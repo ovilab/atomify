@@ -15,6 +15,7 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 include(../library_deployment.pri)
 
+
 ios {
     QMAKE_INFO_PLIST = iOS.plist
 }

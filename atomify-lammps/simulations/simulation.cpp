@@ -93,6 +93,13 @@ QVector3D Simulation::positionOffset()
     return m_positionOffset;
 }
 
+QString Simulation::copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream) {
+    std::string filename;
+    commandStringStream >> filename;
+    QString newFilePath = copyDataFileToReadablePath(QString::fromStdString(filename));
+    return command+" "+newFilePath;
+}
+
 void Simulation::runLammpsScript(LAMMPS *lammps)
 {
     if(!m_isInitialized) {
@@ -111,12 +118,8 @@ void Simulation::runLammpsScript(LAMMPS *lammps)
             std::string command;
             commandLine >> command;
             if(command.compare("read_data") == 0) {
-                // If read_data command is found, we need to copy the file to a readable place for LAMMPS
-                std::string dataFile;
-                commandLine >> dataFile;
-                QString newFilePath = copyDataFileToReadablePath(QString::fromStdString(dataFile));
-                QString command = "read_data "+newFilePath;
-                runCommand(lammps, command.toStdString().c_str());
+                QString newCommand = copyFileAndFixNewCommand(QString::fromStdString(command), commandLine);
+                runCommand(lammps, newCommand.toStdString().c_str());
             } else {
                 runCommand(lammps, to.c_str());
             }

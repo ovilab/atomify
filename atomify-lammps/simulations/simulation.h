@@ -29,8 +29,8 @@ protected:
     QString m_inputScriptFile;
 
     void initialize(QString inputScriptFile, QVector3D initialCameraPosition, QVector3D positionOffset = QVector3D(0,0,0));
+    QString copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream);
     virtual void setScaleAndColorEvaluator();
-
 public:
     Simulation();
     ~Simulation() {}
