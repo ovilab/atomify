@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>LightControl.qml</file>
+        <file>RenderControl.qml</file>
+        <file>SimulatorControl.qml</file>
+        <file>scripts/in.lennardjonesdiffusion</file>
+        <file>scripts/in.lennardjonescrystal</file>
+        <file>scripts/bulkwater.data</file>
+        <file>scripts/in.bulkwater</file>
+        <file>scripts/gashydrate.data</file>
+        <file>scripts/in.gashydrates</file>
+        <file>scripts/in.crack</file>
+        <file>scripts/in.flow.couette</file>
+        <file>scripts/in.flow.poiseuille</file>
+        <file>scripts/in.friction</file>
+        <file>scripts/in.obstacle</file>
+    </qresource>
+</RCC>

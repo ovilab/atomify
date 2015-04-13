@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/org.compphys.SimVis">
+        <file>renderables/marchingcubes/marchingcubes.vsh</file>
+        <file>renderables/marchingcubes/marchingcubes.fsh</file>
+        <file>renderables/billboards/billboards.vsh</file>
+        <file>renderables/billboards/billboards.fsh</file>
+        <file>shadereffects/shaders/perlin3.glsl</file>
+        <file>shadereffects/shaders/perlin4.glsl</file>
+        <file>shadereffects/shaders/simplex3.glsl</file>
+        <file>shadereffects/shaders/simplex4.glsl</file>
+        <file>shadereffects/shaders/perlin2.glsl</file>
+        <file>shadereffects/shaders/simplex2.glsl</file>
+        <file>shadereffects/shaders/coloreffects.glsl</file>
+        <file>shadereffects/shaders/light.glsl</file>
+        <file>shadereffects/shaders/default.glsl</file>
+        <file>shadereffects/shaders/tools.glsl</file>
+        <file>shadereffects/shaders/simplexbump.glsl</file>
+        <file>shadereffects/shaders/simplextexture.glsl</file>
+        <file>renderables/spheres/spheres.fsh</file>
+        <file>renderables/spheres/spheres.vsh</file>
+        <file>renderables/skybox/skybox.fsh</file>
+        <file>renderables/skybox/skybox.vsh</file>
+        <file>shadereffects/shaders/skyboxreflection.glsl</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,3 @@
+module SimVis
+plugin SimVis
+classname SimVisPlugin
