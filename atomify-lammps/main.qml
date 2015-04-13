@@ -20,10 +20,12 @@ ApplicationWindow {
             upVectorAnimation.from = camera.upVector
             positionAnimation.to = newCameraPosition
             positionAnimation.from = camera.position
-            console.log("Starting animation, old pos: "+positionAnimation.from)
-            console.log("new pos: "+newCameraPosition)
-            console.log("old up: "+upVectorAnimation.from)
-            console.log("new up: "+upVectorAnimation.to)
+            if(positionAnimation.running) {
+                positionAnimation.stop()
+            }
+            if(upVectorAnimation.running) {
+                upVectorAnimation.stop()
+            }
 
             positionAnimation.start()
             upVectorAnimation.start()
