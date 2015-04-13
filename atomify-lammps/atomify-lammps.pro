@@ -6,7 +6,8 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 CONFIG += warn_off
 INCLUDEPATH += lammps
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    scripts.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
