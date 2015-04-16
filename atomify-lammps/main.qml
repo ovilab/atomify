@@ -52,8 +52,8 @@ ApplicationWindow {
         Spheres {
             id: spheres
             visible: true
-            scale: 0.5
-            color: "pink"
+            scale: 0.2
+            color: "white"
 
             Light {
                 id: light
@@ -78,7 +78,7 @@ ApplicationWindow {
                 specularIntensity: 1.0
                 shininess: 40.0
                 attenuation: 0.01
-                position: Qt.vector3d(Math.sin(0.1*6.28*visualizer.time), Math.cos(0.1*6.28*visualizer.time), 0)
+                position: Qt.vector3d(30*Math.sin(0.2*6.28*visualizer.time), 0, 30*Math.cos(0.2*6.28*visualizer.time))
             }
         }
     }

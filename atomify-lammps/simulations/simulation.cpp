@@ -64,7 +64,6 @@ void Simulation::setScaleAndColorEvaluator()
         QColor color4(0.0, 255.0, 255.0);
         QColor color5(255.0, 255.0, 0.0);
 
-
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
             if(lammps->atom->type[i] == 1) colors[i] = color1;
             else if(lammps->atom->type[i] == 2) colors[i] = color2;

@@ -11,6 +11,8 @@ class Simulator;
 struct SphereVBOData
 {
     float sphereId;
+    float scale;
+    float vertexId;
     QVector3D position;
     QVector3D color;
     QVector2D textureCoord;

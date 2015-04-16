@@ -105,21 +105,13 @@ void SpheresRenderer::uploadVBOs(Spheres* spheres)
         return;
     }
 
-    double scale = spheres->scale();
+    float scale = spheres->scale();
     QVector<QVector3D>& positions = spheres->m_positions;
     QVector<QColor>& colors = spheres->m_colors;
     QVector<float>& scales = spheres->m_scales;
     QVector<SphereVBOData>& vertices = spheres->m_vertices;
     QVector<GLuint>& indices = spheres->m_indices;
     QVector3D color = spheres->vectorFromColor(spheres->color());
-
-    QVector3D right = m_rightVector;
-    QVector3D up = m_upVector;
-
-    QVector3D ul = (0.5*up - 0.5*right)*scale;
-    QVector3D ur = (0.5*up + 0.5*right)*scale;
-    QVector3D dl = (-0.5*up - 0.5*right)*scale;
-    QVector3D dr = (-0.5*up + 0.5*right)*scale;
 
     int numberOfVertices = positions.size()*4;
     vertices.resize(numberOfVertices);
@@ -128,37 +120,33 @@ void SpheresRenderer::uploadVBOs(Spheres* spheres)
     bool individualScales = scales.size() == positions.size();
     for(auto i=0; i<positions.size(); i++) {
         QVector3D &position = positions[i];
-        float additionalScale = 1.0;
+        float additionalScale = scale;
         if(individualScales) {
             additionalScale = scales[i];
         }
 
         vertices[4*i + 0].sphereId = i;
+        vertices[4*i + 0].scale = additionalScale;
+        vertices[4*i + 0].vertexId = 0;
         vertices[4*i + 0].position = position;
-        vertices[4*i + 0].position[0] += dl[0]*additionalScale;
-        vertices[4*i + 0].position[1] += dl[1]*additionalScale;
-        vertices[4*i + 0].position[2] += dl[2]*additionalScale;
         vertices[4*i + 0].textureCoord= QVector2D(0,1);
 
         vertices[4*i + 1].sphereId = i;
+        vertices[4*i + 1].scale = additionalScale;
+        vertices[4*i + 1].vertexId = 1;
         vertices[4*i + 1].position = position;
-        vertices[4*i + 1].position[0] += dr[0]*additionalScale;
-        vertices[4*i + 1].position[1] += dr[1]*additionalScale;
-        vertices[4*i + 1].position[2] += dr[2]*additionalScale;
         vertices[4*i + 1].textureCoord= QVector2D(1,1);
 
         vertices[4*i + 2].sphereId = i;
+        vertices[4*i + 2].scale = additionalScale;
+        vertices[4*i + 2].vertexId = 2;
         vertices[4*i + 2].position = position;
-        vertices[4*i + 2].position[0] += ur[0]*additionalScale;
-        vertices[4*i + 2].position[1] += ur[1]*additionalScale;
-        vertices[4*i + 2].position[2] += ur[2]*additionalScale;
         vertices[4*i + 2].textureCoord= QVector2D(1,0);
 
         vertices[4*i + 3].sphereId = i;
+        vertices[4*i + 3].scale = additionalScale;
+        vertices[4*i + 3].vertexId = 3;
         vertices[4*i + 3].position = position;
-        vertices[4*i + 3].position[0] += ul[0]*additionalScale;
-        vertices[4*i + 3].position[1] += ul[1]*additionalScale;
-        vertices[4*i + 3].position[2] += ul[2]*additionalScale;
         vertices[4*i + 3].textureCoord= QVector2D(0,0);
         if(individualColors) {
             color = QVector3D(colors[i].redF(), colors[i].greenF(), colors[i].blueF());
@@ -206,6 +194,11 @@ void SpheresRenderer::render()
     glFunctions()->glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[0]);
     glFunctions()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vboIds[1]);
 
+    QVector3D upMinusRightHalf = (m_upVector - m_rightVector)*0.5;
+    QVector3D upPlusRightHalf = (m_upVector + m_rightVector)*0.5;
+    program().setUniformValue("cp_upMinusRightHalf", upMinusRightHalf);
+    program().setUniformValue("cp_upPlusRightHalf", upPlusRightHalf);
+
     // Offset for position
     quintptr offset = 0;
 
@@ -213,6 +206,18 @@ void SpheresRenderer::render()
     int sphereIdLocation = program().attributeLocation("a_sphereId");
     program().enableAttributeArray(sphereIdLocation);
     glFunctions()->glVertexAttribPointer(sphereIdLocation, 1, GL_FLOAT, GL_FALSE, sizeof(SphereVBOData), (const void *)offset);
+
+    offset += sizeof(GLfloat);
+
+    int scaleLocation = program().attributeLocation("a_scale");
+    program().enableAttributeArray(scaleLocation);
+    glFunctions()->glVertexAttribPointer(scaleLocation, 1, GL_FLOAT, GL_FALSE, sizeof(SphereVBOData), (const void *)offset);
+
+    offset += sizeof(GLfloat);
+
+    int vertexIdLocation = program().attributeLocation("a_vertexId");
+    program().enableAttributeArray(vertexIdLocation);
+    glFunctions()->glVertexAttribPointer(vertexIdLocation, 1, GL_FLOAT, GL_FALSE, sizeof(SphereVBOData), (const void *)offset);
 
     offset += sizeof(GLfloat);
 
