@@ -6,8 +6,8 @@ varying highp vec3 vertexPosition;
 varying highp float sphereId;
 
 void main() {
-    highp float x = 2.0*coords.s - 1.0;
-    highp float y = 2.0*coords.t - 1.0;
+    highp float x = coords.s;
+    highp float y = coords.t;
     highp float r2 = x*x + y*y;
     if(r2 > 0.9) {
         // 0.9 so we don't get this light circle on the back of the spheres

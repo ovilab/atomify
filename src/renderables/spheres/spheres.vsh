@@ -14,6 +14,7 @@ varying highp vec3 vertexPosition;
 varying highp float sphereId;
 
 void main() {
+    coords = 2.0*a_texcoord - 1.0;
     vertexPosition = a_position.xyz;
 
     if(a_vertexId==0.0) vertexPosition -= cp_upPlusRightHalf*a_scale;
@@ -25,7 +26,6 @@ void main() {
 
     sphereId = a_sphereId;
 
-    coords = a_texcoord;
     color = a_color;
 }
 // END spheres.vsh

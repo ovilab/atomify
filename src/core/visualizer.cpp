@@ -144,6 +144,14 @@ void VisualizerRenderer::render()
 {
     QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 
+    // qDebug() << "Model view matrix: " << m_camera->matrix();
+    // qDebug() << "Up1: " << m_camera->upVector() << "   right1: " << QVector3D::crossProduct(m_camera->viewVector().normalized(), m_camera->upVector()) << "   view1: " << m_camera->viewVector().normalized();
+
+    // QVector3D up2(m_camera->matrix()(1,0), m_camera->matrix()(1,1), m_camera->matrix()(1,2));
+    // QVector3D right2(m_camera->matrix()(0,0), m_camera->matrix()(0,1), m_camera->matrix()(0,2));
+    // QVector3D view2 = QVector3D::crossProduct(up2, right2);
+    // qDebug() << "Up2: " << up2 << "   right2: " << right2 << "   view2: " << QVector3D::crossProduct(up2, right2);
+
     funcs.glClearColor(m_backgroundColor.redF(), m_backgroundColor.greenF(), m_backgroundColor.blueF(), m_backgroundColor.alphaF());
     funcs.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
