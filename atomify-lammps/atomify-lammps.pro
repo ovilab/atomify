@@ -4,7 +4,9 @@ CONFIG += c++11
 QT += qml quick widgets opengl openglextensions
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 CONFIG += warn_off
-INCLUDEPATH += lammps
+INCLUDEPATH += mpi_stubs
+
+DEFINES += LAMMPS_SMALLSMALL LAMMPS_XDR
 
 RESOURCES += qml.qrc \
     scripts.qrc
@@ -495,7 +497,7 @@ SOURCES += \
     lammps/write_dump.cpp \
     lammps/write_restart.cpp \
     lammps/xdr_compat.cpp \
-    lammps/mpi.c
+    mpi_stubs/mpi.c
 
 HEADERS += \
     mysimulator.h \
@@ -813,7 +815,6 @@ HEADERS += \
     lammps/minimize.h \
     lammps/modify.h \
     lammps/molecule.h \
-    lammps/mpi.h \
     lammps/mpiio.h \
     lammps/msm.h \
     lammps/msm_cg.h \
@@ -1005,7 +1006,8 @@ HEADERS += \
     lammps/write_data.h \
     lammps/write_dump.h \
     lammps/write_restart.h \
-    lammps/xdr_compat.h
+    lammps/xdr_compat.h \
+    mpi_stubs/mpi.h
 
 DISTFILES += \
     iOS.plist
