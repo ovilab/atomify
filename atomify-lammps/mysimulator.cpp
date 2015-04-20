@@ -32,6 +32,8 @@ void MyWorker::loadSimulation(QString simulationId) {
     }
     lammps_open_no_mpi(0, 0, (void**)&lammps);
 
+    lammps->screen = NULL;
+
     m_currentSimulation->runLammpsScript(lammps);
 }
 
