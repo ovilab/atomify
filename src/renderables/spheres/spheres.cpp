@@ -122,7 +122,7 @@ void SpheresRenderer::uploadVBOs(Spheres* spheres)
         QVector3D &position = positions[i];
         float additionalScale = scale;
         if(individualScales) {
-            additionalScale = scales[i];
+            additionalScale *= scales[i];
         }
 
         vertices[4*i + 0].sphereId = i;
