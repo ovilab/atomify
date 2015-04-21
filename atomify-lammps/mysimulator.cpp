@@ -39,8 +39,9 @@ void MyWorker::loadSimulation(QString simulationId) {
 
 MyWorker::MyWorker() {
     m_simulations = createSimulationObjects();
-
     loadSimulation("lennardjonesdiffusion");
+    m_sinceStart.start();
+    m_elapsed.start();
 }
 
 void MyWorker::runCommands(const char *commands) {
@@ -104,18 +105,23 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 
         m_currentSimulation->scaleAndColorEvaluator()(colors, scales, lammps);
 
-//        qDebug() << "Camera position: " << spheres->camera()->position();
-//        qDebug() << "Camera view vector: " << spheres->camera()->viewVector();
-//        qDebug() << "Camera view center: " << spheres->camera()->viewCenter();
-//        qDebug() << "Camera upvector: " << spheres->camera()->upVector();
-
         return;
     }
 }
 
 void MyWorker::work()
 {
+    // m_elapsed.restart();
     runCommand(QString("run %1 pre no post no").arg(m_simulationSpeed).toStdString().c_str());
+    // qDebug() << m_elapsed.elapsed();
+
+    // qDebug() << m_sinceStart.elapsed() << " " << m_elapsed.elapsed();
+    auto dt = m_elapsed.elapsed();
+    double delta = 16 - dt;
+    if(delta > 0) {
+        QThread::currentThread()->msleep(delta);
+    }
+    m_elapsed.restart();
 }
 
 MyWorker *MySimulator::createWorker()

@@ -3,9 +3,10 @@
 #include <SimVis/Simulator>
 #include <functional>
 #include <QMap>
+#include <QElapsedTimer>
 #include "simulations/simulations.h"
 
-#include "lammps/mpi.h"
+#include "mpi_stubs/mpi.h"
 #include "lammps/lammps.h"
 using std::function;
 using namespace LAMMPS_NS;
@@ -17,7 +18,8 @@ public:
     MyWorker();
 private:
     LAMMPS *lammps = 0;
-
+    QElapsedTimer m_elapsed;
+    QElapsedTimer m_sinceStart;
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
     virtual void synchronizeRenderer(Renderable *renderableObject) override;
