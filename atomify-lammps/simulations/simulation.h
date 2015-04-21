@@ -9,7 +9,7 @@
 #include <sstream>
 #include <string>
 
-#include "lammps/mpi.h"
+#include "mpi_stubs/mpi.h"
 #include "lammps/lammps.h"
 #include "lammps/library.h"
 #include "lammps/atom.h"
