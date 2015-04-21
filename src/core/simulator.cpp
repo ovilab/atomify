@@ -20,7 +20,7 @@ void Simulator::step()
     if(!m_worker) {
         m_worker = createWorker();
         m_worker->moveToThread(&m_workerThread);
-        m_workerThread.start();
+        m_workerThread.start(QThread::TimeCriticalPriority);
     }
     if(m_workerMutex.tryLock()) {
         m_worker->synchronizeSimulator(this);
