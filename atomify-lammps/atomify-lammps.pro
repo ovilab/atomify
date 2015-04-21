@@ -6,7 +6,10 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 CONFIG += warn_off
 INCLUDEPATH += mpi_stubs
 
-DEFINES += LAMMPS_SMALLSMALL LAMMPS_XDR
+DEFINES += LAMMPS_SMALLSMALL
+android {
+    DEFINES += LAMMPS_XDR
+}
 
 RESOURCES += qml.qrc \
     scripts.qrc
