@@ -64,6 +64,7 @@ void Simulation::setScaleAndColorEvaluator()
         QColor color4(0.0, 255.0, 255.0);
         QColor color5(255.0, 255.0, 0.0);
 
+
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
             if(lammps->atom->type[i] == 1) colors[i] = color1;
             else if(lammps->atom->type[i] == 2) colors[i] = color2;
@@ -92,11 +93,19 @@ QVector3D Simulation::positionOffset()
     return m_positionOffset;
 }
 
-QString Simulation::copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream) {
-    std::string filename;
-    commandStringStream >> filename;
-    QString newFilePath = copyDataFileToReadablePath(QString::fromStdString(filename));
-    return command+" "+newFilePath;
+void Simulation::processCommand(std::stringstream &command, LAMMPS *lammps) {
+    std::string word;
+    QString processedCommand;
+
+    while(command >> word) {
+        if(word.find("ext://") != std::string::npos) {
+            word.erase(0, 6); // Remove the ext:// prefix
+            word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
+        }
+
+        processedCommand.append(QString::fromStdString(word)).append(" ");
+    }
+    runCommand(lammps, processedCommand.toStdString().c_str());
 }
 
 void Simulation::runLammpsScript(LAMMPS *lammps)
@@ -106,22 +115,16 @@ void Simulation::runLammpsScript(LAMMPS *lammps)
         return;
     }
 
-    QString lammpsScript = readFile(m_inputScriptFile);
-    std::stringstream ss(lammpsScript.toStdString());
-    std::string to;
+    QString lammpsScript_qstring = readFile(m_inputScriptFile);
 
-    if (!lammpsScript.isEmpty())
+    if (!lammpsScript_qstring.isEmpty())
     {
-        while(std::getline(ss,to,'\n')){
-            std::stringstream commandLine(to);
-            std::string command;
-            commandLine >> command;
-            if(command.compare("read_data") == 0) {
-                QString newCommand = copyFileAndFixNewCommand(QString::fromStdString(command), commandLine);
-                runCommand(lammps, newCommand.toStdString().c_str());
-            } else {
-                runCommand(lammps, to.c_str());
-            }
+        std::stringstream lammpsScript(lammpsScript_qstring.toStdString());
+        std::string line;
+
+        while(std::getline(lammpsScript,line,'\n')){
+            std::stringstream command(line);
+            processCommand(command, lammps);
         }
     }
 }

@@ -14,7 +14,7 @@ atom_style		full
 ################################################
 ############# Read input file ##################
 
-read_data		bulkwater.data
+read_data		ext://bulkwater.data
 
 variable                nx equal 8
 variable                ny equal 8

@@ -39,6 +39,7 @@ public:
     QVector3D positionOffset();
     void runLammpsScript(LAMMPS *lammps);
     QVector3D initialCameraPosition() const;
+    void processCommand(std::stringstream &command, LAMMPS *lammps);
 };
 
 #endif // SIMULATION_H

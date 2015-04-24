@@ -10,7 +10,7 @@ atom_style		full
 ################################################
 ############# Read input file ##################
 
-read_data		gashydrate.data
+read_data		ext://gashydrate.data
 
 variable                nx equal 2
 variable                ny equal 2
