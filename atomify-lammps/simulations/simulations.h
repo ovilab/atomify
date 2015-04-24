@@ -38,6 +38,12 @@ public:
     Obstacle() { initialize(":/scripts/in.obstacle", QVector3D(0, 0, 25)); }
 };
 
+class BulkC2H4 : public Simulation
+{
+public:
+    BulkC2H4() { initialize(":/scripts/in.bulkc2h4", QVector3D(0, 0, 25)); }
+};
+
 QMap<QString, Simulation*> createSimulationObjects();
 
 #endif

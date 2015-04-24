@@ -63,7 +63,7 @@ void LAMMPSController::runCommand(const char *command)
         qDebug() << "Command: " << command;
         return;
     }
-
+    qDebug() << command;
     lammps_command((void*)m_lammps, (char*) command);
 }
 
@@ -92,6 +92,7 @@ QString LAMMPSController::copyDataFileToReadablePath(QString filename)
 }
 
 void LAMMPSController::processCommand(QString command) {
+    qDebug() << "Processing " << command;
     stringstream command_ss(command.toStdString());
     string word;
     QString processedCommand;
@@ -106,6 +107,19 @@ void LAMMPSController::processCommand(QString command) {
         if(wordCount == 0 && word.compare("run") == 0) {
             command_ss >> word; // Next word is the number of timesteps
             int numberOfTimesteps = atoi(word.c_str());
+            if(numberOfTimesteps == 0) {
+                // We probably need to read it as a variable in lammps
+                string wordCopy = word;
+                wordCopy.erase(0,2);
+                wordCopy.erase(word.length()-3,1);
+                const char *word_c_str = wordCopy.c_str();
+
+                int found = m_lammps->input->variable->find((char*)word_c_str);
+                if(found > -1) {
+                    char *numberOfTimestepsString = m_lammps->input->variable->retrieve((char*)word_c_str);
+                    numberOfTimesteps = atoi(numberOfTimestepsString);
+                }
+            }
             if(command_ss >> word) {
                 qDebug() << "Warning, LAMMPS visualizer doesn't support run commands with arguments. These will be ignored.";
             }
@@ -148,8 +162,6 @@ void LAMMPSController::tick()
 
 void LAMMPSController::loadLammpsScript(QString filename)
 {
-    reset();
-
     QString lammpsScript_qstring = readFile(filename);
 
     if (!lammpsScript_qstring.isEmpty())
@@ -158,7 +170,22 @@ void LAMMPSController::loadLammpsScript(QString filename)
         std::string command;
 
         while(std::getline(lammpsScript,command,'\n')){
-            m_commands.push_back(QString::fromStdString(command));
+            stringstream command_ss(command);
+            string word;
+            if(command_ss >> word) {
+                if(word.compare("include") == 0) {
+                    if(command_ss >> word) {
+                        word.erase(0, 6); // Remove the ext:// prefix
+                        word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
+                        loadLammpsScript(QString::fromStdString(word));
+                    } else {
+                        qDebug() << "Invalid include statement.";
+                        continue;
+                    }
+                } else {
+                    m_commands.push_back(QString::fromStdString(command));
+                }
+            }
         }
     }
 }

@@ -1,0 +1,9 @@
+# doi.org/10.1021/jp075809d
+
+mass 1   14.0270 #CH2
+pair_style  lj/cut ${Rc}
+pair_coeff  1 1 0.18500  3.685  #CH2-CH2
+bond_style harmonic
+bond_coeff   1 1000.0 1.33
+group mobile type 1
+

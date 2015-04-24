@@ -1,0 +1,83 @@
+variable Nrep equal 8
+variable Nsteps equal 500000
+variable Neq   equal  50000
+variable Nevery equal 10000
+variable Xgcmc equal 6  		#number of exchanges to attempt (on average) every N steps
+variable Ngcmc equal 100 		#invoke  fix gcmc every N steps
+variable Na equal 10     		#loop a
+variable T equal 0400.0  		#temperature [K]
+variable Rc equal 10.0   		#cut-off [A]
+variable RHOtarget equal  0.84533   	# [kg/m3] see NIST database
+clear
+
+# physical constant
+variable Avogadro  equal 6.02214179e23
+variable Planck    equal 6.626068e-34
+variable Boltzmann equal 1.3806503e-23
+variable Pi        equal 4*atan(1)
+
+units           real
+dimension       3
+boundary        p p p
+atom_style      molecular
+
+read_data   ext://singleC2H4.data  #single molecule description
+include     ext://C2H4ff.set  #force field file
+
+variable mass_kg equal mass(mobile)/${Avogadro}*1e-3 #[kg]
+
+#Box size calculation
+variable L equal exp(ln(${mass_kg}/${RHOtarget})/3.0)*1e10 #[Å]
+
+print "Mass in kg is ${mass_kg}"
+print "Lenght of unit cell is ${L}"
+
+#Ideal gas chemical potantial
+variable Lambda  equal ${Planck}/sqrt(2*${Pi}*${mass_kg}*${Boltzmann}*${T})
+print "De Broglie wavelength is ${Lambda}"
+variable V equal   $L*$L*$L*1e-30 #[m3]
+variable mu0 equal ${Boltzmann}*${T}*ln(${Lambda}*${Lambda}*${Lambda}/$V)  #[J], note that N=1 since we have a unit cell
+variable mu  equal ${mu0}*1e-3*${Avogadro}/4.184  #[kcal/mol]
+print "Chemical potential is  ${mu} kcal/mol"
+variable mu0 delete
+variable V   delete
+variable Lambda delete
+variable Pi delete
+
+
+change_box all x final 0.0 $L y final 0.0 $L z final 0.0 $L units box
+replicate  ${Nrep} ${Nrep} ${Nrep}
+
+timestep 1.0
+
+variable rho equal mass(mobile)/${Avogadro}*1e24/vol  # [g/cm3]
+
+velocity  mobile create ${T} 432567 dist uniform
+
+fix SHAKE mobile shake 0.0001 10 0 b 1
+
+fix NVT all nvt temp ${T} ${T} 100
+thermo_style custom step temp v_rho
+thermo ${Nevery}
+run ${Neq}
+
+molecule C2H4mol  ext://C2H4.template
+variable Nm equal count(mobile)/2
+
+
+reset_timestep 0
+fix  PRdens  all ave/time 1000 1 1000 v_rho v_Nm file density.dat
+fix MGCMC mobile gcmc ${Ngcmc}  ${Xgcmc}  0 0 3456543 ${T} ${mu} 0.0 mol C2H4mol maxangle 180
+variable Ninsatt equal f_MGCMC[3]
+variable Ninssuc equal f_MGCMC[4]
+variable Ndelatt equal f_MGCMC[5]
+variable Ndelsuc equal f_MGCMC[6]
+variable saldo   equal v_Ninssuc-v_Ndelsuc
+thermo_style  custom step temp v_rho v_Nm v_saldo
+thermo ${Nevery}
+dump PRINTdump  all  custom ${Nsteps} dump.lmptrj id mol type x y z
+dump_modify PRINTdump sort id
+run  500000
+write_data restart.data
+undump PRINTdump
+unfix  MGCMC

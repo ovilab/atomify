@@ -10,8 +10,10 @@ class LAMMPSController
 {
 private:
     LAMMPS *m_lammps = 0;
+
     QVector<QString> m_commands;
     int m_simulationSpeed = 1;
+
     unsigned int m_runCommandStart = 0;
     unsigned int m_runCommandEnd = 0;
     bool m_runCommandActive = false;

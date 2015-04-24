@@ -11,5 +11,9 @@
         <file>scripts/in.flow.poiseuille</file>
         <file>scripts/in.friction</file>
         <file>scripts/in.obstacle</file>
+        <file>scripts/in.bulkc2h4</file>
+        <file>scripts/C2H4.template</file>
+        <file>scripts/C2H4ff.set</file>
+        <file>scripts/singleC2H4.data</file>
     </qresource>
 </RCC>

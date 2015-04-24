@@ -24,9 +24,7 @@ void MyWorker::loadSimulation(QString simulationId) {
         return;
     }
     m_currentSimulation = simulation.value();
-    qDebug() << "Resetting...";
     m_lammpsController.reset();
-    qDebug() << "Loading script";
     m_lammpsController.loadLammpsScript(m_currentSimulation->inputScriptFile());
 }
 

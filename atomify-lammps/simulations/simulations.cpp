@@ -10,7 +10,7 @@ QMap<QString, Simulation*> createSimulationObjects() {
     simulations["flowcouette"] = new FlowCouette();
     simulations["flowpoiseuille"] = new FlowPoiseuille();
     simulations["friction"] = new Friction();
-    simulations["obstacle"] = new Obstacle();
+    simulations["obstacle"] = new BulkC2H4();
 
     return simulations;
 }
