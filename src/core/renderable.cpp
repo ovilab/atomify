@@ -202,7 +202,7 @@ void RenderableRenderer::setShaderFromSourceCode(QOpenGLShader::ShaderType type,
 
     fullShaderCode.append(shaderCode);
     removeShader(type);
-    qDebug() << "Shader: " << fullShaderCode;
+    // sqDebug() << "Shader: " << fullShaderCode;
 
     m_program.addShaderFromSourceCode(type, fullShaderCode);
 }

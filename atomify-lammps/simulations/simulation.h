@@ -18,28 +18,21 @@ using namespace LAMMPS_NS;
 class Simulation
 {
 protected:
-    QString readFile(QString filename);
-    void runCommand(LAMMPS *lammps, const char *command);
-    QString copyDataFileToReadablePath(QString filename);
+    void initialize(QString inputScriptFile, QVector3D initialCameraPosition, QVector3D positionOffset = QVector3D(0,0,0));
+    virtual void setScaleAndColorEvaluator();
 
     std::function<void (QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps)> m_scaleAndColorEvaluator;
     bool m_isInitialized = false;
     QVector3D m_positionOffset;
     QVector3D m_initialCameraPosition;
     QString m_inputScriptFile;
-
-    void initialize(QString inputScriptFile, QVector3D initialCameraPosition, QVector3D positionOffset = QVector3D(0,0,0));
-    QString copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream);
-    virtual void setScaleAndColorEvaluator();
 public:
     Simulation();
     ~Simulation() {}
     std::function<void (QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps)> scaleAndColorEvaluator();
-    QString simulationId();
+    QString inputScriptFile();
     QVector3D positionOffset();
-    void runLammpsScript(LAMMPS *lammps);
     QVector3D initialCameraPosition() const;
-    void processCommand(std::stringstream &command, LAMMPS *lammps);
 };
 
 #endif // SIMULATION_H

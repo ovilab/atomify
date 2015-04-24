@@ -24,17 +24,10 @@ void MyWorker::loadSimulation(QString simulationId) {
         return;
     }
     m_currentSimulation = simulation.value();
-
-    // Remove old LAMMPS simulator and prepare new, clean simulator
-    if(lammps) {
-        lammps_close((void*)lammps);
-        lammps = 0;
-    }
-    lammps_open_no_mpi(0, 0, (void**)&lammps);
-
-    lammps->screen = NULL;
-
-    m_currentSimulation->runLammpsScript(lammps);
+    qDebug() << "Resetting...";
+    m_lammpsController.reset();
+    qDebug() << "Loading script";
+    m_lammpsController.loadLammpsScript(m_currentSimulation->inputScriptFile());
 }
 
 MyWorker::MyWorker() {
@@ -44,34 +37,10 @@ MyWorker::MyWorker() {
     m_elapsed.start();
 }
 
-void MyWorker::runCommands(const char *commands) {
-    std::stringstream ss(commands);
-    std::string to;
-
-    if (commands != NULL)
-    {
-        while(std::getline(ss,to,'\n')){
-            runCommand(to.c_str());
-        }
-    }
-}
-
-void MyWorker::runCommand(const char *command)
-{
-    if(lammps == 0) {
-        qDebug() << "Warning, trying to run a LAMMPS command with no LAMMPS object. You need to load a simulation first.";
-        qDebug() << "Command: " << command;
-        return;
-    }
-
-    lammps_command((void*)lammps, (char*) command);
-}
-
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     MySimulator *mySimulator = qobject_cast<MySimulator*>(simulator);
-    m_discoMode = mySimulator->discoMode();
-    m_simulationSpeed = mySimulator->simulationSpeed();
+    m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
 
     if(!mySimulator->m_simulationIdToLoad.isEmpty()) {
         loadSimulation(mySimulator->m_simulationIdToLoad);
@@ -83,6 +52,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
+    LAMMPS *lammps = m_lammpsController.lammps();
+
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
@@ -111,11 +82,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 
 void MyWorker::work()
 {
-    // m_elapsed.restart();
-    runCommand(QString("run %1 pre no post no").arg(m_simulationSpeed).toStdString().c_str());
-    // qDebug() << m_elapsed.elapsed();
-
-    // qDebug() << m_sinceStart.elapsed() << " " << m_elapsed.elapsed();
+    m_lammpsController.tick();
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
     if(delta > 0) {
@@ -139,9 +106,9 @@ MySimulator::~MySimulator()
 
 }
 
-bool MySimulator::discoMode() const
+QVector3D MySimulator::newCameraPosition() const
 {
-    return m_discoMode;
+    return m_newCameraPosition;
 }
 
 int MySimulator::simulationSpeed() const
@@ -149,23 +116,15 @@ int MySimulator::simulationSpeed() const
     return m_simulationSpeed;
 }
 
-QVector3D MySimulator::newCameraPosition() const
-{
-    return m_newCameraPosition;
-}
-
-void MySimulator::setDiscoMode(bool arg)
-{
-    if (m_discoMode == arg)
-        return;
-
-    m_discoMode = arg;
-    emit discoModeChanged(arg);
-}
-
 void MySimulator::loadSimulation(QString simulationId)
 {
     m_simulationIdToLoad = simulationId;
+}
+
+void MySimulator::setNewCameraPosition(QVector3D arg)
+{
+    m_newCameraPosition = arg;
+    emit newCameraPositionChanged(arg);
 }
 
 void MySimulator::setSimulationSpeed(int arg)
@@ -175,10 +134,4 @@ void MySimulator::setSimulationSpeed(int arg)
 
     m_simulationSpeed = arg;
     emit simulationSpeedChanged(arg);
-}
-
-void MySimulator::setNewCameraPosition(QVector3D arg)
-{
-    m_newCameraPosition = arg;
-    emit newCameraPositionChanged(arg);
 }

@@ -500,7 +500,8 @@ SOURCES += \
     lammps/write_dump.cpp \
     lammps/write_restart.cpp \
     lammps/xdr_compat.cpp \
-    mpi_stubs/mpi.c
+    mpi_stubs/mpi.c \
+    lammpscontroller.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -1010,7 +1011,8 @@ HEADERS += \
     lammps/write_dump.h \
     lammps/write_restart.h \
     lammps/xdr_compat.h \
-    mpi_stubs/mpi.h
+    mpi_stubs/mpi.h \
+    lammpscontroller.h
 
 DISTFILES += \
     iOS.plist
