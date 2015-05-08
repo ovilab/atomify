@@ -52,7 +52,7 @@ ApplicationWindow {
         Spheres {
             id: spheres
             visible: true
-            scale: 0.2
+            scale: scaleSlider.value
             color: "white"
 
             Light {
@@ -66,19 +66,6 @@ ApplicationWindow {
                 shininess: 40.0
                 attenuation: 0.01
                 position: camera.position
-            }
-
-            Light {
-                id: light2
-                ambientColor: spheres.color
-                specularColor: "white"
-                diffuseColor: spheres.color
-                ambientIntensity: 0.025
-                diffuseIntensity: 0.5
-                specularIntensity: 1.0
-                shininess: 40.0
-                attenuation: 0.01
-                position: Qt.vector3d(30*Math.sin(0.2*6.28*visualizer.time), 0, 30*Math.cos(0.2*6.28*visualizer.time))
             }
         }
     }
@@ -122,13 +109,31 @@ ApplicationWindow {
         Slider {
             id: simulationSpeedSlider
             minimumValue: 1
-            maximumValue: 10
+            maximumValue: 200
             stepSize: 1
             value: 1
             onValueChanged: simulator.simulationSpeed = value
         }
+
         Label {
+            id: simulationSpeedLabel
             text: qsTr("Simulation speed: %1").arg(simulator.simulationSpeed.toFixed(0))
+        }
+
+        Slider {
+            id: scaleSlider
+            minimumValue: 0.1
+            maximumValue: 5.0
+            stepSize: 0.1
+            value: 0.23
+            Label {
+                id: scaleSliderLabel
+                anchors.left: scaleSlider.right
+            }
+
+            onValueChanged: {
+                scaleSliderLabel.text = qsTr("Sphere scale: %1").arg(scaleSlider.value)
+            }
         }
     }
 

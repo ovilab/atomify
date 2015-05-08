@@ -1,0 +1,18 @@
+# doi.org/10.1021/jp075809d
+
+mass 1   14.0270 #CH2
+mass 2 	 15.9994 #Oz
+mass 3 	 28.085  #Si
+
+pair_style  lj/cut ${Rc}
+pair_modify mix arithmetic
+pair_coeff  1 1 0.18500  3.685  ${Rc}  #CH2-CH2
+pair_coeff  2 2 0.17805  2.806  ${Rc}   #Oz-Oz
+pair_coeff  3 3 0.00000  0.000  0.00   #Si-Si
+
+bond_style harmonic
+bond_coeff   1 1000.0 1.33
+group mobile type 1
+group Oz     type 2
+group Si     type 3
+group zsm    type 2 3

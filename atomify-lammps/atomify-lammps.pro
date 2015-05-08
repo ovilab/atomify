@@ -1,5 +1,6 @@
 TEMPLATE = app
 CONFIG += c++11
+DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable

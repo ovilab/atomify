@@ -15,5 +15,12 @@
         <file>scripts/C2H4.template</file>
         <file>scripts/C2H4ff.set</file>
         <file>scripts/singleC2H4.data</file>
+        <file>scripts/in.confinedc2h4</file>
+        <file>scripts/C2H4MFIff.set</file>
+        <file>scripts/MFI.data</file>
+        <file>scripts/inC2H4Bulk.lmp</file>
+        <file>scripts/reconfig.data.gz</file>
+        <file>scripts/in.mesopores</file>
+        <file>scripts/MFI_2.data</file>
     </qresource>
 </RCC>

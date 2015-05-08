@@ -5,7 +5,7 @@ variable Nevery equal 10000
 variable Xgcmc equal 6  		#number of exchanges to attempt (on average) every N steps
 variable Ngcmc equal 100 		#invoke  fix gcmc every N steps
 variable Na equal 10     		#loop a
-variable T equal 0400.0  		#temperature [K]
+variable T equal 400.0  		#temperature [K]
 variable Rc equal 10.0   		#cut-off [A]
 variable RHOtarget equal  0.84533   	# [kg/m3] see NIST database
 clear
@@ -59,14 +59,14 @@ fix SHAKE mobile shake 0.0001 10 0 b 1
 fix NVT all nvt temp ${T} ${T} 100
 thermo_style custom step temp v_rho
 thermo ${Nevery}
-run ${Neq}
+fastrun ${Neq}
 
 molecule C2H4mol  ext://C2H4.template
 variable Nm equal count(mobile)/2
 
 
 reset_timestep 0
-fix  PRdens  all ave/time 1000 1 1000 v_rho v_Nm file density.dat
+fix PRdens  all ave/time 1000 1 1000 v_rho v_Nm file density.dat
 fix MGCMC mobile gcmc ${Ngcmc}  ${Xgcmc}  0 0 3456543 ${T} ${mu} 0.0 mol C2H4mol maxangle 180
 variable Ninsatt equal f_MGCMC[3]
 variable Ninssuc equal f_MGCMC[4]
@@ -77,7 +77,7 @@ thermo_style  custom step temp v_rho v_Nm v_saldo
 thermo ${Nevery}
 dump PRINTdump  all  custom ${Nsteps} dump.lmptrj id mol type x y z
 dump_modify PRINTdump sort id
-run  500000
+run  ${Nsteps}
 write_data restart.data
 undump PRINTdump
-unfix  MGCMC
+unfix MGCMC

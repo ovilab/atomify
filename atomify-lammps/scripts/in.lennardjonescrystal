@@ -1,20 +1,28 @@
-units		lj
+units		real
 atom_style	atomic
 atom_modify	map hash
 
-lattice		fcc 0.8442
-region		box block 0 12 0 12 0 12
+lattice		fcc 17.0997595
+region		box block 0 10 0 10 0 10
 
 create_box	1 box
 create_atoms	1 box
-mass		1 1.0
+mass		1 39.948
 
-velocity	all create 0.02 87287 loop geom
+velocity	all create 135 87287 loop geom
 
-pair_style	lj/cut 2.5
-pair_coeff	1 1 1.0 1.0 2.5
+pair_style	lj/cut 8.5125
+pair_coeff	1 1 0.2380 3.405 8.5125
 
-neighbor	0.3 bin
-neigh_modify	delay 0 every 20 check yes
+fix		1 all nvt temp 135 135 100
 
-fix		1 all nve
+thermo_style custom step temp
+thermo 1000
+run 100000
+
+reset_timestep 0
+
+compute msd all msd com yes
+thermo_style custom step temp c_msd[4]
+thermo 1000
+run 1000000

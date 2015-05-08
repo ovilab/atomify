@@ -41,7 +41,7 @@ public:
 class BulkC2H4 : public Simulation
 {
 public:
-    BulkC2H4() { initialize(":/scripts/in.bulkc2h4", QVector3D(0, 0, 25)); }
+    BulkC2H4() { initialize(":/scripts/in.mesopores", QVector3D(0, 0, 25)); }
 };
 
 QMap<QString, Simulation*> createSimulationObjects();

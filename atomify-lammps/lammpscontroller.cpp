@@ -5,6 +5,7 @@
 #include "lammps/variable.h"
 #include "lammps/update.h"
 #include <QFile>
+#include <QFileInfo>
 #include <QDebug>
 #include <QStandardPaths>
 #include <sstream>
@@ -53,6 +54,7 @@ QString LAMMPSController::readFile(QString filename)
 }
 
 void LAMMPSController::runCommand(QString command) {
+    qDebug() << "Executing " << command;
     runCommand(command.toStdString().c_str());
 }
 
@@ -63,31 +65,31 @@ void LAMMPSController::runCommand(const char *command)
         qDebug() << "Command: " << command;
         return;
     }
-    qDebug() << command;
+    // qDebug() << command;
     lammps_command((void*)m_lammps, (char*) command);
 }
 
 QString LAMMPSController::copyDataFileToReadablePath(QString filename)
 {
-    QFile inFile(":/scripts/"+filename);
-    if(!inFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Error: could not open file "+inFile.fileName();
-        return "";
+    QString qrcFilename = ":/scripts/"+filename;
+
+    bool fileFound = false;
+    QFileInfo fileInfo(qrcFilename);
+    fileFound = fileInfo.exists();
+
+    if(!fileFound) {
+        qrcFilename.append(".gz");
+        filename.append(".gz");
+        fileInfo = QFileInfo(qrcFilename);
+        fileFound = fileInfo.exists();
     }
 
-    QString content = inFile.readAll();
-    inFile.close();
-
-    QString documentsLocation = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory);
-    QString newFilename=documentsLocation+filename;
-    QFile outFile(newFilename);
-    if(!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Error: could not open file "+outFile.fileName();
-        return "";
+    QString tempLocation = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory);
+    QString newFilename=tempLocation+filename;
+    if(fileFound) {
+        QFile::copy(qrcFilename, newFilename);
     }
 
-    outFile.write(content.toStdString().c_str());
-    outFile.close();
     return newFilename;
 }
 
@@ -128,6 +130,13 @@ void LAMMPSController::processCommand(QString command) {
             m_runCommandStart = m_lammps->update->ntimestep;
             m_runCommandEnd = m_runCommandStart + numberOfTimesteps;
             return;
+        }
+
+        if(wordCount == 0 && word.compare("fastrun") == 0) {
+            qDebug() << "Will do a fastrun";
+            processedCommand = "run ";
+            wordCount++;
+            continue;
         }
 
         processedCommand.append(QString::fromStdString(word)).append(" ");
@@ -198,7 +207,7 @@ void LAMMPSController::reset()
     }
 
     lammps_open_no_mpi(0, 0, (void**)&m_lammps);
-    m_lammps->screen = NULL;
+    // m_lammps->screen = NULL;
     m_commands.clear();
 
     m_runCommandActive = false;
