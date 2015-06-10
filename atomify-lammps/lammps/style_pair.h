@@ -97,6 +97,7 @@
 #include "pair_tip4p_cut.h"
 #include "pair_tip4p_long.h"
 #include "pair_tri_lj.h"
+#include "pair_usc.h"
 #include "pair_yukawa.h"
 #include "pair_yukawa_colloid.h"
 #include "pair_zbl.h"

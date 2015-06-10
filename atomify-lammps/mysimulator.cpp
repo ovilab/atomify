@@ -30,7 +30,7 @@ void MyWorker::loadSimulation(QString simulationId) {
 
 MyWorker::MyWorker() {
     m_simulations = createSimulationObjects();
-    loadSimulation("lennardjonescrystal");
+    loadSimulation("lennardjonesdiffusion");
     // loadSimulation("obstacle");
     m_sinceStart.start();
     m_elapsed.start();

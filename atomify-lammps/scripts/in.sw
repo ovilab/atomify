@@ -4,12 +4,12 @@ units		metal
 atom_style	atomic
 
 lattice		diamond 5.431
-region		box block 0 5 0 5 0 5
+region		box block 0 20 0 20 0 10
 create_box	1 box
 create_atoms	1 box
 
 pair_style	sw
-pair_coeff	* * /repos/lammps/src/sw/Si.sw Si
+pair_coeff	* * ext://Si.sw Si
 mass            1 28.06
 
 velocity	all create 1000.0 376847 loop geom
@@ -21,4 +21,4 @@ fix		1 all nve
 
 timestep	0.001
 
-run		10000
+run		100

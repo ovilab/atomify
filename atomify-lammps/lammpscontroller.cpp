@@ -54,7 +54,7 @@ QString LAMMPSController::readFile(QString filename)
 }
 
 void LAMMPSController::runCommand(QString command) {
-    qDebug() << "Executing " << command;
+    // qDebug() << "Executing " << command;
     runCommand(command.toStdString().c_str());
 }
 

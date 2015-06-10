@@ -442,6 +442,7 @@ SOURCES += \
     lammps/pair_snap.cpp \
     lammps/pair_soft.cpp \
     lammps/pair_sw.cpp \
+    lammps/pair_usc.cpp \
     lammps/pair_table.cpp \
     lammps/pair_tersoff.cpp \
     lammps/pair_tersoff_mod.cpp \
@@ -933,6 +934,7 @@ HEADERS += \
     lammps/pair_snap.h \
     lammps/pair_soft.h \
     lammps/pair_sw.h \
+    lammps/pair_usc.h \
     lammps/pair_table.h \
     lammps/pair_tersoff.h \
     lammps/pair_tersoff_mod.h \

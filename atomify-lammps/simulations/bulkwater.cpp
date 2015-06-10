@@ -8,7 +8,7 @@ using namespace std;
 BulkWater::BulkWater()
 {
     setScaleAndColorEvaluator();
-    initialize(":/scripts/in.bulkwater", QVector3D(0, 0, 30));
+    initialize(":/scripts/in.sw", QVector3D(0, 0, 30));
 }
 
 void BulkWater::setScaleAndColorEvaluator()

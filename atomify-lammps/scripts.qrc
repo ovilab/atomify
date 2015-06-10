@@ -22,5 +22,7 @@
         <file>scripts/reconfig.data.gz</file>
         <file>scripts/in.mesopores</file>
         <file>scripts/MFI_2.data</file>
+        <file>scripts/in.sw</file>
+        <file>scripts/Si.sw</file>
     </qresource>
 </RCC>
