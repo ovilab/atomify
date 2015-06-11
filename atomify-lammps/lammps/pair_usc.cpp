@@ -105,7 +105,6 @@ void PairUSC::compute(int eflag, int vflag)
     firstneigh = list->firstneigh;
     
     // loop over full neighbor list of my atoms
-    
     for (ii = 0; ii < inum; ii++) {
         i = ilist[ii];
         itag = tag[i];
@@ -140,22 +139,15 @@ void PairUSC::compute(int eflag, int vflag)
             dely = ytmp - x[j][1];
             delz = ztmp - x[j][2];
             rsq = delx*delx + dely*dely + delz*delz;
-            
-            ijparam = elem2param[itype][jtype][jtype];
-            if (rsq > params[ijparam].rcsq) continue;
-            
-            int type = 0;
-            if(itype == 0 && jtype == 0) type = 1;
+            int type = 1;
             if(itype == 0 && jtype == 1) type = 2;
             if(itype == 1 && jtype == 0) type = 2;
             if(itype == 1 && jtype == 1) type = 3;
 
-            twobody(&params[ijparam],rsq,fpair,eflag,evdwl);
+            ijparam = elem2param[itype][jtype][jtype];
+            if (rsq > params[ijparam].rcsq) continue;
 
-//            std::cout << "Computing force for particle pairs " << i << " and " << j << " which are types " << itype << " and " << jtype << std::endl;
-//            std::cout << "Positions: [" << xtmp << ", " << ytmp << ", " << ztmp << "] and [" << x[j][0] << ", " << x[j][1] << ", " << x[j][2] << "]" << std::endl;
-//            std::cout << "twoparticle("<< sqrt(rsq) << ", " << type << ")" << std::endl;
-//            std::cout << fpair*sqrt(rsq) << std::endl;
+            twobody(&params[ijparam],rsq,fpair,eflag,evdwl);
             
             f[i][0] += delx*fpair;
             f[i][1] += dely*fpair;
@@ -163,7 +155,7 @@ void PairUSC::compute(int eflag, int vflag)
             f[j][0] -= delx*fpair;
             f[j][1] -= dely*fpair;
             f[j][2] -= delz*fpair;
-            
+
             if (evflag) ev_tally(i,j,nlocal,newton_pair,
                                  evdwl,0.0,fpair,delx,dely,delz);
         }
@@ -173,6 +165,7 @@ void PairUSC::compute(int eflag, int vflag)
         for (jj = 0; jj < jnumm1; jj++) {
             j = jlist[jj];
             j &= NEIGHMASK;
+            jtag = tag[j];
             jtype = map[type[j]];
             ijparam = elem2param[itype][jtype][jtype];
             delr1[0] = x[j][0] - xtmp;
@@ -184,16 +177,18 @@ void PairUSC::compute(int eflag, int vflag)
             for (kk = jj+1; kk < jnum; kk++) {
                 k = jlist[kk];
                 k &= NEIGHMASK;
+                int ktag = tag[k];
+
                 ktype = map[type[k]];
                 ikparam = elem2param[itype][ktype][ktype];
                 ijkparam = elem2param[itype][jtype][ktype];
-                
+
                 delr2[0] = x[k][0] - xtmp;
                 delr2[1] = x[k][1] - ytmp;
                 delr2[2] = x[k][2] - ztmp;
                 rsq2 = delr2[0]*delr2[0] + delr2[1]*delr2[1] + delr2[2]*delr2[2];
                 if (rsq2 > params[ikparam].r0sq) continue;
-                
+
                 threebody(&params[ijparam],&params[ikparam],&params[ijkparam],
                           rsq1,rsq2,delr1,delr2,fj,fk,eflag,evdwl);
                 
@@ -206,12 +201,12 @@ void PairUSC::compute(int eflag, int vflag)
                 f[k][0] += fk[0];
                 f[k][1] += fk[1];
                 f[k][2] += fk[2];
-                
+
                 if (evflag) ev_tally3(i,j,k,evdwl,0.0,fj,fk,delr1,delr2);
             }
         }
     }
-    
+
     if (vflag_fdotr) virial_fdotr_compute();
 }
 
@@ -342,8 +337,7 @@ double PairUSC::init_one(int i, int j)
 
 void PairUSC::read_file(char *file)
 {
-    std::cout << "Reading file " << file << std::endl;
-            int params_per_line = 16;
+    int params_per_line = 16;
     char **words = new char*[params_per_line+1];
     
     memory->sfree(params);
@@ -452,17 +446,10 @@ void PairUSC::read_file(char *file)
         params[nparams].D = atof(words[10]);
         params[nparams].B = atof(words[11]);
         params[nparams].costheta = atof(words[12]);
-        params[nparams].ksi = atof(words[12]);
-        params[nparams].r0 = atof(words[13]);
-        params[nparams].tol = atof(words[14]);
-        
-//        if (params[nparams].epsilon < 0.0 || params[nparams].sigma < 0.0 ||
-//                params[nparams].littlea < 0.0 || params[nparams].lambda < 0.0 ||
-//                params[nparams].gamma < 0.0 || params[nparams].biga < 0.0 ||
-//                params[nparams].bigb < 0.0 || params[nparams].powerp < 0.0 ||
-//                params[nparams].powerq < 0.0 || params[nparams].tol < 0.0)
-//            error->all(FLERR,"Illegal Stillinger-Weber parameter");
-        
+        params[nparams].ksi = atof(words[13]);
+        params[nparams].r0 = atof(words[14]);
+        params[nparams].tol = atof(words[15]);
+
         nparams++;
     }
     
@@ -521,7 +508,8 @@ void PairUSC::setup()
 
         params[m].f_at_cutoff = 0;
         params[m].e_at_cutoff = 0;
-        twobody(&params[m], params[m].rcsq, params[m].f_at_cutoff, 1, params[m].e_at_cutoff);
+        // twobody(&params[m], params[m].rcsq, params[m].f_at_cutoff, 1, params[m].e_at_cutoff);
+        // params[m].f_at_cutoff *= params[m].rc;
     }
     
     // set cutmax to max of all params
@@ -531,6 +519,7 @@ void PairUSC::setup()
         rtmp = sqrt(params[m].rcsq);
         if (rtmp > cutmax) cutmax = rtmp;
     }
+
 }
 
 /* ---------------------------------------------------------------------- */
@@ -547,18 +536,16 @@ void PairUSC::twobody(Param *param, double rsq, double &fforce,
     double expROverR4s = exp(-r*param->oneOverR4s);
     double oneOverREta = pow(r, -param->eta);
 
-    fforce = (param->c1*oneOverREta
-           + param->ZiZj*oneOverR*expROverR1s
-           + param->c2*expROverR1s
-           - param->c3*oneOverR4*expROverR4s
-           - param->c4*oneOverR3*expROverR4s)*oneOverR2;
-
-    fforce -= param->f_at_cutoff;
+    fforce = (param->c1*oneOverREta // H/r^eta term
+              + param->ZiZj*oneOverR*expROverR1s // ZZ term (product rule #1)
+              + param->c2*expROverR1s // ZZ term (product rule #2)
+              - param->c3*oneOverR4*expROverR4s // D term (product rule #1)
+              - param->c4*oneOverR3*expROverR4s)*oneOverR2; // D term (product rule #2)
 
     if(eflag) {
         eng = param->H*oneOverREta
-                  + param->ZiZj*oneOverR*expROverR1s
-                  - 0.5*param->D*oneOverR4*expROverR4s;
+                + param->ZiZj*oneOverR*expROverR1s
+                - 0.5*param->D*oneOverR4*expROverR4s;
         eng = eng - param->e_at_cutoff + (r - param->rc)*param->f_at_cutoff;
     }
 }

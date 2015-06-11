@@ -4,7 +4,7 @@
 units		metal
 atom_style	atomic
 
-read_data /repos/lammps/src/usc/sio4.data
+read_data /repos/lammps/src/usc/sio.data
 replicate  1 1 1
 
 #lattice		diamond 5.431
