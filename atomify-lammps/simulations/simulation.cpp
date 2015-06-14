@@ -14,10 +14,10 @@ Simulation::Simulation()
 void Simulation::setScaleAndColorEvaluator()
 {
     m_scaleAndColorEvaluator = [](QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps) {
-        QColor color1(255.0, 0.0, 0.0);
-        QColor color2(0.0, 255.0, 0.0);
-        QColor color3(0.0, 0.0, 255.0);
-        QColor color4(0.0, 255.0, 255.0);
+        QColor color1(252, 255, 0);
+        QColor color2(0.0, 255.0, 6.0);
+        QColor color3(255.0, 0.0, 234.0);
+        QColor color4(130.0, 130.0, 130.0);
         QColor color5(255.0, 255.0, 0.0);
 
 

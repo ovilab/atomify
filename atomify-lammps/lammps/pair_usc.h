@@ -47,9 +47,16 @@ class PairUSC : public Pair {
 
     double ksi,B,B2, tol;
     double c1,c2,c3,c4;
-    double f_at_cutoff;
     double e_at_cutoff;
     int ielement,jelement,kelement;
+  };
+
+  struct PotentialTable {
+      double deltaR2;
+      double oneOverDeltaR2;
+      int numTabulatedEntries;
+      double ***force;
+      double ***potential;
   };
 
  protected:
@@ -61,10 +68,12 @@ class PairUSC : public Pair {
   int nparams;                  // # of stored parameter sets
   int maxparam;                 // max # of parameter sets
   Param *params;                // parameter set for an I-J-K interaction
+  PotentialTable potentialTable;
 
   virtual void allocate();
   void read_file(char *);
   virtual void setup();
+  void createForceAndPotentialTables(Param *param, int element1, int element2);
   void twobody(Param *, double, double &, int, double &);
   void threebody(Param *, Param *, Param *, double, double, double *, double *,
                  double *, double *, int, double &);
