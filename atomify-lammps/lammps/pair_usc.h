@@ -47,7 +47,6 @@ class PairUSC : public Pair {
 
     double ksi,B,B2, tol;
     double c1,c2,c3,c4;
-    double e_at_cutoff;
     int ielement,jelement,kelement;
   };
 
@@ -74,7 +73,7 @@ class PairUSC : public Pair {
   void read_file(char *);
   virtual void setup();
   void createForceAndPotentialTables(Param *param, int element1, int element2);
-  void twobody(Param *, double, double &, int, double &);
+  void twobody(Param *param, double rSquared, double &force, double &energy);
   void threebody(Param *, Param *, Param *, double, double, double *, double *,
                  double *, double *, int, double &);
 };

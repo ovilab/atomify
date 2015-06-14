@@ -35,7 +35,6 @@
 #include "error.h"
 
 using namespace LAMMPS_NS;
-#define TABULATED
 
 #define MAXLINE 1024
 #define DELTA 4
@@ -148,7 +147,6 @@ void PairUSC::compute(int eflag, int vflag)
             ijparam = elem2param[itype][jtype][jtype];
             if (rsq > params[ijparam].rcsq) continue;
 
-#ifdef TABULATED
             int potentialTableIndex = rsq*potentialTable.oneOverDeltaR2;
             double fractionalRest = rsq*potentialTable.oneOverDeltaR2 - potentialTableIndex; // double - int will only keep the 0.xxxx part
 
@@ -168,27 +166,11 @@ void PairUSC::compute(int eflag, int vflag)
             f[j][1] -= dely*force;
             f[j][2] -= delz*force;
 
-
-#else
-            twobody(&params[ijparam],rsq,fpair,eflag,evdwl);
-            f[i][0] += delx*fpair;
-            f[i][1] += dely*fpair;
-            f[i][2] += delz*fpair;
-            f[j][0] -= delx*fpair;
-            f[j][1] -= dely*fpair;
-            f[j][2] -= delz*fpair;
-#endif
-
             if (evflag) {
-#ifdef TABULATED
                 double energy0 = potentialTable.potential[itype][jtype][potentialTableIndex];
                 double energy1 = potentialTable.potential[itype][jtype][potentialTableIndex+1];
                 double energy = (1.0 - fractionalRest)*energy0 + fractionalRest*energy1;
                 ev_tally(i,j,nlocal,newton_pair,energy,0.0,fpair,delx,dely,delz);
-#else
-                ev_tally(i,j,nlocal,newton_pair,
-                                 evdwl,0.0,fpair,delx,dely,delz);
-#endif
             }
         }
 
@@ -550,14 +532,6 @@ void PairUSC::setup()
         params[m].c3 = 2.0*params[m].D;
         params[m].c4 = 0.5*params[m].D*params[m].oneOverR4s;
         params[m].B2 = params[m].B*2.0;
-
-        params[m].e_at_cutoff = 0;
-
-        double energyAtCutoff = 0;
-        double tmp = 0;
-
-        twobody(&params[m], params[m].rcsq, tmp, 1, energyAtCutoff);
-        params[m].e_at_cutoff = energyAtCutoff;
     }
 
     // set cutmax to max of all params
@@ -578,17 +552,30 @@ void PairUSC::setup()
 //    for(int itype=0; itype<2; itype++) {
 //        for(int jtype=0; jtype<2; jtype++) {
 //            Param *param = &params[elem2param[itype][jtype][jtype]];
-//            double rcsq = param->rcsq;
+//            double r = param->rc;
+//            r = 1.0;
+//            double rcsq = r*r;
 //            double force = 0;
 //            double energy = 0;
 
 //            std::cout << itype << "   " << jtype << "   ";
-//            twobody(param, rcsq, force, 1, energy);
+//            twobody(param, rcsq, force, energy);
 //            // std::cout << itype << "   " << jtype << "    " << energy << "    " << force << std::endl;
 //        }
 //    }
-//    exit(1);
+    // exit(1);
 
+//    int itype = 0;
+//    int jtype = 1;
+
+//    for(int k=1; k<=potentialTable.numTabulatedEntries; k++) {
+//        double r = sqrt(k*potentialTable.deltaR2);
+//        double force = potentialTable.force[itype][jtype][k];
+//        double energy = potentialTable.potential[itype][jtype][k];
+//        std::cout << r << "     " << energy << "     " << force << std::endl;
+//    }
+
+//     exit(1);
 }
 
 void PairUSC::createForceAndPotentialTables(Param *param, int element1, int element2)
@@ -614,36 +601,23 @@ void PairUSC::createForceAndPotentialTables(Param *param, int element1, int elem
     double rCutSquared = rCut*rCut;
     double forceAtRCut = 0;
     double energyAtRCut = 0;
-    twobody(param, rCutSquared, forceAtRCut, 1, energyAtRCut);
+    twobody(param, rCutSquared, forceAtRCut, energyAtRCut);
 
-    // Generate V0
+    // Now create V and F, and add/subtact V0 and F0 as specified above
     for(int i=0; i<potentialTable.numTabulatedEntries; i++) {
         double rsq = i*potentialTable.deltaR2;
         double r = sqrt(rsq);
         double oneOverR = 1.0 / r;
-        double oneOverR2 = oneOverR*oneOverR;
-        double oneOverR3 = oneOverR2*oneOverR;
-        double oneOverR4 = oneOverR2*oneOverR2;
-        double expROverR1s = exp(-r*param->oneOverR1s);
-        double expROverR4s = exp(-r*param->oneOverR4s);
-        double oneOverREta = pow(r, -param->eta);
 
-        double V0 = param->H*oneOverREta
-                    + param->ZiZj*oneOverR*expROverR1s
-                    - 0.5*param->D*oneOverR4*expROverR4s;
+        double energy = 0;
+        double force = 0;
+        twobody(param, rsq, force, energy);
 
-        V0 = V0 - energyAtRCut + (r - rCut)*forceAtRCut;
+        energy = energy - energyAtRCut + (r-rCut)*forceAtRCut;
+        potentialTable.potential[element1][element2][i] = energy;
 
-        potentialTable.potential[element1][element2][i] = V0;
-
-        double F0 = (param->c1*oneOverREta // H/r^eta term
-                      + param->ZiZj*oneOverR*expROverR1s // ZZ term (product rule #1)
-                      + param->c2*expROverR1s // ZZ term (product rule #2)
-                      - param->c3*oneOverR4*expROverR4s // D term (product rule #1)
-                      - param->c4*oneOverR3*expROverR4s)*oneOverR2; // D term (product rule #2)
-        F0 = F0 - forceAtRCut*oneOverR;
-        potentialTable.force[element1][element2][i] = F0;
-
+        force = (force - forceAtRCut)*oneOverR;
+        potentialTable.force[element1][element2][i] = force;
     }
 
     // Generate V and F as described above
@@ -656,11 +630,9 @@ void PairUSC::createForceAndPotentialTables(Param *param, int element1, int elem
 
 /* ---------------------------------------------------------------------- */
 
-void PairUSC::twobody(Param *param, double rsq, double &fforce,
-                      int eflag, double &eng)
+void PairUSC::twobody(Param *param, double rSquared, double &force, double &energy)
 {
-#ifdef TABULATED
-    double r=sqrt(rsq);
+    double r=sqrt(rSquared);
     double ri = 1.0/r;
     double r1siv = param->oneOverR1s;
     double r4siv = param->oneOverR4s;
@@ -675,33 +647,11 @@ void PairUSC::twobody(Param *param, double rsq, double &fforce,
     double pol =  -facp*pow(ri,4)*exp(-r*r4siv);
     double vdw = -facw*pow(ri,6);
 
-    fforce = rep*det*ri+col*(ri+r1siv)+pol*(4.0*ri+r4siv)+vdw*6.0*ri;
-    eng = rep+col+pol+vdw;
+    // std::cout << rep << "    " << col << "    " << pol << std::endl;
 
-    return;
-#else
-    // double r = sqrt(rsq);
-    double oneOverR = 1.0 / r;
-    double oneOverR2 = oneOverR*oneOverR;
-    double oneOverR3 = oneOverR2*oneOverR;
-    double oneOverR4 = oneOverR2*oneOverR2;
-    double expROverR1s = exp(-r*param->oneOverR1s);
-    double expROverR4s = exp(-r*param->oneOverR4s);
-    double oneOverREta = pow(r, -param->eta);
-
-    fforce = (param->c1*oneOverREta // H/r^eta term
-              + param->ZiZj*oneOverR*expROverR1s // ZZ term (product rule #1)
-              + param->c2*expROverR1s // ZZ term (product rule #2)
-              - param->c3*oneOverR4*expROverR4s // D term (product rule #1)
-              - param->c4*oneOverR3*expROverR4s)*oneOverR2; // D term (product rule #2)
-
-    if(eflag) {
-        double energy = param->H*oneOverREta
-                + param->ZiZj*oneOverR*expROverR1s
-                - 0.5*param->D*oneOverR4*expROverR4s;
-        eng = energy - param->e_at_cutoff;
-    }
-#endif
+    force = pol*(4.0*ri+r4siv);
+    force = rep*det*ri+col*(ri+r1siv)+pol*(4.0*ri+r4siv)+vdw*6.0*ri;
+    energy = rep+col+pol+vdw;
 }
 
 /* ---------------------------------------------------------------------- */
