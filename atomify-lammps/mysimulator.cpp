@@ -3,6 +3,9 @@
 #include "lammps/atom.h"
 #include "lammps/domain.h"
 #include "lammps/update.h"
+#include "lammps/modify.h"
+#include "physicalproperty.h"
+
 #include <core/camera.h>
 #include <string>
 #include <sstream>
@@ -13,9 +16,9 @@
 #include <QDir>
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include <QStandardPaths>
-
-using std::string;
+using namespace std;
 
 void MyWorker::loadSimulation(QString simulationId) {
     auto simulation = m_simulations.find(simulationId);
@@ -25,7 +28,7 @@ void MyWorker::loadSimulation(QString simulationId) {
     }
     m_currentSimulation = simulation.value();
     m_lammpsController.reset();
-    m_lammpsController.loadLammpsScript(m_currentSimulation->inputScriptFile());
+    m_lammpsController.loadScriptFromFile(m_currentSimulation->inputScriptFile());
 }
 
 MyWorker::MyWorker() {
@@ -46,6 +49,18 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->m_simulationIdToLoad.clear();
         mySimulator->setNewCameraPosition(m_currentSimulation->initialCameraPosition());
     }
+
+    if(!mySimulator->m_scriptToRun.isEmpty()) {
+        m_lammpsController.reset();
+        m_lammpsController.runScript(mySimulator->m_scriptToRun);
+        mySimulator->m_scriptToRun.clear();
+    }
+
+    if(mySimulator->lammpsOutput() != NULL) {
+        m_lammpsController.setOutputParser(mySimulator->lammpsOutput());
+    }
+
+    m_lammpsController.setComputes(mySimulator->computes());
 }
 
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
@@ -94,13 +109,22 @@ MyWorker *MySimulator::createWorker()
 {
     return new MyWorker();
 }
-
-MySimulator::MySimulator()
+QMap<QString, CPCompute *> MySimulator::computes() const
 {
-
+    return m_computes;
 }
 
-MySimulator::~MySimulator()
+void MySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
+{
+    m_computes = computes;
+}
+
+LammpsOutput *MySimulator::lammpsOutput() const
+{
+    return m_lammpsOutput;
+}
+
+MySimulator::MySimulator()
 {
 
 }
@@ -113,6 +137,12 @@ QVector3D MySimulator::newCameraPosition() const
 int MySimulator::simulationSpeed() const
 {
     return m_simulationSpeed;
+}
+
+void MySimulator::addCompute(CPCompute *compute)
+{
+    qDebug() << "Adding compute to MySimulator";
+    m_computes[compute->identifier()] = compute;
 }
 
 void MySimulator::loadSimulation(QString simulationId)
@@ -133,4 +163,18 @@ void MySimulator::setSimulationSpeed(int arg)
 
     m_simulationSpeed = arg;
     emit simulationSpeedChanged(arg);
+}
+
+void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
+{
+    if (m_lammpsOutput == lammpsOutput)
+        return;
+
+    m_lammpsOutput = lammpsOutput;
+    emit lammpsOutputChanged(lammpsOutput);
+}
+
+void MySimulator::runScript(QString script)
+{
+    m_scriptToRun = script;
 }

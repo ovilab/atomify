@@ -173,10 +173,12 @@ void ComputePressure::init()
 /* ----------------------------------------------------------------------
    compute total pressure, averaged over Pxx, Pyy, Pzz
 ------------------------------------------------------------------------- */
-
+#include <iostream>
+using namespace std;
 double ComputePressure::compute_scalar()
 {
   invoked_scalar = update->ntimestep;
+
   if (update->vflag_global != invoked_scalar)
     error->all(FLERR,"Virial was not tallied on needed timestep");
 

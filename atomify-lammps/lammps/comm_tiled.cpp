@@ -1231,7 +1231,6 @@ void CommTiled::forward_comm_compute(Compute *compute)
    reverse communication invoked by a Compute
    nsize used only to set recv buffer limit
 ------------------------------------------------------------------------- */
-
 void CommTiled::reverse_comm_compute(Compute *compute)
 {
   int i,irecv,n,nsend,nrecv;

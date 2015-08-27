@@ -4,5 +4,8 @@
         <file>LightControl.qml</file>
         <file>RenderControl.qml</file>
         <file>SimulatorControl.qml</file>
+        <file>AtomifyVisualizer.qml</file>
+        <file>LammpsEditor.qml</file>
+        <file>DemoSimulations.qml</file>
     </qresource>
 </RCC>

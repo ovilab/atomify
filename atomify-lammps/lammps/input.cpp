@@ -279,7 +279,8 @@ void Input::file(const char *filename)
    copy command in single to line, parse and execute it
    return command name to caller
 ------------------------------------------------------------------------- */
-
+#include <iostream>
+using namespace std;
 char *Input::one(const char *single)
 {
   int n = strlen(single) + 1;

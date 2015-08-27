@@ -82,12 +82,13 @@ Update::~Update()
 }
 
 /* ---------------------------------------------------------------------- */
+#include <iostream>
+using namespace std;
 
 void Update::init()
 {
   // if USER-CUDA mode is enabled:
   // integrate/minimize style must be CUDA variant
-
   if (whichflag == 1 && lmp->cuda)
     if (strstr(integrate_style,"cuda") == NULL)
       error->all(FLERR,"USER-CUDA mode requires CUDA variant of run style");

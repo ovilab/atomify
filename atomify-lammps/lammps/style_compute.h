@@ -10,6 +10,7 @@
 #include "compute_com_chunk.h"
 #include "compute_contact_atom.h"
 #include "compute_coord_atom.h"
+#include "compute_coord_usc.h"
 #include "compute_damage_atom.h"
 #include "compute_dihedral_local.h"
 #include "compute_dilatation_atom.h"

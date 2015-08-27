@@ -1,244 +1,76 @@
-import QtQuick 2.2
-import QtQuick.Controls 1.1
-import QtQuick.Window 2.1
-import QtQuick.Dialogs 1.1
+import QtQuick 2.3
+import QtQuick.Controls 1.2
+import QtQuick.Window 2.0
+import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
 import MySimulator 1.0
 import SimVis 1.0
+import Compute 1.0
+import LammpsOutput 1.0
 
 ApplicationWindow {
     id: applicationRoot
-    title: qsTr("Lammps diffusion demo")
+    title: qsTr("LAMMPS live visualization")
     width: 1650
     height: 900
     visible: true
 
-    MySimulator {
-        id: simulator
-        onNewCameraPositionChanged: {
-            upVectorAnimation.from = camera.upVector
-            positionAnimation.to = newCameraPosition
-            positionAnimation.from = camera.position
-            if(positionAnimation.running) {
-                positionAnimation.stop()
-            }
-            if(upVectorAnimation.running) {
-                upVectorAnimation.stop()
-            }
-
-            positionAnimation.start()
-            upVectorAnimation.start()
-        }
-    }
-
-
-
-    Visualizer {
-        id: visualizer
-        width: applicationRoot.width
-        height: applicationRoot.height - row1.height
-        simulator: simulator
-        camera: camera
-        backgroundColor: "#111"
-        navigator: navigator
-
-        TrackballNavigator {
-            id: navigator
-            anchors.fill: parent
-            camera: camera
-        }
-
-        Spheres {
-            id: spheres
-            visible: true
-            scale: scaleSlider.value
-            color: "white"
-
-            Light {
-                id: light
-                ambientColor: spheres.color
-                specularColor: "white"
-                diffuseColor: spheres.color
-                ambientIntensity: 0.025
-                diffuseIntensity: 0.5
-                specularIntensity: 1.0
-                shininess: 40.0
-                attenuation: 0.01
-                position: camera.position
-            }
-        }
-    }
-
-    Camera {
-        id: camera
-        nearPlane: 0.1
-    }
-
-    PropertyAnimation {
-        id: positionAnimation
-        target: camera
-        property: "position"
-        from: camera.position
-        to: simulator.newCameraPosition
-        duration: 700
-        easing.type: Easing.InOutQuad
-    }
-
-    PropertyAnimation {
-        id: upVectorAnimation
-        target: camera
-        property: "upVector"
-        from: camera.upVector
-        to: Qt.vector3d(0, -1, 0)
-        duration: 700
-        easing.type: Easing.InOutQuad
-    }
-
-    FastBlur {
-        id: blurEffect
-        anchors.fill: visualizer
-        source: visualizer
-    }
-
-    Row {
-        id: row1
-        anchors.top: visualizer.bottom
-        spacing: 10
-
-        Slider {
-            id: simulationSpeedSlider
-            minimumValue: 1
-            maximumValue: 200
-            stepSize: 1
-            value: 1
-            onValueChanged: simulator.simulationSpeed = value
-        }
-
-        Label {
-            id: simulationSpeedLabel
-            text: qsTr("Simulation speed: %1").arg(simulator.simulationSpeed.toFixed(0))
-        }
-
-        Slider {
-            id: scaleSlider
-            minimumValue: 0.1
-            maximumValue: 5.0
-            stepSize: 0.1
-            value: 0.23
-            Label {
-                id: scaleSliderLabel
-                anchors.left: scaleSlider.right
-            }
-
-            onValueChanged: {
-                scaleSliderLabel.text = qsTr("Sphere scale: %1").arg(scaleSlider.value)
-            }
-        }
-    }
-
-    Item {
-        x: 0.5*(parent.width - width)
-        width: buttonDiffusion.width + buttonCrystal.width + buttonWater.width + buttonGashydrates.width
-        opacity: 0.9
-
-        Row {
-            id: simulationRow1
-            anchors.left: parent.left
-            anchors.top: parent.top
-            Button {
-                id: buttonDiffusion
-                anchors.leftMargin: 3
-                text: "Diffusion"
-                onClicked: simulator.loadSimulation("lennardjonesdiffusion")
-            }
-
-            Button {
-                id: buttonCrystal
-                anchors.leftMargin: 3
-                text: "Crystal"
-                onClicked: simulator.loadSimulation("lennardjonescrystal")
-            }
-
-            Button {
-                id: buttonWater
-                anchors.leftMargin: 3
-                text: "Water"
-                onClicked: simulator.loadSimulation("bulkwater")
-            }
-
-            Button {
-                id: buttonGashydrates
-                anchors.leftMargin: 3
-                text: "Gas hydrates"
-                onClicked: simulator.loadSimulation("gashydrates")
-            }
-
-            Button {
-                id: buttonCrack
-                anchors.leftMargin: 3
-                text: "Crack"
-                onClicked: simulator.loadSimulation("crack")
-            }
-        }
-
-        Row {
-            id: simulationRow2
-            anchors.left: parent.left
-            anchors.top: simulationRow1.bottom
-
-            Button {
-                id: buttonFriction
-                anchors.leftMargin: 3
-                text: "Friction"
-                onClicked: simulator.loadSimulation("friction")
-            }
-
-            Button {
-                id: buttonFlowPoiseuille
-                anchors.leftMargin: 3
-                text: "Poiseuille flow"
-                onClicked: simulator.loadSimulation("flowpoiseuille")
-            }
-
-            Button {
-                id: buttonFlowCouette
-                anchors.leftMargin: 3
-                text: "Couette flow"
-                onClicked: simulator.loadSimulation("flowcouette")
-            }
-
-            Button {
-                id: buttonObstacle
-                anchors.leftMargin: 3
-                text: "Obstacle"
-                onClicked: simulator.loadSimulation("obstacle")
-            }
-        }
-    }
-
-//    LightControl {
-//        id: lightControl
-//        light: light
-//        x: applicationRoot.width*0.5 - width*0.5
-//        y: applicationRoot.height*0.5 - height*0.5
-//        visible: false
+//    Component.onCompleted: {
+//        visualizer.simulator.lammpsOutput = output
 //    }
 
-//    SimulatorControl {
-//        id: simulatorControl
-//        simulator: simulator
-//        x: applicationRoot.width*0.5 - width*0.5
-//        y: applicationRoot.height*0.5 - height*0.5
-//        visible: false
-//    }
+    SplitView {
+        anchors.fill: parent
+        Layout.alignment: Qt.AlignTop
+        Layout.fillHeight: true
 
-//    RenderControl {
-//        id: renderControl
-//        simplexBump: simplexBump
-//        spheres: spheres
-//        x: applicationRoot.width*0.5 - width*0.5
-//        y: applicationRoot.height*0.5 - height*0.5
-//        visible: false
-//    }
+        TabView {
+            width: applicationRoot.width*0.4
+            height: parent.height
+
+            Tab {
+                anchors.fill: parent
+                title: "Script editor"
+
+                LammpsEditor {
+                    anchors.fill: parent
+                    id: lammpsEditor
+                    simulator: visualizer.simulator
+                }
+            }
+
+            Tab {
+                anchors.fill: parent
+                title: "Demo simulations"
+
+                DemoSimulations {
+                    anchors.fill: parent
+                    id: demoSimulations
+                    simulator: visualizer.simulator
+                }
+            }
+        }
+        AtomifyVisualizer {
+            id: visualizer
+            Layout.alignment: Qt.AlignLeft
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
+    }
+
+    Compute {
+        id: temperature
+        identifier: "temperature"
+        command: "compute temperature all temp"
+        simulator: visualizer.simulator
+    }
+
+    Compute {
+        id: pressure
+        identifier: "pressure"
+        command: "compute pressure all pressure temperature"
+        simulator: visualizer.simulator
+        dependencies: ["temperature"]
+    }
 }

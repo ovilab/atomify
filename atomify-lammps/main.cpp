@@ -7,10 +7,15 @@
 #endif
 
 #include "mysimulator.h"
-
+#include "highlighter.h"
+#include "CPcompute.h"
+#include "lammpsoutput.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<MySimulator>("MySimulator", 1, 0, "MySimulator");
+    qmlRegisterType<HighlighterWrapper>("Highlighter", 1, 0, "Highlighter");
+    qmlRegisterType<CPCompute>("Compute", 1, 0, "Compute");
+    qmlRegisterType<LammpsOutput>("LammpsOutput", 1, 0, "LammpsOutput");
 
     QApplication app(argc, argv);
 

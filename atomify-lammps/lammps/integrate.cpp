@@ -67,7 +67,8 @@ void Integrate::init()
 /* ----------------------------------------------------------------------
    setup lists of computes for global and per-atom PE and pressure
 ------------------------------------------------------------------------- */
-
+#include <iostream>
+using namespace std;
 void Integrate::ev_setup()
 {
   delete [] elist_global;
@@ -119,7 +120,8 @@ void Integrate::ev_setup()
    vflag = 4 = per-atom virial only
    vflag = 5 or 6 = both global and per-atom virial
 ------------------------------------------------------------------------- */
-
+#include <iostream>
+using namespace std;
 void Integrate::ev_set(bigint ntimestep)
 {
   int i,flag;

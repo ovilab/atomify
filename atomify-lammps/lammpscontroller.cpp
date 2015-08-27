@@ -1,9 +1,14 @@
 #include "lammpscontroller.h"
 
+#include "lammps/integrate.h"
 #include "lammps/library.h"
 #include "lammps/input.h"
 #include "lammps/variable.h"
 #include "lammps/update.h"
+#include "lammps/modify.h"
+#include "CPcompute.h"
+#include <stdio.h>
+
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
@@ -11,6 +16,8 @@
 #include <sstream>
 #include <string>
 #include <cstdlib>
+#include <cassert>
+#include <iostream>
 using namespace std;
 
 LAMMPSController::LAMMPSController()
@@ -18,11 +25,7 @@ LAMMPSController::LAMMPSController()
 
 }
 
-LAMMPSController::~LAMMPSController()
-{
-
-}
-LAMMPS *LAMMPSController::lammps() const
+LAMMPS_NS::LAMMPS *LAMMPSController::lammps() const
 {
     return m_lammps;
 }
@@ -40,7 +43,31 @@ int LAMMPSController::simulationSpeed() const
 
 void LAMMPSController::setSimulationSpeed(int simulationSpeed)
 {
-    m_simulationSpeed = simulationSpeed;
+    if(m_simulationSpeed != simulationSpeed) {
+        m_simulationSpeed = simulationSpeed;
+    }
+}
+
+
+LammpsOutput *LAMMPSController::outputParser() const
+{
+    return m_outputParser;
+}
+
+void LAMMPSController::setOutputParser(LammpsOutput *outputParser)
+{
+    m_outputParser = outputParser;
+}
+
+
+QMap<QString, CPCompute *> LAMMPSController::computes() const
+{
+    return m_computes;
+}
+
+void LAMMPSController::setComputes(const QMap<QString, CPCompute *> &computes)
+{
+    m_computes = computes;
 }
 QString LAMMPSController::readFile(QString filename)
 {
@@ -54,7 +81,7 @@ QString LAMMPSController::readFile(QString filename)
 }
 
 void LAMMPSController::runCommand(QString command) {
-    // qDebug() << "Executing " << command;
+    // qDebug() << "Running command: " << command;
     runCommand(command.toStdString().c_str());
 }
 
@@ -65,7 +92,6 @@ void LAMMPSController::runCommand(const char *command)
         qDebug() << "Command: " << command;
         return;
     }
-    // qDebug() << command;
     lammps_command((void*)m_lammps, (char*) command);
 }
 
@@ -78,6 +104,7 @@ QString LAMMPSController::copyDataFileToReadablePath(QString filename)
     fileFound = fileInfo.exists();
 
     if(!fileFound) {
+        // The file could be a zipped file, let's check that
         qrcFilename.append(".gz");
         filename.append(".gz");
         fileInfo = QFileInfo(qrcFilename);
@@ -93,8 +120,24 @@ QString LAMMPSController::copyDataFileToReadablePath(QString filename)
     return newFilename;
 }
 
+LAMMPSController::~LAMMPSController()
+{
+    if(m_lammps) {
+        lammps_close((void*)m_lammps);
+        m_lammps = 0;
+    }
+    m_commands.clear();
+}
+
 void LAMMPSController::processCommand(QString command) {
-    qDebug() << "Processing " << command;
+    // Parse one single LAMMPS command. Three notes:
+    //   Files are read with full filenames in LAMMPS. Files added as Qt Resrouces have path :/file, which will not work.
+    //   We have introduced the notation ext://file which will copy the file to a temp location and is readable with its full filename.
+    //
+    //   Also, run commands are modified so that run N will be split into smaller run commands to allow smooth visualizations.
+    //   This means that if the number of timesteps are given as a LAMMPS variable, we need to extract that.
+    //
+    //   We also added a fastrun command that act as a normal run command with no visualization.
     stringstream command_ss(command.toStdString());
     string word;
     QString processedCommand;
@@ -110,7 +153,7 @@ void LAMMPSController::processCommand(QString command) {
             command_ss >> word; // Next word is the number of timesteps
             int numberOfTimesteps = atoi(word.c_str());
             if(numberOfTimesteps == 0) {
-                // We probably need to read it as a variable in lammps
+                // We probably need to read it as a variable in lammps.
                 string wordCopy = word;
                 wordCopy.erase(0,2);
                 wordCopy.erase(word.length()-3,1);
@@ -122,6 +165,7 @@ void LAMMPSController::processCommand(QString command) {
                     numberOfTimesteps = atoi(numberOfTimestepsString);
                 }
             }
+
             if(command_ss >> word) {
                 qDebug() << "Warning, LAMMPS visualizer doesn't support run commands with arguments. These will be ignored.";
             }
@@ -133,7 +177,6 @@ void LAMMPSController::processCommand(QString command) {
         }
 
         if(wordCount == 0 && word.compare("fastrun") == 0) {
-            qDebug() << "Will do a fastrun";
             processedCommand = "run ";
             wordCount++;
             continue;
@@ -146,36 +189,117 @@ void LAMMPSController::processCommand(QString command) {
     runCommand(processedCommand);
 }
 
+void LAMMPSController::checkOutput() {
+    if(m_outputParser == NULL) return;
+
+    if(m_outputParser->childrenDirty() || m_outputNotUpdated) {
+        QStringList thermoCommands;
+        QString thermoCommand = "thermo_style custom ";
+
+        for(QObject *child: m_outputParser->children()) {
+            CPCompute *compute = qobject_cast<CPCompute*>(child);
+            if(compute != NULL) {
+                int computeid = m_lammps->modify->find_compute(compute->identifier().toStdString().c_str());
+                if(computeid >= 0) {
+                    QString command = QString("c_").append(compute->identifier()).append(" ");
+                    thermoCommand.append(command);
+                    thermoCommands.append(command);
+                }
+            }
+        }
+        if(thermoCommands.size() > 0) {
+            qDebug() << "We have a new thermo command: " << thermoCommand;
+        } else qDebug() << "We don't have a new thermo command...";
+
+        m_needPreRun = true;
+        m_outputNotUpdated = false;
+    }
+}
+
+void LAMMPSController::processComputes()
+{
+    for(QString key : m_computes.keys()) {
+        int computeid = m_lammps->modify->find_compute(key.toStdString().c_str());
+        if(computeid < 0) {
+            // We need to add it. First check all dependencies
+            CPCompute *compute = m_computes[key];
+            qDebug() << "Adding " << compute->identifier();
+            bool allDependenciesFound = true; // Assume all are found and find potential counterexample
+            foreach(QString dependency, compute->dependencies()) {
+                computeid = m_lammps->modify->find_compute(dependency.toStdString().c_str());
+                if(computeid < 0) {
+                    qDebug() << "Didn't find dependency " << dependency;
+                    allDependenciesFound = false;
+                    break;
+                }
+            }
+
+            if(allDependenciesFound) {
+                qDebug() << "All dependencies found for " << compute->identifier();
+                // Now that all dependencies are met we can add this one too
+                runCommand(compute->command());
+            }
+        }
+    }
+}
+
 void LAMMPSController::tick()
 {
+    if(m_outputParser) {
+        m_lammps->screen = m_outputParser->file();
+    }
+
+    processComputes();
+
+    // If we have an active run command, perform the run command with the current chosen speed.
     if(m_runCommandActive > 0) {
         unsigned int currentTimestep = m_lammps->update->ntimestep;
         int maxSimulationSpeed = m_runCommandEnd - currentTimestep;
+
+        // Choose the smaller of the number of timesteps left and the current simulation speed.
         int simulationSpeed = min(m_simulationSpeed, maxSimulationSpeed);
         if(currentTimestep == m_runCommandStart) {
+            // If this is the first timestep in this run command, execute the pre yes command to prepare the full run command.
             runCommand(QString("run %1 pre yes post no start %2 stop %3").arg(simulationSpeed).arg(m_runCommandStart).arg(m_runCommandEnd));
         } else {
             runCommand(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(m_runCommandStart).arg(m_runCommandEnd));
         }
-
+        checkOutput();
+        m_needPreRun = true;
         currentTimestep = m_lammps->update->ntimestep;
         m_runCommandActive = currentTimestep < m_runCommandEnd;
     } else if(m_commands.size() > 0) {
+        // If the command stack has any commands left, process them.
         QString command = m_commands.front();
         m_commands.pop_front();
         processCommand(command);
     } else {
-        runCommand(QString("run %1 pre no post no").arg(m_simulationSpeed));
+        // If no commands are queued, just perform a normal run command with the current simulation speed.
+        if(m_needPreRun) {
+            m_needPreRun = false;
+            runCommand(QString("run %1 pre yes post no").arg(m_simulationSpeed));
+        } else {
+            runCommand(QString("run %1 pre no post no").arg(m_simulationSpeed));
+        }
+        checkOutput();
     }
+
 }
 
-void LAMMPSController::loadLammpsScript(QString filename)
+void LAMMPSController::loadScriptFromFile(QString filename)
 {
     QString lammpsScript_qstring = readFile(filename);
 
-    if (!lammpsScript_qstring.isEmpty())
+    runScript(lammpsScript_qstring);
+}
+
+void LAMMPSController::runScript(QString script)
+{
+    if(!script.isEmpty())
     {
-        std::stringstream lammpsScript(lammpsScript_qstring.toStdString());
+        // If the file is not empty, load each command and add it to the queue.
+        // Now, if there is an include command, load that script too.
+        std::stringstream lammpsScript(script.toStdString());
         std::string command;
 
         while(std::getline(lammpsScript,command,'\n')){
@@ -184,9 +308,11 @@ void LAMMPSController::loadLammpsScript(QString filename)
             if(command_ss >> word) {
                 if(word.compare("include") == 0) {
                     if(command_ss >> word) {
-                        word.erase(0, 6); // Remove the ext:// prefix
-                        word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
-                        loadLammpsScript(QString::fromStdString(word));
+                        if(word.find("ext://") != std::string::npos) {
+                            word.erase(0, 6); // Remove the ext:// prefix
+                            word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
+                        }
+                        loadScriptFromFile(QString::fromStdString(word));
                     } else {
                         qDebug() << "Invalid include statement.";
                         continue;
@@ -207,8 +333,10 @@ void LAMMPSController::reset()
     }
 
     lammps_open_no_mpi(0, 0, (void**)&m_lammps);
+    m_simulationSpeed = 1;
     // m_lammps->screen = NULL;
     m_commands.clear();
-
+    m_needPreRun = true;
+    m_outputNotUpdated = true;
     m_runCommandActive = false;
 }

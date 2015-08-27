@@ -1,9 +1,10 @@
 TEMPLATE = app
-CONFIG += c++11
+CONFIG += c++14
 DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
+QMAKE_CXXFLAGS += -g
 CONFIG += warn_off
 INCLUDEPATH += mpi_stubs
 
@@ -13,7 +14,8 @@ android {
 }
 
 RESOURCES += qml.qrc \
-    scripts.qrc
+    scripts.qrc \
+    simulations.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -503,7 +505,12 @@ SOURCES += \
     lammps/write_restart.cpp \
     lammps/xdr_compat.cpp \
     mpi_stubs/mpi.c \
-    lammpscontroller.cpp
+    lammpscontroller.cpp \
+    lammps/compute_coord_usc.cpp \
+    highlighter.cpp \
+    physicalproperty.cpp \
+    CPcompute.cpp \
+    lammpsoutput.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -1015,7 +1022,12 @@ HEADERS += \
     lammps/write_restart.h \
     lammps/xdr_compat.h \
     mpi_stubs/mpi.h \
-    lammpscontroller.h
+    lammpscontroller.h \
+    lammps/compute_coord_usc.h \
+    highlighter.h \
+    physicalproperty.h \
+    CPcompute.h \
+    lammpsoutput.h
 
 DISTFILES += \
     iOS.plist

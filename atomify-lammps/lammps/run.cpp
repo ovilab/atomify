@@ -34,11 +34,12 @@ using namespace LAMMPS_NS;
 Run::Run(LAMMPS *lmp) : Pointers(lmp) {}
 
 /* ---------------------------------------------------------------------- */
+#include <iostream>
+using namespace std;
 
 void Run::command(int narg, char **arg)
 {
   if (narg < 1) error->all(FLERR,"Illegal run command");
-
   if (domain->box_exist == 0)
     error->all(FLERR,"Run command before simulation box is defined");
 

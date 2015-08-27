@@ -150,7 +150,6 @@ void ComputeRDF::init()
     jcount[m] = 0;
     for (i = jlo[m]; i <= jhi[m]; i++) jcount[m] += typecount[i];
   }
-
   int *scratch = new int[npairs];
   MPI_Allreduce(icount,scratch,npairs,MPI_INT,MPI_SUM,world);
   for (i = 0; i < npairs; i++) icount[i] = scratch[i];

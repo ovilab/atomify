@@ -1,30 +1,32 @@
-# bulk Si via USC (Anders Hafreager, UiO)
-# using real units: http://lammps.sandia.gov/doc/units.html
+# 3d Lennard-Jones melt
 
-units		metal
+variable	x index 1
+variable	y index 1
+variable	z index 1
+
+variable	xx equal 20*$x
+variable	yy equal 20*$y
+variable	zz equal 20*$z
+
+units		lj
 atom_style	atomic
 
-read_data /repos/lammps/src/usc/sio.data
-replicate  1 1 1
+lattice		fcc 0.8442
+region		box block 0 ${xx} 0 ${yy} 0 ${zz}
+create_box	1 box
+create_atoms	1 box
+mass		1 1.0
 
-#lattice		diamond 5.431
-#region		box block 0 5 0 5 0 5
-#create_box	1 box
-#create_atoms	1 box
+velocity	all create 1.44 87287 loop geom
 
-pair_style	usc
-pair_coeff	* * /repos/lammps/src/usc/SiO.usc Si O
-#pair_coeff	* * /repos/lammps/src/usc/Si.usc Si
-mass            1 28.08
-mass            2 15.9994
+pair_style	lj/cut 2.5
+pair_coeff	1 1 1.0 1.0 2.5
 
-velocity	all create 0.0 376847 loop geom
+neighbor	0.3 bin
+neigh_modify	delay 0 every 20 check no
 
-neighbor	1.0 bin
-neigh_modify    delay 5 every 1
+thermo_style custom step time temp etotal
+thermo 10
 
 fix		1 all nve
-
-timestep	0.001
-
-run		10000
+run 100

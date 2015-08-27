@@ -21,114 +21,96 @@ PairStyle(usc,PairUSC)
 #define LMP_PAIR_USC_H
 
 #include "pair.h"
+#include "compute.h"
+#include <iostream>
+#include <vector>
 
 namespace LAMMPS_NS {
 
 class PairUSC : public Pair {
- public:
-  PairUSC(class LAMMPS *);
-  virtual ~PairUSC();
-  virtual void compute(int, int);
-  void settings(int, char **);
-  virtual void coeff(int, char **);
-  virtual double init_one(int, int);
-  virtual void init_style();
+public:
+    PairUSC(class LAMMPS *);
+    virtual ~PairUSC();
+    virtual void compute(int, int);
+    void settings(int, char **);
+    virtual void coeff(int, char **);
+    virtual double init_one(int, int);
+    virtual void init_style();
 
-  struct Param {
-    double H, D;
-    int eta;
-    double r1s, r4s;
-    double Zi, Zj;
-    double costheta;
-    double r0, r0sq;
-    double rc, rcsq;
-    double ZiZj;
-    double oneOverR1s, oneOverR4s;
+    struct Param {
+        int eta;
+        double H, D, W;
+        double r1s, r4s;
+        double Zi, Zj;
+        double costheta;
+        double r0, r0sq;
+        double rc, rcsq;
+        double ZiZj;
+        double oneOverR1s, oneOverR4s;
 
-    double ksi,B,B2, tol;
-    double c1,c2,c3,c4;
-    int ielement,jelement,kelement;
-  };
+        double ksi,B,twoTimesB;
+        double HTimesEta,ZiZjOverR1s,twoTimesD,DOverR4sHalf;
+        int ielement,jelement,kelement;
+        void print();
+    };
 
-  struct PotentialTable {
-      double deltaR2;
-      double oneOverDeltaR2;
-      int numTabulatedEntries;
-      double ***force;
-      double ***potential;
-  };
+    struct PotentialTable {
+        double deltaR2;
+        double oneOverDeltaR2;
+        int numTabulatedEntries;
+        double ***force;
+        double ***potential;
+        double *forceOOWater;
+        double *potentialOOWater;
+    };
 
- protected:
-  double cutmax;                // max cutoff for all elements
-  int nelements;                // # of unique elements
-  char **elements;              // names of unique elements
-  int ***elem2param;            // mapping from element triplets to parameters
-  int *map;                     // mapping from atom types to elements
-  int nparams;                  // # of stored parameter sets
-  int maxparam;                 // max # of parameter sets
-  Param *params;                // parameter set for an I-J-K interaction
-  PotentialTable potentialTable;
+    struct BenchmarkCounts {
+        unsigned int pairCountTotal;
+        unsigned int pairCountComputed;
+        unsigned int tripletCountTotal;
+        unsigned int tripletCountComputed;
+        unsigned int OOPairCountComputed;
+        unsigned int OOPairCountTotal;
 
-  virtual void allocate();
-  void read_file(char *);
-  virtual void setup();
-  void createForceAndPotentialTables(Param *param, int element1, int element2);
-  void twobody(Param *param, double rSquared, double &force, double &energy);
-  void threebody(Param *, Param *, Param *, double, double, double *, double *,
-                 double *, double *, int, double &);
+        unsigned int pairsComputed;
+    };
+
+protected:
+
+    double cutmax;                // max cutoff for all elements
+    int nelements;                // # of unique elements
+    char *id_coord;               // id of coord/usc compute
+    char **elements;              // names of unique elements
+    int ***moleculeMap;           // mapping from element triplets to parameters
+    int *atomTypeMap;             // mapping from atom types to elements
+    int nparams;                  // # of stored parameter sets
+    int maxparam;                 // max # of parameter sets
+    int oxygenType;
+    int siliconType;
+    int hydrogenType;
+
+    std::vector<double> R;  // Values for interpolating between water OO and silica OO
+    std::vector<double> D;  // Values for interpolating between water OO and silica OO
+    std::vector<double> dg; // Temporary table for storing the gradient of theta for single OO pairs
+    std::vector<std::vector<double> > gradThetaTable; // Table of the gradient of the theta function
+    Param *params;                // parameter set for an I-J-K interaction
+    Param paramsOOWater;        // Special case for silica+water system
+    PotentialTable potentialTable;
+
+    virtual void allocate();
+    void read_file(char *);
+    virtual void setup();
+    void updatePotentialParameters(Param &param);
+    void computeForcesAndEnergyForOO(int i, int j, int potentialTableIndex, double fractionalRest, int evflag, Compute *computeCoord);
+    void createForceAndPotentialTables(Param *param, int element1, int element2);
+    void twobody(Param *param, double rSquared, double &force, double &energy);
+    void threebody(Param *, Param *, Param *, double, double, double *, double *,
+                   double *, double *, int, double &);
+    inline double withinRange(const double rSquared, const double R, const double D) { return (rSquared >= (R-D)*(R-D)) && rSquared < (R+D)*(R+D); }
+
 };
 
 }
 
 #endif
 #endif
-
-/* ERROR/WARNING messages:
-
-E: Illegal ... command
-
-Self-explanatory.  Check the input script syntax and compare to the
-documentation for the command.  You can use -echo screen as a
-command-line option when running LAMMPS to see the offending line.
-
-E: Incorrect args for pair coefficients
-
-Self-explanatory.  Check the input script or data file.
-
-E: Pair style Stillinger-Weber requires atom IDs
-
-This is a requirement to use the SW potential.
-
-E: Pair style Stillinger-Weber requires newton pair on
-
-See the newton command.  This is a restriction to use the SW
-potential.
-
-E: All pair coeffs are not set
-
-All pair coefficients must be set in the data file or by the
-pair_coeff command before running a simulation.
-
-E: Cannot open Stillinger-Weber potential file %s
-
-The specified SW potential file cannot be opened.  Check that the path
-and name are correct.
-
-E: Incorrect format in Stillinger-Weber potential file
-
-Incorrect number of words per line in the potential file.
-
-E: Illegal Stillinger-Weber parameter
-
-One or more of the coefficients defined in the potential file is
-invalid.
-
-E: Potential file has duplicate entry
-
-The potential file has more than one entry for the same element.
-
-E: Potential file is missing an entry
-
-The potential file does not have a needed entry.
-
-*/

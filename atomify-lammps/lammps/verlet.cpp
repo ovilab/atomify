@@ -44,13 +44,13 @@ Verlet::Verlet(LAMMPS *lmp, int narg, char **arg) :
 /* ----------------------------------------------------------------------
    initialization before run
 ------------------------------------------------------------------------- */
-
+#include <iostream>
+using namespace std;
 void Verlet::init()
 {
   Integrate::init();
 
   // warn if no fixes
-
   if (modify->nfix == 0 && comm->me == 0)
     error->warning(FLERR,"No fixes defined, atoms won't move");
 
@@ -203,7 +203,8 @@ void Verlet::setup_minimal(int flag)
 /* ----------------------------------------------------------------------
    run for N steps
 ------------------------------------------------------------------------- */
-
+#include <iostream>
+using namespace std;
 void Verlet::run(int n)
 {
   bigint ntimestep;

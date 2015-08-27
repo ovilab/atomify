@@ -1065,7 +1065,7 @@ void CommBrick::forward_comm_compute(Compute *compute)
    reverse communication invoked by a Compute
    nsize used only to set recv buffer limit
 ------------------------------------------------------------------------- */
-
+#include <iostream>
 void CommBrick::reverse_comm_compute(Compute *compute)
 {
   int iswap,n;
@@ -1077,7 +1077,6 @@ void CommBrick::reverse_comm_compute(Compute *compute)
   for (iswap = nswap-1; iswap >= 0; iswap--) {
 
     // pack buffer
-
     n = compute->pack_reverse_comm(recvnum[iswap],firstrecv[iswap],buf_send);
 
     // exchange with another proc
