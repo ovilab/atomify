@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <QString>
+#include <QDebug>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ LammpsOutput::LammpsOutput()
 }
 
 
-int LammpsOutput::read (void *cookie, char *buffer, int size) {
+int LammpsOutput::read (void *, char *, int ) {
 
 }
 
@@ -60,7 +61,7 @@ void LammpsOutput::parseLine(const char *string)
     foreach(QString word, list) {
         bool isNumeric = false;
         if(word.toDouble(&isNumeric)) {
-
+            qDebug() << "We have a number: "  << word;
         } else {
             return; // This was an invalid line
         }

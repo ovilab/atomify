@@ -4,40 +4,17 @@ import SimVis 1.0
 import LammpsOutput 1.0
 
 Item {
-    // property MySimulator simulator: simulator
-    property MySimulator simulator: simulator
+    id: atomifyVisualizerRoot
     property Visualizer visualizer: visualizer
+    property MySimulator simulator
 
-    MySimulator {
-        id: simulator
-        lammpsOutput: output
-        simulationSpeed: 1
-        onNewCameraPositionChanged: {
-            upVectorAnimation.from = camera.upVector
-            positionAnimation.to = newCameraPosition
-            positionAnimation.from = camera.position
-            if(positionAnimation.running) {
-                positionAnimation.stop()
-            }
-            if(upVectorAnimation.running) {
-                upVectorAnimation.stop()
-            }
-
-            positionAnimation.start()
-            upVectorAnimation.start()
-        }
-    }
-
-    LammpsOutput {
-        id: output
-    }
 
     Visualizer {
         property Spheres spheres: spheres
         id: visualizer
         width: parent.width
         height: parent.height
-        simulator: simulator
+        simulator: atomifyVisualizerRoot.simulator
         camera: camera
         backgroundColor: "#111"
         navigator: navigator
@@ -72,25 +49,5 @@ Item {
     Camera {
         id: camera
         nearPlane: 0.1
-    }
-
-    PropertyAnimation {
-        id: positionAnimation
-        target: camera
-        property: "position"
-        from: camera.position
-        to: simulator.newCameraPosition
-        duration: 700
-        easing.type: Easing.InOutQuad
-    }
-
-    PropertyAnimation {
-        id: upVectorAnimation
-        target: camera
-        property: "upVector"
-        from: camera.upVector
-        to: Qt.vector3d(0, -1, 0)
-        duration: 700
-        easing.type: Easing.InOutQuad
     }
 }

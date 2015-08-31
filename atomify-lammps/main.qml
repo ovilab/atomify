@@ -16,10 +16,6 @@ ApplicationWindow {
     height: 900
     visible: true
 
-//    Component.onCompleted: {
-//        visualizer.simulator.lammpsOutput = output
-//    }
-
     SplitView {
         anchors.fill: parent
         Layout.alignment: Qt.AlignTop
@@ -36,41 +32,45 @@ ApplicationWindow {
                 LammpsEditor {
                     anchors.fill: parent
                     id: lammpsEditor
-                    simulator: visualizer.simulator
+                    simulator: mySimulator
                 }
             }
 
             Tab {
                 anchors.fill: parent
                 title: "Demo simulations"
-
-                DemoSimulations {
-                    anchors.fill: parent
-                    id: demoSimulations
-                    simulator: visualizer.simulator
-                }
             }
         }
+
         AtomifyVisualizer {
             id: visualizer
+            simulator: mySimulator
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true
         }
     }
 
+    MySimulator {
+        id: mySimulator
+        lammpsOutput: LammpsOutput {
+            id: output
+        }
+        simulationSpeed: 1
+    }
+
     Compute {
         id: temperature
         identifier: "temperature"
         command: "compute temperature all temp"
-        simulator: visualizer.simulator
+        simulator: mySimulator
     }
 
     Compute {
         id: pressure
         identifier: "pressure"
         command: "compute pressure all pressure temperature"
-        simulator: visualizer.simulator
+        simulator: mySimulator
         dependencies: ["temperature"]
     }
 }

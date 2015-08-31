@@ -13,23 +13,26 @@ using namespace LAMMPS_NS;
 class LAMMPSController
 {
 private:
+    struct State {
+        bool runCommandActive = false;
+        bool needPreRun = true;
+        bool outputNotUpdated = true;
+        int simulationSpeed = 1;
+        unsigned int runCommandStart = 0;
+        unsigned int runCommandEnd = 0;
+
+    };
+
+    State m_state;
     LAMMPS *m_lammps = NULL;
     LammpsOutput *m_outputParser = NULL;
     QVector<QString> m_commands;
     QMap<QString, CPCompute*> m_computes;
-    int m_simulationSpeed = 1;
-
-    unsigned int m_runCommandStart = 0;
-    unsigned int m_runCommandEnd = 0;
-    bool m_runCommandActive = false;
-    bool m_needPreRun = true;
-    bool m_outputNotUpdated = true;
 
     QString readFile(QString filename);
     QString copyDataFileToReadablePath(QString filename);
     QString copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream);
     void processComputes();
-
     void checkOutput();
 public:
     LAMMPSController();

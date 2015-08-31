@@ -34,7 +34,7 @@ private:
     static int clean(void *cookie);
     static fpos_t seek(void *cookie, fpos_t position, int whence);
     static int write(void *cookie, const char *buffer, int size);
-    static int read(void *cookie, char *buffer, int size);
+    static int read(void *, char *, int);
 };
 
 #endif // LAMMPSOUTPUTPARSER_H

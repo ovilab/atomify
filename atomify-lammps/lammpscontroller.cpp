@@ -25,6 +25,15 @@ LAMMPSController::LAMMPSController()
 
 }
 
+LAMMPSController::~LAMMPSController()
+{
+    if(m_lammps) {
+        lammps_close((void*)m_lammps);
+        m_lammps = 0;
+    }
+    m_commands.clear();
+}
+
 LAMMPS_NS::LAMMPS *LAMMPSController::lammps() const
 {
     return m_lammps;
@@ -38,13 +47,13 @@ void LAMMPSController::setLammps(LAMMPS *lammps)
 
 int LAMMPSController::simulationSpeed() const
 {
-    return m_simulationSpeed;
+    return m_state.simulationSpeed;
 }
 
 void LAMMPSController::setSimulationSpeed(int simulationSpeed)
 {
-    if(m_simulationSpeed != simulationSpeed) {
-        m_simulationSpeed = simulationSpeed;
+    if(m_state.simulationSpeed != simulationSpeed) {
+        m_state.simulationSpeed = simulationSpeed;
     }
 }
 
@@ -69,6 +78,7 @@ void LAMMPSController::setComputes(const QMap<QString, CPCompute *> &computes)
 {
     m_computes = computes;
 }
+
 QString LAMMPSController::readFile(QString filename)
 {
     QFile file(filename);
@@ -120,15 +130,6 @@ QString LAMMPSController::copyDataFileToReadablePath(QString filename)
     return newFilename;
 }
 
-LAMMPSController::~LAMMPSController()
-{
-    if(m_lammps) {
-        lammps_close((void*)m_lammps);
-        m_lammps = 0;
-    }
-    m_commands.clear();
-}
-
 void LAMMPSController::processCommand(QString command) {
     // Parse one single LAMMPS command. Three notes:
     //   Files are read with full filenames in LAMMPS. Files added as Qt Resrouces have path :/file, which will not work.
@@ -149,6 +150,7 @@ void LAMMPSController::processCommand(QString command) {
             word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
         }
 
+        // If this is the first word in a command and it is "run"
         if(wordCount == 0 && word.compare("run") == 0) {
             command_ss >> word; // Next word is the number of timesteps
             int numberOfTimesteps = atoi(word.c_str());
@@ -170,9 +172,9 @@ void LAMMPSController::processCommand(QString command) {
                 qDebug() << "Warning, LAMMPS visualizer doesn't support run commands with arguments. These will be ignored.";
             }
 
-            m_runCommandActive = true;
-            m_runCommandStart = m_lammps->update->ntimestep;
-            m_runCommandEnd = m_runCommandStart + numberOfTimesteps;
+            m_state.runCommandActive = true;
+            m_state.runCommandStart = m_lammps->update->ntimestep;
+            m_state.runCommandEnd = m_state.runCommandStart + numberOfTimesteps;
             return;
         }
 
@@ -192,7 +194,7 @@ void LAMMPSController::processCommand(QString command) {
 void LAMMPSController::checkOutput() {
     if(m_outputParser == NULL) return;
 
-    if(m_outputParser->childrenDirty() || m_outputNotUpdated) {
+    if(m_outputParser->childrenDirty() || m_state.outputNotUpdated) {
         QStringList thermoCommands;
         QString thermoCommand = "thermo_style custom ";
 
@@ -211,8 +213,8 @@ void LAMMPSController::checkOutput() {
             qDebug() << "We have a new thermo command: " << thermoCommand;
         } else qDebug() << "We don't have a new thermo command...";
 
-        m_needPreRun = true;
-        m_outputNotUpdated = false;
+        m_state.needPreRun = true;
+        m_state.outputNotUpdated = false;
     }
 }
 
@@ -241,49 +243,6 @@ void LAMMPSController::processComputes()
             }
         }
     }
-}
-
-void LAMMPSController::tick()
-{
-    if(m_outputParser) {
-        m_lammps->screen = m_outputParser->file();
-    }
-
-    processComputes();
-
-    // If we have an active run command, perform the run command with the current chosen speed.
-    if(m_runCommandActive > 0) {
-        unsigned int currentTimestep = m_lammps->update->ntimestep;
-        int maxSimulationSpeed = m_runCommandEnd - currentTimestep;
-
-        // Choose the smaller of the number of timesteps left and the current simulation speed.
-        int simulationSpeed = min(m_simulationSpeed, maxSimulationSpeed);
-        if(currentTimestep == m_runCommandStart) {
-            // If this is the first timestep in this run command, execute the pre yes command to prepare the full run command.
-            runCommand(QString("run %1 pre yes post no start %2 stop %3").arg(simulationSpeed).arg(m_runCommandStart).arg(m_runCommandEnd));
-        } else {
-            runCommand(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(m_runCommandStart).arg(m_runCommandEnd));
-        }
-        checkOutput();
-        m_needPreRun = true;
-        currentTimestep = m_lammps->update->ntimestep;
-        m_runCommandActive = currentTimestep < m_runCommandEnd;
-    } else if(m_commands.size() > 0) {
-        // If the command stack has any commands left, process them.
-        QString command = m_commands.front();
-        m_commands.pop_front();
-        processCommand(command);
-    } else {
-        // If no commands are queued, just perform a normal run command with the current simulation speed.
-        if(m_needPreRun) {
-            m_needPreRun = false;
-            runCommand(QString("run %1 pre yes post no").arg(m_simulationSpeed));
-        } else {
-            runCommand(QString("run %1 pre no post no").arg(m_simulationSpeed));
-        }
-        checkOutput();
-    }
-
 }
 
 void LAMMPSController::loadScriptFromFile(QString filename)
@@ -333,10 +292,53 @@ void LAMMPSController::reset()
     }
 
     lammps_open_no_mpi(0, 0, (void**)&m_lammps);
-    m_simulationSpeed = 1;
+    m_state.simulationSpeed = 1;
     // m_lammps->screen = NULL;
     m_commands.clear();
-    m_needPreRun = true;
-    m_outputNotUpdated = true;
-    m_runCommandActive = false;
+    m_state.needPreRun = true;
+    m_state.outputNotUpdated = true;
+    m_state.runCommandActive = false;
+}
+
+void LAMMPSController::tick()
+{
+    if(m_outputParser) {
+        m_lammps->screen = m_outputParser->file();
+    }
+
+    processComputes();
+
+    // If we have an active run command, perform the run command with the current chosen speed.
+    if(m_state.runCommandActive > 0) {
+        unsigned int currentTimestep = m_lammps->update->ntimestep;
+        int maxSimulationSpeed = m_state.runCommandEnd - currentTimestep;
+
+        // Choose the smaller of the number of timesteps left and the current simulation speed.
+        int simulationSpeed = min(m_state.simulationSpeed, maxSimulationSpeed);
+        if(currentTimestep == m_state.runCommandStart) {
+            // If this is the first timestep in this run command, execute the pre yes command to prepare the full run command.
+            runCommand(QString("run %1 pre yes post no start %2 stop %3").arg(simulationSpeed).arg(m_state.runCommandStart).arg(m_state.runCommandEnd));
+        } else {
+            runCommand(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(m_state.runCommandStart).arg(m_state.runCommandEnd));
+        }
+        checkOutput();
+        m_state.needPreRun = true;
+        currentTimestep = m_lammps->update->ntimestep;
+        m_state.runCommandActive = currentTimestep < m_state.runCommandEnd;
+    } else if(m_commands.size() > 0) {
+        // If the command stack has any commands left, process them.
+        QString command = m_commands.front();
+        m_commands.pop_front();
+        processCommand(command);
+    } else {
+        // If no commands are queued, just perform a normal run command with the current simulation speed.
+        if(m_state.needPreRun) {
+            m_state.needPreRun = false;
+            runCommand(QString("run %1 pre yes post no").arg(m_state.simulationSpeed));
+        } else {
+            runCommand(QString("run %1 pre no post no").arg(m_state.simulationSpeed));
+        }
+        checkOutput();
+    }
+
 }
