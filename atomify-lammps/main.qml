@@ -26,6 +26,7 @@ ApplicationWindow {
             height: parent.height
 
             Tab {
+                id: editorTab
                 anchors.fill: parent
                 title: "Script editor"
 
@@ -57,7 +58,8 @@ ApplicationWindow {
         identifier: "temperature"
         command: "compute temperature all temp"
         onValueChanged: {
-            console.log("Temperature: "+value)
+            editorTab.title = "t="+time+", T="+value
+            // console.log("Temperature: "+value)
         }
     }
 
@@ -67,8 +69,5 @@ ApplicationWindow {
         identifier: "pressure"
         command: "compute pressure all pressure temperature"
         dependencies: ["temperature"]
-        onValueChanged: {
-            console.log("Pressure: "+value)
-        }
     }
 }

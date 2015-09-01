@@ -63,6 +63,7 @@ FILE *LammpsOutput::stream()
 void LammpsOutput::parseLine(const char *string)
 {
     QString qstr(string); // Convert to QString to do parsing easier
+
     QRegExp pattern("[ ]"); // Split by spaces
     QStringList list = qstr.split(pattern, QString::SkipEmptyParts); // List of each word in a line
     int numberOfExpectedOutputWords = m_computes.size() + 2; // Step Time compute1 compute2 ...

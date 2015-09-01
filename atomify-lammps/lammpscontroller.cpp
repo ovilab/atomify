@@ -37,6 +37,7 @@ LAMMPS_NS::LAMMPS *LAMMPSController::lammps() const
 void LAMMPSController::setLammps(LAMMPS *lammps)
 {
     if(m_lammps) {
+        m_lammps->screen = NULL; // Avoids closing of the output parser.
         lammps_close((void*)m_lammps);
         m_lammps = NULL;
     }
@@ -74,7 +75,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
-    cout << command.toStdString() << endl;
+    // cout << command.toStdString() << endl;
 
     lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
 }
@@ -184,7 +185,7 @@ void LAMMPSController::reset()
 
     lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = output.stream();
-    // m_lammps->screen = NULL;
+
     m_state = State(); // Reset current state variables
 
     m_commands.clear();
