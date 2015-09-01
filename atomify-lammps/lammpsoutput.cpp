@@ -66,7 +66,7 @@ void LammpsOutput::parseLine(const char *string)
     QRegExp pattern("[ ]"); // Split by spaces
     QStringList list = qstr.split(pattern, QString::SkipEmptyParts); // List of each word in a line
     int numberOfExpectedOutputWords = m_computes.size() + 2; // Step Time compute1 compute2 ...
-    if(list.size() != numberOfExpectedOutputWords) {
+    if(list.size() != numberOfExpectedOutputWords || list.size() <= 2) {
         return; // This line did not contain Step Time compute1 compute2 ...
     }
 
@@ -83,7 +83,14 @@ void LammpsOutput::parseLine(const char *string)
     }
 
     if(numericalOutput.size() == numberOfExpectedOutputWords) {
-        // This is probably the output we want (unless we have false positives)
-        qDebug() << "Line: " << qstr.trimmed();
+        // This is probably the output we want (unless we have false positives, TODO: FIX THIS)
+        // unsigned int timestep = numericalOutput[0];
+        double time = numericalOutput[1];
+        for(int i=2; i<numericalOutput.size(); i++) {
+            int computeArrayIndex = i-2; // The two first values in the output don't have a compute assigned to them (Step and Time)
+            CPCompute *compute = m_computes[computeArrayIndex];
+            double value = numericalOutput[i];
+            compute->setValue(qMakePair<double,double>(time, value));
+        }
     }
 }

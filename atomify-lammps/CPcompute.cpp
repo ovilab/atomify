@@ -26,6 +26,16 @@ QStringList CPCompute::dependencies() const
     return m_dependencies;
 }
 
+double CPCompute::value() const
+{
+    return m_value;
+}
+
+double CPCompute::time() const
+{
+    return m_time;
+}
+
 void CPCompute::setIdentifier(QString identifier)
 {
     if (m_identifier == identifier)
@@ -61,4 +71,11 @@ void CPCompute::setDependencies(QStringList dependencies)
 
     m_dependencies = dependencies;
     emit dependenciesChanged(dependencies);
+}
+
+void CPCompute::setValue(QPair<double, double> timeAndValue)
+{
+    m_time = timeAndValue.first;
+    m_value = timeAndValue.second;
+    emit valueChanged(m_value);
 }
