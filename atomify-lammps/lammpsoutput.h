@@ -2,39 +2,30 @@
 #define LAMMPSOUTPUTPARSER_H
 #include <stdio.h>
 #include <QObject>
+#include <QVector>
 #include <QVariantList>
+
+class CPCompute;
 class LammpsOutput : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool childrenDirty READ childrenDirty WRITE setChildrenDirty NOTIFY childrenDirtyChanged)
-    Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
 public:
     LammpsOutput();
-    FILE *file();
+    FILE *stream();
     void parseLine(const char *string);
-    bool childrenDirty() const;
-    int frequency() const;
 
-public slots:
-    void setChildrenDirty(bool childrenDirty);
-    void setFrequency(int frequency);
-
-signals:
-    void childrenDirtyChanged(bool childrenDirty);
-    void frequencyChanged(int frequency);
-
-protected:
-    FILE *m_filePointer = NULL;
-    bool m_childrenDirty = false;
-    int m_frequency = 1;
-    // QObject interface
-    virtual void childEvent(QChildEvent *);
+    QVector<CPCompute *> computes() const;
+    void setComputes(const QVector<CPCompute *> &computes);
 
 private:
-    static int clean(void *cookie);
-    static fpos_t seek(void *cookie, fpos_t position, int whence);
+    // These are functions allowing us to mimic a FILE* object
+    static int clean(void *);
+    static fpos_t seek(void *, fpos_t, int);
     static int write(void *cookie, const char *buffer, int size);
     static int read(void *, char *, int);
+
+    FILE *m_filePointer = NULL;
+    QVector<CPCompute*> m_computes;
 };
 
 #endif // LAMMPSOUTPUTPARSER_H

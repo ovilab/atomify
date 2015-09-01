@@ -34,7 +34,6 @@ void MyWorker::loadSimulation(QString simulationId) {
 MyWorker::MyWorker() {
     m_simulations = createSimulationObjects();
     loadSimulation("lennardjonesdiffusion");
-    // loadSimulation("obstacle");
     m_sinceStart.start();
     m_elapsed.start();
 }
@@ -42,13 +41,6 @@ MyWorker::MyWorker() {
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     MySimulator *mySimulator = qobject_cast<MySimulator*>(simulator);
-    m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
-
-    if(!mySimulator->m_simulationIdToLoad.isEmpty()) {
-        loadSimulation(mySimulator->m_simulationIdToLoad);
-        mySimulator->m_simulationIdToLoad.clear();
-        mySimulator->setNewCameraPosition(m_currentSimulation->initialCameraPosition());
-    }
 
     if(!mySimulator->m_scriptToRun.isEmpty()) {
         m_lammpsController.reset();
@@ -56,11 +48,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->m_scriptToRun.clear();
     }
 
-    if(mySimulator->lammpsOutput() != NULL) {
-        m_lammpsController.setOutputParser(mySimulator->lammpsOutput());
-    }
-
+    mySimulator->setLammpsOutput(&m_lammpsController.output);
     m_lammpsController.setComputes(mySimulator->computes());
+    m_lammpsController.setPaused(mySimulator->paused());
+    m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
 }
 
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
@@ -119,50 +110,19 @@ void MySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
     m_computes = computes;
 }
 
+void MySimulator::addCompute(CPCompute *compute)
+{
+    m_computes[compute->identifier()] = compute;
+}
+
 LammpsOutput *MySimulator::lammpsOutput() const
 {
     return m_lammpsOutput;
 }
 
-MySimulator::MySimulator()
+bool MySimulator::paused() const
 {
-
-}
-
-QVector3D MySimulator::newCameraPosition() const
-{
-    return m_newCameraPosition;
-}
-
-int MySimulator::simulationSpeed() const
-{
-    return m_simulationSpeed;
-}
-
-void MySimulator::addCompute(CPCompute *compute)
-{
-    qDebug() << "Adding compute to MySimulator";
-    m_computes[compute->identifier()] = compute;
-}
-
-void MySimulator::loadSimulation(QString simulationId)
-{
-    m_simulationIdToLoad = simulationId;
-}
-
-void MySimulator::setNewCameraPosition(QVector3D arg)
-{
-    m_newCameraPosition = arg;
-    emit newCameraPositionChanged(arg);
-}
-
-void MySimulator::setSimulationSpeed(int arg)
-{
-    if (m_simulationSpeed == arg)
-        return;
-
-    m_simulationSpeed = arg;
-    emit simulationSpeedChanged(arg);
+    return m_paused;
 }
 
 void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
@@ -174,7 +134,33 @@ void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
     emit lammpsOutputChanged(lammpsOutput);
 }
 
+
+int MySimulator::simulationSpeed() const
+{
+    return m_simulationSpeed;
+}
+
+void MySimulator::setSimulationSpeed(int arg)
+{
+    if (m_simulationSpeed == arg)
+        return;
+
+    m_simulationSpeed = arg;
+    emit simulationSpeedChanged(arg);
+}
+
+void MySimulator::setPaused(bool paused)
+{
+    if (m_paused == paused)
+        return;
+
+    m_paused = paused;
+    emit pausedChanged(paused);
+}
+
 void MySimulator::runScript(QString script)
 {
+    // This is typically called from the QML thread.
+    // We have to wait for synchronization before we actually load this script
     m_scriptToRun = script;
 }

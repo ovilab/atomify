@@ -94,7 +94,7 @@ void PhysicalProperty::addToLAMMPS(LAMMPSController *lammpsController)
         int computeid = lammpsController->lammps()->modify->find_compute(dependency.toStdString().c_str());
         if(computeid < 0) return; // This dependency isn't added yet
     }
-    lammpsController->runCommand(m_command);
+    lammpsController->executeCommandInLAMMPS(m_command);
 
     int icompute = lammpsController->lammps()->modify->find_compute(m_identifier.toStdString().c_str());
     assert(icompute >= 0 && "Tried to create a compute but didn't work.");

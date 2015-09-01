@@ -510,7 +510,8 @@ SOURCES += \
     highlighter.cpp \
     physicalproperty.cpp \
     CPcompute.cpp \
-    lammpsoutput.cpp
+    lammpsoutput.cpp \
+    lammpsfilehandler.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -1027,7 +1028,8 @@ HEADERS += \
     highlighter.h \
     physicalproperty.h \
     CPcompute.h \
-    lammpsoutput.h
+    lammpsoutput.h \
+    lammpsfilehandler.h
 
 DISTFILES += \
     iOS.plist

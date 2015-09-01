@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QString>
 #include <QDebug>
+#include "CPcompute.h"
 
 using namespace std;
 
@@ -20,6 +21,16 @@ LammpsOutput::LammpsOutput()
 int LammpsOutput::read (void *, char *, int ) {
 
 }
+QVector<CPCompute *> LammpsOutput::computes() const
+{
+    return m_computes;
+}
+
+void LammpsOutput::setComputes(const QVector<CPCompute *> &computes)
+{
+    m_computes = computes;
+}
+
 
 int LammpsOutput::write (void *cookie, const char *buffer, int size) {
     LammpsOutput *parser = (LammpsOutput*)cookie;
@@ -34,17 +45,17 @@ int LammpsOutput::write (void *cookie, const char *buffer, int size) {
     }
 }
 
-fpos_t LammpsOutput::seek (void *cookie, fpos_t position, int whence) {
+fpos_t LammpsOutput::seek (void *, fpos_t , int ) {
 
     return 0;
 }
 
-int LammpsOutput::clean (void *cookie) {
+int LammpsOutput::clean (void *) {
 
     return 0;
 }
 
-FILE *LammpsOutput::file()
+FILE *LammpsOutput::stream()
 {
     return m_filePointer;
 }
@@ -54,51 +65,25 @@ void LammpsOutput::parseLine(const char *string)
     QString qstr(string); // Convert to QString to do parsing easier
     QRegExp pattern("[ ]"); // Split by spaces
     QStringList list = qstr.split(pattern, QString::SkipEmptyParts); // List of each word in a line
-//    if(list.size() != m_numberOfProperties) {
-//        return; // This was an invalid line
-//    }
+    int numberOfExpectedOutputWords = m_computes.size() + 2; // Step Time compute1 compute2 ...
+    if(list.size() != numberOfExpectedOutputWords) {
+        return; // This line did not contain Step Time compute1 compute2 ...
+    }
+
+    QVector<double> numericalOutput;
 
     foreach(QString word, list) {
         bool isNumeric = false;
         if(word.toDouble(&isNumeric)) {
-            qDebug() << "We have a number: "  << word;
+            numericalOutput.push_back(word.toDouble());
+            // qDebug() << "We have a number: "  << word;
         } else {
             return; // This was an invalid line
         }
     }
-}
 
-bool LammpsOutput::childrenDirty() const
-{
-    return m_childrenDirty;
-}
-
-int LammpsOutput::frequency() const
-{
-    return m_frequency;
-}
-
-
-void LammpsOutput::childEvent(QChildEvent *)
-{
-    setChildrenDirty(true);
-}
-
-
-void LammpsOutput::setChildrenDirty(bool childrenDirty)
-{
-    if (m_childrenDirty == childrenDirty)
-        return;
-
-    m_childrenDirty = childrenDirty;
-    emit childrenDirtyChanged(childrenDirty);
-}
-
-void LammpsOutput::setFrequency(int frequency)
-{
-    if (m_frequency == frequency)
-        return;
-
-    m_frequency = frequency;
-    emit frequencyChanged(frequency);
+    if(numericalOutput.size() == numberOfExpectedOutputWords) {
+        // This is probably the output we want (unless we have false positives)
+        qDebug() << "Line: " << qstr.trimmed();
+    }
 }

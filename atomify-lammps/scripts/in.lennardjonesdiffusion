@@ -25,8 +25,5 @@ pair_coeff	1 1 1.0 1.0 2.5
 neighbor	0.3 bin
 neigh_modify	delay 0 every 20 check no
 
-thermo_style custom step time temp etotal
-thermo 10
-
 fix		1 all nve
 run 100

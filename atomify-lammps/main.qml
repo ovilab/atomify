@@ -35,11 +35,6 @@ ApplicationWindow {
                     simulator: mySimulator
                 }
             }
-
-            Tab {
-                anchors.fill: parent
-                title: "Demo simulations"
-            }
         }
 
         AtomifyVisualizer {
@@ -53,9 +48,6 @@ ApplicationWindow {
 
     MySimulator {
         id: mySimulator
-        lammpsOutput: LammpsOutput {
-            id: output
-        }
         simulationSpeed: 1
     }
 
@@ -66,11 +58,11 @@ ApplicationWindow {
         simulator: mySimulator
     }
 
-    Compute {
-        id: pressure
-        identifier: "pressure"
-        command: "compute pressure all pressure temperature"
-        simulator: mySimulator
-        dependencies: ["temperature"]
-    }
+//    Compute {
+//        id: pressure
+//        identifier: "pressure"
+//        command: "compute pressure all pressure temperature"
+//        simulator: mySimulator
+//        dependencies: ["temperature"]
+//    }
 }

@@ -38,48 +38,41 @@ class MySimulator : public Simulator
 {
     Q_OBJECT
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
-    Q_PROPERTY(QVector3D newCameraPosition READ newCameraPosition WRITE setNewCameraPosition NOTIFY newCameraPositionChanged)
-    Q_PROPERTY(LammpsOutput* lammpsOutput READ lammpsOutput WRITE setLammpsOutput NOTIFY lammpsOutputChanged)
+    Q_PROPERTY(bool paused READ paused WRITE setPaused NOTIFY pausedChanged)
 public:
-    MySimulator();
+    MySimulator() { }
     ~MySimulator() { }
 
     // Simulator interface
-    QVector3D newCameraPosition() const;
     int simulationSpeed() const;
     void addCompute(CPCompute *compute);
     QMap<QString, CPCompute *> computes() const;
     void setComputes(const QMap<QString, CPCompute *> &computes);
-
     LammpsOutput* lammpsOutput() const;
+    bool paused() const;
 
 public slots:
-    void loadSimulation(QString simulationId);
     void runScript(QString script);
-    void setNewCameraPosition(QVector3D arg);
     void setSimulationSpeed(int arg);
-
     void setLammpsOutput(LammpsOutput* lammpsOutput);
+    void setPaused(bool paused);
 
 signals:
-    void newCameraPositionChanged(QVector3D arg);
     void simulationSpeedChanged(int arg);
-
     void lammpsOutputChanged(LammpsOutput* lammpsOutput);
+    void pausedChanged(bool paused);
 
 protected:
-
     virtual MyWorker *createWorker() override;
 
 private:
     friend class MyWorker;
-    QVector3D m_newCameraPosition;
     int m_simulationSpeed = 1;
+    bool m_paused = false;
     bool m_willLoadSimulation = false;
-    QString m_simulationIdToLoad;
     QString m_scriptToRun;
     QMap<QString, CPCompute*> m_computes;
-    LammpsOutput *m_lammpsOutput;
+    LammpsOutput *m_lammpsOutput = NULL;
 };
 
 #endif // MYSIMULATOR_H
