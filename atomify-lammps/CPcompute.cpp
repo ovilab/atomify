@@ -26,14 +26,39 @@ QStringList CPCompute::dependencies() const
     return m_dependencies;
 }
 
-double CPCompute::value() const
+double CPCompute::firstValue() const
 {
-    return m_value;
+    return m_values.at(0);
+}
+
+double CPCompute::secondValue() const
+{
+    return m_values.at(1);
+}
+
+double CPCompute::thirdValue() const
+{
+    return m_values.at(2);
+}
+
+double CPCompute::fourthValue() const
+{
+    return m_values.at(3);
 }
 
 double CPCompute::time() const
 {
     return m_time;
+}
+
+int CPCompute::numProperties() const
+{
+    return m_numProperties;
+}
+
+QList<double> CPCompute::values() const
+{
+    return m_values;
 }
 
 void CPCompute::setIdentifier(QString identifier)
@@ -73,9 +98,24 @@ void CPCompute::setDependencies(QStringList dependencies)
     emit dependenciesChanged(dependencies);
 }
 
-void CPCompute::setValue(QPair<double, double> timeAndValue)
+void CPCompute::setValues(double time, QVector<double> values)
 {
-    m_time = timeAndValue.first;
-    m_value = timeAndValue.second;
-    emit valueChanged(m_value);
+    m_time = time;
+    m_values.clear();
+    m_values = QList<double>::fromVector(values);
+
+    emit valuesChanged(m_values);
+    emit firstValueChanged(m_values.at(0));
+    if(values.size() > 1) secondValueChanged(m_values.at(1));
+    if(values.size() > 2) thirdValueChanged(m_values.at(2));
+    if(values.size() > 3) fourthValueChanged(m_values.at(3));
+}
+
+void CPCompute::setNumProperties(int numProperties)
+{
+    if (m_numProperties == numProperties)
+        return;
+
+    m_numProperties = numProperties;
+    emit numPropertiesChanged(numProperties);
 }

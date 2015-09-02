@@ -57,9 +57,20 @@ ApplicationWindow {
         simulator: mySimulator
         identifier: "temperature"
         command: "compute temperature all temp"
-        onValueChanged: {
-            editorTab.title = "t="+time+", T="+value
+        onFirstValueChanged: {
+            // editorTab.title = "t="+time+", T="+firstValue
             // console.log("Temperature: "+value)
+        }
+    }
+
+    Compute {
+        id: msd
+        simulator: mySimulator
+        identifier: "msd"
+        command: "compute msd all msd"
+        numProperties: 4
+        onValuesChanged: {
+            // editorTab.title = firstValue+" "+secondValue+" "+thirdValue+" "+fourthValue
         }
     }
 
@@ -68,6 +79,6 @@ ApplicationWindow {
         simulator: mySimulator
         identifier: "pressure"
         command: "compute pressure all pressure temperature"
-        dependencies: ["temperature"]
+        dependencies: [temperature.identifier]
     }
 }

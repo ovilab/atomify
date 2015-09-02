@@ -179,17 +179,6 @@ void LAMMPSController::runScript(QString script)
     }
 }
 
-void LAMMPSController::reset()
-{
-    setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
-
-    lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
-    m_lammps->screen = output.stream();
-
-    m_state = State(); // Reset current state variables
-
-    m_commands.clear();
-}
 
 void LAMMPSController::updateOutput() {
     if(m_state.outputNeedsUpdate && m_state.allComputesAdded) {
@@ -202,10 +191,19 @@ void LAMMPSController::updateOutput() {
         {
             CPCompute *compute = m_computes[key];
             if(!computeExists(compute->identifier())) continue; // This one is not added to LAMMPS yet, skip it.
+            QString command;
 
-            // The lammps script identifier for computes with identifier 'identifier' is c_identifier:
-            QString command = QString("c_").append(compute->identifier()).append(" ");
-            thermoCommand.append(command);
+            if(compute->numProperties() > 1) {
+                for(int i=0; i<compute->numProperties(); i++) {
+                    // The lammps script identifier for multivalue computes with identifier 'identifier' is c_identifier[N] where N = 1,2,...
+                    command.append(QString("c_%1[%2] ").arg(compute->identifier()).arg(i+1));
+                }
+            } else {
+                // The lammps script identifier for computes with identifier 'identifier' is c_identifier:
+                command.append(QString("c_%1 ").arg(compute->identifier()));
+            }
+
+            thermoCommand.append(command.append(" "));
             computeIdentifierList.append(command);
             outputComputes.append(compute);
         }
@@ -272,6 +270,16 @@ void LAMMPSController::executeActiveRunCommand() {
 
     currentTimestep = m_lammps->update->ntimestep;
     m_state.runCommandActive = currentTimestep < m_state.runCommandEnd;
+}
+
+void LAMMPSController::reset()
+{
+    setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
+    lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
+    m_lammps->screen = output.stream();
+
+    m_state = State(); // Reset current state variables
+    m_commands.clear();
 }
 
 void LAMMPSController::tick()

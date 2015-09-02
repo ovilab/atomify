@@ -23,7 +23,7 @@ private:
     static fpos_t seek(void *, fpos_t, int);
     static int write(void *cookie, const char *buffer, int size);
     static int read(void *, char *, int);
-
+    int numberOfExpectedOutputs();
     FILE *m_filePointer = NULL;
     QVector<CPCompute*> m_computes;
 };

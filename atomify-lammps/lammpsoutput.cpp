@@ -21,6 +21,16 @@ LammpsOutput::LammpsOutput()
 int LammpsOutput::read (void *, char *, int ) {
 
 }
+
+int LammpsOutput::numberOfExpectedOutputs()
+{
+    int num = 2; // The first two are Step and Time
+    for(CPCompute *compute : m_computes) {
+        num += compute->numProperties();
+    }
+
+    return num;
+}
 QVector<CPCompute *> LammpsOutput::computes() const
 {
     return m_computes;
@@ -43,6 +53,8 @@ int LammpsOutput::write (void *cookie, const char *buffer, int size) {
         if(nextLine) *nextLine = '\n';
         currentLine = nextLine ? (nextLine+1) : NULL;
     }
+
+    fprintf(stdout, buffer);
 }
 
 fpos_t LammpsOutput::seek (void *, fpos_t , int ) {
@@ -66,9 +78,10 @@ void LammpsOutput::parseLine(const char *string)
 
     QRegExp pattern("[ ]"); // Split by spaces
     QStringList list = qstr.split(pattern, QString::SkipEmptyParts); // List of each word in a line
-    int numberOfExpectedOutputWords = m_computes.size() + 2; // Step Time compute1 compute2 ...
+    int numberOfExpectedOutputWords = numberOfExpectedOutputs();
+
     if(list.size() != numberOfExpectedOutputWords || list.size() <= 2) {
-        return; // This line did not contain Step Time compute1 compute2 ...
+        return; // This line did not match Step Time compute1 compute2 ...
     }
 
     QVector<double> numericalOutput;
@@ -77,21 +90,34 @@ void LammpsOutput::parseLine(const char *string)
         bool isNumeric = false;
         if(word.toDouble(&isNumeric)) {
             numericalOutput.push_back(word.toDouble());
-            // qDebug() << "We have a number: "  << word;
         } else {
-            return; // This was an invalid line
+            return; // This was a line not matching all numbers
         }
     }
 
     if(numericalOutput.size() == numberOfExpectedOutputWords) {
         // This is probably the output we want (unless we have false positives, TODO: FIX THIS)
-        // unsigned int timestep = numericalOutput[0];
         double time = numericalOutput[1];
+        // We might have an output matching: Step Time msd[1] msd[2] msd[3] msd[4] temperature pressure
+        // with values                       10   0.1  0.001  0.021  0.003  0.021  1.44        0.89
+        // We now loop through all values (skipping the first two). We see that the first 4 values are msd values (which here will be the first compute in the list).
+        // The compute knows how many output it expects, so when its list is filled up, the next compute will be the next in the list.
+        CPCompute *currentCompute = m_computes.first();
+        int currentComputeArrayIndex = 0;
+        QVector<double> valuesForCurrentCompute;
         for(int i=2; i<numericalOutput.size(); i++) {
-            int computeArrayIndex = i-2; // The two first values in the output don't have a compute assigned to them (Step and Time)
-            CPCompute *compute = m_computes[computeArrayIndex];
             double value = numericalOutput[i];
-            compute->setValue(qMakePair<double,double>(time, value));
+            valuesForCurrentCompute.push_back(value);
+
+            if(valuesForCurrentCompute.size() == currentCompute->numProperties()) {
+                currentCompute->setValues(time, valuesForCurrentCompute);
+                valuesForCurrentCompute.clear(); // Reset this list
+
+                // If there are any computes left after this, update the pointer
+                if(m_computes.size() > currentComputeArrayIndex+1) {
+                    currentCompute = m_computes.at(++currentComputeArrayIndex); // Pick the next compute
+                }
+            }
         }
     }
 }
