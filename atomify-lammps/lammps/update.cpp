@@ -476,7 +476,6 @@ void Update::reset_timestep(bigint newstep)
    update elapsed simulation time
    called at end of runs or when timestep size changes
 ------------------------------------------------------------------------- */
-
 void Update::update_time()
 {
   atime += (ntimestep-atimestep) * dt;

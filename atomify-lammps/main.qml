@@ -58,27 +58,27 @@ ApplicationWindow {
         identifier: "temperature"
         command: "compute temperature all temp"
         onFirstValueChanged: {
-            // editorTab.title = "t="+time+", T="+firstValue
-            // console.log("Temperature: "+value)
+            editorTab.title = "t="+time.toFixed(2)+" T="+firstValue.toFixed(4)
         }
     }
 
-    Compute {
-        id: msd
-        simulator: mySimulator
-        identifier: "msd"
-        command: "compute msd all msd"
-        numProperties: 4
-        onValuesChanged: {
-            // editorTab.title = firstValue+" "+secondValue+" "+thirdValue+" "+fourthValue
-        }
-    }
+//    Compute {
+//        id: msd
+//        simulator: mySimulator
+//        identifier: "msd"
+//        command: "compute msd all msd"
+//        isVector: true
+//        onValuesChanged: {
+//            console.log("Values: "+values)
+//            // editorTab.title = firstValue+" "+secondValue+" "+thirdValue+" "+fourthValue
+//        }
+//    }
 
-    Compute {
-        id: pressure
-        simulator: mySimulator
-        identifier: "pressure"
-        command: "compute pressure all pressure temperature"
-        dependencies: [temperature.identifier]
-    }
+//    Compute {
+//        id: pressure
+//        simulator: mySimulator
+//        identifier: "pressure"
+//        command: "compute pressure all pressure temperature"
+//        dependencies: [temperature.identifier]
+//    }
 }

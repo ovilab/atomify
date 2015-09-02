@@ -1,9 +1,20 @@
 #include "CPcompute.h"
 #include "mysimulator.h"
 #include "lammpscontroller.h"
+
+LammpsOutput &CPCompute::output()
+{
+    return m_output;
+}
+
+bool CPCompute::isVector() const
+{
+    return m_isVector;
+}
+
 CPCompute::CPCompute(QObject *parent) : QObject(parent)
 {
-
+    m_output.m_compute = this;
 }
 
 QString CPCompute::identifier() const
@@ -51,11 +62,6 @@ double CPCompute::time() const
     return m_time;
 }
 
-int CPCompute::numProperties() const
-{
-    return m_numProperties;
-}
-
 QList<double> CPCompute::values() const
 {
     return m_values;
@@ -98,9 +104,9 @@ void CPCompute::setDependencies(QStringList dependencies)
     emit dependenciesChanged(dependencies);
 }
 
-void CPCompute::setValues(double time, QVector<double> values)
+void CPCompute::setValues(QVector<double> values)
 {
-    m_time = time;
+    m_time = m_simulator->simulationTime();
     m_values.clear();
     m_values = QList<double>::fromVector(values);
 
@@ -111,11 +117,11 @@ void CPCompute::setValues(double time, QVector<double> values)
     if(values.size() > 3) fourthValueChanged(m_values.at(3));
 }
 
-void CPCompute::setNumProperties(int numProperties)
+void CPCompute::setIsVector(bool isVector)
 {
-    if (m_numProperties == numProperties)
+    if (m_isVector == isVector)
         return;
 
-    m_numProperties = numProperties;
-    emit numPropertiesChanged(numProperties);
+    m_isVector = isVector;
+    emit isVectorChanged(isVector);
 }

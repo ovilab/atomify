@@ -48,6 +48,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->m_scriptToRun.clear();
     }
 
+    mySimulator->setSimulationTime(m_lammpsController.simulationTime());
     mySimulator->setLammpsOutput(&m_lammpsController.output);
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
@@ -125,6 +126,11 @@ bool MySimulator::paused() const
     return m_paused;
 }
 
+double MySimulator::simulationTime() const
+{
+    return m_simulationTime;
+}
+
 void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
 {
     if (m_lammpsOutput == lammpsOutput)
@@ -156,6 +162,15 @@ void MySimulator::setPaused(bool paused)
 
     m_paused = paused;
     emit pausedChanged(paused);
+}
+
+void MySimulator::setSimulationTime(double simulationTime)
+{
+    if (m_simulationTime == simulationTime)
+        return;
+
+    m_simulationTime = simulationTime;
+    emit simulationTimeChanged(simulationTime);
 }
 
 void MySimulator::runScript(QString script)

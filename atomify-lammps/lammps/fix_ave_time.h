@@ -36,6 +36,7 @@ class FixAveTime : public Fix {
   double compute_scalar();
   double compute_vector(int);
   double compute_array(int,int);
+  FILE *fp;
 
  private:
   int me,nvalues;
@@ -44,7 +45,7 @@ class FixAveTime : public Fix {
   int *which,*argindex,*value2index,*offcol;
   int *varlen;               // 1 if value is from variable-length compute
   char **ids;
-  FILE *fp;
+  // FILE *fp;
   int nrows;
   int any_variable_length;
   int all_variable_length;

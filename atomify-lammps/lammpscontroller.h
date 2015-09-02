@@ -17,8 +17,6 @@ private:
         bool paused = false;
         bool runCommandActive = false;
         bool preRunNeeded = true;
-        bool allComputesAdded = true;
-        bool outputNeedsUpdate = true;
         int  simulationSpeed = 1;
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
@@ -30,10 +28,13 @@ private:
     LAMMPS *m_lammps = NULL;
 
     void processComputes();
-    void updateOutput();
     void executeActiveRunCommand();
     int findComputeId(QString identifier);
     bool computeExists(QString identifier);
+    int findFixId(QString identifier);
+    bool fixExists(QString identifier);
+    LAMMPS_NS::Compute *findCompute(QString identifier);
+    LAMMPS_NS::Fix *findFix(QString identifier);
 public:
     LammpsOutput output;
 
@@ -49,6 +50,7 @@ public:
     void setComputes(const QMap<QString, CPCompute *> &computes);
     bool getPaused() const;
     void setPaused(bool value);
+    double simulationTime();
 
     // Actions
     void executeCommandInLAMMPS(QString command);

@@ -6,8 +6,7 @@ import LammpsOutput 1.0
 Item {
     id: atomifyVisualizerRoot
     property Visualizer visualizer: visualizer
-    property MySimulator simulator
-
+    property MySimulator simulator: undefined
 
     Visualizer {
         property Spheres spheres: spheres

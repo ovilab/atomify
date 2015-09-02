@@ -1,11 +1,14 @@
 #include "lammpscontroller.h"
-
+#include "lammps/fix_ave_time.h"
 #include "lammps/integrate.h"
 #include "lammps/library.h"
 #include "lammps/input.h"
 #include "lammps/variable.h"
 #include "lammps/update.h"
 #include "lammps/modify.h"
+#include "lammps/output.h"
+#include "lammps/dump.h"
+#include "lammps/fix.h"
 #include "CPcompute.h"
 #include "lammpsfilehandler.h"
 #include <stdio.h>
@@ -179,44 +182,24 @@ void LAMMPSController::runScript(QString script)
     }
 }
 
+LAMMPS_NS::Fix* LAMMPSController::findFix(QString identifier) {
+    int fixId = findFixId(identifier);
+    if(fixId < 0) return NULL;
+    else return m_lammps->modify->fix[fixId];
+}
 
-void LAMMPSController::updateOutput() {
-    if(m_state.outputNeedsUpdate && m_state.allComputesAdded) {
-        // qDebug() << "Output needs update.";
-        QStringList computeIdentifierList;
-        QString thermoCommand = "thermo_style custom step time ";
-        QVector<CPCompute*> outputComputes;
+int LAMMPSController::findFixId(QString identifier) {
+    return m_lammps->modify->find_fix(identifier.toStdString().c_str());
+}
 
-        for(QString key : m_computes.keys())
-        {
-            CPCompute *compute = m_computes[key];
-            if(!computeExists(compute->identifier())) continue; // This one is not added to LAMMPS yet, skip it.
-            QString command;
+bool LAMMPSController::fixExists(QString identifier) {
+    return findFixId(identifier) >= 0;
+}
 
-            if(compute->numProperties() > 1) {
-                for(int i=0; i<compute->numProperties(); i++) {
-                    // The lammps script identifier for multivalue computes with identifier 'identifier' is c_identifier[N] where N = 1,2,...
-                    command.append(QString("c_%1[%2] ").arg(compute->identifier()).arg(i+1));
-                }
-            } else {
-                // The lammps script identifier for computes with identifier 'identifier' is c_identifier:
-                command.append(QString("c_%1 ").arg(compute->identifier()));
-            }
-
-            thermoCommand.append(command.append(" "));
-            computeIdentifierList.append(command);
-            outputComputes.append(compute);
-        }
-
-        if(computeIdentifierList.size() > 0) {
-            m_state.preRunNeeded = true;
-            executeCommandInLAMMPS(thermoCommand);
-            executeCommandInLAMMPS("thermo 10");
-        }
-
-        output.setComputes(outputComputes);
-        m_state.outputNeedsUpdate = false;
-    }
+LAMMPS_NS::Compute* LAMMPSController::findCompute(QString identifier) {
+    int computeId = findComputeId(identifier);
+    if(computeId < 0) return NULL;
+    else return m_lammps->modify->compute[computeId];
 }
 
 int LAMMPSController::findComputeId(QString identifier) {
@@ -229,27 +212,33 @@ bool LAMMPSController::computeExists(QString identifier) {
 
 void LAMMPSController::processComputes()
 {
-    m_state.allComputesAdded = true;
     for(QString key : m_computes.keys()) {
+
         if(!computeExists(key)) {
-            // We need to add it. First check all dependencies
             CPCompute *compute = m_computes[key];
-            // qDebug() << "Trying to add " << compute->identifier();
+            // We need to add it. First check all dependencies
             bool allDependenciesFound = true; // Assume all are found and find potential counterexample
             foreach(QString dependencyIdentifier, compute->dependencies()) {
                 if(!computeExists(dependencyIdentifier)) {
-                    // qDebug() << "Didn't find dependency " << dependencyIdentifier;
                     allDependenciesFound = false;
                     break;
                 }
             }
 
             if(allDependenciesFound) {
-                // qDebug() << "All dependencies found for " << compute->identifier() << ". Executing " << compute->command();
                 // Now that all dependencies are met we can add this one too
                 executeCommandInLAMMPS(compute->command());
-                m_state.outputNeedsUpdate = true;
-                m_state.allComputesAdded = false; // This isn't added yet, it needs to be processed by LAMMPS first
+                // Now we need to create a fix that will store these values
+                QString fixIdentifier = QString("fix%1").arg(compute->identifier());
+                QString fixCommand = QString("fix %1 all ave/time 1 5 10 c_%2").arg(fixIdentifier, compute->identifier());
+                if(compute->isVector()) fixCommand.append(" mode vector");
+                executeCommandInLAMMPS(fixCommand);
+                // Now replace the output on the object
+                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFix(fixIdentifier));
+                if(fix) {
+                    // This is our baby
+                    fix->fp = compute->output().stream();
+                }
             }
         }
     }
@@ -276,7 +265,7 @@ void LAMMPSController::reset()
 {
     setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
-    m_lammps->screen = output.stream();
+    // m_lammps->screen = output.stream();
 
     m_state = State(); // Reset current state variables
     m_commands.clear();
@@ -290,7 +279,6 @@ void LAMMPSController::tick()
     if(m_state.runCommandActive > 0) {
         // Only work with computes and output when we will do a run
         processComputes();
-        updateOutput();
         executeActiveRunCommand();
     } else if(m_commands.size() > 0) {
         // If the command stack has any commands left, process them.
@@ -302,7 +290,6 @@ void LAMMPSController::tick()
 
         // Only work with computes and output when we will do a run
         processComputes();
-        updateOutput();
         if(m_state.preRunNeeded) {
             executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(m_state.simulationSpeed));
             m_state.preRunNeeded = false;
@@ -322,4 +309,9 @@ bool LAMMPSController::getPaused() const
 void LAMMPSController::setPaused(bool value)
 {
     m_state.paused = value;
+}
+
+double LAMMPSController::simulationTime()
+{
+    return m_lammps->update->atime;
 }

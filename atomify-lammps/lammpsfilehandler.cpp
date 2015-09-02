@@ -15,7 +15,6 @@ QString readFile(QString filename)
     return file.readAll();
 }
 
-
 QString copyDataFileToReadablePath(QString filename)
 {
     QString qrcFilename = ":/scripts/"+filename;

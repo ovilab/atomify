@@ -38,6 +38,7 @@ class MySimulator : public Simulator
 {
     Q_OBJECT
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
+    Q_PROPERTY(double simulationTime READ simulationTime WRITE setSimulationTime NOTIFY simulationTimeChanged)
     Q_PROPERTY(bool paused READ paused WRITE setPaused NOTIFY pausedChanged)
 public:
     MySimulator() { }
@@ -50,17 +51,20 @@ public:
     void setComputes(const QMap<QString, CPCompute *> &computes);
     LammpsOutput* lammpsOutput() const;
     bool paused() const;
+    double simulationTime() const;
 
 public slots:
     void runScript(QString script);
     void setSimulationSpeed(int arg);
     void setLammpsOutput(LammpsOutput* lammpsOutput);
     void setPaused(bool paused);
+    void setSimulationTime(double simulationTime);
 
 signals:
     void simulationSpeedChanged(int arg);
     void lammpsOutputChanged(LammpsOutput* lammpsOutput);
     void pausedChanged(bool paused);
+    void simulationTimeChanged(double simulationTime);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -73,6 +77,7 @@ private:
     QString m_scriptToRun;
     QMap<QString, CPCompute*> m_computes;
     LammpsOutput *m_lammpsOutput = NULL;
+    double m_simulationTime = 0.0;
 };
 
 #endif // MYSIMULATOR_H
