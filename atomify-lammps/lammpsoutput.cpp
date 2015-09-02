@@ -42,41 +42,90 @@ FILE *LammpsOutput::stream()
     return m_filePointer;
 }
 
-void LammpsOutput::parse(QString buffer)
-{
+void LammpsOutput::parseVectorOutput(const QString &buffer) {
     QStringList lines = buffer.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
 
-//    qDebug() << "Got data: " << buffer;
-//    qDebug() << "List now has " << lines.size() << ": " << lines;
+    unsigned int timestep = 0;
+    int numberOfValues = 0;
+    QVector<double> numericalOutput;
 
+    bool isFirstLine = true;
     foreach(const QString &line, lines) {
-        QRegExp pattern("[ ]"); // Split by spaces
-        QStringList list = line.split(pattern, QString::SkipEmptyParts); // List of each word in a line
-        QVector<double> numericalOutput;
         bool invalidLine = false;
+        QStringList words = line.split(QRegExp("[ ]"), QString::SkipEmptyParts); // Split by spaces.
 
-        bool firstWord = true;
-        foreach(const QString &word, list) {
+        bool isFirstWord = true;
+        foreach(const QString &word, words) {
             bool isNumerical;
             double value = word.toDouble(&isNumerical);
             if(!isNumerical) {
+                // Could not parse to double. Then this line is nothing we want.
                 invalidLine = true;
                 break;
             }
 
-            if(firstWord) {
-                // The first word is always the timestep number, we'll skip that
-                firstWord = false;
-                continue;
+            if(isFirstLine) {
+                // This line contains 'Timestep NumValues'
+                if(isFirstWord) {
+                    timestep = value;
+                    isFirstWord = false;
+                } else {
+                    numberOfValues = value;
+                }
+            } else {
+                // This line contains ValueId Value
+                if(isFirstWord) {
+                    // First word is the value id (1,2,...)
+                    isFirstWord = false;
+                } else {
+                    // This is our value
+                    numericalOutput.push_back(value);
+                }
+            }
+        }
+
+        if(isFirstLine) isFirstLine = false;
+    }
+
+    m_compute->setValues(numericalOutput);
+}
+
+void LammpsOutput::parseScalarOutput(const QString &buffer) {
+    QStringList lines = buffer.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+
+    unsigned int timestep = 0;
+    foreach(const QString &line, lines) {
+        bool invalidLine = false;
+
+        QStringList words = line.split(QRegExp("[ ]"), QString::SkipEmptyParts); // Split by spaces.
+        QVector<double> numericalOutput;
+
+        bool isFirstWord = true;
+        foreach(const QString &word, words) {
+            bool isNumerical;
+            double value = word.toDouble(&isNumerical);
+            if(!isNumerical) {
+                // Could not parse to double. Then this line is nothing we want.
+                invalidLine = true;
+                break;
             }
 
-            numericalOutput.push_back(value);
+            if(isFirstWord) {
+                // First word in fix outputs is always timestep
+                timestep = value;
+                isFirstWord = false;
+            } else numericalOutput.push_back(value);
         }
 
         if(!invalidLine) {
-            // qDebug() << "Our list is now: " << numericalOutput;
             m_compute->setValues(numericalOutput);
         }
     }
+}
+
+void LammpsOutput::parse(QString buffer)
+{
+    if(m_compute->isVector()) parseVectorOutput(buffer);
+    else parseScalarOutput(buffer);
 
 }

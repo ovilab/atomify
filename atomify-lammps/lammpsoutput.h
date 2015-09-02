@@ -22,6 +22,8 @@ private:
     FILE *m_filePointer = NULL;
     CPCompute* m_compute;
     friend class CPCompute;
+    void parseVectorOutput(const QString &buffer);
+    void parseScalarOutput(const QString &buffer);
 };
 
 #endif // LAMMPSOUTPUTPARSER_H
