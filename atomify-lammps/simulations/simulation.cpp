@@ -13,20 +13,21 @@ Simulation::Simulation()
 
 void Simulation::setScaleAndColorEvaluator()
 {
-    m_scaleAndColorEvaluator = [](QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps) {
+    m_scaleAndColorEvaluator = [](QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes) {
         QColor color1(252, 255, 0);
         QColor color2(0.0, 255.0, 6.0);
         QColor color3(255.0, 0.0, 234.0);
         QColor color4(130.0, 130.0, 130.0);
         QColor color5(255.0, 255.0, 0.0);
 
+        int numberOfAtoms = colors.size();
 
-        for(unsigned int i=0; i<lammps->atom->natoms; i++) {
-            if(lammps->atom->type[i] == 1) colors[i] = color1;
-            else if(lammps->atom->type[i] == 2) colors[i] = color2;
-            else if(lammps->atom->type[i] == 3) colors[i] = color3;
-            else if(lammps->atom->type[i] == 4) colors[i] = color4;
-            else if(lammps->atom->type[i] == 5) colors[i] = color5;
+        for(unsigned int i=0; i<numberOfAtoms; i++) {
+            if(atomTypes[i] == 1) colors[i] = color1;
+            else if(atomTypes[i] == 2) colors[i] = color2;
+            else if(atomTypes[i] == 3) colors[i] = color3;
+            else if(atomTypes[i] == 4) colors[i] = color4;
+            else if(atomTypes[i] == 5) colors[i] = color5;
         }
     };
 }
@@ -39,7 +40,7 @@ void Simulation::initialize(QString inputScriptFile, QVector3D initialCameraPosi
     m_isInitialized = true;
 }
 
-function<void (QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps)> Simulation::scaleAndColorEvaluator()
+function<void (QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes)> Simulation::scaleAndColorEvaluator()
 {
     return m_scaleAndColorEvaluator;
 }

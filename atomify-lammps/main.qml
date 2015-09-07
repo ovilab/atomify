@@ -26,6 +26,7 @@ ApplicationWindow {
             height: parent.height
 
             Tab {
+
                 id: editorTab
                 anchors.fill: parent
                 title: "Script editor"
@@ -41,7 +42,10 @@ ApplicationWindow {
                 id: cameraTab
                 anchors.fill: parent
                 title: "Rendering"
-
+                Rendering {
+                    anchors.fill: parent
+                    simulator: mySimulator
+                }
             }
         }
 
@@ -59,27 +63,27 @@ ApplicationWindow {
         simulationSpeed: 1
     }
 
-    Compute {
-        id: temperature
-        simulator: mySimulator
-        identifier: "temperature"
-        command: "compute temperature all temp"
-        onFirstValueChanged: {
-            // editorTab.title = "t="+time.toFixed(2)+" T="+firstValue.toFixed(4)
-        }
-    }
+//    Compute {
+//        id: temperature
+//        simulator: mySimulator
+//        identifier: "temperature"
+//        command: "compute temperature all temp"
+//        onFirstValueChanged: {
+//            // editorTab.title = "t="+time.toFixed(2)+" T="+firstValue.toFixed(4)
+//        }
+//    }
 
-    Compute {
-        id: msd
-        simulator: mySimulator
-        identifier: "msd"
-        command: "compute msd all msd"
-        isVector: true
-        onValuesChanged: {
-            // console.log("Values: "+values)
-            editorTab.title = firstValue+" "+secondValue+" "+thirdValue+" "+fourthValue
-        }
-    }
+//    Compute {
+//        id: msd
+//        simulator: mySimulator
+//        identifier: "msd"
+//        command: "compute msd all msd"
+//        isVector: true
+//        onValuesChanged: {
+//            // console.log("Values: "+values)
+//            editorTab.title = firstValue+" "+secondValue+" "+thirdValue+" "+fourthValue
+//        }
+//    }
 
 //    Compute {
 //        id: pressure

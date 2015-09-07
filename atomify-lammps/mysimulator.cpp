@@ -53,6 +53,11 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
+
+    slice.distance = mySimulator->sliceDistance();
+    slice.normal = mySimulator->sliceNormal();
+    slice.width = mySimulator->sliceWidth();
+    slice.enabled = mySimulator->sliceEnabled();
 }
 
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
@@ -65,22 +70,42 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
         colors.resize(lammps->atom->natoms);
-
         positions.resize(lammps->atom->natoms);
+        m_atomTypes.resize(lammps->atom->natoms);
+
         double position[3];
         QVector3D deltaPosition = m_currentSimulation->positionOffset();
+        int visibleAtoms = 0;
+
+        // Slice computation
+        QVector3D normal = slice.normal.normalized();
+        bool normalIsValid = !isnan(normal.length()); // If normal vector is 0, then this is not valid
+
+        QVector3D planeOrigo = slice.distance*normal; // From origo (0,0,0), move along the normal a distance slice.distance
+
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
             position[0] = lammps->atom->x[i][0];
             position[1] = lammps->atom->x[i][1];
             position[2] = lammps->atom->x[i][2];
             lammps->domain->remap(position);
 
-            positions[i][0] = position[0] - lammps->domain->prd_half[0] + deltaPosition[0];
-            positions[i][1] = position[1] - lammps->domain->prd_half[1] + deltaPosition[1];
-            positions[i][2] = position[2] - lammps->domain->prd_half[2] + deltaPosition[2];
+            QVector3D qPosition(position[0], position[1], position[2]);
+            bool addAtom = true;
+            if(slice.enabled && normalIsValid) {
+                float distanceToPlane = qPosition.distanceToPlane(planeOrigo, normal);
+                if(distanceToPlane > slice.width) addAtom = false;
+            }
+            if(addAtom) {
+                positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0] + deltaPosition[0];
+                positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1] + deltaPosition[1];
+                positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2] + deltaPosition[2];
+                m_atomTypes[visibleAtoms] = lammps->atom->type[i];
+                visibleAtoms++;
+            }
         }
-
-        m_currentSimulation->scaleAndColorEvaluator()(colors, scales, lammps);
+        colors.resize(visibleAtoms);
+        positions.resize(visibleAtoms);
+        m_currentSimulation->scaleAndColorEvaluator()(colors, scales, m_atomTypes);
 
         return;
     }

@@ -21,7 +21,7 @@ protected:
     void initialize(QString inputScriptFile, QVector3D initialCameraPosition, QVector3D positionOffset = QVector3D(0,0,0));
     virtual void setScaleAndColorEvaluator();
 
-    std::function<void (QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps)> m_scaleAndColorEvaluator;
+    std::function<void (QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes)> m_scaleAndColorEvaluator;
     bool m_isInitialized = false;
     QVector3D m_positionOffset;
     QVector3D m_initialCameraPosition;
@@ -29,7 +29,7 @@ protected:
 public:
     Simulation();
     ~Simulation() {}
-    std::function<void (QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps)> scaleAndColorEvaluator();
+    std::function<void (QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes)> scaleAndColorEvaluator();
     QString inputScriptFile();
     QVector3D positionOffset();
     QVector3D initialCameraPosition() const;

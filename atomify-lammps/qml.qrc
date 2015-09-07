@@ -3,5 +3,7 @@
         <file>main.qml</file>
         <file>AtomifyVisualizer.qml</file>
         <file>LammpsEditor.qml</file>
+        <file>Rendering.qml</file>
+        <file>Slice.qml</file>
     </qresource>
 </RCC>

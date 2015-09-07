@@ -8,8 +8,8 @@ LennardJonesCrystal::LennardJonesCrystal()
 
 void LennardJonesCrystal::setScaleAndColorEvaluator()
 {
-    m_scaleAndColorEvaluator = [](QVector<QColor> &colors, QVector<float> &scales, LAMMPS *lammps) {
-        for(unsigned int i=0; i<lammps->atom->natoms; i++) {
+    m_scaleAndColorEvaluator = [](QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes) {
+        for(unsigned int i=0; i<colors.size(); i++) {
             colors[i] = QColor(252, 255, 0);
         }
     };
