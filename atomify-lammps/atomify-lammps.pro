@@ -33,12 +33,6 @@ ios {
 SOURCES += \
     main.cpp \
     mysimulator.cpp \
-    simulations/simulation.cpp \
-    simulations/lennardjonescrystal.cpp \
-    simulations/lennardjonesdiffusion.cpp \
-    simulations/bulkwater.cpp \
-    simulations/gashydrates.cpp \
-    simulations/simulations.cpp \
     lammps/angle.cpp \
     lammps/angle_charmm.cpp \
     lammps/angle_class2.cpp \
@@ -512,16 +506,11 @@ SOURCES += \
     physicalproperty.cpp \
     CPcompute.cpp \
     lammpsoutput.cpp \
-    lammpsfilehandler.cpp
+    lammpsfilehandler.cpp \
+    atomskin.cpp
 
 HEADERS += \
     mysimulator.h \
-    simulations/simulation.h \
-    simulations/lennardjonescrystal.h \
-    simulations/simulations.h \
-    simulations/lennardjonesdiffusion.h \
-    simulations/bulkwater.h \
-    simulations/gashydrates.h \
     lammps/accelerator_cuda.h \
     lammps/accelerator_intel.h \
     lammps/accelerator_kokkos.h \
@@ -1030,7 +1019,8 @@ HEADERS += \
     physicalproperty.h \
     CPcompute.h \
     lammpsoutput.h \
-    lammpsfilehandler.h
+    lammpsfilehandler.h \
+    atomskin.h
 
 DISTFILES += \
     iOS.plist

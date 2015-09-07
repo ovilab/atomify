@@ -266,7 +266,7 @@ void LAMMPSController::reset()
     setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
     // m_lammps->screen = output.stream();
-    m_lammps->screen = NULL;
+    // m_lammps->screen = NULL;
 
     m_state = State(); // Reset current state variables
     m_commands.clear();
@@ -275,11 +275,11 @@ void LAMMPSController::reset()
 void LAMMPSController::tick()
 {
     if(m_state.paused) return;
+    if(m_lammps == NULL) return;
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(m_state.runCommandActive > 0) {
-        // Only work with computes and output when we will do a run
-        processComputes();
+        processComputes(); // Only work with computes and output when we will do a run
         executeActiveRunCommand();
     } else if(m_commands.size() > 0) {
         // If the command stack has any commands left, process them.
@@ -289,8 +289,7 @@ void LAMMPSController::tick()
     } else {
         // If no commands are queued, just perform a normal run command with the current simulation speed.
 
-        // Only work with computes and output when we will do a run
-        processComputes();
+        processComputes(); // Only work with computes and output when we will do a run
         if(m_state.preRunNeeded) {
             executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(m_state.simulationSpeed));
             m_state.preRunNeeded = false;
@@ -314,5 +313,6 @@ void LAMMPSController::setPaused(bool value)
 
 double LAMMPSController::simulationTime()
 {
+    if(!m_lammps) return 0;
     return m_lammps->update->atime;
 }

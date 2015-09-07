@@ -10,13 +10,15 @@
 #include "highlighter.h"
 #include "CPcompute.h"
 #include "lammpsoutput.h"
+#include "atomskin.h"
+
 int main(int argc, char *argv[])
 {
     qmlRegisterType<MySimulator>("MySimulator", 1, 0, "MySimulator");
     qmlRegisterType<HighlighterWrapper>("Highlighter", 1, 0, "Highlighter");
     qmlRegisterType<CPCompute>("Compute", 1, 0, "Compute");
     qmlRegisterType<LammpsOutput>("LammpsOutput", 1, 0, "LammpsOutput");
-
+    qmlRegisterType<AtomSkin>("AtomSkin", 1, 0, "AtomSkin");
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

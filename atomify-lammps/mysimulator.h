@@ -6,12 +6,14 @@
 #include <QElapsedTimer>
 #include <memory>
 #include <cmath>
+#include <QVector3D>
 
-#include "simulations/simulations.h"
 #include "lammpscontroller.h"
 #include "lammpsoutput.h"
 #include "mpi_stubs/mpi.h"
 #include "lammps/lammps.h"
+#include "atomskin.h"
+
 using std::function; using std::unique_ptr;
 
 using namespace LAMMPS_NS;
@@ -38,11 +40,8 @@ private:
     virtual void synchronizeRenderer(Renderable *renderableObject) override;
     virtual void work() override;
     SliceProperties slice;
-
+    AtomSkin m_atomSkin;
     QVector<int> m_atomTypes;
-    Simulation *m_currentSimulation = 0;
-    QMap<QString, Simulation*> m_simulations;
-    void loadSimulation(QString simulationId);
 };
 
 class MySimulator : public Simulator
@@ -55,6 +54,7 @@ class MySimulator : public Simulator
     Q_PROPERTY(double sliceDistance READ sliceDistance WRITE setSliceDistance NOTIFY sliceDistanceChanged)
     Q_PROPERTY(QVector3D sliceNormal READ sliceNormal WRITE setSliceNormal NOTIFY sliceNormalChanged)
     Q_PROPERTY(double sliceWidth READ sliceWidth WRITE setSliceWidth NOTIFY sliceWidthChanged)
+    Q_PROPERTY(AtomSkin* atomSkin READ atomSkin WRITE setAtomSkin NOTIFY atomSkinChanged)
 public:
     MySimulator() { }
     ~MySimulator() { }
@@ -88,6 +88,11 @@ public:
         return m_sliceWidth;
     }
 
+    AtomSkin* atomSkin() const
+    {
+        return m_atomSkin;
+    }
+
 public slots:
     void runScript(QString script);
     void setSimulationSpeed(int arg);
@@ -100,7 +105,6 @@ public slots:
         if (m_sliceEnabled == sliceEnabled)
             return;
 
-        qDebug() << "Slice enabled: " << sliceEnabled;
         m_sliceEnabled = sliceEnabled;
         emit sliceEnabledChanged(sliceEnabled);
     }
@@ -110,8 +114,6 @@ public slots:
         if (m_sliceDistance == sliceDistance)
             return;
 
-        qDebug() << "Slice distance: " << sliceDistance;
-
         m_sliceDistance = sliceDistance;
         emit sliceDistanceChanged(sliceDistance);
     }
@@ -120,8 +122,6 @@ public slots:
     {
         if (m_sliceNormal == sliceNormal)
             return;
-        qDebug() << "Slice normal: " << sliceNormal;
-        // m_sliceNormal = sliceNormal.normalized();
         m_sliceNormal = sliceNormal;
         emit sliceNormalChanged(sliceNormal);
     }
@@ -130,9 +130,17 @@ public slots:
     {
         if (m_sliceWidth == sliceWidth)
             return;
-        qDebug() << "Slice width: " << sliceWidth;
         m_sliceWidth = sliceWidth;
         emit sliceWidthChanged(sliceWidth);
+    }
+
+    void setAtomSkin(AtomSkin* atomSkin)
+    {
+        if (m_atomSkin == atomSkin)
+            return;
+
+        m_atomSkin = atomSkin;
+        emit atomSkinChanged(atomSkin);
     }
 
 signals:
@@ -145,6 +153,8 @@ signals:
     void sliceNormalChanged(QVector3D sliceNormal);
     void sliceWidthChanged(double sliceWidth);
 
+    void atomSkinChanged(AtomSkin* atomSkin);
+
 protected:
     virtual MyWorker *createWorker() override;
 
@@ -152,7 +162,6 @@ private:
     friend class MyWorker;
     int m_simulationSpeed = 1;
     bool m_paused = false;
-    bool m_willLoadSimulation = false;
     QString m_scriptToRun;
     QMap<QString, CPCompute*> m_computes;
     LammpsOutput *m_lammpsOutput = NULL;
@@ -161,6 +170,7 @@ private:
     QVector3D m_sliceNormal = QVector3D(1,0,0);
     double m_sliceDistance = 0;
     double m_sliceWidth = 10;
+    AtomSkin* m_atomSkin = NULL;
 };
 
 #endif // MYSIMULATOR_H

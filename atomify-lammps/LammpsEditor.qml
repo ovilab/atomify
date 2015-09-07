@@ -66,7 +66,6 @@ run 100"
                 Layout.alignment: Qt.AlignCenter
                 text: "Run"
                 onClicked: {
-                    console.log("Running script: "+script.text)
                     lammpsEditorRoot.simulator.runScript(script.text)
                 }
             }

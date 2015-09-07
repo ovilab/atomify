@@ -20,20 +20,7 @@
 #include <QStandardPaths>
 using namespace std;
 
-void MyWorker::loadSimulation(QString simulationId) {
-    auto simulation = m_simulations.find(simulationId);
-    if(simulation == m_simulations.end()) {
-        qDebug() << "Warning, tried to load simulation "+simulationId+" which does not exist in simulation list.";
-        return;
-    }
-    m_currentSimulation = simulation.value();
-    m_lammpsController.reset();
-    m_lammpsController.loadScriptFromFile(m_currentSimulation->inputScriptFile());
-}
-
 MyWorker::MyWorker() {
-    m_simulations = createSimulationObjects();
-    loadSimulation("lennardjonesdiffusion");
     m_sinceStart.start();
     m_elapsed.start();
 }
@@ -43,9 +30,15 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     MySimulator *mySimulator = qobject_cast<MySimulator*>(simulator);
 
     if(!mySimulator->m_scriptToRun.isEmpty()) {
+        // We have a queued script, now run it
         m_lammpsController.reset();
         m_lammpsController.runScript(mySimulator->m_scriptToRun);
         mySimulator->m_scriptToRun.clear();
+    }
+
+    if(mySimulator->atomSkin() != NULL) {
+        m_atomSkin.setColors(mySimulator->atomSkin()->colors());
+        m_atomSkin.setScales(mySimulator->atomSkin()->scales());
     }
 
     mySimulator->setSimulationTime(m_lammpsController.simulationTime());
@@ -64,6 +57,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     LAMMPS *lammps = m_lammpsController.lammps();
+    if(!lammps) return;
 
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();
@@ -74,7 +68,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         m_atomTypes.resize(lammps->atom->natoms);
 
         double position[3];
-        QVector3D deltaPosition = m_currentSimulation->positionOffset();
         int visibleAtoms = 0;
 
         // Slice computation
@@ -92,22 +85,20 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
             QVector3D qPosition(position[0], position[1], position[2]);
             bool addAtom = true;
             if(slice.enabled && normalIsValid) {
-                float distanceToPlane = qPosition.distanceToPlane(planeOrigo, normal);
-                if(distanceToPlane > slice.width) addAtom = false;
+                float distanceToPlane = abs(qPosition.distanceToPlane(planeOrigo, normal)); // Negative values may occu
+                if(distanceToPlane > 0.5*slice.width) addAtom = false; // it is outside the slice
             }
             if(addAtom) {
-                positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0] + deltaPosition[0];
-                positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1] + deltaPosition[1];
-                positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2] + deltaPosition[2];
+                positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
+                positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
+                positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
                 m_atomTypes[visibleAtoms] = lammps->atom->type[i];
                 visibleAtoms++;
             }
         }
         colors.resize(visibleAtoms);
         positions.resize(visibleAtoms);
-        m_currentSimulation->scaleAndColorEvaluator()(colors, scales, m_atomTypes);
-
-        return;
+        m_atomSkin.setColorsAndScales(colors, scales, m_atomTypes);
     }
 }
 
