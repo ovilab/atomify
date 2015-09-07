@@ -36,6 +36,13 @@ ApplicationWindow {
                     simulator: mySimulator
                 }
             }
+
+            Tab {
+                id: cameraTab
+                anchors.fill: parent
+                title: "Rendering"
+
+            }
         }
 
         AtomifyVisualizer {

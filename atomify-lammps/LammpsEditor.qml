@@ -1,7 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.4
-import Highlighter 1.0
 import QtQuick.Layouts 1.1
+import Highlighter 1.0
 import MySimulator 1.0
 Item {
     id: lammpsEditorRoot
@@ -25,7 +25,7 @@ Item {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
             text:
-"# 3d Lennard-Jones melt
+                "# 3d Lennard-Jones melt
 
 variable x index 1
 variable y index 1
@@ -62,12 +62,32 @@ run 100"
             Layout.alignment: Qt.AlignBottom
 
             Button {
+                id: runButton
                 Layout.alignment: Qt.AlignCenter
                 text: "Run"
                 onClicked: {
                     console.log("Running script: "+script.text)
                     lammpsEditorRoot.simulator.runScript(script.text)
                 }
+            }
+
+            Slider {
+                id: speedSlider
+                anchors.left: runButton.right
+                minimumValue: 1
+                maximumValue: 20
+                stepSize: 1
+                value: 1
+                onValueChanged: {
+                    if(simulator != undefined) {
+                        simulator.simulationSpeed = value
+                    }
+                }
+            }
+            Label {
+                id: speedLabel
+                anchors.left: speedSlider.right
+                text: "Simulation speed: "+speedSlider.value
             }
         }
 
