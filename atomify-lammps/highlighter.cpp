@@ -212,5 +212,5 @@ void Highlighter::highlightBlock(const QString &text)
 
 void HighlighterWrapper::setTextDocument(QQuickTextDocument *textDocument)
 {
-    m_highlighter = std::make_unique<Highlighter>(textDocument->textDocument());
+    m_highlighter = new Highlighter(textDocument->textDocument());
 }

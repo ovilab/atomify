@@ -44,7 +44,6 @@
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 #include <QQuickTextDocument>
-#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QTextDocument;
@@ -86,7 +85,7 @@ class HighlighterWrapper : public QObject {
 public:
     ~HighlighterWrapper() { }
 private:
-    std::unique_ptr<Highlighter> m_highlighter;
+    Highlighter *m_highlighter;
 
 public slots:
     void setTextDocument(QQuickTextDocument *textDocument);
