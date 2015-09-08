@@ -25,14 +25,19 @@ Item {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
             text:
-"units lj
+'variable L equal 12.0
+variable thickness equal 3.0
+
+units lj
 atom_style atomic
 atom_modify	map hash
-
 lattice fcc 0.8442
-region system block 0 12 0 12 0 12
-region boxinside block 5 7 0 12 0 12
-region boxoutside block 5 7 0 12 0 12 side out
+
+variable left equal 0.5*$L-0.5*${thickness}
+variable right equal 0.5*$L+0.5*${thickness}
+region system block 0 $L 0 $L 0 $L
+region boxinside block ${left} ${right} 0 $L 0 $L
+region boxoutside block ${left} ${right} 0 $L 0 $L side out
 
 create_box 2 system
 create_atoms 1 region boxinside
@@ -47,7 +52,7 @@ pair_coeff * * 1.0 1.0 2.5
 neighbor 0.3 bin
 neigh_modify delay 0 every 20 check no
 
-fix 1 all nve"
+fix 1 all nve'
         }
 
         RowLayout {
