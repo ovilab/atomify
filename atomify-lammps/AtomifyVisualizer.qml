@@ -6,7 +6,7 @@ import LammpsOutput 1.0
 Item {
     id: atomifyVisualizerRoot
     property Visualizer visualizer: visualizer
-    property MySimulator simulator: undefined
+    property MySimulator simulator
 
     Visualizer {
         property Spheres spheres: spheres
@@ -42,6 +42,34 @@ Item {
                 attenuation: 0.001
                 position: camera.position
             }
+        }
+    }
+
+    Rectangle {
+        x: 20
+        y: 20
+        width: 200
+        height: 80
+        radius: 4
+        color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
+        Text {
+            x: 10
+            y: 10
+            font.bold: true
+            text: "Number of atoms: "+simulator.numberOfAtoms
+        }
+        Text {
+            x: 10
+            y: 30
+            font.bold: true
+            text: "Number of atom types: "+simulator.numberOfAtomTypes
+        }
+
+        Text {
+            x: 10
+            y: 50
+            font.bold: true
+            text: "System size: ["+simulator.systemSize.x.toFixed(1)+","+simulator.systemSize.y.toFixed(1)+","+simulator.systemSize.z.toFixed(1)+"]"
         }
     }
 

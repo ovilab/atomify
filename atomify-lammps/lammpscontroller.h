@@ -10,6 +10,7 @@
 #include <QString>
 #include <QMap>
 using namespace LAMMPS_NS;
+class MyWorker;
 class LAMMPSController
 {
 private:
@@ -26,6 +27,7 @@ private:
     QVector<QString> m_commands;
     QMap<QString, CPCompute*> m_computes;
     LAMMPS *m_lammps = NULL;
+    MyWorker *m_worker = NULL;
 
     void processComputes();
     void executeActiveRunCommand();
@@ -35,6 +37,7 @@ private:
     bool fixExists(QString identifier);
     LAMMPS_NS::Compute *findCompute(QString identifier);
     LAMMPS_NS::Fix *findFix(QString identifier);
+
 public:
     LammpsOutput output;
 
@@ -44,6 +47,7 @@ public:
     // Getters/setters
     LAMMPS *lammps() const;
     void setLammps(LAMMPS *lammps);
+    void setWorker(MyWorker *worker);
     int  simulationSpeed() const;
     void setSimulationSpeed(int simulationSpeed);
     QMap<QString, CPCompute *> computes() const;
@@ -51,6 +55,9 @@ public:
     bool getPaused() const;
     void setPaused(bool value);
     double simulationTime();
+    int numberOfAtoms() const;
+    int numberOfAtomTypes() const;
+    QVector3D systemSize() const;
 
     // Actions
     void executeCommandInLAMMPS(QString command);

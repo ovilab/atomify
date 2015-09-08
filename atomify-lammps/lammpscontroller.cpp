@@ -2,15 +2,18 @@
 #include "lammps/fix_ave_time.h"
 #include "lammps/integrate.h"
 #include "lammps/library.h"
+#include "lammps/atom.h"
 #include "lammps/input.h"
 #include "lammps/variable.h"
 #include "lammps/update.h"
 #include "lammps/modify.h"
 #include "lammps/output.h"
 #include "lammps/dump.h"
+#include "lammps/domain.h"
 #include "lammps/fix.h"
 #include "CPcompute.h"
 #include "lammpsfilehandler.h"
+#include "mysimulator.h"
 #include <stdio.h>
 
 #include <QDebug>
@@ -46,6 +49,11 @@ void LAMMPSController::setLammps(LAMMPS *lammps)
     }
 
     m_lammps = lammps;
+}
+
+void LAMMPSController::setWorker(MyWorker *worker)
+{
+    m_worker = worker;
 }
 
 
@@ -98,6 +106,12 @@ void LAMMPSController::processCommand(QString command) {
 
     int wordCount = 0;
     while(command_ss >> word) {
+        if(word.compare("pause") == 0) {
+            qDebug() << "Found pause";
+            m_worker->setWillPause(true);
+            return;
+        }
+
         if(word.find("ext://") != std::string::npos) {
             word.erase(0, 6); // Remove the ext:// prefix
             word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
@@ -299,6 +313,24 @@ void LAMMPSController::tick()
     }
 
     fflush(output.stream());
+}
+
+int LAMMPSController::numberOfAtoms() const
+{
+    if(!m_lammps) return 0;
+    return m_lammps->atom->natoms;
+}
+
+int LAMMPSController::numberOfAtomTypes() const
+{
+    if(!m_lammps) return 0;
+    return m_lammps->atom->ntypes;
+}
+
+QVector3D LAMMPSController::systemSize() const
+{
+    if(!m_lammps) return QVector3D();
+    return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
 }
 
 bool LAMMPSController::getPaused() const

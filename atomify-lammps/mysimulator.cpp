@@ -23,6 +23,7 @@ using namespace std;
 MyWorker::MyWorker() {
     m_sinceStart.start();
     m_elapsed.start();
+    m_lammpsController.setWorker(this);
 }
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
@@ -37,14 +38,26 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(mySimulator->atomStyle() != NULL) {
+        // Sync potential new atom styles
         m_atomStyle.setData(mySimulator->atomStyle()->data());
     }
 
-    mySimulator->setSimulationTime(m_lammpsController.simulationTime());
-    mySimulator->setLammpsOutput(&m_lammpsController.output);
+    // Sync values from QML and simulator
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
+
+    // Sync properties from lammps controller
+    mySimulator->setSimulationTime(m_lammpsController.simulationTime());
+    mySimulator->setNumberOfAtoms(m_lammpsController.numberOfAtoms());
+    mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
+    mySimulator->setSystemSize(m_lammpsController.systemSize());
+    mySimulator->setLammpsOutput(&m_lammpsController.output);
+    if(m_willPause) {
+        m_lammpsController.setPaused(true);
+        mySimulator->setPaused(true);
+        m_willPause = false;
+    }
 
     slice.distance = mySimulator->sliceDistance();
     slice.normal = mySimulator->sliceNormal();
@@ -111,6 +124,16 @@ void MyWorker::work()
     }
     m_elapsed.restart();
 }
+bool MyWorker::willPause() const
+{
+    return m_willPause;
+}
+
+void MyWorker::setWillPause(bool willPause)
+{
+    m_willPause = willPause;
+}
+
 
 MyWorker *MySimulator::createWorker()
 {
@@ -144,6 +167,46 @@ bool MySimulator::paused() const
 double MySimulator::simulationTime() const
 {
     return m_simulationTime;
+}
+
+bool MySimulator::sliceEnabled() const
+{
+    return m_sliceEnabled;
+}
+
+double MySimulator::sliceDistance() const
+{
+    return m_sliceDistance;
+}
+
+QVector3D MySimulator::sliceNormal() const
+{
+    return m_sliceNormal;
+}
+
+double MySimulator::sliceWidth() const
+{
+    return m_sliceWidth;
+}
+
+AtomStyle *MySimulator::atomStyle() const
+{
+    return m_atomStyle;
+}
+
+int MySimulator::numberOfAtoms() const
+{
+    return m_numberOfAtoms;
+}
+
+int MySimulator::numberOfAtomTypes() const
+{
+    return m_numberOfAtomTypes;
+}
+
+QVector3D MySimulator::systemSize() const
+{
+    return m_systemSize;
 }
 
 void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
@@ -186,6 +249,76 @@ void MySimulator::setSimulationTime(double simulationTime)
 
     m_simulationTime = simulationTime;
     emit simulationTimeChanged(simulationTime);
+}
+
+void MySimulator::setSliceEnabled(bool sliceEnabled)
+{
+    if (m_sliceEnabled == sliceEnabled)
+        return;
+
+    m_sliceEnabled = sliceEnabled;
+    emit sliceEnabledChanged(sliceEnabled);
+}
+
+void MySimulator::setSliceDistance(double sliceDistance)
+{
+    if (m_sliceDistance == sliceDistance)
+        return;
+
+    m_sliceDistance = sliceDistance;
+    emit sliceDistanceChanged(sliceDistance);
+}
+
+void MySimulator::setSliceNormal(QVector3D sliceNormal)
+{
+    if (m_sliceNormal == sliceNormal)
+        return;
+    m_sliceNormal = sliceNormal;
+    emit sliceNormalChanged(sliceNormal);
+}
+
+void MySimulator::setSliceWidth(double sliceWidth)
+{
+    if (m_sliceWidth == sliceWidth)
+        return;
+    m_sliceWidth = sliceWidth;
+    emit sliceWidthChanged(sliceWidth);
+}
+
+void MySimulator::setAtomStyle(AtomStyle *atomStyle)
+{
+    if (m_atomStyle == atomStyle)
+        return;
+
+    m_atomStyle = atomStyle;
+    emit atomStyleChanged(atomStyle);
+}
+
+void MySimulator::setNumberOfAtoms(int numberOfAtoms)
+{
+    if (m_numberOfAtoms == numberOfAtoms)
+        return;
+
+    m_numberOfAtoms = numberOfAtoms;
+    emit numberOfAtomsChanged(numberOfAtoms);
+}
+
+void MySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
+{
+    if (m_numberOfAtomTypes == numberOfAtomTypes)
+        return;
+
+    m_numberOfAtomTypes = numberOfAtomTypes;
+    emit numberOfAtomTypesChanged(numberOfAtomTypes);
+}
+
+void MySimulator::setSystemSize(QVector3D systemSize)
+{
+    if (m_systemSize == systemSize)
+        return;
+
+    m_systemSize = systemSize;
+    emit systemSizeChanged(systemSize);
 }
 
 void MySimulator::runScript(QString script)

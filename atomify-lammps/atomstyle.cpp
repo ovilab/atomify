@@ -2,7 +2,8 @@
 
 AtomStyle::AtomStyle(QObject *parent) : QObject(parent)
 {
-    m_data.push_back(new AtomStyleData(1.0, QColor("red")));
+    m_data.push_back(new AtomStyleData(1.0, QColor(220, 85, 176)));
+    m_data.push_back(new AtomStyleData(1.0, QColor(55, 199, 166)));
     setModel(QVariant::fromValue(m_data));
 }
 
