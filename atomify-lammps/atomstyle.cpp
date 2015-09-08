@@ -71,6 +71,12 @@ void AtomStyle::add()
     setModel(QVariant::fromValue(m_data));
 }
 
+void AtomStyle::remove(const int index)
+{
+    m_data.removeAt(index);
+    setModel(QVariant::fromValue(m_data));
+}
+
 AtomStyleData::AtomStyleData(double scale, QColor color)
 {
     m_scale = scale;

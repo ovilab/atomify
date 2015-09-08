@@ -28,6 +28,7 @@ Item {
                     y: 5
                     text: 'Atom type ' + (index+1) + ":"
                 }
+
                 SpinBox {
                     minimumValue: 0
                     maximumValue: 3
@@ -37,6 +38,7 @@ Item {
                     prefix: "Scale: "
                     onValueChanged: atomStyle.setModelData(index, "scale", value)
                 }
+
 
                 Rectangle {
                     height: 20
@@ -48,6 +50,18 @@ Item {
                             colorDialog.color = model.modelData.color
                             colorDialog.clickedIndex = index
                             colorDialog.visible = true
+                        }
+                    }
+                }
+
+                Image {
+                    height: 20
+                    width: 20
+                    source: "images/close.png"
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            atomStyle.remove(index)
                         }
                     }
                 }

@@ -48,6 +48,7 @@ public slots:
     void setModelData(const int index, const QString &key, const QVariant &value);
     void setModel(QVariant model);
     void add();
+    void remove(const int index);
 };
 
 #endif // ATOMSKIN_H
