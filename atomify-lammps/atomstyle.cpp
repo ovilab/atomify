@@ -2,7 +2,8 @@
 
 AtomStyle::AtomStyle(QObject *parent) : QObject(parent)
 {
-
+    m_data.push_back(new AtomStyleData(1.0, QColor("red")));
+    setModel(QVariant::fromValue(m_data));
 }
 
 AtomStyle::~AtomStyle()
@@ -72,9 +73,6 @@ void AtomStyle::add()
 
 AtomStyleData::AtomStyleData(double scale, QColor color)
 {
-    m_red = color.red();
-    m_green = color.green();
-    m_blue = color.blue();
     m_scale = scale;
     m_color = color;
 }
@@ -89,21 +87,6 @@ QColor AtomStyleData::color() const
     return m_color;
 }
 
-int AtomStyleData::red() const
-{
-    return m_red;
-}
-
-int AtomStyleData::green() const
-{
-    return m_green;
-}
-
-int AtomStyleData::blue() const
-{
-    return m_blue;
-}
-
 void AtomStyleData::setScale(double scale)
 {
     if (m_scale == scale)
@@ -113,35 +96,11 @@ void AtomStyleData::setScale(double scale)
     emit scaleChanged(scale);
 }
 
-void AtomStyleData::setRed(int red)
+void AtomStyleData::setColor(QColor color)
 {
-    if (m_red == red)
+    if (m_color == color)
         return;
 
-    m_red = red;
-    emit redChanged(red);
-    m_color.setRed(m_red);
-    emit colorChanged(m_color);
-}
-
-void AtomStyleData::setGreen(int green)
-{
-    if (m_green == green)
-        return;
-
-    m_green = green;
-    emit greenChanged(green);
-    m_color.setGreen(m_green);
-    emit colorChanged(m_color);
-}
-
-void AtomStyleData::setBlue(int blue)
-{
-    if (m_blue == blue)
-        return;
-
-    m_blue = blue;
-    emit blueChanged(blue);
-    m_color.setBlue(m_blue);
-    emit colorChanged(m_color);
+    m_color = color;
+    emit colorChanged(color);
 }

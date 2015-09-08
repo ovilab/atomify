@@ -2,6 +2,7 @@ import QtQuick 2.3
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import AtomStyle 1.0
+import QtQuick.Dialogs 1.0
 
 Item {
     property AtomStyle atomStyle
@@ -37,38 +38,27 @@ Item {
                     onValueChanged: atomStyle.setModelData(index, "scale", value)
                 }
 
-                SpinBox {
-                    minimumValue: 0
-                    maximumValue: 255
-                    stepSize: 1
-                    prefix: "Red: "
-                    value: model.modelData.red
-                    onValueChanged: atomStyle.setModelData(index, "red", value)
-                }
-
-                SpinBox {
-                    minimumValue: 0
-                    maximumValue: 255
-                    stepSize: 1
-                    prefix: "Green: "
-                    value: model.modelData.green
-                    onValueChanged: atomStyle.setModelData(index, "green", value)
-                }
-
-                SpinBox {
-                    minimumValue: 0
-                    maximumValue: 255
-                    stepSize: 1
-                    prefix: "Blue: "
-                    value: model.modelData.blue
-                    onValueChanged: atomStyle.setModelData(index, "blue", value)
-                }
-
                 Rectangle {
                     height: 20
                     width: 20
                     color: model.modelData.color
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            colorDialog.color = model.modelData.color
+                            colorDialog.clickedIndex = index
+                            colorDialog.visible = true
+                        }
+                    }
                 }
+            }
+        }
+
+        ColorDialog {
+            id: colorDialog
+            property int clickedIndex
+            onColorChanged: {
+                atomStyle.setModelData(clickedIndex, "color", colorDialog.color)
             }
         }
 
