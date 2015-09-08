@@ -18,15 +18,14 @@ QVariant AtomStyle::model() const
 void AtomStyle::setColorsAndScales(QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes)
 {
     int numberOfAtoms = colors.size();
-    // If we have any scales, we need to provide scales for all atoms
     QColor defaultColor = QColor(255.0, 0.0, 0.0);
     double defaultScale = 1.0;
-    int numberOfAtomsInModel = m_data.size();
+    int numberOfAtomsInStyle = m_data.size();
 
     for(unsigned int i=0; i<numberOfAtoms; i++) {
         int atomType = atomTypes[i];
 
-        if(atomType > numberOfAtomsInModel) {
+        if(atomType > numberOfAtomsInStyle) {
             colors[i] = defaultColor;
             scales[i] = defaultScale;
         } else {
