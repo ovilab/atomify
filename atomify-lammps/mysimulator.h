@@ -12,7 +12,7 @@
 #include "lammpsoutput.h"
 #include "mpi_stubs/mpi.h"
 #include "lammps/lammps.h"
-#include "atomskin.h"
+#include "atomstyle.h"
 
 using std::function; using std::unique_ptr;
 
@@ -40,7 +40,7 @@ private:
     virtual void synchronizeRenderer(Renderable *renderableObject) override;
     virtual void work() override;
     SliceProperties slice;
-    AtomSkin m_atomSkin;
+    AtomStyle m_atomStyle;
     QVector<int> m_atomTypes;
 };
 
@@ -54,7 +54,7 @@ class MySimulator : public Simulator
     Q_PROPERTY(double sliceDistance READ sliceDistance WRITE setSliceDistance NOTIFY sliceDistanceChanged)
     Q_PROPERTY(QVector3D sliceNormal READ sliceNormal WRITE setSliceNormal NOTIFY sliceNormalChanged)
     Q_PROPERTY(double sliceWidth READ sliceWidth WRITE setSliceWidth NOTIFY sliceWidthChanged)
-    Q_PROPERTY(AtomSkin* atomSkin READ atomSkin WRITE setAtomSkin NOTIFY atomSkinChanged)
+    Q_PROPERTY(AtomStyle* atomStyle READ atomStyle WRITE setAtomStyle NOTIFY atomStyleChanged)
 public:
     MySimulator() { }
     ~MySimulator() { }
@@ -88,9 +88,9 @@ public:
         return m_sliceWidth;
     }
 
-    AtomSkin* atomSkin() const
+    AtomStyle* atomStyle() const
     {
-        return m_atomSkin;
+        return m_atomStyle;
     }
 
 public slots:
@@ -106,6 +106,7 @@ public slots:
             return;
 
         m_sliceEnabled = sliceEnabled;
+        qDebug() << "Slice enabled: " << sliceEnabled;
         emit sliceEnabledChanged(sliceEnabled);
     }
 
@@ -115,6 +116,7 @@ public slots:
             return;
 
         m_sliceDistance = sliceDistance;
+        qDebug() << "Slice distance: " << sliceDistance;
         emit sliceDistanceChanged(sliceDistance);
     }
 
@@ -123,6 +125,7 @@ public slots:
         if (m_sliceNormal == sliceNormal)
             return;
         m_sliceNormal = sliceNormal;
+        qDebug() << "Slice normal: " << sliceNormal;
         emit sliceNormalChanged(sliceNormal);
     }
 
@@ -131,16 +134,17 @@ public slots:
         if (m_sliceWidth == sliceWidth)
             return;
         m_sliceWidth = sliceWidth;
+        qDebug() << "Slice width: " << sliceWidth;
         emit sliceWidthChanged(sliceWidth);
     }
 
-    void setAtomSkin(AtomSkin* atomSkin)
+    void setAtomStyle(AtomStyle* atomStyle)
     {
-        if (m_atomSkin == atomSkin)
+        if (m_atomStyle == atomStyle)
             return;
 
-        m_atomSkin = atomSkin;
-        emit atomSkinChanged(atomSkin);
+        m_atomStyle = atomStyle;
+        emit atomStyleChanged(atomStyle);
     }
 
 signals:
@@ -153,7 +157,7 @@ signals:
     void sliceNormalChanged(QVector3D sliceNormal);
     void sliceWidthChanged(double sliceWidth);
 
-    void atomSkinChanged(AtomSkin* atomSkin);
+    void atomStyleChanged(AtomStyle* atomStyle);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -170,7 +174,7 @@ private:
     QVector3D m_sliceNormal = QVector3D(1,0,0);
     double m_sliceDistance = 0;
     double m_sliceWidth = 10;
-    AtomSkin* m_atomSkin = NULL;
+    AtomStyle* m_atomStyle = NULL;
 };
 
 #endif // MYSIMULATOR_H

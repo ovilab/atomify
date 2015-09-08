@@ -73,7 +73,7 @@ void Light::beforeRendering(QOpenGLShaderProgram &shaderProgram)
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].diffuseColor").arg(m_lightId)), m_diffuseColor);
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].specularColor").arg(m_lightId)), m_specularColor);
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].shininess").arg(m_lightId)), m_shininess);
-    shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].attenuationColor").arg(m_lightId)), m_attenuation);
+    shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].attenuation").arg(m_lightId)), m_attenuation);
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].gamma").arg(m_lightId)), m_gamma);
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].diffuseIntensity").arg(m_lightId)), m_diffuseIntensity);
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("cp_lights[%1].specularIntensity").arg(m_lightId)), m_specularIntensity);

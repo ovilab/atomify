@@ -507,7 +507,7 @@ SOURCES += \
     CPcompute.cpp \
     lammpsoutput.cpp \
     lammpsfilehandler.cpp \
-    atomskin.cpp
+    atomstyle.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -1020,7 +1020,7 @@ HEADERS += \
     CPcompute.h \
     lammpsoutput.h \
     lammpsfilehandler.h \
-    atomskin.h
+    atomstyle.h
 
 DISTFILES += \
     iOS.plist

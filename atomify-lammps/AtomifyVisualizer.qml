@@ -35,11 +35,11 @@ Item {
                 ambientColor: spheres.color
                 specularColor: "white"
                 diffuseColor: spheres.color
-                ambientIntensity: 0.025
+                ambientIntensity: 0.2
                 diffuseIntensity: 0.5
                 specularIntensity: 1.0
                 shininess: 40.0
-                attenuation: 0.01
+                attenuation: 0.001
                 position: camera.position
             }
         }
@@ -48,5 +48,6 @@ Item {
     Camera {
         id: camera
         nearPlane: 0.1
+        farPlane: 1000
     }
 }

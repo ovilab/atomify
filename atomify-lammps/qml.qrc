@@ -4,6 +4,7 @@
         <file>AtomifyVisualizer.qml</file>
         <file>LammpsEditor.qml</file>
         <file>Rendering.qml</file>
-        <file>Slice.qml</file>
+        <file>SliceControl.qml</file>
+        <file>AtomStyleControl.qml</file>
     </qresource>
 </RCC>

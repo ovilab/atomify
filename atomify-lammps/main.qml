@@ -8,7 +8,7 @@ import MySimulator 1.0
 import SimVis 1.0
 import Compute 1.0
 import LammpsOutput 1.0
-import AtomSkin 1.0
+import AtomStyle 1.0
 
 ApplicationWindow {
     id: applicationRoot
@@ -27,7 +27,6 @@ ApplicationWindow {
             height: parent.height
 
             Tab {
-
                 id: editorTab
                 anchors.fill: parent
                 title: "Script editor"
@@ -52,8 +51,12 @@ ApplicationWindow {
             Tab {
                 id: atomskinTab
                 anchors.fill: parent
-                title: "Atom skin"
-
+                title: "Atom style"
+                AtomStyleControl {
+                    anchors.topMargin: 20
+                    anchors.fill: parent
+                    atomStyle: myAtomStyle
+                }
             }
         }
 
@@ -69,19 +72,8 @@ ApplicationWindow {
     MySimulator {
         id: mySimulator
         simulationSpeed: 1
-        atomSkin: AtomSkin {
-            colors: [
-                Qt.rgba(255,0,0,1),
-                Qt.rgba(0,255,0,1),
-                Qt.rgba(0,0,255,1),
-                Qt.rgba(255,255,0,1),
-                Qt.rgba(0,255,255,1)
-            ]
-            scales: [
-                1.0,
-                1.5,
-                1.2
-            ]
+        atomStyle: AtomStyle {
+            id: myAtomStyle
         }
     }
 

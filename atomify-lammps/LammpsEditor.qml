@@ -70,9 +70,18 @@ run 100"
                 }
             }
 
+            Button {
+                id: pauseButton
+                Layout.alignment: Qt.AlignCenter
+                text: "Toggle pause"
+                onClicked: {
+                    lammpsEditorRoot.simulator.setPaused(!lammpsEditorRoot.simulator.paused)
+                }
+            }
+
             Slider {
                 id: speedSlider
-                anchors.left: runButton.right
+                // anchors.left: runButton.right
                 minimumValue: 1
                 maximumValue: 20
                 stepSize: 1
@@ -85,7 +94,7 @@ run 100"
             }
             Label {
                 id: speedLabel
-                anchors.left: speedSlider.right
+                // anchors.left: speedSlider.right
                 text: "Simulation speed: "+speedSlider.value
             }
         }

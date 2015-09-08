@@ -36,9 +36,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->m_scriptToRun.clear();
     }
 
-    if(mySimulator->atomSkin() != NULL) {
-        m_atomSkin.setColors(mySimulator->atomSkin()->colors());
-        m_atomSkin.setScales(mySimulator->atomSkin()->scales());
+    if(mySimulator->atomStyle() != NULL) {
+        m_atomStyle.setData(mySimulator->atomStyle()->data());
     }
 
     mySimulator->setSimulationTime(m_lammpsController.simulationTime());
@@ -73,7 +72,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         // Slice computation
         QVector3D normal = slice.normal.normalized();
         bool normalIsValid = !isnan(normal.length()); // If normal vector is 0, then this is not valid
-
         QVector3D planeOrigo = slice.distance*normal; // From origo (0,0,0), move along the normal a distance slice.distance
 
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
@@ -98,7 +96,8 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         }
         colors.resize(visibleAtoms);
         positions.resize(visibleAtoms);
-        m_atomSkin.setColorsAndScales(colors, scales, m_atomTypes);
+        scales.resize(visibleAtoms);
+        m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
     }
 }
 

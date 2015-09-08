@@ -11,21 +11,18 @@ Item {
         spacing: 10
 
         GroupBox {
+            id: slicing
             checkable: true
             title: "Slicing"
-            checked: false
+            checked: renderingRoot.simulator ? renderingRoot.simulator.sliceEnabled : false
             onCheckedChanged: {
-                renderingRoot.simulator.sliceEnabled = checked
+                simulator.sliceEnabled = checked
             }
 
-            CheckBox {
-                id: slicingEnabled
-                visible: false
-            }
             Column {
                 width: 500
                 height: 155
-                Slice {
+                SliceControl {
                     id: slice
                     simulator: renderingRoot.simulator
                     anchors.fill: parent

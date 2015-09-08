@@ -10,7 +10,7 @@
 #include "highlighter.h"
 #include "CPcompute.h"
 #include "lammpsoutput.h"
-#include "atomskin.h"
+#include "atomstyle.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<HighlighterWrapper>("Highlighter", 1, 0, "Highlighter");
     qmlRegisterType<CPCompute>("Compute", 1, 0, "Compute");
     qmlRegisterType<LammpsOutput>("LammpsOutput", 1, 0, "LammpsOutput");
-    qmlRegisterType<AtomSkin>("AtomSkin", 1, 0, "AtomSkin");
+    qmlRegisterType<AtomStyle>("AtomStyle", 1, 0, "AtomStyle");
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
