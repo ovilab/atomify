@@ -45,12 +45,13 @@ ApplicationWindow {
                 Rendering {
                     anchors.fill: parent
                     simulator: mySimulator
+                    light: myVisualizer.light
                 }
             }
         }
 
         AtomifyVisualizer {
-            id: visualizer
+            id: myVisualizer
             simulator: mySimulator
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true

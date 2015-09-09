@@ -6,5 +6,6 @@
         <file>Rendering.qml</file>
         <file>SliceControl.qml</file>
         <file>AtomStyleControl.qml</file>
+        <file>LightControl.qml</file>
     </qresource>
 </RCC>

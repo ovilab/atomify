@@ -7,6 +7,7 @@ Item {
     id: atomifyVisualizerRoot
     property Visualizer visualizer: visualizer
     property MySimulator simulator
+    property Light light: light
 
     Visualizer {
         property Spheres spheres: spheres
