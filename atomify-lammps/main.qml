@@ -80,11 +80,6 @@ ApplicationWindow {
 
                     Text {
                         font.bold: true
-                        text: "System size: ["+mySimulator.systemSize.x.toFixed(1)+","+mySimulator.systemSize.y.toFixed(1)+","+mySimulator.systemSize.z.toFixed(1)+"]"
-                    }
-
-                    Text {
-                        font.bold: true
                         text: "Temperature: "+temperature.value
                     }
 
@@ -114,16 +109,6 @@ ApplicationWindow {
         onActivated: tabview.currentIndex = 1
     }
 
-//    Item {
-//        focus: true
-//        Keys.onPressed: {
-//            if(event.key >= 49 && event.key <= 57 && (event.modifiers&Qt.ControlModifier)) {
-//                var value = event.key-49
-//                tabview.currentIndex = value
-//            }
-//        }
-//    }
-
     Compute {
         id: temperature
         simulator: mySimulator
@@ -138,18 +123,4 @@ ApplicationWindow {
         command: "compute pressure all pressure temperature"
         dependencies: ["temperature"]
     }
-
-//    Compute {
-//        id: msd
-//        simulator: mySimulator
-//        identifier: "msd"
-//        command: "compute msd all msd"
-//        isVector: true
-//        onValuesChanged: {
-//            // console.log("Values: "+values)
-//            editorTab.title = firstValue+" "+secondValue+" "+thirdValue+" "+fourthValue
-//        }
-//    }
-
-
 }
