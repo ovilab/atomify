@@ -6,8 +6,10 @@ import MySimulator 1.0
 Item {
     id: sliceRoot
     property MySimulator simulator
-
+    width: parent.width
+    height: columnLayout.height
     ColumnLayout {
+        id: columnLayout
         spacing: 10
 
         Row {

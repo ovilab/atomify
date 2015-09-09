@@ -6,92 +6,92 @@ import QtQuick.Dialogs 1.0
 
 Item {
     property AtomStyle atomStyle
+    height: listview.height+button.height
+    width: parent.width
 
-    Item {
-        anchors.fill: parent
+    ListView {
+        id: listview
+        height: count*26
+        model: atomStyle.model
+        delegate: Row {
+            spacing: 5
 
-        ListView {
-            id: listview
-            anchors.top: button.bottom
-            // anchors.fill: parent
-            height: count*40
-            width: 300
-            model: atomStyle.model
-            delegate: Row {
-                width: 180
-                height: 30
-                spacing: 5
-                Text {
-                    y: 5
-                    text: 'Atom type ' + (index+1) + ":"
-                }
+            Text {
+                y: 4
+                text: 'Atom type ' + (index+1) + ":"
+            }
 
-                ComboBox {
-                    id: atomDatathing
-                    model: atomDataModel
-                    onCurrentIndexChanged: {
-                        if(currentIndex > 0) {
-                            scale.value = model.get(currentIndex).radius/100 // We want angstroms, these are in pm
-                            atomStyle.setModelData(index, "color", model.get(currentIndex).color)
-                        }
+            ComboBox {
+                id: atomDatathing
+                model: atomDataModel
+                onCurrentIndexChanged: {
+                    if(currentIndex > 0) {
+                        scale.value = model.get(currentIndex).radius/100 // We want angstroms, these are in pm
+                        atomStyle.setModelData(index, "color", model.get(currentIndex).color)
                     }
                 }
+            }
 
-                SpinBox {
-                    id: scale
-                    minimumValue: 0
-                    maximumValue: 3
-                    decimals: 1
-                    stepSize: 0.1
-                    value: model.modelData.scale
-                    prefix: "Scale: "
-                    onValueChanged: atomStyle.setModelData(index, "scale", value)
-                }
+            Text {
+                y: 4
+                text: "Color:"
+            }
 
-
-                Rectangle {
-                    id: colorRectangle
-                    height: 20
-                    width: 20
-                    color: model.modelData.color
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            colorDialog.color = model.modelData.color
-                            colorDialog.clickedIndex = index
-                            colorDialog.visible = true
-                        }
+            Rectangle {
+                id: colorRectangle
+                y: 2
+                height: 20
+                width: 20
+                color: model.modelData.color
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        colorDialog.color = model.modelData.color
+                        colorDialog.clickedIndex = index
+                        colorDialog.visible = true
                     }
                 }
+            }
 
-                Image {
-                    height: 20
-                    width: 20
-                    source: "images/close.png"
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            atomStyle.remove(index)
-                        }
+            SpinBox {
+                id: scale
+                minimumValue: 0
+                maximumValue: 3
+                decimals: 1
+                stepSize: 0.1
+                value: model.modelData.scale
+                prefix: "Size: "
+                onValueChanged: atomStyle.setModelData(index, "scale", value)
+            }
+
+            Image {
+                height: 20
+                width: 20
+                source: "images/close.png"
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        atomStyle.remove(index)
                     }
                 }
             }
         }
+    }
 
-        ColorDialog {
-            id: colorDialog
-            property int clickedIndex
-            onColorChanged: {
-                atomStyle.setModelData(clickedIndex, "color", colorDialog.color)
-            }
+    ColorDialog {
+        id: colorDialog
+        property int clickedIndex
+        onColorChanged: {
+            atomStyle.setModelData(clickedIndex, "color", colorDialog.color)
         }
+    }
 
-        Button {
-            id: button
-            text: "Add"
-            onClicked: {
-                atomStyle.add()
-            }
+    Button {
+        id: button
+        anchors.top: listview.bottom
+        text: "Add"
+        onClicked: {
+            atomStyle.add()
         }
     }
 

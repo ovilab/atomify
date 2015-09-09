@@ -47,17 +47,6 @@ ApplicationWindow {
                     simulator: mySimulator
                 }
             }
-
-            Tab {
-                id: atomskinTab
-                anchors.fill: parent
-                title: "Atom style"
-                AtomStyleControl {
-                    anchors.topMargin: 20
-                    anchors.fill: parent
-                    atomStyle: myAtomStyle
-                }
-            }
         }
 
         AtomifyVisualizer {
