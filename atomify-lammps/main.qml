@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
@@ -23,6 +23,7 @@ ApplicationWindow {
         Layout.fillHeight: true
 
         TabView {
+            id: tabview
             width: applicationRoot.width*0.4
             height: parent.height
 
@@ -32,8 +33,8 @@ ApplicationWindow {
                 title: "Script editor"
 
                 LammpsEditor {
-                    anchors.fill: parent
                     id: lammpsEditor
+                    anchors.fill: parent
                     simulator: mySimulator
                 }
             }
@@ -56,6 +57,43 @@ ApplicationWindow {
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true
+
+            Rectangle {
+                x: 20
+                y: 20
+                width: 200
+                height: statusColumn.height+20
+                radius: 4
+                color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
+                ColumnLayout {
+                    y: 10
+                    x: 10
+                    id: statusColumn
+                    Text {
+                        font.bold: true
+                        text: "Number of atoms: "+mySimulator.numberOfAtoms
+                    }
+                    Text {
+                        font.bold: true
+                        text: "Number of atom types: "+mySimulator.numberOfAtomTypes
+                    }
+
+                    Text {
+                        font.bold: true
+                        text: "System size: ["+mySimulator.systemSize.x.toFixed(1)+","+mySimulator.systemSize.y.toFixed(1)+","+mySimulator.systemSize.z.toFixed(1)+"]"
+                    }
+
+                    Text {
+                        font.bold: true
+                        text: "Temperature: "+temperature.value
+                    }
+
+                    Text {
+                        font.bold: true
+                        text: "Pressure: "+pressure.value
+                    }
+                }
+            }
         }
     }
 
@@ -67,15 +105,39 @@ ApplicationWindow {
         }
     }
 
-//    Compute {
-//        id: temperature
-//        simulator: mySimulator
-//        identifier: "temperature"
-//        command: "compute temperature all temp"
-//        onFirstValueChanged: {
-//            // editorTab.title = "t="+time.toFixed(2)+" T="+firstValue.toFixed(4)
+    Shortcut {
+        sequence: "Ctrl+1"
+        onActivated: tabview.currentIndex = 0
+    }
+    Shortcut {
+        sequence: "Ctrl+2"
+        onActivated: tabview.currentIndex = 1
+    }
+
+//    Item {
+//        focus: true
+//        Keys.onPressed: {
+//            if(event.key >= 49 && event.key <= 57 && (event.modifiers&Qt.ControlModifier)) {
+//                var value = event.key-49
+//                tabview.currentIndex = value
+//            }
 //        }
 //    }
+
+    Compute {
+        id: temperature
+        simulator: mySimulator
+        identifier: "temperature"
+        command: "compute temperature all temp"
+    }
+
+    Compute {
+        id: pressure
+        simulator: mySimulator
+        identifier: "pressure"
+        command: "compute pressure all pressure temperature"
+        dependencies: ["temperature"]
+    }
 
 //    Compute {
 //        id: msd
@@ -89,11 +151,5 @@ ApplicationWindow {
 //        }
 //    }
 
-//    Compute {
-//        id: pressure
-//        simulator: mySimulator
-//        identifier: "pressure"
-//        command: "compute pressure all pressure temperature"
-//        dependencies: [temperature.identifier]
-//    }
+
 }

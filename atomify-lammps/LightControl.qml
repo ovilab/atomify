@@ -80,6 +80,7 @@ Item {
                 onValueChanged: light.shininess = (maximumValue+1) - value
             }
         }
+
         Row {
             spacing: 5
             Label {

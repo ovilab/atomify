@@ -6,9 +6,8 @@ import MySimulator 1.0
 Item {
     id: lammpsEditorRoot
     property MySimulator simulator
-
     Component.onCompleted: {
-        highlighter.setTextDocument(script.textDocument)
+        highlighter.setTextDocument(textarea.textDocument)
     }
 
     Highlighter {
@@ -20,7 +19,7 @@ Item {
         anchors.fill: parent
 
         TextArea {
-            id: script
+            id: textarea
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
@@ -64,7 +63,7 @@ fix 1 all nve'
                 Layout.alignment: Qt.AlignCenter
                 text: "Run"
                 onClicked: {
-                    lammpsEditorRoot.simulator.runScript(script.text)
+                    lammpsEditorRoot.simulator.runScript(textarea.text)
                 }
             }
 
@@ -98,6 +97,4 @@ fix 1 all nve'
         }
 
     }
-
-
 }
