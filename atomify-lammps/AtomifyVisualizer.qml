@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.4
 import MySimulator 1.0
 import SimVis 1.0
 import LammpsOutput 1.0

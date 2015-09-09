@@ -107,7 +107,6 @@ void LAMMPSController::processCommand(QString command) {
     int wordCount = 0;
     while(command_ss >> word) {
         if(word.compare("pause") == 0) {
-            qDebug() << "Found pause";
             m_worker->setWillPause(true);
             return;
         }
@@ -280,7 +279,7 @@ void LAMMPSController::reset()
     setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
     // m_lammps->screen = output.stream();
-    // m_lammps->screen = NULL;
+    m_lammps->screen = NULL;
 
     m_state = State(); // Reset current state variables
     m_commands.clear();
