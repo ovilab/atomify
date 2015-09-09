@@ -226,7 +226,6 @@ bool LAMMPSController::computeExists(QString identifier) {
 void LAMMPSController::processComputes()
 {
     for(QString key : m_computes.keys()) {
-
         if(!computeExists(key)) {
             CPCompute *compute = m_computes[key];
             // We need to add it. First check all dependencies
@@ -239,6 +238,7 @@ void LAMMPSController::processComputes()
             }
 
             if(allDependenciesFound) {
+                m_state.preRunNeeded = true; // When a new compute is added, a run with pre yes is needed for it to be included
                 // Now that all dependencies are met we can add this one too
                 executeCommandInLAMMPS(compute->command());
                 // Now we need to create a fix that will store these values
@@ -279,7 +279,7 @@ void LAMMPSController::reset()
     setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
     // m_lammps->screen = output.stream();
-    m_lammps->screen = NULL;
+    // m_lammps->screen = NULL;
 
     m_state = State(); // Reset current state variables
     m_commands.clear();

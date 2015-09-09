@@ -15,6 +15,7 @@ LammpsOutput::LammpsOutput()
 #else
     m_filePointer = funopen((const void*)this, LammpsOutput::read, LammpsOutput::write, LammpsOutput::seek, LammpsOutput::clean);
 #endif
+
 }
 
 
