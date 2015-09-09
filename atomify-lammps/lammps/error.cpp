@@ -36,6 +36,8 @@ void Error::universe_all(const char *file, int line, const char *str)
   if (universe->me == 0) {
     if (universe->uscreen) fprintf(universe->uscreen,
                                    "ERROR: %s (%s:%d)\n",str,file,line);
+    else fprintf(stdout,
+                 "ERROR: %s (%s:%d)\n",str,file,line);
     if (universe->ulogfile) fprintf(universe->ulogfile,
                                     "ERROR: %s (%s:%d)\n",str,file,line);
   }
@@ -92,6 +94,7 @@ void Error::all(const char *file, int line, const char *str)
 
   if (me == 0) {
     if (screen) fprintf(screen,"ERROR: %s (%s:%d)\n",str,file,line);
+    else fprintf(stdout,"ERROR: %s (%s:%d)\n",str,file,line);
     if (logfile) fprintf(logfile,"ERROR: %s (%s:%d)\n",str,file,line);
   }
 
