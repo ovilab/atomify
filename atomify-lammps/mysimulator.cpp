@@ -309,6 +309,7 @@ void MySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
         return;
 
     m_numberOfAtomTypes = numberOfAtomTypes;
+    if(m_atomStyle) m_atomStyle->setMinimumSize(numberOfAtomTypes);
     emit numberOfAtomTypesChanged(numberOfAtomTypes);
 }
 

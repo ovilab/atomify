@@ -78,6 +78,13 @@ void AtomStyle::remove(const int index)
     setModel(QVariant::fromValue(m_data));
 }
 
+void AtomStyle::setMinimumSize(int minimumSize)
+{
+    while(m_data.size() < minimumSize) {
+        add();
+    }
+}
+
 AtomStyleData::AtomStyleData(double scale, QColor color)
 {
     m_scale = scale;

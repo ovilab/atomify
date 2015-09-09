@@ -49,6 +49,7 @@ public slots:
     void setModel(QVariant model);
     void add();
     void remove(const int index);
+    void setMinimumSize(int minimumSize);
 };
 
 #endif // ATOMSKIN_H
