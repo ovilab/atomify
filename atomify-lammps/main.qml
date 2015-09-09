@@ -41,6 +41,13 @@ ApplicationWindow {
                         sequence: "Ctrl+R"
                         onActivated: runScript()
                     }
+                    Shortcut {
+                        sequence: "Escape"
+                        onActivated: {
+                            if(textarea.focus) textarea.focus = false
+                            else mySimulator.paused = !mySimulator.paused
+                        }
+                    }
                 }
             }
 
@@ -98,8 +105,18 @@ ApplicationWindow {
                     anchors.fill: parent
                     drag.target: parent
                     drag.axis: Drag.XAndYAxis
-
                 }
+            }
+
+            Label {
+                x: 0.5*(parent.width - width)
+                y: 25
+                color: Qt.rgba(1,1,1,0.5)
+                width: 200
+                height: 50
+                font.pixelSize: 50
+                text: "Paused"
+                visible: mySimulator.paused
             }
         }
     }
@@ -120,8 +137,14 @@ ApplicationWindow {
         sequence: "Ctrl+2"
         onActivated: tabview.currentIndex = 1
     }
+//    Shortcut {
+//        sequence: "Escape"
+//        onActivated: {
+//            mySimulator.paused = !mySimulator.paused
+//        }
+//    }
     Shortcut {
-        sequence: "Escape"
+        sequence: "Space"
         onActivated: {
             mySimulator.paused = !mySimulator.paused
         }

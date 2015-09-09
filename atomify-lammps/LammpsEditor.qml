@@ -5,7 +5,9 @@ import Highlighter 1.0
 import MySimulator 1.0
 Item {
     id: lammpsEditorRoot
+
     property MySimulator simulator
+    property TextArea textarea: textarea
     function runScript() {
         simulator.runScript(textarea.text)
     }
