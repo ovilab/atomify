@@ -33,9 +33,14 @@ ApplicationWindow {
                 title: "Script editor"
 
                 LammpsEditor {
-                    id: lammpsEditor
+                    id: myLammpsEditor
                     anchors.fill: parent
                     simulator: mySimulator
+                    Shortcut {
+                        // Random placement here because it could not find the editor otherwise (Qt bug?)
+                        sequence: "Ctrl+R"
+                        onActivated: runScript()
+                    }
                 }
             }
 
@@ -88,6 +93,13 @@ ApplicationWindow {
                         text: "Pressure: "+pressure.value
                     }
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    drag.target: parent
+                    drag.axis: Drag.XAndYAxis
+
+                }
             }
         }
     }
@@ -108,6 +120,13 @@ ApplicationWindow {
         sequence: "Ctrl+2"
         onActivated: tabview.currentIndex = 1
     }
+    Shortcut {
+        sequence: "Escape"
+        onActivated: {
+            mySimulator.paused = !mySimulator.paused
+        }
+    }
+
 
     Compute {
         id: temperature

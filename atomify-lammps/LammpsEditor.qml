@@ -6,6 +6,10 @@ import MySimulator 1.0
 Item {
     id: lammpsEditorRoot
     property MySimulator simulator
+    function runScript() {
+        simulator.runScript(textarea.text)
+    }
+
     Component.onCompleted: {
         highlighter.setTextDocument(textarea.textDocument)
     }
@@ -63,7 +67,7 @@ fix 1 all nve'
                 Layout.alignment: Qt.AlignCenter
                 text: "Run"
                 onClicked: {
-                    lammpsEditorRoot.simulator.runScript(textarea.text)
+                    runScript()
                 }
             }
 
