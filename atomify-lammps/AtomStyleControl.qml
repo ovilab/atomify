@@ -46,9 +46,9 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        colorDialog.color = model.modelData.color
-                        colorDialog.clickedIndex = index
                         colorDialog.visible = true
+                        colorDialog.clickedIndex = index
+                        colorDialog.color = model.modelData.color
                     }
                 }
             }
@@ -80,9 +80,17 @@ Item {
 
     ColorDialog {
         id: colorDialog
-        property int clickedIndex
+        property int clickedIndex: -1
         onColorChanged: {
-            atomStyle.setModelData(clickedIndex, "color", colorDialog.color)
+            if(clickedIndex >= 0) {
+                atomStyle.setModelData(clickedIndex, "color", colorDialog.color)
+            }
+        }
+        onAccepted: {
+            clickedIndex = -1
+        }
+        onRejected: {
+            clickedIndex = -1
         }
     }
 

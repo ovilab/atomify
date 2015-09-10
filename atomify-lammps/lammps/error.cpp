@@ -17,7 +17,7 @@
 #include "universe.h"
 #include "output.h"
 #include <QString>
-#include "lammpserror.h"
+#include "lammpsexception.h"
 using namespace LAMMPS_NS;
 
 
