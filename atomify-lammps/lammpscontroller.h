@@ -16,6 +16,7 @@ class LAMMPSController
 private:
     struct State {
         bool paused = false;
+        bool crashed = false;
         bool runCommandActive = false;
         bool preRunNeeded = true;
         int  simulationSpeed = 1;

@@ -78,6 +78,7 @@ void LAMMPSController::setComputes(const QMap<QString, CPCompute *> &computes)
 {
     m_computes = computes;
 }
+#include "lammpsexception.h"
 
 void LAMMPSController::executeCommandInLAMMPS(QString command) {
     if(m_lammps == NULL) {
@@ -87,8 +88,12 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     }
 
     // cout << command.toStdString() << endl;
-
-    lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
+    try {
+        lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
+    } catch (LammpsException &exception) {
+        qDebug() << "An exception occurred. Exception: " << exception.what();
+        m_state.crashed = true;
+    }
 }
 
 void LAMMPSController::processCommand(QString command) {
@@ -286,6 +291,7 @@ void LAMMPSController::reset()
 
 void LAMMPSController::tick()
 {
+    if(m_state.crashed) return;
     if(m_state.paused) return;
     if(m_lammps == NULL) return;
 

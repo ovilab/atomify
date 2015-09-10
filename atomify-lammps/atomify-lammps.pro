@@ -1019,7 +1019,8 @@ HEADERS += \
     CPcompute.h \
     lammpsoutput.h \
     lammpsfilehandler.h \
-    atomstyle.h
+    atomstyle.h \
+    lammpsexception.h
 
 DISTFILES += \
     iOS.plist

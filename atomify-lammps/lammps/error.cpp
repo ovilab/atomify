@@ -16,8 +16,11 @@
 #include "error.h"
 #include "universe.h"
 #include "output.h"
-
+#include <QString>
+#include "lammpserror.h"
 using namespace LAMMPS_NS;
+
+
 
 /* ---------------------------------------------------------------------- */
 
@@ -94,17 +97,21 @@ void Error::all(const char *file, int line, const char *str)
 
   if (me == 0) {
     if (screen) fprintf(screen,"ERROR: %s (%s:%d)\n",str,file,line);
-    else fprintf(stdout,"ERROR: %s (%s:%d)\n",str,file,line);
     if (logfile) fprintf(logfile,"ERROR: %s (%s:%d)\n",str,file,line);
   }
 
-  if (output) delete output;
-  if (screen && screen != stdout) fclose(screen);
-  if (logfile) fclose(logfile);
+  QString error = QString("ERROR: %1 (%2:%3)").arg(str,file).arg(line);
+  throw LammpsException(error);
 
-  if (universe->nworlds > 1) MPI_Abort(universe->uworld,1);
-  MPI_Finalize();
-  exit(1);
+  // throw error.toStdString().c_str();
+
+//  if (output) delete output;
+//  if (screen && screen != stdout) fclose(screen);
+//  if (logfile) fclose(logfile);
+
+//  if (universe->nworlds > 1) MPI_Abort(universe->uworld,1);
+//  MPI_Finalize();
+//  exit(1);
 }
 
 /* ----------------------------------------------------------------------
