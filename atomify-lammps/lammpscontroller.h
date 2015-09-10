@@ -4,11 +4,13 @@
 #include "lammps/lammps.h"
 #include "lammps/compute.h"
 #include "lammpsoutput.h"
+#include "lammpsexception.h"
 #include "CPcompute.h"
 #include <memory>
 #include <QVector>
 #include <QString>
 #include <QMap>
+
 using namespace LAMMPS_NS;
 class MyWorker;
 class LAMMPSController
@@ -23,10 +25,10 @@ private:
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
     };
-
     State m_state;
     QVector<QString> m_commands;
     QMap<QString, CPCompute*> m_computes;
+    LammpsException m_currentException;
     LAMMPS *m_lammps = NULL;
     MyWorker *m_worker = NULL;
 
@@ -53,8 +55,10 @@ public:
     void setSimulationSpeed(int simulationSpeed);
     QMap<QString, CPCompute *> computes() const;
     void setComputes(const QMap<QString, CPCompute *> &computes);
-    bool getPaused() const;
+    bool paused() const;
     void setPaused(bool value);
+    bool crashed() const;
+    LammpsException &currentException();
     double simulationTime();
     int numberOfAtoms() const;
     int numberOfAtomTypes() const;

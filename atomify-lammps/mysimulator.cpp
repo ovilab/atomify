@@ -37,8 +37,15 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->m_scriptToRun.clear();
     }
 
+    if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
+        qDebug() << "LAMMPS crashed and we picked it up :D";
+        qDebug() << "An error occured in " << m_lammpsController.currentException().file() << " on line " << m_lammpsController.currentException().line();
+        qDebug() << "Message: " << m_lammpsController.currentException().error() << endl;
+        m_lammpsController.currentException().setIsReported(true);
+    }
+
     if(mySimulator->atomStyle() != NULL) {
-        // Sync potential new atom styles
+        // Sync new atom styles from Simulator (QML) to Worker
         m_atomStyle.setData(mySimulator->atomStyle()->data());
     }
 

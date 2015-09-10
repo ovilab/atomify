@@ -78,7 +78,6 @@ void LAMMPSController::setComputes(const QMap<QString, CPCompute *> &computes)
 {
     m_computes = computes;
 }
-#include "lammpsexception.h"
 
 void LAMMPSController::executeCommandInLAMMPS(QString command) {
     if(m_lammps == NULL) {
@@ -91,7 +90,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {
-        qDebug() << "An exception occurred. Exception: " << exception.what();
+        m_currentException = exception; // Store a copy of the exception to communicate to GUI
         m_state.crashed = true;
     }
 }
@@ -337,7 +336,7 @@ QVector3D LAMMPSController::systemSize() const
     return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
 }
 
-bool LAMMPSController::getPaused() const
+bool LAMMPSController::paused() const
 {
     return m_state.paused;
 }
@@ -345,6 +344,16 @@ bool LAMMPSController::getPaused() const
 void LAMMPSController::setPaused(bool value)
 {
     m_state.paused = value;
+}
+
+bool LAMMPSController::crashed() const
+{
+    return m_state.crashed;
+}
+
+LammpsException &LAMMPSController::currentException()
+{
+    return m_currentException;
 }
 
 double LAMMPSController::simulationTime()

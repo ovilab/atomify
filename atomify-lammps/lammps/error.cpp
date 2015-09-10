@@ -100,8 +100,7 @@ void Error::all(const char *file, int line, const char *str)
     if (logfile) fprintf(logfile,"ERROR: %s (%s:%d)\n",str,file,line);
   }
 
-  QString error = QString("ERROR: %1 (%2:%3)").arg(str,file).arg(line);
-  throw LammpsException(error);
+  throw LammpsException(QString(file), QString(str), line);
 
   // throw error.toStdString().c_str();
 
