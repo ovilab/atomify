@@ -285,10 +285,13 @@ void LAMMPSController::executeActiveRunCommand() {
 void LAMMPSController::reset()
 {
     if(m_lammps != NULL) {
+        // We need to set FILE pointers in fixes to NULL so that they are not closed when LAMMPS deallocates.
         for(CPCompute *compute : m_computes) {
             if(computeExists(compute->identifier())) {
                 FixAveTime *fix = dynamic_cast<FixAveTime*>(findFix(compute->fixIdentifier()));
-                fix->fp = NULL;
+                if(fix != NULL) {
+                    fix->fp = NULL;
+                }
             }
         }
     }
