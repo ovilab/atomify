@@ -502,7 +502,6 @@ SOURCES += \
     lammpscontroller.cpp \
     lammps/compute_coord_usc.cpp \
     highlighter.cpp \
-    physicalproperty.cpp \
     CPcompute.cpp \
     lammpsoutput.cpp \
     lammpsfilehandler.cpp \
@@ -1015,7 +1014,6 @@ HEADERS += \
     lammpscontroller.h \
     lammps/compute_coord_usc.h \
     highlighter.h \
-    physicalproperty.h \
     CPcompute.h \
     lammpsoutput.h \
     lammpsfilehandler.h \

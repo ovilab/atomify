@@ -4,7 +4,6 @@
 #include "lammps/domain.h"
 #include "lammps/update.h"
 #include "lammps/modify.h"
-#include "physicalproperty.h"
 
 #include <core/camera.h>
 #include <string>
