@@ -133,16 +133,12 @@ ApplicationWindow {
         sequence: "Ctrl+1"
         onActivated: tabview.currentIndex = 0
     }
+
     Shortcut {
         sequence: "Ctrl+2"
         onActivated: tabview.currentIndex = 1
     }
-//    Shortcut {
-//        sequence: "Escape"
-//        onActivated: {
-//            mySimulator.paused = !mySimulator.paused
-//        }
-//    }
+
     Shortcut {
         sequence: "Space"
         onActivated: {

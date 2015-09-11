@@ -247,8 +247,12 @@ void LAMMPSController::processComputes()
                 executeCommandInLAMMPS(compute->command());
                 // Now we need to create a fix that will store these values
                 QString fixIdentifier = QString("fix%1").arg(compute->identifier());
+                compute->setFixIdentifier(fixIdentifier);
+
                 QString fixCommand = QString("fix %1 all ave/time 1 5 10 c_%2").arg(fixIdentifier, compute->identifier());
                 if(compute->isVector()) fixCommand.append(" mode vector");
+
+                compute->setFixCommand(fixCommand);
                 executeCommandInLAMMPS(fixCommand);
                 // Now replace the output on the object
                 FixAveTime *fix = dynamic_cast<FixAveTime*>(findFix(fixIdentifier));
@@ -280,6 +284,14 @@ void LAMMPSController::executeActiveRunCommand() {
 
 void LAMMPSController::reset()
 {
+    if(m_lammps != NULL) {
+        for(CPCompute *compute : m_computes) {
+            if(computeExists(compute->identifier())) {
+                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFix(compute->fixIdentifier()));
+                fix->fp = NULL;
+            }
+        }
+    }
     setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;

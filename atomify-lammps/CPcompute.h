@@ -11,6 +11,8 @@ class CPCompute : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
+    Q_PROPERTY(QString fixIdentifier READ fixIdentifier WRITE setFixIdentifier NOTIFY fixIdentifierChanged)
+    Q_PROPERTY(QString fixCommand READ fixCommand WRITE setFixCommand NOTIFY fixCommandChanged)
     Q_PROPERTY(QString command READ command WRITE setCommand NOTIFY commandChanged)
     Q_PROPERTY(MySimulator* simulator READ simulator WRITE setSimulator NOTIFY simulatorChanged)
     Q_PROPERTY(QStringList dependencies READ dependencies WRITE setDependencies NOTIFY dependenciesChanged)
@@ -24,7 +26,10 @@ class CPCompute : public QObject
     Q_PROPERTY(double fourthValue READ fourthValue NOTIFY fourthValueChanged)
 private:
     QString m_identifier;
+    QString m_fixIdentifier;
+    QString m_fixCommand;
     QString m_command;
+
     LammpsOutput m_output;
     MySimulator* m_simulator = NULL;
     QStringList m_dependencies;
@@ -47,6 +52,8 @@ public:
     QList<double> values() const;
     LammpsOutput &output();
     bool isVector() const;
+    QString fixIdentifier() const;
+    QString fixCommand() const;
 
 signals:
     void identifierChanged(QString identifier);
@@ -59,6 +66,8 @@ signals:
     void fourthValueChanged(double value);
     void valuesChanged(QList<double> values);
     void isVectorChanged(bool isVector);
+    void fixIdentifierChanged(QString fixIdentifier);
+    void fixCommandChanged(QString fixCommand);
 
 public slots:
     void setIdentifier(QString identifier);
@@ -67,5 +76,7 @@ public slots:
     void setDependencies(QStringList dependencies);
     void setValues(QVector<double> values);
     void setIsVector(bool isVector);
+    void setFixIdentifier(QString fixIdentifier);
+    void setFixCommand(QString fixCommand);
 };
 #endif // COMPUTE_H

@@ -12,6 +12,16 @@ bool CPCompute::isVector() const
     return m_isVector;
 }
 
+QString CPCompute::fixIdentifier() const
+{
+    return m_fixIdentifier;
+}
+
+QString CPCompute::fixCommand() const
+{
+    return m_fixCommand;
+}
+
 CPCompute::CPCompute(QObject *parent) : QObject(parent)
 {
     m_output.m_compute = this;
@@ -124,4 +134,22 @@ void CPCompute::setIsVector(bool isVector)
 
     m_isVector = isVector;
     emit isVectorChanged(isVector);
+}
+
+void CPCompute::setFixIdentifier(QString fixIdentifier)
+{
+    if (m_fixIdentifier == fixIdentifier)
+        return;
+
+    m_fixIdentifier = fixIdentifier;
+    emit fixIdentifierChanged(fixIdentifier);
+}
+
+void CPCompute::setFixCommand(QString fixCommand)
+{
+    if (m_fixCommand == fixCommand)
+        return;
+
+    m_fixCommand = fixCommand;
+    emit fixCommandChanged(fixCommand);
 }
