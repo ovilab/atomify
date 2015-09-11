@@ -10,6 +10,7 @@ AtomStyle::AtomStyle(QObject *parent) : QObject(parent)
 AtomStyle::~AtomStyle()
 {
     m_data.clear();
+    m_model.clear();
 }
 
 QVariant AtomStyle::model() const

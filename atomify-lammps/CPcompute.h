@@ -39,6 +39,7 @@ private:
 
 public:
     explicit CPCompute(QObject *parent = 0);
+    ~CPCompute();
 
     QString identifier() const;
     QString command() const;

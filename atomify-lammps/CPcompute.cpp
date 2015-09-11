@@ -27,6 +27,13 @@ CPCompute::CPCompute(QObject *parent) : QObject(parent)
     m_output.m_compute = this;
 }
 
+CPCompute::~CPCompute()
+{
+    m_values.clear();
+    m_simulator = NULL;
+    m_dependencies.clear();
+}
+
 QString CPCompute::identifier() const
 {
     return m_identifier;
