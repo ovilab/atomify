@@ -1,9 +1,9 @@
 #include "mysimulator.h"
-#include "lammps/library.h"
-#include "lammps/atom.h"
-#include "lammps/domain.h"
-#include "lammps/update.h"
-#include "lammps/modify.h"
+#include <library.h>
+#include <atom.h>
+#include <domain.h>
+#include <update.h>
+#include <modify.h>
 
 #include <core/camera.h>
 #include <string>
@@ -37,9 +37,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
-        qDebug() << "LAMMPS crashed and we picked it up :D";
-        qDebug() << "An error occured in " << m_lammpsController.currentException().file() << " on line " << m_lammpsController.currentException().line();
-        qDebug() << "Message: " << m_lammpsController.currentException().error() << endl;
+
+        cout << "LAMMPS crashed and we picked it up :D" << endl;
+        cout << "An error occured in " << m_lammpsController.currentException().file() << " on line " << m_lammpsController.currentException().line() << endl;
+        cout << "Message: " << m_lammpsController.currentException().error() << endl;
         m_lammpsController.currentException().setIsReported(true);
     }
 

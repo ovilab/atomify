@@ -1,21 +1,23 @@
 #include "lammpscontroller.h"
-#include "lammps/fix_ave_time.h"
-#include "lammps/integrate.h"
-#include "lammps/library.h"
-#include "lammps/atom.h"
-#include "lammps/input.h"
-#include "lammps/variable.h"
-#include "lammps/update.h"
-#include "lammps/modify.h"
-#include "lammps/output.h"
-#include "lammps/dump.h"
-#include "lammps/domain.h"
-#include "lammps/fix.h"
+
+#include <fix_ave_time.h>
+#include <integrate.h>
+#include <library.h>
+#include <atom.h>
+#include <input.h>
+#include <variable.h>
+#include <update.h>
+#include <modify.h>
+#include <output.h>
+#include <dump.h>
+#include <domain.h>
+#include <fix.h>
+
 #include "CPcompute.h"
 #include "lammpsfilehandler.h"
 #include "mysimulator.h"
-#include <stdio.h>
 
+#include <stdio.h>
 #include <QDebug>
 #include <string>
 #include <cstdlib>

@@ -1,15 +1,17 @@
 #ifndef LAMMPSCONTROLLER_H
 #define LAMMPSCONTROLLER_H
-#include <mpi.h>
-#include "lammps/lammps.h"
-#include "lammps/compute.h"
-#include "lammpsoutput.h"
-#include "lammpsexception.h"
-#include "CPcompute.h"
 #include <memory>
 #include <QVector>
 #include <QString>
 #include <QMap>
+#include <mpi.h>
+#include <lammps.h>
+#include <compute.h>
+#include <lammpsexception.h>
+
+#include "lammpsoutput.h"
+#include "CPcompute.h"
+
 
 using namespace LAMMPS_NS;
 class MyWorker;

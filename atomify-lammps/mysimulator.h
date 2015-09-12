@@ -7,11 +7,11 @@
 #include <memory>
 #include <cmath>
 #include <QVector3D>
+#include <mpi.h>
+#include <lammps.h>
 
 #include "lammpscontroller.h"
 #include "lammpsoutput.h"
-#include "mpi_stubs/mpi.h"
-#include "lammps/lammps.h"
 #include "atomstyle.h"
 
 using std::function; using std::unique_ptr;

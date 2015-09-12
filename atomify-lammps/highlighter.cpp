@@ -46,6 +46,7 @@ Highlighter::Highlighter(QTextDocument *parent)
 {
     HighlightingRule rule;
 
+
     QTextCharFormat format;
     QStringList patterns;
 
