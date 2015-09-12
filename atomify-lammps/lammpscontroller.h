@@ -24,6 +24,7 @@ private:
         bool runCommandActive = false;
         bool preRunNeeded = true;
         int  simulationSpeed = 1;
+        bool dataDirty = false;
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
     };
@@ -59,6 +60,8 @@ public:
     void setComputes(const QMap<QString, CPCompute *> &computes);
     bool paused() const;
     void setPaused(bool value);
+    bool dataDirty() const;
+    void setDataDirty(bool value);
     bool crashed() const;
     LammpsException &currentException();
     double simulationTime();

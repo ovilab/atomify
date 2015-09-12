@@ -11,6 +11,7 @@ class LammpsOutput : public QObject
     Q_OBJECT
 public:
     LammpsOutput();
+    ~LammpsOutput();
     FILE *stream();
     void parse(QString buffer);
 private:

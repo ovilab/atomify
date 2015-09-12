@@ -12,7 +12,6 @@ Visualizer::Visualizer() :
 {
     connect(this, &Visualizer::widthChanged, this, &Visualizer::resetAspectRatio);
     connect(this, &Visualizer::heightChanged, this, &Visualizer::resetAspectRatio);
-    connect(this, &Visualizer::componentComplete, this, &Visualizer::resetAspectRatio);
     connect(&m_timer, &QTimer::timeout, this, &Visualizer::timerTicked);
     m_timer.start(16);
     m_elapsedTimer.start();
@@ -143,7 +142,6 @@ void Visualizer::timerTicked()
 void VisualizerRenderer::render()
 {
     QOpenGLFunctions funcs(QOpenGLContext::currentContext());
-
     // qDebug() << "Model view matrix: " << m_camera->matrix();
     // qDebug() << "Up1: " << m_camera->upVector() << "   right1: " << QVector3D::crossProduct(m_camera->viewVector().normalized(), m_camera->upVector()) << "   view1: " << m_camera->viewVector().normalized();
 
@@ -180,7 +178,6 @@ void VisualizerRenderer::render()
         m_fpsCounterTimeZero = QDateTime::currentMSecsSinceEpoch();
         m_fps = 60.0 / dt * 1000;
     }
-
     m_frameCount++;
 }
 

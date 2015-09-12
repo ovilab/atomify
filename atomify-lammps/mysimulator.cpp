@@ -76,7 +76,8 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     LAMMPS *lammps = m_lammpsController.lammps();
-    if(!lammps) return;
+    if(!lammps || !m_lammpsController.dataDirty()) return;
+    m_lammpsController.setDataDirty(false);
 
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();
@@ -118,6 +119,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         positions.resize(visibleAtoms);
         scales.resize(visibleAtoms);
         m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
+        spheres->setDirty(true);
     }
 }
 

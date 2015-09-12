@@ -34,6 +34,20 @@ void Spheres::setScales(const QVector<float> &scales)
     m_scales = scales;
 }
 
+bool Spheres::dirty() const
+{
+    return m_dirty;
+}
+
+void Spheres::setDirty(bool dirty)
+{
+    if (m_dirty == dirty)
+        return;
+
+    m_dirty = dirty;
+    emit dirtyChanged(dirty);
+}
+
 QVector<QColor> &Spheres::colors()
 {
     return m_colors;
@@ -101,7 +115,7 @@ void SpheresRenderer::synchronize(Renderable* renderer)
 
 void SpheresRenderer::uploadVBOs(Spheres* spheres)
 {
-    if(spheres->m_positions.size() < 1) {
+    if(!spheres->dirty() || spheres->m_positions.size() < 1) {
         return;
     }
 
@@ -164,6 +178,8 @@ void SpheresRenderer::uploadVBOs(Spheres* spheres)
         indices [6*i + 4] = 4*i+3;
         indices [6*i + 5] = 4*i+0;
     }
+
+    spheres->setDirty(false);
 
     // Transfer vertex data to VBO 0
     glFunctions()->glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[0]);

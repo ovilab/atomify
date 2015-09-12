@@ -332,7 +332,7 @@ void LAMMPSController::tick()
         }
     }
 
-    fflush(output.stream());
+    m_state.dataDirty = true;
 }
 
 int LAMMPSController::numberOfAtoms() const
@@ -361,6 +361,16 @@ bool LAMMPSController::paused() const
 void LAMMPSController::setPaused(bool value)
 {
     m_state.paused = value;
+}
+
+bool LAMMPSController::dataDirty() const
+{
+    return m_state.dataDirty;
+}
+
+void LAMMPSController::setDataDirty(bool value)
+{
+    m_state.dataDirty = value;
 }
 
 bool LAMMPSController::crashed() const

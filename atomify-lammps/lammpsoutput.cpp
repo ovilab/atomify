@@ -18,6 +18,11 @@ LammpsOutput::LammpsOutput()
 
 }
 
+LammpsOutput::~LammpsOutput()
+{
+
+}
+
 
 int LammpsOutput::read (void *, char *, int ) {
 
