@@ -305,6 +305,22 @@ void LAMMPSController::reset()
     m_commands.clear();
 }
 
+QString LAMMPSController::getNextCommand() {
+    QString line = m_commands.front().trimmed();
+    QString command = line;
+    m_commands.pop_front();
+
+    // Check if the last character is & - then combine the command with the next line
+    while(line.endsWith(QChar('&'))) {
+        command.remove(line.length() - 1,1);
+        line = m_commands.front().trimmed();
+        command.append(QString(" %1").arg(line));
+        m_commands.pop_front();
+    }
+
+    return command;
+}
+
 void LAMMPSController::tick()
 {
     if(m_state.crashed) return;
@@ -317,9 +333,7 @@ void LAMMPSController::tick()
         executeActiveRunCommand();
     } else if(m_commands.size() > 0) {
         // If the command stack has any commands left, process them.
-        QString command = m_commands.front();
-        m_commands.pop_front();
-        processCommand(command);
+        processCommand(getNextCommand());
     } else {
         // If no commands are queued, just perform a normal run command with the current simulation speed.
 

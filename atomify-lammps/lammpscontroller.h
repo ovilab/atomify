@@ -44,6 +44,7 @@ private:
     LAMMPS_NS::Compute *findCompute(QString identifier);
     LAMMPS_NS::Fix *findFix(QString identifier);
 
+    QString getNextCommand();
 public:
     LammpsOutput output;
 

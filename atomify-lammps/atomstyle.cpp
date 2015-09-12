@@ -7,6 +7,7 @@ AtomStyle::AtomStyle(QObject *parent) : QObject(parent)
     setModel(QVariant::fromValue(m_data));
 }
 
+
 AtomStyle::~AtomStyle()
 {
     m_data.clear();
