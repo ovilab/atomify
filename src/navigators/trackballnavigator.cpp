@@ -44,6 +44,7 @@ void TrackballNavigator::moved(QVector2D delta)
     // Tilt back before we add the delta tilt from touch/mouse move
     m_camera->tiltAboutViewCenter(-currentTilt);
     m_camera->tiltAboutViewCenter(deltaTilt);
+    emit m_camera->cameraMoved();
 }
 
 void TrackballNavigator::mousePressEvent(QMouseEvent *event)
@@ -65,6 +66,7 @@ void TrackballNavigator::wheelEvent(QWheelEvent *event)
     float deltaY = -event->angleDelta().y() * effectiveSensitivity;
     float factor = exp(deltaY);
     m_camera->setPosition(m_camera->position()*factor);
+    emit m_camera->cameraMoved();
 }
 
 void TrackballNavigator::touchEvent(QTouchEvent *event)
@@ -97,6 +99,7 @@ void TrackballNavigator::touchEvent(QTouchEvent *event)
                     float currentTheta = atan2(currentDelta.y(), currentDelta.x());
                     float deltaTheta = (lastTheta - currentTheta)*180.0/M_PI;
                     m_camera->rollAboutViewCenter(deltaTheta);
+                    emit m_camera->cameraMoved();
                 }
 
                 // Require at least movement in both touches if we want to move

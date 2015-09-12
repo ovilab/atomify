@@ -118,6 +118,7 @@ void SpheresRenderer::uploadVBOs(Spheres* spheres)
     if(!spheres->dirty() || spheres->m_positions.size() < 1) {
         return;
     }
+    qDebug() << "Uploading vbo...";
 
     float scale = spheres->scale();
     QVector<QVector3D>& positions = spheres->m_positions;
@@ -188,6 +189,7 @@ void SpheresRenderer::uploadVBOs(Spheres* spheres)
     // Transfer index data to VBO 1
     glFunctions()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vboIds[1]);
     glFunctions()->glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices.front(), GL_STATIC_DRAW);
+    qDebug() << "Done uploading vbo.";
 }
 
 void Spheres::setPositions(QVector<QVector3D> &positions)

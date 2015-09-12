@@ -82,7 +82,11 @@ void Visualizer::setCamera(Camera *arg)
     if (m_camera == arg)
         return;
 
+    if(m_camera) {
+        disconnect(m_camera, &Camera::cameraMoved, this, &Visualizer::update);
+    }
     m_camera = arg;
+    connect(m_camera, &Camera::cameraMoved, this, &Visualizer::update);
     emit cameraChanged(arg);
 }
 

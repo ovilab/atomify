@@ -130,6 +130,7 @@ Q_SIGNALS:
     void viewCenterChanged();
     void viewVectorChanged();
     void matrixChanged();
+    void cameraMoved();
 
 protected:
     CameraPrivate *d_ptr;
