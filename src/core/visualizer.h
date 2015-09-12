@@ -48,6 +48,7 @@ public:
     Navigator* navigator();
     float fps() const;
     float time() const;
+    void gotWindow();
 
 public slots:
     void setSimulator(Simulator* arg);

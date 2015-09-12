@@ -6,6 +6,7 @@
 #include "../navigators/trackballnavigator.h"
 #include <QDebug>
 #include <QOpenGLFramebufferObjectFormat>
+#include <QQuickWindow>
 
 Visualizer::Visualizer() :
     m_defaultCamera(this)
@@ -15,7 +16,7 @@ Visualizer::Visualizer() :
     connect(&m_timer, &QTimer::timeout, this, &Visualizer::timerTicked);
     m_timer.start(16);
     m_elapsedTimer.start();
-
+    connect(this, &Visualizer::windowChanged, this, &Visualizer::gotWindow);
 }
 
 Visualizer::~Visualizer()
@@ -62,6 +63,15 @@ float Visualizer::fps() const
 float Visualizer::time() const
 {
     return m_time;
+}
+
+void Visualizer::gotWindow()
+{
+    QSurfaceFormat format = window()->format();
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setMajorVersion(4);
+    format.setMinorVersion(3);
+    window()->setFormat(format);
 }
 
 void Visualizer::setSimulator(Simulator *arg)
@@ -146,6 +156,12 @@ void Visualizer::timerTicked()
 void VisualizerRenderer::render()
 {
     QOpenGLFunctions funcs(QOpenGLContext::currentContext());
+    QSurfaceFormat format = QOpenGLContext::currentContext()->format();
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setMajorVersion(4);
+    format.setMinorVersion(1);
+    QOpenGLContext::currentContext()->setFormat(format);
+
     // qDebug() << "Model view matrix: " << m_camera->matrix();
     // qDebug() << "Up1: " << m_camera->upVector() << "   right1: " << QVector3D::crossProduct(m_camera->viewVector().normalized(), m_camera->upVector()) << "   view1: " << m_camera->viewVector().normalized();
 
@@ -183,6 +199,7 @@ void VisualizerRenderer::render()
         m_fps = 60.0 / dt * 1000;
     }
     m_frameCount++;
+    qDebug() << "OpenGL version: " << QOpenGLContext::currentContext()->format().majorVersion() << "," << QOpenGLContext::currentContext()->format().minorVersion();
 }
 
 void VisualizerRenderer::synchronize(QQuickFramebufferObject *fbo)
@@ -216,7 +233,7 @@ void VisualizerRenderer::setCamera(Camera *camera)
 QOpenGLFramebufferObject *VisualizerRenderer::createFramebufferObject(const QSize &size) {
     QOpenGLFramebufferObjectFormat format;
     format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
-//    format.setSamples(4);
     QOpenGLFramebufferObject* fbo = new QOpenGLFramebufferObject(size, format);
+
     return fbo;
 }

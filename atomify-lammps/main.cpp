@@ -1,7 +1,9 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
-
+#include <QSurfaceFormat>
+#include <QOpenGLContext>
+#include <QQuickWindow>
 #ifdef Q_OS_LINUX
 #include <locale>
 #endif
@@ -22,11 +24,26 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
+    QSurfaceFormat format;
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setMajorVersion(4);
+    format.setMinorVersion(3);
+
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    for(auto &obj : engine.rootObjects()) {
+        qDebug() << "Obj: " << obj;
+        qDebug() << "Window type: " << obj->isWindowType();
+
+        QQuickWindow *window = qobject_cast<QQuickWindow*>(obj);
+        if(window != NULL) {
+            window->setFormat(format);
+        } else qDebug() << "No :(((";
+    }
 #ifdef Q_OS_LINUX
     setlocale(LC_ALL, "C");
     setlocale(LC_NUMERIC, "C");
 #endif
+
     return app.exec();
 }
