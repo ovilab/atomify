@@ -76,7 +76,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
-
     if(spheres) {
         LAMMPS *lammps = m_lammpsController.lammps();
         if(!lammps || !m_lammpsController.dataDirty()) return;

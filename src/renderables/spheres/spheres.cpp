@@ -195,7 +195,7 @@ void SpheresRenderer::uploadVBONoGeometryShader(Spheres* spheres) {
 }
 
 void SpheresRenderer::uploadVBOGeometryShader(Spheres* spheres) {
-    if(spheres->positions().size() < 1) {
+    if(!spheres->dirty() || spheres->m_positions.size() < 1) {
         return;
     }
     QVector<QVector3D>& positions = spheres->m_positions;
