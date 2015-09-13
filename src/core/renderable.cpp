@@ -98,9 +98,11 @@ void RenderableRenderer::prepareAndRender()
         m_fragmentShaderBase.clear();
         m_vertexShaderBase.clear();
         m_geometryShaderBase.clear();
-        addShaderCodeToBase(QOpenGLShader::Fragment, QString("#version 330\n"));
-        addShaderCodeToBase(QOpenGLShader::Vertex, QString("#version 330\n"));
-        addShaderCodeToBase(QOpenGLShader::Geometry, QString("#version 330\n"));
+        if(QOpenGLContext::currentContext()->format().profile() == QSurfaceFormat::CoreProfile) {
+            addShaderCodeToBase(QOpenGLShader::Fragment, QString("#version 330\n"));
+            addShaderCodeToBase(QOpenGLShader::Vertex, QString("#version 330\n"));
+            addShaderCodeToBase(QOpenGLShader::Geometry, QString("#version 330\n"));
+        }
         addShaderCodeToBase(QOpenGLShader::Fragment, contentFromFile(":/org.compphys.SimVis/shadereffects/shaders/default.glsl"));
         addShaderCodeToBase(QOpenGLShader::Vertex, contentFromFile(":/org.compphys.SimVis/shadereffects/shaders/default.glsl"));
         addShaderCodeToBase(QOpenGLShader::Geometry, contentFromFile(":/org.compphys.SimVis/shadereffects/shaders/default.glsl"));

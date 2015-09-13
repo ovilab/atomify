@@ -210,7 +210,7 @@ void SpheresRenderer::uploadVBOGeometryShader(Spheres* spheres) {
         vertices[i].color[0] = colors[i].redF();
         vertices[i].color[1] = colors[i].greenF();
         vertices[i].color[2] = colors[i].blueF();
-        vertices[i].scale = scales[i]*spheres->scale();
+        vertices[i].scale = scales[i]*spheres->scale()*0.5;
     }
     spheres->setDirty(false);
 
