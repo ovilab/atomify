@@ -403,7 +403,7 @@ bool LAMMPSController::crashed() const
 
 double LAMMPSController::timePerTimestep()
 {
-    return ((double)m_state.timeSpentInLammps) / m_state.numberOfTimesteps; // Measured in ms
+    return ((double)m_state.timeSpentInLammps) / (m_state.numberOfTimesteps ? m_state.numberOfTimesteps : 1); // Measured in ms
 }
 
 LammpsException &LAMMPSController::currentException()
