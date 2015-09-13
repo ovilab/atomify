@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "../shadereffects/light.h"
 #include <QFile>
+#include <QOpenGLFunctions_4_1_Core>
 
 Renderable::Renderable(QQuickItem *parent) :
     QQuickItem(parent),
@@ -80,7 +81,8 @@ void RenderableRenderer::generateVBOs()
     if(m_numberOfVBOs>0) {
         m_vboIds.resize(m_numberOfVBOs);
         glFunctions()->glGenBuffers(m_numberOfVBOs, &m_vboIds.front());
-        glGenVertexArrays(1, &m_vaoId);
+        m_vao = new QOpenGLVertexArrayObject(this);
+        m_vao->create();
     }
 }
 

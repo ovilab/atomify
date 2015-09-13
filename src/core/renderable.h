@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLVertexArrayObject>
 #include <QMatrix4x4>
 #include <QColor>
 #include <QElapsedTimer>
@@ -47,7 +48,7 @@ protected:
     QVector3D m_rightVector;
     QVector3D m_cameraPosition;
     QVector<GLuint> m_vboIds;
-    GLuint m_vaoId;
+    QOpenGLVertexArrayObject *m_vao;
     QString m_fragmentShaderBase;
     QString m_geometryShaderBase;
     QString m_vertexShaderBase;

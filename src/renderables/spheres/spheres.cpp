@@ -215,7 +215,7 @@ void SpheresRenderer::uploadVBOGeometryShader(Spheres* spheres) {
     spheres->setDirty(false);
 
     // Transfer vertex data to VBO 0
-    glBindVertexArray(m_vaoId);
+    m_vao->bind();
     glFunctions()->glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[0]);
     glFunctions()->glBufferData(GL_ARRAY_BUFFER, numberOfVertices * sizeof(SphereGeometryShaderVBOData), &vertices.front(), GL_STATIC_DRAW);
     m_vertexCount = spheres->m_verticesGeometryShader.size();
@@ -310,7 +310,7 @@ void SpheresRenderer::renderNoGeometryShader() {
 void SpheresRenderer::renderGeometryShader() {
     QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 
-    glBindVertexArray(m_vaoId);
+    m_vao->bind();
 
     int positionLocation = 0;
     int colorLocation = 1;

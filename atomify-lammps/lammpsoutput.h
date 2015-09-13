@@ -20,6 +20,9 @@ private:
     static fpos_t seek(void *, fpos_t, int);
     static int write(void *cookie, const char *buffer, int size);
     static int read(void *, char *, int);
+    static __ssize_t readLinux(void *, char *, size_t);
+    static __ssize_t writeLinux(void *cookie, const char *buffer, size_t n);
+    static int seekLinux(void *cookie, __off64_t *__pos, int __w);
     FILE *m_filePointer = NULL;
     CPCompute* m_compute;
     friend class CPCompute;

@@ -4,39 +4,20 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
-QMAKE_CXXFLAGS += -g
+QMAKE_CXXFLAGS += -g -fopenmp
+QMAKE_LFLAGS += -fopenmp
 CONFIG += warn_off
 
 # MPI STUBS
-INCLUDEPATH += /projects/lammps-10Aug15/src/STUBS
-DEPENDPATH += /projects/lammps-10Aug15/src/STUBS
-LIBS += -L/projects/lammps-10Aug15/src/STUBS -lmpi_stubs
-PRE_TARGETDEPS += /projects/lammps-10Aug15/src/STUBS/libmpi_stubs.a
+#INCLUDEPATH += /projects/lammps-10Aug15/src/STUBS
+#DEPENDPATH += /projects/lammps-10Aug15/src/STUBS
+#LIBS += -L/projects/lammps-10Aug15/src/STUBS -lmpi_stubs
+#PRE_TARGETDEPS += /projects/lammps-10Aug15/src/STUBS/libmpi_stubs.a
 
-CONFIG += openmp
-
-openmp {
-    # LAMMPS Library
-    DEFINES += _OPENMP
-    INCLUDEPATH += /projects/lammps-10Aug15/src
-    DEPENDPATH += /projects/lammps-10Aug15/src
-    unix: LIBS += -L/projects/lammps-10Aug15/src -llammps_omp
-    unix: PRE_TARGETDEPS += /projects/lammps-10Aug15/src/liblammps_omp.a
-    QMAKE_CXXFLAGS += -fopenmp
-    QMAKE_LFLAGS += -fopenmp
-}
-
-#!openmp {
-#    # LAMMPS Library
-#    INCLUDEPATH += /projects/lammps-10Aug15/src/STUBS
-#    DEPENDPATH += /projects/lammps-10Aug15/src/STUBS
-#    INCLUDEPATH += /projects/lammps-10Aug15/src
-#    DEPENDPATH += /projects/lammps-10Aug15/src
-#    unix: LIBS += -L/projects/lammps-10Aug15/src -llammps_omp4
-#    unix: PRE_TARGETDEPS += /projects/lammps-10Aug15/src/liblammps_omp.a
-#}
-
-
+DEFINES += _OPENMP
+INCLUDEPATH += /projects/lammps-10Aug15/src
+DEPENDPATH += /projects/lammps-10Aug15/src
+LIBS += -L/projects/lammps-10Aug15/src -llammps_omp
 
 android {
     DEFINES += LAMMPS_XDR
