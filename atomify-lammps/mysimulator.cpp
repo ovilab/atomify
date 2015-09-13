@@ -76,7 +76,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
-    Points* points = qobject_cast<Points*>(renderableObject);
 
     if(spheres) {
         LAMMPS *lammps = m_lammpsController.lammps();
@@ -122,32 +121,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         scales.resize(visibleAtoms);
         m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
         spheres->setDirty(true);
-    }
-
-
-    if(points) {
-        LAMMPS *lammps = m_lammpsController.lammps();
-        if(!lammps || !m_lammpsController.dataDirty()) return;
-        m_lammpsController.setDataDirty(false);
-
-        QVector<QVector3D> &positions = points->positions();
-        positions.resize(lammps->atom->natoms);
-
-        double position[3];
-        int visibleAtoms = 0;
-
-        for(unsigned int i=0; i<lammps->atom->natoms; i++) {
-            position[0] = lammps->atom->x[i][0];
-            position[1] = lammps->atom->x[i][1];
-            position[2] = lammps->atom->x[i][2];
-            lammps->domain->remap(position);
-
-            positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
-            positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
-            positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
-            visibleAtoms++;
-        }
-        positions.resize(visibleAtoms);
     }
 }
 
