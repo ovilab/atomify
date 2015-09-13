@@ -47,7 +47,9 @@ protected:
     QVector3D m_rightVector;
     QVector3D m_cameraPosition;
     QVector<GLuint> m_vboIds;
+    GLuint m_vaoId;
     QString m_fragmentShaderBase;
+    QString m_geometryShaderBase;
     QString m_vertexShaderBase;
     QOpenGLShaderProgram& program();
     QOpenGLFunctions* glFunctions();
@@ -91,7 +93,6 @@ public:
     Camera* camera() const;
 
 signals:
-
     void visibleChanged(bool arg);
     void cameraChanged(Camera* arg);
 public slots:

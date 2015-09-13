@@ -1,33 +1,30 @@
-// BEGIN spheres.vsh
-attribute highp vec3 a_position;
-attribute highp vec3 a_color;
-attribute highp vec2 a_texcoord;
-attribute highp float a_sphereId;
-attribute highp float a_scale;
-attribute highp float a_vertexId;
+layout( points ) in;
+layout( triangle_strip, max_vertices = 4 ) out;
+in vec3 vs_color[1];
+in float vs_scale[1];
+in vec3 vs_vertexPosition[1];
 
-uniform highp vec3 cp_upPlusRightHalf;
-uniform highp vec3 cp_upMinusRightHalf;
+out vec2 texCoord;
+out vec3 vertexPosition;
+out vec3 color;
 
-varying highp vec2 coords;
-varying highp vec3 color;
-varying highp vec3 vertexPosition;
-varying highp float sphereId;
+void main(void) {
+    vec4 pos = gl_in[0].gl_Position;
+    vertexPosition = vs_vertexPosition[0];
+    float scale = vs_scale[0];
+    color = vs_color[0];
 
-void main() {
-    coords = 2.0*a_texcoord - 1.0;
-    // vertexPosition = a_position.xyz + 0.5*(cp_rightVector*coords.x + cp_upVector*coords.y);
-
-    vertexPosition = a_position.xyz;
-    vertexPosition -= cp_upPlusRightHalf*(a_scale*float(a_vertexId==0.0));
-    vertexPosition -= cp_upMinusRightHalf*(a_scale*float(a_vertexId==1.0));
-    vertexPosition += cp_upPlusRightHalf*(a_scale*float(a_vertexId==2.0));
-    vertexPosition += cp_upMinusRightHalf*(a_scale*float(a_vertexId==3.0));
-
-    gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-
-    sphereId = a_sphereId;
-
-    color = a_color;
+    gl_Position = pos + cp_projectionMatrix*vec4(-scale, -scale, 0.0, 0.0);
+    texCoord = vec2(-1.0, -1.0);
+    EmitVertex();
+    gl_Position = pos + cp_projectionMatrix*vec4(-scale, scale, 0.0, 0.0);
+    texCoord = vec2(-1.0, 1.0);
+    EmitVertex();
+    gl_Position = pos + cp_projectionMatrix*vec4(scale, -scale, 0.0, 0.0);
+    texCoord = vec2(1.0, -1.0);
+    EmitVertex();
+    gl_Position = pos + cp_projectionMatrix*vec4(scale, scale, 0.0, 0.0);
+    texCoord = vec2(1.0, 1.0);
+    EmitVertex();
+    EndPrimitive();
 }
-// END spheres.vsh

@@ -48,7 +48,6 @@ public:
     Navigator* navigator();
     float fps() const;
     float time() const;
-    void gotWindow();
 
 public slots:
     void setSimulator(Simulator* arg);
@@ -56,6 +55,7 @@ public slots:
     void setBackgroundColor(QColor arg);
     void setNavigator(Navigator* arg);
     void setFps(float arg);
+    void handleWindowChanged(QQuickWindow *win);
 
 private slots:
     void synchronizeWorker(SimulatorWorker* worker);

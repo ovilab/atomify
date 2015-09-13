@@ -14,9 +14,10 @@ Visualizer::Visualizer() :
     connect(this, &Visualizer::widthChanged, this, &Visualizer::resetAspectRatio);
     connect(this, &Visualizer::heightChanged, this, &Visualizer::resetAspectRatio);
     connect(&m_timer, &QTimer::timeout, this, &Visualizer::timerTicked);
+    // connect(this, &Visualizer::windowChanged, this, &Visualizer::handleWindowChanged);
+    connect(this, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(handleWindowChanged(QQuickWindow*)));
     m_timer.start(16);
     m_elapsedTimer.start();
-    connect(this, &Visualizer::windowChanged, this, &Visualizer::gotWindow);
 }
 
 Visualizer::~Visualizer()
@@ -65,13 +66,16 @@ float Visualizer::time() const
     return m_time;
 }
 
-void Visualizer::gotWindow()
+void Visualizer::handleWindowChanged(QQuickWindow *win)
 {
-    QSurfaceFormat format = window()->format();
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setMajorVersion(4);
-    format.setMinorVersion(3);
-    window()->setFormat(format);
+    if(win) {
+        QSurfaceFormat format = win->format();
+        format.setProfile(QSurfaceFormat::CoreProfile);
+        format.setMajorVersion(4);
+        format.setMinorVersion(3);
+        win->setFormat(format);
+        win->setClearBeforeRendering(false);
+    }
 }
 
 void Visualizer::setSimulator(Simulator *arg)
@@ -156,19 +160,6 @@ void Visualizer::timerTicked()
 void VisualizerRenderer::render()
 {
     QOpenGLFunctions funcs(QOpenGLContext::currentContext());
-    QSurfaceFormat format = QOpenGLContext::currentContext()->format();
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setMajorVersion(4);
-    format.setMinorVersion(1);
-    QOpenGLContext::currentContext()->setFormat(format);
-
-    // qDebug() << "Model view matrix: " << m_camera->matrix();
-    // qDebug() << "Up1: " << m_camera->upVector() << "   right1: " << QVector3D::crossProduct(m_camera->viewVector().normalized(), m_camera->upVector()) << "   view1: " << m_camera->viewVector().normalized();
-
-    // QVector3D up2(m_camera->matrix()(1,0), m_camera->matrix()(1,1), m_camera->matrix()(1,2));
-    // QVector3D right2(m_camera->matrix()(0,0), m_camera->matrix()(0,1), m_camera->matrix()(0,2));
-    // QVector3D view2 = QVector3D::crossProduct(up2, right2);
-    // qDebug() << "Up2: " << up2 << "   right2: " << right2 << "   view2: " << QVector3D::crossProduct(up2, right2);
 
     funcs.glClearColor(m_backgroundColor.redF(), m_backgroundColor.greenF(), m_backgroundColor.blueF(), m_backgroundColor.alphaF());
     funcs.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -176,21 +167,11 @@ void VisualizerRenderer::render()
     funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     funcs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-    funcs.glFrontFace(GL_CW);
-    funcs.glCullFace(GL_FRONT);
-    funcs.glEnable(GL_CULL_FACE);
-    funcs.glEnable(GL_DEPTH_TEST);
-
     for(Renderable* renderable : m_renderables) {
         if(renderable->visible()) {
             renderable->requestRender();
         }
     }
-
-    funcs.glDepthMask(GL_TRUE);
-
-    funcs.glDisable(GL_DEPTH_TEST);
-    funcs.glDisable(GL_CULL_FACE);
 
     if(m_frameCount % 60 == 0 && m_frameCount > 0) {
         qint64 t1 = QDateTime::currentMSecsSinceEpoch();
@@ -199,7 +180,6 @@ void VisualizerRenderer::render()
         m_fps = 60.0 / dt * 1000;
     }
     m_frameCount++;
-    qDebug() << "OpenGL version: " << QOpenGLContext::currentContext()->format().majorVersion() << "," << QOpenGLContext::currentContext()->format().minorVersion();
 }
 
 void VisualizerRenderer::synchronize(QQuickFramebufferObject *fbo)
