@@ -73,7 +73,7 @@ ApplicationWindow {
             Rectangle {
                 x: 20
                 y: 20
-                width: 200
+                width: statusColumn.width+20
                 height: statusColumn.height+20
                 radius: 4
                 color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
