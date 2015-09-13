@@ -61,6 +61,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setLammpsOutput(&m_lammpsController.output);
+    mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
     if(m_willPause) {
         m_lammpsController.setPaused(true);
         mySimulator->setPaused(true);
@@ -218,6 +219,11 @@ QVector3D MySimulator::systemSize() const
     return m_systemSize;
 }
 
+double MySimulator::timePerTimestep() const
+{
+    return m_timePerTimestep;
+}
+
 void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
 {
     if (m_lammpsOutput == lammpsOutput)
@@ -329,6 +335,15 @@ void MySimulator::setSystemSize(QVector3D systemSize)
 
     m_systemSize = systemSize;
     emit systemSizeChanged(systemSize);
+}
+
+void MySimulator::setTimePerTimestep(double timePerTimestep)
+{
+    if (m_timePerTimestep == timePerTimestep)
+        return;
+
+    m_timePerTimestep = timePerTimestep;
+    emit timePerTimestepChanged(timePerTimestep);
 }
 
 void MySimulator::runScript(QString script)

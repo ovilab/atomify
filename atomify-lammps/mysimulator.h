@@ -62,6 +62,7 @@ class MySimulator : public Simulator
     Q_PROPERTY(QVector3D sliceNormal READ sliceNormal WRITE setSliceNormal NOTIFY sliceNormalChanged)
     Q_PROPERTY(double sliceWidth READ sliceWidth WRITE setSliceWidth NOTIFY sliceWidthChanged)
     Q_PROPERTY(AtomStyle* atomStyle READ atomStyle WRITE setAtomStyle NOTIFY atomStyleChanged)
+    Q_PROPERTY(double timePerTimestep READ timePerTimestep WRITE setTimePerTimestep NOTIFY timePerTimestepChanged)
 public:
     MySimulator() { }
     ~MySimulator() { }
@@ -82,6 +83,7 @@ public:
     int numberOfAtomTypes() const;
     QVector3D sliceNormal() const;
     QVector3D systemSize() const;
+    double timePerTimestep() const;
 
 public slots:
     void runScript(QString script);
@@ -97,6 +99,7 @@ public slots:
     void setNumberOfAtoms(int numberOfAtoms);
     void setNumberOfAtomTypes(int numberOfAtomTypes);
     void setSystemSize(QVector3D systemSize);
+    void setTimePerTimestep(double timePerTimestep);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -111,6 +114,7 @@ signals:
     void numberOfAtomsChanged(int numberOfAtoms);
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void systemSizeChanged(QVector3D systemSize);
+    void timePerTimestepChanged(double timePerTimestep);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -131,6 +135,7 @@ private:
     int m_numberOfAtoms;
     int m_numberOfAtomTypes;
     QVector3D m_systemSize;
+    double m_timePerTimestep = 0;
 };
 
 #endif // MYSIMULATOR_H

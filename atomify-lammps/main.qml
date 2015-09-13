@@ -89,6 +89,10 @@ ApplicationWindow {
                         font.bold: true
                         text: "Number of atom types: "+mySimulator.numberOfAtomTypes
                     }
+                    Text {
+                        font.bold: true
+                        text: "Time per timestep [ms]: "+mySimulator.timePerTimestep.toFixed(2)
+                    }
 
                     Text {
                         font.bold: true
