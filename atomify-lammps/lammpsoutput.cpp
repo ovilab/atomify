@@ -4,9 +4,10 @@
 #include <iostream>
 #include <QString>
 #include <QDebug>
-#include <libio.h>
 #include "CPcompute.h"
-
+#ifdef Q_OS_LINUX
+#include <libio.h>
+#endif
 using namespace std;
 
 LammpsOutput::LammpsOutput()
@@ -14,9 +15,9 @@ LammpsOutput::LammpsOutput()
 #ifdef Q_OS_LINUX
     cookie_io_functions_t funcs;
     funcs.close = LammpsOutput::clean;
-    funcs.read = LammpsOutput::readLinux;
-    funcs.write = LammpsOutput::writeLinux;
-    funcs.seek = LammpsOutput::seekLinux;
+    funcs.read = LammpsOutput::read;
+    funcs.write = LammpsOutput::write;
+    funcs.seek = LammpsOutput::seek;
     m_filePointer = fopencookie((void*)this, "w", funcs);
 #else
     m_filePointer = funopen((const void*)this, LammpsOutput::read, LammpsOutput::write, LammpsOutput::seek, LammpsOutput::clean);
@@ -24,23 +25,22 @@ LammpsOutput::LammpsOutput()
 
 }
 
-LammpsOutput::~LammpsOutput()
-{
+#ifdef Q_OS_LINUX
+__ssize_t LammpsOutput::read(void *, char *, size_t ) {
 
 }
 
-
-int LammpsOutput::read (void *, char *, int ) {
-
-}
-// __ssize_t __io_read_fn (void *__cookie, char *__buf, size_t __nbytes);
-__ssize_t LammpsOutput::readLinux(void *, char *, size_t ) {
-
-}
-
-__ssize_t LammpsOutput::writeLinux(void *cookie, const char *buffer, size_t n) {
+__ssize_t LammpsOutput::write(void *cookie, const char *buffer, size_t n) {
     LammpsOutput *parser = (LammpsOutput*)cookie;
     parser->parse(QString(buffer));
+}
+
+int LammpsOutput::seek(void *cookie, _IO_off64_t *__pos, int __w) {
+    return 0;
+}
+#else
+int LammpsOutput::read (void *, char *, int ) {
+
 }
 
 int LammpsOutput::write (void *cookie, const char *buffer, int size) {
@@ -48,15 +48,13 @@ int LammpsOutput::write (void *cookie, const char *buffer, int size) {
     parser->parse(QString(buffer));
 }
 
-// typedef int __io_seek_fn (void *__cookie, _IO_off64_t *__pos, int __w);
-int LammpsOutput::seekLinux(void *cookie, _IO_off64_t *__pos, int __w) {
-    return 0;
-}
 
 fpos_t LammpsOutput::seek (void *, fpos_t , int ) {
     fpos_t obj;
     return obj;
 }
+
+#endif
 
 int LammpsOutput::clean (void *) {
 
