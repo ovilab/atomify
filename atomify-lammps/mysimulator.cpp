@@ -47,6 +47,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     if(mySimulator->atomStyle() != NULL) {
         // Sync new atom styles from Simulator (QML) to Worker
         m_atomStyle.setData(mySimulator->atomStyle()->data());
+        m_atomStyle.setDirty(mySimulator->atomStyle()->dirty());
+        mySimulator->atomStyle()->setDirty(false);
     }
 
     // Sync values from QML and simulator
@@ -76,8 +78,10 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     LAMMPS *lammps = m_lammpsController.lammps();
-    if(!lammps || !m_lammpsController.dataDirty()) return;
+    if(!lammps) return;
+    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
     m_lammpsController.setDataDirty(false);
+    m_atomStyle.setDirty(false);
 
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();

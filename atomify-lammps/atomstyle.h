@@ -30,8 +30,10 @@ class AtomStyle : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(bool dirty READ dirty WRITE setDirty NOTIFY dirtyChanged)
     QVariant m_model;
     QList<QObject*> m_data;
+    bool m_dirty = false;
 
 public:
     explicit AtomStyle(QObject *parent = 0);
@@ -40,9 +42,11 @@ public:
     void setColorsAndScales(QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes);
     void setData(QList<QObject*> data);
     QList<QObject*> data();
+    bool dirty() const;
 
 signals:
     void modelChanged(QVariant model);
+    void dirtyChanged(bool dirty);
 
 public slots:
     void setModelData(const int index, const QString &key, const QVariant &value);
@@ -50,6 +54,7 @@ public slots:
     void add();
     void remove(const int index);
     void setMinimumSize(int minimumSize);
+    void setDirty(bool dirty);
 };
 
 #endif // ATOMSKIN_H

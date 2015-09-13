@@ -50,11 +50,17 @@ QList<QObject *> AtomStyle::data()
     return m_data;
 }
 
+bool AtomStyle::dirty() const
+{
+    return m_dirty;
+}
+
 void AtomStyle::setModelData(const int index, const QString &key, const QVariant &value)
 {
     QList<QObject*> content = m_model.value<QList<QObject*> >();
     AtomStyleData *obj = qobject_cast<AtomStyleData*>(content[index]);
     obj->setProperty(key.toStdString().c_str(), value);
+    setDirty(true);
 }
 
 void AtomStyle::setModel(QVariant model)
@@ -72,12 +78,14 @@ void AtomStyle::add()
     double blue = 255*(rand()/double(RAND_MAX));
     m_data.push_back(new AtomStyleData(1.0, QColor(red,green,blue)));
     setModel(QVariant::fromValue(m_data));
+    setDirty(true);
 }
 
 void AtomStyle::remove(const int index)
 {
     m_data.removeAt(index);
     setModel(QVariant::fromValue(m_data));
+    setDirty(true);
 }
 
 void AtomStyle::setMinimumSize(int minimumSize)
@@ -85,6 +93,15 @@ void AtomStyle::setMinimumSize(int minimumSize)
     while(m_data.size() < minimumSize) {
         add();
     }
+}
+
+void AtomStyle::setDirty(bool dirty)
+{
+    if (m_dirty == dirty)
+        return;
+
+    m_dirty = dirty;
+    emit dirtyChanged(dirty);
 }
 
 AtomStyleData::AtomStyleData(double scale, QColor color)
