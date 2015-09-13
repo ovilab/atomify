@@ -8,6 +8,7 @@ Item {
     property Visualizer visualizer: visualizer
     property MySimulator simulator
     property Light light: light
+    property bool addPeriodicCopies: false
 
     Visualizer {
         property Spheres spheres: spheres
@@ -42,6 +43,13 @@ Item {
                 shininess: 40.0
                 attenuation: 0.001
                 position: camera.position
+            }
+
+            PeriodicCopies {
+                id: periodicCopies
+                systemSize: simulator.systemSize
+                enabled: addPeriodicCopies
+                // enabled: false
             }
         }
     }

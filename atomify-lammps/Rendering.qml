@@ -6,7 +6,9 @@ import SimVis 1.0
 Item {
     id: renderingRoot
     property MySimulator simulator
+    property AtomifyVisualizer atomifyVisualizer
     property Light light
+
     ColumnLayout {
         spacing: 10
         x: 10
@@ -52,6 +54,13 @@ Item {
                 id: lightControl
                 light: renderingRoot.light
             }
+        }
+
+        CheckBox {
+            onCheckedChanged: {
+                atomifyVisualizer.addPeriodicCopies = checked
+            }
+            text: "Periodic copies"
         }
     }
 }

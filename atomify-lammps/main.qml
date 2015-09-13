@@ -59,6 +59,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     simulator: mySimulator
                     light: myVisualizer.light
+                    atomifyVisualizer: myVisualizer
                 }
             }
         }

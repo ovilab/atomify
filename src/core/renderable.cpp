@@ -121,6 +121,8 @@ void RenderableRenderer::prepareAndRender()
             }
         }
 
+        qDebug() << m_geometryShaderBase;
+
         beforeLinkProgram();
         m_program.link();
         m_shadersDirty = false;

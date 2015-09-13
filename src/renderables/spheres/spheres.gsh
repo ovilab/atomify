@@ -1,3 +1,6 @@
+#ifdef ADDPERIODICCOPIES
+layout(invocations=27) in;
+#endif
 layout( points ) in;
 layout( triangle_strip, max_vertices = 4 ) out;
 in vec3 vs_color[1];
@@ -9,7 +12,17 @@ out vec3 vertexPosition;
 out vec3 color;
 
 void main(void) {
+#ifdef ADDPERIODICCOPIES
+    int x = gl_InvocationID % 3 - 1;
+    int y = (gl_InvocationID/3)%3-1;
+    int z = (gl_InvocationID/9)-1;
+    vec4 displacement = vec4(systemSize.x*x, systemSize.y*y, systemSize.z*z, 0.0);
+    vec4 vertex = cp_modelViewMatrix * (vec4(vs_vertexPosition[0], 1.0) + displacement);
+    vec4 pos = gl_in[0].gl_Position + cp_modelViewProjectionMatrix * displacement;
+#else
     vec4 pos = gl_in[0].gl_Position;
+#endif
+
     vertexPosition = vs_vertexPosition[0];
     float scale = vs_scale[0];
     color = vs_color[0];
