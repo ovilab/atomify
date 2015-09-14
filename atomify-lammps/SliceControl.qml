@@ -35,22 +35,40 @@ Item {
         Row {
             spacing: 2
             Label {
-                text: "Normal (X): "
+                text: "Origo (x,y,z): "
             }
 
-            TextField {
-                id: normalXText
-                text: slice ? slice.normal.x : 0
-                Layout.preferredWidth: 200
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-
-                onTextChanged: {
-                    var x = parseFloat(normalXText.text)
-                    var y = parseFloat(slice.normal.y)
-                    var z = parseFloat(slice.normal.z)
-                    if(text.length > 0) {
-                        slice.normal = Qt.vector3d(x,y,z)
-                    }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.origo.x : 0
+                onValueChanged: {
+                    var x = parseFloat(value)
+                    var y = parseFloat(slice.origo.y)
+                    var z = parseFloat(slice.origo.z)
+                    slice.origo = Qt.vector3d(x,y,z)
+                }
+            }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.origo.y : 0
+                onValueChanged: {
+                    var x = parseFloat(slice.origo.x)
+                    var y = parseFloat(value)
+                    var z = parseFloat(slice.origo.z)
+                    slice.origo = Qt.vector3d(x,y,z)
+                }
+            }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.origo.z : 0
+                onValueChanged: {
+                    var x = parseFloat(slice.origo.x)
+                    var y = parseFloat(slice.origo.y)
+                    var z = parseFloat(value)
+                    slice.origo = Qt.vector3d(x,y,z)
                 }
             }
         }
@@ -58,46 +76,40 @@ Item {
         Row {
             spacing: 2
             Label {
-                text: "Normal (Y): "
+                text: "Normal (x,y,z): "
             }
 
-            TextField {
-                id: normalYText
-                text: slice ? slice.normal.y : 0
-                Layout.preferredWidth: 200
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                onTextChanged: {
-                    var x = parseFloat(slice.normal.x)
-                    var y = parseFloat(normalYText.text)
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.normal.x : 0
+                onValueChanged: {
+                    var x = parseFloat(value)
+                    var y = parseFloat(slice.normal.y)
                     var z = parseFloat(slice.normal.z)
-
-                    if(text.length > 0) {
-                        slice.normal = Qt.vector3d(x,y,z)
-                    }
+                    slice.normal = Qt.vector3d(x,y,z)
                 }
             }
-        }
-
-        Row {
-            spacing: 2
-            Label {
-                text: "Normal (Z): "
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.normal.y : 0
+                onValueChanged: {
+                    var x = parseFloat(slice.normal.x)
+                    var y = parseFloat(value)
+                    var z = parseFloat(slice.normal.z)
+                    slice.normal = Qt.vector3d(x,y,z)
+                }
             }
-
-            TextField {
-                id: normalZText
-                text: slice ? slice.normal.z : 0
-                Layout.preferredWidth: 200
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-
-                onTextChanged: {
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.normal.z : 0
+                onValueChanged: {
                     var x = parseFloat(slice.normal.x)
                     var y = parseFloat(slice.normal.y)
-                    var z = parseFloat(normalZText.text)
-
-                    if(text.length > 0) {
-                        slice.normal = Qt.vector3d(x,y,z)
-                    }
+                    var z = parseFloat(value)
+                    slice.normal = Qt.vector3d(x,y,z)
                 }
             }
         }

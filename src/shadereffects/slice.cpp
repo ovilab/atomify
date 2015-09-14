@@ -55,14 +55,15 @@ void Slice::copyState(ShaderEffect *source)
     m_width = slice->width();
     m_normal = slice->normal();
     m_distance = slice->distance();
-    m_origin = slice->origin();
+    m_origo = slice->origo();
+    m_systemSize = slice->systemSize();
 }
 
 void Slice::beforeRendering(QOpenGLShaderProgram &shaderProgram)
 {
     QVector3D normal = m_normal;
     if(normal.length() > 0) normal.normalize();
-    QVector3D planeOrigo = m_origin + m_distance*normal;
+    QVector3D planeOrigo = m_origo - 0.5*m_systemSize + m_distance*normal;
 
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("sliceWidth")), float(m_width));
     shaderProgram.setUniformValue(shaderProgram.uniformLocation(QString("sliceNormal")), normal);

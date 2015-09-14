@@ -8,13 +8,15 @@ class Slice : public ShaderEffect
     Q_OBJECT
     Q_PROPERTY(double distance READ distance WRITE setDistance NOTIFY distanceChanged)
     Q_PROPERTY(QVector3D normal READ normal WRITE setNormal NOTIFY normalChanged)
-    Q_PROPERTY(QVector3D origin READ origin WRITE setOrigin NOTIFY originChanged)
+    Q_PROPERTY(QVector3D origo READ origo WRITE setOrigo NOTIFY origoChanged)
     Q_PROPERTY(double width READ width WRITE setWidth NOTIFY widthChanged)
+    Q_PROPERTY(QVector3D systemSize READ systemSize WRITE setSystemSize NOTIFY systemSizeChanged)
 
     QVector3D m_normal;
-    QVector3D m_origin;
+    QVector3D m_origo;
     double m_distance = 0.0;
     double m_width = 1.0;
+    QVector3D m_systemSize;
 
 public:
     Slice();
@@ -45,9 +47,14 @@ public:
         return m_width;
     }
 
-    QVector3D origin() const
+    QVector3D origo() const
     {
-        return m_origin;
+        return m_origo;
+    }
+
+    QVector3D systemSize() const
+    {
+        return m_systemSize;
     }
 
 public slots:
@@ -55,7 +62,6 @@ public slots:
     {
         if (m_distance == distance)
             return;
-        qDebug() << "New distance: " << distance;
         m_distance = distance;
         emit distanceChanged(distance);
     }
@@ -64,7 +70,6 @@ public slots:
         if (m_normal == normal)
             return;
 
-        qDebug() << "New normal: " << normal;
         m_normal = normal;
         emit normalChanged(normal);
     }
@@ -73,25 +78,34 @@ public slots:
     {
         if (m_width == width)
             return;
-        qDebug() << "New width: " << width;
         m_width = width;
         emit widthChanged(width);
     }
 
-    void setOrigin(QVector3D origin)
+    void setOrigo(QVector3D origo)
     {
-        if (m_origin == origin)
+        if (m_origo == origo)
             return;
-        qDebug() << "New origin: " << origin;
-        m_origin = origin;
-        emit originChanged(origin);
+
+        m_origo = origo;
+        emit origoChanged(origo);
+    }
+
+    void setSystemSize(QVector3D systemSize)
+    {
+        if (m_systemSize == systemSize)
+            return;
+
+        m_systemSize = systemSize;
+        emit systemSizeChanged(systemSize);
     }
 
 signals:
     void distanceChanged(double distance);
     void normalChanged(QVector3D normal);
     void widthChanged(double width);
-    void originChanged(QVector3D origin);
+    void origoChanged(QVector3D origo);
+    void systemSizeChanged(QVector3D systemSize);
 };
 
 #endif // SLICE_H

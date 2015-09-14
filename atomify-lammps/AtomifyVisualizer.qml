@@ -54,7 +54,8 @@ Item {
 
             Slice {
                 id: mySlice
-                origin: Qt.vector3d(0,0,0)
+                systemSize: simulator.systemSize
+                origo: Qt.vector3d(0,0,0)
                 distance: 0
                 normal: Qt.vector3d(1.0, 0.0, 0.0)
                 width: 5
