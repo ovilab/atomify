@@ -12,32 +12,39 @@ out vec3 vertexPosition;
 out vec3 color;
 
 void main(void) {
+    vec4 displacement = vec4(0.0,0.0,0.0,0.0);
 #ifdef ADDPERIODICCOPIES
     int x = gl_InvocationID % 3 - 1;
     int y = (gl_InvocationID/3)%3-1;
     int z = (gl_InvocationID/9)-1;
-    vec4 displacement = vec4(systemSize.x*x, systemSize.y*y, systemSize.z*z, 0.0);
+    displacement = vec4(systemSize.x*x, systemSize.y*y, systemSize.z*z, 0.0);
     vec4 vertex = cp_modelViewMatrix * (vec4(vs_vertexPosition[0], 1.0) + displacement);
     vec4 pos = gl_in[0].gl_Position + cp_modelViewProjectionMatrix * displacement;
 #else
     vec4 pos = gl_in[0].gl_Position;
 #endif
 
-    vertexPosition = vs_vertexPosition[0];
-    float scale = vs_scale[0];
-    color = vs_color[0];
+    bool addPoint = true;
+#ifdef SLICE
+    addPoint = slice_vectorIsInside(vs_vertexPosition[0] + displacement.xyz);
+#endif
+    if(addPoint) {
+        vertexPosition = vs_vertexPosition[0];
+        float scale = vs_scale[0];
+        color = vs_color[0];
 
-    gl_Position = pos + cp_projectionMatrix*vec4(-scale, -scale, 0.0, 0.0);
-    texCoord = vec2(-1.0, -1.0);
-    EmitVertex();
-    gl_Position = pos + cp_projectionMatrix*vec4(-scale, scale, 0.0, 0.0);
-    texCoord = vec2(-1.0, 1.0);
-    EmitVertex();
-    gl_Position = pos + cp_projectionMatrix*vec4(scale, -scale, 0.0, 0.0);
-    texCoord = vec2(1.0, -1.0);
-    EmitVertex();
-    gl_Position = pos + cp_projectionMatrix*vec4(scale, scale, 0.0, 0.0);
-    texCoord = vec2(1.0, 1.0);
-    EmitVertex();
-    EndPrimitive();
+        gl_Position = pos + cp_projectionMatrix*vec4(-scale, -scale, 0.0, 0.0);
+        texCoord = vec2(-1.0, -1.0);
+        EmitVertex();
+        gl_Position = pos + cp_projectionMatrix*vec4(-scale, scale, 0.0, 0.0);
+        texCoord = vec2(-1.0, 1.0);
+        EmitVertex();
+        gl_Position = pos + cp_projectionMatrix*vec4(scale, -scale, 0.0, 0.0);
+        texCoord = vec2(1.0, -1.0);
+        EmitVertex();
+        gl_Position = pos + cp_projectionMatrix*vec4(scale, scale, 0.0, 0.0);
+        texCoord = vec2(1.0, 1.0);
+        EmitVertex();
+        EndPrimitive();
+    }
 }

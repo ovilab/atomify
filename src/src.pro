@@ -35,7 +35,8 @@ SOURCES += \
     shadereffects/light.cpp \
     renderables/skybox/skybox.cpp \
     shadereffects/skyboxreflection.cpp \
-    shadereffects/periodiccopies.cpp
+    shadereffects/periodiccopies.cpp \
+    shadereffects/slice.cpp
 
 HEADERS += \
     core/navigator.h \
@@ -66,7 +67,8 @@ HEADERS += \
     shadereffects/light.h \
     renderables/skybox/skybox.h \
     shadereffects/skyboxreflection.h \
-    shadereffects/periodiccopies.h
+    shadereffects/periodiccopies.h \
+    shadereffects/slice.h
 
 DISTFILES = qmldir \
     core/simvisplugin.json

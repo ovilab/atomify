@@ -8,6 +8,7 @@ Item {
     property Visualizer visualizer: visualizer
     property MySimulator simulator
     property Light light: light
+    property Slice slice: mySlice
     property bool addPeriodicCopies: false
 
     Visualizer {
@@ -49,7 +50,15 @@ Item {
                 id: periodicCopies
                 systemSize: simulator.systemSize
                 enabled: addPeriodicCopies
-                // enabled: false
+            }
+
+            Slice {
+                id: mySlice
+                origin: Qt.vector3d(0,0,0)
+                distance: 0
+                normal: Qt.vector3d(1.0, 0.0, 0.0)
+                width: 5
+                enabled: false
             }
         }
     }

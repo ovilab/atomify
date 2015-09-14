@@ -57,8 +57,6 @@ ApplicationWindow {
                 title: "Rendering"
                 Rendering {
                     anchors.fill: parent
-                    simulator: mySimulator
-                    light: myVisualizer.light
                     atomifyVisualizer: myVisualizer
                 }
             }
