@@ -16,6 +16,9 @@ ApplicationWindow {
     width: 1650
     height: 900
     visible: true
+    onClosing: {
+
+    }
 
     SplitView {
         anchors.fill: parent

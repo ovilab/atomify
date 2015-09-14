@@ -119,7 +119,7 @@ void LAMMPSController::processCommand(QString command) {
 
         if(word.find("ext://") != std::string::npos) {
             word.erase(0, 6); // Remove the ext:// prefix
-            word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
+            word = IO::copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
         }
 
         // If this is the first word in a command and it is "run"
@@ -165,7 +165,7 @@ void LAMMPSController::processCommand(QString command) {
 
 void LAMMPSController::loadScriptFromFile(QString filename)
 {
-    QString lammpsScript_qstring = readFile(filename);
+    QString lammpsScript_qstring = IO::readFile(filename);
     runScript(lammpsScript_qstring);
 }
 
@@ -186,7 +186,7 @@ void LAMMPSController::runScript(QString script)
                     if(command_ss >> word) {
                         if(word.find("ext://") != std::string::npos) {
                             word.erase(0, 6); // Remove the ext:// prefix
-                            word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
+                            word = IO::copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
                         }
                         loadScriptFromFile(QString::fromStdString(word));
                     } else {

@@ -13,6 +13,7 @@
 #include "lammpscontroller.h"
 #include "lammpsoutput.h"
 #include "atomstyle.h"
+#include "lammpsfilehandler.h"
 
 using std::function; using std::unique_ptr;
 
@@ -88,7 +89,6 @@ public slots:
     void setNumberOfAtomTypes(int numberOfAtomTypes);
     void setSystemSize(QVector3D systemSize);
     void setTimePerTimestep(double timePerTimestep);
-
 signals:
     void simulationSpeedChanged(int arg);
     void lammpsOutputChanged(LammpsOutput* lammpsOutput);

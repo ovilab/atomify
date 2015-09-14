@@ -13,6 +13,7 @@
 #include "CPcompute.h"
 #include "lammpsoutput.h"
 #include "atomstyle.h"
+#include "fileio.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<CPCompute>("Compute", 1, 0, "Compute");
     qmlRegisterType<LammpsOutput>("LammpsOutput", 1, 0, "LammpsOutput");
     qmlRegisterType<AtomStyle>("AtomStyle", 1, 0, "AtomStyle");
+    // qmlRegisterType<FileIO>("Atomify", 1, 0, "FileIO");
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

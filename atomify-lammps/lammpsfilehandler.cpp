@@ -3,7 +3,7 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QDebug>
-
+namespace IO {
 QString readFile(QString filename)
 {
     QFile file(filename);
@@ -39,9 +39,4 @@ QString copyDataFileToReadablePath(QString filename)
 
     return newFilename;
 }
-
-
-QString copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream)
-{
-
 }

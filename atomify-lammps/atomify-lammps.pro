@@ -24,7 +24,8 @@ android {
 }
 
 RESOURCES += qml.qrc \
-    images.qrc
+    images.qrc \
+    scripts.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -46,7 +47,8 @@ SOURCES += \
     CPcompute.cpp \
     lammpsoutput.cpp \
     lammpsfilehandler.cpp \
-    atomstyle.cpp
+    atomstyle.cpp \
+    fileio.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -55,7 +57,8 @@ HEADERS += \
     CPcompute.h \
     lammpsoutput.h \
     lammpsfilehandler.h \
-    atomstyle.h
+    atomstyle.h \
+    fileio.h
 
 DISTFILES += \
     iOS.plist
