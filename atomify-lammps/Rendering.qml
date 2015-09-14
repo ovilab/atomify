@@ -20,7 +20,7 @@ Item {
 
             AtomStyleControl {
                 id: atomStyleControl
-                atomStyle: simulator.atomStyle
+                atomStyle: atomifyVisualizer.simulator.atomStyle
             }
         }
 
@@ -50,7 +50,7 @@ Item {
 
             LightControl {
                 id: lightControl
-                light: renderingRoot.atomifyVisualizer.light
+                light: atomifyVisualizer.light
             }
         }
 
