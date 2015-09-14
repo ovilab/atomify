@@ -9,6 +9,7 @@ Item {
     property Slice slice
     width: parent.width
     height: columnLayout.height
+    property real labelWidth: 90
     ColumnLayout {
         id: columnLayout
         spacing: 10
@@ -16,6 +17,7 @@ Item {
         Row {
             spacing: 2
             Label {
+                width: sliceRoot.labelWidth
                 text: "Distance: "
             }
 
@@ -35,6 +37,7 @@ Item {
         Row {
             spacing: 2
             Label {
+                width: sliceRoot.labelWidth
                 text: "Origo (x,y,z): "
             }
 
@@ -76,6 +79,7 @@ Item {
         Row {
             spacing: 2
             Label {
+                width: sliceRoot.labelWidth
                 text: "Normal (x,y,z): "
             }
 
@@ -117,6 +121,7 @@ Item {
         Row {
             spacing: 2
             Label {
+                width: sliceRoot.labelWidth
                 text: "Slice width: "
             }
 
