@@ -27,10 +27,16 @@ Item {
             camera: camera
         }
 
+        Cylinders {
+            id: cylinders
+            visible: true
+        }
+
         Spheres {
             id: spheres
             visible: true
-            scale: 0.23
+            // scale: 0.23
+            scale: 1.0
             color: "white"
 
             Light {

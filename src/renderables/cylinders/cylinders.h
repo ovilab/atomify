@@ -10,10 +10,9 @@ class Simulator;
 
 struct CylinderVBOData
 {
-    float sphereId;
-    QVector3D position;
-    QVector3D color;
-    QVector2D textureCoord;
+    QVector3D vertex1;
+    QVector3D vertex2;
+
 };
 
 class Cylinders;
@@ -31,38 +30,31 @@ private:
     bool m_isInitialized = false;
     int m_vertexCount = 0;
     int m_indexCount = 0;
-    QVector3D m_upVector;
-    QVector3D m_viewVector;
-    QVector3D m_rightVector;
 };
 
 class Cylinders : public Renderable
 {
     Q_OBJECT
-    Q_PROPERTY(float scale READ scale WRITE setScale NOTIFY scaleChanged)
-
+    Q_PROPERTY(bool dirty READ dirty WRITE setDirty NOTIFY dirtyChanged)
 public:
     Cylinders(QQuickItem *parent = 0);
     ~Cylinders();
-    void setPositions(QVector<QVector3D> &positions);
-    QVector<QVector3D> &positions();
-    float scale() const;
-    void setScale(float scale);
-    QVector3D color() const;
-    void setColor(const QColor &color);
+
     virtual CylindersRenderer *createRenderer();
+    bool dirty() const;
+    QVector<CylinderVBOData> &vertices() { return m_vertices; }
+
+public slots:
+    void setDirty(bool dirty);
+
 signals:
-    void scaleChanged(bool arg);
+    void dirtyChanged(bool dirty);
 
 private:
-    QVector3D vectorFromColor(const QColor &color);
     QVector<CylinderVBOData> m_vertices;
-    QVector<GLuint> m_indices;
-    QVector3D m_color = QVector3D(1.0, 1.0, 1.0);
-    QVector<QVector3D> m_positions;
-    float m_scale = 1.0;
 
     friend class CylindersRenderer;
+    bool m_dirty = false;
 };
 
 

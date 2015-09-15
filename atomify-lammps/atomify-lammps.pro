@@ -48,7 +48,8 @@ SOURCES += \
     lammpsoutput.cpp \
     lammpsfilehandler.cpp \
     atomstyle.cpp \
-    fileio.cpp
+    fileio.cpp \
+    scriptparser.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -58,7 +59,8 @@ HEADERS += \
     lammpsoutput.h \
     lammpsfilehandler.h \
     atomstyle.h \
-    fileio.h
+    fileio.h \
+    scriptparser.h
 
 DISTFILES += \
     iOS.plist

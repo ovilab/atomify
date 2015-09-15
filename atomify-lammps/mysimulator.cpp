@@ -9,6 +9,7 @@
 #include <string>
 #include <sstream>
 #include <SimVis/Spheres>
+#include <SimVis/Cylinders>
 #include <SimVis/Points>
 #include <QUrl>
 #include <QString>
@@ -71,39 +72,69 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
+    QVector3D p1(-4,0,0);
+    QVector3D p2(4,0,0);
+    // float sphereRadius = 0.23;
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     if(spheres) {
-        LAMMPS *lammps = m_lammpsController.lammps();
-        if(!lammps || !m_lammpsController.dataDirty()) return;
-        m_lammpsController.setDataDirty(false);
+        return;
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
-        colors.resize(lammps->atom->natoms);
-        positions.resize(lammps->atom->natoms);
-        m_atomTypes.resize(lammps->atom->natoms);
-
-        double position[3];
-        int visibleAtoms = 0;
-
-        for(unsigned int i=0; i<lammps->atom->natoms; i++) {
-            position[0] = lammps->atom->x[i][0];
-            position[1] = lammps->atom->x[i][1];
-            position[2] = lammps->atom->x[i][2];
-            lammps->domain->remap(position);
-
-            positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
-            positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
-            positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
-            m_atomTypes[visibleAtoms] = lammps->atom->type[i];
-            visibleAtoms++;
-        }
-        colors.resize(visibleAtoms);
-        positions.resize(visibleAtoms);
-        scales.resize(visibleAtoms);
-        m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
+        colors.resize(2);
+        positions.resize(2);
+        scales.resize(2);
+        positions[0] = p1;
+        positions[1] = p2;
+        colors[0] = QColor("red");
+        colors[1] = QColor("red");
+        scales[0] = 2.0;
+        scales[1] = 2.0;
         spheres->setDirty(true);
     }
+    Cylinders *cylinders = qobject_cast<Cylinders*>(renderableObject);
+    if(cylinders) {
+//        p1[0] += 0.85*sphereRadius;
+//        p2[0] -= 0.85*sphereRadius;
+        QVector<CylinderVBOData> &points = cylinders->vertices();
+        points.resize(1);
+        points[0].vertex1 = p1;
+        points[0].vertex2 = p2;
+        cylinders->setDirty(true);
+    }
+
+//    if(spheres) {
+//        LAMMPS *lammps = m_lammpsController.lammps();
+//        if(!lammps || !m_lammpsController.dataDirty()) return;
+//        m_lammpsController.setDataDirty(false);
+//        QVector<QVector3D> &positions = spheres->positions();
+//        QVector<float> &scales = spheres->scales();
+//        QVector<QColor> &colors = spheres->colors();
+//        colors.resize(lammps->atom->natoms);
+//        positions.resize(lammps->atom->natoms);
+//        m_atomTypes.resize(lammps->atom->natoms);
+
+//        double position[3];
+//        int visibleAtoms = 0;
+
+//        for(unsigned int i=0; i<lammps->atom->natoms; i++) {
+//            position[0] = lammps->atom->x[i][0];
+//            position[1] = lammps->atom->x[i][1];
+//            position[2] = lammps->atom->x[i][2];
+//            lammps->domain->remap(position);
+
+//            positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
+//            positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
+//            positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
+//            m_atomTypes[visibleAtoms] = lammps->atom->type[i];
+//            visibleAtoms++;
+//        }
+//        colors.resize(visibleAtoms);
+//        positions.resize(visibleAtoms);
+//        scales.resize(visibleAtoms);
+//        m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
+//        spheres->setDirty(true);
+//    }
 }
 
 void MyWorker::work()

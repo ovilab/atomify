@@ -133,9 +133,9 @@ void RenderableRenderer::prepareAndRender()
     m_program.setUniformValue("cp_projectionMatrix", m_projectionMatrix);
     m_program.setUniformValue("cp_modelViewMatrixInverse", m_modelViewMatrixInverse);
     m_program.setUniformValue("cp_projectionMatrixInverse", m_projectionMatrixInverse);
-    m_program.setUniformValue("cp_viewVector", m_viewVector);
-    m_program.setUniformValue("cp_rightVector", m_rightVector);
-    m_program.setUniformValue("cp_upVector", m_upVector);
+    m_program.setUniformValue("cp_viewVector", m_viewVector.normalized());
+    m_program.setUniformValue("cp_rightVector", m_rightVector.normalized());
+    m_program.setUniformValue("cp_upVector", m_upVector.normalized());
     m_program.setUniformValue("cp_cameraPosition", m_cameraPosition);
     m_program.setUniformValue("cp_time", float(m_elapsedTime.elapsed()*1e-3));
 
