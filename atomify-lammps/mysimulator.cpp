@@ -4,6 +4,8 @@
 #include <domain.h>
 #include <update.h>
 #include <modify.h>
+#include <neighbor.h>
+#include <neigh_list.h>
 
 #include <core/camera.h>
 #include <string>
@@ -107,17 +109,18 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 
     if(spheres) {
         LAMMPS *lammps = m_lammpsController.lammps();
-        if(!lammps || !m_lammpsController.dataDirty()) return;
+        // if(!lammps || !m_lammpsController.dataDirty()) return;
+        if(!lammps) return;
         m_lammpsController.setDataDirty(false);
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
         colors.resize(lammps->atom->natoms);
+        scales.resize(lammps->atom->natoms);
         positions.resize(lammps->atom->natoms);
         m_atomTypes.resize(lammps->atom->natoms);
 
         double position[3];
-        int visibleAtoms = 0;
 
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
             position[0] = lammps->atom->x[i][0];
@@ -125,17 +128,70 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
             position[2] = lammps->atom->x[i][2];
             lammps->domain->remap(position);
 
-            positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
-            positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
-            positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
-            m_atomTypes[visibleAtoms] = lammps->atom->type[i];
-            visibleAtoms++;
+            positions[i][0] = position[0] - lammps->domain->prd_half[0];
+            positions[i][1] = position[1] - lammps->domain->prd_half[1];
+            positions[i][2] = position[2] - lammps->domain->prd_half[2];
+            m_atomTypes[i] = lammps->atom->type[i];
         }
-        colors.resize(visibleAtoms);
-        positions.resize(visibleAtoms);
-        scales.resize(visibleAtoms);
         m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
         spheres->setDirty(true);
+    }
+
+    Cylinders *cylinders = qobject_cast<Cylinders*>(renderableObject);
+    if(cylinders) {
+        LAMMPS *lammps = m_lammpsController.lammps();
+        if(!lammps) return;
+
+        QVector<CylinderVBOData> &points = cylinders->vertices();
+        points.resize(0);
+        if( lammps->neighbor->nlist > 0) {
+            NeighList *list = lammps->neighbor->lists[0];
+            int inum = list->inum;
+            int *ilist = list->ilist;
+            int *numneigh = list->numneigh;
+            int **firstneigh = list->firstneigh;
+
+            double posi[3];
+            double posj[3];
+            for(int ii=0; ii<inum; ii++) {
+                int i = ilist[ii];
+                posi[0] = lammps->atom->x[i][0];
+                posi[1] = lammps->atom->x[i][1];
+                posi[2] = lammps->atom->x[i][2];
+
+                lammps->domain->remap(posi);
+
+                QVector3D qposi(posi[0], posi[1], posi[2]);
+                // two-body interactions, skip half of them
+                int *jlist = firstneigh[i];
+                int jnum = numneigh[i];
+                for (int jj = 0; jj < jnum; jj++) {
+                    int j = jlist[jj];
+                    posj[0] = lammps->atom->x[j][0];
+                    posj[1] = lammps->atom->x[j][1];
+                    posj[2] = lammps->atom->x[j][2];
+                    lammps->domain->remap(posj);
+
+                    QVector3D qposj(posj[0], posj[1], posj[2]);
+                    double dr2 = (qposj-qposi).lengthSquared();
+                    if(dr2 > 1.0*1.0) continue;
+
+
+                    CylinderVBOData data;
+                    data.vertex1[0] = posi[0] - lammps->domain->prd_half[0];;
+                    data.vertex1[1] = posi[1] - lammps->domain->prd_half[1];;
+                    data.vertex1[2] = posi[2] - lammps->domain->prd_half[2];;
+                    data.vertex2[0] = posj[0] - lammps->domain->prd_half[0];;
+                    data.vertex2[1] = posj[1] - lammps->domain->prd_half[1];;
+                    data.vertex2[2] = posj[2] - lammps->domain->prd_half[2];;
+                    data.radius1 = 0.23*0.5;
+                    data.radius2 = 0.23*0.5;
+                    points.push_back(data);
+                }
+            }
+
+            cylinders->setDirty(true);
+        }
     }
 #endif
 }

@@ -74,7 +74,7 @@ private:
 
     friend class CylindersRenderer;
     bool m_dirty = false;
-    float m_radius = 0.1;
+    float m_radius = 0.025;
 };
 
 
