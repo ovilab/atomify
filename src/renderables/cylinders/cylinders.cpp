@@ -43,7 +43,7 @@ void CylindersRenderer::synchronize(Renderable* renderer)
         m_isInitialized = true;
     }
     uploadVBOs(cylinders);
-
+    m_radius = cylinders->radius();
     m_vertexCount = cylinders->m_vertices.size();
 }
 
@@ -76,8 +76,10 @@ void CylindersRenderer::render()
 
     int vertex1Location = 0;
     int vertex2Location = 1;
+    int radius1Location = 2;
+    int radius2Location = 3;
     glFunctions()->glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[0]); // Tell OpenGL which VBOs to use
-
+    program().setUniformValue("radius", m_radius);
     quintptr offset = 0;
 
     program().enableAttributeArray(vertex1Location);
@@ -88,9 +90,19 @@ void CylindersRenderer::render()
     glFunctions()->glVertexAttribPointer(vertex2Location, 3, GL_FLOAT, GL_FALSE, sizeof(CylinderVBOData), (const void *)offset);
     offset += sizeof(QVector3D);
 
+    program().enableAttributeArray(radius1Location);
+    glFunctions()->glVertexAttribPointer(radius1Location, 1, GL_FLOAT, GL_FALSE, sizeof(CylinderVBOData), (const void *)offset);
+    offset += sizeof(float);
+
+    program().enableAttributeArray(radius2Location);
+    glFunctions()->glVertexAttribPointer(radius2Location, 1, GL_FLOAT, GL_FALSE, sizeof(CylinderVBOData), (const void *)offset);
+
     funcs.glDisable(GL_CULL_FACE);
     glDrawArrays(GL_POINTS, 0, m_vertexCount);
 
     program().disableAttributeArray(vertex1Location);
     program().disableAttributeArray(vertex2Location);
+    program().disableAttributeArray(radius1Location);
+    program().disableAttributeArray(radius2Location);
+
 }

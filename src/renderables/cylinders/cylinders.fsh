@@ -1,7 +1,6 @@
 in vec2 texCoord;
 in vec3 vertexPosition;
 in float da;
-in vec3 xDir;
 in vec3 yDir;
 out vec4 fragcolor;
 
