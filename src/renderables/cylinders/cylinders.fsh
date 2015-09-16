@@ -1,8 +1,8 @@
 in vec2 texCoord;
 in vec3 vertexPosition;
 in float da;
-in float mode;
 out vec4 fragcolor;
+
 void main(void) {
     vec3 color = vec3(0.0, 1.0, 1.0);
     highp float x = texCoord.s;
