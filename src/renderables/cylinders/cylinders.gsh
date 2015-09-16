@@ -13,19 +13,21 @@ void main(void) {
     vec3 v1 = vs_vertex1Position[0];
     vec3 v2 = vs_vertex2Position[0];
     vec3 delta = v2 - v1;
+
     // Project delta onto screen (remove anything orthogonal on screen)
     vec3 deltaProjected = delta - dot(delta, cp_viewVector)*cp_viewVector;
     vec3 deltaProjectedNormalized = normalize(deltaProjected);
     vec3 orthogonalOnDelta = cross(deltaProjectedNormalized, cp_viewVector);
-    float costheta = normalize(dot(deltaProjectedNormalized, delta));
+    float costheta = 1.0 - dot(deltaProjectedNormalized, normalize(delta));
     da = radius*costheta;
 
     vec3 cameraToV1 = cp_cameraPosition - v1;
     vec3 cameraToV2 = cp_cameraPosition - v2;
     float distanceToV1 = dot(cameraToV1, cameraToV1);
     float distanceToV2 = dot(cameraToV2, cameraToV2);
+
     if(distanceToV1 < distanceToV2) {
-        mode = 0.0;
+        mode = 1.0;
         // v1 closer than v2
         gl_Position = cp_modelViewProjectionMatrix*vec4(v1 + orthogonalOnDelta*radius, 1.0);
         texCoord = vec2(0, 1.0);
@@ -41,16 +43,17 @@ void main(void) {
         EmitVertex();
         EndPrimitive();
     } else {
-        mode = 1.0;
+        mode = 0.0;
         // v2 closer than v1
+        // v1 must then be moved slightly
         gl_Position = cp_modelViewProjectionMatrix*vec4(v1 + orthogonalOnDelta*radius, 1.0);
-        texCoord = vec2(0, 1.0);
+        texCoord = vec2(-da, 1.0);
         EmitVertex();
         gl_Position = cp_modelViewProjectionMatrix*vec4(v2 + orthogonalOnDelta*radius, 1.0);
         texCoord = vec2(1.0, 1.0);
         EmitVertex();
         gl_Position = cp_modelViewProjectionMatrix*vec4(v1 - orthogonalOnDelta*radius, 1.0);
-        texCoord = vec2(0, -1.0);
+        texCoord = vec2(-da, -1.0);
         EmitVertex();
         gl_Position = cp_modelViewProjectionMatrix*vec4(v2 - orthogonalOnDelta*radius, 1.0);
         texCoord = vec2(1.0, -1.0);
