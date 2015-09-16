@@ -93,8 +93,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     }
     Cylinders *cylinders = qobject_cast<Cylinders*>(renderableObject);
     if(cylinders) {
-//        p1[0] += 0.85*sphereRadius;
-//        p2[0] -= 0.85*sphereRadius;
         QVector<CylinderVBOData> &points = cylinders->vertices();
         points.resize(1);
         points[0].vertex1 = p1;

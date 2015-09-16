@@ -5,11 +5,13 @@ in vec3 vs_vertex2Position[1];
 
 out vec2 texCoord;
 out vec3 vertexPosition;
+out vec3 xDir;
+out vec3 yDir;
 out float da;
 
 void main(void) {
     float radius = 0.2;
-    float sphereRadius = 0.96; // Spheres discard any r^2 > 0.9 => r>0.95
+    float sphereRadius = 0.95; // Spheres discard any r^2 > 0.9 => r>0.95
     float dr = sqrt(sphereRadius*sphereRadius - radius*radius);
     vec3 epsilonAwayFromCamera = cp_viewVector*0.001;
 
@@ -25,8 +27,7 @@ void main(void) {
     vec3 orthogonalOnDelta = cross(deltaProjectedNormalized, cp_viewVector);
     vec3 orthogonalOnDeltaTimesRadius = orthogonalOnDelta*radius;
 
-    float costheta = 0.5*abs(dot(cp_viewVector, normalize(delta))); // Cheating or being stupid
-    // float costheta = 1.0 - dot(deltaProjectedNormalized, normalize(delta));
+    float costheta = 0.5*abs(dot(cp_viewVector, deltaNormalized)); // Cheating or being stupid with the factor 0.5
     da = radius*costheta;
 
     vec3 cameraToV1 = cp_cameraPosition - v1;
@@ -37,32 +38,46 @@ void main(void) {
     if(distanceToV1 < distanceToV2) {
         // v1 closer than v2
         v2 = v2 - deltaNormalized*dr;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 - orthogonalOnDeltaTimesRadius, 1.0);
+        xDir = deltaNormalized;
+        yDir = orthogonalOnDelta;
+
+        vertexPosition = v2 - orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(-da, 1.0);
         EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v1 - orthogonalOnDeltaTimesRadius, 1.0);
+        vertexPosition = v1 - orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(1.0, 1.0);
         EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 + orthogonalOnDeltaTimesRadius, 1.0);
+        vertexPosition = v2 + orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(-da, -1.0);
         EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v1 + orthogonalOnDeltaTimesRadius, 1.0);
+        vertexPosition = v1 + orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(1.0, -1.0);
         EmitVertex();
         EndPrimitive();
     } else {
         // v2 closer than v1
         v1 = v1 + deltaNormalized*dr;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v1 + orthogonalOnDeltaTimesRadius, 1.0);
+        xDir = -deltaNormalized;
+        yDir = -orthogonalOnDelta;
+
+        vertexPosition = v1 + orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(-da, 1.0);
         EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 + orthogonalOnDeltaTimesRadius, 1.0);
+        vertexPosition = v2 + orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(1.0, 1.0);
         EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v1 - orthogonalOnDeltaTimesRadius, 1.0);
+        vertexPosition = v1 - orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(-da, -1.0);
         EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 - orthogonalOnDeltaTimesRadius, 1.0);
+        vertexPosition = v2 - orthogonalOnDeltaTimesRadius;
+        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
         texCoord = vec2(1.0, -1.0);
         EmitVertex();
         EndPrimitive();
