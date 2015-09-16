@@ -27,18 +27,18 @@ void main(void) {
     float distanceToV2 = dot(cameraToV2, cameraToV2);
 
     if(distanceToV1 < distanceToV2) {
-        mode = 1.0;
+        mode = 0.0;
         // v1 closer than v2
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v1 + orthogonalOnDelta*radius, 1.0);
-        texCoord = vec2(0, 1.0);
-        EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 + orthogonalOnDelta*radius, 1.0);
-        texCoord = vec2(1.0, 1.0);
+        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 - orthogonalOnDelta*radius, 1.0);
+        texCoord = vec2(-da, 1.0);
         EmitVertex();
         gl_Position = cp_modelViewProjectionMatrix*vec4(v1 - orthogonalOnDelta*radius, 1.0);
-        texCoord = vec2(0, -1.0);
+        texCoord = vec2(1.0, 1.0);
         EmitVertex();
-        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 - orthogonalOnDelta*radius, 1.0);
+        gl_Position = cp_modelViewProjectionMatrix*vec4(v2 + orthogonalOnDelta*radius, 1.0);
+        texCoord = vec2(-da, -1.0);
+        EmitVertex();
+        gl_Position = cp_modelViewProjectionMatrix*vec4(v1 + orthogonalOnDelta*radius, 1.0);
         texCoord = vec2(1.0, -1.0);
         EmitVertex();
         EndPrimitive();

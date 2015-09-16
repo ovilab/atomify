@@ -77,7 +77,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     // float sphereRadius = 0.23;
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     if(spheres) {
-        return;
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
