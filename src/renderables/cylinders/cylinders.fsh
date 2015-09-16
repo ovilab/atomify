@@ -8,19 +8,13 @@ void main(void) {
     highp float x = texCoord.s;
     highp float y = texCoord.t;
     float yy = y*y;
-    if(yy > 0.9) {
+    if(yy > 1.0) {
         discard;
     }
 
     float dada = da*da;
-    if(x>(1.0-da) ) {
-        float d = 1.0 - x;
-        // if(d*d/da2 + y*y < 1.0) { discard; }
-        if(d*d + yy*dada < dada) { discard; }
-    } else if(x<0.0) {
-        float d = -x;
-        // if(d*d/da2 + y*y > 1.0) { discard; }
-        if(d*d + yy*dada > dada) { discard; }
+    if(x<0.0) {
+        if(x*x + yy*dada > dada) { discard; }
     }
 
     highp float z = sqrt(1.0 - yy);
