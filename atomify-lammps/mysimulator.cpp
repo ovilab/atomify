@@ -72,11 +72,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
-#define STUFF
+    Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
+// #define STUFF
 #ifdef STUFF
     QVector3D p1(-4,0,0);
     QVector3D p2(4,0,0);
-    Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
+
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
