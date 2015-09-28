@@ -75,10 +75,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
-// #define STUFF
+#define STUFF
 #ifdef STUFF
-    QVector3D p1(-4,0,0);
-    QVector3D p2(4,0,0);
+    QVector3D p1(-4,2,0);
+    QVector3D p2(4,2,0);
 
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();
@@ -92,7 +92,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         colors[0] = QColor("red");
         colors[1] = QColor("red");
         scales[0] = 2.0;
-        scales[1] = 1.0;
+        scales[1] = 2.0;
         spheres->setDirty(true);
     }
     Cylinders *cylinders = qobject_cast<Cylinders*>(renderableObject);
@@ -101,8 +101,9 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         points.resize(1);
         points[0].vertex1 = p1;
         points[0].vertex2 = p2;
-        points[0].radius1 = 1.0;
-        points[0].radius2 = 0.5;
+        points[0].radius1 = 2.0;
+        points[0].radius2 = 2.0;
+        cylinders->setRadius(0.2);
         cylinders->setDirty(true);
     }
 #else

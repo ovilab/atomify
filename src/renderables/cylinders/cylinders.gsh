@@ -12,75 +12,60 @@ out vec3 yDir;
 out float da;
 
 void main(void) {
-    float sphereRadius1 = vs_radius1[0]*0.95; // Spheres discard any r^2 > 0.9 => r>0.95
-    float sphereRadius2 = vs_radius2[0]*0.95; // Spheres discard any r^2 > 0.9 => r>0.95
-    float dr1 = sqrt(sphereRadius1*sphereRadius1 - radius*radius);
-    float dr2 = sqrt(sphereRadius2*sphereRadius2 - radius*radius);
-    vec3 epsilonAwayFromCamera = cp_viewVector*0.001;
+//    float sphereRadius1 = vs_radius1[0]*0.95; // Spheres discard any r^2 > 0.9 => r>0.95
+//    float sphereRadius2 = vs_radius2[0]*0.95; // Spheres discard any r^2 > 0.9 => r>0.95
+//    float dr1 = sqrt(sphereRadius1*sphereRadius1 - radius*radius);
+//    float dr2 = sqrt(sphereRadius2*sphereRadius2 - radius*radius);
 
     // Move vertices slightly away from camera so they always appear behind spheres
-    vec3 v1 = vs_vertex1Position[0]+epsilonAwayFromCamera;
-    vec3 v2 = vs_vertex2Position[0]+epsilonAwayFromCamera;
+    vec3 v1 = vs_vertex1Position[0];
+    vec3 v2 = vs_vertex2Position[0];
+    vec4 v14 = vec4(v1, 1.0);
+    vec4 v24 = vec4(v2, 1.0);
     vec3 delta = v2 - v1;
     vec3 deltaNormalized = normalize(delta);
+    float cosphi = abs(dot(cp_viewVector, deltaNormalized)); // Cheating or being stupid with the factor 0.5
+    float sinphi = sqrt(1.0 - cosphi*cosphi);
 
-    // Project delta onto screen (remove anything orthogonal on screen)
-    vec3 deltaProjected = delta - dot(delta, cp_viewVector)*cp_viewVector;
-    vec3 deltaProjectedNormalized = normalize(deltaProjected);
-    vec3 orthogonalOnDeltaNormalized = cross(deltaProjectedNormalized, cp_viewVector);
-    vec3 orthogonalOnDeltaNormalizedTimesRadius = orthogonalOnDeltaNormalized*radius;
+    vec4 v1_mv = cp_modelViewMatrix*vec4(v1, 1.0);
+    vec4 v2_mv = cp_modelViewMatrix*vec4(v2, 1.0);
+    float x1 = v1_mv.x; float y1 = v1_mv.y; float z1 = v1_mv.z;
+    float x2 = v2_mv.x; float y2 = v2_mv.y; float z2 = v2_mv.z;
+    float r1 = sqrt(dot(v1_mv,v1_mv));
+    float r2 = sqrt(dot(v2_mv,v2_mv));
+    float theta1 = acos(z/r);
+    float phi1 = atan(y1,z1);
+    float phi2 = atan(y2,z2);
 
-    float costheta = 0.5*abs(dot(cp_viewVector, deltaNormalized)); // Cheating or being stupid with the factor 0.5
-    da = radius*costheta;
 
-    vec3 cameraToV1 = cp_cameraPosition - v1;
-    vec3 cameraToV2 = cp_cameraPosition - v2;
-    float distanceToV1 = dot(cameraToV1, cameraToV1);
-    float distanceToV2 = dot(cameraToV2, cameraToV2);
+    vec4 delta_mv = v2_mv-v1_mv;
+    float delta_mv_length = dot(delta_mv,delta_mv);
+    float costheta = delta_mv.x / delta_mv_length;
+    float sintheta = delta_mv.y / delta_mv_length;
+    vec4 delta_mv_half = 0.5*delta_mv;
 
-    if(distanceToV1 < distanceToV2) {
-        // v1 closer than v2
-        v2 = v2 - deltaNormalized*dr2;
-        yDir = orthogonalOnDeltaNormalized;
-
-        vertexPosition = v2 - orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(-da, 1.0);
-        EmitVertex();
-        vertexPosition = v1 - orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(1.0, 1.0);
-        EmitVertex();
-        vertexPosition = v2 + orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(-da, -1.0);
-        EmitVertex();
-        vertexPosition = v1 + orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(1.0, -1.0);
-        EmitVertex();
-        EndPrimitive();
-    } else {
-        // v2 closer than v1
-        v1 = v1 + deltaNormalized*dr1;
-        yDir = -orthogonalOnDeltaNormalized;
-
-        vertexPosition = v1 + orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(-da, 1.0);
-        EmitVertex();
-        vertexPosition = v2 + orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(1.0, 1.0);
-        EmitVertex();
-        vertexPosition = v1 - orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(-da, -1.0);
-        EmitVertex();
-        vertexPosition = v2 - orthogonalOnDeltaNormalizedTimesRadius;
-        gl_Position = cp_modelViewProjectionMatrix*vec4(vertexPosition, 1.0);
-        texCoord = vec2(1.0, -1.0);
-        EmitVertex();
-        EndPrimitive();
-    }
+    vec4 middle = vec4(0.5*(v2+v1), 1.0);
+    da = 0.0;
+    float a = 10;
+    vertexPosition = v2;
+    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(-delta_mv_half.x + radius*sintheta, -delta_mv_half.y + radius*costheta, 0.0, 0.0);
+    gl_Position = cp_modelViewProjectionMatrix*v14 + cp_projectionMatrix*vec4(-radius*sintheta*cosphi, radius*costheta*sinphi, 0.0, 0.0);
+    texCoord = vec2(0, 1.0);
+    EmitVertex();
+    vertexPosition = v1;
+    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(delta_mv_half.x + radius*sintheta, delta_mv_half.y + radius*costheta, 0.0, 0.0);
+    gl_Position = cp_modelViewProjectionMatrix*v24 + cp_projectionMatrix*vec4(radius*sintheta*cosphi, radius*costheta*sinphi, 0.0, 0.0);
+    texCoord = vec2(1.0, 1.0);
+    EmitVertex();
+    vertexPosition = v2;
+    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(-delta_mv_half.x - radius*sintheta, -delta_mv_half.y - radius*costheta, 0.0, 0.0);
+    gl_Position = cp_modelViewProjectionMatrix*v14 + cp_projectionMatrix*vec4(-radius*sintheta*cosphi, -radius*costheta*sinphi, 0.0, 0.0);
+    texCoord = vec2(0, -1.0);
+    EmitVertex();
+    vertexPosition = v1;
+    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(delta_mv_half.x - radius*sintheta, delta_mv_half.y - radius*costheta, 0.0, 0.0);
+    gl_Position = cp_modelViewProjectionMatrix*v24 + cp_projectionMatrix*vec4(radius*sintheta*cosphi, -radius*costheta*sinphi, 0.0, 0.0);
+    texCoord = vec2(1.0, -1.0);
+    EmitVertex();
+    EndPrimitive();
 }
