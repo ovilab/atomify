@@ -3,8 +3,10 @@
 #include <QString>
 #include <sstream>
 
-QString readFile(QString filename);
-QString copyDataFileToReadablePath(QString filename);
-QString copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream);
+namespace IO {
+    QString readFile(QString filename);
+    QString copyDataFileToReadablePath(QString filename);
+    QString copyFileAndFixNewCommand(QString command, std::stringstream &commandStringStream);
+}
 
 #endif // LAMMPSFILEHANDLER_H

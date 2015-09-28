@@ -8,6 +8,8 @@ Item {
     property Visualizer visualizer: visualizer
     property MySimulator simulator
     property Light light: light
+    property Slice slice: mySlice
+    property bool addPeriodicCopies: false
 
     Visualizer {
         property Spheres spheres: spheres
@@ -42,6 +44,22 @@ Item {
                 shininess: 40.0
                 attenuation: 0.001
                 position: camera.position
+            }
+
+            PeriodicCopies {
+                id: periodicCopies
+                systemSize: simulator.systemSize
+                enabled: addPeriodicCopies
+            }
+
+            Slice {
+                id: mySlice
+                systemSize: simulator.systemSize
+                origo: Qt.vector3d(0,0,0)
+                distance: 0
+                normal: Qt.vector3d(1.0, 0.0, 0.0)
+                width: 5
+                enabled: false
             }
         }
     }

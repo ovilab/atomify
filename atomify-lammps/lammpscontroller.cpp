@@ -119,7 +119,7 @@ void LAMMPSController::processCommand(QString command) {
 
         if(word.find("ext://") != std::string::npos) {
             word.erase(0, 6); // Remove the ext:// prefix
-            word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
+            word = IO::copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
         }
 
         // If this is the first word in a command and it is "run"
@@ -165,7 +165,7 @@ void LAMMPSController::processCommand(QString command) {
 
 void LAMMPSController::loadScriptFromFile(QString filename)
 {
-    QString lammpsScript_qstring = readFile(filename);
+    QString lammpsScript_qstring = IO::readFile(filename);
     runScript(lammpsScript_qstring);
 }
 
@@ -186,7 +186,7 @@ void LAMMPSController::runScript(QString script)
                     if(command_ss >> word) {
                         if(word.find("ext://") != std::string::npos) {
                             word.erase(0, 6); // Remove the ext:// prefix
-                            word = copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
+                            word = IO::copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
                         }
                         loadScriptFromFile(QString::fromStdString(word));
                     } else {
@@ -272,6 +272,9 @@ void LAMMPSController::executeActiveRunCommand() {
     int maxSimulationSpeed = m_state.runCommandEnd - currentTimestep; // We cannot exceed the last timestep in the active run command
 
     int simulationSpeed = min(m_state.simulationSpeed, maxSimulationSpeed);
+
+    QElapsedTimer t;
+    t.start();
     if(currentTimestep == m_state.runCommandStart || m_state.preRunNeeded) {
         // If this is the first timestep in this run command, execute the pre yes command to prepare the full run command.
         executeCommandInLAMMPS(QString("run %1 pre yes post no start %2 stop %3").arg(simulationSpeed).arg(m_state.runCommandStart).arg(m_state.runCommandEnd));
@@ -279,7 +282,8 @@ void LAMMPSController::executeActiveRunCommand() {
     } else {
         executeCommandInLAMMPS(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(m_state.runCommandStart).arg(m_state.runCommandEnd));
     }
-
+    m_state.timeSpentInLammps += t.elapsed();
+    m_state.numberOfTimesteps += simulationSpeed;
     currentTimestep = m_lammps->update->ntimestep;
     m_state.runCommandActive = currentTimestep < m_state.runCommandEnd;
 }
@@ -338,12 +342,17 @@ void LAMMPSController::tick()
         // If no commands are queued, just perform a normal run command with the current simulation speed.
 
         processComputes(); // Only work with computes and output when we will do a run
+        QElapsedTimer t;
+        t.start();
+
         if(m_state.preRunNeeded) {
             executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(m_state.simulationSpeed));
             m_state.preRunNeeded = false;
         } else {
             executeCommandInLAMMPS(QString("run %1 pre no post no").arg(m_state.simulationSpeed));
         }
+        m_state.numberOfTimesteps += m_state.simulationSpeed;
+        m_state.timeSpentInLammps += t.elapsed();
     }
 
     m_state.dataDirty = true;
@@ -390,6 +399,11 @@ void LAMMPSController::setDataDirty(bool value)
 bool LAMMPSController::crashed() const
 {
     return m_state.crashed;
+}
+
+double LAMMPSController::timePerTimestep()
+{
+    return ((double)m_state.timeSpentInLammps) / (m_state.numberOfTimesteps ? m_state.numberOfTimesteps : 1); // Measured in ms
 }
 
 LammpsException &LAMMPSController::currentException()

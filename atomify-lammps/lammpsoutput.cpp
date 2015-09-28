@@ -5,25 +5,40 @@
 #include <QString>
 #include <QDebug>
 #include "CPcompute.h"
-
+#ifdef Q_OS_LINUX
+#include <libio.h>
+#endif
 using namespace std;
 
 LammpsOutput::LammpsOutput()
 {
 #ifdef Q_OS_LINUX
-
+    cookie_io_functions_t funcs;
+    funcs.close = LammpsOutput::clean;
+    funcs.read = LammpsOutput::read;
+    funcs.write = LammpsOutput::write;
+    funcs.seek = LammpsOutput::seek;
+    m_filePointer = fopencookie((void*)this, "w", funcs);
 #else
     m_filePointer = funopen((const void*)this, LammpsOutput::read, LammpsOutput::write, LammpsOutput::seek, LammpsOutput::clean);
 #endif
 
 }
 
-LammpsOutput::~LammpsOutput()
-{
+#ifdef Q_OS_LINUX
+__ssize_t LammpsOutput::read(void *, char *, size_t ) {
 
 }
 
+__ssize_t LammpsOutput::write(void *cookie, const char *buffer, size_t n) {
+    LammpsOutput *parser = (LammpsOutput*)cookie;
+    parser->parse(QString(buffer));
+}
 
+int LammpsOutput::seek(void *cookie, _IO_off64_t *__pos, int __w) {
+    return 0;
+}
+#else
 int LammpsOutput::read (void *, char *, int ) {
 
 }
@@ -33,10 +48,13 @@ int LammpsOutput::write (void *cookie, const char *buffer, int size) {
     parser->parse(QString(buffer));
 }
 
-fpos_t LammpsOutput::seek (void *, fpos_t , int ) {
 
-    return 0;
+fpos_t LammpsOutput::seek (void *, fpos_t , int ) {
+    fpos_t obj;
+    return obj;
 }
+
+#endif
 
 int LammpsOutput::clean (void *) {
 

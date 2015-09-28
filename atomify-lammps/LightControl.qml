@@ -4,10 +4,11 @@ import QtQuick.Layouts 1.1
 import SimVis 1.0
 
 Item {
+    id: lightControlRoot
     property Light light
     height: columnLayout.height
     width: parent.width
-
+    property real labelWidth: 80
     ColumnLayout {
         id: columnLayout
         spacing: 5
@@ -15,6 +16,7 @@ Item {
             spacing: 5
             CheckBox {
                 id: ambient
+                width: lightControlRoot.labelWidth
                 text: "Ambient"
                 checked: light ? light.ambient : false
                 onCheckedChanged: {
@@ -34,6 +36,7 @@ Item {
             spacing: 5
             CheckBox {
                 id: diffuse
+                width: lightControlRoot.labelWidth
                 text: "Diffuse"
                 checked: light.diffuse
                 onCheckedChanged: light.diffuse = checked
@@ -51,6 +54,7 @@ Item {
             spacing: 5
             CheckBox {
                 id: specular
+                width: lightControlRoot.labelWidth
                 text: "Specular"
                 checked: light.specular
                 onCheckedChanged: light.specular = checked
@@ -69,6 +73,7 @@ Item {
             spacing: 5
             Label {
                 id: shininess
+                width: lightControlRoot.labelWidth
                 text: "Shininess"
             }
 
@@ -85,6 +90,7 @@ Item {
             spacing: 5
             Label {
                 id: attenuation
+                width: lightControlRoot.labelWidth
                 text: "Attenuation"
             }
 

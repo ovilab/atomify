@@ -8,7 +8,7 @@
 
 class Simulator;
 
-struct SphereVBOData
+struct SphereNoGeometryShaderVBOData
 {
     float sphereId;
     float scale;
@@ -16,6 +16,13 @@ struct SphereVBOData
     QVector3D position;
     QVector3D color;
     QVector2D textureCoord;
+};
+
+struct SphereGeometryShaderVBOData
+{
+    QVector3D position;
+    QVector3D color;
+    float scale;
 };
 
 class Spheres;
@@ -29,6 +36,7 @@ private:
     virtual void render() override;
     virtual void beforeLinkProgram() override;
 
+    bool m_geometryShaderSupported = false;
     void uploadVBOs(Spheres* spheres);
     bool m_isInitialized = false;
     int m_vertexCount = 0;
@@ -36,6 +44,10 @@ private:
     QVector3D m_upVector;
     QVector3D m_viewVector;
     QVector3D m_rightVector;
+    void uploadVBONoGeometryShader(Spheres *spheres);
+    void uploadVBOGeometryShader(Spheres *spheres);
+    void renderGeometryShader();
+    void renderNoGeometryShader();
 };
 
 class Spheres : public Renderable
@@ -70,7 +82,9 @@ signals:
 
 private:
     QVector3D vectorFromColor(const QColor &color);
-    QVector<SphereVBOData> m_vertices;
+    QVector<SphereNoGeometryShaderVBOData> m_verticesNoGeometryShader;
+    QVector<SphereGeometryShaderVBOData> m_verticesGeometryShader;
+
     QVector<GLuint> m_indices;
     QVector<QVector3D> m_positions;
     QVector<QColor> m_colors;

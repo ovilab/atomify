@@ -55,6 +55,7 @@ public slots:
     void setBackgroundColor(QColor arg);
     void setNavigator(Navigator* arg);
     void setFps(float arg);
+    void handleWindowChanged(QQuickWindow *win);
 
 private slots:
     void synchronizeWorker(SimulatorWorker* worker);

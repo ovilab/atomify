@@ -13,6 +13,7 @@
 #include "lammpscontroller.h"
 #include "lammpsoutput.h"
 #include "atomstyle.h"
+#include "lammpsfilehandler.h"
 
 using std::function; using std::unique_ptr;
 
@@ -57,11 +58,8 @@ class MySimulator : public Simulator
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes WRITE setNumberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(QVector3D systemSize READ systemSize WRITE setSystemSize NOTIFY systemSizeChanged)
     Q_PROPERTY(bool paused READ paused WRITE setPaused NOTIFY pausedChanged)
-    Q_PROPERTY(bool sliceEnabled READ sliceEnabled WRITE setSliceEnabled NOTIFY sliceEnabledChanged)
-    Q_PROPERTY(double sliceDistance READ sliceDistance WRITE setSliceDistance NOTIFY sliceDistanceChanged)
-    Q_PROPERTY(QVector3D sliceNormal READ sliceNormal WRITE setSliceNormal NOTIFY sliceNormalChanged)
-    Q_PROPERTY(double sliceWidth READ sliceWidth WRITE setSliceWidth NOTIFY sliceWidthChanged)
     Q_PROPERTY(AtomStyle* atomStyle READ atomStyle WRITE setAtomStyle NOTIFY atomStyleChanged)
+    Q_PROPERTY(double timePerTimestep READ timePerTimestep WRITE setTimePerTimestep NOTIFY timePerTimestepChanged)
 public:
     MySimulator() { }
     ~MySimulator() { }
@@ -74,14 +72,11 @@ public:
     LammpsOutput* lammpsOutput() const;
     AtomStyle* atomStyle() const;
     double simulationTime() const;
-    double sliceDistance() const;
-    double sliceWidth() const;
     bool paused() const;
-    bool sliceEnabled() const;
     int numberOfAtoms() const;
     int numberOfAtomTypes() const;
-    QVector3D sliceNormal() const;
     QVector3D systemSize() const;
+    double timePerTimestep() const;
 
 public slots:
     void runScript(QString script);
@@ -89,28 +84,21 @@ public slots:
     void setLammpsOutput(LammpsOutput* lammpsOutput);
     void setPaused(bool paused);
     void setSimulationTime(double simulationTime);
-    void setSliceEnabled(bool sliceEnabled);
-    void setSliceDistance(double sliceDistance);
-    void setSliceNormal(QVector3D sliceNormal);
-    void setSliceWidth(double sliceWidth);
     void setAtomStyle(AtomStyle* atomStyle);
     void setNumberOfAtoms(int numberOfAtoms);
     void setNumberOfAtomTypes(int numberOfAtomTypes);
     void setSystemSize(QVector3D systemSize);
-
+    void setTimePerTimestep(double timePerTimestep);
 signals:
     void simulationSpeedChanged(int arg);
     void lammpsOutputChanged(LammpsOutput* lammpsOutput);
     void pausedChanged(bool paused);
     void simulationTimeChanged(double simulationTime);
-    void sliceEnabledChanged(bool sliceEnabled);
-    void sliceDistanceChanged(double sliceDistance);
-    void sliceNormalChanged(QVector3D sliceNormal);
-    void sliceWidthChanged(double sliceWidth);
     void atomStyleChanged(AtomStyle* atomStyle);
     void numberOfAtomsChanged(int numberOfAtoms);
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void systemSizeChanged(QVector3D systemSize);
+    void timePerTimestepChanged(double timePerTimestep);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -123,14 +111,11 @@ private:
     QMap<QString, CPCompute*> m_computes;
     LammpsOutput *m_lammpsOutput = NULL;
     double m_simulationTime = 0.0;
-    bool m_sliceEnabled = false;
-    QVector3D m_sliceNormal = QVector3D(1,0,0);
-    double m_sliceDistance = 0;
-    double m_sliceWidth = 10;
     AtomStyle* m_atomStyle = NULL;
     int m_numberOfAtoms;
     int m_numberOfAtomTypes;
     QVector3D m_systemSize;
+    double m_timePerTimestep = 0;
 };
 
 #endif // MYSIMULATOR_H

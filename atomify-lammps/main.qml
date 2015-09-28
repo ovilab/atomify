@@ -16,6 +16,9 @@ ApplicationWindow {
     width: 1650
     height: 900
     visible: true
+    onClosing: {
+
+    }
 
     SplitView {
         anchors.fill: parent
@@ -57,8 +60,7 @@ ApplicationWindow {
                 title: "Rendering"
                 Rendering {
                     anchors.fill: parent
-                    simulator: mySimulator
-                    light: myVisualizer.light
+                    atomifyVisualizer: myVisualizer
                 }
             }
         }
@@ -73,7 +75,7 @@ ApplicationWindow {
             Rectangle {
                 x: 20
                 y: 20
-                width: 200
+                width: statusColumn.width+20
                 height: statusColumn.height+20
                 radius: 4
                 color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
@@ -88,6 +90,10 @@ ApplicationWindow {
                     Text {
                         font.bold: true
                         text: "Number of atom types: "+mySimulator.numberOfAtomTypes
+                    }
+                    Text {
+                        font.bold: true
+                        text: "Time per timestep [ms]: "+mySimulator.timePerTimestep.toFixed(2)
                     }
 
                     Text {

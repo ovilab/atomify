@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "../shadereffects/light.h"
 #include <QFile>
+#include <QOpenGLFunctions_4_1_Core>
 
 Renderable::Renderable(QQuickItem *parent) :
     QQuickItem(parent),
@@ -80,6 +81,8 @@ void RenderableRenderer::generateVBOs()
     if(m_numberOfVBOs>0) {
         m_vboIds.resize(m_numberOfVBOs);
         glFunctions()->glGenBuffers(m_numberOfVBOs, &m_vboIds.front());
+        m_vao = new QOpenGLVertexArrayObject(this);
+        m_vao->create();
     }
 }
 
@@ -96,16 +99,25 @@ void RenderableRenderer::prepareAndRender()
     if(m_shadersDirty) {
         m_fragmentShaderBase.clear();
         m_vertexShaderBase.clear();
+        m_geometryShaderBase.clear();
+        if(QOpenGLContext::currentContext()->format().profile() == QSurfaceFormat::CoreProfile) {
+            addShaderCodeToBase(QOpenGLShader::Fragment, QString("#version 330\n"));
+            addShaderCodeToBase(QOpenGLShader::Vertex, QString("#version 330\n"));
+            addShaderCodeToBase(QOpenGLShader::Geometry, QString("#version 400\n"));
+        }
         addShaderCodeToBase(QOpenGLShader::Fragment, contentFromFile(":/org.compphys.SimVis/shadereffects/shaders/default.glsl"));
         addShaderCodeToBase(QOpenGLShader::Vertex, contentFromFile(":/org.compphys.SimVis/shadereffects/shaders/default.glsl"));
+        addShaderCodeToBase(QOpenGLShader::Geometry, contentFromFile(":/org.compphys.SimVis/shadereffects/shaders/default.glsl"));
 
         for(ShaderEffect *shaderEffect : m_shaderEffects) {
             if(shaderEffect->enabled()) {
                 // Defines must come before library
                 addShaderCodeToBase(QOpenGLShader::Fragment, shaderEffect->fragmentShaderDefines());
                 addShaderCodeToBase(QOpenGLShader::Vertex, shaderEffect->vertexShaderDefines());
+                addShaderCodeToBase(QOpenGLShader::Geometry, shaderEffect->geometryShaderDefines());
                 addShaderCodeToBase(QOpenGLShader::Fragment, shaderEffect->fragmentShaderLibrary());
                 addShaderCodeToBase(QOpenGLShader::Vertex, shaderEffect->vertexShaderLibrary());
+                addShaderCodeToBase(QOpenGLShader::Geometry, shaderEffect->geometryShaderLibrary());
             }
         }
 
@@ -195,6 +207,8 @@ void RenderableRenderer::setShaderFromSourceCode(QOpenGLShader::ShaderType type,
         fullShaderCode = m_vertexShaderBase;
     } else if(type == QOpenGLShader::Fragment) {
         fullShaderCode = m_fragmentShaderBase;
+    } else if(type == QOpenGLShader::Geometry) {
+        fullShaderCode = m_geometryShaderBase;
     } else {
         qDebug() << "Shaders of this type aren't supported yet.";
         return;
@@ -215,6 +229,7 @@ void RenderableRenderer::setShaderFromSourceFile(QOpenGLShader::ShaderType type,
 void RenderableRenderer::addShaderCodeToBase(QOpenGLShader::ShaderType type, QString shaderCode) {
     if(type == QOpenGLShader::Fragment) m_fragmentShaderBase.append(shaderCode);
     else if(type == QOpenGLShader::Vertex) m_vertexShaderBase.append(shaderCode);
+    else if(type == QOpenGLShader::Geometry) m_geometryShaderBase.append(shaderCode);
     else qDebug() << "Shaders of this type aren't supported yet.";
 }
 

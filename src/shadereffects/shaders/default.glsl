@@ -1,7 +1,6 @@
 // BEGIN default.glsl
 #ifndef DEFAULTGLSL
 #define DEFAULTGLSL
-
 uniform highp mat4 cp_modelViewMatrix;
 uniform highp mat4 cp_projectionMatrix;
 uniform highp mat4 cp_modelViewMatrixInverse;

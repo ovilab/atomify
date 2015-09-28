@@ -5,8 +5,8 @@ import MySimulator 1.0
 import SimVis 1.0
 Item {
     id: renderingRoot
-    property MySimulator simulator
-    property Light light
+    property AtomifyVisualizer atomifyVisualizer
+
     ColumnLayout {
         spacing: 10
         x: 10
@@ -20,7 +20,7 @@ Item {
 
             AtomStyleControl {
                 id: atomStyleControl
-                atomStyle: simulator.atomStyle
+                atomStyle: atomifyVisualizer.simulator.atomStyle
             }
         }
 
@@ -30,15 +30,15 @@ Item {
             width: parent.width
             checkable: true
             title: "Slicing"
-            checked: renderingRoot.simulator ? renderingRoot.simulator.sliceEnabled : false
+            checked: atomifyVisualizer ? atomifyVisualizer.slice.enabled : false
 
             onCheckedChanged: {
-                simulator.sliceEnabled = checked
+                atomifyVisualizer.slice.enabled = checked
             }
 
             SliceControl {
                 id: sliceControl
-                simulator: renderingRoot.simulator
+                slice: atomifyVisualizer.slice
             }
         }
 
@@ -50,8 +50,15 @@ Item {
 
             LightControl {
                 id: lightControl
-                light: renderingRoot.light
+                light: atomifyVisualizer.light
             }
+        }
+
+        CheckBox {
+            onCheckedChanged: {
+                atomifyVisualizer.addPeriodicCopies = checked
+            }
+            text: "Periodic copies"
         }
     }
 }

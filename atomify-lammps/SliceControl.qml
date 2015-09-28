@@ -2,12 +2,14 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import MySimulator 1.0
+import SimVis 1.0
 
 Item {
     id: sliceRoot
-    property MySimulator simulator
+    property Slice slice
     width: parent.width
     height: columnLayout.height
+    property real labelWidth: 90
     ColumnLayout {
         id: columnLayout
         spacing: 10
@@ -15,6 +17,7 @@ Item {
         Row {
             spacing: 2
             Label {
+                width: sliceRoot.labelWidth
                 text: "Distance: "
             }
 
@@ -24,9 +27,9 @@ Item {
                 minimumValue: 0
                 maximumValue: 200
                 stepSize: 1
-                value: simulator ? simulator.sliceDistance : 1
+                value: slice ? slice.distance : 1
                 onValueChanged: {
-                    simulator.sliceDistance = value
+                    slice.distance = value
                 }
             }
         }
@@ -34,22 +37,41 @@ Item {
         Row {
             spacing: 2
             Label {
-                text: "Normal (X): "
+                width: sliceRoot.labelWidth
+                text: "Origo (x,y,z): "
             }
 
-            TextField {
-                id: normalXText
-                text: simulator ? simulator.sliceNormal.x : 0
-                Layout.preferredWidth: 200
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-
-                onTextChanged: {
-                    var x = parseFloat(normalXText.text)
-                    var y = parseFloat(simulator.sliceNormal.y)
-                    var z = parseFloat(simulator.sliceNormal.z)
-                    if(text.length > 0) {
-                        simulator.sliceNormal = Qt.vector3d(x,y,z)
-                    }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.origo.x : 0
+                onValueChanged: {
+                    var x = parseFloat(value)
+                    var y = parseFloat(slice.origo.y)
+                    var z = parseFloat(slice.origo.z)
+                    slice.origo = Qt.vector3d(x,y,z)
+                }
+            }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.origo.y : 0
+                onValueChanged: {
+                    var x = parseFloat(slice.origo.x)
+                    var y = parseFloat(value)
+                    var z = parseFloat(slice.origo.z)
+                    slice.origo = Qt.vector3d(x,y,z)
+                }
+            }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.origo.z : 0
+                onValueChanged: {
+                    var x = parseFloat(slice.origo.x)
+                    var y = parseFloat(slice.origo.y)
+                    var z = parseFloat(value)
+                    slice.origo = Qt.vector3d(x,y,z)
                 }
             }
         }
@@ -57,22 +79,41 @@ Item {
         Row {
             spacing: 2
             Label {
-                text: "Normal (Y): "
+                width: sliceRoot.labelWidth
+                text: "Normal (x,y,z): "
             }
 
-            TextField {
-                id: normalYText
-                text: simulator ? simulator.sliceNormal.y : 0
-                Layout.preferredWidth: 200
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                onTextChanged: {
-                    var x = parseFloat(simulator.sliceNormal.x)
-                    var y = parseFloat(normalYText.text)
-                    var z = parseFloat(simulator.sliceNormal.z)
-
-                    if(text.length > 0) {
-                        simulator.sliceNormal = Qt.vector3d(x,y,z)
-                    }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.normal.x : 0
+                onValueChanged: {
+                    var x = parseFloat(value)
+                    var y = parseFloat(slice.normal.y)
+                    var z = parseFloat(slice.normal.z)
+                    slice.normal = Qt.vector3d(x,y,z)
+                }
+            }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.normal.y : 0
+                onValueChanged: {
+                    var x = parseFloat(slice.normal.x)
+                    var y = parseFloat(value)
+                    var z = parseFloat(slice.normal.z)
+                    slice.normal = Qt.vector3d(x,y,z)
+                }
+            }
+            SpinBox {
+                minimumValue: 0
+                stepSize: 1
+                value: slice ? slice.normal.z : 0
+                onValueChanged: {
+                    var x = parseFloat(slice.normal.x)
+                    var y = parseFloat(slice.normal.y)
+                    var z = parseFloat(value)
+                    slice.normal = Qt.vector3d(x,y,z)
                 }
             }
         }
@@ -80,30 +121,7 @@ Item {
         Row {
             spacing: 2
             Label {
-                text: "Normal (Z): "
-            }
-
-            TextField {
-                id: normalZText
-                text: simulator ? simulator.sliceNormal.z : 0
-                Layout.preferredWidth: 200
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-
-                onTextChanged: {
-                    var x = parseFloat(simulator.sliceNormal.x)
-                    var y = parseFloat(simulator.sliceNormal.y)
-                    var z = parseFloat(normalZText.text)
-
-                    if(text.length > 0) {
-                        simulator.sliceNormal = Qt.vector3d(x,y,z)
-                    }
-                }
-            }
-        }
-
-        Row {
-            spacing: 2
-            Label {
+                width: sliceRoot.labelWidth
                 text: "Slice width: "
             }
 
@@ -113,9 +131,9 @@ Item {
                 minimumValue: 0
                 maximumValue: 200
                 stepSize: 1
-                value: simulator ? simulator.sliceWidth : 1
+                value: slice ? slice.width : 1
                 onValueChanged: {
-                    simulator.sliceWidth = value
+                    slice.width = value
                 }
             }
         }

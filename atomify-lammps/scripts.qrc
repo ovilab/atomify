@@ -1,28 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>scripts/in.lennardjonesdiffusion</file>
-        <file>scripts/in.lennardjonescrystal</file>
-        <file>scripts/bulkwater.data</file>
-        <file>scripts/in.bulkwater</file>
-        <file>scripts/gashydrate.data</file>
-        <file>scripts/in.gashydrates</file>
-        <file>scripts/in.crack</file>
-        <file>scripts/in.flow.couette</file>
-        <file>scripts/in.flow.poiseuille</file>
-        <file>scripts/in.friction</file>
-        <file>scripts/in.obstacle</file>
-        <file>scripts/in.bulkc2h4</file>
-        <file>scripts/C2H4.template</file>
-        <file>scripts/C2H4ff.set</file>
-        <file>scripts/singleC2H4.data</file>
-        <file>scripts/in.confinedc2h4</file>
-        <file>scripts/C2H4MFIff.set</file>
-        <file>scripts/MFI.data</file>
-        <file>scripts/inC2H4Bulk.lmp</file>
-        <file>scripts/reconfig.data.gz</file>
-        <file>scripts/in.mesopores</file>
-        <file>scripts/MFI_2.data</file>
-        <file>scripts/in.sw</file>
-        <file>scripts/Si.sw</file>
+        <file>scripts/default.lmp</file>
     </qresource>
 </RCC>

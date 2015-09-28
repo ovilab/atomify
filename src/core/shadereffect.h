@@ -15,8 +15,10 @@ public:
     ~ShaderEffect();
     virtual QString fragmentShaderDefines() = 0;
     virtual QString vertexShaderDefines() = 0;
+    virtual QString geometryShaderDefines() { return QString(""); }
     virtual QString fragmentShaderLibrary() = 0;
     virtual QString vertexShaderLibrary() = 0;
+    virtual QString geometryShaderLibrary() { return QString(""); }
     virtual ShaderEffect *clone() = 0;
     virtual void copyState(ShaderEffect *source) = 0;
     virtual void beforeRendering(QOpenGLShaderProgram &shaderProgram) = 0;
