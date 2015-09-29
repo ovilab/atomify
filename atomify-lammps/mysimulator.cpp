@@ -77,8 +77,8 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
 #define STUFF
 #ifdef STUFF
-    QVector3D p1(-4,2,0);
-    QVector3D p2(4,2,0);
+    QVector3D p1(-4,2,3);
+    QVector3D p2(4,6,8);
 
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();

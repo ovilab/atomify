@@ -22,49 +22,30 @@ void main(void) {
     vec3 v2 = vs_vertex2Position[0];
     vec4 v14 = vec4(v1, 1.0);
     vec4 v24 = vec4(v2, 1.0);
-    vec3 delta = v2 - v1;
-    vec3 deltaNormalized = normalize(delta);
-    float cosphi = abs(dot(cp_viewVector, deltaNormalized)); // Cheating or being stupid with the factor 0.5
-    float sinphi = sqrt(1.0 - cosphi*cosphi);
+    vec4 v1mvp = cp_modelViewProjectionMatrix*v14;
+    vec4 v2mvp = cp_modelViewProjectionMatrix*v24;
+    vec4 delta = v2mvp/v2mvp.w - v1mvp/v1mvp.w;
+    vec4 deltaNormalized = normalize(delta);
 
-    vec4 v1_mv = cp_modelViewMatrix*vec4(v1, 1.0);
-    vec4 v2_mv = cp_modelViewMatrix*vec4(v2, 1.0);
-    float x1 = v1_mv.x; float y1 = v1_mv.y; float z1 = v1_mv.z;
-    float x2 = v2_mv.x; float y2 = v2_mv.y; float z2 = v2_mv.z;
-    float r1 = sqrt(dot(v1_mv,v1_mv));
-    float r2 = sqrt(dot(v2_mv,v2_mv));
-    float theta1 = acos(z/r);
-    float phi1 = atan(y1,z1);
-    float phi2 = atan(y2,z2);
+    vec4 ortho = vec4(cross(vec3(0,0,1), deltaNormalized.xyz), 0.0);
 
+    da = costheta;
 
-    vec4 delta_mv = v2_mv-v1_mv;
-    float delta_mv_length = dot(delta_mv,delta_mv);
-    float costheta = delta_mv.x / delta_mv_length;
-    float sintheta = delta_mv.y / delta_mv_length;
-    vec4 delta_mv_half = 0.5*delta_mv;
+    vec4 v = cp_modelViewProjectionMatrix*vec4(0.5*(v1+v2), 1.0);
 
-    vec4 middle = vec4(0.5*(v2+v1), 1.0);
-    da = 0.0;
-    float a = 10;
-    vertexPosition = v2;
-    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(-delta_mv_half.x + radius*sintheta, -delta_mv_half.y + radius*costheta, 0.0, 0.0);
-    gl_Position = cp_modelViewProjectionMatrix*v14 + cp_projectionMatrix*vec4(-radius*sintheta*cosphi, radius*costheta*sinphi, 0.0, 0.0);
+    gl_Position = v1mvp - ortho*radius;
     texCoord = vec2(0, 1.0);
     EmitVertex();
-    vertexPosition = v1;
-    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(delta_mv_half.x + radius*sintheta, delta_mv_half.y + radius*costheta, 0.0, 0.0);
-    gl_Position = cp_modelViewProjectionMatrix*v24 + cp_projectionMatrix*vec4(radius*sintheta*cosphi, radius*costheta*sinphi, 0.0, 0.0);
+
+    gl_Position = v2mvp - ortho*radius;
     texCoord = vec2(1.0, 1.0);
     EmitVertex();
-    vertexPosition = v2;
-    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(-delta_mv_half.x - radius*sintheta, -delta_mv_half.y - radius*costheta, 0.0, 0.0);
-    gl_Position = cp_modelViewProjectionMatrix*v14 + cp_projectionMatrix*vec4(-radius*sintheta*cosphi, -radius*costheta*sinphi, 0.0, 0.0);
+
+    gl_Position = v1mvp + ortho*radius;
     texCoord = vec2(0, -1.0);
     EmitVertex();
-    vertexPosition = v1;
-    // gl_Position = cp_modelViewProjectionMatrix*middle + vec4(delta_mv_half.x - radius*sintheta, delta_mv_half.y - radius*costheta, 0.0, 0.0);
-    gl_Position = cp_modelViewProjectionMatrix*v24 + cp_projectionMatrix*vec4(radius*sintheta*cosphi, -radius*costheta*sinphi, 0.0, 0.0);
+
+    gl_Position = v2mvp + ortho*radius;
     texCoord = vec2(1.0, -1.0);
     EmitVertex();
     EndPrimitive();

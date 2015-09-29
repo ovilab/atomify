@@ -9,7 +9,7 @@ void main(void) {
     highp float y = texCoord.t;
     float yy = y*y;
     if(yy > 1.0) {
-        // discard;
+        discard;
     }
 
 //    float dada = da*da;
@@ -20,5 +20,5 @@ void main(void) {
     highp vec3 light = vec3(1.0, 1.0, 1.0);
     highp float z = sqrt(1.0 - yy);
 
-    fragcolor = vec4(color*light, 1.0);
+    fragcolor = vec4(da, 0.0, 1.0, 1.0);
 }
