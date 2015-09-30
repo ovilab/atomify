@@ -9,6 +9,7 @@ Item {
     property MySimulator simulator
     property Light light: light
     property Slice slice: mySlice
+    property Camera camera: camera
     property bool addPeriodicCopies: false
 
     Visualizer {

@@ -39,7 +39,6 @@ void Renderable::requestSynchronize()
     m_renderer->m_modelViewMatrixInverse = m_renderer->m_modelViewMatrix.inverted();
     m_renderer->m_projectionMatrixInverse = m_renderer->m_projectionMatrix.inverted();
     m_renderer->copyShaderEffects(this);
-
     m_renderer->synchronize(this);
 }
 

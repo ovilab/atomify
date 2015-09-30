@@ -55,6 +55,14 @@ Item {
         }
 
         CheckBox {
+            id: ortho
+            text: "Orthographic camera"
+            onCheckedChanged: {
+                atomifyVisualizer.camera.setOrthographic(checked)
+            }
+        }
+
+        CheckBox {
             onCheckedChanged: {
                 atomifyVisualizer.addPeriodicCopies = checked
             }

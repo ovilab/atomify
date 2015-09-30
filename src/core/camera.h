@@ -29,6 +29,7 @@ class Camera : public QObject
     Q_PROPERTY(float right READ right WRITE setRight NOTIFY rightChanged)
     Q_PROPERTY(float bottom READ bottom WRITE setBottom NOTIFY bottomChanged)
     Q_PROPERTY(float top READ top WRITE setTop NOTIFY topChanged)
+    Q_PROPERTY(bool orthographic READ orthographic WRITE setOrthographic)
     Q_PROPERTY(QMatrix4x4 projectionMatrix READ projectionMatrix NOTIFY projectionMatrixChanged)
     // LookAt
     Q_PROPERTY(QVector3D position READ position WRITE setPosition NOTIFY positionChanged)
@@ -113,6 +114,22 @@ public:
     QVector3D viewVector() const;
 
     QMatrix4x4 matrix() const;
+
+    bool orthographic() const
+    {
+        if(projectionType() == CameraLens::OrthogonalProjection) return true;
+        else return false;
+    }
+
+public slots:
+    void setOrthographic(bool orthographic)
+    {
+        if(orthographic) {
+            setProjectionType(CameraLens::OrthogonalProjection);
+        } else {
+            setProjectionType(CameraLens::PerspectiveProjection);
+        }
+    }
 
 Q_SIGNALS:
     void projectionTypeChanged();

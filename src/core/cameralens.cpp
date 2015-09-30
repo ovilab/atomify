@@ -11,10 +11,10 @@ CameraLensPrivate::CameraLensPrivate(CameraLens *qq)
     , m_farPlane(1024.0f)
     , m_fieldOfView(25.0f)
     , m_aspectRatio(1.0f)
-    , m_left(-0.5f)
-    , m_right(0.5f)
-    , m_bottom(-0.5f)
-    , m_top(0.5f)
+    , m_left(-1)
+    , m_right(1)
+    , m_bottom(-1)
+    , m_top(1)
 {
 }
 
