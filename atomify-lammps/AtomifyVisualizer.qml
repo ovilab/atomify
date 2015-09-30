@@ -7,7 +7,7 @@ Item {
     id: atomifyVisualizerRoot
     property Visualizer visualizer: visualizer
     property MySimulator simulator
-    property Light light: light2
+    property Light light: light
     property Slice slice: mySlice
     property bool addPeriodicCopies: false
 
@@ -27,22 +27,23 @@ Item {
             camera: camera
         }
 
-        Cylinders {
-            id: cylinders
-            visible: true
-            Light {
-                id: light2
-                ambientColor: spheres.color
-                specularColor: "white"
-                diffuseColor: spheres.color
-                ambientIntensity: 0.2
-                diffuseIntensity: 0.5
-                specularIntensity: 1.0
-                shininess: 40.0
-                attenuation: 0.001
-                position: camera.position
-            }
-        }
+//        Cylinders {
+//            id: cylinders
+//            visible: true
+//            radius: 0.5
+//            Light {
+//                id: light2
+//                ambientColor: spheres.color
+//                specularColor: "white"
+//                diffuseColor: spheres.color
+//                ambientIntensity: 0.2
+//                diffuseIntensity: 0.5
+//                specularIntensity: 1.0
+//                shininess: 40.0
+//                attenuation: 0.001
+//                position: camera.position
+//            }
+//        }
 
         Spheres {
             id: spheres

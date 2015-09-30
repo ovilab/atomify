@@ -75,10 +75,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
-#define STUFF
+//#define STUFF
 #ifdef STUFF
-    QVector3D p1(-4,2,3);
-    QVector3D p2(4,6,8);
+    QVector3D p1(-4,1,-1);
+    QVector3D p2(4,2,2);
 
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();
@@ -101,9 +101,8 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         points.resize(1);
         points[0].vertex1 = p1;
         points[0].vertex2 = p2;
-        points[0].radius1 = 2.0;
-        points[0].radius2 = 2.0;
-        cylinders->setRadius(0.2);
+        points[0].radius1 = 1.0;
+        points[0].radius2 = 1.0;
         cylinders->setDirty(true);
     }
 #else
@@ -138,62 +137,62 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         spheres->setDirty(true);
     }
 
-    Cylinders *cylinders = qobject_cast<Cylinders*>(renderableObject);
-    if(cylinders) {
-        LAMMPS *lammps = m_lammpsController.lammps();
-        if(!lammps) return;
+//    Cylinders *cylinders = qobject_cast<Cylinders*>(renderableObject);
+//    if(cylinders) {
+//        LAMMPS *lammps = m_lammpsController.lammps();
+//        if(!lammps) return;
 
-        QVector<CylinderVBOData> &points = cylinders->vertices();
-        points.resize(0);
-        if( lammps->neighbor->nlist > 0) {
-            NeighList *list = lammps->neighbor->lists[0];
-            int inum = list->inum;
-            int *ilist = list->ilist;
-            int *numneigh = list->numneigh;
-            int **firstneigh = list->firstneigh;
+//        QVector<CylinderVBOData> &points = cylinders->vertices();
+//        points.resize(0);
+//        if( lammps->neighbor->nlist > 0) {
+//            NeighList *list = lammps->neighbor->lists[0];
+//            int inum = list->inum;
+//            int *ilist = list->ilist;
+//            int *numneigh = list->numneigh;
+//            int **firstneigh = list->firstneigh;
 
-            double posi[3];
-            double posj[3];
-            for(int ii=0; ii<inum; ii++) {
-                int i = ilist[ii];
-                posi[0] = lammps->atom->x[i][0];
-                posi[1] = lammps->atom->x[i][1];
-                posi[2] = lammps->atom->x[i][2];
+//            double posi[3];
+//            double posj[3];
+//            for(int ii=0; ii<inum; ii++) {
+//                int i = ilist[ii];
+//                posi[0] = lammps->atom->x[i][0];
+//                posi[1] = lammps->atom->x[i][1];
+//                posi[2] = lammps->atom->x[i][2];
 
-                lammps->domain->remap(posi);
+//                lammps->domain->remap(posi);
 
-                QVector3D qposi(posi[0], posi[1], posi[2]);
-                // two-body interactions, skip half of them
-                int *jlist = firstneigh[i];
-                int jnum = numneigh[i];
-                for (int jj = 0; jj < jnum; jj++) {
-                    int j = jlist[jj];
-                    posj[0] = lammps->atom->x[j][0];
-                    posj[1] = lammps->atom->x[j][1];
-                    posj[2] = lammps->atom->x[j][2];
-                    lammps->domain->remap(posj);
+//                QVector3D qposi(posi[0], posi[1], posi[2]);
+//                // two-body interactions, skip half of them
+//                int *jlist = firstneigh[i];
+//                int jnum = numneigh[i];
+//                for (int jj = 0; jj < jnum; jj++) {
+//                    int j = jlist[jj];
+//                    posj[0] = lammps->atom->x[j][0];
+//                    posj[1] = lammps->atom->x[j][1];
+//                    posj[2] = lammps->atom->x[j][2];
+//                    lammps->domain->remap(posj);
 
-                    QVector3D qposj(posj[0], posj[1], posj[2]);
-                    double dr2 = (qposj-qposi).lengthSquared();
-                    if(dr2 > 1.0*1.0) continue;
+//                    QVector3D qposj(posj[0], posj[1], posj[2]);
+//                    double dr2 = (qposj-qposi).lengthSquared();
+//                    if(dr2 > 1.5*1.5) continue;
 
 
-                    CylinderVBOData data;
-                    data.vertex1[0] = posi[0] - lammps->domain->prd_half[0];;
-                    data.vertex1[1] = posi[1] - lammps->domain->prd_half[1];;
-                    data.vertex1[2] = posi[2] - lammps->domain->prd_half[2];;
-                    data.vertex2[0] = posj[0] - lammps->domain->prd_half[0];;
-                    data.vertex2[1] = posj[1] - lammps->domain->prd_half[1];;
-                    data.vertex2[2] = posj[2] - lammps->domain->prd_half[2];;
-                    data.radius1 = 0.23*0.5;
-                    data.radius2 = 0.23*0.5;
-                    points.push_back(data);
-                }
-            }
+//                    CylinderVBOData data;
+//                    data.vertex1[0] = posi[0] - lammps->domain->prd_half[0];;
+//                    data.vertex1[1] = posi[1] - lammps->domain->prd_half[1];;
+//                    data.vertex1[2] = posi[2] - lammps->domain->prd_half[2];;
+//                    data.vertex2[0] = posj[0] - lammps->domain->prd_half[0];;
+//                    data.vertex2[1] = posj[1] - lammps->domain->prd_half[1];;
+//                    data.vertex2[2] = posj[2] - lammps->domain->prd_half[2];;
+//                    data.radius1 = 0.23*0.5;
+//                    data.radius2 = 0.23*0.5;
+//                    points.push_back(data);
+//                }
+//            }
 
-            cylinders->setDirty(true);
-        }
-    }
+//            cylinders->setDirty(true);
+//        }
+//    }
 #endif
 }
 

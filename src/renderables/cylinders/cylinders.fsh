@@ -12,10 +12,10 @@ void main(void) {
         discard;
     }
 
-//    float dada = da*da;
-//    if(x<0.0) {
-//        if(x*x + yy*dada > dada) { discard; }
-//    }
+    float dada = da*da;
+    if(x<0.0) {
+        if(x*x + yy*dada > dada) { discard; }
+    }
 
     highp vec3 light = vec3(1.0, 1.0, 1.0);
     highp float z = sqrt(1.0 - yy);
