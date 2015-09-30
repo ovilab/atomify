@@ -9,7 +9,7 @@ void main() {
     highp float x = coords.s;
     highp float y = coords.t;
     highp float r2 = x*x + y*y;
-    if(r2 > 0.9) {
+    if(r2 > 1.0) {
         // 0.9 so we don't get this light circle on the back of the spheres
         discard;
     } else {
