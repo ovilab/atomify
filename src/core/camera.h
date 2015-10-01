@@ -131,7 +131,7 @@ public slots:
         }
     }
 
-Q_SIGNALS:
+signals:
     void projectionTypeChanged();
     void nearPlaneChanged();
     void farPlaneChanged();

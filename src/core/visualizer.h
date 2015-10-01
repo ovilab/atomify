@@ -69,6 +69,7 @@ signals:
     void navigatorChanged(Navigator* arg);
     void fpsChanged(float arg);
     void timeChanged(float arg);
+    void touched();
 
 private:
     QTimer m_timer;

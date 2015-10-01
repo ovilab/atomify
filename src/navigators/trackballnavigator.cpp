@@ -1,7 +1,7 @@
 #include "trackballnavigator.h"
 #include "../core/camera.h"
+#include "../core/visualizer.h"
 #include <cmath>
-
 TrackballNavigator::TrackballNavigator(Camera *camera, QQuickItem *parent) :
     Navigator(camera, parent)
 {
@@ -49,6 +49,11 @@ void TrackballNavigator::moved(QVector2D delta)
 
 void TrackballNavigator::mousePressEvent(QMouseEvent *event)
 {
+
+    Visualizer *myParent = qobject_cast<Visualizer*>(parent());
+    if(myParent) {
+        emit myParent->touched();
+    }
     m_touch1Position = scaledTouchPosition(QVector2D(event->pos().x(), event->pos().y()));
 }
 

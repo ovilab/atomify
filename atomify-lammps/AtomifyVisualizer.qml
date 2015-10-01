@@ -21,6 +21,9 @@ Item {
         camera: camera
         backgroundColor: "#111"
         navigator: navigator
+        onTouched: {
+            atomifyVisualizerRoot.focus = true
+        }
 
         TrackballNavigator {
             id: navigator

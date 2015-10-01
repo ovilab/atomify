@@ -9,7 +9,8 @@ class Navigator : public QQuickItem
     Q_PROPERTY(Camera* camera READ camera WRITE setCamera NOTIFY cameraChanged)
 
 protected:
-    Camera* m_camera = 0;
+    Camera* m_camera = NULL;
+    // QQuickItem* m_parent = NULL;
 public:
     explicit Navigator(Camera *camera = 0, QQuickItem *parent = 0);
     ~Navigator();
