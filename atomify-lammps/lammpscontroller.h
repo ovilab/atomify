@@ -29,6 +29,7 @@ private:
         bool dataDirty = false;
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
+        QString lastCommand;
     };
     State m_state;
     QVector<QString> m_commands;
@@ -45,8 +46,8 @@ private:
     bool fixExists(QString identifier);
     LAMMPS_NS::Compute *findCompute(QString identifier);
     LAMMPS_NS::Fix *findFix(QString identifier);
-
     QString getNextCommand();
+
 public:
     LammpsOutput output;
 
@@ -72,7 +73,7 @@ public:
     int numberOfAtoms() const;
     int numberOfAtomTypes() const;
     QVector3D systemSize() const;
-
+    QString lastCommand() const;
     // Actions
     void executeCommandInLAMMPS(QString command);
     void processCommand(QString command);

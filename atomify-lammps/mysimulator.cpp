@@ -38,14 +38,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         m_lammpsController.reset();
         m_lammpsController.runScript(mySimulator->m_scriptToRun);
         mySimulator->m_scriptToRun.clear();
-    }
-
-    if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
-
-        cout << "LAMMPS crashed and we picked it up :D" << endl;
-        cout << "An error occured in " << m_lammpsController.currentException().file() << " on line " << m_lammpsController.currentException().line() << endl;
-        cout << "Message: " << m_lammpsController.currentException().error() << endl;
-        m_lammpsController.currentException().setIsReported(true);
+        emit mySimulator->lammpsReset();
     }
 
     if(mySimulator->atomStyle() != NULL) {
@@ -67,6 +60,15 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setLammpsOutput(&m_lammpsController.output);
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
+    mySimulator->setLastCommand(m_lammpsController.lastCommand());
+
+    if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
+        mySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
+        mySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+        emit mySimulator->errorInLammpsScript();
+        m_lammpsController.currentException().setIsReported(true);
+    }
+
     if(m_willPause) {
         m_lammpsController.setPaused(true);
         mySimulator->setPaused(true);
@@ -190,6 +192,21 @@ double MySimulator::timePerTimestep() const
     return m_timePerTimestep;
 }
 
+QString MySimulator::lastCommand() const
+{
+    return m_lastCommand;
+}
+
+QString MySimulator::lammpsError() const
+{
+    return m_lammpsError;
+}
+
+QString MySimulator::lammpsErrorMessage() const
+{
+    return m_lammpsErrorMessage;
+}
+
 void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
 {
     if (m_lammpsOutput == lammpsOutput)
@@ -276,6 +293,33 @@ void MySimulator::setTimePerTimestep(double timePerTimestep)
 
     m_timePerTimestep = timePerTimestep;
     emit timePerTimestepChanged(timePerTimestep);
+}
+
+void MySimulator::setLastCommand(QString lastCommand)
+{
+    if (m_lastCommand == lastCommand)
+        return;
+
+    m_lastCommand = lastCommand;
+    emit lastCommandChanged(lastCommand);
+}
+
+void MySimulator::setLammpsError(QString lammpsError)
+{
+    if (m_lammpsError == lammpsError)
+        return;
+
+    m_lammpsError = lammpsError;
+    emit lammpsErrorChanged(lammpsError);
+}
+
+void MySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
+{
+    if (m_lammpsErrorMessage == lammpsErrorMessage)
+        return;
+
+    m_lammpsErrorMessage = lammpsErrorMessage;
+    emit lammpsErrorMessageChanged(lammpsErrorMessage);
 }
 
 void MySimulator::runScript(QString script)

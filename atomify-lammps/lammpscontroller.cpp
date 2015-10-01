@@ -89,6 +89,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     }
 
     // cout << command.toStdString() << endl;
+    m_state.lastCommand = command;
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {
@@ -374,6 +375,11 @@ QVector3D LAMMPSController::systemSize() const
 {
     if(!m_lammps) return QVector3D();
     return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
+}
+
+QString LAMMPSController::lastCommand() const
+{
+    return m_state.lastCommand;
 }
 
 bool LAMMPSController::paused() const

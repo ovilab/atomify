@@ -32,25 +32,67 @@ ApplicationWindow {
 
             Tab {
                 id: editorTab
+                property TextArea consoleOutput: item.consoleOutput1
                 anchors.fill: parent
                 title: "Script editor"
 
-                LammpsEditor {
-                    id: myLammpsEditor
-                    anchors.fill: parent
-                    simulator: mySimulator
-                    Shortcut {
-                        // Random placement here because it could not find the editor otherwise (Qt bug?)
-                        sequence: "Ctrl+R"
-                        onActivated: runScript()
-                    }
-                    Shortcut {
-                        sequence: "Escape"
-                        onActivated: {
-                            if(textarea.focus) textarea.focus = false
-                            else mySimulator.paused = !mySimulator.paused
+                SplitView {
+                    orientation: Qt.Vertical
+                    property TextArea consoleOutput1: consoleOutputObject
+                    LammpsEditor {
+                        id: myLammpsEditor
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 200
+                        Layout.preferredHeight: parent.height*0.75
+                        simulator: mySimulator
+                        Shortcut {
+                            // Random placement here because it could not find the editor otherwise (Qt bug?)
+                            sequence: "Ctrl+R"
+                            onActivated: myLammpsEditor.runScript()
+                        }
+                        Shortcut {
+                            sequence: "Escape"
+                            onActivated: {
+                                if(textarea.focus) textarea.focus = false
+                                else mySimulator.paused = !mySimulator.paused
+                            }
                         }
                     }
+
+                    ColumnLayout {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        TextArea {
+                            id: consoleOutputObject
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            Layout.minimumHeight: 100
+                            readOnly: true
+                            onTextChanged: {
+                                console.log("Has text: "+consoleOutputObject.text)
+                            }
+                        }
+
+                        Row {
+                            id: singleCommandRow
+                            Layout.fillWidth: true
+                            TextField {
+                                id: singleCommand
+                                width: parent.width - runSingleCommand.width
+                                onTextChanged:  {
+                                    console.log(parent.height)
+                                }
+                            }
+
+                            Button {
+                                id: runSingleCommand
+                                text: "Run"
+                            }
+                        }
+
+                    }
+
                 }
             }
 
@@ -133,6 +175,15 @@ ApplicationWindow {
         atomStyle: AtomStyle {
             id: myAtomStyle
         }
+        onErrorInLammpsScript: {
+            console.log("We have the error in QML: "+mySimulator.lammpsError)
+            console.log("Also with the command: "+mySimulator.lastCommand)
+            editorTab.consoleOutput.append("Error in parsing LAMMPS command: '"+mySimulator.lastCommand+"'")
+            editorTab.consoleOutput.append("LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
+        }
+        onLammpsReset: {
+            editorTab.consoleOutput.text = ""
+        }
     }
 
     Shortcut {
@@ -151,7 +202,6 @@ ApplicationWindow {
             mySimulator.paused = !mySimulator.paused
         }
     }
-
 
     Compute {
         id: temperature

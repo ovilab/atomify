@@ -60,6 +60,9 @@ class MySimulator : public Simulator
     Q_PROPERTY(bool paused READ paused WRITE setPaused NOTIFY pausedChanged)
     Q_PROPERTY(AtomStyle* atomStyle READ atomStyle WRITE setAtomStyle NOTIFY atomStyleChanged)
     Q_PROPERTY(double timePerTimestep READ timePerTimestep WRITE setTimePerTimestep NOTIFY timePerTimestepChanged)
+    Q_PROPERTY(QString lastCommand READ lastCommand WRITE setLastCommand NOTIFY lastCommandChanged)
+    Q_PROPERTY(QString lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
+    Q_PROPERTY(QString lammpsErrorMessage READ lammpsErrorMessage WRITE setLammpsErrorMessage NOTIFY lammpsErrorMessageChanged)
 public:
     MySimulator() { }
     ~MySimulator() { }
@@ -77,6 +80,9 @@ public:
     int numberOfAtomTypes() const;
     QVector3D systemSize() const;
     double timePerTimestep() const;
+    QString lastCommand() const;
+    QString lammpsError() const;
+    QString lammpsErrorMessage() const;
 
 public slots:
     void runScript(QString script);
@@ -89,6 +95,10 @@ public slots:
     void setNumberOfAtomTypes(int numberOfAtomTypes);
     void setSystemSize(QVector3D systemSize);
     void setTimePerTimestep(double timePerTimestep);
+    void setLastCommand(QString lastCommand);
+    void setLammpsError(QString lammpsError);
+    void setLammpsErrorMessage(QString lammpsErrorMessage);
+
 signals:
     void simulationSpeedChanged(int arg);
     void lammpsOutputChanged(LammpsOutput* lammpsOutput);
@@ -99,6 +109,11 @@ signals:
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void systemSizeChanged(QVector3D systemSize);
     void timePerTimestepChanged(double timePerTimestep);
+    void errorInLammpsScript();
+    void lastCommandChanged(QString lastCommand);
+    void lammpsErrorChanged(QString lammpsError);
+    void lammpsErrorMessageChanged(QString lammpsErrorMessage);
+    void lammpsReset();
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -116,6 +131,9 @@ private:
     int m_numberOfAtomTypes;
     QVector3D m_systemSize;
     double m_timePerTimestep = 0;
+    QString m_lastCommand;
+    QString m_lammpsError;
+    QString m_lammpsErrorMessage;
 };
 
 #endif // MYSIMULATOR_H
