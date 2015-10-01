@@ -16,6 +16,7 @@ ApplicationWindow {
     width: 1650
     height: 900
     visible: true
+    property variant previousCommands: Array()
 
     SplitView {
         anchors.fill: parent
@@ -79,38 +80,35 @@ ApplicationWindow {
                                         if(singleCommand.text != "") {
                                             mySimulator.runCommand(singleCommand.text)
                                             consoleOutputObject.append(singleCommand.text)
+                                            previousCommands.push(singleCommand.text)
                                             singleCommand.text = ""
                                         }
                                     }
                                 }
-
                                 Shortcut {
                                     sequence: "Up"
                                     onActivated: {
-                                        var commands = consoleOutputObject.text.split("\n")
-                                        var numCommands = commands.length
+                                        var numCommands = previousCommands.length
 
                                         if(singleCommand.text == "") {
                                             singleCommand.previousCommandCounter = numCommands
                                         }
                                         singleCommand.previousCommandCounter--
                                         if(singleCommand.previousCommandCounter>=0) {
-                                            singleCommand.text = commands[singleCommand.previousCommandCounter]
+                                            singleCommand.text = previousCommands[singleCommand.previousCommandCounter]
                                         } else {
                                             singleCommand.previousCommandCounter = 0
                                         }
                                     }
                                 }
-
                                 Shortcut {
                                     sequence: "Down"
                                     onActivated: {
-                                        var commands = consoleOutputObject.text.split("\n")
-                                        var numCommands = commands.length
+                                        var numCommands = previousCommands.length
 
                                         singleCommand.previousCommandCounter++
                                         if(singleCommand.previousCommandCounter<numCommands) {
-                                            singleCommand.text = commands[singleCommand.previousCommandCounter]
+                                            singleCommand.text = previousCommands[singleCommand.previousCommandCounter]
                                         } else {
                                             singleCommand.text = ""
                                         }
@@ -125,13 +123,12 @@ ApplicationWindow {
                                 onClicked: {
                                     mySimulator.runCommand(singleCommand.text)
                                     consoleOutputObject.append(singleCommand.text)
+                                    previousCommands.push(singleCommand.text)
                                     singleCommand.text = ""
                                 }
                             }
                         }
-
                     }
-
                 }
             }
 
@@ -215,11 +212,8 @@ ApplicationWindow {
             id: myAtomStyle
         }
         onErrorInLammpsScript: {
-            editorTab.consoleOutput.append("Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.lastCommand+"'")
-            editorTab.consoleOutput.append("LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
-        }
-        onLammpsReset: {
-            // editorTab.consoleOutput.text = ""
+            editorTab.consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.lastCommand+"'")
+            editorTab.consoleOutput.append(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
         }
     }
 
@@ -228,26 +222,19 @@ ApplicationWindow {
         sequence: "Ctrl+R"
         onActivated: editorTab.lammpsEditor.runScript()
     }
-
     Shortcut {
         sequence: "Ctrl+1"
         onActivated: tabview.currentIndex = 0
     }
-
     Shortcut {
         sequence: "Ctrl+2"
         onActivated: tabview.currentIndex = 1
     }
-
     Shortcut {
         sequence: "Space"
         onActivated: {
             mySimulator.paused = !mySimulator.paused
         }
-    }
-
-    Keys.onPressed: {
-
     }
 
     Compute {
