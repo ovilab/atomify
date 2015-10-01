@@ -82,11 +82,8 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
     m_lammpsController.setDataDirty(false);
     m_atomStyle.setDirty(false);
+
     if(spheres) {
-        LAMMPS *lammps = m_lammpsController.lammps();
-        // if(!lammps || !m_lammpsController.dataDirty()) return;
-        if(!lammps) return;
-        m_lammpsController.setDataDirty(false);
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
