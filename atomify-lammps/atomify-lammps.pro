@@ -8,15 +8,8 @@ QMAKE_CXXFLAGS += -g -fopenmp
 QMAKE_LFLAGS += -fopenmp
 CONFIG += warn_off
 
-# MPI STUBS
-#INCLUDEPATH += /projects/lammps-10Aug15/src/STUBS
-#DEPENDPATH += /projects/lammps-10Aug15/src/STUBS
-#LIBS += -L/projects/lammps-10Aug15/src/STUBS -lmpi_stubs
-#PRE_TARGETDEPS += /projects/lammps-10Aug15/src/STUBS/libmpi_stubs.a
-
 DEFINES += _OPENMP
 INCLUDEPATH += /projects/lammps-10Aug15/src
-DEPENDPATH += /projects/lammps-10Aug15/src
 LIBS += -L/projects/lammps-10Aug15/src -llammps_omp
 
 android {
