@@ -64,96 +64,103 @@ Highlighter::Highlighter(QTextDocument *parent)
         }
     };
 
-    // lammpsOutput
-    patterns << "log" << "write_restart" << "restart" << "dump" << "undump" << "thermo" << "thermo_modify" << "thermo_style" << "print";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsOutput
+//    patterns << "log" << "write_restart" << "restart" << "dump" << "undump" << "thermo" << "thermo_modify" << "thermo_style" << "print";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsRead
-    patterns.clear();
-    patterns << "include" << "read" << "read_restart" << "read_data";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsRead
+//    patterns.clear();
+//    patterns << "include" << "read" << "read_restart" << "read_data";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // package stuff
-    patterns.clear();
-    patterns << "package";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // package stuff
+//    patterns.clear();
+//    patterns << "package";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsLattice
-    patterns.clear();
-    patterns << "boundary" << "units" << "atom_style" << "lattice" << "region" << "create_box" << "create_atoms" << "dielectric";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsLattice
+//    patterns.clear();
+//    patterns << "boundary" << "units" << "atom_style" << "lattice" << "region" << "create_box" << "create_atoms" << "dielectric";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsLattice
-    patterns.clear();
-    patterns << "delete_atoms" << "change_box" << "dimension" << "replicate";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsLattice
+//    patterns.clear();
+//    patterns << "delete_atoms" << "change_box" << "dimension" << "replicate";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsParticle
-    patterns.clear();
-    patterns << "pair_coeff" << "pair_style" << "pair_modify" << "mass" << "velocity" << "angle_coeff" << "angle_style";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsParticle
+//    patterns.clear();
+//    patterns << "pair_coeff" << "pair_style" << "pair_modify" << "mass" << "velocity" << "angle_coeff" << "angle_style";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsParticle
-    patterns.clear();
-    patterns << "atom_modify" << "atom_style" << "bond_coeff" << "bond_style" << "delete_bonds" << "kspace_style";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsParticle
+//    patterns.clear();
+//    patterns << "atom_modify" << "atom_style" << "bond_coeff" << "bond_style" << "delete_bonds" << "kspace_style";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsParticle
-    patterns.clear();
-    patterns << "kspace_modify" << "dihedral_style" << "dihedral_coeff" << "improper_style" << "improper_coeff";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsParticle
+//    patterns.clear();
+//    patterns << "kspace_modify" << "dihedral_style" << "dihedral_coeff" << "improper_style" << "improper_coeff";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsSetup
-    patterns.clear();
-    patterns << "min_style" << "fix_modify" << "run_style" << "timestep" << "neighbor" << "neigh_modify" << "fix" << "unfix";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsSetup
+//    patterns.clear();
+//    patterns << "min_style" << "fix_modify" << "run_style" << "timestep" << "neighbor" << "neigh_modify" << "fix" << "unfix";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsSetup
-    patterns.clear();
-    patterns << "communicate" << "newton" << "nthreads" << "processors" << "reset_timestep";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsSetup
+//    patterns.clear();
+//    patterns << "communicate" << "newton" << "nthreads" << "processors" << "reset_timestep";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsRun
-    patterns.clear();
-    patterns << "minimize" << "run";
-    createKeywordRules(patterns);
-    format.setForeground(Qt::darkBlue);
-    format.setFontWeight(QFont::Bold);
-    appendRule(patterns, format);
+//    // lammpsRun
+//    patterns.clear();
+//    patterns << "minimize" << "run";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
 
-    // lammpsDefine
+//    // lammpsDefine
+//    patterns.clear();
+//    patterns << "variable" << "group" << "compute";
+//    createKeywordRules(patterns);
+//    format.setForeground(Qt::darkBlue);
+//    format.setFontWeight(QFont::Bold);
+//    appendRule(patterns, format);
+
     patterns.clear();
-    patterns << "variable" << "group" << "compute";
+    patterns << "angle_coeff" << "angle_style" << "atom_modify" << "atom_style" << "balance" << "bond_coeff" << "bond_style" << "boundary" << "box" << "change_box" << "clear" << "comm_modify" << "comm_style" << "compute" << "compute_modify" << "create_atoms" << "create_bonds" << "create_box" << "delete_atoms" << "delete_bonds" << "dielectric" << "dihedral_coeff" << "dihedral_style" << "dimension" << "displace_atoms" << "dump" << "dump image" << "dump_modify" << "dump movie" << "echo" << "fix" << "fix_modify" << "group" << "if" << "info" << "improper_coeff" << "improper_style" << "include" << "jump" << "kspace_modify" << "kspace_style" << "label" << "lattice" << "log" << "mass" << "minimize" << "min_modify" << "min_style" << "molecule" << "neb" << "neigh_modify" << "neighbor" << "newton" << "next" << "package" << "pair_coeff" << "pair_modify" << "pair_style" << "pair_write" << "partition" << "prd" << "print" << "processors" << "python" << "quit" << "read_data" << "read_dump" << "read_restart" << "region" << "replicate" << "rerun" << "reset_timestep" << "restart" << "run" << "run_style" << "set" << "shell" << "special_bonds" << "suffix" << "tad" << "temper" << "thermo" << "thermo_modify" << "thermo_style" << "timer" << "timestep" << "uncompute" << "undump" << "unfix" << "units" << "variable" << "velocity" << "write_data" << "write_dump" << "write_restart";
     createKeywordRules(patterns);
     format.setForeground(Qt::darkBlue);
     format.setFontWeight(QFont::Bold);
@@ -179,7 +186,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     patterns.clear();
     patterns << "if" << "then" << "elif" << "else";
     createKeywordRules(patterns);
-    format.setForeground(Qt::darkRed);
+    format.setForeground(Qt::darkBlue);
     format.setFontWeight(QFont::Normal);
     appendRule(patterns, format);
 
