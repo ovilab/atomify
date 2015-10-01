@@ -79,6 +79,14 @@ Highlighter::Highlighter(QTextDocument *parent)
     format.setFontWeight(QFont::Bold);
     appendRule(patterns, format);
 
+    // package stuff
+    patterns.clear();
+    patterns << "package";
+    createKeywordRules(patterns);
+    format.setForeground(Qt::darkBlue);
+    format.setFontWeight(QFont::Bold);
+    appendRule(patterns, format);
+
     // lammpsLattice
     patterns.clear();
     patterns << "boundary" << "units" << "atom_style" << "lattice" << "region" << "create_box" << "create_atoms" << "dielectric";
