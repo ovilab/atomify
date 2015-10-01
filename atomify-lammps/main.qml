@@ -189,7 +189,7 @@ ApplicationWindow {
             editorTab.consoleOutput.append("LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
         }
         onLammpsReset: {
-            editorTab.consoleOutput.text = ""
+            // editorTab.consoleOutput.text = ""
         }
     }
 
