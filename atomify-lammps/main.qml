@@ -29,13 +29,15 @@ ApplicationWindow {
 
             Tab {
                 id: editorTab
-                property TextArea consoleOutput: item.consoleOutput1
+                property TextArea consoleOutput: item.consoleOutput
+                property LammpsEditor lammpsEditor: item.lammpsEditor
                 anchors.fill: parent
                 title: "Script editor"
 
                 SplitView {
                     orientation: Qt.Vertical
-                    property TextArea consoleOutput1: consoleOutputObject
+                    property TextArea consoleOutput: consoleOutputObject
+                    property LammpsEditor lammpsEditor: myLammpsEditor
                     LammpsEditor {
                         id: myLammpsEditor
                         Layout.fillHeight: true
@@ -43,15 +45,11 @@ ApplicationWindow {
                         Layout.minimumHeight: 200
                         Layout.preferredHeight: parent.height*0.75
                         simulator: mySimulator
-                        Shortcut {
-                            // Random placement here because it could not find the editor otherwise (Qt bug?)
-                            sequence: "Ctrl+R"
-                            onActivated: myLammpsEditor.runScript()
-                        }
+
                         Shortcut {
                             sequence: "Escape"
                             onActivated: {
-                                if(textarea.focus) textarea.focus = false
+                                if(myLammpsEditor.textarea.focus) myLammpsEditor.textarea.focus = false
                                 else mySimulator.paused = !mySimulator.paused
                             }
                         }
@@ -66,9 +64,6 @@ ApplicationWindow {
                             Layout.fillWidth: true
                             Layout.minimumHeight: 100
                             readOnly: true
-                            onTextChanged: {
-                                console.log("Has text: "+consoleOutputObject.text)
-                            }
                         }
 
                         Row {
@@ -191,6 +186,12 @@ ApplicationWindow {
         onLammpsReset: {
             // editorTab.consoleOutput.text = ""
         }
+    }
+
+    Shortcut {
+        // Random placement here because it could not find the editor otherwise (Qt bug?)
+        sequence: "Ctrl+R"
+        onActivated: editorTab.lammpsEditor.runScript()
     }
 
     Shortcut {
