@@ -1,0 +1,19 @@
+--- error.cpp.old	2013-07-23 17:10:07.000000000 +0200
++++ error.cpp	2015-09-30 20:12:23.000000000 +0200
+@@ -16,6 +16,7 @@
+ #include "error.h"
+ #include "universe.h"
+ #include "output.h"
++#include "lammpsexception.h"
+ 
+ using namespace LAMMPS_NS;
+ 
+@@ -95,6 +96,8 @@
+     if (logfile) fprintf(logfile,"ERROR: %s (%s:%d)\n",str,file,line);
+   }
+ 
++  throw LammpsException(string(file), string(str), line);
++
+   if (output) delete output;
+   if (screen && screen != stdout) fclose(screen);
+   if (logfile) fclose(logfile);
