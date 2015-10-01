@@ -38,14 +38,16 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->setPaused(false);
         m_lammpsController.reset();
         m_lammpsController.runScript(mySimulator->m_scriptToRun);
-        mySimulator->m_queuedCommand.clear();
+        mySimulator->m_queuedCommands.clear();
         mySimulator->m_scriptToRun.clear();
         emit mySimulator->lammpsReset();
     }
 
-    if(!mySimulator->m_queuedCommand.isEmpty()) {
-        m_lammpsController.m_state.queuedCommand = mySimulator->m_queuedCommand;
-        mySimulator->m_queuedCommand.clear();
+    if(!mySimulator->m_queuedCommands.isEmpty()) {
+        for(QString command : mySimulator->m_queuedCommands) {
+            m_lammpsController.m_state.queuedCommands.push_back(command);
+        }
+        mySimulator->m_queuedCommands.clear();
     }
 
     if(mySimulator->atomStyle() != NULL) {
@@ -338,5 +340,5 @@ void MySimulator::runScript(QString script)
 
 void MySimulator::runCommand(QString command)
 {
-    m_queuedCommand = command;
+    m_queuedCommands.push_back(command);
 }

@@ -70,6 +70,7 @@ ApplicationWindow {
                             id: singleCommandRow
                             Layout.fillWidth: true
                             TextField {
+                                property int previousCommandCounter: 0
                                 id: singleCommand
                                 width: parent.width - runSingleCommand.width
                                 Shortcut {
@@ -82,6 +83,40 @@ ApplicationWindow {
                                         }
                                     }
                                 }
+
+                                Shortcut {
+                                    sequence: "Up"
+                                    onActivated: {
+                                        var commands = consoleOutputObject.text.split("\n")
+                                        var numCommands = commands.length
+
+                                        if(singleCommand.text == "") {
+                                            singleCommand.previousCommandCounter = numCommands
+                                        }
+                                        singleCommand.previousCommandCounter--
+                                        if(singleCommand.previousCommandCounter>=0) {
+                                            singleCommand.text = commands[singleCommand.previousCommandCounter]
+                                        } else {
+                                            singleCommand.previousCommandCounter = 0
+                                        }
+                                    }
+                                }
+
+                                Shortcut {
+                                    sequence: "Down"
+                                    onActivated: {
+                                        var commands = consoleOutputObject.text.split("\n")
+                                        var numCommands = commands.length
+
+                                        singleCommand.previousCommandCounter++
+                                        if(singleCommand.previousCommandCounter<numCommands) {
+                                            singleCommand.text = commands[singleCommand.previousCommandCounter]
+                                        } else {
+                                            singleCommand.text = ""
+                                        }
+                                    }
+                                }
+
                             }
 
                             Button {
@@ -209,6 +244,10 @@ ApplicationWindow {
         onActivated: {
             mySimulator.paused = !mySimulator.paused
         }
+    }
+
+    Keys.onPressed: {
+
     }
 
     Compute {

@@ -135,7 +135,7 @@ private:
     QString m_lastCommand;
     QString m_lammpsError;
     QString m_lammpsErrorMessage;
-    QString m_queuedCommand;
+    QVector<QString> m_queuedCommands;
 };
 
 #endif // MYSIMULATOR_H

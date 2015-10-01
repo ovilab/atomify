@@ -30,7 +30,7 @@ private:
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
         QString lastCommand;
-        QString queuedCommand;
+        QVector<QString> queuedCommands;
     };
     QVector<QString> m_commands;
     QMap<QString, CPCompute*> m_computes;
