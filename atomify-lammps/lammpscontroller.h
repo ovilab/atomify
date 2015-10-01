@@ -30,8 +30,8 @@ private:
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
         QString lastCommand;
+        QString queuedCommand;
     };
-    State m_state;
     QVector<QString> m_commands;
     QMap<QString, CPCompute*> m_computes;
     LammpsException m_currentException;
@@ -50,6 +50,7 @@ private:
 
 public:
     LammpsOutput output;
+    State m_state;
 
     LAMMPSController();
     ~LAMMPSController();

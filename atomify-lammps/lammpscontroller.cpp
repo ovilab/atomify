@@ -328,15 +328,27 @@ QString LAMMPSController::getNextCommand() {
 
 void LAMMPSController::tick()
 {
-    if(m_state.crashed) return;
-    if(m_state.paused) return;
     if(m_lammps == NULL) return;
+    if(m_state.crashed) return;
+
+    if(!m_state.queuedCommand.isEmpty()) {
+        processCommand(m_state.queuedCommand);
+        m_state.queuedCommand.clear();
+        m_state.preRunNeeded = true;
+        m_state.dataDirty = true;
+        return;
+    }
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(m_state.runCommandActive > 0) {
         processComputes(); // Only work with computes and output when we will do a run
         executeActiveRunCommand();
-    } else if(m_commands.size() > 0) {
+        m_state.dataDirty = true;
+    }
+
+    if(m_state.paused) return;
+
+    if(m_commands.size() > 0) {
         // If the command stack has any commands left, process them.
         processCommand(getNextCommand());
     } else {

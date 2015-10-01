@@ -86,6 +86,7 @@ public:
 
 public slots:
     void runScript(QString script);
+    void runCommand(QString command);
     void setSimulationSpeed(int arg);
     void setLammpsOutput(LammpsOutput* lammpsOutput);
     void setPaused(bool paused);
@@ -134,6 +135,7 @@ private:
     QString m_lastCommand;
     QString m_lammpsError;
     QString m_lammpsErrorMessage;
+    QString m_queuedCommand;
 };
 
 #endif // MYSIMULATOR_H

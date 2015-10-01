@@ -35,10 +35,17 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     if(!mySimulator->m_scriptToRun.isEmpty()) {
         // We have a queued script, now run it
+        mySimulator->setPaused(false);
         m_lammpsController.reset();
         m_lammpsController.runScript(mySimulator->m_scriptToRun);
+        mySimulator->m_queuedCommand.clear();
         mySimulator->m_scriptToRun.clear();
         emit mySimulator->lammpsReset();
+    }
+
+    if(!mySimulator->m_queuedCommand.isEmpty()) {
+        m_lammpsController.m_state.queuedCommand = mySimulator->m_queuedCommand;
+        mySimulator->m_queuedCommand.clear();
     }
 
     if(mySimulator->atomStyle() != NULL) {
@@ -327,4 +334,9 @@ void MySimulator::runScript(QString script)
     // This is typically called from the QML thread.
     // We have to wait for synchronization before we actually load this script
     m_scriptToRun = script;
+}
+
+void MySimulator::runCommand(QString command)
+{
+    m_queuedCommand = command;
 }

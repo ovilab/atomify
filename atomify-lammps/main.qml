@@ -16,9 +16,6 @@ ApplicationWindow {
     width: 1650
     height: 900
     visible: true
-    onClosing: {
-
-    }
 
     SplitView {
         anchors.fill: parent
@@ -80,14 +77,26 @@ ApplicationWindow {
                             TextField {
                                 id: singleCommand
                                 width: parent.width - runSingleCommand.width
-                                onTextChanged:  {
-                                    console.log(parent.height)
+                                Shortcut {
+                                    sequence: "Return"
+                                    onActivated: {
+                                        if(singleCommand.text != "") {
+                                            mySimulator.runCommand(singleCommand.text)
+                                            consoleOutputObject.append(singleCommand.text)
+                                            singleCommand.text = ""
+                                        }
+                                    }
                                 }
                             }
 
                             Button {
                                 id: runSingleCommand
                                 text: "Run"
+                                onClicked: {
+                                    mySimulator.runCommand(singleCommand.text)
+                                    consoleOutputObject.append(singleCommand.text)
+                                    singleCommand.text = ""
+                                }
                             }
                         }
 
@@ -176,9 +185,7 @@ ApplicationWindow {
             id: myAtomStyle
         }
         onErrorInLammpsScript: {
-            console.log("We have the error in QML: "+mySimulator.lammpsError)
-            console.log("Also with the command: "+mySimulator.lastCommand)
-            editorTab.consoleOutput.append("Error in parsing LAMMPS command: '"+mySimulator.lastCommand+"'")
+            editorTab.consoleOutput.append("Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.lastCommand+"'")
             editorTab.consoleOutput.append("LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
         }
         onLammpsReset: {
