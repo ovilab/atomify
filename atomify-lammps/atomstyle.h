@@ -8,22 +8,27 @@ class AtomStyleData : public QObject {
     Q_OBJECT
     Q_PROPERTY(double scale READ scale WRITE setScale NOTIFY scaleChanged)
     Q_PROPERTY(QColor color READ color  WRITE setColor NOTIFY colorChanged)
+    Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
 
-    double m_scale;
+    bool m_visible = true;
+    double m_scale = 1.0;
     QColor m_color;
 
 public:
     AtomStyleData(double scale, QColor color);
     double scale() const;
     QColor color() const;
+    bool visible() const;
 
 public slots:
     void setScale(double scale);
     void setColor(QColor color);
+    void setVisible(bool visible);
 
 signals:
     void scaleChanged(double scale);
     void colorChanged(QColor color);
+    void visibleChanged(bool visible);
 };
 
 class AtomStyle : public QObject

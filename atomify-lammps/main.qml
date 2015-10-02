@@ -90,23 +90,26 @@ ApplicationWindow {
         }
     }
 
-    Shortcut {
-        // Random placement here because it could not find the editor otherwise (Qt bug?)
-        sequence: "Ctrl+R"
-        onActivated: editorTab.lammpsEditor.runScript()
-    }
-    Shortcut {
-        sequence: "Ctrl+1"
-        onActivated: tabview.currentIndex = 0
-    }
-    Shortcut {
-        sequence: "Ctrl+2"
-        onActivated: tabview.currentIndex = 1
-    }
-    Shortcut {
-        sequence: "Space"
-        onActivated: {
-            mySimulator.paused = !mySimulator.paused
+    Item {
+        id: shortcutes
+        Shortcut {
+            // Random placement here because it could not find the editor otherwise (Qt bug?)
+            sequence: "Ctrl+R"
+            onActivated: editorTab.lammpsEditor.runScript()
+        }
+        Shortcut {
+            sequence: "Ctrl+1"
+            onActivated: tabview.currentIndex = 0
+        }
+        Shortcut {
+            sequence: "Ctrl+2"
+            onActivated: tabview.currentIndex = 1
+        }
+        Shortcut {
+            sequence: "Space"
+            onActivated: {
+                mySimulator.paused = !mySimulator.paused
+            }
         }
     }
 

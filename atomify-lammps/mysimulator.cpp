@@ -94,18 +94,28 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         m_atomTypes.resize(lammps->atom->natoms);
 
         double position[3];
-
+        QList<QObject *> atomStyleDataList = m_atomStyle.data();
+        int numVisibleAtoms = 0;
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
-            position[0] = lammps->atom->x[i][0];
-            position[1] = lammps->atom->x[i][1];
-            position[2] = lammps->atom->x[i][2];
-            lammps->domain->remap(position);
+            int atomType = lammps->atom->type[i];
+            AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(atomStyleDataList[atomType-1]); // LAMMPS atom types start at 1
+            if(atomStyleData->visible()) {
+                position[0] = lammps->atom->x[i][0];
+                position[1] = lammps->atom->x[i][1];
+                position[2] = lammps->atom->x[i][2];
+                lammps->domain->remap(position);
 
-            positions[i][0] = position[0] - lammps->domain->prd_half[0];
-            positions[i][1] = position[1] - lammps->domain->prd_half[1];
-            positions[i][2] = position[2] - lammps->domain->prd_half[2];
-            m_atomTypes[i] = lammps->atom->type[i];
+                positions[numVisibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
+                positions[numVisibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
+                positions[numVisibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
+                m_atomTypes[numVisibleAtoms] = atomType;
+                numVisibleAtoms++;
+            }
         }
+        colors.resize(numVisibleAtoms);
+        scales.resize(numVisibleAtoms);
+        positions.resize(numVisibleAtoms);
+        m_atomTypes.resize(numVisibleAtoms);
         m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
         spheres->setDirty(true);
     }

@@ -108,6 +108,7 @@ AtomStyleData::AtomStyleData(double scale, QColor color)
 {
     m_scale = scale;
     m_color = color;
+    m_visible = true;
 }
 
 double AtomStyleData::scale() const
@@ -118,6 +119,11 @@ double AtomStyleData::scale() const
 QColor AtomStyleData::color() const
 {
     return m_color;
+}
+
+bool AtomStyleData::visible() const
+{
+    return m_visible;
 }
 
 void AtomStyleData::setScale(double scale)
@@ -136,4 +142,14 @@ void AtomStyleData::setColor(QColor color)
 
     m_color = color;
     emit colorChanged(color);
+}
+
+void AtomStyleData::setVisible(bool visible)
+{
+    qDebug() << "Setting visible: " << visible;
+    if (m_visible == visible)
+        return;
+
+    m_visible = visible;
+    emit visibleChanged(visible);
 }

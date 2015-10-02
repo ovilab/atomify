@@ -16,9 +16,13 @@ Item {
         delegate: Row {
             spacing: 5
 
-            Text {
+            CheckBox {
                 y: 4
                 text: 'Atom type ' + (index+1) + ":"
+                checked: model.modelData.visible
+                onCheckedChanged: {
+                    atomStyle.setModelData(index, "visible", checked)
+                }
             }
 
             ComboBox {
