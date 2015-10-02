@@ -9,6 +9,7 @@ import SimVis 1.0
 import Compute 1.0
 import LammpsOutput 1.0
 import AtomStyle 1.0
+import Qt.labs.settings 1.0
 
 ApplicationWindow {
     id: applicationRoot
@@ -78,9 +79,11 @@ ApplicationWindow {
                                     sequence: "Return"
                                     onActivated: {
                                         if(singleCommand.text != "") {
-                                            mySimulator.runCommand(singleCommand.text)
+                                            mySimulator.scriptHandler.runCommand(singleCommand.text)
                                             consoleOutputObject.append(singleCommand.text)
-                                            previousCommands.push(singleCommand.text)
+                                            var oldCommands = previousCommands
+                                            oldCommands.push(singleCommand.text)
+                                            previousCommands = oldCommands
                                             singleCommand.text = ""
                                         }
                                     }
@@ -121,9 +124,11 @@ ApplicationWindow {
                                 id: runSingleCommand
                                 text: "Run"
                                 onClicked: {
-                                    mySimulator.runCommand(singleCommand.text)
+                                    mySimulator.scriptHandler.runCommand(singleCommand.text)
                                     consoleOutputObject.append(singleCommand.text)
-                                    previousCommands.push(singleCommand.text)
+                                    var oldCommands = previousCommands
+                                    oldCommands.push(singleCommand.text)
+                                    previousCommands = oldCommands
                                     singleCommand.text = ""
                                 }
                             }

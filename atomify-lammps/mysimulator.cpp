@@ -70,6 +70,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setLammpsOutput(&m_lammpsController.output);
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
     mySimulator->setLastCommand(m_lammpsController.lastCommand());
+    mySimulator->setScriptHandler(m_lammpsController.scriptHandler());
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
         mySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
@@ -216,6 +217,11 @@ QString MySimulator::lammpsErrorMessage() const
     return m_lammpsErrorMessage;
 }
 
+ScriptHandler *MySimulator::scriptHandler() const
+{
+    return m_scriptHandler;
+}
+
 void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
 {
     if (m_lammpsOutput == lammpsOutput)
@@ -329,6 +335,15 @@ void MySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
 
     m_lammpsErrorMessage = lammpsErrorMessage;
     emit lammpsErrorMessageChanged(lammpsErrorMessage);
+}
+
+void MySimulator::setScriptHandler(ScriptHandler *scriptHandler)
+{
+    if (m_scriptHandler == scriptHandler)
+        return;
+
+    m_scriptHandler = scriptHandler;
+    emit scriptHandlerChanged(scriptHandler);
 }
 
 void MySimulator::runScript(QString script)

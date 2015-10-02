@@ -14,6 +14,7 @@
 #include "lammpsoutput.h"
 #include "atomstyle.h"
 #include "lammpsfilehandler.h"
+#include "scripthandler.h"
 
 using std::function; using std::unique_ptr;
 
@@ -63,6 +64,7 @@ class MySimulator : public Simulator
     Q_PROPERTY(QString lastCommand READ lastCommand WRITE setLastCommand NOTIFY lastCommandChanged)
     Q_PROPERTY(QString lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(QString lammpsErrorMessage READ lammpsErrorMessage WRITE setLammpsErrorMessage NOTIFY lammpsErrorMessageChanged)
+    Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
 public:
     MySimulator() { }
     ~MySimulator() { }
@@ -83,6 +85,7 @@ public:
     QString lastCommand() const;
     QString lammpsError() const;
     QString lammpsErrorMessage() const;
+    ScriptHandler* scriptHandler() const;
 
 public slots:
     void runScript(QString script);
@@ -99,6 +102,7 @@ public slots:
     void setLastCommand(QString lastCommand);
     void setLammpsError(QString lammpsError);
     void setLammpsErrorMessage(QString lammpsErrorMessage);
+    void setScriptHandler(ScriptHandler* scriptHandler);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -115,6 +119,7 @@ signals:
     void lammpsErrorChanged(QString lammpsError);
     void lammpsErrorMessageChanged(QString lammpsErrorMessage);
     void lammpsReset();
+    void scriptHandlerChanged(ScriptHandler* scriptHandler);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -136,6 +141,7 @@ private:
     QString m_lammpsError;
     QString m_lammpsErrorMessage;
     QVector<QString> m_queuedCommands;
+    ScriptHandler* m_scriptHandler = NULL;
 };
 
 #endif // MYSIMULATOR_H

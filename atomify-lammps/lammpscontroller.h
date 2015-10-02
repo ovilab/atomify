@@ -8,10 +8,9 @@
 #include <lammps.h>
 #include <compute.h>
 #include <lammpsexception.h>
-
 #include "lammpsoutput.h"
 #include "CPcompute.h"
-
+#include "scripthandler.h"
 
 using namespace LAMMPS_NS;
 class MyWorker;
@@ -32,6 +31,7 @@ private:
         QString lastCommand;
         QVector<QString> queuedCommands;
     };
+    ScriptHandler m_scriptHandler;
     QVector<QString> m_commands;
     QMap<QString, CPCompute*> m_computes;
     LammpsException m_currentException;
@@ -58,6 +58,7 @@ public:
     // Getters/setters
     LAMMPS *lammps() const;
     void setLammps(LAMMPS *lammps);
+    ScriptHandler *scriptHandler();
     void setWorker(MyWorker *worker);
     int  simulationSpeed() const;
     void setSimulationSpeed(int simulationSpeed);

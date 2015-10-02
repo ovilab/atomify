@@ -53,6 +53,11 @@ void LAMMPSController::setLammps(LAMMPS *lammps)
     m_lammps = lammps;
 }
 
+ScriptHandler *LAMMPSController::scriptHandler()
+{
+    return &m_scriptHandler;
+}
+
 void LAMMPSController::setWorker(MyWorker *worker)
 {
     m_worker = worker;
@@ -116,11 +121,6 @@ void LAMMPSController::processCommand(QString command) {
         if(word.compare("pause") == 0) {
             m_worker->setWillPause(true);
             return;
-        }
-
-        if(word.find("ext://") != std::string::npos) {
-            word.erase(0, 6); // Remove the ext:// prefix
-            word = IO::copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
         }
 
         // If this is the first word in a command and it is "run"
@@ -339,23 +339,28 @@ void LAMMPSController::tick()
         return;
     }
 
-    if(!m_state.queuedCommands.isEmpty()) {
-        QString command = m_state.queuedCommands.front();
-        m_state.queuedCommands.pop_front();
-        processCommand(command);
-        m_state.preRunNeeded = true;
-        m_state.dataDirty = true;
-        return;
-    }
+//    if(!m_state.queuedCommands.isEmpty()) {
+//        QString command = m_state.queuedCommands.front();
+//        m_state.queuedCommands.pop_front();
+//        processCommand(command);
+//        m_state.preRunNeeded = true;
+//        m_state.dataDirty = true;
+//        return;
+//    }
 
-    if(m_state.paused) return;
-
-    if(m_commands.size() > 0) {
+    QPair<QString, CommandInfo> nextCommandObject = m_scriptHandler.nextCommand();
+    QString nextCommand = nextCommandObject.first;
+    CommandInfo nextCommandInfo = nextCommandObject.second;
+    if(!nextCommand.isEmpty()) {
         // If the command stack has any commands left, process them.
-        processCommand(getNextCommand());
-    } else {
-        // If no commands are queued, just perform a normal run command with the current simulation speed.
+        if(nextCommandInfo.type == CommandInfo::Type::SingleCommand) {
+            m_state.preRunNeeded = true;
+        }
 
+        processCommand(nextCommand);
+    } else {
+        if(m_state.paused) return;
+        // If no commands are queued, just perform a normal run command with the current simulation speed.
         processComputes(); // Only work with computes and output when we will do a run
         QElapsedTimer t;
         t.start();

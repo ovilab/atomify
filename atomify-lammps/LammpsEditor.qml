@@ -11,6 +11,7 @@ Item {
     property MySimulator simulator
     property TextArea textarea: textarea
     function runScript() {
+        simulator.scriptHandler.runScript(textarea.text)
         simulator.runScript(textarea.text)
     }
 
