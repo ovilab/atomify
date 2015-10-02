@@ -117,7 +117,7 @@ void SpheresRenderer::synchronize(Renderable* renderer)
 }
 
 void SpheresRenderer::uploadVBONoGeometryShader(Spheres* spheres) {
-    if(!spheres->dirty() || spheres->m_positions.size() < 1) {
+    if(!spheres->dirty()) {
         return;
     }
     float scale = spheres->scale();
@@ -195,7 +195,7 @@ void SpheresRenderer::uploadVBONoGeometryShader(Spheres* spheres) {
 }
 
 void SpheresRenderer::uploadVBOGeometryShader(Spheres* spheres) {
-    if(!spheres->dirty() || spheres->m_positions.size() < 1) {
+    if(!spheres->dirty()) {
         return;
     }
     QVector<QVector3D>& positions = spheres->m_positions;
