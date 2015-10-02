@@ -3,11 +3,12 @@
         <file>main.qml</file>
         <file>AtomifyVisualizer.qml</file>
         <file>LammpsEditor.qml</file>
-        <file>Rendering.qml</file>
+        <file>RenderingTab.qml</file>
         <file>SliceControl.qml</file>
         <file>AtomStyleControl.qml</file>
         <file>LightControl.qml</file>
         <file>Console.qml</file>
         <file>EditorTab.qml</file>
+        <file>SimulationSummary.qml</file>
     </qresource>
 </RCC>

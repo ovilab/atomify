@@ -30,36 +30,14 @@ ApplicationWindow {
 
             Tab {
                 id: editorTab
+                title: "Script editor"
+                anchors.fill: parent
                 property TextArea consoleOutput: item.consoleOutput
                 property LammpsEditor lammpsEditor: item.lammpsEditor
-                anchors.fill: parent
-                title: "Script editor"
-
-                SplitView {
-                    orientation: Qt.Vertical
-                    property TextArea consoleOutput: myConsole.output
-                    property LammpsEditor lammpsEditor: myLammpsEditor
-                    LammpsEditor {
-                        id: myLammpsEditor
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        Layout.minimumHeight: 200
-                        Layout.preferredHeight: parent.height*0.75
-                        simulator: mySimulator
-
-                        Shortcut {
-                            sequence: "Escape"
-                            onActivated: {
-                                if(myLammpsEditor.textarea.focus) myLammpsEditor.textarea.focus = false
-                                else mySimulator.paused = !mySimulator.paused
-                            }
-                        }
-                    }
-
-                    Console {
-                        id: myConsole
-                        simulator: mySimulator
-                    }
+                EditorTab {
+                    id: myEditorTab
+                    anchors.fill: parent
+                    simulator: mySimulator
                 }
             }
 
@@ -67,7 +45,7 @@ ApplicationWindow {
                 id: renderingTab
                 anchors.fill: parent
                 title: "Rendering"
-                Rendering {
+                RenderingTab {
                     anchors.fill: parent
                     atomifyVisualizer: myVisualizer
                 }
@@ -81,46 +59,10 @@ ApplicationWindow {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            Rectangle {
-                x: 20
-                y: 20
-                width: statusColumn.width+20
-                height: statusColumn.height+20
-                radius: 4
-                color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
-                ColumnLayout {
-                    y: 10
-                    x: 10
-                    id: statusColumn
-                    Text {
-                        font.bold: true
-                        text: "Number of atoms: "+mySimulator.numberOfAtoms
-                    }
-                    Text {
-                        font.bold: true
-                        text: "Number of atom types: "+mySimulator.numberOfAtomTypes
-                    }
-                    Text {
-                        font.bold: true
-                        text: "Time per timestep [ms]: "+mySimulator.timePerTimestep.toFixed(2)
-                    }
-
-                    Text {
-                        font.bold: true
-                        text: "Temperature: "+temperature.value
-                    }
-
-                    Text {
-                        font.bold: true
-                        text: "Pressure: "+pressure.value
-                    }
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    drag.target: parent
-                    drag.axis: Drag.XAndYAxis
-                }
+            SimulationSummary {
+                simulator: mySimulator
+                pressure: pressure
+                temperature: temperature
             }
 
             Label {
