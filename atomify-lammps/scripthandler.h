@@ -27,6 +27,7 @@ struct CommandInfo {
 class ScriptHandler : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString currentCommand READ currentCommand)
 
 private:
     ScriptParser m_parser;
@@ -40,6 +41,7 @@ public:
     ScriptHandler();
     QPair<QString, CommandInfo> nextCommand();
     void loadScriptFromFile(QString filename);
+    QString currentCommand() const;
 
 public slots:
     void runScript(QString script, CommandInfo::Type type = CommandInfo::Type::Editor, QString filename = "");
@@ -48,7 +50,6 @@ public slots:
     QString previousSingleCommand();
     QString nextSingleCommand();
     QString lastSingleCommand();
-
 signals:
 
 };

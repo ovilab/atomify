@@ -92,14 +92,20 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         scales.resize(lammps->atom->natoms);
         positions.resize(lammps->atom->natoms);
         m_atomTypes.resize(lammps->atom->natoms);
-
         double position[3];
         QList<QObject *> atomStyleDataList = m_atomStyle.data();
         int numVisibleAtoms = 0;
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
+            bool addAtom = true;
             int atomType = lammps->atom->type[i];
-            AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(atomStyleDataList[atomType-1]); // LAMMPS atom types start at 1
-            if(atomStyleData->visible()) {
+
+            if(atomType-1 < atomStyleDataList.size()) {
+                // If not, we haven't added this atom to the list yet. Skip this atom type then
+                AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(atomStyleDataList[atomType-1]); // LAMMPS atom types start at 1
+                if(!atomStyleData->visible()) addAtom = false;
+            } else addAtom = false;
+
+            if(addAtom) {
                 position[0] = lammps->atom->x[i][0];
                 position[1] = lammps->atom->x[i][1];
                 position[2] = lammps->atom->x[i][2];

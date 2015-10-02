@@ -6,6 +6,8 @@ class ScriptParser
 {
 public:
     ScriptParser();
+    bool isInclude(QString command);
+    QString includePath(QString command);
 };
 
 #endif // SCRIPTPARSER_H

@@ -10,20 +10,6 @@ ScriptHandler::ScriptHandler()
 
 }
 
-//QString line = m_commands.front().trimmed();
-//QString command = line;
-//m_commands.pop_front();
-
-//// Check if the last character is & - then combine the command with the next line
-//while(line.endsWith(QChar('&'))) {
-//    command.remove(line.length() - 1,1);
-//    line = m_commands.front().trimmed();
-//    command.append(QString(" %1").arg(line));
-//    m_commands.pop_front();
-//}
-
-//return command;
-
 QPair<QString, CommandInfo> ScriptHandler::nextCommand()
 {
     QMutexLocker locker(&m_mutex);
@@ -39,6 +25,11 @@ QPair<QString, CommandInfo> ScriptHandler::nextCommand()
 void ScriptHandler::loadScriptFromFile(QString filename)
 {
     runScript(IO::readFile(filename), CommandInfo::Type::File, filename);
+}
+
+QString ScriptHandler::currentCommand() const
+{
+    return m_currentCommand.first;
 }
 
 QString ScriptHandler::previousSingleCommand()
@@ -69,38 +60,41 @@ QString ScriptHandler::lastSingleCommand()
     else return QString("");
 }
 
-void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString filename)
-{
+void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString filename) {
     QMutexLocker locker(&m_mutex);
 
     if(!script.isEmpty())
     {
         // If the file is not empty, load each command and add it to the queue.
         // Now, if there is an include command, load that script too.
-        std::stringstream lammpsScript(script.toStdString());
-        std::string command;
-        int lineNumber = 0;
-        while(std::getline(lammpsScript,command,'\n')){
-            lineNumber++;
-            std::stringstream command_ss(command);
-            std::string word;
-            if(command_ss >> word) {
-                if(word.compare("include") == 0) {
-                    if(command_ss >> word) {
-                        if(word.find("ext://") != std::string::npos) {
-                            word.erase(0, 6); // Remove the ext:// prefix
-                            word = IO::copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
-                        }
-                        loadScriptFromFile(QString::fromStdString(word));
-                    } else {
-                        qDebug() << "Invalid include statement.";
-                        continue;
-                    }
-                } else {
-                    auto commandObject = QPair<QString, CommandInfo>(QString::fromStdString(command), CommandInfo(type, lineNumber, filename));
-                    m_lammpsCommandStack.enqueue(commandObject);
-                }
+        int lineNumber = 1;
+        QString currentCommand;
+        QStringList lines = script.split("\n");
+
+        for(QString line : lines) {
+            line = line.trimmed();
+            if(line.endsWith("&")) {
+                line.remove(line.length() - 1, 1);
+                currentCommand.append(QString(" %1").arg(line));
+                continue;
+            } else {
+                currentCommand.append(QString(" %1").arg(line));
             }
+
+            // currentCommand = currentCommand.trimmed();
+
+            if(m_parser.isInclude(currentCommand)) {
+                QString filename = m_parser.includePath(currentCommand);
+                loadScriptFromFile(filename);
+                currentCommand.clear(); lineNumber++; continue; // This line is complete
+            }
+
+            if(!currentCommand.isEmpty()) {
+                auto commandObject = QPair<QString, CommandInfo>(currentCommand, CommandInfo(type, lineNumber, filename));
+                m_lammpsCommandStack.enqueue(commandObject);
+            }
+
+            currentCommand.clear(); lineNumber++; continue; // This line is complete
         }
     }
 }

@@ -92,6 +92,8 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
+    // qDebug() << command;
+
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {
@@ -280,19 +282,10 @@ void LAMMPSController::tick()
         return;
     }
 
-//    if(!m_state.queuedCommands.isEmpty()) {
-//        QString command = m_state.queuedCommands.front();
-//        m_state.queuedCommands.pop_front();
-//        processCommand(command);
-//        m_state.preRunNeeded = true;
-//        m_state.dataDirty = true;
-//        return;
-//    }
-
     QPair<QString, CommandInfo> nextCommandObject = m_scriptHandler.nextCommand();
     QString nextCommand = nextCommandObject.first;
     CommandInfo nextCommandInfo = nextCommandObject.second;
-    if(!nextCommand.isEmpty()) {
+    if(nextCommandInfo.type != CommandInfo::Type::NA) {
         // If the command stack has any commands left, process them.
         if(nextCommandInfo.type == CommandInfo::Type::SingleCommand) {
             m_state.preRunNeeded = true;

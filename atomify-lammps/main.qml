@@ -85,7 +85,7 @@ ApplicationWindow {
             id: myAtomStyle
         }
         onErrorInLammpsScript: {
-            editorTab.consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.lastCommand+"'")
+            editorTab.consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
             editorTab.consoleOutput.append(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
         }
     }
