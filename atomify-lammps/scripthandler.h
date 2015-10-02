@@ -39,7 +39,6 @@ private:
 public:
     ScriptHandler();
     QPair<QString, CommandInfo> nextCommand();
-
     void loadScriptFromFile(QString filename);
 
 public slots:

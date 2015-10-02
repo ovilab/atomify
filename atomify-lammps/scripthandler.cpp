@@ -114,6 +114,7 @@ void ScriptHandler::runCommand(QString command)
 
 void ScriptHandler::reset()
 {
+    m_lammpsCommandStack.clear();
     m_currentCommand = QPair<QString, CommandInfo>(QString(""), CommandInfo());
 }
 

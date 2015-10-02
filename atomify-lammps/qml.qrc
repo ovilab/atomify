@@ -7,5 +7,7 @@
         <file>SliceControl.qml</file>
         <file>AtomStyleControl.qml</file>
         <file>LightControl.qml</file>
+        <file>Console.qml</file>
+        <file>EditorTab.qml</file>
     </qresource>
 </RCC>

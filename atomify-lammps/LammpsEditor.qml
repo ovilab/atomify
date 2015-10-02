@@ -11,9 +11,9 @@ Item {
     property MySimulator simulator
     property TextArea textarea: textarea
     function runScript() {
-        simulator.scriptHandler.runScript(textarea.text)
-        simulator.runScript(textarea.text)
         simulator.willReset = true
+        simulator.scriptHandler.reset()
+        simulator.scriptHandler.runScript(textarea.text)
     }
 
     Component.onCompleted: {

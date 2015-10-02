@@ -37,7 +37,7 @@ ApplicationWindow {
 
                 SplitView {
                     orientation: Qt.Vertical
-                    property TextArea consoleOutput: consoleOutputObject
+                    property TextArea consoleOutput: myConsole.output
                     property LammpsEditor lammpsEditor: myLammpsEditor
                     LammpsEditor {
                         id: myLammpsEditor
@@ -56,70 +56,9 @@ ApplicationWindow {
                         }
                     }
 
-                    ColumnLayout {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        TextArea {
-                            id: consoleOutputObject
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            Layout.minimumHeight: 100
-                            readOnly: true
-                        }
-
-                        Row {
-                            id: singleCommandRow
-                            Layout.fillWidth: true
-                            TextField {
-                                property int previousCommandCounter: 0
-                                id: singleCommand
-                                width: parent.width - runSingleCommand.width
-
-                                Keys.onPressed: {
-                                    if(singleCommand.text == "") {
-                                        mySimulator.scriptHandler.lastSingleCommand();
-                                    }
-                                }
-
-                                Shortcut {
-                                    sequence: "Return"
-                                    onActivated: {
-                                        if(singleCommand.text != "") {
-                                            mySimulator.scriptHandler.runCommand(singleCommand.text)
-                                            consoleOutputObject.append(singleCommand.text)
-                                            singleCommand.text = ""
-                                        }
-                                    }
-                                }
-                                Shortcut {
-                                    sequence: "Up"
-                                    onActivated: {
-                                        if(singleCommand.text == "") {
-                                            singleCommand.text = mySimulator.scriptHandler.lastSingleCommand();
-                                        } else {
-                                            singleCommand.text = mySimulator.scriptHandler.previousSingleCommand();
-                                        }
-                                    }
-                                }
-                                Shortcut {
-                                    sequence: "Down"
-                                    onActivated: {
-                                        singleCommand.text = mySimulator.scriptHandler.nextSingleCommand();
-                                    }
-                                }
-
-                            }
-
-                            Button {
-                                id: runSingleCommand
-                                text: "Run"
-                                onClicked: {
-                                    mySimulator.scriptHandler.runCommand(singleCommand.text)
-                                    consoleOutputObject.append(singleCommand.text)
-                                    singleCommand.text = ""
-                                }
-                            }
-                        }
+                    Console {
+                        id: myConsole
+                        simulator: mySimulator
                     }
                 }
             }

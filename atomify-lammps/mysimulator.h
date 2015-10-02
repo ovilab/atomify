@@ -61,7 +61,6 @@ class MySimulator : public Simulator
     Q_PROPERTY(bool paused READ paused WRITE setPaused NOTIFY pausedChanged)
     Q_PROPERTY(AtomStyle* atomStyle READ atomStyle WRITE setAtomStyle NOTIFY atomStyleChanged)
     Q_PROPERTY(double timePerTimestep READ timePerTimestep WRITE setTimePerTimestep NOTIFY timePerTimestepChanged)
-    Q_PROPERTY(QString lastCommand READ lastCommand WRITE setLastCommand NOTIFY lastCommandChanged)
     Q_PROPERTY(QString lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(QString lammpsErrorMessage READ lammpsErrorMessage WRITE setLammpsErrorMessage NOTIFY lammpsErrorMessageChanged)
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
@@ -83,17 +82,13 @@ public:
     int numberOfAtomTypes() const;
     QVector3D systemSize() const;
     double timePerTimestep() const;
-    QString lastCommand() const;
     QString lammpsError() const;
     QString lammpsErrorMessage() const;
     ScriptHandler* scriptHandler() const;
     bool willReset() const;
 
 public slots:
-    void runScript(QString script);
-    void runCommand(QString command);
     void setSimulationSpeed(int arg);
-    void setLammpsOutput(LammpsOutput* lammpsOutput);
     void setPaused(bool paused);
     void setSimulationTime(double simulationTime);
     void setAtomStyle(AtomStyle* atomStyle);
@@ -101,7 +96,6 @@ public slots:
     void setNumberOfAtomTypes(int numberOfAtomTypes);
     void setSystemSize(QVector3D systemSize);
     void setTimePerTimestep(double timePerTimestep);
-    void setLastCommand(QString lastCommand);
     void setLammpsError(QString lammpsError);
     void setLammpsErrorMessage(QString lammpsErrorMessage);
     void setScriptHandler(ScriptHandler* scriptHandler);
@@ -109,7 +103,6 @@ public slots:
 
 signals:
     void simulationSpeedChanged(int arg);
-    void lammpsOutputChanged(LammpsOutput* lammpsOutput);
     void pausedChanged(bool paused);
     void simulationTimeChanged(double simulationTime);
     void atomStyleChanged(AtomStyle* atomStyle);
@@ -118,7 +111,6 @@ signals:
     void systemSizeChanged(QVector3D systemSize);
     void timePerTimestepChanged(double timePerTimestep);
     void errorInLammpsScript();
-    void lastCommandChanged(QString lastCommand);
     void lammpsErrorChanged(QString lammpsError);
     void lammpsErrorMessageChanged(QString lammpsErrorMessage);
     void lammpsDidReset();
@@ -132,19 +124,15 @@ private:
     friend class MyWorker;
     int m_simulationSpeed = 1;
     bool m_paused = false;
-    QString m_scriptToRun;
     QMap<QString, CPCompute*> m_computes;
-    LammpsOutput *m_lammpsOutput = NULL;
     double m_simulationTime = 0.0;
     AtomStyle* m_atomStyle = NULL;
     int m_numberOfAtoms;
     int m_numberOfAtomTypes;
     QVector3D m_systemSize;
     double m_timePerTimestep = 0;
-    QString m_lastCommand;
     QString m_lammpsError;
     QString m_lammpsErrorMessage;
-    QVector<QString> m_queuedCommands;
     ScriptHandler* m_scriptHandler = NULL;
     bool m_willReset = false;
 };

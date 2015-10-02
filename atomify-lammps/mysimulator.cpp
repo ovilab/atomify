@@ -56,16 +56,16 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setNumberOfAtoms(m_lammpsController.numberOfAtoms());
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
     mySimulator->setSystemSize(m_lammpsController.systemSize());
-    mySimulator->setLammpsOutput(&m_lammpsController.output);
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
     mySimulator->setScriptHandler(m_lammpsController.scriptHandler());
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
+        qDebug() << "LAMMPS crashed";
         mySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
         mySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+        m_lammpsController.currentException().setIsReported(true);
 
         emit mySimulator->errorInLammpsScript();
-        m_lammpsController.currentException().setIsReported(true);
     }
 
     if(m_willPause) {
@@ -151,11 +151,6 @@ void MySimulator::addCompute(CPCompute *compute)
     m_computes[compute->identifier()] = compute;
 }
 
-LammpsOutput *MySimulator::lammpsOutput() const
-{
-    return m_lammpsOutput;
-}
-
 bool MySimulator::paused() const
 {
     return m_paused;
@@ -191,11 +186,6 @@ double MySimulator::timePerTimestep() const
     return m_timePerTimestep;
 }
 
-QString MySimulator::lastCommand() const
-{
-    return m_lastCommand;
-}
-
 QString MySimulator::lammpsError() const
 {
     return m_lammpsError;
@@ -215,16 +205,6 @@ bool MySimulator::willReset() const
 {
     return m_willReset;
 }
-
-void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
-{
-    if (m_lammpsOutput == lammpsOutput)
-        return;
-
-    m_lammpsOutput = lammpsOutput;
-    emit lammpsOutputChanged(lammpsOutput);
-}
-
 
 int MySimulator::simulationSpeed() const
 {
@@ -304,15 +284,6 @@ void MySimulator::setTimePerTimestep(double timePerTimestep)
     emit timePerTimestepChanged(timePerTimestep);
 }
 
-void MySimulator::setLastCommand(QString lastCommand)
-{
-    if (m_lastCommand == lastCommand)
-        return;
-
-    m_lastCommand = lastCommand;
-    emit lastCommandChanged(lastCommand);
-}
-
 void MySimulator::setLammpsError(QString lammpsError)
 {
     if (m_lammpsError == lammpsError)
@@ -347,16 +318,4 @@ void MySimulator::setWillReset(bool willReset)
 
     m_willReset = willReset;
     emit willResetChanged(willReset);
-}
-
-void MySimulator::runScript(QString script)
-{
-    // This is typically called from the QML thread.
-    // We have to wait for synchronization before we actually load this script
-    m_scriptToRun = script;
-}
-
-void MySimulator::runCommand(QString command)
-{
-    m_queuedCommands.push_back(command);
 }
