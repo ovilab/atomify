@@ -28,11 +28,8 @@ private:
         bool dataDirty = false;
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
-        QString lastCommand;
-        QVector<QString> queuedCommands;
     };
     ScriptHandler m_scriptHandler;
-    QVector<QString> m_commands;
     QMap<QString, CPCompute*> m_computes;
     LammpsException m_currentException;
     LAMMPS *m_lammps = NULL;
@@ -46,7 +43,6 @@ private:
     bool fixExists(QString identifier);
     LAMMPS_NS::Compute *findCompute(QString identifier);
     LAMMPS_NS::Fix *findFix(QString identifier);
-    QString getNextCommand();
 
 public:
     LammpsOutput output;
@@ -75,12 +71,9 @@ public:
     int numberOfAtoms() const;
     int numberOfAtomTypes() const;
     QVector3D systemSize() const;
-    QString lastCommand() const;
     // Actions
     void executeCommandInLAMMPS(QString command);
     void processCommand(QString command);
-    void loadScriptFromFile(QString filename);
-    void runScript(QString script);
     void reset();
     void tick();
 };

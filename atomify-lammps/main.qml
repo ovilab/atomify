@@ -17,7 +17,6 @@ ApplicationWindow {
     width: 1650
     height: 900
     visible: true
-    property variant previousCommands: Array()
 
     SplitView {
         anchors.fill: parent
@@ -75,15 +74,19 @@ ApplicationWindow {
                                 property int previousCommandCounter: 0
                                 id: singleCommand
                                 width: parent.width - runSingleCommand.width
+
+                                Keys.onPressed: {
+                                    if(singleCommand.text == "") {
+                                        mySimulator.scriptHandler.lastSingleCommand();
+                                    }
+                                }
+
                                 Shortcut {
                                     sequence: "Return"
                                     onActivated: {
                                         if(singleCommand.text != "") {
                                             mySimulator.scriptHandler.runCommand(singleCommand.text)
                                             consoleOutputObject.append(singleCommand.text)
-                                            var oldCommands = previousCommands
-                                            oldCommands.push(singleCommand.text)
-                                            previousCommands = oldCommands
                                             singleCommand.text = ""
                                         }
                                     }
@@ -91,30 +94,17 @@ ApplicationWindow {
                                 Shortcut {
                                     sequence: "Up"
                                     onActivated: {
-                                        var numCommands = previousCommands.length
-
                                         if(singleCommand.text == "") {
-                                            singleCommand.previousCommandCounter = numCommands
-                                        }
-                                        singleCommand.previousCommandCounter--
-                                        if(singleCommand.previousCommandCounter>=0) {
-                                            singleCommand.text = previousCommands[singleCommand.previousCommandCounter]
+                                            singleCommand.text = mySimulator.scriptHandler.lastSingleCommand();
                                         } else {
-                                            singleCommand.previousCommandCounter = 0
+                                            singleCommand.text = mySimulator.scriptHandler.previousSingleCommand();
                                         }
                                     }
                                 }
                                 Shortcut {
                                     sequence: "Down"
                                     onActivated: {
-                                        var numCommands = previousCommands.length
-
-                                        singleCommand.previousCommandCounter++
-                                        if(singleCommand.previousCommandCounter<numCommands) {
-                                            singleCommand.text = previousCommands[singleCommand.previousCommandCounter]
-                                        } else {
-                                            singleCommand.text = ""
-                                        }
+                                        singleCommand.text = mySimulator.scriptHandler.nextSingleCommand();
                                     }
                                 }
 
@@ -126,9 +116,6 @@ ApplicationWindow {
                                 onClicked: {
                                     mySimulator.scriptHandler.runCommand(singleCommand.text)
                                     consoleOutputObject.append(singleCommand.text)
-                                    var oldCommands = previousCommands
-                                    oldCommands.push(singleCommand.text)
-                                    previousCommands = oldCommands
                                     singleCommand.text = ""
                                 }
                             }

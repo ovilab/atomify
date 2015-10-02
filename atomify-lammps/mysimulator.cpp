@@ -33,21 +33,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     MySimulator *mySimulator = qobject_cast<MySimulator*>(simulator);
 
-    if(!mySimulator->m_scriptToRun.isEmpty()) {
-        // We have a queued script, now run it
-        mySimulator->setPaused(false);
+    if(mySimulator->willReset()) {
         m_lammpsController.reset();
-        m_lammpsController.runScript(mySimulator->m_scriptToRun);
-        mySimulator->m_queuedCommands.clear();
-        mySimulator->m_scriptToRun.clear();
-        emit mySimulator->lammpsReset();
-    }
-
-    if(!mySimulator->m_queuedCommands.isEmpty()) {
-        for(QString command : mySimulator->m_queuedCommands) {
-            m_lammpsController.m_state.queuedCommands.push_back(command);
-        }
-        mySimulator->m_queuedCommands.clear();
+        mySimulator->setWillReset(false);
+        emit mySimulator->lammpsDidReset();
     }
 
     if(mySimulator->atomStyle() != NULL) {
@@ -69,12 +58,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setLammpsOutput(&m_lammpsController.output);
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
-    mySimulator->setLastCommand(m_lammpsController.lastCommand());
     mySimulator->setScriptHandler(m_lammpsController.scriptHandler());
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
         mySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
         mySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+
         emit mySimulator->errorInLammpsScript();
         m_lammpsController.currentException().setIsReported(true);
     }
@@ -222,6 +211,11 @@ ScriptHandler *MySimulator::scriptHandler() const
     return m_scriptHandler;
 }
 
+bool MySimulator::willReset() const
+{
+    return m_willReset;
+}
+
 void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
 {
     if (m_lammpsOutput == lammpsOutput)
@@ -344,6 +338,15 @@ void MySimulator::setScriptHandler(ScriptHandler *scriptHandler)
 
     m_scriptHandler = scriptHandler;
     emit scriptHandlerChanged(scriptHandler);
+}
+
+void MySimulator::setWillReset(bool willReset)
+{
+    if (m_willReset == willReset)
+        return;
+
+    m_willReset = willReset;
+    emit willResetChanged(willReset);
 }
 
 void MySimulator::runScript(QString script)

@@ -13,6 +13,7 @@ Item {
     function runScript() {
         simulator.scriptHandler.runScript(textarea.text)
         simulator.runScript(textarea.text)
+        simulator.willReset = true
     }
 
     Component.onCompleted: {
@@ -22,10 +23,6 @@ Item {
     Highlighter {
         id: highlighter
     }
-
-//    ScriptHandler {
-//        id: scriptHandler
-//    }
 
     ColumnLayout {
         spacing: 2

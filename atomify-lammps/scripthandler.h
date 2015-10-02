@@ -33,15 +33,22 @@ private:
     QMutex m_mutex;
     QQueue<QPair<QString, CommandInfo> > m_lammpsCommandStack;
     QPair<QString, CommandInfo> m_currentCommand;
+    QVector<QString> m_previousSingleCommands;
+    int m_currentPreviousSingleCommand = 0;
+
 public:
     ScriptHandler();
     QPair<QString, CommandInfo> nextCommand();
 
     void loadScriptFromFile(QString filename);
+
 public slots:
     void runScript(QString script, CommandInfo::Type type = CommandInfo::Type::Editor, QString filename = "");
     void runCommand(QString command);
     void reset();
+    QString previousSingleCommand();
+    QString nextSingleCommand();
+    QString lastSingleCommand();
 
 signals:
 

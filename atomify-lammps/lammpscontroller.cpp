@@ -33,7 +33,6 @@ LAMMPSController::LAMMPSController()
 LAMMPSController::~LAMMPSController()
 {
     setLammps(NULL);
-    m_commands.clear();
     m_computes.clear();
 }
 
@@ -93,8 +92,6 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
-    // cout << command.toStdString() << endl;
-    m_state.lastCommand = command;
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {
@@ -162,44 +159,6 @@ void LAMMPSController::processCommand(QString command) {
     }
 
     executeCommandInLAMMPS(processedCommand);
-}
-
-void LAMMPSController::loadScriptFromFile(QString filename)
-{
-    QString lammpsScript_qstring = IO::readFile(filename);
-    runScript(lammpsScript_qstring);
-}
-
-void LAMMPSController::runScript(QString script)
-{
-    if(!script.isEmpty())
-    {
-        // If the file is not empty, load each command and add it to the queue.
-        // Now, if there is an include command, load that script too.
-        std::stringstream lammpsScript(script.toStdString());
-        std::string command;
-
-        while(std::getline(lammpsScript,command,'\n')){
-            stringstream command_ss(command);
-            string word;
-            if(command_ss >> word) {
-                if(word.compare("include") == 0) {
-                    if(command_ss >> word) {
-                        if(word.find("ext://") != std::string::npos) {
-                            word.erase(0, 6); // Remove the ext:// prefix
-                            word = IO::copyDataFileToReadablePath(QString::fromStdString(word)).toStdString();
-                        }
-                        loadScriptFromFile(QString::fromStdString(word));
-                    } else {
-                        qDebug() << "Invalid include statement.";
-                        continue;
-                    }
-                } else {
-                    m_commands.push_back(QString::fromStdString(command));
-                }
-            }
-        }
-    }
 }
 
 LAMMPS_NS::Fix* LAMMPSController::findFix(QString identifier) {
@@ -307,23 +266,6 @@ void LAMMPSController::reset()
     m_lammps->screen = NULL;
 
     m_state = State(); // Reset current state variables
-    m_commands.clear();
-}
-
-QString LAMMPSController::getNextCommand() {
-    QString line = m_commands.front().trimmed();
-    QString command = line;
-    m_commands.pop_front();
-
-    // Check if the last character is & - then combine the command with the next line
-    while(line.endsWith(QChar('&'))) {
-        command.remove(line.length() - 1,1);
-        line = m_commands.front().trimmed();
-        command.append(QString(" %1").arg(line));
-        m_commands.pop_front();
-    }
-
-    return command;
 }
 
 void LAMMPSController::tick()
@@ -394,11 +336,6 @@ QVector3D LAMMPSController::systemSize() const
 {
     if(!m_lammps) return QVector3D();
     return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
-}
-
-QString LAMMPSController::lastCommand() const
-{
-    return m_state.lastCommand;
 }
 
 bool LAMMPSController::paused() const

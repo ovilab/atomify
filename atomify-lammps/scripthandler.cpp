@@ -10,6 +10,20 @@ ScriptHandler::ScriptHandler()
 
 }
 
+//QString line = m_commands.front().trimmed();
+//QString command = line;
+//m_commands.pop_front();
+
+//// Check if the last character is & - then combine the command with the next line
+//while(line.endsWith(QChar('&'))) {
+//    command.remove(line.length() - 1,1);
+//    line = m_commands.front().trimmed();
+//    command.append(QString(" %1").arg(line));
+//    m_commands.pop_front();
+//}
+
+//return command;
+
 QPair<QString, CommandInfo> ScriptHandler::nextCommand()
 {
     QMutexLocker locker(&m_mutex);
@@ -25,6 +39,34 @@ QPair<QString, CommandInfo> ScriptHandler::nextCommand()
 void ScriptHandler::loadScriptFromFile(QString filename)
 {
     runScript(IO::readFile(filename), CommandInfo::Type::File, filename);
+}
+
+QString ScriptHandler::previousSingleCommand()
+{
+    if(--m_currentPreviousSingleCommand < 0) {
+        m_currentPreviousSingleCommand = 0;
+    }
+
+    return m_previousSingleCommands.at(m_currentPreviousSingleCommand);
+}
+
+QString ScriptHandler::nextSingleCommand()
+{
+    if(++m_currentPreviousSingleCommand < m_previousSingleCommands.count()) {
+        return m_previousSingleCommands.at(m_currentPreviousSingleCommand);
+    } else{
+        m_currentPreviousSingleCommand = m_previousSingleCommands.count();
+        return QString("");
+    }
+}
+
+QString ScriptHandler::lastSingleCommand()
+{
+    m_currentPreviousSingleCommand = m_previousSingleCommands.count()-1;
+    if(m_previousSingleCommands.count()>0) {
+        return m_previousSingleCommands.last();
+    }
+    else return QString("");
 }
 
 void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString filename)
@@ -67,6 +109,7 @@ void ScriptHandler::runCommand(QString command)
 {
     auto commandObject = QPair<QString, CommandInfo>(command, CommandInfo(CommandInfo::Type::SingleCommand));
     m_lammpsCommandStack.enqueue(commandObject);
+    m_previousSingleCommands.push_back(command);
 }
 
 void ScriptHandler::reset()

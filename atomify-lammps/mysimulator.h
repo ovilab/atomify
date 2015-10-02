@@ -65,6 +65,7 @@ class MySimulator : public Simulator
     Q_PROPERTY(QString lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(QString lammpsErrorMessage READ lammpsErrorMessage WRITE setLammpsErrorMessage NOTIFY lammpsErrorMessageChanged)
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
+    Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
 public:
     MySimulator() { }
     ~MySimulator() { }
@@ -86,6 +87,7 @@ public:
     QString lammpsError() const;
     QString lammpsErrorMessage() const;
     ScriptHandler* scriptHandler() const;
+    bool willReset() const;
 
 public slots:
     void runScript(QString script);
@@ -103,6 +105,7 @@ public slots:
     void setLammpsError(QString lammpsError);
     void setLammpsErrorMessage(QString lammpsErrorMessage);
     void setScriptHandler(ScriptHandler* scriptHandler);
+    void setWillReset(bool willReset);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -118,8 +121,9 @@ signals:
     void lastCommandChanged(QString lastCommand);
     void lammpsErrorChanged(QString lammpsError);
     void lammpsErrorMessageChanged(QString lammpsErrorMessage);
-    void lammpsReset();
+    void lammpsDidReset();
     void scriptHandlerChanged(ScriptHandler* scriptHandler);
+    void willResetChanged(bool willReset);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -142,6 +146,7 @@ private:
     QString m_lammpsErrorMessage;
     QVector<QString> m_queuedCommands;
     ScriptHandler* m_scriptHandler = NULL;
+    bool m_willReset = false;
 };
 
 #endif // MYSIMULATOR_H
