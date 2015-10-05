@@ -49,9 +49,7 @@ void CylindersRenderer::synchronize(Renderable* renderer)
 
 void CylindersRenderer::uploadVBOs(Cylinders* cylinders)
 {
-    if(!cylinders->dirty() || cylinders->m_vertices.size() < 1) {
-        return;
-    }
+    if(!cylinders->dirty()) return;
     QVector<CylinderVBOData>& vertices = cylinders->m_vertices;
     int numberOfVertices = vertices.size();
     cylinders->setDirty(false);
@@ -98,7 +96,7 @@ void CylindersRenderer::render()
     glFunctions()->glVertexAttribPointer(radius2Location, 1, GL_FLOAT, GL_FALSE, sizeof(CylinderVBOData), (const void *)offset);
 
     funcs.glDisable(GL_CULL_FACE);
-    glDrawArrays(GL_POINTS, 0, m_vertexCount);
+    glDrawArrays(GL_LINES, 0, m_vertexCount);
 
     program().disableAttributeArray(vertex1Location);
     program().disableAttributeArray(vertex2Location);

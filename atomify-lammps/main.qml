@@ -65,6 +65,65 @@ ApplicationWindow {
                 temperature: temperature
             }
 
+            Rectangle {
+                id: scaleRectangle
+                width: parent.width
+                anchors.bottom: myVisualizer.bottom
+
+                height: 25
+                radius: 4
+                color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
+
+                RowLayout {
+                    id: scaleRow
+                    x: 10
+                    y: 3
+                    spacing: 10
+
+                    Label {
+                        id: speedLabel
+                        text: "Simulation speed"
+                    }
+
+                    Slider {
+                        id: speedSlider
+                        minimumValue: 1
+                        maximumValue: 20
+                        stepSize: 1
+                        value: mySimulator.simulationSpeed
+                        onValueChanged: {
+                            if(mySimulator) {
+                                mySimulator.simulationSpeed = value
+                            }
+                        }
+                        Settings {
+                            property alias speedValue: speedSlider.value
+                        }
+                    }
+
+                    Label {
+                        text: "Sphere size"
+                    }
+
+                    Slider {
+                        id: scaleSlider
+                        minimumValue: 0.1
+                        maximumValue: 1.0
+                        value: myVisualizer.scale
+                        onValueChanged: {
+                            myVisualizer.scale = value
+                        }
+                        Settings {
+                            property alias scaleValue: scaleSlider.value
+                        }
+                    }
+
+                }
+
+
+
+            }
+
             Label {
                 x: 0.5*(parent.width - width)
                 y: 25

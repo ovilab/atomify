@@ -25,6 +25,12 @@ Rectangle {
             font.bold: true
             text: "Number of atom types: "+simulator.numberOfAtomTypes
         }
+
+        Text {
+            font.bold: true
+            text: "Time: "+simulator.simulationTime.toFixed(2)
+        }
+
         Text {
             font.bold: true
             text: "Time per timestep [ms]: "+simulator.timePerTimestep.toFixed(2)

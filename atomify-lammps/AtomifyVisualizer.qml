@@ -7,6 +7,7 @@ Item {
     id: atomifyVisualizerRoot
     property Visualizer visualizer: visualizer
     property MySimulator simulator
+    property real scale: 0.23
     property Light light: light
     property Slice slice: mySlice
     property Camera camera: camera
@@ -52,8 +53,7 @@ Item {
         Spheres {
             id: spheres
             visible: true
-            scale: 0.23
-            // scale: 1.0
+            scale: atomifyVisualizerRoot.scale
             color: "white"
 
             Light {

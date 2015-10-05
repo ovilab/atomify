@@ -90,25 +90,6 @@ fix 1 all nve"
                     lammpsEditorRoot.simulator.setPaused(!lammpsEditorRoot.simulator.paused)
                 }
             }
-
-            Slider {
-                id: speedSlider
-                // anchors.left: runButton.right
-                minimumValue: 1
-                maximumValue: 20
-                stepSize: 1
-                value: 1
-                onValueChanged: {
-                    if(simulator != undefined) {
-                        simulator.simulationSpeed = value
-                    }
-                }
-            }
-            Label {
-                id: speedLabel
-                // anchors.left: speedSlider.right
-                text: "Simulation speed: "+speedSlider.value
-            }
         }
 
     }
