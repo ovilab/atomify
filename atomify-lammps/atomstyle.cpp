@@ -1,129 +1,5 @@
 #include "atomstyle.h"
 
-AtomStyleData *AtomStyle::getAtomStyleData(int index)
-{
-    if(index<0 || index >= m_data.size()) return NULL;
-
-    return qobject_cast<AtomStyleData*>(m_data[index]);
-}
-
-AtomStyle::AtomStyle(QObject *parent) : QObject(parent)
-{
-    m_data.push_back(new AtomStyleData(1.0, QColor(220, 85, 176)));
-    m_data.push_back(new AtomStyleData(1.0, QColor(55, 199, 166)));
-    m_data.push_back(new AtomStyleData(1.0, QColor(220, 0, 200)));
-    setModel(QVariant::fromValue(m_data));
-}
-
-AtomStyle::~AtomStyle()
-{
-
-}
-
-QVariant AtomStyle::model() const
-{
-    return m_model;
-}
-
-void AtomStyle::setColorsAndScales(QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes)
-{
-    int numberOfAtoms = colors.size();
-    QColor defaultColor = QColor(255.0, 0.0, 0.0);
-    double defaultScale = 1.0;
-    int numberOfAtomsInStyle = m_data.size();
-
-    for(unsigned int i=0; i<numberOfAtoms; i++) {
-        int atomType = atomTypes[i];
-
-        if(atomType > numberOfAtomsInStyle) {
-            colors[i] = defaultColor;
-            scales[i] = defaultScale;
-        } else {
-            AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(m_data[atomType-1]); // LAMMPS atom types start at 1
-            colors[i] = atomStyleData->color();
-            scales[i] = atomStyleData->scale();
-        }
-    }
-}
-
-void AtomStyle::setScaleAndColorForAtom(float scale, QString color, int atomType)
-{
-    atomType -= 1; // LAMMPS atom types start at 1
-    if(atomType<0 || atomType >= m_data.size()) return;
-
-    AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(m_data[atomType]);
-
-    if(atomStyleData) {
-        atomStyleData->setColor(color);
-        atomStyleData->setScale(scale);
-    }
-    setDirty(true);
-}
-
-void AtomStyle::setData(QList<QObject *> data)
-{
-    m_data = data;
-}
-
-QList<QObject *> AtomStyle::data()
-{
-    return m_data;
-}
-
-bool AtomStyle::dirty() const
-{
-    return m_dirty;
-}
-
-void AtomStyle::setModelData(const int index, const QString &key, const QVariant &value)
-{
-    QList<QObject*> content = m_model.value<QList<QObject*> >();
-    AtomStyleData *obj = qobject_cast<AtomStyleData*>(content[index]);
-    obj->setProperty(key.toStdString().c_str(), value);
-    setDirty(true);
-}
-
-void AtomStyle::setModel(QVariant model)
-{
-    if (m_model == model)
-        return;
-    m_model = model;
-    emit modelChanged(model);
-}
-
-void AtomStyle::add()
-{
-    double red = 255*(rand()/double(RAND_MAX));
-    double green = 255*(rand()/double(RAND_MAX));
-    double blue = 255*(rand()/double(RAND_MAX));
-    m_data.push_back(new AtomStyleData(1.0, QColor(red,green,blue)));
-    setModel(QVariant::fromValue(m_data));
-    setDirty(true);
-}
-
-void AtomStyle::remove(const int index)
-{
-    m_data.removeAt(index);
-    setModel(QVariant::fromValue(m_data));
-    setDirty(true);
-}
-
-void AtomStyle::setMinimumSize(int minimumSize)
-{
-    while(m_data.size() < minimumSize) {
-        add();
-    }
-}
-
-void AtomStyle::setDirty(bool dirty)
-{
-    if (m_dirty == dirty)
-        return;
-
-    m_dirty = dirty;
-    emit dirtyChanged(dirty);
-}
-
 void AtomStyleData::fillInAtomStyleTypes()
 {
     m_atomStyleTypes.insert("hydrogen", QPair<float, QString>(1.20, "#FFFFFF"));
@@ -220,6 +96,131 @@ void AtomStyleData::setVisible(bool visible)
 
     m_visible = visible;
     emit visibleChanged(visible);
+}
+
+AtomStyleData *AtomStyle::getAtomStyleData(int index)
+{
+    if(index<0 || index >= m_data.size()) return NULL;
+
+    return qobject_cast<AtomStyleData*>(m_data[index]);
+}
+
+AtomStyle::AtomStyle(QObject *parent) : QObject(parent)
+{
+    m_data.push_back(new AtomStyleData(1.0, QColor(220, 85, 176)));
+    m_data.push_back(new AtomStyleData(1.0, QColor(55, 199, 166)));
+    m_data.push_back(new AtomStyleData(1.0, QColor(220, 0, 200)));
+    setModel(QVariant::fromValue(m_data));
+}
+
+AtomStyle::~AtomStyle()
+{
+
+}
+
+QVariant AtomStyle::model() const
+{
+    return m_model;
+}
+
+void AtomStyle::setColorsAndScales(QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes)
+{
+    int numberOfAtoms = colors.size();
+    QColor defaultColor = QColor(255.0, 0.0, 0.0);
+    double defaultScale = 1.0;
+    int numberOfAtomsInStyle = m_data.size();
+
+    for(unsigned int i=0; i<numberOfAtoms; i++) {
+        int atomType = atomTypes[i];
+
+        if(atomType > numberOfAtomsInStyle) {
+            colors[i] = defaultColor;
+            scales[i] = defaultScale;
+        } else {
+            AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(m_data[atomType-1]); // LAMMPS atom types start at 1
+            colors[i] = atomStyleData->color();
+            scales[i] = atomStyleData->scale();
+        }
+    }
+}
+
+void AtomStyle::setScaleAndColorForAtom(float scale, QString color, int atomType)
+{
+    atomType -= 1; // LAMMPS atom types start at 1
+    if(atomType<0 || atomType >= m_data.size()) return;
+
+    AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(m_data[atomType]);
+
+    if(atomStyleData) {
+        atomStyleData->setColor(color);
+        atomStyleData->setScale(scale);
+    }
+    setDirty(true);
+}
+
+void AtomStyle::setData(QList<QObject *> data)
+{
+    m_data = data;
+}
+
+QList<QObject *> AtomStyle::data()
+{
+    return m_data;
+}
+
+bool AtomStyle::dirty() const
+{
+    return m_dirty;
+}
+
+void AtomStyle::setModelData(const int index, const QString &key, const QVariant &value)
+{
+    QList<QObject*> content = m_model.value<QList<QObject*> >();
+    AtomStyleData *obj = qobject_cast<AtomStyleData*>(content[index]);
+    obj->setProperty(key.toStdString().c_str(), value);
+    setDirty(true);
+}
+
+void AtomStyle::setModel(QVariant model)
+{
+    if (m_model == model)
+        return;
+
+    m_model = model;
+    emit modelChanged(model);
+}
+
+void AtomStyle::add()
+{
+    double red = 255*(rand()/double(RAND_MAX));
+    double green = 255*(rand()/double(RAND_MAX));
+    double blue = 255*(rand()/double(RAND_MAX));
+    m_data.push_back(new AtomStyleData(1.0, QColor(red,green,blue)));
+    setModel(QVariant::fromValue(m_data));
+    setDirty(true);
+}
+
+void AtomStyle::remove(const int index)
+{
+    m_data.removeAt(index);
+    setModel(QVariant::fromValue(m_data));
+    setDirty(true);
+}
+
+void AtomStyle::setMinimumSize(int minimumSize)
+{
+    while(m_data.size() < minimumSize) {
+        add();
+    }
+}
+
+void AtomStyle::setDirty(bool dirty)
+{
+    if (m_dirty == dirty)
+        return;
+
+    m_dirty = dirty;
+    emit dirtyChanged(dirty);
 }
 
 void AtomStyle::setAtomType(QString atomTypeName, int atomType)

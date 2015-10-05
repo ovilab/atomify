@@ -40,17 +40,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(mySimulator->atomStyle() != NULL) {
+        m_lammpsController.scriptHandler()->setAtomStyle(mySimulator->atomStyle());
+
         // Sync new atom styles from Simulator (QML) to Worker
         if(mySimulator->atomStyle()->dirty()) {
             m_atomStyle.setData(mySimulator->atomStyle()->data());
             m_atomStyle.setDirty(mySimulator->atomStyle()->dirty());
             mySimulator->atomStyle()->setDirty(false);
-        } else if(m_atomStyle.dirty()) {
-            mySimulator->atomStyle()->setData(m_atomStyle.data());
-            mySimulator->atomStyle()->updateModel();
         }
-
-        m_lammpsController.scriptHandler()->setAtomStyle(&m_atomStyle);
     }
 
     // Sync values from QML and simulator

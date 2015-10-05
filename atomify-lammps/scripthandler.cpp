@@ -76,12 +76,14 @@ void ScriptHandler::parseEditorCommand(QString command) {
         m_parser.atomType(command, [&](QString atomTypeName, int atomType) {
             if(m_atomStyle) m_atomStyle->setAtomType(atomTypeName, atomType);
         });
+        return;
     }
 
     if(m_parser.isAtomColorAndSize(command)) {
         m_parser.AtomColorAndSize(command, [&](float scale, QString color, int atomType) {
             if(m_atomStyle) m_atomStyle->setScaleAndColorForAtom(scale, color, atomType);
         });
+        return;
     }
 }
 
@@ -131,6 +133,8 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
 
 void ScriptHandler::runCommand(QString command)
 {
+    m_previousSingleCommands.push_back(command);
+
     if(m_parser.isEditorCommand(command)) {
         parseEditorCommand(command);
         return;
@@ -138,7 +142,6 @@ void ScriptHandler::runCommand(QString command)
 
     auto commandObject = QPair<QString, CommandInfo>(command, CommandInfo(CommandInfo::Type::SingleCommand));
     m_lammpsCommandStack.enqueue(commandObject);
-    m_previousSingleCommands.push_back(command);
 }
 
 void ScriptHandler::reset()
