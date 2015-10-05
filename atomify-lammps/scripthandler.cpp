@@ -32,6 +32,11 @@ QString ScriptHandler::currentCommand() const
     return m_currentCommand.first;
 }
 
+AtomStyle *ScriptHandler::atomStyle() const
+{
+    return m_atomStyle;
+}
+
 QString ScriptHandler::previousSingleCommand()
 {
     if(--m_currentPreviousSingleCommand < 0) {
@@ -60,6 +65,26 @@ QString ScriptHandler::lastSingleCommand()
     else return QString("");
 }
 
+void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
+{
+    m_atomStyle = atomStyle;
+}
+
+void ScriptHandler::parseEditorCommand(QString command) {
+    command.remove(0,2);
+    if(m_parser.isAtomType(command)) {
+        m_parser.atomType(command, [&](QString atomTypeName, int atomType) {
+            if(m_atomStyle) m_atomStyle->setAtomType(atomTypeName, atomType);
+        });
+    }
+
+    if(m_parser.isAtomColorAndSize(command)) {
+        m_parser.AtomColorAndSize(command, [&](float scale, QString color, int atomType) {
+            if(m_atomStyle) m_atomStyle->setScaleAndColorForAtom(scale, color, atomType);
+        });
+    }
+}
+
 void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString filename) {
     QMutexLocker locker(&m_mutex);
 
@@ -81,7 +106,7 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
                 currentCommand.append(QString(" %1").arg(line));
             }
 
-            // currentCommand = currentCommand.trimmed();
+            currentCommand = currentCommand.trimmed();
 
             if(m_parser.isInclude(currentCommand)) {
                 QString filename = m_parser.includePath(currentCommand);
@@ -94,6 +119,11 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
                 m_lammpsCommandStack.enqueue(commandObject);
             }
 
+            if(m_parser.isEditorCommand(currentCommand)) {
+                parseEditorCommand(currentCommand);
+                currentCommand.clear(); lineNumber++; continue; // This line is complete
+            }
+
             currentCommand.clear(); lineNumber++; continue; // This line is complete
         }
     }
@@ -101,6 +131,11 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
 
 void ScriptHandler::runCommand(QString command)
 {
+    if(m_parser.isEditorCommand(command)) {
+        parseEditorCommand(command);
+        return;
+    }
+
     auto commandObject = QPair<QString, CommandInfo>(command, CommandInfo(CommandInfo::Type::SingleCommand));
     m_lammpsCommandStack.enqueue(commandObject);
     m_previousSingleCommands.push_back(command);

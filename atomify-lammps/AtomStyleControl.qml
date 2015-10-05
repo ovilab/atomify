@@ -132,6 +132,5 @@ Item {
         ListElement { text: "18: Argon (Ar)"; radius: 188; color: "#80D1E3" }
         ListElement { text: "19: Potassium (K)"; radius: 275; color: "#8F40D4" }
         ListElement { text: "20: Calcium (Ca)"; radius: 231; color: "#3DFF00" }
-
     }
 }

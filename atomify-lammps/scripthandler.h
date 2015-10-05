@@ -7,6 +7,7 @@
 #include <QString>
 #include <QPair>
 #include "scriptparser.h"
+#include "atomstyle.h"
 
 struct CommandInfo {
     enum class Type {NA, File, Editor, SingleCommand};
@@ -28,7 +29,7 @@ class ScriptHandler : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString currentCommand READ currentCommand)
-
+    Q_PROPERTY(AtomStyle* atomStyle READ atomStyle WRITE setAtomStyle)
 private:
     ScriptParser m_parser;
     QMutex m_mutex;
@@ -36,12 +37,15 @@ private:
     QPair<QString, CommandInfo> m_currentCommand;
     QVector<QString> m_previousSingleCommands;
     int m_currentPreviousSingleCommand = 0;
+    void parseEditorCommand(QString command);
+    AtomStyle* m_atomStyle = NULL;
 
 public:
     ScriptHandler();
     QPair<QString, CommandInfo> nextCommand();
     void loadScriptFromFile(QString filename);
     QString currentCommand() const;
+    AtomStyle* atomStyle() const;
 
 public slots:
     void runScript(QString script, CommandInfo::Type type = CommandInfo::Type::Editor, QString filename = "");
@@ -50,8 +54,7 @@ public slots:
     QString previousSingleCommand();
     QString nextSingleCommand();
     QString lastSingleCommand();
-signals:
-
+    void setAtomStyle(AtomStyle* atomStyle);
 };
 
 #endif // SCRIPTHANDLER_H
