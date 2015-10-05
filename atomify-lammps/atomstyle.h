@@ -56,6 +56,7 @@ public:
     QList<QObject*> data();
     bool dirty() const;
     void setAtomType(QString atomTypeName, int atomType);
+    void updateModel();
 
 signals:
     void modelChanged(QVariant model);

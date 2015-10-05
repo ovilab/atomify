@@ -12,17 +12,17 @@ Item {
         x: 10
         width: parent.width - 20
 
-//        GroupBox {
-//            id: atomColoring
-//            height: atomStyleControl.height + 20
-//            width: parent.width
-//            title: "Atom style"
+        GroupBox {
+            id: atomColoring
+            height: atomStyleControl.height + 20
+            width: parent.width
+            title: "Atom style"
 
-//            AtomStyleControl {
-//                id: atomStyleControl
-//                atomStyle: atomifyVisualizer.simulator.atomStyle
-//            }
-//        }
+            AtomStyleControl {
+                id: atomStyleControl
+                atomStyle: atomifyVisualizer.simulator.atomStyle
+            }
+        }
 
         GroupBox {
             id: slicing

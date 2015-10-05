@@ -47,6 +47,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             mySimulator->atomStyle()->setDirty(false);
         } else if(m_atomStyle.dirty()) {
             mySimulator->atomStyle()->setData(m_atomStyle.data());
+            mySimulator->atomStyle()->updateModel();
         }
 
         m_lammpsController.scriptHandler()->setAtomStyle(&m_atomStyle);

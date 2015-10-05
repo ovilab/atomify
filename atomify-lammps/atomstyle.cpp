@@ -231,3 +231,9 @@ void AtomStyle::setAtomType(QString atomTypeName, int atomType)
         setDirty(true);
     }
 }
+
+void AtomStyle::updateModel()
+{
+    setModel(QVariant::fromValue(m_data));
+    setDirty(true);
+}
