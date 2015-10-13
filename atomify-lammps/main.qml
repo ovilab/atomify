@@ -117,11 +117,7 @@ ApplicationWindow {
                             property alias scaleValue: scaleSlider.value
                         }
                     }
-
                 }
-
-
-
             }
 
             Label {
