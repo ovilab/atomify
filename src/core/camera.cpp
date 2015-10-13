@@ -271,6 +271,7 @@ void Camera::setAspectRatio(float aspectRatio)
 {
     Q_D(Camera);
     d->m_lens->setAspectRatio(aspectRatio);
+    updateViewBox();
 }
 
 float Camera::aspectRatio() const
@@ -333,16 +334,22 @@ QMatrix4x4 Camera::projectionMatrix()
     return d->m_lens->projectionMatrix();
 }
 
+void Camera::updateViewBox() {
+    Q_D(Camera);
+    QVector3D position = d->m_lookAt->position();
+    float r = (position-d->m_lookAt->viewCenter()).length();
+
+    setLeft(-r*(aspectRatio()));
+    setRight(r*(aspectRatio()));
+    setTop(r);
+    setBottom(-r);
+}
+
 void Camera::setPosition(const QVector3D &position)
 {
     Q_D(Camera);
     d->m_lookAt->setPosition(position);
-    float r = (position-d->m_lookAt->viewCenter()).length();
-
-    setLeft(-r);
-    setRight(r);
-    setTop(r);
-    setBottom(-r);
+    updateViewBox();
 }
 
 QVector3D Camera::position() const

@@ -121,6 +121,7 @@ public:
         else return false;
     }
 
+    void updateViewBox();
 public slots:
     void setOrthographic(bool orthographic)
     {
