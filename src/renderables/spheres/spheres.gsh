@@ -29,7 +29,7 @@ void main(void) {
     addPoint = slice_vectorIsInside(vs_vertexPosition[0] + displacement.xyz);
 #endif
     if(addPoint) {
-        vertexPosition = vs_vertexPosition[0];
+        vertexPosition = vs_vertexPosition[0] + displacement.xyz;
         float scale = vs_scale[0];
         color = vs_color[0];
 
