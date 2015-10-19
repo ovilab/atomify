@@ -21,6 +21,7 @@ struct Light {
 
 uniform Light cp_lights[maxLights];
 uniform highp int cp_numberOfLights;
+uniform highp float cp_oneOverNumberOfLights;
 
 highp float attenuation(Light light, highp vec3 vertexPosition) {
     highp float distanceToLight = distance(vertexPosition, light.position);
@@ -72,9 +73,9 @@ highp vec3 applyLight(Light light, highp vec3 normal, highp vec3 vertexPosition,
 
 highp vec3 defaultLight(highp vec3 normal, highp vec3 vertexPosition, highp vec3 color) {
     highp vec3 light = vec3(0.0);
-    highp float oneOverNumberOfLights = 1.0/max(float(cp_numberOfLights), 1.0);
+    // highp float oneOverNumberOfLights = 1.0/max(float(cp_numberOfLights), 1.0);
     for(int i=0; i<cp_numberOfLights; i++) {
-        light += oneOverNumberOfLights*applyLight(cp_lights[i], normal, vertexPosition, color);
+        light += cp_oneOverNumberOfLights*applyLight(cp_lights[i], normal, vertexPosition, color);
     }
 
     return light;

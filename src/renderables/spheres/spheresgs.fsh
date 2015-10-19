@@ -4,8 +4,6 @@ in vec3 vertexPosition;
 out vec4 fragcolor;
 
 void main(void) {
-//    highp float x = 2.0*(texCoord.s - 0.5);
-//    highp float y = 2.0*(texCoord.t - 0.5);
     highp float x = texCoord.s;
     highp float y = texCoord.t;
     highp float r2 = x*x + y*y;

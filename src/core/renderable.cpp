@@ -137,7 +137,6 @@ void RenderableRenderer::prepareAndRender()
     m_program.setUniformValue("cp_upVector", m_upVector.normalized());
     m_program.setUniformValue("cp_cameraPosition", m_cameraPosition);
     m_program.setUniformValue("cp_time", float(m_elapsedTime.elapsed()*1e-3));
-
     GLint numberOfLights = 0;
     for(ShaderEffect *shaderEffect : m_shaderEffects) {
         if(shaderEffect->enabled()) {
@@ -150,6 +149,8 @@ void RenderableRenderer::prepareAndRender()
         }
     }
     m_program.setUniformValue("cp_numberOfLights", numberOfLights);
+    float oneOverNumberOfLights = (numberOfLights > 0) ? 1.0/numberOfLights : 10000.0;
+    m_program.setUniformValue("cp_oneOverNumberOfLights", oneOverNumberOfLights);
 
     render();
     m_program.release();
