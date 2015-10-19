@@ -9,8 +9,10 @@ QMAKE_LFLAGS += -fopenmp
 CONFIG += warn_off
 
 DEFINES += _OPENMP
-INCLUDEPATH += /projects/lammps-10Aug15/src
-LIBS += -L/projects/lammps-10Aug15/src -llammps_omp
+
+# lammps.pri includes the path and libs to lammps
+# Run configure.py to generate lammps.pri
+include(lammps.pri)
 
 android {
     DEFINES += LAMMPS_XDR

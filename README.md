@@ -1,20 +1,24 @@
-#Atomify - a live LAMMPS visualizer
-*Simplifty your workflow significantly.* Atomify is a script editor for LAMMPS supporting live visualization of the simulation. Edit your script, just press Run, and you will immediately see the atoms on your screen while LAMMPS is running. There is no need to dump the trajectories to disk and open them in VMD or Ovito anymore. It uses the high performance visualization library **[SimVis](https://github.com/computationalphysics/SimVis)** (based on Qt) allowing live visualization of millions of atoms in a live simulation. 
+# Atomify - a live LAMMPS visualizer #
 
-##Why
+- Simplifty your workflow significantly.
+- Atomify is a script editor for LAMMPS supporting live visualization of the simulation. Edit your script, just press Run, and you will immediately see the atoms on your screen while LAMMPS is running. There is no need to dump the trajectories to disk and open them in VMD or Ovito anymore. It uses the high performance visualization library **[SimVis](https://github.com/computationalphysics/SimVis)** (based on Qt) allowing live visualization of millions of atoms in a live simulation.
+
+## Why ##
+
 The current workflow for developing LAMMPS scripts is as follows:
 - Edit the script in your favorite text editor
 - Open terminal, run the script and dump trajectories to disk
 - Open VMD, Ovito or some other visualization software to visualize the dumped trajectories
 With Atomify, we solved this problem by combining the script editing and visualizing in the same tool. Atomify runs LAMMPS internally, so there is almost no overhead in visualizing the simulation. 
 
-##Highlights
+## Highlights ##
 - Full OpenMP support (MPI support will come later)
 - Also runs on your mobile phone / tablet (both Android and iOS)
 
-##Installation
+## Installation ##
+
 * Atomify is based on the Qt library, so you need to download **[Qt Creator](http://www.qt.io/download-open-source/)** (the open source version is fine). Qt version 5.5.0 or later is required.
-* Download the **[LAMMPS source code](http://lammps.sandia.gov/download.html)**
+* Download a stable source tarball of the **[LAMMPS source code](http://lammps.sandia.gov/download.html)**
 It is now assumed that <atomify_source_folder> is the folder containing this README.md file. It is also assumed that <lammps_source_folder> is the folder containing the LAMMPS source code. This is for instance '~/Downloads/lammps-10Aug15/src'.
 Once you have downloaded the LAMMPS source code and extracted the contents, you will need to patch the LAMMPS source code with the patch_lammps.py python script:
 - `cd <atomify_source_folder>`
