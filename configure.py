@@ -5,6 +5,15 @@ import os
 import sys
 import shutil
 from os.path import join, abspath
+from sys import platform as _platform
+
+lammps_build_type = "serial"
+
+if _platform == "darwin":
+    lammps_build_type = "mac"
+elif _platform == "win32":
+	print "Windows is not supported yet"
+	exit()
 
 root_path = os.path.abspath(".")
 
@@ -34,7 +43,7 @@ lammps_source_dir_src = join(lammps_source_dir, "src")
 lammps_pri = open("lammps.pri", "w")
 lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
 lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
-lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_serial" + "\n")
+lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_" + lammps_build_type + "\n")
 lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
 lammps_pri.close()
 
@@ -64,5 +73,5 @@ print "\nLAMMPS was (probably) successfully patched."
 print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
-run_command("make -j8 serial mode=lib")
+run_command("make -j8 " + lammps_build_type + " mode=lib")
 os.chdir(root_path)
