@@ -12,8 +12,8 @@ def run_command(cmd):
 
 numArgs = len(sys.argv)
 if(numArgs == 1):
-	print "Please provide link to lammps source folder. For instance:"
-	print "python patch_lammps.python /projects/lammps-10-august/src/"
+	print "Please provide link to lammps folder. For instance:"
+	print "python configure.py /projects/lammps-10Aug15/"
 	exit()
 
 lammps_source_dir = sys.argv[1]
@@ -28,12 +28,12 @@ errorCppFile = join(lammps_source_dir_src, "error.cpp")
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
 if not os.path.isfile(errorCppFile):
 	print "Error, could not find file to patch: "+errorCppFile
-	print "Make sure you provided the correct LAMMPS source folder."
+	print "Make sure you provided the correct LAMMPS folder."
 	exit()
 
 if not os.path.isfile(fix_ave_timeHFile):
 	print "Error, could not find file to patch: "+fix_ave_timeHFile
-	print "Make sure you provided the correct LAMMPS source folder."
+	print "Make sure you provided the correct LAMMPS folder."
 	exit()
 
 print "Attempting to patch lammps source files error.cpp and fix_ave_time.h."
