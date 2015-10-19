@@ -24,7 +24,7 @@ def run_command(cmd):
 if not os.path.exists("lammps-build"):
 	os.makedirs("lammps-build")
 os.chdir("lammps-build")
-run_command("curl \"http://lammps.sandia.gov/tars/lammps-stable.tar.gz\" -o \"lammps-stable.tar.gz\"")
+#run_command("curl \"http://lammps.sandia.gov/tars/lammps-stable.tar.gz\" -o \"lammps-stable.tar.gz\"")
 if not os.path.exists("lammps-stable"):
 	os.makedirs("lammps-stable")
 run_command("tar xvzf lammps-stable.tar.gz -C lammps-stable --strip-components 1")
@@ -43,7 +43,7 @@ lammps_source_dir_src = join(lammps_source_dir, "src")
 lammps_pri = open("lammps.pri", "w")
 lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
 lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
-lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_" + lammps_build_type + "\n")
+lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps \n")
 lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
 lammps_pri.close()
 
@@ -68,10 +68,18 @@ fix_ave_timeHPatchFile = join("lammps-patch", "fix_ave_time.h.patch")
 run_command("patch %s < %s" % (fix_ave_timeHFile, fix_ave_timeHPatchFile)) 
 shutil.copy(join("lammps-patch", "lammpsexception.h"), lammps_source_dir_src)
 
+if _platform == "darwin":
+	# Patch makefile to remove FFTW dependency
+    makefileMacPatchFile = join("lammps-patch", "Makefile.mac.patch")
+    makefileMacFile = join(lammps_source_dir_src, "MAKE", "MACHINES", "Makefile.mac")
+    run_command("patch %s < %s" % (makefileMacFile, makefileMacPatchFile)) 
+
 print "\nLAMMPS was (probably) successfully patched."
 
 print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
 run_command("make -j8 " + lammps_build_type + " mode=lib")
+os.chdir("STUBS")
+run_command("make")
 os.chdir(root_path)
