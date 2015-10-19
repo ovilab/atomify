@@ -36,6 +36,7 @@ lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
 lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
 lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_serial" + "\n")
 lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
+lammps_pri.close()
 
 errorCppFile = join(lammps_source_dir_src, "error.cpp")
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
