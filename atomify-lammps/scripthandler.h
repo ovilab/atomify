@@ -1,6 +1,7 @@
 #ifndef SCRIPTHANDLER_H
 #define SCRIPTHANDLER_H
 
+#include <QMutex>
 #include <QObject>
 #include <QDebug>
 #include <QQueue>
