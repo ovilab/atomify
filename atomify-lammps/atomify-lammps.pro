@@ -12,7 +12,7 @@ DEFINES += _OPENMP
 
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri
-include(lammps.pri)
+include(../lammps.pri)
 
 android {
     DEFINES += LAMMPS_XDR

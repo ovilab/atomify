@@ -46,9 +46,9 @@ run_command("patch %s < %s" % (fix_ave_timeHFile, fix_ave_timeHPatchFile))
 shutil.copy(join("lammps-patch", "lammpsexception.h"), lammps_source_dir)
 
 lammps_pri = open("lammps.pri", "w")
-lammps_pri.write("INCLUDEPATH += " + lammps_source_dir + "\n")
-lammps_pri.write("INCLUDEPATH += " + lammps_source_dir + "/STUBS" + "\n")
-lammps_pri.write("LIBS += -L" + lammps_source_dir + " -llammps_serial" + "\n")
-lammps_pri.write("LIBS += -L" + lammps_source_dir + "/STUBS -lmpi_stubs" + "\n")
+lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
+lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
+lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_serial" + "\n")
+lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
 
 print "\nLAMMPS was (probably) successfully patched. Note: you also need to compile LAMMPS as a library with c++11. Se README.md for instructions."
