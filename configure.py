@@ -15,10 +15,10 @@ def run_command(cmd):
 if not os.path.exists("lammps-build"):
 	os.makedirs("lammps-build")
 os.chdir("lammps-build")
-# run_command("wget http://lammps.sandia.gov/tars/lammps-stable.tar.gz")
+run_command("wget http://lammps.sandia.gov/tars/lammps-stable.tar.gz")
 if not os.path.exists("lammps-stable"):
 	os.makedirs("lammps-stable")
-# run_command("tar xvzf lammps-stable.tar.gz -C lammps-stable --strip-components 1")
+run_command("tar xvzf lammps-stable.tar.gz -C lammps-stable --strip-components 1")
 os.chdir("lammps-stable")
 
 os.chdir(root_path)
