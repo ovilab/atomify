@@ -56,7 +56,7 @@ errorCppPatchFile = join("lammps-patch", "error.cpp.patch")
 run_command("patch %s < %s" % (errorCppFile, errorCppPatchFile)) 
 fix_ave_timeHPatchFile = join("lammps-patch", "fix_ave_time.h.patch")
 run_command("patch %s < %s" % (fix_ave_timeHFile, fix_ave_timeHPatchFile)) 
-shutil.copy(join("lammps-patch", "lammpsexception.h"), lammps_source_dir)
+shutil.copy(join("lammps-patch", "lammpsexception.h"), lammps_source_dir_src)
 
 print "\nLAMMPS was (probably) successfully patched."
 
