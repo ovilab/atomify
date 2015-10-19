@@ -195,6 +195,8 @@ void LAMMPSController::processComputes()
 {
     for(QString key : m_computes.keys()) {
         if(!computeExists(key)) {
+            qDebug() << "Missing key: " << key;
+
             CPCompute *compute = m_computes[key];
             // We need to add it. First check all dependencies
             bool allDependenciesFound = true; // Assume all are found and find potential counterexample
@@ -206,6 +208,7 @@ void LAMMPSController::processComputes()
             }
 
             if(allDependenciesFound) {
+                qDebug() << "All dependencies found";
                 m_state.preRunNeeded = true; // When a new compute is added, a run with pre yes is needed for it to be included
                 // Now that all dependencies are met we can add this one too
                 executeCommandInLAMMPS(compute->command());
