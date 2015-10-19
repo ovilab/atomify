@@ -3,8 +3,9 @@ CONFIG += c++11
 DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions
+QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 QMAKE_CXXFLAGS += -g
-QMAKE_LFLAGS +=
+CONFIG += warn_off
 
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri

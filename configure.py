@@ -7,11 +7,7 @@ import shutil
 from os.path import join, abspath
 from sys import platform as _platform
 
-lammps_build_type = "serial"
-
-if _platform == "darwin":
-    lammps_build_type = "mac"
-elif _platform == "win32":
+if _platform == "win32":
 	print "Windows is not supported yet"
 	exit()
 
@@ -68,18 +64,10 @@ fix_ave_timeHPatchFile = join("lammps-patch", "fix_ave_time.h.patch")
 run_command("patch %s < %s" % (fix_ave_timeHFile, fix_ave_timeHPatchFile)) 
 shutil.copy(join("lammps-patch", "lammpsexception.h"), lammps_source_dir_src)
 
-if _platform == "darwin":
-	# Patch makefile to remove FFTW dependency
-    makefileMacPatchFile = join("lammps-patch", "Makefile.mac.patch")
-    makefileMacFile = join(lammps_source_dir_src, "MAKE", "MACHINES", "Makefile.mac")
-    run_command("patch %s < %s" % (makefileMacFile, makefileMacPatchFile)) 
-
 print "\nLAMMPS was (probably) successfully patched."
 
 print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
-run_command("make -j8 " + lammps_build_type + " mode=lib")
-os.chdir("STUBS")
-run_command("make")
+run_command("make -j4 serial mode=lib")
 os.chdir(root_path)
