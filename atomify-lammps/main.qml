@@ -88,7 +88,7 @@ ApplicationWindow {
                     Slider {
                         id: speedSlider
                         minimumValue: 1
-                        maximumValue: 20
+                        maximumValue: 100
                         stepSize: 1
                         value: mySimulator.simulationSpeed
                         onValueChanged: {
@@ -167,6 +167,12 @@ ApplicationWindow {
             }
         }
     }
+
+//    Temperature {
+//        id: temperature
+//        lammps: lammpsObject
+//        targetValue: slider.value
+//    }
 
     Compute {
         id: temperature

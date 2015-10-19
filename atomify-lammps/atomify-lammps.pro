@@ -43,7 +43,8 @@ SOURCES += \
     atomstyle.cpp \
     fileio.cpp \
     scriptparser.cpp \
-    scripthandler.cpp
+    scripthandler.cpp \
+    nvt.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -55,7 +56,8 @@ HEADERS += \
     atomstyle.h \
     fileio.h \
     scriptparser.h \
-    scripthandler.h
+    scripthandler.h \
+    nvt.h
 
 DISTFILES += \
     iOS.plist
