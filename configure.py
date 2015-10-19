@@ -6,23 +6,42 @@ import sys
 import shutil
 from os.path import join, abspath
 
+root_path = os.path.abspath(".")
+
 def run_command(cmd):
     print cmd
     subprocess.call(cmd, shell=True)
 
-numArgs = len(sys.argv)
-if(numArgs == 1):
-	print "Please provide link to lammps source folder. For instance:"
-	print "python patch_lammps.python /projects/lammps-10-august/src/"
-	exit()
+if not os.path.exists("lammps-build"):
+	os.makedirs("lammps-build")
+os.chdir("lammps-build")
+run_command("wget http://lammps.sandia.gov/tars/lammps-stable.tar.gz")
+if not os.path.exists("lammps-stable"):
+	os.makedirs("lammps-stable")
+run_command("tar xvzf lammps-stable.tar.gz -C lammps-stable --strip-components 1")
+os.chdir("lammps-stable")
 
-lammps_source_dir = sys.argv[1]
+os.chdir(root_path)
+
+# numArgs = len(sys.argv)
+# if(numArgs == 1):
+# 	print "Please provide link to lammps source folder. For instance:"
+# 	print "python patch_lammps.python /projects/lammps-10-august/src/"
+# 	exit()
+
+lammps_source_dir = join("lammps-build", "lammps-stable")
 if not os.path.isdir(lammps_source_dir):
 	print "Error, the path '"+lammps_source_dir+"' is not a directory."
 	exit()
 
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
+
+lammps_pri = open("lammps.pri", "w")
+lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
+lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
+lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_serial" + "\n")
+lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
 
 errorCppFile = join(lammps_source_dir_src, "error.cpp")
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
@@ -45,10 +64,10 @@ fix_ave_timeHPatchFile = join("lammps-patch", "fix_ave_time.h.patch")
 run_command("patch %s < %s" % (fix_ave_timeHFile, fix_ave_timeHPatchFile)) 
 shutil.copy(join("lammps-patch", "lammpsexception.h"), lammps_source_dir)
 
-lammps_pri = open("lammps.pri", "w")
-lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
-lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
-lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_serial" + "\n")
-lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
+print "\nLAMMPS was (probably) successfully patched."
 
-print "\nLAMMPS was (probably) successfully patched. Note: you also need to compile LAMMPS as a library with c++11. Se README.md for instructions."
+print "\nCompiling LAMMPS"
+
+os.chdir(lammps_source_dir_src)
+run_command("make -j8 serial mode=lib")
+os.chdir(root_path)
