@@ -38,12 +38,12 @@ Rectangle {
 
         Text {
             font.bold: true
-            text: "Temperature: "+temperature.value
+            text: "Temperature: "+ (temperature ? temperature.value : "N/A")
         }
 
         Text {
             font.bold: true
-            text: "Pressure: "+pressure.value
+            text: "Pressure: " + (pressure ? pressure.value : "N/A")
         }
     }
 
