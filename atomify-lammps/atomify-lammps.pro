@@ -10,10 +10,14 @@ CONFIG += warn_off
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri
 
-include(../lammps.pri)
-
 android {
     DEFINES += LAMMPS_XDR
+    SOURCES += stdioext.c
+    HEADERS += stdioext.h
+    LIBS += -fopenmp
+    include(../lammps-android.pri)
+} else {
+    include(../lammps.pri)
 }
 
 RESOURCES += qml.qrc \

@@ -15,7 +15,11 @@ public:
     void parse(QString buffer);
 private:
     // These are functions allowing us to mimic a FILE* object
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_ANDROID)
+    static ssize_t read(void *, char *, size_t);
+    static ssize_t write(void *cookie, const char *buffer, size_t n);
+    static int seek(void *cookie, off_t *__pos, int __w);
+#elif defined(Q_OS_LINUX)
     static __ssize_t read(void *, char *, size_t);
     static __ssize_t write(void *cookie, const char *buffer, size_t n);
     static int seek(void *cookie, __off64_t *__pos, int __w);

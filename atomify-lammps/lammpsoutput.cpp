@@ -5,7 +5,9 @@
 #include <QString>
 #include <QDebug>
 #include "CPcompute.h"
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_ANDROID)
+#include "stdioext.h"
+#elif defined(Q_OS_LINUX)
 #include <libio.h>
 #endif
 using namespace std;
@@ -25,12 +27,25 @@ LammpsOutput::LammpsOutput()
 
 }
 
-#ifdef Q_OS_LINUX
-__ssize_t LammpsOutput::read(void *, char *, size_t ) {
+#if defined(Q_OS_ANDROID)
+ssize_t LammpsOutput::read(void *, char *, size_t ) {
 
 }
 
-__ssize_t LammpsOutput::write(void *cookie, const char *buffer, size_t n) {
+ssize_t LammpsOutput::write(void *cookie, const char *buffer, size_t n) {
+    LammpsOutput *parser = (LammpsOutput*)cookie;
+    parser->parse(QString(buffer));
+}
+
+int LammpsOutput::seek(void *cookie, off_t *__pos, int __w) {
+    return 0;
+}
+#elif defined(Q_OS_LINUX)
+ssize_t LammpsOutput::read(void *, char *, size_t ) {
+
+}
+
+ssize_t LammpsOutput::write(void *cookie, const char *buffer, size_t n) {
     LammpsOutput *parser = (LammpsOutput*)cookie;
     parser->parse(QString(buffer));
 }
