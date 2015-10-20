@@ -174,18 +174,18 @@ ApplicationWindow {
 //        targetValue: slider.value
 //    }
 
-    Compute {
-        id: temperature
-        simulator: mySimulator
-        identifier: "temperature"
-        command: "compute temperature all temp"
-    }
+//    Compute {
+//        id: temperature
+//        simulator: mySimulator
+//        identifier: "temperature"
+//        command: "compute temperature all temp"
+//    }
 
-    Compute {
-        id: pressure
-        simulator: mySimulator
-        identifier: "pressure"
-        command: "compute pressure all pressure temperature"
-        dependencies: ["temperature"]
-    }
+//    Compute {
+//        id: pressure
+//        simulator: mySimulator
+//        identifier: "pressure"
+//        command: "compute pressure all pressure temperature"
+//        dependencies: ["temperature"]
+//    }
 }

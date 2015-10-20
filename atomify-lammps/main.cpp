@@ -28,9 +28,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     QSurfaceFormat format;
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setMajorVersion(4);
-    format.setMinorVersion(3);
+//    format.setProfile(QSurfaceFormat::CoreProfile);
+//    format.setMajorVersion(4);
+//    format.setMinorVersion(3);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     for(auto &obj : engine.rootObjects()) {

@@ -8,14 +8,19 @@ QMAKE_CXXFLAGS += -g -fopenmp
 QMAKE_LFLAGS += -fopenmp
 CONFIG += warn_off
 
-DEFINES += _OPENMP
+#DEFINES += _OPENMP
 
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri
-include(../lammps.pri)
+
 
 android {
     DEFINES += LAMMPS_XDR
+    SOURCES += stdioext.c
+    HEADERS += stdioext.h
+    include(../lammps-android.pri)
+} else {
+    include(../lammps.pri)
 }
 
 RESOURCES += qml.qrc \
