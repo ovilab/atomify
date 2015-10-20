@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.2
 import MySimulator 1.0
 
 ColumnLayout {
+    id: consoleRoot
     property MySimulator simulator
     property TextArea output: consoleOutput
     Layout.fillHeight: true
@@ -63,7 +64,7 @@ ColumnLayout {
             id: runSingleCommand
             text: "Run"
             onClicked: {
-                mySimulator.scriptHandler.runCommand(singleCommand.text)
+                simulator.scriptHandler.runCommand(singleCommand.text)
                 consoleOutput.append(singleCommand.text)
                 singleCommand.text = ""
             }

@@ -24,13 +24,16 @@ Item {
             Layout.fillWidth: true
             Layout.minimumHeight: 200
             Layout.preferredHeight: parent.height*0.75
-            simulator: mySimulator
+            simulator: editorTabRoot.simulator
 
             Shortcut {
                 sequence: "Escape"
                 onActivated: {
-                    if(myLammpsEditor.textarea.focus) myLammpsEditor.textarea.focus = false
-                    else mySimulator.paused = !mySimulator.paused
+                    if(myLammpsEditor.textarea.focus) {
+                        myLammpsEditor.textarea.focus = false
+                    } else {
+                        editorTabRoot.paused = !editorTabRoot.paused
+                    }
                 }
             }
         }

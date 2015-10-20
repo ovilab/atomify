@@ -45,7 +45,7 @@ Item {
                 EditorTab {
                     id: myEditorTab
                     anchors.fill: parent
-                    simulator: mySimulator
+                    simulator: desktopRoot.simulator
                 }
             }
 
@@ -68,7 +68,7 @@ Item {
             Layout.fillWidth: true
 
             SimulationSummary {
-                simulator: mySimulator
+                simulator: desktopRoot.simulator
                 pressure: pressure
                 temperature: temperature
             }
@@ -98,10 +98,10 @@ Item {
                         minimumValue: 1
                         maximumValue: 100
                         stepSize: 1
-                        value: mySimulator.simulationSpeed
+                        value: simulator.simulationSpeed
                         onValueChanged: {
-                            if(mySimulator) {
-                                mySimulator.simulationSpeed = value
+                            if(simulator) {
+                                simulator.simulationSpeed = value
                             }
                         }
                         Settings {
@@ -136,7 +136,7 @@ Item {
                 height: 50
                 font.pixelSize: 50
                 text: "Paused"
-                visible: mySimulator.paused
+                visible: simulator.paused
             }
         }
     }
@@ -159,7 +159,7 @@ Item {
         Shortcut {
             sequence: "Space"
             onActivated: {
-                mySimulator.paused = !mySimulator.paused
+                simulator.paused = !simulator.paused
             }
         }
     }
