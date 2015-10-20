@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.1
 import MySimulator 1.0
 import SimVis 1.0
 
+import "../visualization"
+
 Item {
     id: renderingRoot
     property AtomifyVisualizer atomifyVisualizer

@@ -21,9 +21,10 @@ android {
     include(../lammps.pri)
 }
 
-RESOURCES += qml.qrc \
-    images.qrc \
-    scripts.qrc
+RESOURCES += images.qrc \
+    scripts.qrc \
+    qml/qml.qrc \
+    simulations/diffusion/diffusion.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

@@ -71,7 +71,7 @@ Item {
             Image {
                 height: 20
                 width: 20
-                source: "images/close.png"
+                source: "/images/close.png"
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {

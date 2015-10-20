@@ -11,6 +11,10 @@ import LammpsOutput 1.0
 import AtomStyle 1.0
 import Qt.labs.settings 1.0
 
+import "mobile"
+import "mobile/style"
+import "desktop"
+
 ApplicationWindow {
     id: applicationRoot
 
@@ -20,6 +24,22 @@ ApplicationWindow {
     width: 1650
     height: 900
     visible: true
+
+    function resetStyle() {
+        Style.reset(width, height, Screen.pixelDensity)
+    }
+
+    onWidthChanged: {
+        resetStyle()
+    }
+
+    onHeightChanged: {
+        resetStyle()
+    }
+
+    Component.onCompleted: {
+        resetStyle()
+    }
 
     MainDesktop {
         visible: mode === "desktop"
@@ -40,8 +60,8 @@ ApplicationWindow {
             id: myAtomStyle
         }
         onErrorInLammpsScript: {
-            editorTab.consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
-            editorTab.consoleOutput.append(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
+            console.log(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
+            console.log(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
         }
     }
 

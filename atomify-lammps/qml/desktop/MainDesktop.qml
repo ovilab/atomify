@@ -11,10 +11,16 @@ import LammpsOutput 1.0
 import AtomStyle 1.0
 import Qt.labs.settings 1.0
 
+import "../visualization"
+
 Item {
     id: desktopRoot
 
     property MySimulator simulator: null
+
+    Component.onCompleted: {
+        simulator.errorInLammpsScript.connect(editorTab.reportError)
+    }
 
     SplitView {
         anchors.fill: parent
@@ -32,6 +38,10 @@ Item {
                 anchors.fill: parent
                 property TextArea consoleOutput: item.consoleOutput
                 property LammpsEditor lammpsEditor: item.lammpsEditor
+                function reportError() {
+                    item.reportError()
+                }
+
                 EditorTab {
                     id: myEditorTab
                     anchors.fill: parent

@@ -9,6 +9,11 @@ Item {
     property LammpsEditor lammpsEditor: myLammpsEditor
     property MySimulator simulator
 
+    function reportError() {
+        consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '" + simulator.scriptHandler.currentCommand + "'")
+        consoleOutput.append(" LAMMPS error message: '" + simulator.lammpsErrorMessage + "'")
+    }
+
     SplitView {
         orientation: Qt.Vertical
         anchors.fill: parent
