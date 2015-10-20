@@ -15,6 +15,7 @@ android {
     DEFINES += LAMMPS_XDR
     SOURCES += stdioext.c
     HEADERS += stdioext.h
+    LIBS += -fopenmp
     include(../lammps-android.pri)
 } else {
     include(../lammps.pri)
