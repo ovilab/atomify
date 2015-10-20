@@ -5,6 +5,8 @@
 #include <sstream>
 #include <string>
 #include <QDebug>
+#include <QFile>
+#include <QQmlFile>
 #include <QMutexLocker>
 ScriptHandler::ScriptHandler()
 {
@@ -80,7 +82,20 @@ void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
     m_atomStyle = atomStyle;
 }
 
-void ScriptHandler::parseEditorCommand(QString command, MySimulator *mySimulator) {
+void ScriptHandler::runFile(QString filename)
+{
+    QString fileNameString = QQmlFile::urlToLocalFileOrQrc(filename);
+    QFile f(fileNameString);
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Could not open file: " << filename;
+        return;
+    }
+
+    QString script(f.readAll());
+    runScript(script, CommandInfo::Type::File, filename);
+}
+
+void ScriptHandler::parseEditorCommand(QString command, AtomifySimulator *mySimulator) {
     command.remove(0,2);
     if(m_parser.isAtomType(command)) {
         m_parser.atomType(command, [&](QString atomTypeName, int atomType) {

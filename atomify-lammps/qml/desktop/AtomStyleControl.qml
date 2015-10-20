@@ -1,8 +1,8 @@
-import QtQuick 2.4
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import AtomStyle 1.0
-import QtQuick.Dialogs 1.0
+import QtQuick.Dialogs 1.2
 
 Item {
     property AtomStyle atomStyle
@@ -71,7 +71,7 @@ Item {
             Image {
                 height: 20
                 width: 20
-                source: "images/close.png"
+                source: "/images/close.png"
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {

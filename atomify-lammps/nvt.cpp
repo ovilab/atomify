@@ -10,7 +10,7 @@ double NVT::targetTemperature() const
     return m_targetTemperature;
 }
 
-MySimulator *NVT::simulator() const
+AtomifySimulator *NVT::simulator() const
 {
     return m_simulator;
 }
@@ -29,7 +29,7 @@ void NVT::setTargetTemperature(double targetTemperature)
     emit targetTemperatureChanged(targetTemperature);
 }
 
-void NVT::setSimulator(MySimulator *simulator)
+void NVT::setSimulator(AtomifySimulator *simulator)
 {
     if (m_simulator == simulator)
         return;

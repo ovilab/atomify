@@ -4,19 +4,23 @@ import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
-import MySimulator 1.0
+import AtomifySimulator 1.0
 import SimVis 1.0
 import Compute 1.0
 import LammpsOutput 1.0
 import AtomStyle 1.0
 import Qt.labs.settings 1.0
 
-ApplicationWindow {
-    id: applicationRoot
-    title: qsTr("Atomify LAMMPS - live visualization")
-    width: 1650
-    height: 900
-    visible: true
+import "../visualization"
+
+Item {
+    id: desktopRoot
+
+    property AtomifySimulator simulator: null
+
+    Component.onCompleted: {
+        simulator.errorInLammpsScript.connect(editorTab.reportError)
+    }
 
     SplitView {
         anchors.fill: parent
@@ -25,7 +29,7 @@ ApplicationWindow {
 
         TabView {
             id: tabview
-            width: applicationRoot.width*0.4
+            width: desktopRoot.width*0.4
             height: parent.height
 
             Tab {
@@ -34,10 +38,14 @@ ApplicationWindow {
                 anchors.fill: parent
                 property TextArea consoleOutput: item.consoleOutput
                 property LammpsEditor lammpsEditor: item.lammpsEditor
+                function reportError() {
+                    item.reportError()
+                }
+
                 EditorTab {
                     id: myEditorTab
                     anchors.fill: parent
-                    simulator: mySimulator
+                    simulator: desktopRoot.simulator
                 }
             }
 
@@ -54,13 +62,13 @@ ApplicationWindow {
 
         AtomifyVisualizer {
             id: myVisualizer
-            simulator: mySimulator
+            simulator: desktopRoot.simulator
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true
 
             SimulationSummary {
-                simulator: mySimulator
+                simulator: desktopRoot.simulator
                 pressure: pressure
                 temperature: temperature
             }
@@ -90,10 +98,10 @@ ApplicationWindow {
                         minimumValue: 1
                         maximumValue: 100
                         stepSize: 1
-                        value: mySimulator.simulationSpeed
+                        value: simulator.simulationSpeed
                         onValueChanged: {
-                            if(mySimulator) {
-                                mySimulator.simulationSpeed = value
+                            if(simulator) {
+                                simulator.simulationSpeed = value
                             }
                         }
                         Settings {
@@ -128,20 +136,8 @@ ApplicationWindow {
                 height: 50
                 font.pixelSize: 50
                 text: "Paused"
-                visible: mySimulator.paused
+                visible: simulator.paused
             }
-        }
-    }
-
-    MySimulator {
-        id: mySimulator
-        simulationSpeed: 1
-        atomStyle: AtomStyle {
-            id: myAtomStyle
-        }
-        onErrorInLammpsScript: {
-            editorTab.consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
-            editorTab.consoleOutput.append(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
         }
     }
 
@@ -163,7 +159,7 @@ ApplicationWindow {
         Shortcut {
             sequence: "Space"
             onActivated: {
-                mySimulator.paused = !mySimulator.paused
+                simulator.paused = !simulator.paused
             }
         }
     }

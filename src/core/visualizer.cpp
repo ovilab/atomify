@@ -159,6 +159,9 @@ void Visualizer::timerTicked()
 
 void VisualizerRenderer::render()
 {
+    if(!m_visible) {
+        return;
+    }
     QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 
     funcs.glClearColor(m_backgroundColor.redF(), m_backgroundColor.greenF(), m_backgroundColor.blueF(), m_backgroundColor.alphaF());
@@ -185,6 +188,7 @@ void VisualizerRenderer::render()
 void VisualizerRenderer::synchronize(QQuickFramebufferObject *fbo)
 {
     Visualizer* visualizer = static_cast<Visualizer*>(fbo);
+    m_visible = visualizer->isVisible();
     m_renderables = visualizer->findChildren<Renderable*>();
     m_camera = visualizer->camera();
     m_backgroundColor = visualizer->backgroundColor();

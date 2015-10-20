@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>desktop/MainDesktop.qml</file>
+        <file>visualization/AtomifyVisualizer.qml</file>
+        <file>desktop/LammpsEditor.qml</file>
+        <file>desktop/RenderingTab.qml</file>
+        <file>desktop/SliceControl.qml</file>
+        <file>desktop/AtomStyleControl.qml</file>
+        <file>desktop/LightControl.qml</file>
+        <file>desktop/Console.qml</file>
+        <file>desktop/EditorTab.qml</file>
+        <file>desktop/SimulationSummary.qml</file>
+        <file>mobile/MainMobile.qml</file>
+        <file>main.qml</file>
+        <file>mobile/main-menu/MainMenu.qml</file>
+        <file>mobile/main-menu/MainMenuButton.qml</file>
+        <file>mobile/style/CustomSliderStyle.qml</file>
+        <file>mobile/style/OpacityAnimation.qml</file>
+        <file>mobile/style/qmldir</file>
+        <file>mobile/style/Style.qml</file>
+        <file>core/Simulation.qml</file>
+        <file>mobile/main-menu/SimulationButton.qml</file>
+        <file>mobile/main-menu/SimulationsView.qml</file>
+        <file>mobile/main-menu/About.qml</file>
+        <file>mobile/main-menu/SimulationLoader.qml</file>
+        <file>mobile/style/Heading.qml</file>
+        <file>mobile/dashboard/Dashboard.qml</file>
+        <file>mobile/controls/Thermostat.qml</file>
+        <file>mobile/controls/Plot.qml</file>
+        <file>mobile/controls/PlotLabels.qml</file>
+    </qresource>
+</RCC>

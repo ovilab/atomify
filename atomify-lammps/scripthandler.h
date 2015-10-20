@@ -10,7 +10,7 @@
 #include "scriptparser.h"
 #include "atomstyle.h"
 class LAMMPSController;
-class MySimulator;
+class AtomifySimulator;
 
 struct CommandInfo {
     enum class Type {NA, File, Editor, SingleCommand, SkipLammpsTick};
@@ -51,7 +51,7 @@ public:
     AtomStyle* atomStyle() const;
     QQueue<QPair<QString, CommandInfo> > &queuedCommands();
     ScriptParser &parser() { return m_parser; }
-    void parseEditorCommand(QString command, MySimulator *mySimulator);
+    void parseEditorCommand(QString command, AtomifySimulator *mySimulator);
     bool parseLammpsCommand(QString command, LAMMPSController *lammpsController);
 
 public slots:
@@ -62,6 +62,7 @@ public slots:
     QString nextSingleCommand();
     QString lastSingleCommand();
     void setAtomStyle(AtomStyle* atomStyle);
+    void runFile(QString filename);
 };
 
 #endif // SCRIPTHANDLER_H

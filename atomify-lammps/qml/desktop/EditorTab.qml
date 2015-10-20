@@ -1,13 +1,18 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
-import MySimulator 1.0
+import AtomifySimulator 1.0
 
 Item {
     id: editorTabRoot
     property TextArea consoleOutput: myConsole.output
     property LammpsEditor lammpsEditor: myLammpsEditor
-    property MySimulator simulator
+    property AtomifySimulator simulator
+
+    function reportError() {
+        consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '" + simulator.scriptHandler.currentCommand + "'")
+        consoleOutput.append(" LAMMPS error message: '" + simulator.lammpsErrorMessage + "'")
+    }
 
     SplitView {
         orientation: Qt.Vertical
@@ -19,13 +24,16 @@ Item {
             Layout.fillWidth: true
             Layout.minimumHeight: 200
             Layout.preferredHeight: parent.height*0.75
-            simulator: mySimulator
+            simulator: editorTabRoot.simulator
 
             Shortcut {
                 sequence: "Escape"
                 onActivated: {
-                    if(myLammpsEditor.textarea.focus) myLammpsEditor.textarea.focus = false
-                    else mySimulator.paused = !mySimulator.paused
+                    if(myLammpsEditor.textarea.focus) {
+                        myLammpsEditor.textarea.focus = false
+                    } else {
+                        editorTabRoot.paused = !editorTabRoot.paused
+                    }
                 }
             }
         }

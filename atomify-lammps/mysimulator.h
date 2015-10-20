@@ -50,7 +50,7 @@ private:
     QVector<int> m_atomTypes;
 };
 
-class MySimulator : public Simulator
+class AtomifySimulator : public Simulator
 {
     Q_OBJECT
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
@@ -66,8 +66,8 @@ class MySimulator : public Simulator
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
 public:
-    MySimulator() { }
-    ~MySimulator() { }
+    AtomifySimulator() { }
+    ~AtomifySimulator() { }
 
     // Simulator interface
     int simulationSpeed() const;

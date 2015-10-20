@@ -31,7 +31,7 @@ MyWorker::MyWorker() {
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
-    MySimulator *mySimulator = qobject_cast<MySimulator*>(simulator);
+    AtomifySimulator *mySimulator = qobject_cast<AtomifySimulator*>(simulator);
 
     if(mySimulator->willReset()) {
         m_lammpsController.reset();
@@ -81,11 +81,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     ScriptHandler *scriptHandler = mySimulator->m_scriptHandler;
     ScriptParser &scriptParser = scriptHandler->parser();
-
     QPair<QString, CommandInfo> nextCommandObject = scriptHandler->nextCommand();
 
     QString nextCommand = nextCommandObject.first;
-    CommandInfo nextCommandInfo = nextCommandObject.second;
 
     if(scriptParser.isEditorCommand(nextCommand)) {
         scriptHandler->parseEditorCommand(nextCommand, mySimulator);
@@ -100,7 +98,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     LAMMPS *lammps = m_lammpsController.lammps();
     if(!lammps) return;
-    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
+//    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
     m_lammpsController.setDataDirty(false);
     m_atomStyle.setDirty(false);
 
@@ -168,86 +166,86 @@ void MyWorker::setWillPause(bool willPause)
 }
 
 
-MyWorker *MySimulator::createWorker()
+MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
 }
-QMap<QString, CPCompute *> MySimulator::computes() const
+QMap<QString, CPCompute *> AtomifySimulator::computes() const
 {
     return m_computes;
 }
 
-void MySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
+void AtomifySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
 {
     m_computes = computes;
 }
 
-void MySimulator::addCompute(CPCompute *compute)
+void AtomifySimulator::addCompute(CPCompute *compute)
 {
     m_computes[compute->identifier()] = compute;
 }
 
-bool MySimulator::paused() const
+bool AtomifySimulator::paused() const
 {
     return m_paused;
 }
 
-double MySimulator::simulationTime() const
+double AtomifySimulator::simulationTime() const
 {
     return m_simulationTime;
 }
 
-AtomStyle *MySimulator::atomStyle() const
+AtomStyle *AtomifySimulator::atomStyle() const
 {
     return m_atomStyle;
 }
 
-int MySimulator::numberOfAtoms() const
+int AtomifySimulator::numberOfAtoms() const
 {
     return m_numberOfAtoms;
 }
 
-int MySimulator::numberOfAtomTypes() const
+int AtomifySimulator::numberOfAtomTypes() const
 {
     return m_numberOfAtomTypes;
 }
 
-QVector3D MySimulator::systemSize() const
+QVector3D AtomifySimulator::systemSize() const
 {
     return m_systemSize;
 }
 
-double MySimulator::timePerTimestep() const
+double AtomifySimulator::timePerTimestep() const
 {
     return m_timePerTimestep;
 }
 
-QString MySimulator::lammpsError() const
+QString AtomifySimulator::lammpsError() const
 {
     return m_lammpsError;
 }
 
-QString MySimulator::lammpsErrorMessage() const
+QString AtomifySimulator::lammpsErrorMessage() const
 {
     return m_lammpsErrorMessage;
 }
 
-ScriptHandler *MySimulator::scriptHandler() const
+ScriptHandler *AtomifySimulator::scriptHandler() const
 {
     return m_scriptHandler;
 }
 
-bool MySimulator::willReset() const
+bool AtomifySimulator::willReset() const
 {
     return m_willReset;
 }
 
-int MySimulator::simulationSpeed() const
+int AtomifySimulator::simulationSpeed() const
 {
     return m_simulationSpeed;
 }
 
-void MySimulator::setSimulationSpeed(int arg)
+void AtomifySimulator::setSimulationSpeed(int arg)
 {
     if (m_simulationSpeed == arg)
         return;
@@ -256,7 +254,7 @@ void MySimulator::setSimulationSpeed(int arg)
     emit simulationSpeedChanged(arg);
 }
 
-void MySimulator::setPaused(bool paused)
+void AtomifySimulator::setPaused(bool paused)
 {
     if (m_paused == paused)
         return;
@@ -265,7 +263,7 @@ void MySimulator::setPaused(bool paused)
     emit pausedChanged(paused);
 }
 
-void MySimulator::setSimulationTime(double simulationTime)
+void AtomifySimulator::setSimulationTime(double simulationTime)
 {
     if (m_simulationTime == simulationTime)
         return;
@@ -274,7 +272,7 @@ void MySimulator::setSimulationTime(double simulationTime)
     emit simulationTimeChanged(simulationTime);
 }
 
-void MySimulator::setAtomStyle(AtomStyle *atomStyle)
+void AtomifySimulator::setAtomStyle(AtomStyle *atomStyle)
 {
     if (m_atomStyle == atomStyle)
         return;
@@ -283,7 +281,7 @@ void MySimulator::setAtomStyle(AtomStyle *atomStyle)
     emit atomStyleChanged(atomStyle);
 }
 
-void MySimulator::setNumberOfAtoms(int numberOfAtoms)
+void AtomifySimulator::setNumberOfAtoms(int numberOfAtoms)
 {
     if (m_numberOfAtoms == numberOfAtoms)
         return;
@@ -292,7 +290,7 @@ void MySimulator::setNumberOfAtoms(int numberOfAtoms)
     emit numberOfAtomsChanged(numberOfAtoms);
 }
 
-void MySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
+void AtomifySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
 {
     if (m_numberOfAtomTypes == numberOfAtomTypes)
         return;
@@ -302,7 +300,7 @@ void MySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
     emit numberOfAtomTypesChanged(numberOfAtomTypes);
 }
 
-void MySimulator::setSystemSize(QVector3D systemSize)
+void AtomifySimulator::setSystemSize(QVector3D systemSize)
 {
     if (m_systemSize == systemSize)
         return;
@@ -311,7 +309,7 @@ void MySimulator::setSystemSize(QVector3D systemSize)
     emit systemSizeChanged(systemSize);
 }
 
-void MySimulator::setTimePerTimestep(double timePerTimestep)
+void AtomifySimulator::setTimePerTimestep(double timePerTimestep)
 {
     if (m_timePerTimestep == timePerTimestep)
         return;
@@ -320,7 +318,7 @@ void MySimulator::setTimePerTimestep(double timePerTimestep)
     emit timePerTimestepChanged(timePerTimestep);
 }
 
-void MySimulator::setLammpsError(QString lammpsError)
+void AtomifySimulator::setLammpsError(QString lammpsError)
 {
     if (m_lammpsError == lammpsError)
         return;
@@ -329,7 +327,7 @@ void MySimulator::setLammpsError(QString lammpsError)
     emit lammpsErrorChanged(lammpsError);
 }
 
-void MySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
+void AtomifySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
 {
     if (m_lammpsErrorMessage == lammpsErrorMessage)
         return;
@@ -338,7 +336,7 @@ void MySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
     emit lammpsErrorMessageChanged(lammpsErrorMessage);
 }
 
-void MySimulator::setScriptHandler(ScriptHandler *scriptHandler)
+void AtomifySimulator::setScriptHandler(ScriptHandler *scriptHandler)
 {
     if (m_scriptHandler == scriptHandler)
         return;
@@ -347,7 +345,7 @@ void MySimulator::setScriptHandler(ScriptHandler *scriptHandler)
     emit scriptHandlerChanged(scriptHandler);
 }
 
-void MySimulator::setWillReset(bool willReset)
+void AtomifySimulator::setWillReset(bool willReset)
 {
     if (m_willReset == willReset)
         return;

@@ -1,10 +1,10 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.2
-import MySimulator 1.0
+import AtomifySimulator 1.0
 import Compute 1.0
 
 Rectangle {
-    property MySimulator simulator
+    property AtomifySimulator simulator
     property Compute pressure
     property Compute temperature
     x: 20

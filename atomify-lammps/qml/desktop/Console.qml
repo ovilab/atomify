@@ -1,10 +1,11 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
-import MySimulator 1.0
+import AtomifySimulator 1.0
 
 ColumnLayout {
-    property MySimulator simulator
+    id: consoleRoot
+    property AtomifySimulator simulator
     property TextArea output: consoleOutput
     Layout.fillHeight: true
     Layout.fillWidth: true
@@ -62,7 +63,7 @@ ColumnLayout {
             id: runSingleCommand
             text: "Run"
             onClicked: {
-                mySimulator.scriptHandler.runCommand(singleCommand.text, true)
+                simulator.scriptHandler.runCommand(singleCommand.text, true)
                 consoleOutput.append(singleCommand.text)
                 singleCommand.text = ""
             }

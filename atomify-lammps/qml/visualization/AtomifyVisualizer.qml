@@ -1,12 +1,12 @@
-import QtQuick 2.4
-import MySimulator 1.0
+import QtQuick 2.5
+import AtomifySimulator 1.0
 import SimVis 1.0
 import LammpsOutput 1.0
 
 Item {
     id: atomifyVisualizerRoot
     property Visualizer visualizer: visualizer
-    property MySimulator simulator
+    property AtomifySimulator simulator
     property real scale: 0.23
     property Light light: light
     property Slice slice: mySlice

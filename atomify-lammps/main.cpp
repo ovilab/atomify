@@ -17,7 +17,7 @@
 
 int main(int argc, char *argv[])
 {
-    qmlRegisterType<MySimulator>("MySimulator", 1, 0, "MySimulator");
+    qmlRegisterType<AtomifySimulator>("AtomifySimulator", 1, 0, "AtomifySimulator");
     qmlRegisterType<HighlighterWrapper>("Highlighter", 1, 0, "Highlighter");
     qmlRegisterType<CPCompute>("Compute", 1, 0, "Compute");
     qmlRegisterType<LammpsOutput>("LammpsOutput", 1, 0, "LammpsOutput");
