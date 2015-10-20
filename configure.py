@@ -90,7 +90,7 @@ shutil.copy(join(patch_path, "lammpsexception.h"), lammps_source_dir_src)
 print "\nLAMMPS was (probably) successfully patched."
 
 if lammps_build_type == "android":
-    print "Compiling MPI stubs"
+    print "Compiling MPI stubs for Android"
     shutil.copy(join(patch_path, "Makefile.android"), join(lammps_source_dir_src, "MAKE/MACHINES"))
     shutil.copy(join(patch_path, "STUBS", "Makefile.android"), join(lammps_source_dir_src, "STUBS"))
 
