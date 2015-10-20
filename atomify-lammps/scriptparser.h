@@ -20,6 +20,7 @@ public:
     bool isEditorCommand(QString command);
     bool isInclude(QString command);
     QString includePath(QString command);
+    bool isDisableAllEnsembleFixes(QString command);
 };
 
 #endif // SCRIPTPARSER_H

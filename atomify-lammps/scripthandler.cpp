@@ -85,6 +85,10 @@ void ScriptHandler::parseEditorCommand(QString command) {
         });
         return;
     }
+
+    if(m_parser.isDisableAllEnsembleFixes(command)) {
+
+    }
 }
 
 void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString filename) {

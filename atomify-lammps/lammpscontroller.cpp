@@ -12,6 +12,9 @@
 #include <dump.h>
 #include <domain.h>
 #include <fix.h>
+#include <fix_nve.h>
+#include <fix_nvt.h>
+#include <fix_npt.h>
 
 #include "CPcompute.h"
 #include "lammpsfilehandler.h"
@@ -325,6 +328,26 @@ int LAMMPSController::numberOfAtomTypes() const
 {
     if(!m_lammps) return 0;
     return m_lammps->atom->ntypes;
+}
+
+void LAMMPSController::disableAllEnsembleFixes()
+{
+    for(int i=0; i<m_lammps->modify->nfix; i++) {
+        LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
+        LAMMPS_NS::FixNVE *nve = dynamic_cast<LAMMPS_NS::FixNVE*>(fix);
+        if(nve) {
+            executeCommandInLAMMPS(QString("unfix %1").arg(nve->id));
+        }
+        LAMMPS_NS::FixNVT *nvt = dynamic_cast<LAMMPS_NS::FixNVT*>(fix);
+        if(nvt) {
+            executeCommandInLAMMPS(QString("unfix %1").arg(nvt->id));
+        }
+
+        LAMMPS_NS::FixNPT *npt = dynamic_cast<LAMMPS_NS::FixNPT*>(fix);
+        if(npt) {
+            executeCommandInLAMMPS(QString("unfix %1").arg(npt->id));
+        }
+    }
 }
 
 QVector3D LAMMPSController::systemSize() const

@@ -117,14 +117,11 @@ void SpheresRenderer::synchronize(Renderable* renderer)
 }
 
 void SpheresRenderer::uploadVBONoGeometryShader(Spheres* spheres) {
-    if(!spheres->dirty()) {
+    if(!spheres->dirty() || spheres->m_positions.size() == 0) {
         return;
     }
     float scale = spheres->scale();
     QVector<QVector3D>& positions = spheres->m_positions;
-    if(positions.size() < 1) {
-        return;
-    }
     QVector<QColor>& colors = spheres->m_colors;
     QVector<float>& scales = spheres->m_scales;
     QVector<SphereNoGeometryShaderVBOData>& vertices = spheres->m_verticesNoGeometryShader;

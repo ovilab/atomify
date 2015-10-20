@@ -10,7 +10,6 @@ CONFIG += warn_off
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri
 
-
 android {
     DEFINES += LAMMPS_XDR
     SOURCES += stdioext.c
