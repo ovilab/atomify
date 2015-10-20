@@ -68,6 +68,7 @@ float Visualizer::time() const
 
 void Visualizer::handleWindowChanged(QQuickWindow *win)
 {
+#if !defined(Q_OS_ANDROID)
     if(win) {
         QSurfaceFormat format = win->format();
         format.setProfile(QSurfaceFormat::CoreProfile);
@@ -76,6 +77,9 @@ void Visualizer::handleWindowChanged(QQuickWindow *win)
         win->setFormat(format);
         win->setClearBeforeRendering(false);
     }
+#else
+    Q_UNUSED(win)
+#endif
 }
 
 void Visualizer::setSimulator(Simulator *arg)
