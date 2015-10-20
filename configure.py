@@ -7,6 +7,7 @@ import shutil
 from os.path import join, abspath
 from sys import platform as _platform
 
+<<<<<<< HEAD
 
 def run_command(cmd):
     print cmd
