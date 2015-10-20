@@ -38,6 +38,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     if(mySimulator->willReset()) {
         m_lammpsController.reset();
         mySimulator->setWillReset(false);
+        auto simulatorControls = mySimulator->findChildren<SimulatorControl*>();
+        for(auto *simulatorControl : simulatorControls) {
+            simulatorControl->setDirty(false);
+        }
         emit mySimulator->lammpsDidReset();
     }
 
@@ -88,7 +92,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     QPair<QString, CommandInfo> nextCommandObject = scriptHandler->nextCommand();
 
     QString nextCommand = nextCommandObject.first;
-    qDebug() << "Next command: " << nextCommand;
     if(scriptParser.isEditorCommand(nextCommand)) {
         scriptHandler->parseEditorCommand(nextCommand, mySimulator);
         m_lammpsController.state.nextCommandObject = QPair<QString, CommandInfo>("", CommandInfo(CommandInfo::Type::SkipLammpsTick));

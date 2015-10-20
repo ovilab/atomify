@@ -67,6 +67,9 @@ ApplicationWindow {
 
         NVT {
             id: nvt
+            onEnabledChanged: {
+                nvtCheck.checked = enabled
+            }
         }
     }
 
