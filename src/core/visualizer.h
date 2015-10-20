@@ -27,6 +27,7 @@ private:
     float m_fps = 60;
     qint64 m_fpsCounterTimeZero = QDateTime::currentMSecsSinceEpoch();
     QColor m_backgroundColor = QColor(0,0,0,0);
+    bool m_visible = true;
 };
 
 class Visualizer : public QQuickFramebufferObject
