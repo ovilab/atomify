@@ -10,6 +10,11 @@ ScriptParser::ScriptParser()
 
 }
 
+bool ScriptParser::isDisableAllEnsembleFixes(QString command) {
+    QRegExp regex("disableAllEnsembleFixes");
+    return regex.exactMatch(command);
+}
+
 bool ScriptParser::isAtomColorAndSize(QString command)
 {
     QRegExp regex = QRegExp(QString("(atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));

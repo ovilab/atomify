@@ -9,6 +9,7 @@ CONFIG += warn_off
 
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri
+
 include(../lammps.pri)
 
 android {

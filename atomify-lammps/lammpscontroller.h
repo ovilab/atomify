@@ -70,6 +70,7 @@ public:
     double simulationTime();
     int numberOfAtoms() const;
     int numberOfAtomTypes() const;
+    void disableAllEnsembleFixes();
     QVector3D systemSize() const;
     // Actions
     void executeCommandInLAMMPS(QString command);
