@@ -15,6 +15,11 @@ MySimulator *NVT::simulator() const
     return m_simulator;
 }
 
+bool NVT::enabled() const
+{
+    return m_enabled;
+}
+
 void NVT::setTargetTemperature(double targetTemperature)
 {
     if (m_targetTemperature == targetTemperature)
@@ -31,5 +36,14 @@ void NVT::setSimulator(MySimulator *simulator)
 
     m_simulator = simulator;
     emit simulatorChanged(simulator);
+}
+
+void NVT::setEnabled(bool enabled)
+{
+    if (m_enabled == enabled)
+        return;
+
+    m_enabled = enabled;
+    emit enabledChanged(enabled);
 }
 
