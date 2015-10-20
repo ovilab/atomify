@@ -96,8 +96,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
-    // qDebug() << command;
-
+//    qDebug() << command;
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {

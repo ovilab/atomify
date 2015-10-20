@@ -18,7 +18,6 @@ public:
     virtual void synchronizeLammps(LAMMPSController *lammpsController) = 0;
     bool dirty() const;
     bool enabled() const;
-
 signals:
 
     void dirtyChanged(bool dirty);

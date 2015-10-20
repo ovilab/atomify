@@ -33,7 +33,6 @@ void NVT::setTargetTemperature(double targetTemperature)
     emit targetTemperatureChanged(targetTemperature);
 }
 
-
 void NVT::synchronizeLammps(LAMMPSController *lammpsController)
 {
     FixNVT *fix = lammpsController->findFixByType<FixNVT>();
@@ -43,7 +42,6 @@ void NVT::synchronizeLammps(LAMMPSController *lammpsController)
         if(fixHack) {
             if(m_dirty) {
                 m_dirty = false;
-
                 if(!m_enabled) {
                     QList<QString> disableCommands;
                     disableCommands.push_back(QString("unfix %1").arg(fix->id));

@@ -23,7 +23,8 @@ android {
 RESOURCES += images.qrc \
     scripts.qrc \
     qml/qml.qrc \
-    simulations/diffusion/diffusion.qrc
+    simulations/diffusion/diffusion.qrc \
+    simulations/other/other.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -67,4 +68,7 @@ HEADERS += \
     simulatorcontrol.h
 
 DISTFILES += \
-    iOS.plist
+    iOS.plist \
+    simulations/diffusion/indent/indent.png \
+    simulations/diffusion/indent/indent.in \
+    simulations/diffusion/indent/indent.qml

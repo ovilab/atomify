@@ -24,6 +24,7 @@ Item {
     AtomifyVisualizer {
         simulator: mobileRoot.simulator
         anchors.fill: parent
+        scale: 0.8
     }
 
     Item {
@@ -190,6 +191,7 @@ Item {
             simulator.willReset = true
             simulator.scriptHandler.reset()
             simulator.scriptHandler.runFile(simulation.scriptSource)
+            revealed = false
         }
 
         onRevealedChanged: {

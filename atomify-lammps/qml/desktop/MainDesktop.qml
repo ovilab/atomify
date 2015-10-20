@@ -36,8 +36,8 @@ Item {
                 id: editorTab
                 title: "Script editor"
                 anchors.fill: parent
-                property TextArea consoleOutput: item.consoleOutput
-                property LammpsEditor lammpsEditor: item.lammpsEditor
+                property TextArea consoleOutput: item ? item.consoleOutput : null
+                property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
                 function reportError() {
                     item.reportError()
                 }
