@@ -9,9 +9,11 @@
 #include <QPair>
 #include "scriptparser.h"
 #include "atomstyle.h"
+class LAMMPSController;
+class MySimulator;
 
 struct CommandInfo {
-    enum class Type {NA, File, Editor, SingleCommand};
+    enum class Type {NA, File, Editor, SingleCommand, SkipLammpsTick};
     Type type;
     QString filename;
     int line = 0;
@@ -35,10 +37,10 @@ private:
     ScriptParser m_parser;
     QMutex m_mutex;
     QQueue<QPair<QString, CommandInfo> > m_lammpsCommandStack;
+    QQueue<QPair<QString, CommandInfo> > m_queuedCommands;
     QPair<QString, CommandInfo> m_currentCommand;
     QVector<QString> m_previousSingleCommands;
     int m_currentPreviousSingleCommand = 0;
-    void parseEditorCommand(QString command);
     AtomStyle* m_atomStyle = NULL;
 
 public:
@@ -47,10 +49,14 @@ public:
     void loadScriptFromFile(QString filename);
     QString currentCommand() const;
     AtomStyle* atomStyle() const;
+    QQueue<QPair<QString, CommandInfo> > &queuedCommands();
+    ScriptParser &parser() { return m_parser; }
+    void parseEditorCommand(QString command, MySimulator *mySimulator);
+    bool parseLammpsCommand(QString command, LAMMPSController *lammpsController);
 
 public slots:
     void runScript(QString script, CommandInfo::Type type = CommandInfo::Type::Editor, QString filename = "");
-    void runCommand(QString command);
+    void runCommand(QString command, bool addToPreviousCommands = false);
     void reset();
     QString previousSingleCommand();
     QString nextSingleCommand();

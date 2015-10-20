@@ -70,12 +70,28 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         m_lammpsController.currentException().setIsReported(true);
 
         emit mySimulator->errorInLammpsScript();
+        return;
     }
 
     if(m_willPause) {
         m_lammpsController.setPaused(true);
         mySimulator->setPaused(true);
         m_willPause = false;
+    }
+
+    ScriptHandler *scriptHandler = mySimulator->m_scriptHandler;
+    ScriptParser &scriptParser = scriptHandler->parser();
+
+    QPair<QString, CommandInfo> nextCommandObject = scriptHandler->nextCommand();
+
+    QString nextCommand = nextCommandObject.first;
+    CommandInfo nextCommandInfo = nextCommandObject.second;
+
+    if(scriptParser.isEditorCommand(nextCommand)) {
+        scriptHandler->parseEditorCommand(nextCommand, mySimulator);
+        m_lammpsController.state.nextCommandObject = QPair<QString, CommandInfo>("", CommandInfo(CommandInfo::Type::SkipLammpsTick));
+    } else {
+        m_lammpsController.state.nextCommandObject = nextCommandObject;
     }
 }
 

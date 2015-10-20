@@ -34,7 +34,7 @@ ColumnLayout {
                 sequence: "Return"
                 onActivated: {
                     if(singleCommand.text != "") {
-                        simulator.scriptHandler.runCommand(singleCommand.text)
+                        simulator.scriptHandler.runCommand(singleCommand.text, true)
                         consoleOutput.append(singleCommand.text)
                         singleCommand.text = ""
                     }
@@ -56,14 +56,13 @@ ColumnLayout {
                     singleCommand.text = simulator.scriptHandler.nextSingleCommand();
                 }
             }
-
         }
 
         Button {
             id: runSingleCommand
             text: "Run"
             onClicked: {
-                mySimulator.scriptHandler.runCommand(singleCommand.text)
+                mySimulator.scriptHandler.runCommand(singleCommand.text, true)
                 consoleOutput.append(singleCommand.text)
                 singleCommand.text = ""
             }

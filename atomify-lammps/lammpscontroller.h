@@ -28,6 +28,7 @@ private:
         bool dataDirty = false;
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
+        QPair<QString, CommandInfo> nextCommandObject;
     };
     ScriptHandler m_scriptHandler;
     QMap<QString, CPCompute*> m_computes;
@@ -46,7 +47,7 @@ private:
 
 public:
     LammpsOutput output;
-    State m_state;
+    State state;
 
     LAMMPSController();
     ~LAMMPSController();

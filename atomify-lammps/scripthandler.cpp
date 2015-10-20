@@ -1,10 +1,11 @@
 #include "scripthandler.h"
 #include "lammpsfilehandler.h"
+#include "lammpscontroller.h"
+#include "mysimulator.h"
 #include <sstream>
 #include <string>
 #include <QDebug>
 #include <QMutexLocker>
-
 ScriptHandler::ScriptHandler()
 {
 
@@ -13,7 +14,11 @@ ScriptHandler::ScriptHandler()
 QPair<QString, CommandInfo> ScriptHandler::nextCommand()
 {
     QMutexLocker locker(&m_mutex);
-    if(m_lammpsCommandStack.size()) {
+
+    if(m_queuedCommands.size()) {
+        m_currentCommand = m_queuedCommands.dequeue();
+    }
+    else if(m_lammpsCommandStack.size()) {
         m_currentCommand = m_lammpsCommandStack.dequeue();
     } else {
         m_currentCommand = QPair<QString, CommandInfo>(QString(""), CommandInfo());
@@ -35,6 +40,11 @@ QString ScriptHandler::currentCommand() const
 AtomStyle *ScriptHandler::atomStyle() const
 {
     return m_atomStyle;
+}
+
+QQueue<QPair<QString, CommandInfo> > &ScriptHandler::queuedCommands()
+{
+    return m_queuedCommands;
 }
 
 QString ScriptHandler::previousSingleCommand()
@@ -70,7 +80,7 @@ void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
     m_atomStyle = atomStyle;
 }
 
-void ScriptHandler::parseEditorCommand(QString command) {
+void ScriptHandler::parseEditorCommand(QString command, MySimulator *mySimulator) {
     command.remove(0,2);
     if(m_parser.isAtomType(command)) {
         m_parser.atomType(command, [&](QString atomTypeName, int atomType) {
@@ -85,10 +95,15 @@ void ScriptHandler::parseEditorCommand(QString command) {
         });
         return;
     }
+}
 
-    if(m_parser.isDisableAllEnsembleFixes(command)) {
-
+bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammpsController) {
+    if(command.trimmed().compare("disableAllEnsembleFixes") == 0) {
+        lammpsController->disableAllEnsembleFixes();
+        return true;
     }
+
+    return false;
 }
 
 void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString filename) {
@@ -126,7 +141,9 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
             }
 
             if(m_parser.isEditorCommand(currentCommand)) {
-                parseEditorCommand(currentCommand);
+                auto commandObject = QPair<QString, CommandInfo>(currentCommand, CommandInfo(type, lineNumber, filename));
+                m_queuedCommands.push_back(commandObject);
+                // parseEditorCommand(currentCommand);
                 currentCommand.clear(); lineNumber++; continue; // This line is complete
             }
 
@@ -135,21 +152,16 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
     }
 }
 
-void ScriptHandler::runCommand(QString command)
+void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)
 {
-    m_previousSingleCommands.push_back(command);
-
-    if(m_parser.isEditorCommand(command)) {
-        parseEditorCommand(command);
-        return;
-    }
-
+    if(addToPreviousCommands) m_previousSingleCommands.push_back(command);
     auto commandObject = QPair<QString, CommandInfo>(command, CommandInfo(CommandInfo::Type::SingleCommand));
-    m_lammpsCommandStack.enqueue(commandObject);
+    m_queuedCommands.enqueue(commandObject);
 }
 
 void ScriptHandler::reset()
 {
+    m_queuedCommands.clear();
     m_lammpsCommandStack.clear();
     m_currentCommand = QPair<QString, CommandInfo>(QString(""), CommandInfo());
 }
