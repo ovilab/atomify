@@ -174,6 +174,25 @@ void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)
     m_queuedCommands.enqueue(commandObject);
 }
 
+void ScriptHandler::addCommandToTop(QString command, CommandInfo commandInfo)
+{
+    auto commandObject = QPair<QString, CommandInfo>(command, commandInfo);
+    m_queuedCommands.push_front(commandObject);
+}
+
+void ScriptHandler::addCommandsToTop(QList<QString> commands, CommandInfo commandInfo)
+{
+    QList<QPair<QString, CommandInfo> > commandObjects;
+    for(QString command : commands) {
+        auto commandObject = QPair<QString, CommandInfo>(command, commandInfo);
+        commandObjects.push_front(commandObject);
+    }
+
+    for(auto commandObject : commandObjects) {
+        m_queuedCommands.push_front(commandObject);
+    }
+}
+
 void ScriptHandler::reset()
 {
     m_queuedCommands.clear();

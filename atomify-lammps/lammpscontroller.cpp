@@ -19,6 +19,7 @@
 #include "CPcompute.h"
 #include "lammpsfilehandler.h"
 #include "mysimulator.h"
+#include "simulatorcontrol.h"
 
 #include <stdio.h>
 #include <QDebug>
@@ -95,7 +96,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
-    // qDebug() << command;
+    qDebug() << command;
 
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
@@ -166,18 +167,18 @@ void LAMMPSController::processCommand(QString command) {
     executeCommandInLAMMPS(processedCommand);
 }
 
-LAMMPS_NS::Fix* LAMMPSController::findFix(QString identifier) {
-    int fixId = findFixId(identifier);
+LAMMPS_NS::Fix* LAMMPSController::findFixByIdentifier(QString identifier) {
+    int fixId = findFixIndex(identifier);
     if(fixId < 0) return NULL;
     else return m_lammps->modify->fix[fixId];
 }
 
-int LAMMPSController::findFixId(QString identifier) {
+int LAMMPSController::findFixIndex(QString identifier) {
     return m_lammps->modify->find_fix(identifier.toStdString().c_str());
 }
 
 bool LAMMPSController::fixExists(QString identifier) {
-    return findFixId(identifier) >= 0;
+    return findFixIndex(identifier) >= 0;
 }
 
 LAMMPS_NS::Compute* LAMMPSController::findCompute(QString identifier) {
@@ -192,6 +193,12 @@ int LAMMPSController::findComputeId(QString identifier) {
 
 bool LAMMPSController::computeExists(QString identifier) {
     return (findComputeId(identifier) >= 0);
+}
+
+void LAMMPSController::processSimulatorControls() {
+    for(SimulatorControl *control : simulatorControls) {
+        control->synchronizeLammps(this);
+    }
 }
 
 void LAMMPSController::processComputes()
@@ -225,7 +232,7 @@ void LAMMPSController::processComputes()
                 compute->setFixCommand(fixCommand);
                 executeCommandInLAMMPS(fixCommand);
                 // Now replace the output on the object
-                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFix(fixIdentifier));
+                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFixByIdentifier(fixIdentifier));
                 if(fix) {
                     // This is our baby
                     fix->fp = compute->output().stream();
@@ -262,7 +269,7 @@ void LAMMPSController::reset()
         // We need to set FILE pointers in fixes to NULL so that they are not closed when LAMMPS deallocates.
         for(CPCompute *compute : m_computes) {
             if(computeExists(compute->identifier())) {
-                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFix(compute->fixIdentifier()));
+                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFixByIdentifier(compute->fixIdentifier()));
                 if(fix != NULL) {
                     fix->fp = NULL;
                 }
@@ -282,6 +289,7 @@ void LAMMPSController::tick()
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
+        processSimulatorControls();
         processComputes(); // Only work with computes and output when we will do a run
         executeActiveRunCommand();
         state.dataDirty = true;
@@ -306,6 +314,7 @@ void LAMMPSController::tick()
     } else {
         if(state.paused) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.
+        processSimulatorControls();
         processComputes(); // Only work with computes and output when we will do a run
         QElapsedTimer t;
         t.start();

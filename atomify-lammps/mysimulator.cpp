@@ -1,4 +1,5 @@
 #include "mysimulator.h"
+#include "simulatorcontrol.h"
 #include <library.h>
 #include <atom.h>
 #include <domain.h>
@@ -21,6 +22,7 @@
 #include <fstream>
 #include <memory>
 #include <QStandardPaths>
+
 using namespace std;
 
 MyWorker::MyWorker() {
@@ -54,6 +56,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
+    // QVector<SimulatorControl*> simulatorControls;
+    m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
 
     // Sync properties from lammps controller
     mySimulator->setSimulationTime(m_lammpsController.simulationTime());
@@ -84,7 +88,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     QPair<QString, CommandInfo> nextCommandObject = scriptHandler->nextCommand();
 
     QString nextCommand = nextCommandObject.first;
-
+    qDebug() << "Next command: " << nextCommand;
     if(scriptParser.isEditorCommand(nextCommand)) {
         scriptHandler->parseEditorCommand(nextCommand, mySimulator);
         m_lammpsController.state.nextCommandObject = QPair<QString, CommandInfo>("", CommandInfo(CommandInfo::Type::SkipLammpsTick));

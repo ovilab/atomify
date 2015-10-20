@@ -57,6 +57,8 @@ public:
 public slots:
     void runScript(QString script, CommandInfo::Type type = CommandInfo::Type::Editor, QString filename = "");
     void runCommand(QString command, bool addToPreviousCommands = false);
+    void addCommandToTop(QString command, CommandInfo commandInfo);
+    void addCommandsToTop(QList<QString> commands, CommandInfo commandInfo);
     void reset();
     QString previousSingleCommand();
     QString nextSingleCommand();

@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <QMutex>
+#include <QQuickItem>
 
 class Renderable;
 class Simulator;
@@ -28,11 +29,11 @@ private:
     friend class Visualizer;
 };
 
-class Simulator : public QObject
+class Simulator : public QQuickItem
 {
     Q_OBJECT
 public:
-    explicit Simulator(QObject *parent = 0);
+    explicit Simulator(QQuickItem *parent = 0);
     ~Simulator();
 protected:
     virtual SimulatorWorker *createWorker() = 0;

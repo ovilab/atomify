@@ -1,36 +1,39 @@
 #ifndef NVT_H
 #define NVT_H
 
-#include <QObject>
+#include "simulatorcontrol.h"
 #include "mysimulator.h"
 
-class NVT : public QObject
+class NVT : public SimulatorControl
 {
     Q_OBJECT
     Q_PROPERTY(double targetTemperature READ targetTemperature WRITE setTargetTemperature NOTIFY targetTemperatureChanged)
-    Q_PROPERTY(AtomifySimulator* simulator READ simulator WRITE setSimulator NOTIFY simulatorChanged)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool dirty READ dirty WRITE setDirty NOTIFY dirtyChanged)
 private:
     double m_targetTemperature = 1;
-    AtomifySimulator* m_simulator = NULL;
     bool m_enabled = false;
+    bool m_dirty = false;
 
 public:
     explicit NVT(QObject *parent = 0);
     double targetTemperature() const;
-    AtomifySimulator* simulator() const;
     bool enabled() const;
 
 signals:
-
     void targetTemperatureChanged(double targetTemperature);
-    void simulatorChanged(AtomifySimulator* simulator);
     void enabledChanged(bool enabled);
+    void dirtyChanged(bool dirty);
 
 public slots:
     void setTargetTemperature(double targetTemperature);
-    void setSimulator(AtomifySimulator* simulator);
     void setEnabled(bool enabled);
+    // SimulatorControl interface
+    void setDirty(bool dirty);
+public:
+
+    virtual void synchronizeLammps(LAMMPSController *lammpsController);
+    bool dirty() const;
 };
 
 #endif // NVT_H

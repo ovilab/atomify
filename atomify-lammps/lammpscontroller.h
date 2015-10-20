@@ -7,6 +7,7 @@
 #include <mpi.h>
 #include <lammps.h>
 #include <compute.h>
+#include <modify.h>
 #include <lammpsexception.h>
 #include "lammpsoutput.h"
 #include "CPcompute.h"
@@ -14,6 +15,7 @@
 
 using namespace LAMMPS_NS;
 class MyWorker;
+class SimulatorControl;
 class LAMMPSController
 {
 private:
@@ -40,10 +42,10 @@ private:
     void executeActiveRunCommand();
     int findComputeId(QString identifier);
     bool computeExists(QString identifier);
-    int findFixId(QString identifier);
+    int findFixIndex(QString identifier);
     bool fixExists(QString identifier);
     LAMMPS_NS::Compute *findCompute(QString identifier);
-    LAMMPS_NS::Fix *findFix(QString identifier);
+    LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
 
 public:
     LammpsOutput output;
@@ -78,6 +80,21 @@ public:
     void processCommand(QString command);
     void reset();
     void tick();
+    QList<SimulatorControl*> simulatorControls;
+    template<class T>
+    T *findFixByType() {
+        for(int i=0; i<m_lammps->modify->nfix; i++) {
+            LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
+
+            T *myFix = dynamic_cast<T*>(fix);
+            if(myFix) {
+                return myFix;
+            }
+        }
+
+        return nullptr;
+    }
+    void processSimulatorControls();
 };
 
 #endif // LAMMPSCONTROLLER_H
