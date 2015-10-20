@@ -7,7 +7,7 @@ SHELL = /bin/sh
 # specify flags and libraries needed for your compiler
 
 CC =		$(ANDROID_NDK_PATH)/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin/arm-linux-androideabi-g++
-CCFLAGS =	-g -O3  -c -Wno-psabi -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -DANDROID -Wa,--noexecstack -fno-builtin-memmove -std=c++11 -O2 -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -mthumb -D_REENTRANT -Wall -Wno-psabi -W -fPIC -DQT_NO_DEBUG -DQT_PLUGIN -DQT_QUICK_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_OPENGLEXTENSIONS_LIB -DQT_GUI_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -isystem $(ANDROID_NDK_PATH)/sources/cxx-stl/gnu-libstdc++/4.8/include -isystem $(ANDROID_NDK_PATH)sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi-v7a/include -isystem $(ANDROID_NDK_PATH)/platforms/android-9/arch-arm/usr/include -D__STDC_LIMIT_MACROS
+CCFLAGS =	-c -Wno-psabi -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -DANDROID -Wa,--noexecstack -fno-builtin-memmove -std=c++11 -Wno-unused-parameter -Wno-unused-variable -g -fopenmp -O2 -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -mthumb -Wno-psabi -D_REENTRANT -fPIC -DLAMMPS_GZIP -DLAMMPS_XDR -I. -isystem $(ANDROID_NDK_PATH)/sources/cxx-stl/gnu-libstdc++/4.8/include -isystem $(ANDROID_NDK_PATH)/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi-v7a/include -isystem $(ANDROID_NDK_PATH)/platforms/android-9/arch-arm/usr/include -D__STDC_LIMIT_MACROS
 SHFLAGS =	-fPIC
 DEPFLAGS =	-M
 
