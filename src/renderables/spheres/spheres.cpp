@@ -117,7 +117,7 @@ void SpheresRenderer::synchronize(Renderable* renderer)
 }
 
 void SpheresRenderer::uploadVBONoGeometryShader(Spheres* spheres) {
-    if(!spheres->dirty()) {
+    if(!spheres->dirty() || spheres->m_positions.size() == 0) {
         return;
     }
     float scale = spheres->scale();
