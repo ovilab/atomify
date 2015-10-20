@@ -49,7 +49,8 @@ SOURCES += \
     fileio.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
-    nvt.cpp
+    nvt.cpp \
+    simulatorcontrol.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -62,7 +63,8 @@ HEADERS += \
     fileio.h \
     scriptparser.h \
     scripthandler.h \
-    nvt.h
+    nvt.h \
+    simulatorcontrol.h
 
 DISTFILES += \
     iOS.plist

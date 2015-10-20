@@ -9,6 +9,7 @@ import SimVis 1.0
 import Compute 1.0
 import LammpsOutput 1.0
 import AtomStyle 1.0
+import NVT 1.0
 import Qt.labs.settings 1.0
 
 import "mobile"
@@ -63,9 +64,35 @@ ApplicationWindow {
             console.log(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
             console.log(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
         }
+
+        NVT {
+            id: nvt
+        }
+    }
+
+    CheckBox {
+        id: nvtCheck
+        anchors.top: parent.top
+        anchors.right: nvtSlider.left
+        checked: nvt.enabled
+        onCheckedChanged: {
+            nvt.enabled = checked
+        }
+    }
+
+    Slider {
+        id: nvtSlider
+        minimumValue: 0.1
+        maximumValue: 7
+        anchors.right: switchButton.left
+        value: nvt.targetTemperature
+        onValueChanged: {
+            nvt.targetTemperature = value
+        }
     }
 
     Button {
+        id: switchButton
         text: "Switch mode"
         onClicked: (mode === "desktop") ? mode = "mobile" : mode = "desktop"
         anchors {

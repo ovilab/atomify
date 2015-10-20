@@ -1,6 +1,6 @@
 #include "simulator.h"
 
-Simulator::Simulator(QObject *parent) : QObject(parent)
+Simulator::Simulator(QQuickItem *parent) : QQuickItem(parent)
 {
     connect(&m_timer, &QTimer::timeout, this, &Simulator::step);
     m_timer.start(1);
