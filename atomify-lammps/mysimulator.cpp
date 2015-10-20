@@ -84,7 +84,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     LAMMPS *lammps = m_lammpsController.lammps();
     if(!lammps) return;
-    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
+//    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
     m_lammpsController.setDataDirty(false);
     m_atomStyle.setDirty(false);
 
