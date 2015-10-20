@@ -4,7 +4,7 @@ import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
-import MySimulator 1.0
+import AtomifySimulator 1.0
 import SimVis 1.0
 import Compute 1.0
 import LammpsOutput 1.0
@@ -19,7 +19,7 @@ import "style"
 Item {
     id: mobileRoot
 
-    property MySimulator simulator: null
+    property AtomifySimulator simulator: null
 
     AtomifyVisualizer {
         simulator: mobileRoot.simulator

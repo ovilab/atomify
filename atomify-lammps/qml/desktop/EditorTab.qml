@@ -1,13 +1,13 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
-import MySimulator 1.0
+import AtomifySimulator 1.0
 
 Item {
     id: editorTabRoot
     property TextArea consoleOutput: myConsole.output
     property LammpsEditor lammpsEditor: myLammpsEditor
-    property MySimulator simulator
+    property AtomifySimulator simulator
 
     function reportError() {
         consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '" + simulator.scriptHandler.currentCommand + "'")

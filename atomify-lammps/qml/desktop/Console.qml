@@ -1,11 +1,11 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
-import MySimulator 1.0
+import AtomifySimulator 1.0
 
 ColumnLayout {
     id: consoleRoot
-    property MySimulator simulator
+    property AtomifySimulator simulator
     property TextArea output: consoleOutput
     Layout.fillHeight: true
     Layout.fillWidth: true

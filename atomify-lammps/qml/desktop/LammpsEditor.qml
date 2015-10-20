@@ -2,13 +2,13 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import Highlighter 1.0
-import MySimulator 1.0
+import AtomifySimulator 1.0
 import Qt.labs.settings 1.0
 
 Item {
     id: lammpsEditorRoot
 
-    property MySimulator simulator
+    property AtomifySimulator simulator
     property TextArea textarea: textarea
     function runScript() {
         simulator.willReset = true

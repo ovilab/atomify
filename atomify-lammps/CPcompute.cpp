@@ -44,7 +44,7 @@ QString CPCompute::command() const
     return m_command;
 }
 
-MySimulator *CPCompute::simulator() const
+AtomifySimulator *CPCompute::simulator() const
 {
     return m_simulator;
 }
@@ -102,7 +102,7 @@ void CPCompute::setCommand(QString command)
     emit commandChanged(command);
 }
 
-void CPCompute::setSimulator(MySimulator *simulator)
+void CPCompute::setSimulator(AtomifySimulator *simulator)
 {
     if (m_simulator == simulator)
         return;
