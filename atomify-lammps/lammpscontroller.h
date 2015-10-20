@@ -47,6 +47,7 @@ private:
     LAMMPS_NS::Compute *findCompute(QString identifier);
     LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
 
+    void notifySimulatorControlsAboutCommand();
 public:
     LammpsOutput output;
     State state;

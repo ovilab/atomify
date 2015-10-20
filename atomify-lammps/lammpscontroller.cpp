@@ -96,7 +96,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
-    qDebug() << command;
+//    qDebug() << command;
 
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
@@ -197,7 +197,13 @@ bool LAMMPSController::computeExists(QString identifier) {
 
 void LAMMPSController::processSimulatorControls() {
     for(SimulatorControl *control : simulatorControls) {
-        control->synchronizeLammps(this);
+        control->processTick(this);
+    }
+}
+
+void LAMMPSController::notifySimulatorControlsAboutCommand() {
+    for(SimulatorControl *control : simulatorControls) {
+        control->refreshAfterCommand(this);
     }
 }
 
@@ -311,6 +317,7 @@ void LAMMPSController::tick()
         if(didProcessCommand) return;
 
         processCommand(nextCommand);
+        notifySimulatorControlsAboutCommand();
     } else {
         if(state.paused) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.

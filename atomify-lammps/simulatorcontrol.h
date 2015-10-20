@@ -11,7 +11,8 @@ private:
 
 public:
     explicit SimulatorControl(QObject *parent = 0);
-    virtual void synchronizeLammps(LAMMPSController *lammpsController) = 0;
+    virtual void processTick(LAMMPSController *lammpsController) {}
+    virtual void refreshAfterCommand(LAMMPSController *lammpsController) {}
 signals:
 
 public slots:

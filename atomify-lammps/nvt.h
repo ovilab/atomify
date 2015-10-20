@@ -32,7 +32,8 @@ public slots:
     void setDirty(bool dirty);
 public:
 
-    virtual void synchronizeLammps(LAMMPSController *lammpsController);
+    virtual void processTick(LAMMPSController *lammpsController) override;
+    virtual void refreshAfterCommand(LAMMPSController *lammpsController);
     bool dirty() const;
 };
 
