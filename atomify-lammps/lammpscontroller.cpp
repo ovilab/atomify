@@ -345,6 +345,7 @@ int LAMMPSController::numberOfAtomTypes() const
 
 void LAMMPSController::disableAllEnsembleFixes()
 {
+    state.preRunNeeded = true;
     while(true) {
         bool didFindFix = false;
         for(int i=0; i<m_lammps->modify->nfix; i++) {

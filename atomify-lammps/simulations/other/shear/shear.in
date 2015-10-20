@@ -76,4 +76,4 @@ thermo		100
 thermo_modify	temp new2d
 
 reset_timestep	0
-run		3000
+# run		3000

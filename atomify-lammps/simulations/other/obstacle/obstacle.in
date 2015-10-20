@@ -78,4 +78,4 @@ thermo_modify	temp mobile
 #		zoom 1.6 adiam 1.5
 #dump_modify	3 pad 5
 
-run		25000
+#run		25000
