@@ -11,29 +11,21 @@ Item {
     ListModel {
         id: simulationsModel
 
+//        ListElement {
+//            folder: "../../simulations/other/shear"
+//        }
+//        ListElement {
+//            folder: "../../simulations/other/micelle"
+//        }
+        ListElement {
+            folder: "../../simulations/other/indent"
+        }
+        ListElement {
+            folder: "../../simulations/other/obstacle"
+        }
         ListElement {
             folder: "../../simulations/diffusion/simple_diffusion"
         }
-
-//        ListElement {
-//            folder: "../simulations/diffusion/chamber"
-//        }
-
-//        ListElement {
-//            folder: "../simulations/fractures/simple_fracture"
-//        }
-
-//        ListElement {
-//            folder: "../simulations/pressure/crystal"
-//        }
-
-//        ListElement {
-//            folder: "../simulations/fun/bullets"
-//        }
-
-//        ListElement {
-//            folder: "../simulations/fun/wallcrash"
-//        }
     }
 
     ListView {
