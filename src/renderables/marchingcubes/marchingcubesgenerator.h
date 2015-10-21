@@ -17,7 +17,6 @@
 #include <QVector>
 #include <functional>
 #include <QVector3D>
-#include <QPair>
 
 using std::function;
 

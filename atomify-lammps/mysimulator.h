@@ -13,7 +13,6 @@
 #include "lammpscontroller.h"
 #include "lammpsoutput.h"
 #include "atomstyle.h"
-#include "lammpsfilehandler.h"
 #include "scripthandler.h"
 
 using std::function; using std::unique_ptr;

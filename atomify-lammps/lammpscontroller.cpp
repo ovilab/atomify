@@ -16,17 +16,18 @@
 #include <fix_nvt.h>
 #include <fix_npt.h>
 
-#include "CPcompute.h"
-#include "lammpsfilehandler.h"
-#include "mysimulator.h"
-#include "simulatorcontrol.h"
-
 #include <stdio.h>
 #include <QDebug>
 #include <string>
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
+#include <sstream>
+
+#include "CPcompute.h"
+#include "mysimulator.h"
+#include "simulatorcontrol.h"
+#include "scriptcommand.h"
 using namespace std;
 
 LAMMPSController::LAMMPSController()
@@ -296,20 +297,20 @@ void LAMMPSController::tick()
     }
 
     // If the command stack has any commands left, process them.
-    CommandInfo nextCommandInfo = state.nextCommandObject.second;
-    if(nextCommandInfo.type == CommandInfo::Type::SkipLammpsTick) return;
+    ScriptCommand nextCommand = state.nextCommand;
+    if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return;
 
-    if(nextCommandInfo.type != CommandInfo::Type::NA) {
-        if(nextCommandInfo.type == CommandInfo::Type::SingleCommand) {
+    if(nextCommand.type() != ScriptCommand::Type::NoCommand) {
+        if(nextCommand.type() == ScriptCommand::Type::SingleCommand) {
             state.preRunNeeded = true;
         }
 
-        QString nextCommand = state.nextCommandObject.first;
+        bool didProcessCommand = m_scriptHandler.parseLammpsCommand(nextCommand.command(), this);
+        if(didProcessCommand) {
+            return;
+        }
 
-        bool didProcessCommand = m_scriptHandler.parseLammpsCommand(nextCommand, this);
-        if(didProcessCommand) return;
-
-        processCommand(nextCommand);
+        processCommand(nextCommand.command());
     } else {
         if(state.paused) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.

@@ -30,7 +30,7 @@ private:
         bool dataDirty = false;
         unsigned int runCommandStart = 0;
         unsigned int runCommandEnd = 0;
-        QPair<QString, CommandInfo> nextCommandObject;
+        ScriptCommand nextCommand;
     };
     ScriptHandler m_scriptHandler;
     QMap<QString, CPCompute*> m_computes;
@@ -49,7 +49,6 @@ private:
 
     void notifySimulatorControlsAboutCommand();
 public:
-    LammpsOutput output;
     State state;
 
     LAMMPSController();

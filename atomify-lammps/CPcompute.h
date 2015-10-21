@@ -2,7 +2,6 @@
 #define COMPUTE_H
 
 #include <QObject>
-#include <QPair>
 #include <QVector>
 #include "lammpsoutput.h"
 

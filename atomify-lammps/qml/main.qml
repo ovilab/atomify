@@ -60,10 +60,6 @@ ApplicationWindow {
         atomStyle: AtomStyle {
             id: myAtomStyle
         }
-        onErrorInLammpsScript: {
-            console.log(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
-            console.log(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
-        }
 
         NVT {
             id: nvt

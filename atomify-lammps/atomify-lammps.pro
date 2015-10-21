@@ -45,13 +45,13 @@ SOURCES += \
     highlighter.cpp \
     CPcompute.cpp \
     lammpsoutput.cpp \
-    lammpsfilehandler.cpp \
     atomstyle.cpp \
     fileio.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
     nvt.cpp \
-    simulatorcontrol.cpp
+    simulatorcontrol.cpp \
+    scriptcommand.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -59,13 +59,13 @@ HEADERS += \
     highlighter.h \
     CPcompute.h \
     lammpsoutput.h \
-    lammpsfilehandler.h \
     atomstyle.h \
     fileio.h \
     scriptparser.h \
     scripthandler.h \
     nvt.h \
-    simulatorcontrol.h
+    simulatorcontrol.h \
+    scriptcommand.h
 
 DISTFILES += \
     iOS.plist \

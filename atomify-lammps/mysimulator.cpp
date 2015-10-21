@@ -77,6 +77,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
         m_lammpsController.currentException().setIsReported(true);
 
+//        console.log(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
+//        console.log(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
+
         emit mySimulator->errorInLammpsScript();
         return;
     }
@@ -89,14 +92,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     ScriptHandler *scriptHandler = mySimulator->m_scriptHandler;
     ScriptParser &scriptParser = scriptHandler->parser();
-    QPair<QString, CommandInfo> nextCommandObject = scriptHandler->nextCommand();
+    ScriptCommand nextCommandObject = scriptHandler->nextCommand();
 
-    QString nextCommand = nextCommandObject.first;
+    QString nextCommand = nextCommandObject.command();
     if(scriptParser.isEditorCommand(nextCommand)) {
         scriptHandler->parseEditorCommand(nextCommand, mySimulator);
-        m_lammpsController.state.nextCommandObject = QPair<QString, CommandInfo>("", CommandInfo(CommandInfo::Type::SkipLammpsTick));
+        m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
     } else {
-        m_lammpsController.state.nextCommandObject = nextCommandObject;
+        m_lammpsController.state.nextCommand = nextCommandObject;
     }
 }
 

@@ -1,19 +1,22 @@
 #include "scripthandler.h"
-#include "lammpsfilehandler.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
+#include <unistd.h>
 #include <sstream>
 #include <string>
 #include <QDebug>
 #include <QFile>
 #include <QQmlFile>
 #include <QMutexLocker>
+#include <QStandardPaths>
+#include <QFileInfo>
+
 ScriptHandler::ScriptHandler()
 {
-
+    m_tempLocation = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory);
 }
 
-QPair<QString, CommandInfo> ScriptHandler::nextCommand()
+const ScriptCommand& ScriptHandler::nextCommand()
 {
     QMutexLocker locker(&m_mutex);
 
@@ -23,7 +26,7 @@ QPair<QString, CommandInfo> ScriptHandler::nextCommand()
     else if(m_lammpsCommandStack.size()) {
         m_currentCommand = m_lammpsCommandStack.dequeue();
     } else {
-        m_currentCommand = QPair<QString, CommandInfo>(QString(""), CommandInfo());
+        m_currentCommand = ScriptCommand();
     }
 
     return m_currentCommand;
@@ -31,12 +34,7 @@ QPair<QString, CommandInfo> ScriptHandler::nextCommand()
 
 void ScriptHandler::loadScriptFromFile(QString filename)
 {
-    runScript(IO::readFile(filename), CommandInfo::Type::File, filename);
-}
-
-QString ScriptHandler::currentCommand() const
-{
-    return m_currentCommand.first;
+    runScript(readFile(filename), ScriptCommand::Type::File, filename);
 }
 
 AtomStyle *ScriptHandler::atomStyle() const
@@ -44,35 +42,30 @@ AtomStyle *ScriptHandler::atomStyle() const
     return m_atomStyle;
 }
 
-QQueue<QPair<QString, CommandInfo> > &ScriptHandler::queuedCommands()
+QString ScriptHandler::previousSingleCommandString()
 {
-    return m_queuedCommands;
-}
-
-QString ScriptHandler::previousSingleCommand()
-{
-    if(--m_currentPreviousSingleCommand < 0) {
-        m_currentPreviousSingleCommand = 0;
+    if(--m_currentPreviousSingleCommandIndex < 0) {
+        m_currentPreviousSingleCommandIndex = 0;
     }
 
-    return m_previousSingleCommands.at(m_currentPreviousSingleCommand);
+    return m_previousSingleCommands.at(m_currentPreviousSingleCommandIndex).command();
 }
 
-QString ScriptHandler::nextSingleCommand()
+QString ScriptHandler::nextSingleCommandString()
 {
-    if(++m_currentPreviousSingleCommand < m_previousSingleCommands.count()) {
-        return m_previousSingleCommands.at(m_currentPreviousSingleCommand);
+    if(++m_currentPreviousSingleCommandIndex < m_previousSingleCommands.count()) {
+        return m_previousSingleCommands.at(m_currentPreviousSingleCommandIndex).command();
     } else{
-        m_currentPreviousSingleCommand = m_previousSingleCommands.count();
+        m_currentPreviousSingleCommandIndex = m_previousSingleCommands.count();
         return QString("");
     }
 }
 
-QString ScriptHandler::lastSingleCommand()
+QString ScriptHandler::lastSingleCommandString()
 {
-    m_currentPreviousSingleCommand = m_previousSingleCommands.count()-1;
-    if(m_previousSingleCommands.count()>0) {
-        return m_previousSingleCommands.last();
+    m_currentPreviousSingleCommandIndex = m_previousSingleCommands.count()-1;
+    if(m_previousSingleCommands.count() > 0) {
+        return m_previousSingleCommands.last().command();
     }
     else return QString("");
 }
@@ -92,7 +85,7 @@ void ScriptHandler::runFile(QString filename)
     }
 
     QString script(f.readAll());
-    runScript(script, CommandInfo::Type::File, filename);
+    runScript(script, ScriptCommand::Type::File, filename);
 }
 
 void ScriptHandler::parseEditorCommand(QString command, AtomifySimulator *mySimulator) {
@@ -121,7 +114,7 @@ bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammps
     return false;
 }
 
-void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString filename) {
+void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString filename) {
     QMutexLocker locker(&m_mutex);
 
     if(!script.isEmpty())
@@ -151,12 +144,12 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
             }
 
             if(!currentCommand.isEmpty()) {
-                auto commandObject = QPair<QString, CommandInfo>(currentCommand, CommandInfo(type, lineNumber, filename));
+                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
                 m_lammpsCommandStack.enqueue(commandObject);
             }
 
             if(m_parser.isEditorCommand(currentCommand)) {
-                auto commandObject = QPair<QString, CommandInfo>(currentCommand, CommandInfo(type, lineNumber, filename));
+                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
                 m_queuedCommands.push_back(commandObject);
                 // parseEditorCommand(currentCommand);
                 currentCommand.clear(); lineNumber++; continue; // This line is complete
@@ -170,21 +163,20 @@ void ScriptHandler::runScript(QString script, CommandInfo::Type type, QString fi
 void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)
 {
     if(addToPreviousCommands) m_previousSingleCommands.push_back(command);
-    auto commandObject = QPair<QString, CommandInfo>(command, CommandInfo(CommandInfo::Type::SingleCommand));
+    auto commandObject = ScriptCommand(command, ScriptCommand::Type::SingleCommand);
     m_queuedCommands.enqueue(commandObject);
 }
 
-void ScriptHandler::addCommandToTop(QString command, CommandInfo commandInfo)
+void ScriptHandler::addCommandToTop(ScriptCommand command)
 {
-    auto commandObject = QPair<QString, CommandInfo>(command, commandInfo);
-    m_queuedCommands.push_front(commandObject);
+    m_queuedCommands.push_front(command);
 }
 
-void ScriptHandler::addCommandsToTop(QList<QString> commands, CommandInfo commandInfo)
+void ScriptHandler::addCommandsToTop(QList<QString> commands, ScriptCommand::Type commandType)
 {
-    QList<QPair<QString, CommandInfo> > commandObjects;
+    QList<ScriptCommand> commandObjects;
     for(QString command : commands) {
-        auto commandObject = QPair<QString, CommandInfo>(command, commandInfo);
+        auto commandObject = ScriptCommand(command, commandType);
         commandObjects.push_front(commandObject);
     }
 
@@ -197,6 +189,42 @@ void ScriptHandler::reset()
 {
     m_queuedCommands.clear();
     m_lammpsCommandStack.clear();
-    m_currentCommand = QPair<QString, CommandInfo>(QString(""), CommandInfo());
+    m_currentCommand = ScriptCommand();
 }
 
+QString ScriptHandler::readFile(QString filename)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Could not open file: " << file.fileName();
+        return "";
+    }
+
+    return file.readAll();
+}
+
+QString ScriptHandler::copyDataFileToReadablePath(QString filename)
+{
+    QString qrcFilename = ":/scripts/"+filename;
+
+    bool fileFound = false;
+    QFileInfo fileInfo(qrcFilename);
+    fileFound = fileInfo.exists();
+
+    if(!fileFound) {
+        // The file could be a zipped file, let's check that
+        qrcFilename.append(".gz");
+        filename.append(".gz");
+        fileInfo = QFileInfo(qrcFilename);
+        fileFound = fileInfo.exists();
+    }
+
+    chdir(m_tempLocation.toStdString().c_str());
+
+    QString newFilename=m_tempLocation+filename;
+    if(fileFound) {
+        QFile::copy(qrcFilename, newFilename);
+    }
+
+    return newFilename;
+}

@@ -55,7 +55,7 @@ void NVT::synchronizeLammps(LAMMPSController *lammpsController)
                     QList<QString> disableCommands;
                     disableCommands.push_back(QString("unfix %1").arg(fix->id));
                     disableCommands.push_back("fix nve all nve");
-                    lammpsController->scriptHandler()->addCommandsToTop(disableCommands, CommandInfo(CommandInfo::Type::SingleCommand));
+                    lammpsController->scriptHandler()->addCommandsToTop(disableCommands, ScriptCommand::Type::SingleCommand);
                     return;
                 }
 
@@ -77,7 +77,7 @@ void NVT::synchronizeLammps(LAMMPSController *lammpsController)
         if(m_dirty && m_enabled) {
             lammpsController->disableAllEnsembleFixes();
             QString command = QString("fix nvt all nvt temp %1 %1 %2").arg(m_targetTemperature).arg(m_temperatureDampening);
-            lammpsController->scriptHandler()->addCommandToTop(command, CommandInfo(CommandInfo::Type::SingleCommand));
+            lammpsController->scriptHandler()->addCommandToTop(ScriptCommand(command, ScriptCommand::Type::SingleCommand));
         } else if(m_enabled) {
             m_enabled = false;
             emit enabledChanged(m_enabled);
