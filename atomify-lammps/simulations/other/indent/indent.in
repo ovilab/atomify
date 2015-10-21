@@ -59,9 +59,9 @@ thermo_modify	temp new
 #		zoom 1.6 adiam 1.5
 #dump_modify	3 pad 5
 
-run		30000
+#run		30000
 
 # run without indenter
 
-unfix           4
-run		30000
+#unfix           4
+#run		30000
