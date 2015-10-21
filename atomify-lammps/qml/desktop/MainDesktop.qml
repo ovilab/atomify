@@ -38,6 +38,12 @@ Item {
                 anchors.fill: parent
                 property TextArea consoleOutput: item ? item.consoleOutput : null
                 property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
+                function runScript() {
+                    if(lammpsEditor) {
+                        lammpsEditor.runScript()
+                    }
+                }
+
                 function reportError() {
                     if(item) {
                         item.reportError()
@@ -148,7 +154,7 @@ Item {
         Shortcut {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
-            onActivated: editorTab.lammpsEditor.runScript()
+            onActivated: editorTab.runScript()
         }
         Shortcut {
             sequence: "Ctrl+1"
