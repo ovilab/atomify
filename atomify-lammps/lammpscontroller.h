@@ -32,11 +32,11 @@ private:
         unsigned int runCommandEnd = 0;
         ScriptCommand nextCommand;
     };
-    ScriptHandler m_scriptHandler;
+    ScriptHandler *m_scriptHandler = nullptr;
     QMap<QString, CPCompute*> m_computes;
     LammpsException m_currentException;
-    LAMMPS *m_lammps = NULL;
-    MyWorker *m_worker = NULL;
+    LAMMPS *m_lammps = nullptr;
+    MyWorker *m_worker = nullptr;
 
     void processComputes();
     void executeActiveRunCommand();
@@ -57,7 +57,6 @@ public:
     // Getters/setters
     LAMMPS *lammps() const;
     void setLammps(LAMMPS *lammps);
-    ScriptHandler *scriptHandler();
     void setWorker(MyWorker *worker);
     int  simulationSpeed() const;
     void setSimulationSpeed(int simulationSpeed);
@@ -75,6 +74,8 @@ public:
     int numberOfAtomTypes() const;
     void disableAllEnsembleFixes();
     QVector3D systemSize() const;
+    ScriptHandler* scriptHandler() const;
+    void setScriptHandler(ScriptHandler* scriptHandler);
     // Actions
     void executeCommandInLAMMPS(QString command);
     void processCommand(QString command);

@@ -34,6 +34,9 @@ MyWorker::MyWorker() {
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *mySimulator = qobject_cast<AtomifySimulator*>(simulator);
+    if(mySimulator->scriptHandler() == nullptr) {
+        return;
+    }
 
     if(mySimulator->willReset()) {
         m_lammpsController.reset();
@@ -45,9 +48,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         emit mySimulator->lammpsDidReset();
     }
 
-    if(mySimulator->atomStyle() != NULL) {
-        m_lammpsController.scriptHandler()->setAtomStyle(mySimulator->atomStyle());
-
+    if(mySimulator->atomStyle() != nullptr) {
         // Sync new atom styles from Simulator (QML) to Worker
         if(mySimulator->atomStyle()->dirty()) {
             m_atomStyle.setData(mySimulator->atomStyle()->data());
@@ -69,7 +70,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
-    mySimulator->setScriptHandler(m_lammpsController.scriptHandler());
+
+    m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
         qDebug() << "LAMMPS crashed";

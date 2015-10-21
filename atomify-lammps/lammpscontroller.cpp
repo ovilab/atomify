@@ -37,7 +37,7 @@ LAMMPSController::LAMMPSController()
 
 LAMMPSController::~LAMMPSController()
 {
-    setLammps(NULL);
+    setLammps(nullptr);
     m_computes.clear();
 }
 
@@ -51,15 +51,10 @@ void LAMMPSController::setLammps(LAMMPS *lammps)
     if(m_lammps) {
         m_lammps->screen = NULL; // Avoids closing of the output parser.
         lammps_close((void*)m_lammps);
-        m_lammps = NULL;
+        m_lammps = nullptr;
     }
 
     m_lammps = lammps;
-}
-
-ScriptHandler *LAMMPSController::scriptHandler()
-{
-    return &m_scriptHandler;
 }
 
 void LAMMPSController::setWorker(MyWorker *worker)
@@ -91,7 +86,7 @@ void LAMMPSController::setComputes(const QMap<QString, CPCompute *> &computes)
 }
 
 void LAMMPSController::executeCommandInLAMMPS(QString command) {
-    if(m_lammps == NULL) {
+    if(m_lammps == nullptr) {
         qDebug() << "Warning, trying to run a LAMMPS command with no LAMMPS object.";
         qDebug() << "Command: " << command;
         return;
@@ -169,7 +164,7 @@ void LAMMPSController::processCommand(QString command) {
 
 LAMMPS_NS::Fix* LAMMPSController::findFixByIdentifier(QString identifier) {
     int fixId = findFixIndex(identifier);
-    if(fixId < 0) return NULL;
+    if(fixId < 0) return nullptr;
     else return m_lammps->modify->fix[fixId];
 }
 
@@ -183,7 +178,7 @@ bool LAMMPSController::fixExists(QString identifier) {
 
 LAMMPS_NS::Compute* LAMMPSController::findCompute(QString identifier) {
     int computeId = findComputeId(identifier);
-    if(computeId < 0) return NULL;
+    if(computeId < 0) return nullptr;
     else return m_lammps->modify->compute[computeId];
 }
 
@@ -265,18 +260,18 @@ void LAMMPSController::executeActiveRunCommand() {
 
 void LAMMPSController::reset()
 {
-    if(m_lammps != NULL) {
+    if(m_lammps != nullptr) {
         // We need to set FILE pointers in fixes to NULL so that they are not closed when LAMMPS deallocates.
         for(CPCompute *compute : m_computes) {
             if(computeExists(compute->identifier())) {
                 FixAveTime *fix = dynamic_cast<FixAveTime*>(findFixByIdentifier(compute->fixIdentifier()));
-                if(fix != NULL) {
-                    fix->fp = NULL;
+                if(fix != nullptr) {
+                    fix->fp = nullptr;
                 }
             }
         }
     }
-    setLammps(NULL); // This will destroy the LAMMPS object within the LAMMPS library framework
+    setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
     state = State(); // Reset current state variables
@@ -284,7 +279,7 @@ void LAMMPSController::reset()
 
 void LAMMPSController::tick()
 {
-    if(m_lammps == NULL) return;
+    if(m_lammps == nullptr) return;
     if(state.crashed) return;
 
     // If we have an active run command, perform the run command with the current chosen speed.
@@ -305,7 +300,7 @@ void LAMMPSController::tick()
             state.preRunNeeded = true;
         }
 
-        bool didProcessCommand = m_scriptHandler.parseLammpsCommand(nextCommand.command(), this);
+        bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
         if(didProcessCommand) {
             return;
         }
@@ -382,6 +377,16 @@ QVector3D LAMMPSController::systemSize() const
 {
     if(!m_lammps) return QVector3D();
     return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
+}
+
+ScriptHandler *LAMMPSController::scriptHandler() const
+{
+    return m_scriptHandler;
+}
+
+void LAMMPSController::setScriptHandler(ScriptHandler *scriptHandler)
+{
+    m_scriptHandler = scriptHandler;
 }
 
 bool LAMMPSController::paused() const

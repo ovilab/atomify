@@ -4,11 +4,8 @@ import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
-import AtomifySimulator 1.0
+import Atomify 1.0
 import SimVis 1.0
-import Compute 1.0
-import LammpsOutput 1.0
-import AtomStyle 1.0
 import Qt.labs.settings 1.0
 
 import "../visualization"

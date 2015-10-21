@@ -15,15 +15,16 @@
 #include "atomstyle.h"
 #include "fileio.h"
 #include "nvt.h"
+#include "scripthandler.h"
 
 int main(int argc, char *argv[])
 {
-    qmlRegisterType<AtomifySimulator>("AtomifySimulator", 1, 0, "AtomifySimulator");
-    qmlRegisterType<HighlighterWrapper>("Highlighter", 1, 0, "Highlighter");
-    qmlRegisterType<CPCompute>("Compute", 1, 0, "Compute");
-    qmlRegisterType<LammpsOutput>("LammpsOutput", 1, 0, "LammpsOutput");
-    qmlRegisterType<AtomStyle>("AtomStyle", 1, 0, "AtomStyle");
-    qmlRegisterType<NVT>("NVT", 1, 0, "NVT");
+    qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
+    qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
+    qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
+    qmlRegisterType<AtomStyle>("Atomify", 1, 0, "AtomStyle");
+    qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
+    qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

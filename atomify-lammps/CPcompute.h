@@ -30,7 +30,7 @@ private:
     QString m_command;
 
     LammpsOutput m_output;
-    AtomifySimulator* m_simulator = NULL;
+    AtomifySimulator* m_simulator = nullptr;
     QStringList m_dependencies;
     QList<double> m_values;
     double m_time = 0;

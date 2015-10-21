@@ -24,7 +24,7 @@ private:
     ScriptCommand m_currentCommand;
     QVector<ScriptCommand> m_previousSingleCommands;
     int m_currentPreviousSingleCommandIndex = 0;
-    AtomStyle* m_atomStyle = NULL;
+    AtomStyle* m_atomStyle = nullptr;
     QString m_tempLocation;
 
     Q_INVOKABLE QString previousSingleCommandString();

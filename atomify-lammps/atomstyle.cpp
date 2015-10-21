@@ -100,7 +100,7 @@ void AtomStyleData::setVisible(bool visible)
 
 AtomStyleData *AtomStyle::getAtomStyleData(int index)
 {
-    if(index<0 || index >= m_data.size()) return NULL;
+    if(index<0 || index >= m_data.size()) return nullptr;
 
     return qobject_cast<AtomStyleData*>(m_data[index]);
 }

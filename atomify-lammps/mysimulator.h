@@ -1,7 +1,6 @@
 #ifndef MYSIMULATOR_H
 #define MYSIMULATOR_H
 #include <SimVis/Simulator>
-#include <functional>
 #include <QMap>
 #include <QElapsedTimer>
 #include <memory>
@@ -15,8 +14,6 @@
 #include "atomstyle.h"
 #include "scripthandler.h"
 
-using std::function; using std::unique_ptr;
-
 using namespace LAMMPS_NS;
 
 class MyWorker : public SimulatorWorker
@@ -28,13 +25,6 @@ public:
     void setWillPause(bool willPause);
 
 private:
-    struct SliceProperties {
-        bool enabled = false;
-        QVector3D normal;
-        double distance = 0;
-        double width = 0;
-    };
-
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
     LAMMPSController m_lammpsController;
@@ -43,7 +33,6 @@ private:
     virtual void synchronizeSimulator(Simulator *simulator) override;
     virtual void synchronizeRenderer(Renderable *renderableObject) override;
     virtual void work() override;
-    SliceProperties slice;
     bool m_willPause = false;
     AtomStyle m_atomStyle;
     QVector<int> m_atomTypes;
@@ -125,14 +114,14 @@ private:
     bool m_paused = false;
     QMap<QString, CPCompute*> m_computes;
     double m_simulationTime = 0.0;
-    AtomStyle* m_atomStyle = NULL;
+    AtomStyle* m_atomStyle = nullptr;
     int m_numberOfAtoms;
     int m_numberOfAtomTypes;
     QVector3D m_systemSize;
     double m_timePerTimestep = 0;
     QString m_lammpsError;
     QString m_lammpsErrorMessage;
-    ScriptHandler* m_scriptHandler = NULL;
+    ScriptHandler* m_scriptHandler = nullptr;
     bool m_willReset = false;
 };
 

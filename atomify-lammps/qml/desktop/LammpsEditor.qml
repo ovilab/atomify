@@ -1,8 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
-import Highlighter 1.0
-import AtomifySimulator 1.0
+import Atomify 1.0
 import Qt.labs.settings 1.0
 
 Item {
@@ -11,6 +10,9 @@ Item {
     property AtomifySimulator simulator
     property TextArea textarea: textarea
     function runScript() {
+        if(!simulator.scriptHandler) {
+            return
+        }
         simulator.willReset = true
         simulator.scriptHandler.reset()
         simulator.scriptHandler.runScript(textarea.text)

@@ -29,7 +29,7 @@ private:
     static int read(void *, char *, int);
 #endif
     static int clean(void *);
-    FILE *m_filePointer = NULL;
+    FILE *m_filePointer = nullptr;
     CPCompute* m_compute;
     friend class CPCompute;
     void parseVectorOutput(const QString &buffer);

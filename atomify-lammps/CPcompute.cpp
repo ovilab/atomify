@@ -30,7 +30,7 @@ CPCompute::CPCompute(QObject *parent) : QObject(parent)
 CPCompute::~CPCompute()
 {
     m_values.clear();
-    m_simulator = NULL;
+    m_simulator = nullptr;
     m_dependencies.clear();
 }
 

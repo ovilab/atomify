@@ -1,7 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.2
-import AtomifySimulator 1.0
-import Compute 1.0
+import Atomify 1.0
 
 Rectangle {
     property AtomifySimulator simulator

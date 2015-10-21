@@ -44,6 +44,9 @@ void NVT::setTemperatureDampening(double temperatureDampening)
 
 void NVT::synchronizeLammps(LAMMPSController *lammpsController)
 {
+    if(lammpsController->scriptHandler() == nullptr) {
+        return;
+    }
     FixNVT *fix = lammpsController->findFixByType<FixNVT>();
     if(fix) {
         FixNH *fixNH = dynamic_cast<FixNH*>(fix);

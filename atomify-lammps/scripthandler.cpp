@@ -162,6 +162,7 @@ void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString 
 
 void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)
 {
+    QMutexLocker locker(&m_mutex);
     if(addToPreviousCommands) m_previousSingleCommands.push_back(command);
     auto commandObject = ScriptCommand(command, ScriptCommand::Type::SingleCommand);
     m_queuedCommands.enqueue(commandObject);
@@ -169,11 +170,13 @@ void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)
 
 void ScriptHandler::addCommandToTop(ScriptCommand command)
 {
+    QMutexLocker locker(&m_mutex);
     m_queuedCommands.push_front(command);
 }
 
 void ScriptHandler::addCommandsToTop(QList<QString> commands, ScriptCommand::Type commandType)
 {
+    QMutexLocker locker(&m_mutex);
     QList<ScriptCommand> commandObjects;
     for(QString command : commands) {
         auto commandObject = ScriptCommand(command, commandType);
@@ -187,6 +190,7 @@ void ScriptHandler::addCommandsToTop(QList<QString> commands, ScriptCommand::Typ
 
 void ScriptHandler::reset()
 {
+    QMutexLocker locker(&m_mutex);
     m_queuedCommands.clear();
     m_lammpsCommandStack.clear();
     m_currentCommand = ScriptCommand();
