@@ -195,13 +195,17 @@ void SpheresRenderer::uploadVBONoGeometryShader(Spheres* spheres) {
 }
 
 void SpheresRenderer::uploadVBOGeometryShader(Spheres* spheres) {
-    if(!spheres->dirty()) {
-        return;
-    }
     QVector<QVector3D>& positions = spheres->m_positions;
     QVector<QColor>& colors = spheres->m_colors;
     QVector<float>& scales = spheres->m_scales;
     QVector<SphereGeometryShaderVBOData>& vertices = spheres->m_verticesGeometryShader;
+    if(!spheres->dirty()) {
+        return;
+    }
+    if(vertices.size() < 1 || colors.size() < 1 || scales.size() < 1 ||
+            positions.size() < 1) {
+        return;
+    }
     int numberOfVertices = positions.size();
     vertices.resize(numberOfVertices);
 

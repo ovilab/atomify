@@ -149,13 +149,15 @@ void BillboardsRenderer::synchronize(Renderable* renderer)
 
 void BillboardsRenderer::uploadVBOs(Billboards* billboards)
 {
-    if(billboards->m_positions.size() < 1) {
-        return;
-    }
-    double scale = billboards->scale();
     QVector<QVector3D>& positions = billboards->m_positions;
     QVector<BillboardVBOData>& vertices = billboards->m_vertices;
     QVector<GLuint>& indices = billboards->m_indices;
+    if(positions.size() < 1 ||
+            indices.size() < 1 ||
+            vertices.size() < 1) {
+        return;
+    }
+    double scale = billboards->scale();
     QVector3D& color = billboards->m_color;
     QVector<float>& rotations = billboards->m_rotations;
 

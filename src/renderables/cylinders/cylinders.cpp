@@ -51,6 +51,9 @@ void CylindersRenderer::uploadVBOs(Cylinders* cylinders)
 {
     if(!cylinders->dirty()) return;
     QVector<CylinderVBOData>& vertices = cylinders->m_vertices;
+    if(vertices.size() < 1) {
+        return;
+    }
     int numberOfVertices = vertices.size();
     cylinders->setDirty(false);
 
