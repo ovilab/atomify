@@ -152,27 +152,6 @@ Item {
 //        potentialEnergy: molecularDynamics.potentialEnergy
 //        totalEnergy: molecularDynamics.totalEnergy
 //        time: molecularDynamics.time
-
-        function updateSystemSize() {
-//            if(molecularDynamics.isSettingSystemSize) {
-//                return
-//            }
-//            isSettingSystemSize = true
-//            molecularDynamics.systemSize = Qt.vector3d(systemSizeX, systemSizeY, systemSizeZ)
-//            isSettingSystemSize = false
-        }
-
-        onSystemSizeXChanged: {
-            updateSystemSize()
-        }
-
-        onSystemSizeYChanged: {
-            updateSystemSize()
-        }
-
-        onSystemSizeZChanged: {
-            updateSystemSize()
-        }
     }
 
     MainMenu {

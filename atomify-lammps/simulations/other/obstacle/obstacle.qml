@@ -3,5 +3,6 @@ import "qrc:/core"
 
 Simulation {
     name: "Obstacle"
+    description: "Particles flowing past two obstacles."
 }
 

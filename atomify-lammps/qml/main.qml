@@ -104,4 +104,16 @@ ApplicationWindow {
             top: parent.top
         }
     }
+
+    Shortcut {
+        sequence: StandardKey.FullScreen
+        context: Qt.ApplicationShortcut
+        onActivated: {
+            if(visibility === Window.FullScreen) {
+                visibility = Window.AutomaticVisibility
+            } else {
+                visibility = Window.FullScreen
+            }
+        }
+    }
 }

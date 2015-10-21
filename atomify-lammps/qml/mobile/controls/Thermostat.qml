@@ -65,7 +65,7 @@ Rectangle {
         color: "white"
         font.pixelSize: parent.height * 0.25
 
-        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+        renderType: Style.renderType
     }
 
     Text {
@@ -80,7 +80,7 @@ Rectangle {
         opacity: 0.7
         text: "°C"
 
-        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+        renderType: Style.renderType
     }
 
     Text {
@@ -94,7 +94,7 @@ Rectangle {
 
         text: dialRoot.activated ? "ON" : "OFF"
 
-        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+        renderType: Style.renderType
 
     }
 

@@ -22,7 +22,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
             topMargin: Style.baseMargin
         }
-        text: simulation ? simulation.name : ""
+        text: (simulation ? simulation.name : "")
 
         MouseArea {
             anchors.fill: parent

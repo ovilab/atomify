@@ -1,4 +1,5 @@
 import QtQuick 2.5
+import "qrc:/mobile/style"
 
 Item {
     property real maximumValue: 100
@@ -35,7 +36,7 @@ Item {
         text: formatValue(maximumValue)
         color: "white"
 
-        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+        renderType: Style.renderType
     }
 
     Text {
@@ -48,7 +49,7 @@ Item {
         text: formatValue(minimumValue)
         color: "white"
 
-        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+        renderType: Style.renderType
     }
 
     Text {
@@ -61,6 +62,6 @@ Item {
         text: title
         color: "white"
 
-        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+        renderType: Style.renderType
     }
 }

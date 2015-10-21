@@ -328,14 +328,14 @@ Item {
 
             opacity: othersPressed ? hiddenOpacity : 1.0
 
-            renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+            renderType: Style.renderType
 
             Text {
                 text: "t = " + (dashboardRoot.time * 1e12).toFixed(1) + " ps"
                 color: "white"
                 font.pixelSize: dashboardRoot.height * 0.03
 
-                renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+                renderType: Style.renderType
             }
         }
 
@@ -395,7 +395,7 @@ Item {
                         color: temperaturePlot.strokeStyle
                         font.pixelSize: dashboardRoot.height * 0.03
 
-                        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+                        renderType: Style.renderType
                     }
                 }
             }
@@ -436,7 +436,7 @@ Item {
                         color: pressurePlot.strokeStyle
                         font.pixelSize: dashboardRoot.height * 0.03
 
-                        renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+                        renderType: Style.renderType
                     }
                 }
             }
@@ -489,14 +489,14 @@ Item {
                             color: kineticEnergyPlot.strokeStyle
                             font.pixelSize: dashboardRoot.height * 0.03
 
-                            renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+                            renderType: Style.renderType
                         }
                         Text {
                             text: "Ep = " + dashboardRoot.potentialEnergy.toFixed(0) + " eV"
                             color: potentialEnergyPlot.strokeStyle
                             font.pixelSize: dashboardRoot.height * 0.03
 
-                            renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+                            renderType: Style.renderType
                         }
                     }
                 }
