@@ -10,13 +10,12 @@ Item {
 
     ListModel {
         id: simulationsModel
-
-//        ListElement {
-//            folder: "../../simulations/other/shear"
-//        }
-//        ListElement {
-//            folder: "../../simulations/other/micelle"
-//        }
+        ListElement {
+            folder: "../../simulations/diffusion/simple_diffusion"
+        }
+        ListElement {
+            folder: "../../simulations/other/water"
+        }
         ListElement {
             folder: "../../simulations/other/indent"
         }
@@ -24,7 +23,10 @@ Item {
             folder: "../../simulations/other/obstacle"
         }
         ListElement {
-            folder: "../../simulations/diffusion/simple_diffusion"
+            folder: "../../simulations/other/shear"
+        }
+        ListElement {
+            folder: "../../simulations/other/micelle"
         }
     }
 

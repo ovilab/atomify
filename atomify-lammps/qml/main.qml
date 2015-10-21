@@ -67,7 +67,7 @@ ApplicationWindow {
 
         NVT {
             id: nvt
-            temperatureDampening: 0.1
+            temperatureDampening: 0.01
             onEnabledChanged: {
                 nvtCheck.checked = enabled
             }
@@ -86,8 +86,8 @@ ApplicationWindow {
 
     Slider {
         id: nvtSlider
-        minimumValue: 0.1
-        maximumValue: 7
+        minimumValue: 10
+        maximumValue: 5000
         anchors.right: switchButton.left
         value: nvt.targetTemperature
         onValueChanged: {

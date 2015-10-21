@@ -1,0 +1,33 @@
+
+
+# ----------------- Init Section -----------------
+
+units metal
+atom_style atomic
+
+# ----------------- Atom Definition Section -----------------
+read_data "/projects/PhD/2015/lammpsUSCPotential/silicawater/water.data"
+# replicate 2 2 1
+
+pair_style	usc
+pair_coeff	* * /repos/lammps/src/usc/silicawater/SiOWater.usc Si O H
+
+neighbor	0.5 bin
+neigh_modify    delay 1 every 1
+
+# timestep	0.00025
+timestep	0.0005
+
+velocity	all create 300 376847 loop geom
+
+# minimize 1.0e-5 1.0e-7 1000 10000
+variable energyPerAtom equal "etotal/atoms"
+
+thermo_style custom step time temp pe v_energyPerAtom
+thermo 100
+#fix		1 all nve
+fix nvt all nvt temp 1500 1500 0.1
+atom_modify sort 100 3
+
+#!atom 2 oxygen
+#!atom 3 hydrogen

@@ -15,5 +15,8 @@
         <file>micelle/micelle.in</file>
         <file>micelle/micelle.png</file>
         <file>micelle/micelle.qml</file>
+        <file>water/water.png</file>
+        <file>water/water.qml</file>
+        <file>water/water.in</file>
     </qresource>
 </RCC>

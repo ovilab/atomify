@@ -13,7 +13,7 @@ lattice		fcc 3.52 orient	x 1 0 0 orient y 0 1 1 orient z 0 -1 1 &
 create_atoms	1 box
 
 pair_style	eam
-pair_coeff	* * Ni_u3.eam
+pair_coeff	* * /projects/lammps-10Aug15/examples/shear/Ni_u3.eam
 
 neighbor	0.3 bin
 neigh_modify	delay 5
