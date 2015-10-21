@@ -33,6 +33,15 @@ void NVT::setTargetTemperature(double targetTemperature)
     emit targetTemperatureChanged(targetTemperature);
 }
 
+void NVT::setTemperatureDampening(double temperatureDampening)
+{
+    if (m_temperatureDampening == temperatureDampening)
+        return;
+
+    m_temperatureDampening = temperatureDampening;
+    emit temperatureDampeningChanged(temperatureDampening);
+}
+
 void NVT::synchronizeLammps(LAMMPSController *lammpsController)
 {
     FixNVT *fix = lammpsController->findFixByType<FixNVT>();
@@ -67,7 +76,7 @@ void NVT::synchronizeLammps(LAMMPSController *lammpsController)
     } else {
         if(m_dirty && m_enabled) {
             lammpsController->disableAllEnsembleFixes();
-            QString command = QString("fix nvt all nvt temp %1 %1 1.0").arg(m_targetTemperature);
+            QString command = QString("fix nvt all nvt temp %1 %1 %2").arg(m_targetTemperature).arg(m_temperatureDampening);
             lammpsController->scriptHandler()->addCommandToTop(command, CommandInfo(CommandInfo::Type::SingleCommand));
         } else if(m_enabled) {
             m_enabled = false;
@@ -76,4 +85,9 @@ void NVT::synchronizeLammps(LAMMPSController *lammpsController)
     }
 
     m_dirty = false;
+}
+
+double NVT::temperatureDampening() const
+{
+    return m_temperatureDampening;
 }

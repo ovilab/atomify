@@ -39,7 +39,9 @@ Item {
                 property TextArea consoleOutput: item ? item.consoleOutput : null
                 property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
                 function reportError() {
-                    item.reportError()
+                    if(item) {
+                        item.reportError()
+                    }
                 }
 
                 EditorTab {

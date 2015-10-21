@@ -67,6 +67,7 @@ ApplicationWindow {
 
         NVT {
             id: nvt
+            temperatureDampening: 0.1
             onEnabledChanged: {
                 nvtCheck.checked = enabled
             }
