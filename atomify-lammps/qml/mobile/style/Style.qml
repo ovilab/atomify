@@ -13,6 +13,7 @@ Item {
     property real baseMargin: 4 * baseSize
 
     property alias font: fontObject
+    property int renderType: Text.QtRendering
 
     Item {
         id: fontObject
@@ -36,8 +37,6 @@ Item {
     }
 
     function reset(width, height, pixelDensity) {
-        console.log("Resetting style")
-
         styleRoot.windowWidth = width
         styleRoot.windowHeight = height
         styleRoot.pixelDensity = pixelDensity

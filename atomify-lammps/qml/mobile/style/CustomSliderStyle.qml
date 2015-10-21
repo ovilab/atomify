@@ -26,7 +26,7 @@ SliderStyle {
             color: "#444"
             rotation: control.orientation === Qt.Vertical ? 90 : 0
 
-            renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+            renderType: Style.renderType
         }
     }
     groove: Rectangle {

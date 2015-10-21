@@ -34,5 +34,9 @@ int main(int argc, char *argv[])
     setlocale(LC_NUMERIC, "C");
 #endif
 
+    for(QKeySequence k : QKeySequence::keyBindings(QKeySequence::FullScreen)) {
+        qDebug() << "Use " << k.toString() << " to toggle fullscreen.";
+    }
+
     return app.exec();
 }

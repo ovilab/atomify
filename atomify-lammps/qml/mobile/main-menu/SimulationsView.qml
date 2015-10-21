@@ -18,13 +18,13 @@ Item {
 //            folder: "../../simulations/other/micelle"
 //        }
         ListElement {
+            folder: "../../simulations/diffusion/simple_diffusion"
+        }
+        ListElement {
             folder: "../../simulations/other/indent"
         }
         ListElement {
             folder: "../../simulations/other/obstacle"
-        }
-        ListElement {
-            folder: "../../simulations/diffusion/simple_diffusion"
         }
     }
 

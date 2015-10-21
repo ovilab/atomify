@@ -7,5 +7,6 @@ Text {
     font.weight: Font.Light
     font.family: "Roboto"
     font.pixelSize: Style.font.heading.size
-    renderType: Qt.platform.os === "linux" ? Text.NativeRendering : Text.QtRendering
+
+    renderType: Style.renderType
 }
