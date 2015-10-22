@@ -65,6 +65,7 @@ ApplicationWindow {
             }
         }
         scriptHandler: ScriptHandler {
+            atomStyle: myAtomStyle
         }
     }
 
