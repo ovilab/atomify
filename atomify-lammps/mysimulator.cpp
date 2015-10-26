@@ -118,6 +118,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
+
         colors.resize(lammps->atom->natoms);
         scales.resize(lammps->atom->natoms);
         positions.resize(lammps->atom->natoms);
