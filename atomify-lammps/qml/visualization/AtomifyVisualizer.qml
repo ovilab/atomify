@@ -91,6 +91,6 @@ Item {
     Camera {
         id: camera
         nearPlane: 0.1
-        farPlane: 1000
+        farPlane: 100000
     }
 }
