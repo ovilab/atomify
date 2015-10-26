@@ -34,7 +34,7 @@ const ScriptCommand& ScriptHandler::nextCommand()
 
 void ScriptHandler::loadScriptFromFile(QString filename)
 {
-    runScript(readFile(filename), ScriptCommand::Type::File, filename);
+    doRunScript(readFile(filename), ScriptCommand::Type::File, filename);
 }
 
 AtomStyle *ScriptHandler::atomStyle() const
@@ -114,9 +114,7 @@ bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammps
     return false;
 }
 
-void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString filename) {
-    QMutexLocker locker(&m_mutex);
-
+void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename) {
     if(!script.isEmpty())
     {
         // If the file is not empty, load each command and add it to the queue.
@@ -126,6 +124,7 @@ void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString 
         QStringList lines = script.split("\n");
 
         for(QString line : lines) {
+            qDebug() << "Executing " << line;
             line = line.trimmed();
             if(line.endsWith("&")) {
                 line.remove(line.length() - 1, 1);
@@ -138,6 +137,7 @@ void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString 
             currentCommand = currentCommand.trimmed();
 
             if(m_parser.isInclude(currentCommand)) {
+                qDebug() << "Is include";
                 QString filename = m_parser.includePath(currentCommand);
                 loadScriptFromFile(filename);
                 currentCommand.clear(); lineNumber++; continue; // This line is complete
@@ -158,6 +158,11 @@ void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString 
             currentCommand.clear(); lineNumber++; continue; // This line is complete
         }
     }
+}
+
+void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString filename) {
+    QMutexLocker locker(&m_mutex);
+    doRunScript(script, type, filename);
 }
 
 void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)
