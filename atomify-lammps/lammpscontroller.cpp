@@ -271,8 +271,21 @@ void LAMMPSController::reset()
             }
         }
     }
+
+    int nargs = 1;
+    char **argv = new char*[nargs];
+    for(int i=0; i<nargs; i++) {
+        argv[i] = new char[100];
+    }
+    if(nargs>0) sprintf(argv[0], "myprogram");
+    if(nargs>1) sprintf(argv[1], "-sf");
+    if(nargs>2) sprintf(argv[2], "gpu");
+//    sprintf(argv[3], "-pk");
+//    sprintf(argv[4], "gpu");
+//    sprintf(argv[5], "1");
+
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
-    lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
+    lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
     state = State(); // Reset current state variables
 }
@@ -428,4 +441,9 @@ double LAMMPSController::simulationTime()
 {
     if(!m_lammps) return 0;
     return m_lammps->update->atime;
+}
+
+unsigned long LAMMPSController::numberOfTimesteps()
+{
+    return state.numberOfTimesteps;
 }
