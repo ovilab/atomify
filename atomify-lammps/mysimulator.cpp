@@ -65,6 +65,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
 
     // Sync properties from lammps controller
+    mySimulator->setNumberOfTimesteps(m_lammpsController.numberOfTimesteps());
     mySimulator->setSimulationTime(m_lammpsController.simulationTime());
     mySimulator->setNumberOfAtoms(m_lammpsController.numberOfAtoms());
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
