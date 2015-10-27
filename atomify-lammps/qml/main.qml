@@ -81,8 +81,8 @@ ApplicationWindow {
 
     Slider {
         id: nvtSlider
-        minimumValue: 10
-        maximumValue: 5000
+        minimumValue: 0.1
+        maximumValue: 6
         anchors.right: switchButton.left
         value: nvt.targetTemperature
         onValueChanged: {
