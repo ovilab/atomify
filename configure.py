@@ -15,6 +15,11 @@ def run_command(cmd):
 lammps_build_type = "serial"
 env = os.environ.copy()
 
+# Set up SimVis
+run_command("git submodule update --init --recursive")
+
+# Set up LAMMPS
+
 if _platform == "darwin":
     lammps_build_type = "mac"
 elif _platform == "win32":
