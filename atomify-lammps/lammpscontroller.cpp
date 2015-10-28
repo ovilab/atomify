@@ -24,7 +24,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "CPcompute.h"
+#include "cpcompute.h"
 #include "mysimulator.h"
 #include "simulatorcontrol.h"
 #include "scriptcommand.h"
@@ -194,30 +194,8 @@ bool LAMMPSController::computeExists(QString identifier) {
 
 void LAMMPSController::processSimulatorControls() {
     for(SimulatorControl *control : simulatorControls) {
-        control->synchronizeLammps(this);
-    }
-}
-
-void LAMMPSController::processComputes()
-{
-    for(QString key : m_computes.keys()) {
-        if(!computeExists(key)) {
-            CPCompute *compute = m_computes[key];
-            // We need to add it. First check all dependencies
-            bool allDependenciesFound = true; // Assume all are found and find potential counterexample
-            foreach(QString dependencyIdentifier, compute->dependencies()) {
-                if(!computeExists(dependencyIdentifier)) {
-                    allDependenciesFound = false;
-                    break;
-                }
-            }
-
-            if(allDependenciesFound) {
-                state.preRunNeeded = true; // When a new compute is added, a run with pre yes is needed for it to be included
-                // Now that all dependencies are met we can add this one too
-                executeCommandInLAMMPS(compute->command());
-            }
-        }
+        qDebug() << "Checking control: " << control->identifier();
+        control->update(this);
     }
 }
 
@@ -244,7 +222,7 @@ void LAMMPSController::executeActiveRunCommand() {
 
 void LAMMPSController::reset()
 {
-    int nargs = 3;
+    int nargs = 1;
     char **argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];
@@ -257,7 +235,7 @@ void LAMMPSController::reset()
 //    sprintf(argv[5], "1");
 
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
-    lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
+    lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
     state = State(); // Reset current state variables
 }
@@ -269,9 +247,8 @@ void LAMMPSController::tick()
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
-        processSimulatorControls();
-        processComputes(); // Only work with computes and output when we will do a run
         executeActiveRunCommand();
+        processSimulatorControls();
         state.dataDirty = true;
         return;
     }
@@ -294,8 +271,6 @@ void LAMMPSController::tick()
     } else {
         if(state.paused) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.
-        processSimulatorControls();
-        processComputes(); // Only work with computes and output when we will do a run
         QElapsedTimer t;
         t.start();
 
@@ -305,6 +280,8 @@ void LAMMPSController::tick()
         } else {
             executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
         }
+
+        processSimulatorControls();
         state.numberOfTimesteps += state.simulationSpeed;
         state.timeSpentInLammps += t.elapsed();
     }

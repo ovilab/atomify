@@ -58,67 +58,63 @@ ApplicationWindow {
             id: myAtomStyle
         }
 
-        NVT {
-            id: nvt
-            temperatureDampening: 0.01
-            onEnabledChanged: {
-                nvtCheck.checked = enabled
-            }
-        }
+//        NVT {
+//            id: nvt
+//            temperatureDampening: 0.01
+//            onEnabledChanged: {
+//                nvtCheck.checked = enabled
+//            }
+//        }
         scriptHandler: ScriptHandler {
             atomStyle: myAtomStyle
         }
-    }
 
-    Compute {
-        property real maxValue: 0
-        id: computeMsd
-        identifier: "msd"
-        command: "compute msd all msd"
-        isVector: true
-        simulator: mySimulator
-        onFourthValueChanged: {
-            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
-            tempGraph.addPoint(mySimulator.simulationTime, fourthValue)
-            tempPlot.xMax = mySimulator.simulationTime
-            //tempPlot.xMin = mySimulator.simulationTime-1
-            maxValue = Math.max(maxValue, fourthValue)
-            tempPlot.yMax = maxValue
+        Compute {
+            property real maxValue: 0
+            id: computeTemp
+            identifier: "temperature"
+            command: "all temp"
+            onValueChanged: {
+//                tempGraph.addPoint(mySimulator.simulationTime, value)
+//                tempPlot.xMax = mySimulator.simulationTime
+//                tempPlot.xMin = mySimulator.simulationTime-1
+//                maxValue = Math.max(maxValue, value)
+//                tempPlot.yMax = maxValue
+            }
+        }
+
+        Compute {
+            property real maxValue: 0
+            id: computePressure
+            identifier: "pressure"
+            command: "all pressure temperature"
+            dependencies: [computeTemp]
+            onValueChanged: {
+                tempGraph.addPoint(mySimulator.simulationTime, value)
+                tempPlot.xMax = mySimulator.simulationTime
+                tempPlot.xMin = mySimulator.simulationTime-1
+                maxValue = Math.max(maxValue, value)
+                tempPlot.yMax = maxValue
+            }
         }
     }
 
-    Compute {
-        property real maxValue: 0
-        id: computePressure
-        identifier: "pressure"
-        command: "compute pressure all pressure temperature"
-        simulator: mySimulator
-        dependencies: ["temperature"]
-        onValueChanged: {
-            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
-//            tempGraph.addPoint(mySimulator.simulationTime, value)
-//            tempPlot.xMax = mySimulator.simulationTime
-//            tempPlot.xMin = mySimulator.simulationTime-1
-//            maxValue = Math.max(maxValue, value)
-//            tempPlot.yMax = maxValue
-        }
-    }
-
-    Compute {
-        property real maxValue: 0
-        id: computeTemp
-        identifier: "temperature"
-        command: "compute temperature all temp"
-        simulator: mySimulator
-//        onValueChanged: {
+//    Compute {
+//        property real maxValue: 0
+//        id: computeMsd
+//        identifier: "msd"
+//        command: "compute msd all msd"
+//        isVector: true
+//        simulator: mySimulator
+//        onFourthValueChanged: {
 //            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
-//            tempGraph.addPoint(mySimulator.simulationTime, value)
+//            tempGraph.addPoint(mySimulator.simulationTime, fourthValue)
 //            tempPlot.xMax = mySimulator.simulationTime
-//            tempPlot.xMin = mySimulator.simulationTime-1
-//            maxValue = Math.max(maxValue, value)
+//            //tempPlot.xMin = mySimulator.simulationTime-1
+//            maxValue = Math.max(maxValue, fourthValue)
 //            tempPlot.yMax = maxValue
 //        }
-    }
+//    }
 
     Rectangle {
         width: 400
@@ -158,15 +154,15 @@ ApplicationWindow {
                 }
             }
 
-            Slider {
-                id: nvtSlider
-                minimumValue: 0.1
-                maximumValue: 6
-                value: nvt.targetTemperature
-                onValueChanged: {
-                    nvt.targetTemperature = value
-                }
-            }
+//            Slider {
+//                id: nvtSlider
+//                minimumValue: 0.1
+//                maximumValue: 6
+//                value: nvt.targetTemperature
+//                onValueChanged: {
+//                    nvt.targetTemperature = value
+//                }
+//            }
         }
     }
 

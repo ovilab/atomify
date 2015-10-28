@@ -10,8 +10,7 @@
 
 #include "mysimulator.h"
 #include "highlighter.h"
-#include "CPcompute.h"
-#include "lammpsoutput.h"
+#include "cpcompute.h"
 #include "atomstyle.h"
 #include "fileio.h"
 #include "nvt.h"
@@ -25,7 +24,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<AtomStyle>("Atomify", 1, 0, "AtomStyle");
-    qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
+    // qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
     qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
     qmlRegisterType<Figure>("QMLPlot", 1, 0, "Figure");
     qmlRegisterType<LineGraph>("QMLPlot", 1, 0, "LineGraph");

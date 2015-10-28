@@ -7,7 +7,6 @@ class ScriptCommand
 {
 public:
     enum class Type {NoCommand, File, Editor, SingleCommand, SkipLammpsTick};
-
     ScriptCommand(QString command = "", Type type = Type::NoCommand, int line = -1, QString filename = "");
 
     const QString& command() const;

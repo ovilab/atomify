@@ -42,10 +42,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     if(mySimulator->willReset()) {
         m_lammpsController.reset();
         mySimulator->setWillReset(false);
-        auto simulatorControls = mySimulator->findChildren<SimulatorControl*>();
-        for(auto *simulatorControl : simulatorControls) {
-            simulatorControl->setDirty(false);
-        }
         emit mySimulator->lammpsDidReset();
     }
 
@@ -73,9 +69,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
 
-    for(CPCompute *compute : mySimulator->computes()) {
-        compute->update(&m_lammpsController);
-    }
+//    for(CPCompute *compute : mySimulator->computes()) {
+//        compute->update(&m_lammpsController);
+//    }
 
     m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
 
@@ -199,10 +195,10 @@ void AtomifySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
     m_computes = computes;
 }
 
-void AtomifySimulator::addCompute(CPCompute *compute)
-{
-    m_computes[compute->identifier()] = compute;
-}
+//void AtomifySimulator::addCompute(CPCompute *compute)
+//{
+//    m_computes[compute->identifier()] = compute;
+//}
 
 bool AtomifySimulator::paused() const
 {

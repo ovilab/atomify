@@ -10,7 +10,6 @@
 #include <lammps.h>
 
 #include "lammpscontroller.h"
-#include "lammpsoutput.h"
 #include "atomstyle.h"
 #include "scripthandler.h"
 
@@ -63,7 +62,6 @@ public:
     void addCompute(CPCompute *compute);
     QMap<QString, CPCompute *> computes() const;
     void setComputes(const QMap<QString, CPCompute *> &computes);
-    LammpsOutput* lammpsOutput() const;
     AtomStyle* atomStyle() const;
     double simulationTime() const;
     bool paused() const;

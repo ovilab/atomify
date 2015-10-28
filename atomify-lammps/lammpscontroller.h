@@ -9,8 +9,7 @@
 #include <compute.h>
 #include <modify.h>
 #include <lammpsexception.h>
-#include "lammpsoutput.h"
-#include "CPcompute.h"
+#include "cpcompute.h"
 #include "scripthandler.h"
 
 using namespace LAMMPS_NS;
@@ -38,7 +37,6 @@ private:
     LAMMPS *m_lammps = nullptr;
     MyWorker *m_worker = nullptr;
 
-    void processComputes();
     void executeActiveRunCommand();
     void notifySimulatorControlsAboutCommand();
 public:
