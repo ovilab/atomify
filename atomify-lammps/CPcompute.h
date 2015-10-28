@@ -10,8 +10,6 @@ class CPCompute : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
-    Q_PROPERTY(QString fixIdentifier READ fixIdentifier WRITE setFixIdentifier NOTIFY fixIdentifierChanged)
-    Q_PROPERTY(QString fixCommand READ fixCommand WRITE setFixCommand NOTIFY fixCommandChanged)
     Q_PROPERTY(QString command READ command WRITE setCommand NOTIFY commandChanged)
     Q_PROPERTY(AtomifySimulator* simulator READ simulator WRITE setSimulator NOTIFY simulatorChanged)
     Q_PROPERTY(QStringList dependencies READ dependencies WRITE setDependencies NOTIFY dependenciesChanged)
@@ -29,7 +27,6 @@ private:
     QString m_fixCommand;
     QString m_command;
 
-    LammpsOutput m_output;
     AtomifySimulator* m_simulator = nullptr;
     QStringList m_dependencies;
     QList<double> m_values;
@@ -52,8 +49,7 @@ public:
     QList<double> values() const;
     LammpsOutput &output();
     bool isVector() const;
-    QString fixIdentifier() const;
-    QString fixCommand() const;
+    void update(LAMMPSController *lammpsController);
 
 signals:
     void identifierChanged(QString identifier);
@@ -66,8 +62,6 @@ signals:
     void fourthValueChanged(double value);
     void valuesChanged(QList<double> values);
     void isVectorChanged(bool isVector);
-    void fixIdentifierChanged(QString fixIdentifier);
-    void fixCommandChanged(QString fixCommand);
 
 public slots:
     void setIdentifier(QString identifier);
@@ -76,7 +70,5 @@ public slots:
     void setDependencies(QStringList dependencies);
     void setValues(QVector<double> values);
     void setIsVector(bool isVector);
-    void setFixIdentifier(QString fixIdentifier);
-    void setFixCommand(QString fixCommand);
 };
 #endif // COMPUTE_H

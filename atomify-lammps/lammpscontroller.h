@@ -40,13 +40,6 @@ private:
 
     void processComputes();
     void executeActiveRunCommand();
-    int findComputeId(QString identifier);
-    bool computeExists(QString identifier);
-    int findFixIndex(QString identifier);
-    bool fixExists(QString identifier);
-    LAMMPS_NS::Compute *findCompute(QString identifier);
-    LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
-
     void notifySimulatorControlsAboutCommand();
 public:
     State state;
@@ -82,21 +75,30 @@ public:
     void processCommand(QString command);
     void reset();
     void tick();
+    int findComputeId(QString identifier);
+    bool computeExists(QString identifier);
+    int findFixIndex(QString identifier);
+    bool fixExists(QString identifier);
+    LAMMPS_NS::Compute *findComputeByIdentifier(QString identifier);
+    LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
     QList<SimulatorControl*> simulatorControls;
     template<class T>
-    T *findFixByType() {
-        for(int i=0; i<m_lammps->modify->nfix; i++) {
-            LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
-
-            T *myFix = dynamic_cast<T*>(fix);
-            if(myFix) {
-                return myFix;
-            }
-        }
-
-        return nullptr;
-    }
+    T *findFixByType();
     void processSimulatorControls();
 };
+
+template<class T>
+T *LAMMPSController::findFixByType() {
+    for(int i=0; i<m_lammps->modify->nfix; i++) {
+        LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
+
+        T *myFix = dynamic_cast<T*>(fix);
+        if(myFix) {
+            return myFix;
+        }
+    }
+
+    return nullptr;
+}
 
 #endif // LAMMPSCONTROLLER_H

@@ -3,6 +3,7 @@
 #include <library.h>
 #include <atom.h>
 #include <domain.h>
+#include <compute_temp.h>
 #include <update.h>
 #include <modify.h>
 #include <neighbor.h>
@@ -71,6 +72,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
+
+    for(CPCompute *compute : mySimulator->computes()) {
+        compute->update(&m_lammpsController);
+    }
 
     m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
 
@@ -254,6 +259,11 @@ bool AtomifySimulator::willReset() const
     return m_willReset;
 }
 
+int AtomifySimulator::numberOfTimesteps() const
+{
+    return m_numberOfTimesteps;
+}
+
 int AtomifySimulator::simulationSpeed() const
 {
     return m_simulationSpeed;
@@ -366,4 +376,13 @@ void AtomifySimulator::setWillReset(bool willReset)
 
     m_willReset = willReset;
     emit willResetChanged(willReset);
+}
+
+void AtomifySimulator::setNumberOfTimesteps(int numberOfTimesteps)
+{
+    if (m_numberOfTimesteps == numberOfTimesteps)
+        return;
+
+    m_numberOfTimesteps = numberOfTimesteps;
+    emit numberOfTimestepsChanged(numberOfTimesteps);
 }

@@ -72,18 +72,52 @@ ApplicationWindow {
 
     Compute {
         property real maxValue: 0
-        id: computeTemp
-        identifier: "temp"
-        command: "compute temp all temp"
+        id: computeMsd
+        identifier: "msd"
+        command: "compute msd all msd"
+        isVector: true
         simulator: mySimulator
-        onValueChanged: {
+        onFourthValueChanged: {
             // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
-            tempGraph.addPoint(mySimulator.simulationTime, value)
+            tempGraph.addPoint(mySimulator.simulationTime, fourthValue)
             tempPlot.xMax = mySimulator.simulationTime
-            tempPlot.xMin = mySimulator.simulationTime-1
-            maxValue = Math.max(maxValue, value)
+            //tempPlot.xMin = mySimulator.simulationTime-1
+            maxValue = Math.max(maxValue, fourthValue)
             tempPlot.yMax = maxValue
         }
+    }
+
+    Compute {
+        property real maxValue: 0
+        id: computePressure
+        identifier: "pressure"
+        command: "compute pressure all pressure temperature"
+        simulator: mySimulator
+        dependencies: ["temperature"]
+        onValueChanged: {
+            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
+//            tempGraph.addPoint(mySimulator.simulationTime, value)
+//            tempPlot.xMax = mySimulator.simulationTime
+//            tempPlot.xMin = mySimulator.simulationTime-1
+//            maxValue = Math.max(maxValue, value)
+//            tempPlot.yMax = maxValue
+        }
+    }
+
+    Compute {
+        property real maxValue: 0
+        id: computeTemp
+        identifier: "temperature"
+        command: "compute temperature all temp"
+        simulator: mySimulator
+//        onValueChanged: {
+//            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
+//            tempGraph.addPoint(mySimulator.simulationTime, value)
+//            tempPlot.xMax = mySimulator.simulationTime
+//            tempPlot.xMin = mySimulator.simulationTime-1
+//            maxValue = Math.max(maxValue, value)
+//            tempPlot.yMax = maxValue
+//        }
     }
 
     Rectangle {
@@ -94,13 +128,16 @@ ApplicationWindow {
         Figure {
             id: tempPlot
             anchors.fill: parent
-            yMin: -1
+            yMin: 0
             yMax: 1
             xLabel: "t [ps] "
-            yLabel: "T"
-            title: "Temperature"
+            yLabel: "<∆r^2>"
+            title: "Mean square displacement"
             LineGraph {
                 id: tempGraph
+                color: "red"
+                width: 3
+                style: Qt.DashDotDotLine
             }
         }
     }

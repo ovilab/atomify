@@ -169,6 +169,7 @@ LAMMPS_NS::Fix* LAMMPSController::findFixByIdentifier(QString identifier) {
 }
 
 int LAMMPSController::findFixIndex(QString identifier) {
+    if(!m_lammps) return -1;
     return m_lammps->modify->find_fix(identifier.toStdString().c_str());
 }
 
@@ -176,13 +177,14 @@ bool LAMMPSController::fixExists(QString identifier) {
     return findFixIndex(identifier) >= 0;
 }
 
-LAMMPS_NS::Compute* LAMMPSController::findCompute(QString identifier) {
+LAMMPS_NS::Compute* LAMMPSController::findComputeByIdentifier(QString identifier) {
     int computeId = findComputeId(identifier);
     if(computeId < 0) return nullptr;
     else return m_lammps->modify->compute[computeId];
 }
 
 int LAMMPSController::findComputeId(QString identifier) {
+    if(!m_lammps) return -1;
     return m_lammps->modify->find_compute(identifier.toStdString().c_str());
 }
 
@@ -200,8 +202,6 @@ void LAMMPSController::processComputes()
 {
     for(QString key : m_computes.keys()) {
         if(!computeExists(key)) {
-            qDebug() << "Missing key: " << key;
-
             CPCompute *compute = m_computes[key];
             // We need to add it. First check all dependencies
             bool allDependenciesFound = true; // Assume all are found and find potential counterexample
@@ -213,25 +213,9 @@ void LAMMPSController::processComputes()
             }
 
             if(allDependenciesFound) {
-                qDebug() << "All dependencies found";
                 state.preRunNeeded = true; // When a new compute is added, a run with pre yes is needed for it to be included
                 // Now that all dependencies are met we can add this one too
                 executeCommandInLAMMPS(compute->command());
-                // Now we need to create a fix that will store these values
-                QString fixIdentifier = QString("fix%1").arg(compute->identifier());
-                compute->setFixIdentifier(fixIdentifier);
-
-                QString fixCommand = QString("fix %1 all ave/time 1 1 1 c_%2").arg(fixIdentifier, compute->identifier());
-                if(compute->isVector()) fixCommand.append(" mode vector");
-
-                compute->setFixCommand(fixCommand);
-                executeCommandInLAMMPS(fixCommand);
-                // Now replace the output on the object
-                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFixByIdentifier(fixIdentifier));
-                if(fix) {
-                    // This is our baby
-                    fix->fp = compute->output().stream();
-                }
             }
         }
     }
@@ -260,19 +244,7 @@ void LAMMPSController::executeActiveRunCommand() {
 
 void LAMMPSController::reset()
 {
-    if(m_lammps != nullptr) {
-        // We need to set FILE pointers in fixes to NULL so that they are not closed when LAMMPS deallocates.
-        for(CPCompute *compute : m_computes) {
-            if(computeExists(compute->identifier())) {
-                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFixByIdentifier(compute->fixIdentifier()));
-                if(fix != nullptr) {
-                    fix->fp = nullptr;
-                }
-            }
-        }
-    }
-
-    int nargs = 1;
+    int nargs = 3;
     char **argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];

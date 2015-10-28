@@ -2,29 +2,37 @@
 #include "mysimulator.h"
 #include "lammpscontroller.h"
 
-LammpsOutput &CPCompute::output()
-{
-    return m_output;
-}
-
 bool CPCompute::isVector() const
 {
     return m_isVector;
 }
 
-QString CPCompute::fixIdentifier() const
+void CPCompute::update(LAMMPSController *lammpsController)
 {
-    return m_fixIdentifier;
-}
+    LAMMPS_NS::Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
+    if(lmp_compute != nullptr) {
+        QVector<double> newValues;
 
-QString CPCompute::fixCommand() const
-{
-    return m_fixCommand;
+        if(isVector()) {
+            lmp_compute->compute_vector();
+            double *values = lmp_compute->vector;
+            int numValues = lmp_compute->size_vector;
+
+            for(int i=0; i<numValues; i++) {
+                newValues.push_back(values[i]);
+            }
+        } else {
+            double value = lmp_compute->compute_scalar();
+            newValues.push_back(value);
+        }
+
+        setValues(newValues);
+    }
 }
 
 CPCompute::CPCompute(QObject *parent) : QObject(parent)
 {
-    m_output.m_compute = this;
+
 }
 
 CPCompute::~CPCompute()
@@ -56,21 +64,25 @@ QStringList CPCompute::dependencies() const
 
 double CPCompute::firstValue() const
 {
+    if(m_values.size()<1) return NAN;
     return m_values.at(0);
 }
 
 double CPCompute::secondValue() const
 {
+    if(m_values.size()<2) return NAN;
     return m_values.at(1);
 }
 
 double CPCompute::thirdValue() const
 {
+    if(m_values.size()<3) return NAN;
     return m_values.at(2);
 }
 
 double CPCompute::fourthValue() const
 {
+    if(m_values.size()<4) return NAN;
     return m_values.at(3);
 }
 
@@ -126,12 +138,13 @@ void CPCompute::setValues(QVector<double> values)
     m_time = m_simulator->simulationTime();
     m_values.clear();
     m_values = QList<double>::fromVector(values);
-
-    emit valuesChanged(m_values);
-    emit firstValueChanged(m_values.at(0));
-    if(values.size() > 1) secondValueChanged(m_values.at(1));
-    if(values.size() > 2) thirdValueChanged(m_values.at(2));
-    if(values.size() > 3) fourthValueChanged(m_values.at(3));
+    if(m_values.size()>0) {
+        emit valuesChanged(m_values);
+        emit firstValueChanged(m_values.at(0));
+        if(values.size() > 1) secondValueChanged(m_values.at(1));
+        if(values.size() > 2) thirdValueChanged(m_values.at(2));
+        if(values.size() > 3) fourthValueChanged(m_values.at(3));
+    }
 }
 
 void CPCompute::setIsVector(bool isVector)
@@ -141,22 +154,4 @@ void CPCompute::setIsVector(bool isVector)
 
     m_isVector = isVector;
     emit isVectorChanged(isVector);
-}
-
-void CPCompute::setFixIdentifier(QString fixIdentifier)
-{
-    if (m_fixIdentifier == fixIdentifier)
-        return;
-
-    m_fixIdentifier = fixIdentifier;
-    emit fixIdentifierChanged(fixIdentifier);
-}
-
-void CPCompute::setFixCommand(QString fixCommand)
-{
-    if (m_fixCommand == fixCommand)
-        return;
-
-    m_fixCommand = fixCommand;
-    emit fixCommandChanged(fixCommand);
 }
