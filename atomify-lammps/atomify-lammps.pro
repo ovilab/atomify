@@ -51,7 +51,10 @@ SOURCES += \
     scripthandler.cpp \
     nvt.cpp \
     simulatorcontrol.cpp \
-    scriptcommand.cpp
+    scriptcommand.cpp \
+    linegraph.cpp \
+    graph.cpp \
+    figure.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -65,7 +68,10 @@ HEADERS += \
     scripthandler.h \
     nvt.h \
     simulatorcontrol.h \
-    scriptcommand.h
+    scriptcommand.h \
+    linegraph.h \
+    graph.h \
+    figure.h
 
 DISTFILES += \
     iOS.plist \

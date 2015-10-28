@@ -70,6 +70,7 @@ public:
     double timePerTimestep();
     LammpsException &currentException();
     double simulationTime();
+    unsigned long numberOfTimesteps();
     int numberOfAtoms() const;
     int numberOfAtomTypes() const;
     void disableAllEnsembleFixes();

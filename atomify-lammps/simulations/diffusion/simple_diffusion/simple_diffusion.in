@@ -1,19 +1,18 @@
 variable L equal 12.0
-variable thickness equal 3.0
+variable thickness equal 2.0
 
 units lj
 atom_style atomic
 atom_modify map hash
-lattice fcc 0.8442
+lattice fcc 0.5
 
 variable left equal 0.5*$L-0.5*${thickness}
 variable right equal 0.5*$L+0.5*${thickness}
 region system block 0 $L 0 $L 0 $L
 region boxinside block ${left} ${right} 0 $L 0 $L
 region boxoutside block ${left} ${right} 0 $L 0 $L side out
-region corner block 0 3 0 3 0 3
 
-create_box 3 system
+create_box 2 system
 create_atoms 1 region boxinside
 create_atoms 2 region boxoutside
 mass * 1.0

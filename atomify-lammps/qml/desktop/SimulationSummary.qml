@@ -27,6 +27,11 @@ Rectangle {
 
         Text {
             font.bold: true
+            text: "Tiemsteps: "+simulator.numberOfTimesteps
+        }
+
+        Text {
+            font.bold: true
             text: "Time: "+simulator.simulationTime.toFixed(2)
         }
 

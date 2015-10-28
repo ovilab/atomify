@@ -51,6 +51,8 @@ public slots:
 
     QString readFile(QString filename);
     QString copyDataFileToReadablePath(QString filename);
+protected:
+    void doRunScript(QString script, ScriptCommand::Type type, QString filename);
 };
 
 #endif // SCRIPTHANDLER_H

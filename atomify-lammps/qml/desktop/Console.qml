@@ -27,7 +27,7 @@ ColumnLayout {
 
             Keys.onPressed: {
                 if(singleCommand.text == "") {
-                    simulator.scriptHandler.lastSingleCommand();
+                    simulator.scriptHandler.lastSingleCommandString();
                 }
             }
 
@@ -45,16 +45,20 @@ ColumnLayout {
                 sequence: "Up"
                 onActivated: {
                     if(singleCommand.text == "") {
-                        singleCommand.text = simulator.scriptHandler.lastSingleCommand();
+                        for(var myObj in simulator.scriptHandler) {
+                            console.log(myObj)
+                        }
+
+                        singleCommand.text = simulator.scriptHandler.lastSingleCommandString();
                     } else {
-                        singleCommand.text = simulator.scriptHandler.previousSingleCommand();
+                        singleCommand.text = simulator.scriptHandler.previousSingleCommandString();
                     }
                 }
             }
             Shortcut {
                 sequence: "Down"
                 onActivated: {
-                    singleCommand.text = simulator.scriptHandler.nextSingleCommand();
+                    singleCommand.text = simulator.scriptHandler.nextSingleCommandString();
                 }
             }
         }

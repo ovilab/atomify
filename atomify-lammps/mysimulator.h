@@ -43,6 +43,7 @@ class AtomifySimulator : public Simulator
     Q_OBJECT
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
     Q_PROPERTY(double simulationTime READ simulationTime WRITE setSimulationTime NOTIFY simulationTimeChanged)
+    Q_PROPERTY(int numberOfTimesteps READ numberOfTimesteps WRITE setNumberOfTimesteps NOTIFY numberOfTimestepsChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms WRITE setNumberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes WRITE setNumberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(QVector3D systemSize READ systemSize WRITE setSystemSize NOTIFY systemSizeChanged)
@@ -75,6 +76,11 @@ public:
     ScriptHandler* scriptHandler() const;
     bool willReset() const;
 
+    int numberOfTimesteps() const
+    {
+        return m_numberOfTimesteps;
+    }
+
 public slots:
     void setSimulationSpeed(int arg);
     void setPaused(bool paused);
@@ -88,6 +94,15 @@ public slots:
     void setLammpsErrorMessage(QString lammpsErrorMessage);
     void setScriptHandler(ScriptHandler* scriptHandler);
     void setWillReset(bool willReset);
+
+    void setNumberOfTimesteps(int numberOfTimesteps)
+    {
+        if (m_numberOfTimesteps == numberOfTimesteps)
+            return;
+
+        m_numberOfTimesteps = numberOfTimesteps;
+        emit numberOfTimestepsChanged(numberOfTimesteps);
+    }
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -104,6 +119,8 @@ signals:
     void lammpsDidReset();
     void scriptHandlerChanged(ScriptHandler* scriptHandler);
     void willResetChanged(bool willReset);
+
+    void numberOfTimestepsChanged(int numberOfTimesteps);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -123,6 +140,7 @@ private:
     QString m_lammpsErrorMessage;
     ScriptHandler* m_scriptHandler = nullptr;
     bool m_willReset = false;
+    int m_numberOfTimesteps = 0;
 };
 
 #endif // MYSIMULATOR_H

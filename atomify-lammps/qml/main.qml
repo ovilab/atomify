@@ -7,6 +7,7 @@ import QtGraphicalEffects 1.0
 import Atomify 1.0
 import SimVis 1.0
 import Qt.labs.settings 1.0
+import QMLPlot 1.0
 
 import "mobile"
 import "mobile/style"
@@ -65,27 +66,70 @@ ApplicationWindow {
             }
         }
         scriptHandler: ScriptHandler {
+            atomStyle: myAtomStyle
         }
     }
 
-    CheckBox {
-        id: nvtCheck
-        anchors.top: parent.top
-        anchors.right: nvtSlider.left
-        checked: nvt.enabled
-        onCheckedChanged: {
-            nvt.enabled = checked
-        }
-    }
-
-    Slider {
-        id: nvtSlider
-        minimumValue: 10
-        maximumValue: 5000
-        anchors.right: switchButton.left
-        value: nvt.targetTemperature
+    Compute {
+        property real maxValue: 0
+        id: computeTemp
+        identifier: "temp"
+        command: "compute temp all temp"
+        simulator: mySimulator
         onValueChanged: {
-            nvt.targetTemperature = value
+            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
+            tempGraph.addPoint(mySimulator.simulationTime, value)
+            tempPlot.xMax = mySimulator.simulationTime
+            tempPlot.xMin = mySimulator.simulationTime-1
+            maxValue = Math.max(maxValue, value)
+            tempPlot.yMax = maxValue
+        }
+    }
+
+    Rectangle {
+        width: 400
+        height: 400
+        anchors.right: parent.right
+        anchors.top: stuff.bottom
+        Figure {
+            id: tempPlot
+            anchors.fill: parent
+            yMin: -1
+            yMax: 1
+            xLabel: "t [ps] "
+            yLabel: "T"
+            title: "Temperature"
+            LineGraph {
+                id: tempGraph
+            }
+        }
+    }
+
+    Rectangle {
+        id: stuff
+        width: 300
+        height: 50
+        color: "white"
+        anchors.right: switchButton.left
+        anchors.top: parent.top
+        Row {
+            CheckBox {
+                id: nvtCheck
+                checked: nvt.enabled
+                onCheckedChanged: {
+                    nvt.enabled = checked
+                }
+            }
+
+            Slider {
+                id: nvtSlider
+                minimumValue: 0.1
+                maximumValue: 6
+                value: nvt.targetTemperature
+                onValueChanged: {
+                    nvt.targetTemperature = value
+                }
+            }
         }
     }
 

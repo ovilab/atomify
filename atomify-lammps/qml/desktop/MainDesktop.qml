@@ -101,7 +101,7 @@ Item {
                     Slider {
                         id: speedSlider
                         minimumValue: 1
-                        maximumValue: 100
+                        maximumValue: 1000
                         stepSize: 1
                         value: simulator.simulationSpeed
                         onValueChanged: {

@@ -65,6 +65,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
 
     // Sync properties from lammps controller
+    mySimulator->setNumberOfTimesteps(m_lammpsController.numberOfTimesteps());
     mySimulator->setSimulationTime(m_lammpsController.simulationTime());
     mySimulator->setNumberOfAtoms(m_lammpsController.numberOfAtoms());
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
@@ -118,6 +119,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
+
         colors.resize(lammps->atom->natoms);
         scales.resize(lammps->atom->natoms);
         positions.resize(lammps->atom->natoms);
