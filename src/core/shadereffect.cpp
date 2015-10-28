@@ -8,7 +8,7 @@ ShaderEffect::ShaderEffect()
 
 ShaderEffect::ShaderEffect(QUuid uniqueId)
 {
-
+    Q_UNUSED(uniqueId);
 }
 
 ShaderEffect::~ShaderEffect()

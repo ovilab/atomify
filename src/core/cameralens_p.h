@@ -25,6 +25,7 @@ public:
 
     Q_DECLARE_PUBLIC(CameraLens)
 
+    CameraLens *q_ptr;
     CameraLens::ProjectionType m_projectionType;
 
     float m_nearPlane;
@@ -40,7 +41,6 @@ public:
 
     mutable QMatrix4x4 m_projectionMatrix;
 
-    CameraLens *q_ptr;
 
 private:
     inline void updatePerpectiveProjection()

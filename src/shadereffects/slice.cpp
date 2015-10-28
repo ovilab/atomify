@@ -72,5 +72,5 @@ void Slice::beforeRendering(QOpenGLShaderProgram &shaderProgram)
 
 void Slice::afterRendering(QOpenGLShaderProgram &shaderProgram)
 {
-
+    Q_UNUSED(shaderProgram);
 }

@@ -11,6 +11,7 @@ public :
 
     Q_DECLARE_PUBLIC(LookAtTransform)
 
+    LookAtTransform* q_ptr;
     mutable QMatrix4x4 m_matrix;
     QVector3D m_position;
     QVector3D m_upVector;
@@ -18,7 +19,6 @@ public :
     QVector3D m_viewVector; // From "camera" position to view center
     mutable bool m_matrixDirty;
 
-    LookAtTransform* q_ptr;
 };
 
 #endif // LOOKATTRANSFORM_P_H

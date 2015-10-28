@@ -58,7 +58,7 @@ void SimplexBump::beforeRendering(QOpenGLShaderProgram &shaderProgram)
 
 void SimplexBump::afterRendering(QOpenGLShaderProgram &shaderProgram)
 {
-
+    Q_UNUSED(shaderProgram);
 }
 
 float SimplexBump::intensity() const
