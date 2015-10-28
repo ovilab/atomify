@@ -21,7 +21,7 @@ run_command("git submodule update --init --recursive")
 # Set up LAMMPS
 
 if _platform == "darwin":
-    lammps_build_type = "mac"
+    lammps_build_type = "serial"
 elif _platform == "win32":
     print "Windows is not supported yet"
     exit()
