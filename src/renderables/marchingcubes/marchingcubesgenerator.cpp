@@ -452,6 +452,7 @@ void MarchingCubesGenerator::updateCube(Cube &cube, const QVector3D &minValues, 
 MarchingCubesGenerator::MarchingCubesGenerator()
 {
     m_scalarFieldEvaluator = [](const QVector3D point) {
+        Q_UNUSED(point);
         std::cout << "Scalar field evaluator not set in MarchingCubesGenerator. Aborting!" << std::endl;
         return 0;
     };

@@ -61,7 +61,7 @@ void SimplexTexture::beforeRendering(QOpenGLShaderProgram &shaderProgram)
 
 void SimplexTexture::afterRendering(QOpenGLShaderProgram &shaderProgram)
 {
-
+    Q_UNUSED(shaderProgram);
 }
 
 float SimplexTexture::scale() const

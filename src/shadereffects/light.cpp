@@ -84,7 +84,7 @@ void Light::beforeRendering(QOpenGLShaderProgram &shaderProgram)
 }
 
 void Light::afterRendering(QOpenGLShaderProgram &shaderProgram) {
-
+    Q_UNUSED(shaderProgram);
 }
 
 QColor Light::ambientColor() const

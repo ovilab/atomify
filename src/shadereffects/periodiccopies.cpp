@@ -58,7 +58,7 @@ void PeriodicCopies::beforeRendering(QOpenGLShaderProgram &shaderProgram)
 
 void PeriodicCopies::afterRendering(QOpenGLShaderProgram &shaderProgram)
 {
-
+    Q_UNUSED(shaderProgram);
 }
 
 QVector3D PeriodicCopies::systemSize() const

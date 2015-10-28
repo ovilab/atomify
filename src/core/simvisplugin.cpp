@@ -46,6 +46,8 @@ void SimVisPlugin::registerTypes(const char *uri)
 
 void SimVisPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
+    Q_UNUSED(engine);
+    Q_UNUSED(uri);
 }
 
 

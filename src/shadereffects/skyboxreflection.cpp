@@ -49,7 +49,7 @@ SkyBoxReflection *SkyBoxReflection::clone()
 
 void SkyBoxReflection::copyState(ShaderEffect *source)
 {
-
+    Q_UNUSED(source);
 }
 
 void SkyBoxReflection::beforeRendering(QOpenGLShaderProgram &shaderProgram)
@@ -61,7 +61,10 @@ void SkyBoxReflection::beforeRendering(QOpenGLShaderProgram &shaderProgram)
 
 void SkyBoxReflection::afterRendering(QOpenGLShaderProgram &shaderProgram)
 {
-    if(!m_skybox) return;
+    Q_UNUSED(shaderProgram);
+    if(!m_skybox) {
+        return;
+    }
     m_skybox->texturePointer()->release();
 }
 

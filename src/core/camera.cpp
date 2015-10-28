@@ -4,16 +4,11 @@
 #include <QTransform>
 
 CameraPrivate::CameraPrivate(Camera *qq)
-//    : QEntityPrivate(qq)
-    : q_ptr(qq)
-    , m_lens(new CameraLens())
-//    , m_transform(new QTransform())
+    : m_lens(new CameraLens())
     , m_lookAt(new LookAtTransform())
+    , q_ptr(qq)
 {
 }
-
-//Camera::Camera(QNode *parent) :
-//    QEntity(*new CameraPrivate(this), parent)
 
 Camera::Camera(QObject *parent) :
     QObject(parent),
