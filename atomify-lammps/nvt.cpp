@@ -1,96 +1,55 @@
-//#include "nvt.h"
-//#include "lammpscontroller.h"
-//#include <fix_nvt.h>
-//#include <QString>
+#include "nvt.h"
+#include "lammpscontroller.h"
+#include <QString>
 
-//class FixNHHack : public FixNH {
-//public:
-//    double target() { return t_target; }
-//    void setTargets(double targetValue) {
-//        t_target = targetValue;
-//        t_start = targetValue;
-//        t_stop = targetValue;
-//    }
-//};
+NVT::NVT(QObject *parent) : CPFix(parent)
+{
+    setIdentifier(QString("cp_nvt"));
+    updateCommand();
+}
 
-//NVT::NVT(QObject *parent) : SimulatorControl(parent)
-//{
+double NVT::targetTemperature() const
+{
+    return m_targetTemperature;
+}
 
-//}
+void NVT::setTargetTemperature(double targetTemperature)
+{
+    if (m_targetTemperature == targetTemperature)
+        return;
 
-//double NVT::targetTemperature() const
-//{
-//    return m_targetTemperature;
-//}
+    m_targetTemperature = targetTemperature;
+    emit targetTemperatureChanged(targetTemperature);
+}
 
-//void NVT::setTargetTemperature(double targetTemperature)
-//{
-//    if (m_targetTemperature == targetTemperature)
-//        return;
+void NVT::setTemperatureDampening(double temperatureDampening)
+{
+    if (m_temperatureDampening == temperatureDampening)
+        return;
 
-//    m_targetTemperature = targetTemperature;
-//    setDirty(true);
-//    emit targetTemperatureChanged(targetTemperature);
-//}
+    m_temperatureDampening = temperatureDampening;
+    emit temperatureDampeningChanged(temperatureDampening);
+}
 
-//void NVT::setTemperatureDampening(double temperatureDampening)
-//{
-//    if (m_temperatureDampening == temperatureDampening)
-//        return;
+double NVT::temperatureDampening() const
+{
+    return m_temperatureDampening;
+}
 
-//    m_temperatureDampening = temperatureDampening;
-//    emit temperatureDampeningChanged(temperatureDampening);
-//}
+void NVT::updateCommand()
+{
+    QString newCommand = QString("all nvt temp %1 %1 %2").arg(m_targetTemperature).arg(m_temperatureDampening);
+    setCommand(newCommand);
+}
 
-//void NVT::update(LAMMPSController *lammpsController)
-//{
-//    if(lammpsController->scriptHandler() == nullptr) {
-//        return;
-//    }
-//    FixNVT *fix = lammpsController->findFixByType<FixNVT>();
-//    if(fix) {
-//        FixNH *fixNH = dynamic_cast<FixNH*>(fix);
-//        FixNHHack *fixHack = reinterpret_cast<FixNHHack*>(fixNH);
-//        if(fixHack) {
-//            if(m_dirty) {
-//                m_dirty = false;
-//                if(!m_enabled) {
-//                    QList<QString> disableCommands;
-//                    disableCommands.push_back(QString("unfix %1").arg(fix->id));
-//                    disableCommands.push_back("fix nve all nve");
-//                    lammpsController->scriptHandler()->addCommandsToTop(disableCommands, ScriptCommand::Type::SingleCommand);
-//                    return;
-//                }
+QList<QString> NVT::enabledCommands()
+{
+    QString enableCommand = QString("fix %1 %2").arg(identifier()).arg(command());
+    return {QString("#/disableAllEnsembleFixes"), enableCommand};
+}
 
-//                if(m_targetTemperature != fixHack->target()) {
-//                    fixHack->setTargets(m_targetTemperature);
-//                }
-//            } else {
-//                if(m_targetTemperature != fixHack->target()) {
-//                    m_targetTemperature = fixHack->target();
-//                    emit targetTemperatureChanged(m_targetTemperature);
-//                }
-//                if(!m_enabled) {
-//                    m_enabled = true;
-//                    emit enabledChanged(m_enabled);
-//                }
-//            }
-//        }
-//    } else {
-//        if(m_dirty && m_enabled) {
-//            lammpsController->disableAllEnsembleFixes();
-//            QString command = QString("fix nvt all nvt temp %1 %1 %2").arg(m_targetTemperature).arg(m_temperatureDampening);
-//            lammpsController->scriptHandler()->addCommandToTop(ScriptCommand(command, ScriptCommand::Type::SingleCommand));
-//        } else if(m_enabled) {
-//            m_enabled = false;
-//            emit enabledChanged(m_enabled);
-//        }
-//    }
+QList<QString> NVT::disableCommands()
+{
+    return {QString("unfix %1").arg(identifier()), QString("fix cp_nve all nve")};
+}
 
-//    m_dirty = false;
-//}
-
-//double NVT::temperatureDampening() const
-//{
-//    return m_temperatureDampening;
-//}

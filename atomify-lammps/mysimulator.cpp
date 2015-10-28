@@ -99,8 +99,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     ScriptCommand nextCommandObject = scriptHandler->nextCommand();
 
     QString nextCommand = nextCommandObject.command();
-    if(scriptParser.isEditorCommand(nextCommand)) {
-        scriptHandler->parseEditorCommand(nextCommand, mySimulator);
+    if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {
+        scriptHandler->parseGUICommand(nextCommand);
         m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
     } else {
         m_lammpsController.state.nextCommand = nextCommandObject;

@@ -7,11 +7,14 @@ class CPFix : public SimulatorControl
 {
     Q_OBJECT
 protected:
-    QString enabledCommand() override;
-    QString disableCommand() override;
+    QList<QString> enabledCommands() override;
+    QList<QString> disableCommands() override;
+    virtual void updateCommand() override;
+    virtual QList<QString> resetCommands() override;
 
 public:
-    CPFix();
+    explicit CPFix(QObject *parent = 0);
+    ~CPFix() { }
     void update(LAMMPSController *lammpsController) override;
     virtual bool existsInLammps(LAMMPSController *lammpsController);
 
@@ -19,9 +22,6 @@ signals:
 
 public slots:
 
-    // SimulatorControl interface
-protected:
-    virtual void updateCommand();
 };
 
 #endif // CPFIX_H

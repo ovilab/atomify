@@ -1,7 +1,7 @@
 #include "cpfix.h"
 #include "lammpscontroller.h"
 
-CPFix::CPFix()
+CPFix::CPFix(QObject *parent) : SimulatorControl(parent)
 {
 
 }
@@ -12,24 +12,29 @@ void CPFix::update(LAMMPSController *lammpsController)
 
 }
 
-
-QString CPFix::enabledCommand()
+QList<QString> CPFix::enabledCommands()
 {
-    return QString("fix %1 %2").arg(identifier()).arg(command());
+    return {QString("fix %1 %2").arg(identifier()).arg(command())};
 }
 
-QString CPFix::disableCommand()
+QList<QString> CPFix::disableCommands()
 {
-    return QString("unfix %1 ").arg(identifier());
+    return {QString("unfix %1 ").arg(identifier())};
 }
-
 
 void CPFix::updateCommand()
 {
+
 }
 
 bool CPFix::existsInLammps(LAMMPSController *lammpsController)
 {
     LAMMPS_NS::Fix *fix = lammpsController->findFixByIdentifier(identifier());
     return fix!=nullptr;
+}
+
+
+QList<QString> CPFix::resetCommands()
+{
+    return { QString("unfix %1").arg(identifier()), QString("fix %1 %2").arg(identifier()).arg(command()) };
 }

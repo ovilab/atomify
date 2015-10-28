@@ -92,7 +92,10 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
-//    qDebug() << command;
+    if(!command.startsWith("run")) {
+        qDebug() << command;
+    }
+
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {
@@ -194,7 +197,6 @@ bool LAMMPSController::computeExists(QString identifier) {
 
 void LAMMPSController::processSimulatorControls() {
     for(SimulatorControl *control : simulatorControls) {
-        qDebug() << "Checking control: " << control->identifier();
         control->update(this);
     }
 }
@@ -303,35 +305,28 @@ int LAMMPSController::numberOfAtomTypes() const
 
 void LAMMPSController::disableAllEnsembleFixes()
 {
+    if(!m_scriptHandler) {
+        qDebug() << "Error, LAMMPSController doesn't have script handler. Aborting!";
+        exit(1);
+    }
     state.preRunNeeded = true;
-    while(true) {
-        bool didFindFix = false;
-        for(int i=0; i<m_lammps->modify->nfix; i++) {
-            LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
+    for(int i=0; i<m_lammps->modify->nfix; i++) {
+        LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
 
-            LAMMPS_NS::FixNVT *nvt = dynamic_cast<LAMMPS_NS::FixNVT*>(fix);
-            if(nvt) {
-                executeCommandInLAMMPS(QString("unfix %1").arg(nvt->id));
-                didFindFix = true;
-                break;
-            }
-
-            LAMMPS_NS::FixNVE *nve = dynamic_cast<LAMMPS_NS::FixNVE*>(fix);
-            if(nve) {
-                executeCommandInLAMMPS(QString("unfix %1").arg(nve->id));
-                didFindFix = true;
-                break;
-            }
-
-            LAMMPS_NS::FixNPT *npt = dynamic_cast<LAMMPS_NS::FixNPT*>(fix);
-            if(npt) {
-                executeCommandInLAMMPS(QString("unfix %1").arg(npt->id));
-                didFindFix = true;
-                break;
-            }
+        LAMMPS_NS::FixNVT *nvt = dynamic_cast<LAMMPS_NS::FixNVT*>(fix);
+        if(nvt) {
+            m_scriptHandler->addCommandToTop(ScriptCommand(QString("unfix %1").arg(nvt->id), ScriptCommand::Type::SingleCommand));
         }
 
-        if(!didFindFix) return;
+        LAMMPS_NS::FixNVE *nve = dynamic_cast<LAMMPS_NS::FixNVE*>(fix);
+        if(nve) {
+            m_scriptHandler->addCommandToTop(ScriptCommand(QString("unfix %1").arg(nve->id), ScriptCommand::Type::SingleCommand));
+        }
+
+        LAMMPS_NS::FixNPT *npt = dynamic_cast<LAMMPS_NS::FixNPT*>(fix);
+        if(npt) {
+            m_scriptHandler->addCommandToTop(ScriptCommand(QString("unfix %1").arg(npt->id), ScriptCommand::Type::SingleCommand));
+        }
     }
 }
 

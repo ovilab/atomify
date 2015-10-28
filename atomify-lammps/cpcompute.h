@@ -20,10 +20,13 @@ protected:
     void setValues(double time, QVector<double> values);
 
     virtual void updateCommand() override;
-    QString enabledCommand() override;
-    QString disableCommand() override;
+    QList<QString> enabledCommands() override;
+    QList<QString> disableCommands() override;
+    virtual QList<QString> resetCommands() override;
+
 public:
-    CPCompute();
+    explicit CPCompute(QObject *parent = 0);
+    ~CPCompute() { }
     void update(LAMMPSController *lammpsController) override;
     bool existsInLammps(LAMMPSController *lammpsController) override;
     QList<double> values() const;

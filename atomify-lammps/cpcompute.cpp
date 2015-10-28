@@ -2,7 +2,7 @@
 #include "lammpscontroller.h"
 #include "mysimulator.h"
 
-CPCompute::CPCompute()
+CPCompute::CPCompute(QObject *parent) : SimulatorControl(parent)
 {
 
 }
@@ -50,14 +50,14 @@ void CPCompute::update(LAMMPSController *lammpsController)
     }
 }
 
-QString CPCompute::enabledCommand()
+QList<QString> CPCompute::enabledCommands()
 {
-    return QString("compute %1 %2").arg(identifier()).arg(command());
+    return { QString("compute %1 %2").arg(identifier()).arg(command()) };
 }
 
-QString CPCompute::disableCommand()
+QList<QString> CPCompute::disableCommands()
 {
-    return QString("uncompute %1").arg(identifier());
+    return {QString("uncompute %1").arg(identifier())};
 }
 
 bool CPCompute::existsInLammps(LAMMPSController *lammpsController)
@@ -121,4 +121,10 @@ void CPCompute::setIsVector(bool isVector)
 
     m_isVector = isVector;
     emit isVectorChanged(isVector);
+}
+
+
+QList<QString> CPCompute::resetCommands()
+{
+    return { QString("uncompute %1").arg(identifier()), QString("compute %1 %2").arg(identifier()).arg(command()) };
 }

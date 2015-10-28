@@ -21,11 +21,13 @@ protected:
     bool m_enabled = true;
     bool addToLammps(LAMMPSController *lammpsController);
     virtual void updateCommand() = 0;
-    virtual QString enabledCommand() = 0;
-    virtual QString disableCommand() = 0;
+    virtual QList<QString> enabledCommands() = 0;
+    virtual QList<QString> disableCommands() = 0;
+    virtual QList<QString> resetCommands() = 0;
 
 public:
     explicit SimulatorControl(QObject *parent = 0);
+    ~SimulatorControl();
     bool enabled() const;
     QString identifier() const;
     QString command() const;

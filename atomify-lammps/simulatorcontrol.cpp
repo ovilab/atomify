@@ -8,8 +8,12 @@ SimulatorControl::SimulatorControl(QObject *parent) : QObject(parent)
 
 }
 
+SimulatorControl::~SimulatorControl()
+{
+    m_dependencies.clear();
+}
+
 bool SimulatorControl::addToLammps(LAMMPSController *lammpsController) {
-    qDebug() << "Trying to add to lammps...";
     for(const QVariant &variant : m_dependencies) {
         SimulatorControl *dependency = qvariant_cast<SimulatorControl*>(variant);
         if(dependency && !dependency->existsInLammps(lammpsController)) {
@@ -18,9 +22,8 @@ bool SimulatorControl::addToLammps(LAMMPSController *lammpsController) {
         }
     }
 
-    qDebug() << "All dependencies are met";
     ScriptHandler *scriptHandler = lammpsController->scriptHandler();
-    scriptHandler->addCommandToTop(ScriptCommand(enabledCommand(), ScriptCommand::Type::SingleCommand));
+    scriptHandler->addCommandsToTop(enabledCommands(), ScriptCommand::Type::SingleCommand);
     return true;
 }
 
@@ -42,14 +45,11 @@ bool SimulatorControl::dependenciesValid(LAMMPSController *lammpsController)
 
 void SimulatorControl::update(LAMMPSController *lammpsController)
 {
-    qDebug() << "Updating control with identifier " << identifier();
     if(!lammpsController->scriptHandler()) {
         return;
     }
 
     bool exists = existsInLammps(lammpsController);
-    qDebug() << identifier() << " exists: " << exists;
-    qDebug() << "Enabled: " << m_enabled;
     if(!exists && m_enabled) {
         // We should exist, so let's try to add.
         // Whatever happens, just return. We aren't ready to compute any values yet anyway.
@@ -59,15 +59,15 @@ void SimulatorControl::update(LAMMPSController *lammpsController)
 
     if(exists && !m_enabled || !dependenciesValid(lammpsController)) {
         // We should not exist, but we do. Now remove from lammps
-        lammpsController->scriptHandler()->addCommandToTop(disableCommand());
+        lammpsController->scriptHandler()->addCommandsToTop(disableCommands(), ScriptCommand::Type::SingleCommand);
     }
 
     if(exists) {
         QString currentCommand = command();
         updateCommand();
         if(currentCommand!=command()) {
-            QList<QString> reAddCommands = { disableCommand(), enabledCommand() };
-            lammpsController->scriptHandler()->addCommandsToTop(reAddCommands, ScriptCommand::Type::SingleCommand);
+
+            lammpsController->scriptHandler()->addCommandsToTop(resetCommands(), ScriptCommand::Type::SingleCommand);
         }
     }
 }

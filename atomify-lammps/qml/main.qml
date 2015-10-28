@@ -58,13 +58,13 @@ ApplicationWindow {
             id: myAtomStyle
         }
 
-//        NVT {
-//            id: nvt
-//            temperatureDampening: 0.01
-//            onEnabledChanged: {
-//                nvtCheck.checked = enabled
-//            }
-//        }
+        NVT {
+            id: nvt
+            temperatureDampening: 0.01
+            onEnabledChanged: {
+                nvtCheck.checked = enabled
+            }
+        }
         scriptHandler: ScriptHandler {
             atomStyle: myAtomStyle
         }
@@ -75,11 +75,11 @@ ApplicationWindow {
             identifier: "temperature"
             command: "all temp"
             onValueChanged: {
-//                tempGraph.addPoint(mySimulator.simulationTime, value)
-//                tempPlot.xMax = mySimulator.simulationTime
-//                tempPlot.xMin = mySimulator.simulationTime-1
-//                maxValue = Math.max(maxValue, value)
-//                tempPlot.yMax = maxValue
+                tempGraph.addPoint(mySimulator.simulationTime, value)
+                tempPlot.xMax = mySimulator.simulationTime
+                tempPlot.xMin = mySimulator.simulationTime-1
+                maxValue = Math.max(maxValue, value)
+                tempPlot.yMax = maxValue
             }
         }
 
@@ -90,11 +90,11 @@ ApplicationWindow {
             command: "all pressure temperature"
             dependencies: [computeTemp]
             onValueChanged: {
-                tempGraph.addPoint(mySimulator.simulationTime, value)
-                tempPlot.xMax = mySimulator.simulationTime
-                tempPlot.xMin = mySimulator.simulationTime-1
-                maxValue = Math.max(maxValue, value)
-                tempPlot.yMax = maxValue
+//                tempGraph.addPoint(mySimulator.simulationTime, value)
+//                tempPlot.xMax = mySimulator.simulationTime
+//                tempPlot.xMin = mySimulator.simulationTime-1
+//                maxValue = Math.max(maxValue, value)
+//                tempPlot.yMax = maxValue
             }
         }
     }
@@ -154,15 +154,15 @@ ApplicationWindow {
                 }
             }
 
-//            Slider {
-//                id: nvtSlider
-//                minimumValue: 0.1
-//                maximumValue: 6
-//                value: nvt.targetTemperature
-//                onValueChanged: {
-//                    nvt.targetTemperature = value
-//                }
-//            }
+            Slider {
+                id: nvtSlider
+                minimumValue: 0.1
+                maximumValue: 6
+                value: nvt.targetTemperature
+                onValueChanged: {
+                    nvt.targetTemperature = value
+                }
+            }
         }
     }
 
