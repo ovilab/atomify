@@ -28,5 +28,10 @@
         <file>mobile/controls/Thermostat.qml</file>
         <file>mobile/controls/Plot.qml</file>
         <file>mobile/controls/PlotLabels.qml</file>
+        <file>mobile/main-menu/MainMenuLeft.qml</file>
+        <file>mobile/hud/RevealDashboardButton.qml</file>
+        <file>mobile/hud/RevealSimulationsViewButton.qml</file>
+        <file>mobile/main-menu/MainMenuLeftButton.qml</file>
+        <file>mobile/simulations/SimulationsViewNew.qml</file>
     </qresource>
 </RCC>

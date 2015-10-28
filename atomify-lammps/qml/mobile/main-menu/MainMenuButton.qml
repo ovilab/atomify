@@ -48,47 +48,4 @@ Item {
             buttonRoot.clicked()
         }
     }
-
-//    ParallelAnimation {
-//        loops: Animation.Infinite
-//        running: true
-//        SequentialAnimation {
-//            NumberAnimation {
-//                id: forwardAnimation
-//                target: rotationTransform
-//                property: "angle"
-//                duration: Math.random() * 6000 + 8000
-//                easing.type: Easing.InOutQuad
-//                from: -buttonRoot.maximumRotation
-//                to: buttonRoot.maximumRotation
-//            }
-//            NumberAnimation {
-//                id: backAnimation
-//                target: rotationTransform
-//                property: "angle"
-//                duration: Math.random() * 6000 + 6000
-//                easing.type: Easing.InOutQuad
-//                from: buttonRoot.maximumRotation
-//                to: -buttonRoot.maximumRotation
-//            }
-//        }
-//        SequentialAnimation {
-//            NumberAnimation {
-//                target: rotationTransform
-//                property: "axis.x"
-//                duration: Math.random() * 6000 + 6000
-//                easing.type: Easing.InOutQuad
-//                from: 0
-//                to: 1
-//            }
-//            NumberAnimation {
-//                target: rotationTransform
-//                property: "axis.x"
-//                duration: Math.random() * 6000 + 8000
-//                easing.type: Easing.InOutQuad
-//                from: 1
-//                to: 0
-//            }
-//        }
-//    }
 }

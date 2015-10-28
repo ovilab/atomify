@@ -19,12 +19,12 @@ ApplicationWindow {
     property string mode: "mobile"
 
     title: qsTr("Atomify")
-    width: 1650
-    height: 900
+    width: 320
+    height: 560
     visible: true
 
     function resetStyle() {
-        Style.reset(width, height, Screen.pixelDensity)
+        Style.reset(width, height, Screen)
     }
 
     onWidthChanged: {
@@ -78,68 +78,23 @@ ApplicationWindow {
         simulator: mySimulator
         onValueChanged: {
             // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
-            tempGraph.addPoint(mySimulator.simulationTime, value)
-            tempPlot.xMax = mySimulator.simulationTime
-            tempPlot.xMin = mySimulator.simulationTime-1
-            maxValue = Math.max(maxValue, value)
-            tempPlot.yMax = maxValue
+//            tempGraph.addPoint(mySimulator.simulationTime, value)
+//            tempPlot.xMax = mySimulator.simulationTime
+//            tempPlot.xMin = mySimulator.simulationTime-1
+//            maxValue = Math.max(maxValue, value)
+//            tempPlot.yMax = maxValue
         }
     }
 
-    Rectangle {
-        width: 400
-        height: 400
-        anchors.right: parent.right
-        anchors.top: stuff.bottom
-        Figure {
-            id: tempPlot
-            anchors.fill: parent
-            yMin: -1
-            yMax: 1
-            xLabel: "t [ps] "
-            yLabel: "T"
-            title: "Temperature"
-            LineGraph {
-                id: tempGraph
+    Shortcut {
+        sequence: StandardKey.AddTab
+        context: Qt.ApplicationShortcut
+        onActivated: {
+            if(mode === "desktop") {
+                mode = "mobile"
+            } else {
+                mode = "desktop"
             }
-        }
-    }
-
-    Rectangle {
-        id: stuff
-        width: 300
-        height: 50
-        color: "white"
-        anchors.right: switchButton.left
-        anchors.top: parent.top
-        Row {
-            CheckBox {
-                id: nvtCheck
-                checked: nvt.enabled
-                onCheckedChanged: {
-                    nvt.enabled = checked
-                }
-            }
-
-            Slider {
-                id: nvtSlider
-                minimumValue: 0.1
-                maximumValue: 6
-                value: nvt.targetTemperature
-                onValueChanged: {
-                    nvt.targetTemperature = value
-                }
-            }
-        }
-    }
-
-    Button {
-        id: switchButton
-        text: "Switch mode"
-        onClicked: (mode === "desktop") ? mode = "mobile" : mode = "desktop"
-        anchors {
-            right: parent.right
-            top: parent.top
         }
     }
 

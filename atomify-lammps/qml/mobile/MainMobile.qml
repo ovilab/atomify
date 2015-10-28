@@ -12,157 +12,123 @@ import "../visualization"
 import "main-menu"
 import "dashboard"
 import "style"
+import "hud"
+import "simulations"
 
 Item {
     id: mobileRoot
 
     property AtomifySimulator simulator: null
 
+    states: [
+        State {
+            name: "simulations"
+            PropertyChanges {
+                target: visualizer
+                y: -visualizer.height
+            }
+        },
+        State {
+            name: "tools"
+            PropertyChanges {
+                target: visualizer
+                y: visualizer.height
+            }
+        }
+    ]
+
+    transitions: [
+        Transition {
+            NumberAnimation {
+                target: visualizer
+                properties: "x,y"
+                duration: 360
+                easing.type: Easing.InOutQuad
+            }
+        }
+    ]
+
     AtomifyVisualizer {
+        id: visualizer
         simulator: mobileRoot.simulator
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
         scale: 0.8
-    }
-
-    Item {
-        id: revealDashboardButton
-        property bool revealed: !dashboard.revealed && !mainMenu.revealed
-        anchors {
-            right: parent.right
-            bottom: parent.bottom
-        }
-        enabled: revealed
-        state: revealed ? "revealed" : "hidden"
-        width: Style.touchableSize * 2.5
-        height: width
-
-        states: [
-            State {
-                name: "hidden"
-                PropertyChanges {
-                    target: revealDashboardButton
-                    opacity: 0.0
-                }
-            },
-            State {
-                name: "revealed"
-                PropertyChanges {
-                    target: revealDashboardButton
-                    opacity: 1.0
-                }
-            }
-        ]
-
-        transitions: [
-            Transition {
-                NumberAnimation {
-                    properties: "opacity"
-                    duration: 200
-                    easing.type: Easing.InOutQuad
-                }
-            }
-        ]
-
-        Image {
-            anchors {
-                fill: parent
-                margins: mobileRoot.width * 0.01
-            }
-            smooth: true
-
-            source: "qrc:/images/dashboard.png"
-        }
 
         MouseArea {
             anchors.fill: parent
-            onPressed: {
+            onClicked: {
                 mainMenu.revealed = false
-                dashboard.revealed = true
+                dashboard.revealed = false
+            }
+        }
+
+        MouseArea {
+            anchors {
+                top: parent.bottom
+                left: parent.left
+                right: parent.right
+            }
+            height: 100
+            onClicked: {
+                mobileRoot.state = ""
+            }
+        }
+
+        MouseArea {
+            anchors {
+                bottom: parent.top
+                left: parent.left
+                right: parent.right
+            }
+            height: 100
+            onClicked: {
+                mobileRoot.state = ""
+            }
+        }
+
+        MouseArea {
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+            height: 100
+            onClicked: {
+                console.log("Visualizer top")
+                mobileRoot.state = "tools"
+            }
+        }
+
+        MouseArea {
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+            height: 100
+            onClicked: {
+                console.log("Simulations")
+                mobileRoot.state = "simulations"
             }
         }
     }
 
-    Item {
-        id: revealSimulationsViewButton
-        property bool revealed: !dashboard.revealed && !mainMenu.revealed
-
-        anchors {
-            top: mobileRoot.top
-            left: mobileRoot.left
-        }
-        width: Style.touchableSize * 2.5
-        height: width
-
-        enabled: revealed
-        state: revealed ? "revealed" : "hidden"
-
-        states: [
-            State {
-                name: "hidden"
-                PropertyChanges {
-                    target: revealSimulationsViewButton
-                    opacity: 0.0
-                }
-            },
-            State {
-                name: "revealed"
-                PropertyChanges {
-                    target: revealSimulationsViewButton
-                    opacity: 1.0
-                }
-            }
-        ]
-
-        transitions: [
-            Transition {
-                NumberAnimation {
-                    properties: "opacity"
-                    duration: 200
-                    easing.type: Easing.InOutQuad
-                }
-            }
-        ]
-
-        Image {
-            anchors {
-                fill: parent
-                margins: parent.width * 0.2
-            }
-            source: "qrc:/images/systems.png"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onPressed: {
-                mainMenu.revealed = true
-            }
-        }
+    RevealDashboardButton {
+        id: revealDashboardButton
     }
 
     Dashboard {
         id: dashboard
-        property bool isSettingSystemSize: false
-
-//        temperature: molecularDynamics.temperature
-//        pressure: molecularDynamics.pressure
-//        kineticEnergy: molecularDynamics.kineticEnergy
-//        potentialEnergy: molecularDynamics.potentialEnergy
-//        totalEnergy: molecularDynamics.totalEnergy
-//        time: molecularDynamics.time
     }
 
-    MainMenu {
-        id: mainMenu
 
-        property bool wasPausedByReveal: false
-
-        anchors.fill: parent
-
-        Component.onCompleted: {
-            loadFirstSimulation()
-            revealed = true
+    SimulationsViewNew {
+        width: parent.width
+        height: parent.height
+        anchors {
+            top: visualizer.bottom
         }
-
         onLoadSimulation: {
             if(!simulator.scriptHandler) {
                 return
@@ -171,19 +137,25 @@ Item {
             simulator.willReset = true
             simulator.scriptHandler.reset()
             simulator.scriptHandler.runFile(simulation.scriptSource)
-            revealed = false
+            mobileRoot.state = ""
+        }
+    }
+
+    RevealSimulationsViewButton {
+        id: revealSimulationsViewButton
+        onClicked: {
+            mainMenu.revealed = true
+        }
+    }
+
+    MainMenuLeft {
+        id: mainMenu
+        onContinueClicked: {
+            mobileRoot.state = ""
         }
 
-        onRevealedChanged: {
-            if(revealed) {
-                if(dashboard.running) {
-                    wasPausedByReveal = true
-                    dashboard.running = false
-                }
-            } else if(wasPausedByReveal) {
-                dashboard.running = true
-                wasPausedByReveal = false
-            }
+        onSimulationsClicked: {
+            mobileRoot.state = "simulations"
         }
     }
 }
