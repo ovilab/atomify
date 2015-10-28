@@ -2,11 +2,10 @@
 #define COMPUTE_H
 
 #include <QObject>
-#include <QPair>
 #include <QVector>
 #include "lammpsoutput.h"
 
-class MySimulator; class LAMMPSController;
+class AtomifySimulator; class LAMMPSController;
 class CPCompute : public QObject
 {
     Q_OBJECT
@@ -14,7 +13,7 @@ class CPCompute : public QObject
     Q_PROPERTY(QString fixIdentifier READ fixIdentifier WRITE setFixIdentifier NOTIFY fixIdentifierChanged)
     Q_PROPERTY(QString fixCommand READ fixCommand WRITE setFixCommand NOTIFY fixCommandChanged)
     Q_PROPERTY(QString command READ command WRITE setCommand NOTIFY commandChanged)
-    Q_PROPERTY(MySimulator* simulator READ simulator WRITE setSimulator NOTIFY simulatorChanged)
+    Q_PROPERTY(AtomifySimulator* simulator READ simulator WRITE setSimulator NOTIFY simulatorChanged)
     Q_PROPERTY(QStringList dependencies READ dependencies WRITE setDependencies NOTIFY dependenciesChanged)
     Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
     Q_PROPERTY(double time READ time)
@@ -31,7 +30,7 @@ private:
     QString m_command;
 
     LammpsOutput m_output;
-    MySimulator* m_simulator = NULL;
+    AtomifySimulator* m_simulator = nullptr;
     QStringList m_dependencies;
     QList<double> m_values;
     double m_time = 0;
@@ -43,7 +42,7 @@ public:
 
     QString identifier() const;
     QString command() const;
-    MySimulator* simulator() const;
+    AtomifySimulator* simulator() const;
     QStringList dependencies() const;
     double firstValue() const;
     double secondValue() const;
@@ -59,7 +58,7 @@ public:
 signals:
     void identifierChanged(QString identifier);
     void commandChanged(QString command);
-    void simulatorChanged(MySimulator* simulator);
+    void simulatorChanged(AtomifySimulator* simulator);
     void dependenciesChanged(QStringList dependencies);
     void firstValueChanged(double value);
     void secondValueChanged(double value);
@@ -73,7 +72,7 @@ signals:
 public slots:
     void setIdentifier(QString identifier);
     void setCommand(QString command);
-    void setSimulator(MySimulator* simulator);
+    void setSimulator(AtomifySimulator* simulator);
     void setDependencies(QStringList dependencies);
     void setValues(QVector<double> values);
     void setIsVector(bool isVector);

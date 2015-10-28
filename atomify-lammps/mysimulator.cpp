@@ -1,14 +1,19 @@
 #include "mysimulator.h"
-#include "lammps/library.h"
-#include "lammps/atom.h"
-#include "lammps/domain.h"
-#include "lammps/update.h"
-#include "lammps/modify.h"
+#include "simulatorcontrol.h"
+#include <library.h>
+#include <atom.h>
+#include <domain.h>
+#include <update.h>
+#include <modify.h>
+#include <neighbor.h>
+#include <neigh_list.h>
 
 #include <core/camera.h>
 #include <string>
 #include <sstream>
 #include <SimVis/Spheres>
+#include <SimVis/Cylinders>
+#include <SimVis/Points>
 #include <QUrl>
 #include <QString>
 #include <QQmlFile>
@@ -17,6 +22,7 @@
 #include <fstream>
 #include <memory>
 #include <QStandardPaths>
+
 using namespace std;
 
 MyWorker::MyWorker() {
@@ -27,48 +33,77 @@ MyWorker::MyWorker() {
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
-    MySimulator *mySimulator = qobject_cast<MySimulator*>(simulator);
+    AtomifySimulator *mySimulator = qobject_cast<AtomifySimulator*>(simulator);
+    if(mySimulator->scriptHandler() == nullptr) {
+        return;
+    }
 
-    if(!mySimulator->m_scriptToRun.isEmpty()) {
-        // We have a queued script, now run it
+    if(mySimulator->willReset()) {
         m_lammpsController.reset();
-        m_lammpsController.runScript(mySimulator->m_scriptToRun);
-        mySimulator->m_scriptToRun.clear();
+        mySimulator->setWillReset(false);
+        auto simulatorControls = mySimulator->findChildren<SimulatorControl*>();
+        for(auto *simulatorControl : simulatorControls) {
+            simulatorControl->setDirty(false);
+        }
+        emit mySimulator->lammpsDidReset();
     }
 
-    if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
-        qDebug() << "LAMMPS crashed and we picked it up :D";
-        qDebug() << "An error occured in " << m_lammpsController.currentException().file() << " on line " << m_lammpsController.currentException().line();
-        qDebug() << "Message: " << m_lammpsController.currentException().error() << endl;
-        m_lammpsController.currentException().setIsReported(true);
-    }
-
-    if(mySimulator->atomStyle() != NULL) {
+    if(mySimulator->atomStyle() != nullptr) {
         // Sync new atom styles from Simulator (QML) to Worker
-        m_atomStyle.setData(mySimulator->atomStyle()->data());
+        if(mySimulator->atomStyle()->dirty()) {
+            m_atomStyle.setData(mySimulator->atomStyle()->data());
+            m_atomStyle.setDirty(mySimulator->atomStyle()->dirty());
+            mySimulator->atomStyle()->setDirty(false);
+        }
     }
 
     // Sync values from QML and simulator
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
+    // QVector<SimulatorControl*> simulatorControls;
+    m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
 
     // Sync properties from lammps controller
+    mySimulator->setNumberOfTimesteps(m_lammpsController.numberOfTimesteps());
     mySimulator->setSimulationTime(m_lammpsController.simulationTime());
     mySimulator->setNumberOfAtoms(m_lammpsController.numberOfAtoms());
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
     mySimulator->setSystemSize(m_lammpsController.systemSize());
-    mySimulator->setLammpsOutput(&m_lammpsController.output);
+    mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
+
+    m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
+
+    if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
+        qDebug() << "LAMMPS crashed";
+        mySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
+        mySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+        m_lammpsController.currentException().setIsReported(true);
+
+//        console.log(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
+//        console.log(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
+
+        emit mySimulator->errorInLammpsScript();
+        return;
+    }
+
     if(m_willPause) {
         m_lammpsController.setPaused(true);
         mySimulator->setPaused(true);
         m_willPause = false;
     }
 
-    slice.distance = mySimulator->sliceDistance();
-    slice.normal = mySimulator->sliceNormal();
-    slice.width = mySimulator->sliceWidth();
-    slice.enabled = mySimulator->sliceEnabled();
+    ScriptHandler *scriptHandler = mySimulator->m_scriptHandler;
+    ScriptParser &scriptParser = scriptHandler->parser();
+    ScriptCommand nextCommandObject = scriptHandler->nextCommand();
+
+    QString nextCommand = nextCommandObject.command();
+    if(scriptParser.isEditorCommand(nextCommand)) {
+        scriptHandler->parseEditorCommand(nextCommand, mySimulator);
+        m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
+    } else {
+        m_lammpsController.state.nextCommand = nextCommandObject;
+    }
 }
 
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
@@ -76,47 +111,51 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     Spheres* spheres = qobject_cast<Spheres*>(renderableObject);
     LAMMPS *lammps = m_lammpsController.lammps();
     if(!lammps) return;
+//    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
+    m_lammpsController.setDataDirty(false);
+    m_atomStyle.setDirty(false);
 
     if(spheres) {
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
+
         colors.resize(lammps->atom->natoms);
+        scales.resize(lammps->atom->natoms);
         positions.resize(lammps->atom->natoms);
         m_atomTypes.resize(lammps->atom->natoms);
-
         double position[3];
-        int visibleAtoms = 0;
-
-        // Slice computation
-        QVector3D normal = slice.normal.normalized();
-        bool normalIsValid = !isnan(normal.length()); // If normal vector is 0, then this is not valid
-        QVector3D planeOrigo = slice.distance*normal; // From origo (0,0,0), move along the normal a distance slice.distance
-
+        QList<QObject *> atomStyleDataList = m_atomStyle.data();
+        int numVisibleAtoms = 0;
         for(unsigned int i=0; i<lammps->atom->natoms; i++) {
-            position[0] = lammps->atom->x[i][0];
-            position[1] = lammps->atom->x[i][1];
-            position[2] = lammps->atom->x[i][2];
-            lammps->domain->remap(position);
-
-            QVector3D qPosition(position[0], position[1], position[2]);
             bool addAtom = true;
-            if(slice.enabled && normalIsValid) {
-                float distanceToPlane = abs(qPosition.distanceToPlane(planeOrigo, normal)); // Negative values may occu
-                if(distanceToPlane > 0.5*slice.width) addAtom = false; // it is outside the slice
-            }
+            int atomType = lammps->atom->type[i];
+
+            if(atomType-1 < atomStyleDataList.size()) {
+                // If not, we haven't added this atom to the list yet. Skip this atom type then
+                AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(atomStyleDataList[atomType-1]); // LAMMPS atom types start at 1
+                if(!atomStyleData->visible()) addAtom = false;
+            } else addAtom = false;
+
             if(addAtom) {
-                positions[visibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
-                positions[visibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
-                positions[visibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
-                m_atomTypes[visibleAtoms] = lammps->atom->type[i];
-                visibleAtoms++;
+                position[0] = lammps->atom->x[i][0];
+                position[1] = lammps->atom->x[i][1];
+                position[2] = lammps->atom->x[i][2];
+                lammps->domain->remap(position);
+
+                positions[numVisibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
+                positions[numVisibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
+                positions[numVisibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
+                m_atomTypes[numVisibleAtoms] = atomType;
+                numVisibleAtoms++;
             }
         }
-        colors.resize(visibleAtoms);
-        positions.resize(visibleAtoms);
-        scales.resize(visibleAtoms);
+        colors.resize(numVisibleAtoms);
+        scales.resize(numVisibleAtoms);
+        positions.resize(numVisibleAtoms);
+        m_atomTypes.resize(numVisibleAtoms);
         m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
+        spheres->setDirty(true);
     }
 }
 
@@ -141,96 +180,86 @@ void MyWorker::setWillPause(bool willPause)
 }
 
 
-MyWorker *MySimulator::createWorker()
+MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
 }
-QMap<QString, CPCompute *> MySimulator::computes() const
+QMap<QString, CPCompute *> AtomifySimulator::computes() const
 {
     return m_computes;
 }
 
-void MySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
+void AtomifySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
 {
     m_computes = computes;
 }
 
-void MySimulator::addCompute(CPCompute *compute)
+void AtomifySimulator::addCompute(CPCompute *compute)
 {
     m_computes[compute->identifier()] = compute;
 }
 
-LammpsOutput *MySimulator::lammpsOutput() const
-{
-    return m_lammpsOutput;
-}
-
-bool MySimulator::paused() const
+bool AtomifySimulator::paused() const
 {
     return m_paused;
 }
 
-double MySimulator::simulationTime() const
+double AtomifySimulator::simulationTime() const
 {
     return m_simulationTime;
 }
 
-bool MySimulator::sliceEnabled() const
-{
-    return m_sliceEnabled;
-}
-
-double MySimulator::sliceDistance() const
-{
-    return m_sliceDistance;
-}
-
-QVector3D MySimulator::sliceNormal() const
-{
-    return m_sliceNormal;
-}
-
-double MySimulator::sliceWidth() const
-{
-    return m_sliceWidth;
-}
-
-AtomStyle *MySimulator::atomStyle() const
+AtomStyle *AtomifySimulator::atomStyle() const
 {
     return m_atomStyle;
 }
 
-int MySimulator::numberOfAtoms() const
+int AtomifySimulator::numberOfAtoms() const
 {
     return m_numberOfAtoms;
 }
 
-int MySimulator::numberOfAtomTypes() const
+int AtomifySimulator::numberOfAtomTypes() const
 {
     return m_numberOfAtomTypes;
 }
 
-QVector3D MySimulator::systemSize() const
+QVector3D AtomifySimulator::systemSize() const
 {
     return m_systemSize;
 }
 
-void MySimulator::setLammpsOutput(LammpsOutput *lammpsOutput)
+double AtomifySimulator::timePerTimestep() const
 {
-    if (m_lammpsOutput == lammpsOutput)
-        return;
-
-    m_lammpsOutput = lammpsOutput;
-    emit lammpsOutputChanged(lammpsOutput);
+    return m_timePerTimestep;
 }
 
+QString AtomifySimulator::lammpsError() const
+{
+    return m_lammpsError;
+}
 
-int MySimulator::simulationSpeed() const
+QString AtomifySimulator::lammpsErrorMessage() const
+{
+    return m_lammpsErrorMessage;
+}
+
+ScriptHandler *AtomifySimulator::scriptHandler() const
+{
+    return m_scriptHandler;
+}
+
+bool AtomifySimulator::willReset() const
+{
+    return m_willReset;
+}
+
+int AtomifySimulator::simulationSpeed() const
 {
     return m_simulationSpeed;
 }
 
-void MySimulator::setSimulationSpeed(int arg)
+void AtomifySimulator::setSimulationSpeed(int arg)
 {
     if (m_simulationSpeed == arg)
         return;
@@ -239,7 +268,7 @@ void MySimulator::setSimulationSpeed(int arg)
     emit simulationSpeedChanged(arg);
 }
 
-void MySimulator::setPaused(bool paused)
+void AtomifySimulator::setPaused(bool paused)
 {
     if (m_paused == paused)
         return;
@@ -248,7 +277,7 @@ void MySimulator::setPaused(bool paused)
     emit pausedChanged(paused);
 }
 
-void MySimulator::setSimulationTime(double simulationTime)
+void AtomifySimulator::setSimulationTime(double simulationTime)
 {
     if (m_simulationTime == simulationTime)
         return;
@@ -257,41 +286,7 @@ void MySimulator::setSimulationTime(double simulationTime)
     emit simulationTimeChanged(simulationTime);
 }
 
-void MySimulator::setSliceEnabled(bool sliceEnabled)
-{
-    if (m_sliceEnabled == sliceEnabled)
-        return;
-
-    m_sliceEnabled = sliceEnabled;
-    emit sliceEnabledChanged(sliceEnabled);
-}
-
-void MySimulator::setSliceDistance(double sliceDistance)
-{
-    if (m_sliceDistance == sliceDistance)
-        return;
-
-    m_sliceDistance = sliceDistance;
-    emit sliceDistanceChanged(sliceDistance);
-}
-
-void MySimulator::setSliceNormal(QVector3D sliceNormal)
-{
-    if (m_sliceNormal == sliceNormal)
-        return;
-    m_sliceNormal = sliceNormal;
-    emit sliceNormalChanged(sliceNormal);
-}
-
-void MySimulator::setSliceWidth(double sliceWidth)
-{
-    if (m_sliceWidth == sliceWidth)
-        return;
-    m_sliceWidth = sliceWidth;
-    emit sliceWidthChanged(sliceWidth);
-}
-
-void MySimulator::setAtomStyle(AtomStyle *atomStyle)
+void AtomifySimulator::setAtomStyle(AtomStyle *atomStyle)
 {
     if (m_atomStyle == atomStyle)
         return;
@@ -300,7 +295,7 @@ void MySimulator::setAtomStyle(AtomStyle *atomStyle)
     emit atomStyleChanged(atomStyle);
 }
 
-void MySimulator::setNumberOfAtoms(int numberOfAtoms)
+void AtomifySimulator::setNumberOfAtoms(int numberOfAtoms)
 {
     if (m_numberOfAtoms == numberOfAtoms)
         return;
@@ -309,7 +304,7 @@ void MySimulator::setNumberOfAtoms(int numberOfAtoms)
     emit numberOfAtomsChanged(numberOfAtoms);
 }
 
-void MySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
+void AtomifySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
 {
     if (m_numberOfAtomTypes == numberOfAtomTypes)
         return;
@@ -319,7 +314,7 @@ void MySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
     emit numberOfAtomTypesChanged(numberOfAtomTypes);
 }
 
-void MySimulator::setSystemSize(QVector3D systemSize)
+void AtomifySimulator::setSystemSize(QVector3D systemSize)
 {
     if (m_systemSize == systemSize)
         return;
@@ -328,9 +323,47 @@ void MySimulator::setSystemSize(QVector3D systemSize)
     emit systemSizeChanged(systemSize);
 }
 
-void MySimulator::runScript(QString script)
+void AtomifySimulator::setTimePerTimestep(double timePerTimestep)
 {
-    // This is typically called from the QML thread.
-    // We have to wait for synchronization before we actually load this script
-    m_scriptToRun = script;
+    if (m_timePerTimestep == timePerTimestep)
+        return;
+
+    m_timePerTimestep = timePerTimestep;
+    emit timePerTimestepChanged(timePerTimestep);
+}
+
+void AtomifySimulator::setLammpsError(QString lammpsError)
+{
+    if (m_lammpsError == lammpsError)
+        return;
+
+    m_lammpsError = lammpsError;
+    emit lammpsErrorChanged(lammpsError);
+}
+
+void AtomifySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
+{
+    if (m_lammpsErrorMessage == lammpsErrorMessage)
+        return;
+
+    m_lammpsErrorMessage = lammpsErrorMessage;
+    emit lammpsErrorMessageChanged(lammpsErrorMessage);
+}
+
+void AtomifySimulator::setScriptHandler(ScriptHandler *scriptHandler)
+{
+    if (m_scriptHandler == scriptHandler)
+        return;
+
+    m_scriptHandler = scriptHandler;
+    emit scriptHandlerChanged(scriptHandler);
+}
+
+void AtomifySimulator::setWillReset(bool willReset)
+{
+    if (m_willReset == willReset)
+        return;
+
+    m_willReset = willReset;
+    emit willResetChanged(willReset);
 }

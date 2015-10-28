@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/simulations/other">
+        <file>indent/indent.in</file>
+        <file>indent/indent.png</file>
+        <file>indent/indent.qml</file>
+        <file>obstacle/obstacle.png</file>
+        <file>obstacle/obstacle.qml</file>
+        <file>obstacle/obstacle.in</file>
+        <file>shear/Ni_u3.eam</file>
+        <file>shear/shear.in</file>
+        <file>shear/shear.png</file>
+        <file>shear/shear.qml</file>
+        <file>micelle/data.micelle</file>
+        <file>micelle/def.micelle</file>
+        <file>micelle/micelle.in</file>
+        <file>micelle/micelle.png</file>
+        <file>micelle/micelle.qml</file>
+        <file>water/water.png</file>
+        <file>water/water.qml</file>
+        <file>water/water.in</file>
+    </qresource>
+</RCC>
