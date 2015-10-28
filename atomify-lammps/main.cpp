@@ -16,6 +16,8 @@
 #include "fileio.h"
 #include "nvt.h"
 #include "scripthandler.h"
+#include "figure.h"
+#include "linegraph.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,6 +27,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<AtomStyle>("Atomify", 1, 0, "AtomStyle");
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
     qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
+    qmlRegisterType<Figure>("QMLPlot", 1, 0, "Figure");
+    qmlRegisterType<LineGraph>("QMLPlot", 1, 0, "LineGraph");
+    qmlRegisterType<LineGraphDataSource>("QMLPlot", 1, 0, "LineGraphDataSource");
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
