@@ -1,6 +1,8 @@
 #include "nvt.h"
 #include "lammpscontroller.h"
 #include <QString>
+#include <QRegularExpression>
+#include <QDebug>
 
 NVT::NVT(QObject *parent) : CPFix(parent)
 {
@@ -50,6 +52,5 @@ QList<QString> NVT::enabledCommands()
 
 QList<QString> NVT::disableCommands()
 {
-    return {QString("unfix %1").arg(identifier()), QString("fix cp_nve all nve")};
+    return { QString("unfix %1").arg(identifier()), QString("fix cp_nve all nve") };
 }
-

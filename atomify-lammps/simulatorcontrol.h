@@ -35,6 +35,7 @@ public:
     bool dependenciesValid(LAMMPSController *lammpsController);
     virtual bool existsInLammps(LAMMPSController *lammpsController) = 0;
     virtual void update(LAMMPSController *lammpsController);
+    virtual void handleCommand(QString command) { /* TODO */ }
 
 signals:
     void enabledChanged(bool enabled);

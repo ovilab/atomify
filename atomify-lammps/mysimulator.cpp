@@ -58,7 +58,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
-    // QVector<SimulatorControl*> simulatorControls;
     m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
 
     // Sync properties from lammps controller
@@ -69,9 +68,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
 
-//    for(CPCompute *compute : mySimulator->computes()) {
-//        compute->update(&m_lammpsController);
-//    }
 
     m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
 
@@ -80,9 +76,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
         mySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
         m_lammpsController.currentException().setIsReported(true);
-
-//        console.log(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
-//        console.log(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
 
         emit mySimulator->errorInLammpsScript();
         return;
@@ -103,6 +96,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         scriptHandler->parseGUICommand(nextCommand);
         m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
     } else {
+        for(auto *simulatorControl : mySimulator->findChildren<SimulatorControl*>()) {
+            simulatorControl->handleCommand(nextCommandObject.command());
+        }
         m_lammpsController.state.nextCommand = nextCommandObject;
     }
 }
