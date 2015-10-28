@@ -33,5 +33,6 @@
         <file>mobile/hud/RevealSimulationsViewButton.qml</file>
         <file>mobile/main-menu/MainMenuLeftButton.qml</file>
         <file>mobile/simulations/SimulationsViewNew.qml</file>
+        <file>mobile/simulations/SingleSimulationView.qml</file>
     </qresource>
 </RCC>

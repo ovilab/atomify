@@ -34,6 +34,13 @@ Item {
                 target: visualizer
                 y: visualizer.height
             }
+        },
+        State {
+            name: "singleSimulation"
+            PropertyChanges {
+                target: visualizer
+                y: -visualizer.height * 2
+            }
         }
     ]
 
@@ -116,6 +123,7 @@ Item {
 
     RevealDashboardButton {
         id: revealDashboardButton
+        revealed: mobileRoot.state == ""
     }
 
     Dashboard {
@@ -124,10 +132,25 @@ Item {
 
 
     SimulationsViewNew {
+        id: simulationsView
         width: parent.width
         height: parent.height
         anchors {
             top: visualizer.bottom
+        }
+        onClickedSimulation: {
+            singleSimulation.simulation = simulation
+            mobileRoot.state = "singleSimulation"
+        }
+    }
+
+
+    SingleSimulationView {
+        id: singleSimulation
+        width: parent.width
+        height: parent.height
+        anchors {
+            top: simulationsView.bottom
         }
         onLoadSimulation: {
             if(!simulator.scriptHandler) {
@@ -143,6 +166,7 @@ Item {
 
     RevealSimulationsViewButton {
         id: revealSimulationsViewButton
+        revealed: mobileRoot.state == ""
         onClicked: {
             mainMenu.revealed = true
         }

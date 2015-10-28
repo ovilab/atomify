@@ -4,7 +4,7 @@ import "qrc:/mobile/style"
 import "../main-menu"
 
 Rectangle {
-    signal loadSimulation(var simulation)
+    signal clickedSimulation(var simulation)
     clip: true
     color: "#333"
 
@@ -58,7 +58,7 @@ Rectangle {
                             }
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: loadSimulation(loader.item)
+                                onClicked: clickedSimulation(loader.item)
                             }
                         }
                     }
