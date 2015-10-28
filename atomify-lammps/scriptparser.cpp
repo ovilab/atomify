@@ -53,7 +53,7 @@ void ScriptParser::atomType(QString command, std::function<void(QString atomType
 
 bool ScriptParser::isEditorCommand(QString command)
 {
-    return command.startsWith("#!");
+    return command.startsWith("#/");
 }
 
 bool ScriptParser::isInclude(QString command)
