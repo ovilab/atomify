@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/org.compphys.SimVis">
-        <file>imports/SimVis/qmldir</file>
-    </qresource>
-</RCC>
