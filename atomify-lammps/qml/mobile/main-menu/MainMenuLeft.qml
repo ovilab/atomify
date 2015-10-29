@@ -32,7 +32,7 @@ Item {
         }
     ]
 
-    width: Math.min(parent.width, parent.height)
+    width: parent.width
     height: parent.height
 
     anchors {
