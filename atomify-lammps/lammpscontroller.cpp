@@ -24,7 +24,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "CPcompute.h"
+#include "cpcompute.h"
 #include "mysimulator.h"
 #include "simulatorcontrol.h"
 #include "scriptcommand.h"
@@ -92,7 +92,10 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         return;
     }
 
-//    qDebug() << command;
+    if(!command.startsWith("run")) {
+        qDebug() << command;
+    }
+
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {
@@ -169,6 +172,7 @@ LAMMPS_NS::Fix* LAMMPSController::findFixByIdentifier(QString identifier) {
 }
 
 int LAMMPSController::findFixIndex(QString identifier) {
+    if(!m_lammps) return -1;
     return m_lammps->modify->find_fix(identifier.toStdString().c_str());
 }
 
@@ -176,13 +180,14 @@ bool LAMMPSController::fixExists(QString identifier) {
     return findFixIndex(identifier) >= 0;
 }
 
-LAMMPS_NS::Compute* LAMMPSController::findCompute(QString identifier) {
+LAMMPS_NS::Compute* LAMMPSController::findComputeByIdentifier(QString identifier) {
     int computeId = findComputeId(identifier);
     if(computeId < 0) return nullptr;
     else return m_lammps->modify->compute[computeId];
 }
 
 int LAMMPSController::findComputeId(QString identifier) {
+    if(!m_lammps) return -1;
     return m_lammps->modify->find_compute(identifier.toStdString().c_str());
 }
 
@@ -192,48 +197,7 @@ bool LAMMPSController::computeExists(QString identifier) {
 
 void LAMMPSController::processSimulatorControls() {
     for(SimulatorControl *control : simulatorControls) {
-        control->synchronizeLammps(this);
-    }
-}
-
-void LAMMPSController::processComputes()
-{
-    for(QString key : m_computes.keys()) {
-        if(!computeExists(key)) {
-            qDebug() << "Missing key: " << key;
-
-            CPCompute *compute = m_computes[key];
-            // We need to add it. First check all dependencies
-            bool allDependenciesFound = true; // Assume all are found and find potential counterexample
-            foreach(QString dependencyIdentifier, compute->dependencies()) {
-                if(!computeExists(dependencyIdentifier)) {
-                    allDependenciesFound = false;
-                    break;
-                }
-            }
-
-            if(allDependenciesFound) {
-                qDebug() << "All dependencies found";
-                state.preRunNeeded = true; // When a new compute is added, a run with pre yes is needed for it to be included
-                // Now that all dependencies are met we can add this one too
-                executeCommandInLAMMPS(compute->command());
-                // Now we need to create a fix that will store these values
-                QString fixIdentifier = QString("fix%1").arg(compute->identifier());
-                compute->setFixIdentifier(fixIdentifier);
-
-                QString fixCommand = QString("fix %1 all ave/time 1 1 1 c_%2").arg(fixIdentifier, compute->identifier());
-                if(compute->isVector()) fixCommand.append(" mode vector");
-
-                compute->setFixCommand(fixCommand);
-                executeCommandInLAMMPS(fixCommand);
-                // Now replace the output on the object
-                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFixByIdentifier(fixIdentifier));
-                if(fix) {
-                    // This is our baby
-                    fix->fp = compute->output().stream();
-                }
-            }
-        }
+        control->update(this);
     }
 }
 
@@ -260,18 +224,6 @@ void LAMMPSController::executeActiveRunCommand() {
 
 void LAMMPSController::reset()
 {
-    if(m_lammps != nullptr) {
-        // We need to set FILE pointers in fixes to NULL so that they are not closed when LAMMPS deallocates.
-        for(CPCompute *compute : m_computes) {
-            if(computeExists(compute->identifier())) {
-                FixAveTime *fix = dynamic_cast<FixAveTime*>(findFixByIdentifier(compute->fixIdentifier()));
-                if(fix != nullptr) {
-                    fix->fp = nullptr;
-                }
-            }
-        }
-    }
-
     int nargs = 1;
     char **argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
@@ -285,7 +237,7 @@ void LAMMPSController::reset()
 //    sprintf(argv[5], "1");
 
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
-    lammps_open_no_mpi(0, 0, (void**)&m_lammps); // This creates a new LAMMPS object
+    lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
     state = State(); // Reset current state variables
 }
@@ -297,9 +249,8 @@ void LAMMPSController::tick()
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
-        processSimulatorControls();
-        processComputes(); // Only work with computes and output when we will do a run
         executeActiveRunCommand();
+        processSimulatorControls();
         state.dataDirty = true;
         return;
     }
@@ -322,8 +273,6 @@ void LAMMPSController::tick()
     } else {
         if(state.paused) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.
-        processSimulatorControls();
-        processComputes(); // Only work with computes and output when we will do a run
         QElapsedTimer t;
         t.start();
 
@@ -333,6 +282,8 @@ void LAMMPSController::tick()
         } else {
             executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
         }
+
+        processSimulatorControls();
         state.numberOfTimesteps += state.simulationSpeed;
         state.timeSpentInLammps += t.elapsed();
     }
@@ -354,35 +305,28 @@ int LAMMPSController::numberOfAtomTypes() const
 
 void LAMMPSController::disableAllEnsembleFixes()
 {
+    if(!m_scriptHandler) {
+        qDebug() << "Error, LAMMPSController doesn't have script handler. Aborting!";
+        exit(1);
+    }
     state.preRunNeeded = true;
-    while(true) {
-        bool didFindFix = false;
-        for(int i=0; i<m_lammps->modify->nfix; i++) {
-            LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
+    for(int i=0; i<m_lammps->modify->nfix; i++) {
+        LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
 
-            LAMMPS_NS::FixNVT *nvt = dynamic_cast<LAMMPS_NS::FixNVT*>(fix);
-            if(nvt) {
-                executeCommandInLAMMPS(QString("unfix %1").arg(nvt->id));
-                didFindFix = true;
-                break;
-            }
-
-            LAMMPS_NS::FixNVE *nve = dynamic_cast<LAMMPS_NS::FixNVE*>(fix);
-            if(nve) {
-                executeCommandInLAMMPS(QString("unfix %1").arg(nve->id));
-                didFindFix = true;
-                break;
-            }
-
-            LAMMPS_NS::FixNPT *npt = dynamic_cast<LAMMPS_NS::FixNPT*>(fix);
-            if(npt) {
-                executeCommandInLAMMPS(QString("unfix %1").arg(npt->id));
-                didFindFix = true;
-                break;
-            }
+        LAMMPS_NS::FixNVT *nvt = dynamic_cast<LAMMPS_NS::FixNVT*>(fix);
+        if(nvt) {
+            m_scriptHandler->addCommandToTop(ScriptCommand(QString("unfix %1").arg(nvt->id), ScriptCommand::Type::SingleCommand));
         }
 
-        if(!didFindFix) return;
+        LAMMPS_NS::FixNVE *nve = dynamic_cast<LAMMPS_NS::FixNVE*>(fix);
+        if(nve) {
+            m_scriptHandler->addCommandToTop(ScriptCommand(QString("unfix %1").arg(nve->id), ScriptCommand::Type::SingleCommand));
+        }
+
+        LAMMPS_NS::FixNPT *npt = dynamic_cast<LAMMPS_NS::FixNPT*>(fix);
+        if(npt) {
+            m_scriptHandler->addCommandToTop(ScriptCommand(QString("unfix %1").arg(npt->id), ScriptCommand::Type::SingleCommand));
+        }
     }
 }
 

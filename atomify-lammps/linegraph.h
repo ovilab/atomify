@@ -9,7 +9,7 @@ private:
     QVector<QPointF> m_points;
     int m_firstIndex = 0;
     int m_numberOfPoints = 0;
-    int m_maxNumberOfPoints = 500;
+    int m_maxNumberOfPoints = 50000;
     void cleanupMemory();
 public:
     Q_INVOKABLE void addPoint(float x, float y);

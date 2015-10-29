@@ -29,5 +29,5 @@ thermo 100
 fix nvt all nvt temp 1500 1500 0.1
 atom_modify sort 100 3
 
-#!atom 2 oxygen
-#!atom 3 hydrogen
+#/atom 2 oxygen
+#/atom 3 hydrogen

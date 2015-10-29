@@ -74,8 +74,8 @@ Item {
 
             SimulationSummary {
                 simulator: desktopRoot.simulator
-                pressure: pressure
-                temperature: temperature
+//                pressure: pressure
+//                temperature: temperature
             }
 
             Rectangle {
