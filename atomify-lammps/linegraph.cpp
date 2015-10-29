@@ -1,5 +1,6 @@
 #include "linegraph.h"
 #include "figure.h"
+#include <cmath>
 
 LineGraph::LineGraph()
 {

@@ -3,6 +3,7 @@
 #include <library.h>
 #include <atom.h>
 #include <domain.h>
+#include <compute_temp.h>
 #include <update.h>
 #include <modify.h>
 #include <neighbor.h>
@@ -41,10 +42,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     if(mySimulator->willReset()) {
         m_lammpsController.reset();
         mySimulator->setWillReset(false);
-        auto simulatorControls = mySimulator->findChildren<SimulatorControl*>();
-        for(auto *simulatorControl : simulatorControls) {
-            simulatorControl->setDirty(false);
-        }
         emit mySimulator->lammpsDidReset();
     }
 
@@ -61,7 +58,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
-    // QVector<SimulatorControl*> simulatorControls;
     m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
 
     // Sync properties from lammps controller
@@ -72,6 +68,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
 
+
     m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
@@ -79,9 +76,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
         mySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
         m_lammpsController.currentException().setIsReported(true);
-
-//        console.log(" Simulation crashed. Error in parsing LAMMPS command: '"+mySimulator.scriptHandler.currentCommand+"'")
-//        console.log(" LAMMPS error message: '"+mySimulator.lammpsErrorMessage+"'")
 
         emit mySimulator->errorInLammpsScript();
         return;
@@ -98,10 +92,13 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     ScriptCommand nextCommandObject = scriptHandler->nextCommand();
 
     QString nextCommand = nextCommandObject.command();
-    if(scriptParser.isEditorCommand(nextCommand)) {
-        scriptHandler->parseEditorCommand(nextCommand, mySimulator);
+    if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {
+        scriptHandler->parseGUICommand(nextCommand);
         m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
     } else {
+        for(auto *simulatorControl : mySimulator->findChildren<SimulatorControl*>()) {
+            simulatorControl->handleCommand(nextCommandObject.command());
+        }
         m_lammpsController.state.nextCommand = nextCommandObject;
     }
 }
@@ -194,10 +191,10 @@ void AtomifySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
     m_computes = computes;
 }
 
-void AtomifySimulator::addCompute(CPCompute *compute)
-{
-    m_computes[compute->identifier()] = compute;
-}
+//void AtomifySimulator::addCompute(CPCompute *compute)
+//{
+//    m_computes[compute->identifier()] = compute;
+//}
 
 bool AtomifySimulator::paused() const
 {
@@ -252,6 +249,11 @@ ScriptHandler *AtomifySimulator::scriptHandler() const
 bool AtomifySimulator::willReset() const
 {
     return m_willReset;
+}
+
+int AtomifySimulator::numberOfTimesteps() const
+{
+    return m_numberOfTimesteps;
 }
 
 int AtomifySimulator::simulationSpeed() const
@@ -366,4 +368,13 @@ void AtomifySimulator::setWillReset(bool willReset)
 
     m_willReset = willReset;
     emit willResetChanged(willReset);
+}
+
+void AtomifySimulator::setNumberOfTimesteps(int numberOfTimesteps)
+{
+    if (m_numberOfTimesteps == numberOfTimesteps)
+        return;
+
+    m_numberOfTimesteps = numberOfTimesteps;
+    emit numberOfTimestepsChanged(numberOfTimesteps);
 }

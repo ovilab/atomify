@@ -68,23 +68,20 @@ ApplicationWindow {
         scriptHandler: ScriptHandler {
             atomStyle: myAtomStyle
         }
-    }
 
-    Compute {
-        property real maxValue: 0
-        id: computeTemp
-        identifier: "temp"
-        command: "compute temp all temp"
-        simulator: mySimulator
-        onValueChanged: {
-            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
+        Compute {
+            property real maxValue: 0
+            id: computeTemp
+            identifier: "temperature"
+            command: "all temp"
+            onValueChanged: {
 //            tempGraph.addPoint(mySimulator.simulationTime, value)
 //            tempPlot.xMax = mySimulator.simulationTime
 //            tempPlot.xMin = mySimulator.simulationTime-1
 //            maxValue = Math.max(maxValue, value)
 //            tempPlot.yMax = maxValue
+            }
         }
-    }
 
     Shortcut {
         sequence: StandardKey.AddTab
@@ -94,6 +91,34 @@ ApplicationWindow {
                 mode = "mobile"
             } else {
                 mode = "desktop"
+//                tempPlot.xMax = mySimulator.simulationTime
+//                tempPlot.xMin = mySimulator.simulationTime-1
+//                maxValue = Math.max(maxValue, value)
+//                tempPlot.yMax = maxValue
+            }
+        }
+    }
+
+//    Compute {
+//        property real maxValue: 0
+//        id: computeMsd
+//        identifier: "msd"
+//        command: "compute msd all msd"
+//        isVector: true
+//        simulator: mySimulator
+//        onFourthValueChanged: {
+//            // tempGraph.addPoint(mySimulator.simulationTime, 0.2+0.8*Math.sin(mySimulator.simulationTime))
+//            tempGraph.addPoint(mySimulator.simulationTime, fourthValue)
+//            tempPlot.xMax = mySimulator.simulationTime
+//            //tempPlot.xMin = mySimulator.simulationTime-1
+//            maxValue = Math.max(maxValue, fourthValue)
+//            tempPlot.yMax = maxValue
+//        }
+//    }
+
+                color: "red"
+                width: 3
+                style: Qt.DashDotDotLine
             }
         }
     }

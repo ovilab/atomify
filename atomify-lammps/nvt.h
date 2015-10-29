@@ -1,33 +1,37 @@
 #ifndef NVT_H
 #define NVT_H
 
-#include "simulatorcontrol.h"
+#include "cpfix.h"
 #include "mysimulator.h"
 
-class NVT : public SimulatorControl
+class NVT : public CPFix
 {
     Q_OBJECT
     Q_PROPERTY(double targetTemperature READ targetTemperature WRITE setTargetTemperature NOTIFY targetTemperatureChanged)
     Q_PROPERTY(double temperatureDampening READ temperatureDampening WRITE setTemperatureDampening NOTIFY temperatureDampeningChanged)
 private:
-    double m_targetTemperature = 1;
+    double m_targetTemperature = 1.0;
     double m_temperatureDampening = 1.0;
 
 public:
     explicit NVT(QObject *parent = 0);
+    ~NVT() { }
     double targetTemperature() const;
+    double temperatureDampening() const;
 
 signals:
     void targetTemperatureChanged(double targetTemperature);
     void temperatureDampeningChanged(double temperatureDampening);
 
 public slots:
-void setTargetTemperature(double targetTemperature);
-void setTemperatureDampening(double temperatureDampening);
+    void setTargetTemperature(double targetTemperature);
+    void setTemperatureDampening(double temperatureDampening);
 
-public:
-virtual void synchronizeLammps(LAMMPSController *lammpsController);
-double temperatureDampening() const;
+    // SimulatorControl interface
+protected:
+    virtual void updateCommand() override;
+    virtual QList<QString> enabledCommands();
+    virtual QList<QString> disableCommands();
 };
 
 #endif // NVT_H

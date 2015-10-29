@@ -10,7 +10,6 @@
 #include <lammps.h>
 
 #include "lammpscontroller.h"
-#include "lammpsoutput.h"
 #include "atomstyle.h"
 #include "scripthandler.h"
 
@@ -63,7 +62,6 @@ public:
     void addCompute(CPCompute *compute);
     QMap<QString, CPCompute *> computes() const;
     void setComputes(const QMap<QString, CPCompute *> &computes);
-    LammpsOutput* lammpsOutput() const;
     AtomStyle* atomStyle() const;
     double simulationTime() const;
     bool paused() const;
@@ -75,11 +73,7 @@ public:
     QString lammpsErrorMessage() const;
     ScriptHandler* scriptHandler() const;
     bool willReset() const;
-
-    int numberOfTimesteps() const
-    {
-        return m_numberOfTimesteps;
-    }
+    int numberOfTimesteps() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -94,15 +88,7 @@ public slots:
     void setLammpsErrorMessage(QString lammpsErrorMessage);
     void setScriptHandler(ScriptHandler* scriptHandler);
     void setWillReset(bool willReset);
-
-    void setNumberOfTimesteps(int numberOfTimesteps)
-    {
-        if (m_numberOfTimesteps == numberOfTimesteps)
-            return;
-
-        m_numberOfTimesteps = numberOfTimesteps;
-        emit numberOfTimestepsChanged(numberOfTimesteps);
-    }
+    void setNumberOfTimesteps(int numberOfTimesteps);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -119,7 +105,6 @@ signals:
     void lammpsDidReset();
     void scriptHandlerChanged(ScriptHandler* scriptHandler);
     void willResetChanged(bool willReset);
-
     void numberOfTimestepsChanged(int numberOfTimesteps);
 
 protected:

@@ -88,8 +88,25 @@ void ScriptHandler::runFile(QString filename)
     runScript(script, ScriptCommand::Type::File, filename);
 }
 
-void ScriptHandler::parseEditorCommand(QString command, AtomifySimulator *mySimulator) {
+bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammpsController) {
+    if(m_parser.isEditorCommand(command)) {
+        command = command.trimmed();
+        command.remove(0,2);
+
+        if(m_parser.isDisableAllEnsembleFixes(command)) {
+            lammpsController->disableAllEnsembleFixes();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void ScriptHandler::parseGUICommand(QString command)
+{
+    command = command.trimmed();
     command.remove(0,2);
+
     if(m_parser.isAtomType(command)) {
         m_parser.atomType(command, [&](QString atomTypeName, int atomType) {
             if(m_atomStyle) m_atomStyle->setAtomType(atomTypeName, atomType);
@@ -105,15 +122,6 @@ void ScriptHandler::parseEditorCommand(QString command, AtomifySimulator *mySimu
     }
 }
 
-bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammpsController) {
-    if(command.trimmed().compare("disableAllEnsembleFixes") == 0) {
-        lammpsController->disableAllEnsembleFixes();
-        return true;
-    }
-
-    return false;
-}
-
 void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename) {
     if(!script.isEmpty())
     {
@@ -124,7 +132,6 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
         QStringList lines = script.split("\n");
 
         for(QString line : lines) {
-            qDebug() << "Executing " << line;
             line = line.trimmed();
             if(line.endsWith("&")) {
                 line.remove(line.length() - 1, 1);
@@ -137,7 +144,6 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
             currentCommand = currentCommand.trimmed();
 
             if(m_parser.isInclude(currentCommand)) {
-                qDebug() << "Is include";
                 QString filename = m_parser.includePath(currentCommand);
                 loadScriptFromFile(filename);
                 currentCommand.clear(); lineNumber++; continue; // This line is complete
@@ -168,8 +174,8 @@ void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString 
 void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)
 {
     QMutexLocker locker(&m_mutex);
-    if(addToPreviousCommands) m_previousSingleCommands.push_back(command);
     auto commandObject = ScriptCommand(command, ScriptCommand::Type::SingleCommand);
+    if(addToPreviousCommands) m_previousSingleCommands.push_back(commandObject);
     m_queuedCommands.enqueue(commandObject);
 }
 

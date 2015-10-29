@@ -51,9 +51,18 @@ void ScriptParser::atomType(QString command, std::function<void(QString atomType
     action(atomTypeName, atomType);
 }
 
+bool ScriptParser::isGUICommand(QString command) {
+    bool isGUICommand = false;
+    if(isAtomType(command)) isGUICommand = true;
+    if(isAtomColorAndSize(command)) isGUICommand = true;
+
+    return isGUICommand;
+}
+
 bool ScriptParser::isEditorCommand(QString command)
 {
-    return command.startsWith("#!");
+    command = command.trimmed();
+    return command.startsWith("#/");
 }
 
 bool ScriptParser::isInclude(QString command)

@@ -37,8 +37,8 @@ public:
     void loadScriptFromFile(QString filename);
     AtomStyle* atomStyle() const;
     ScriptParser &parser() { return m_parser; }
-    void parseEditorCommand(QString command, AtomifySimulator *mySimulator);
     bool parseLammpsCommand(QString command, LAMMPSController *lammpsController);
+    void parseGUICommand(QString command);
 
 public slots:
     void runScript(QString script, ScriptCommand::Type type = ScriptCommand::Type::Editor, QString filename = "");

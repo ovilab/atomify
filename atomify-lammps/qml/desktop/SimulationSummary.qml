@@ -4,8 +4,8 @@ import Atomify 1.0
 
 Rectangle {
     property AtomifySimulator simulator
-    property Compute pressure
-    property Compute temperature
+//    property Compute pressure
+//    property Compute temperature
     x: 20
     y: 20
     width: statusColumn.width+20
@@ -40,15 +40,15 @@ Rectangle {
             text: "Time per timestep [ms]: "+simulator.timePerTimestep.toFixed(2)
         }
 
-        Text {
-            font.bold: true
-            text: "Temperature: "+ (temperature ? temperature.value : "N/A")
-        }
+//        Text {
+//            font.bold: true
+//            text: "Temperature: "+ (temperature ? temperature.value : "N/A")
+//        }
 
-        Text {
-            font.bold: true
-            text: "Pressure: " + (pressure ? pressure.value : "N/A")
-        }
+//        Text {
+//            font.bold: true
+//            text: "Pressure: " + (pressure ? pressure.value : "N/A")
+//        }
     }
 
     MouseArea {

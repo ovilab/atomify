@@ -12,8 +12,8 @@ CONFIG += warn_off
 
 android {
     DEFINES += LAMMPS_XDR
-    SOURCES += stdioext.c
-    HEADERS += stdioext.h
+    SOURCES +=
+    HEADERS +=
     LIBS += -fopenmp
     include(../lammps-android.pri)
 } else {
@@ -43,8 +43,6 @@ SOURCES += \
     mysimulator.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
-    CPcompute.cpp \
-    lammpsoutput.cpp \
     atomstyle.cpp \
     fileio.cpp \
     scriptparser.cpp \
@@ -54,14 +52,14 @@ SOURCES += \
     scriptcommand.cpp \
     linegraph.cpp \
     graph.cpp \
-    figure.cpp
+    figure.cpp \
+    cpfix.cpp \
+    cpcompute.cpp
 
 HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
-    CPcompute.h \
-    lammpsoutput.h \
     atomstyle.h \
     fileio.h \
     scriptparser.h \
@@ -71,7 +69,9 @@ HEADERS += \
     scriptcommand.h \
     linegraph.h \
     graph.h \
-    figure.h
+    figure.h \
+    cpfix.h \
+    cpcompute.h
 
 DISTFILES += \
     iOS.plist \
