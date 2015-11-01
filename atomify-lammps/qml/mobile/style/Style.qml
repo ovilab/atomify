@@ -20,19 +20,19 @@ Item {
         property alias heading: headingObject
         property alias button: buttonObject
 
-        property real size: 2 * baseSize
+        property real size: 2.5 * baseSize
         property color color: "#dedede"
 
         Item {
             id: headingObject
             property color color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            property real size: 2.5 * font.size
+            property real size: 2 * font.size
         }
 
         Item {
             id: buttonObject
             property color color: "#dedede"
-            property real size: 1.6 * font.size
+            property real size: 1.4 * font.size
         }
     }
 

@@ -6,7 +6,8 @@ import "qrc:/mobile/style"
 Rectangle {
     id: simulationRoot
     property Simulation simulation: null
-    signal loadSimulation(var simulation)
+    signal playClicked(var simulation)
+    signal backClicked
     width: 100
     height: 100
     color: "#333"
@@ -36,16 +37,38 @@ Rectangle {
                 antialiasing: true
                 fillMode: Image.PreserveAspectCrop
 
-                Rectangle {
+                Image {
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        margins: Style.baseMargin
+                    }
+
+                    width: Style.touchableSize
+                    height: width
+
+                    source: "qrc:/images/back.png"
+                    smooth: true
+                    antialiasing: true
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: backClicked()
+                    }
+                }
+
+                Image {
                     anchors.centerIn: parent
                     width: Style.touchableSize * 2
                     height: width
 
-                    color: Qt.rgba(1.0, 1.0, 1.0, 0.5)
+                    source: "qrc:/images/play.png"
+                    smooth: true
+                    antialiasing: true
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: loadSimulation(simulation)
+                        onClicked: playClicked(simulation)
                     }
                 }
             }

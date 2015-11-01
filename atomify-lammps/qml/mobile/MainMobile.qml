@@ -8,17 +8,120 @@ import Atomify 1.0
 import SimVis 1.0
 import Qt.labs.settings 1.0
 
-import "../visualization"
-import "main-menu"
-import "dashboard"
-import "style"
-import "hud"
-import "simulations"
+import "qrc:/core"
+import "qrc:/mobile/main-menu"
+import "qrc:/mobile/dashboard"
+import "qrc:/mobile/style"
+import "qrc:/mobile/hud"
+import "qrc:/mobile/simulations"
+import "qrc:/visualization"
 
 Item {
     id: mobileRoot
 
     property AtomifySimulator simulator: null
+    property Simulation simulation: null
+    property string previousState: ""
+
+    function loadSimulation(simulation) {
+        if(!simulator.scriptHandler) {
+            return
+        }
+
+        simulator.willReset = true
+        simulator.scriptHandler.reset()
+        simulator.scriptHandler.runFile(simulation.scriptSource)
+        mobileRoot.simulation = simulation
+        mobileRoot.state = ""
+    }
+
+    onStateChanged: {
+        dashboard.revealed = false
+    }
+
+    SimulationLoader {
+        id: initialSimulationLoader
+        folder: "qrc:/simulations/diffusion/simple_diffusion"
+        onLoaded: {
+            loadSimulation(item)
+        }
+    }
+
+    AtomifyVisualizer {
+        id: visualizer
+        simulator: mobileRoot.simulator
+        width: parent.width
+        height: parent.height
+        scale: 0.8
+    }
+
+    RevealDashboardButton {
+        id: revealDashboardButton
+        revealed: mobileRoot.state == ""
+    }
+
+    RevealSimulationsViewButton {
+        id: revealSimulationsViewButton
+        revealed: mobileRoot.state == ""
+        onClicked: {
+            mainMenu.revealed = true
+        }
+    }
+
+    DashboardRight {
+        id: dashboard
+        simulation: mobileRoot.simulation
+    }
+
+    SimulationsViewNew {
+        id: simulationsView
+        width: parent.width
+        height: parent.height
+        anchors {
+            top: visualizer.bottom
+        }
+        onSimulationClicked: {
+            singleSimulation.simulation = simulation
+            mobileRoot.previousState = mobileRoot.state
+            mobileRoot.state = "singleSimulation"
+        }
+        onBackClicked: {
+            mainMenu.revealed = true
+        }
+    }
+
+    SingleSimulationView {
+        id: singleSimulation
+        width: parent.width
+        height: parent.height
+        anchors {
+            top: simulationsView.bottom
+        }
+        onPlayClicked: {
+            loadSimulation(simulation)
+        }
+        onBackClicked: {
+            mobileRoot.state = mobileRoot.previousState
+        }
+    }
+
+    MainMenuLeft {
+        id: mainMenu
+
+        simulation: mobileRoot.simulation
+        onContinueClicked: {
+            mobileRoot.state = ""
+        }
+        onSimulationsClicked: {
+            mobileRoot.state = "simulations"
+        }
+        onSimulationClicked: {
+            singleSimulation.simulation = simulation
+            mainMenu.revealed = false
+            mobileRoot.previousState = mobileRoot.state
+            mobileRoot.state = "singleSimulation"
+        }
+    }
 
     states: [
         State {
@@ -54,133 +157,5 @@ Item {
             }
         }
     ]
-
-    AtomifyVisualizer {
-        id: visualizer
-        simulator: mobileRoot.simulator
-        width: parent.width
-        height: parent.height
-        scale: 0.8
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                mainMenu.revealed = false
-                dashboard.revealed = false
-            }
-        }
-
-        MouseArea {
-            anchors {
-                top: parent.bottom
-                left: parent.left
-                right: parent.right
-            }
-            height: 100
-            onClicked: {
-                mobileRoot.state = ""
-            }
-        }
-
-        MouseArea {
-            anchors {
-                bottom: parent.top
-                left: parent.left
-                right: parent.right
-            }
-            height: 100
-            onClicked: {
-                mobileRoot.state = ""
-            }
-        }
-
-        MouseArea {
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-            }
-            height: 100
-            onClicked: {
-                console.log("Visualizer top")
-                mobileRoot.state = "tools"
-            }
-        }
-
-        MouseArea {
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-            }
-            height: 100
-            onClicked: {
-                console.log("Simulations")
-                mobileRoot.state = "simulations"
-            }
-        }
-    }
-
-    RevealDashboardButton {
-        id: revealDashboardButton
-        revealed: mobileRoot.state == ""
-    }
-
-    Dashboard {
-        id: dashboard
-    }
-
-
-    SimulationsViewNew {
-        id: simulationsView
-        width: parent.width
-        height: parent.height
-        anchors {
-            top: visualizer.bottom
-        }
-        onClickedSimulation: {
-            singleSimulation.simulation = simulation
-            mobileRoot.state = "singleSimulation"
-        }
-    }
-
-
-    SingleSimulationView {
-        id: singleSimulation
-        width: parent.width
-        height: parent.height
-        anchors {
-            top: simulationsView.bottom
-        }
-        onLoadSimulation: {
-            if(!simulator.scriptHandler) {
-                return
-            }
-
-            simulator.willReset = true
-            simulator.scriptHandler.reset()
-            simulator.scriptHandler.runFile(simulation.scriptSource)
-            mobileRoot.state = ""
-        }
-    }
-
-    RevealSimulationsViewButton {
-        id: revealSimulationsViewButton
-        revealed: mobileRoot.state == ""
-        onClicked: {
-            mainMenu.revealed = true
-        }
-    }
-
-    MainMenuLeft {
-        id: mainMenu
-        onContinueClicked: {
-            mobileRoot.state = ""
-        }
-
-        onSimulationsClicked: {
-            mobileRoot.state = "simulations"
-        }
-    }
 }
 

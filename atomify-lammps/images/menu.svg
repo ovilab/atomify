@@ -14,8 +14,8 @@
    id="svg3753"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="play.svg"
-   inkscape:export-filename="./play.png"
+   sodipodi:docname="menu.svg"
+   inkscape:export-filename="./menu.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -27,17 +27,25 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.42919922"
-     inkscape:cx="-1277.1377"
-     inkscape:cy="256.24602"
+     inkscape:zoom="0.60697935"
+     inkscape:cx="-142.43594"
+     inkscape:cy="307.20339"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
-     inkscape:window-width="1680"
-     inkscape:window-height="1026"
-     inkscape:window-x="2560"
+     showgrid="true"
+     inkscape:window-width="2507"
+     inkscape:window-height="1416"
+     inkscape:window-x="53"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:snap-global="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true">
     <inkscape:grid
        type="xygrid"
        id="grid3761"
@@ -63,11 +71,26 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-540.36218)">
-    <path
-       style="opacity:0.93415635;fill:#f2f2f2;fill-opacity:1;stroke:#4d4d4d;stroke-width:16;stroke-miterlimit:4;stroke-dasharray:none"
-       d="M 45.393166,587.21542 463.68669,796.36218 45.393166,1005.5089 Z"
-       id="rect3767"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
+    <rect
+       y="628.36218"
+       x="48"
+       height="63.999996"
+       width="416"
+       id="rect3910"
+       style="opacity:0.93415635;fill:#f2f2f2;fill-opacity:1;stroke:#4d4d4d;stroke-width:8;stroke-miterlimit:4;stroke-dasharray:none" />
+    <rect
+       style="opacity:0.93415635;fill:#f2f2f2;fill-opacity:1;stroke:#4d4d4d;stroke-width:8;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3342"
+       width="416"
+       height="63.999996"
+       x="48"
+       y="768.36218" />
+    <rect
+       y="908.36218"
+       x="48"
+       height="63.999996"
+       width="416"
+       id="rect3344"
+       style="opacity:0.93415635;fill:#f2f2f2;fill-opacity:1;stroke:#4d4d4d;stroke-width:8;stroke-miterlimit:4;stroke-dasharray:none" />
   </g>
 </svg>

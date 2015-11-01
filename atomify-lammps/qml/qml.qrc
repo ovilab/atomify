@@ -34,5 +34,6 @@
         <file>mobile/main-menu/MainMenuLeftButton.qml</file>
         <file>mobile/simulations/SimulationsViewNew.qml</file>
         <file>mobile/simulations/SingleSimulationView.qml</file>
+        <file>mobile/dashboard/DashboardRight.qml</file>
     </qresource>
 </RCC>

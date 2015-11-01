@@ -60,7 +60,7 @@ Item {
             fill: parent
             margins: parent.width * 0.2
         }
-        source: "qrc:/images/systems.png"
+        source: "qrc:/images/menu.png"
     }
     
     MouseArea {

@@ -26,5 +26,7 @@
         <file>images/thermostat_enabled.png</file>
         <file>images/tools.png</file>
         <file>images/tools.svg</file>
+        <file>images/menu.png</file>
+        <file>images/menu.svg</file>
     </qresource>
 </RCC>

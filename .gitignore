@@ -30,9 +30,11 @@ Makefile*
 
 *.autosave
 
-#QtCtreator Qml
+# QtCtreator QML
 *.qmlproject.user
 *.qmlproject.user.*
 
-lammps.pri
-lammps-android.pri
+# LAMMPS
+/lammps.pri
+/lammps-android.pri
+/lammps-build
