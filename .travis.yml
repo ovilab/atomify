@@ -1,0 +1,20 @@
+language: cpp
+os:
+  - linux
+branches:
+  only:
+    - master
+compiler:
+  - gcc
+  - clang
+sudo: required
+dist: trusty
+addons:
+  apt:
+    sources:
+      - ubuntu-sdk-team
+    packages:
+      - qtdeclarative5-dev
+script:
+  - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+  - make
