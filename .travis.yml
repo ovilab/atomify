@@ -13,6 +13,7 @@ addons:
   apt:
     sources:
       - ubuntu-sdk-team
+      - beineri/opt-qt551-trusty
     packages:
       - qtdeclarative5-dev
 script:
