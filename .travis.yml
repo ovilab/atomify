@@ -9,14 +9,13 @@ compiler:
   - clang
 sudo: required
 dist: trusty
-addons:
-  apt:
-    sources:
-      - ubuntu-sdk-team
-      - beineri/opt-qt551-trusty
-    packages:
-      - qtdeclarative5-dev
+install:
+  - sudo add-apt-repository -y ppa:beineri/opt-qt551-trusty
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install qt55declarative
 script:
   - ./configure.py
-  - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+  - source /opt/qt55/bin/qt55-env.sh
+  - /opt/qt55/bin/qmake
   - make
+ 
