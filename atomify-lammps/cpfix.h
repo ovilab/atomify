@@ -13,7 +13,7 @@ protected:
     virtual QList<QString> resetCommands() override;
 
 public:
-    explicit CPFix(QObject *parent = 0);
+    explicit CPFix(QQuickItem *parent = 0);
     ~CPFix() { }
     void update(LAMMPSController *lammpsController) override;
     virtual bool existsInLammps(LAMMPSController *lammpsController);

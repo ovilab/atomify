@@ -25,6 +25,7 @@ Item {
 
     function loadSimulation(simulation) {
         if(!simulator.scriptHandler) {
+            console.warn("WARNING: Cannot laod simulation because simulator has no scriptHandler.")
             return
         }
 
@@ -32,6 +33,7 @@ Item {
         simulator.scriptHandler.reset()
         simulator.scriptHandler.runFile(simulation.scriptSource)
         mobileRoot.simulation = simulation
+
         mobileRoot.state = ""
     }
 
@@ -70,7 +72,21 @@ Item {
 
     DashboardRight {
         id: dashboard
+        simulator: mobileRoot.simulator
         simulation: mobileRoot.simulation
+        onControlClicked: {
+            mobileRoot.previousState = mobileRoot.state
+            mobileRoot.state = "tools"
+        }
+    }
+
+    DashboardControlView {
+        anchors {
+            bottom: visualizer.top
+        }
+        onBackClicked: {
+            mobileRoot.state = mobileRoot.previousState
+        }
     }
 
     SimulationsViewNew {

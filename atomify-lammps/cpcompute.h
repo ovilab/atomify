@@ -25,7 +25,7 @@ protected:
     virtual QList<QString> resetCommands() override;
 
 public:
-    explicit CPCompute(QObject *parent = 0);
+    explicit CPCompute(QQuickItem *parent = 0);
     ~CPCompute() { }
     void update(LAMMPSController *lammpsController) override;
     bool existsInLammps(LAMMPSController *lammpsController) override;

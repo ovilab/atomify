@@ -57,7 +57,7 @@ Rectangle {
                         model: [
                             "qrc:/simulations/diffusion/simple_diffusion",
                             "qrc:/simulations/other/water",
-                            "qrc:/simulations/diffusion/simple_diffusion",
+                            "qrc:/simulations/diffusion/test",
                             "qrc:/simulations/other/indent"
                         ]
                         delegate: Item {

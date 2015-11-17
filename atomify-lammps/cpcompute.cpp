@@ -2,7 +2,7 @@
 #include "lammpscontroller.h"
 #include "mysimulator.h"
 
-CPCompute::CPCompute(QObject *parent) : SimulatorControl(parent)
+CPCompute::CPCompute(QQuickItem *parent) : SimulatorControl(parent)
 {
 
 }

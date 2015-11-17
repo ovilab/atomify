@@ -1,12 +1,12 @@
 #ifndef SIMULATORCONTROL_H
 #define SIMULATORCONTROL_H
 
-#include <QObject>
+#include <QQuickItem>
 #include <QVariantList>
 
 class LAMMPSController;
 class AtomifySimulator;
-class SimulatorControl : public QObject
+class SimulatorControl : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
@@ -26,7 +26,7 @@ protected:
     virtual QList<QString> resetCommands() = 0;
 
 public:
-    explicit SimulatorControl(QObject *parent = 0);
+    explicit SimulatorControl(QQuickItem *parent = 0);
     ~SimulatorControl();
     bool enabled() const;
     QString identifier() const;

@@ -1,7 +1,7 @@
 #include "cpfix.h"
 #include "lammpscontroller.h"
 
-CPFix::CPFix(QObject *parent) : SimulatorControl(parent)
+CPFix::CPFix(QQuickItem *parent) : SimulatorControl(parent)
 {
 
 }

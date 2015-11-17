@@ -4,7 +4,7 @@
 #include <QRegularExpression>
 #include <QDebug>
 
-NVT::NVT(QObject *parent) : CPFix(parent)
+NVT::NVT(QQuickItem *parent) : CPFix(parent)
 {
     setIdentifier(QString("cp_nvt"));
     updateCommand();

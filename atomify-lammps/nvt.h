@@ -14,7 +14,7 @@ private:
     double m_temperatureDampening = 1.0;
 
 public:
-    explicit NVT(QObject *parent = 0);
+    explicit NVT(QQuickItem *parent = 0);
     ~NVT() { }
     double targetTemperature() const;
     double temperatureDampening() const;

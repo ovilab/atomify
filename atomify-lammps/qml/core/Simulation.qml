@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
+import Atomify 1.0
 
 QtObject {
     property string name: "Unnamed"
@@ -20,41 +21,8 @@ QtObject {
 
         return names[names.length - 1]
     }
-    property list<Component> controllers: [
-        Component {
-            Rectangle {
-                color: "red"
-            }
-        },
-        Component {
-            Rectangle {
-                color: "blue"
-            }
-        },
-        Component {
-            Rectangle {
-                Layout.columnSpan: 2
-                color: "green"
-            }
-        },
-        Component {
-            Rectangle {
-                Layout.columnSpan: 2
-                Layout.rowSpan: 2
-                color: "yellow"
-            }
-        },
-        Component {
-            Rectangle {
-                color: "red"
-            }
-        },
-        Component {
-            Rectangle {
-                color: "blue"
-            }
-        }
-    ]
+
+    property list<Component> controllers
 
     onDescriptionChanged: {
         var maximumCharacters = 210

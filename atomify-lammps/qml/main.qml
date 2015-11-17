@@ -57,14 +57,6 @@ ApplicationWindow {
         atomStyle: AtomStyle {
             id: myAtomStyle
         }
-
-        NVT {
-            id: nvt
-            temperatureDampening: 0.01
-            onEnabledChanged: {
-                nvtCheck.checked = enabled
-            }
-        }
         scriptHandler: ScriptHandler {
             atomStyle: myAtomStyle
         }

@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 
+import Atomify 1.0
+
 import "qrc:/mobile/style"
 import "qrc:/core"
 
@@ -8,10 +10,11 @@ Item {
     id: dashboardRoot
 
     signal continueClicked
-    signal simulationsClicked
+    signal controlClicked
 
-    property bool revealed: false
+    property AtomifySimulator simulator: null
     property Simulation simulation: null
+    property bool revealed: false
 
     state: revealed ? "" : "hidden"
 
@@ -26,16 +29,18 @@ Item {
     }
 
     onSimulationChanged: {
-//        for(var i in simulation.controllers) {
-//            var component = Qt.createComponent(simulation.controllers[i])
-//            if (component.status !== Component.Ready) {
-//                // Error Handling
-//                console.log("Error loading component:", component.errorString());
-//            }
-//            var object = component.createObject(gridLayout, {width: gridLayout.itemSize, height: gridLayout.itemSize})
-//        }
-//        console.log(simulation.controllers.count)
-//        repeater.model = simulation.controllers.count
+        //        for(var i in simulation.controllers) {
+        //            var component = Qt.createComponent(simulation.controllers[i])
+        //            if (component.status !== Component.Ready) {
+        //                // Error Handling
+        //                console.log("Error loading component:", component.errorString());
+        //            }
+        //            var object = component.createObject(gridLayout, {width: gridLayout.itemSize, height: gridLayout.itemSize})
+        //        }
+        //        console.log(simulation.controllers.count)
+        //        repeater.model = simulation.controllers.count
+        repeater.model = undefined
+        repeater.model = simulation.controllers.length
     }
 
     Rectangle {
@@ -70,12 +75,31 @@ Item {
                         property real itemSize: gridLayout.width / gridLayout.columns - gridLayout.columnSpacing * (gridLayout.columns - 1)
 
                         Layout.fillWidth: true
-//                        Layout.preferredWidth: itemSize
+                        //                        Layout.preferredWidth: itemSize
                         Layout.preferredHeight: itemSize * Layout.rowSpan
                         Layout.columnSpan: item ? item.Layout.columnSpan ? item.Layout.columnSpan : 1 : 1
                         Layout.rowSpan: item ? item.Layout.rowSpan ? item.Layout.rowSpan : 1 : 1
 
                         sourceComponent: simulation.controllers[index]
+
+                        onLoaded: {
+                            if(!(item && item.fixes && simulator)) {
+                                return
+                            }
+
+                            for(var j in item.fixes) {
+                                var fix = item.fixes[j]
+                                fix.parent = simulator
+                                console.log("Created " + fix + " on simulator " + simulator)
+                            }
+                        }
+
+                        Connections {
+                            target: item
+                            onClicked: {
+                                controlClicked()
+                            }
+                        }
                     }
                 }
             }

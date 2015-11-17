@@ -58,7 +58,19 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
-    m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
+
+    QList<SimulatorControl*> controls;
+    for(QQuickItem* child : mySimulator->childItems()) {
+        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+        if(control) {
+            controls.append(control);
+        }
+    }
+
+    m_lammpsController.simulatorControls = controls;
+    //    m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
+
+//    qDebug() << "Stuffs: " << mySimulator->childItems().length();
 
     // Sync properties from lammps controller
     mySimulator->setNumberOfTimesteps(m_lammpsController.numberOfTimesteps());

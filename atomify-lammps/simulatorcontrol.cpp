@@ -3,7 +3,7 @@
 #include "scripthandler.h"
 #include "mysimulator.h"
 
-SimulatorControl::SimulatorControl(QObject *parent) : QObject(parent)
+SimulatorControl::SimulatorControl(QQuickItem *parent) : QQuickItem(parent)
 {
 
 }
