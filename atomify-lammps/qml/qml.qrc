@@ -38,5 +38,7 @@
         <file>mobile/dashboard/DashboardControl.qml</file>
         <file>mobile/dashboard/TemperatureControl.qml</file>
         <file>mobile/dashboard/DashboardControlView.qml</file>
+        <file>mobile/dashboard/DashboardMiniControl.qml</file>
+        <file>mobile/dashboard/DashboardFullControl.qml</file>
     </qresource>
 </RCC>

@@ -3,18 +3,20 @@ import QtQuick.Layouts 1.1
 
 import Atomify 1.0
 
-import "qrc:/mobile/style"
 import "qrc:/core"
+import "qrc:/mobile/style"
+import "qrc:/visualization"
 
 Item {
     id: dashboardRoot
 
     signal continueClicked
-    signal controlClicked
+    signal controlClicked(var index)
 
     property AtomifySimulator simulator: null
     property Simulation simulation: null
     property bool revealed: false
+    property AtomifyVisualizer visualizer
 
     state: revealed ? "" : "hidden"
 
@@ -29,18 +31,17 @@ Item {
     }
 
     onSimulationChanged: {
-        //        for(var i in simulation.controllers) {
-        //            var component = Qt.createComponent(simulation.controllers[i])
-        //            if (component.status !== Component.Ready) {
-        //                // Error Handling
-        //                console.log("Error loading component:", component.errorString());
-        //            }
-        //            var object = component.createObject(gridLayout, {width: gridLayout.itemSize, height: gridLayout.itemSize})
-        //        }
-        //        console.log(simulation.controllers.count)
-        //        repeater.model = simulation.controllers.count
-        repeater.model = undefined
-        repeater.model = simulation.controllers.length
+        for(var i in simulation.controllers) {
+            var controller = simulation.controllers[i]
+            var miniControl = simulation.controllers[i].miniControl
+            if(!miniControl) {
+                continue
+            }
+
+            miniControl.parent = gridLayout
+            miniControl.itemSize = Qt.binding(function() {return gridLayout.itemSize})
+            miniControl.clicked.connect(function() {controlClicked(i)})
+        }
     }
 
     Rectangle {
@@ -67,41 +68,42 @@ Item {
                 columns: 2
                 columnSpacing: 0
                 rowSpacing: 0
+                property real itemSize: gridLayout.width / gridLayout.columns - gridLayout.columnSpacing * (gridLayout.columns - 1)
 
-                Repeater {
-                    id: repeater
-                    model: simulation.controllers.length
-                    Loader {
-                        property real itemSize: gridLayout.width / gridLayout.columns - gridLayout.columnSpacing * (gridLayout.columns - 1)
+//                Repeater {
+//                    id: repeater
+//                    model: simulation.controllers.length
+//                    Loader {
 
-                        Layout.fillWidth: true
-                        //                        Layout.preferredWidth: itemSize
-                        Layout.preferredHeight: itemSize * Layout.rowSpan
-                        Layout.columnSpan: item ? item.Layout.columnSpan ? item.Layout.columnSpan : 1 : 1
-                        Layout.rowSpan: item ? item.Layout.rowSpan ? item.Layout.rowSpan : 1 : 1
+//                        Layout.fillWidth: true
+//                        //                        Layout.preferredWidth: itemSize
+//                        Layout.preferredHeight: itemSize * Layout.rowSpan
+//                        Layout.columnSpan: item ? item.Layout.columnSpan ? item.Layout.columnSpan : 1 : 1
+//                        Layout.rowSpan: item ? item.Layout.rowSpan ? item.Layout.rowSpan : 1 : 1
 
-                        sourceComponent: simulation.controllers[index]
+//                        sourceComponent: simulation.controllers[index]
 
-                        onLoaded: {
-                            if(!(item && item.fixes && simulator)) {
-                                return
-                            }
+//                        onLoaded: {
+//                            if(!(item && item.fixes && simulator)) {
+//                                return
+//                            }
 
-                            for(var j in item.fixes) {
-                                var fix = item.fixes[j]
-                                fix.parent = simulator
-                                console.log("Created " + fix + " on simulator " + simulator)
-                            }
-                        }
+//                            item.visualizer = visualizer
+//                            for(var j in item.fixes) {
+//                                var fix = item.fixes[j]
+//                                fix.parent = simulator
+//                                console.log("Created " + fix + " on simulator " + simulator)
+//                            }
+//                        }
 
-                        Connections {
-                            target: item
-                            onClicked: {
-                                controlClicked()
-                            }
-                        }
-                    }
-                }
+//                        Connections {
+//                            target: item
+//                            onClicked: {
+//                                controlClicked(item.controlComponents)
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
     }

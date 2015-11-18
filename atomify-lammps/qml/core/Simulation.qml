@@ -22,7 +22,7 @@ QtObject {
         return names[names.length - 1]
     }
 
-    property list<Component> controllers
+    property list<Item> controllers
 
     onDescriptionChanged: {
         var maximumCharacters = 210

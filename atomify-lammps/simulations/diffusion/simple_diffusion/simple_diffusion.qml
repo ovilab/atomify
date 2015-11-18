@@ -1,5 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Layouts 1.1
 import Atomify 1.0
 import "qrc:/core"
 import "qrc:/mobile/dashboard"
@@ -15,8 +16,31 @@ Simulation {
                      "lowering the temperature and sped up when raising the temperature."
 
     controllers: [
-        Component {
-            TemperatureControl {}
+        TemperatureControl {},
+        DashboardControl{
+            miniControl: DashboardMiniControl {
+                Rectangle {
+                    anchors.fill: parent
+                    color: "red"
+                }
+            }
+            fullControl: DashboardFullControl {
+                Rectangle {
+                    color: "blue"
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+                Rectangle {
+                    color: "green"
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+                Rectangle {
+                    color: "red"
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+            }
         }
     ]
 }

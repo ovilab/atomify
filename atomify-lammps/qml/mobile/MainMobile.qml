@@ -34,6 +34,15 @@ Item {
         simulator.scriptHandler.runFile(simulation.scriptSource)
         mobileRoot.simulation = simulation
 
+        for(var i in simulation.controllers) {
+            var controller = simulation.controllers[i]
+            for(var j in controller.fixes) {
+                var fix = controller.fixes[j]
+                fix.parent = simulator
+                console.log("Created " + fix + " on simulator " + simulator)
+            }
+        }
+
         mobileRoot.state = ""
     }
 
@@ -72,15 +81,22 @@ Item {
 
     DashboardRight {
         id: dashboard
+        visualizer: visualizer
         simulator: mobileRoot.simulator
         simulation: mobileRoot.simulation
         onControlClicked: {
             mobileRoot.previousState = mobileRoot.state
             mobileRoot.state = "tools"
+            console.log("Index was " + index)
+            controlView.gotoIndex(index)
         }
     }
 
     DashboardControlView {
+        id: controlView
+        visualizer: visualizer
+        simulator: mobileRoot.simulator
+        simulation: mobileRoot.simulation
         anchors {
             bottom: visualizer.top
         }
