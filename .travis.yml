@@ -19,3 +19,4 @@ script:
   - /opt/qt55/bin/qmake
   - make
  
+
