@@ -3,7 +3,6 @@ os:
   - linux
 compiler:
   - gcc
-  - clang
 sudo: required
 dist: trusty
 install:
