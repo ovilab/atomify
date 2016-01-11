@@ -121,7 +121,7 @@ Item {
                     Slider {
                         id: scaleSlider
                         minimumValue: 0.1
-                        maximumValue: 1.0
+                        maximumValue: 10.0
                         value: myVisualizer.scale
                         onValueChanged: {
                             myVisualizer.scale = value

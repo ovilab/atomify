@@ -6,6 +6,7 @@ void Graph::setDirty(bool dirty) {
         return;
     m_dirty = dirty;
 
+
     if(m_dirty) {
         // Mark parent as dirty as well (or just call update)
         Figure *figure = qobject_cast<Figure*>(parent());

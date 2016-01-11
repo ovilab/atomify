@@ -101,6 +101,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     } catch (LammpsException &exception) {
         m_currentException = exception; // Store a copy of the exception to communicate to GUI
         state.crashed = true;
+        qDebug() << "Last command: " << command;
     }
 }
 
@@ -238,7 +239,7 @@ void LAMMPSController::reset()
 
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
-    m_lammps->screen = NULL;
+    // m_lammps->screen = NULL;
     state = State(); // Reset current state variables
 }
 
