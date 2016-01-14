@@ -42,7 +42,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     if(mySimulator->willReset()) {
         double x = 10*rand() / (double)RAND_MAX;
         m_lammpsController.reset();
+        mySimulator->lammpsState = m_lammpsController.state;
         mySimulator->setWillReset(false);
+        mySimulator->scriptHandler()->setLammpsState(&mySimulator->lammpsState);
         emit mySimulator->lammpsDidReset();
     }
 
@@ -56,10 +58,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     // Sync values from QML and simulator
-    m_lammpsController.setComputes(mySimulator->computes());
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
     m_lammpsController.simulatorControls = mySimulator->findChildren<SimulatorControl*>();
+    m_lammpsController.state.staticSystem = mySimulator->lammpsState.staticSystem;
 
     // Sync properties from lammps controller
     mySimulator->setNumberOfTimesteps(m_lammpsController.numberOfTimesteps());
@@ -185,20 +187,6 @@ MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
 }
-QMap<QString, CPCompute *> AtomifySimulator::computes() const
-{
-    return m_computes;
-}
-
-void AtomifySimulator::setComputes(const QMap<QString, CPCompute *> &computes)
-{
-    m_computes = computes;
-}
-
-//void AtomifySimulator::addCompute(CPCompute *compute)
-//{
-//    m_computes[compute->identifier()] = compute;
-//}
 
 bool AtomifySimulator::paused() const
 {

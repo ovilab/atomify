@@ -42,6 +42,17 @@ AtomStyle *ScriptHandler::atomStyle() const
     return m_atomStyle;
 }
 
+
+LammpsState *ScriptHandler::lammpsState() const
+{
+    return m_lammpsState;
+}
+
+void ScriptHandler::setLammpsState(LammpsState *lammpsState)
+{
+    m_lammpsState = lammpsState;
+}
+
 QString ScriptHandler::previousSingleCommandString()
 {
     if(--m_currentPreviousSingleCommandIndex < 0) {
@@ -119,6 +130,12 @@ void ScriptHandler::parseGUICommand(QString command)
             if(m_atomStyle) m_atomStyle->setScaleAndColorForAtom(scale, color, atomType);
         });
         return;
+    }
+
+    if(m_lammpsState) {
+        if(m_parser.isStaticSystem(command)) {
+            m_lammpsState->staticSystem = true;
+        }
     }
 }
 

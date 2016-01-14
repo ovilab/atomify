@@ -13,27 +13,28 @@
 #include "cpcompute.h"
 #include "scripthandler.h"
 
+struct LammpsState {
+    bool paused = false;
+    bool crashed = false;
+    bool staticSystem = false;
+    bool runCommandActive = false;
+    bool preRunNeeded = true;
+    int  simulationSpeed = 1;
+    unsigned long timeSpentInLammps = 0;
+    int numberOfTimesteps = 1;
+    bool dataDirty = false;
+    unsigned int runCommandStart = 0;
+    unsigned int runCommandEnd = 0;
+    ScriptCommand nextCommand;
+};
+
 using namespace LAMMPS_NS;
 class MyWorker;
 class SimulatorControl;
 class LAMMPSController
 {
 private:
-    struct State {
-        bool paused = false;
-        bool crashed = false;
-        bool runCommandActive = false;
-        bool preRunNeeded = true;
-        int  simulationSpeed = 1;
-        unsigned long timeSpentInLammps = 0;
-        int numberOfTimesteps = 1;
-        bool dataDirty = false;
-        unsigned int runCommandStart = 0;
-        unsigned int runCommandEnd = 0;
-        ScriptCommand nextCommand;
-    };
     ScriptHandler *m_scriptHandler = nullptr;
-    QMap<QString, CPCompute*> m_computes;
     LammpsException m_currentException;
     LAMMPS *m_lammps = nullptr;
     MyWorker *m_worker = nullptr;
@@ -41,7 +42,7 @@ private:
     void executeActiveRunCommand();
     void notifySimulatorControlsAboutCommand();
 public:
-    State state;
+    LammpsState state;
 
     LAMMPSController();
     ~LAMMPSController();
@@ -52,8 +53,6 @@ public:
     void setWorker(MyWorker *worker);
     int  simulationSpeed() const;
     void setSimulationSpeed(int simulationSpeed);
-    QMap<QString, CPCompute *> computes() const;
-    void setComputes(const QMap<QString, CPCompute *> &computes);
     bool paused() const;
     void setPaused(bool value);
     bool dataDirty() const;
