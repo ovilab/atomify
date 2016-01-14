@@ -38,6 +38,7 @@ Item {
             if(!miniControl) {
                 continue
             }
+            // TODO control should be removed again when changing simulation
             miniControl.parent = gridLayout
             miniControl.itemSize = Qt.binding(function() {return gridLayout.itemSize})
             var fullControl = simulation.controllers[i].fullControl
