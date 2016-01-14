@@ -4,8 +4,8 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
-QMAKE_CXXFLAGS += -g -fopenmp
-LIBS += -fopenmp
+#QMAKE_CXXFLAGS += -g -fopenmp
+#LIBS += -fopenmp
 CONFIG += warn_off
 
 # lammps.pri includes the path and libs to lammps
@@ -17,10 +17,11 @@ android {
     HEADERS +=
     LIBS += -fopenmp
     include(../lammps-android.pri)
+} ios {
+    include(../lammps-ios.pri)
 } else {
     include(../lammps.pri)
 }
-
 RESOURCES += images.qrc \
     scripts.qrc \
     qml/qml.qrc \
