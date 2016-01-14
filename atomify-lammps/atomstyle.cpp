@@ -181,6 +181,11 @@ void AtomStyle::setModelData(const int index, const QString &key, const QVariant
     setDirty(true);
 }
 
+bool AtomStyle::isVisible(const int index)
+{
+    return getAtomStyleData(index)->visible();
+}
+
 void AtomStyle::setModel(QVariant model)
 {
     if (m_model == model)
