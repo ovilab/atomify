@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/simulations/water">
+        <file>singlewater/singlewater.in</file>
+        <file>singlewater/singleWater.data</file>
+    </qresource>
+</RCC>

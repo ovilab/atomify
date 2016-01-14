@@ -27,7 +27,8 @@ RESOURCES += images.qrc \
     qml/qml.qrc \
     simulations/diffusion/diffusion.qrc \
     simulations/other/other.qrc \
-    potentialparameters.qrc
+    potentialparameters.qrc \
+    simulations/water/water.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -58,7 +59,8 @@ SOURCES += \
     figure.cpp \
     cpfix.cpp \
     cpcompute.cpp \
-    cpvariable.cpp
+    cpvariable.cpp \
+    fixaveragetime.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -76,7 +78,8 @@ HEADERS += \
     figure.h \
     cpfix.h \
     cpcompute.h \
-    cpvariable.h
+    cpvariable.h \
+    fixaveragetime.h
 
 DISTFILES += \
     iOS.plist \
