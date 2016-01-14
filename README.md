@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ComputationalPhysics/atomify-lammps.svg?branch=master)](https://travis-ci.org/ComputationalPhysics/atomify-lammps)
 
-- Simplifty your workflow significantly.
+- Simplify your workflow significantly.
 - Atomify is a script editor for LAMMPS supporting live visualization of the simulation. Edit your script, just press Run, and you will immediately see the atoms on your screen while LAMMPS is running. There is no need to dump the trajectories to disk and open them in VMD or Ovito anymore. It uses the high performance visualization library **[SimVis](https://github.com/computationalphysics/SimVis)** (based on Qt) allowing live visualization of millions of atoms in a live simulation.
 
 ## Why ##
