@@ -94,12 +94,12 @@ Item {
                 text: "Attenuation"
             }
 
-            Slider {
-                id: attenuationValue
-                maximumValue: 10
-                minimumValue: 0.0
-                value: 1000.0*light.attenuation
-                onValueChanged: light.attenuation = 0.001*value
+            TextField {
+                text: "0.0"
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                onTextChanged: {
+                    light.attenuation = parseFloat(text)
+                }
             }
         }
     }
