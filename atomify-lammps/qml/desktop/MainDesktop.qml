@@ -167,6 +167,27 @@ Item {
                 simulator.paused = !simulator.paused
             }
         }
+        Shortcut {
+            sequence: "1"
+            onActivated: {
+                var isVisible = simulator.atomStyle.isVisible(0)
+                simulator.atomStyle.setModelData(0, "visible", !isVisible)
+            }
+        }
+        Shortcut {
+            sequence: "2"
+            onActivated: {
+                var isVisible = simulator.atomStyle.isVisible(1)
+                simulator.atomStyle.setModelData(1, "visible", !isVisible)
+            }
+        }
+        Shortcut {
+            sequence: "3"
+            onActivated: {
+                var isVisible = simulator.atomStyle.isVisible(2)
+                simulator.atomStyle.setModelData(2, "visible", !isVisible)
+            }
+        }
     }
 
 //    Temperature {
