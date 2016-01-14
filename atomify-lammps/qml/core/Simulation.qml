@@ -21,7 +21,7 @@ QtObject {
 
         return names[names.length - 1]
     }
-
+    property var simulator
     property list<Item> controllers
 
     onDescriptionChanged: {

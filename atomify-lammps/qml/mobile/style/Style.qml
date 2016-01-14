@@ -11,6 +11,7 @@ Item {
     property real touchableSize: 6 * baseSize
     property real baseSize: pixelDensity / 10
     property real baseMargin: 4 * baseSize
+    property real spacing: 2 * baseSize
 
     property alias font: fontObject
     property int renderType: Text.QtRendering

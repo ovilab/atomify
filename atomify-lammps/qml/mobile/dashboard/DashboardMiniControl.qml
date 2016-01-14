@@ -6,9 +6,10 @@ import "qrc:/visualization"
 Item {
     id: controlRoot
 
-    signal clicked
+    signal clicked(var index)
 
     property real itemSize
+    property int menuIndex: 0
 
     Layout.fillWidth: true
     Layout.preferredHeight: itemSize * Layout.rowSpan
@@ -19,7 +20,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            controlRoot.clicked()
+            controlRoot.clicked(menuIndex)
         }
     }
 }

@@ -36,10 +36,10 @@ Item {
 
         for(var i in simulation.controllers) {
             var controller = simulation.controllers[i]
-            for(var j in controller.fixes) {
-                var fix = controller.fixes[j]
-                fix.parent = simulator
-                console.log("Created " + fix + " on simulator " + simulator)
+            for(var j in controller.simulatorControls) {
+                var control = controller.simulatorControls[j]
+                control.parent = simulator
+                console.log("Created " + control + " on simulator " + simulator)
             }
         }
 

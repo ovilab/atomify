@@ -36,9 +36,10 @@
         <file>mobile/simulations/SingleSimulationView.qml</file>
         <file>mobile/dashboard/DashboardRight.qml</file>
         <file>mobile/dashboard/DashboardControl.qml</file>
-        <file>mobile/dashboard/TemperatureControl.qml</file>
+        <file>mobile/dashboard/controls/TemperatureControl.qml</file>
         <file>mobile/dashboard/DashboardControlView.qml</file>
         <file>mobile/dashboard/DashboardMiniControl.qml</file>
         <file>mobile/dashboard/DashboardFullControl.qml</file>
+        <file>mobile/dashboard/controls/Thermometer.qml</file>
     </qresource>
 </RCC>

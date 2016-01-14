@@ -31,16 +31,22 @@ Item {
     }
 
     onSimulationChanged: {
+        var menuIndex = 0
         for(var i in simulation.controllers) {
             var controller = simulation.controllers[i]
             var miniControl = simulation.controllers[i].miniControl
             if(!miniControl) {
                 continue
             }
-
             miniControl.parent = gridLayout
             miniControl.itemSize = Qt.binding(function() {return gridLayout.itemSize})
-            miniControl.clicked.connect(function() {controlClicked(i)})
+            var fullControl = simulation.controllers[i].fullControl
+            if(!fullControl) {
+                continue
+            }
+            miniControl.menuIndex = menuIndex
+            miniControl.clicked.connect(controlClicked)
+            menuIndex += 1
         }
     }
 

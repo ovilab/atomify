@@ -7,7 +7,7 @@ Item {
     id: controlRoot
     signal clicked
 
-    property list<Item> fixes
+    property list<Item> simulatorControls
     property Item fullControl
     property Item miniControl
     property real itemSize: 10
