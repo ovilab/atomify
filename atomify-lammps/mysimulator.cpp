@@ -32,6 +32,16 @@ MyWorker::MyWorker() {
     m_lammpsController.setWorker(this);
 }
 
+void AtomifySimulator::clearSimulatorControls()
+{
+    for(QQuickItem* child : childItems()) {
+        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+        if(control) {
+            control->setParentItem(nullptr);
+        }
+    }
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *mySimulator = qobject_cast<AtomifySimulator*>(simulator);

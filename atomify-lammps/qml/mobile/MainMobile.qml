@@ -34,6 +34,8 @@ Item {
         simulator.scriptHandler.runFile(simulation.scriptSource)
         mobileRoot.simulation = simulation
 
+        simulator.clearSimulatorControls()
+
         for(var i in simulation.controllers) {
             var controller = simulation.controllers[i]
             for(var j in controller.simulatorControls) {

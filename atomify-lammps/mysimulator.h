@@ -72,6 +72,7 @@ public:
     bool willReset() const;
     int numberOfTimesteps() const;
 
+    Q_INVOKABLE void clearSimulatorControls();
 public slots:
     void setSimulationSpeed(int arg);
     void setPaused(bool paused);

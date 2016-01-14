@@ -27,11 +27,14 @@ elif _platform == "win32":
     exit()
 elif len(sys.argv) > 1 and sys.argv[1] == "android":
     lammps_build_type = "android"
-    if len(sys.argv) < 3:
-        print "You need to specify the Android NDK path"
-        print "python configure.py android <Android NDK path>"
+    if len(sys.argv) < 4:
+        print "You need to specify the Android NDK path and Android ABI version (for example \"4.9\")"
+        print "python configure.py android <Android NDK path> <Android ABI version>"
+        print "Example:"
+        print "python configure.py android /home/username/apps/android-ndk-r10d 4.9"
         exit()
     env["ANDROID_NDK_PATH"] = sys.argv[2]
+    env["ANDROID_ABI"] = sys.argv[3]
 
 root_path = os.path.abspath(".")
 patch_path = join(root_path, "lammps-patch")

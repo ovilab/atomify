@@ -15,12 +15,12 @@ android {
     DEFINES += LAMMPS_XDR
     SOURCES +=
     HEADERS +=
-    LIBS += -fopenmp
     include(../lammps-android.pri)
 } ios {
     include(../lammps-ios.pri)
 } else {
     include(../lammps.pri)
+    LIBS += -fopenmp
 }
 RESOURCES += images.qrc \
     scripts.qrc \
