@@ -8,6 +8,7 @@
 #include <lammps.h>
 #include <compute.h>
 #include <modify.h>
+#include <variable.h>
 #include <lammpsexception.h>
 #include "cpcompute.h"
 #include "scripthandler.h"
@@ -83,6 +84,8 @@ public:
     template<class T>
     T *findFixByType();
     void processSimulatorControls();
+    LAMMPS_NS::Variable *findVariableByIdentifier(QString identifier);
+    int findVariableIndex(QString identifier);
 };
 
 template<class T>

@@ -17,6 +17,7 @@ class SimulatorControl : public QQuickItem
 protected:
     QString m_command;
     QString m_identifier;
+    QString m_commandPrefix = "atomify_";
     QVariantList m_dependencies;
     bool m_enabled = true;
     bool addToLammps(LAMMPSController *lammpsController);

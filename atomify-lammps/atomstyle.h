@@ -69,6 +69,7 @@ public slots:
     void remove(const int index);
     void setMinimumSize(int minimumSize);
     void setDirty(bool dirty);
+    bool isVisible(const int index);
 };
 
 #endif // ATOMSKIN_H

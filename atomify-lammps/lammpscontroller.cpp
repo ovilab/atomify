@@ -15,7 +15,6 @@
 #include <fix_nve.h>
 #include <fix_nvt.h>
 #include <fix_npt.h>
-
 #include <stdio.h>
 #include <QDebug>
 #include <string>
@@ -166,6 +165,20 @@ void LAMMPSController::processCommand(QString command) {
     executeCommandInLAMMPS(processedCommand);
 }
 
+int LAMMPSController::findVariableIndex(QString identifier) {
+    if(!m_lammps) return -1;
+    char identifier_cstr[1000];
+    strcpy(identifier_cstr, identifier.toStdString().c_str());
+    return m_lammps->input->variable->find(identifier_cstr);
+}
+
+LAMMPS_NS::Variable* LAMMPSController::findVariableByIdentifier(QString identifier) {
+    int fixId = findFixIndex(identifier);
+    if(fixId < 0) return nullptr;
+    qFatal("LAMMPSController::findVariableByIdentifier(QString identifier) is not implemented yet");
+    return nullptr;
+}
+
 LAMMPS_NS::Fix* LAMMPSController::findFixByIdentifier(QString identifier) {
     int fixId = findFixIndex(identifier);
     if(fixId < 0) return nullptr;
@@ -208,7 +221,9 @@ void LAMMPSController::executeActiveRunCommand() {
 
     int simulationSpeed = min(state.simulationSpeed, maxSimulationSpeed);
 
+
     QElapsedTimer t;
+
     t.start();
     if(currentTimestep == state.runCommandStart || state.preRunNeeded) {
         // If this is the first timestep in this run command, execute the pre yes command to prepare the full run command.

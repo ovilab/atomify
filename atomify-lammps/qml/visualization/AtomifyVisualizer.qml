@@ -60,12 +60,12 @@ Item {
                 ambientColor: spheres.color
                 specularColor: "white"
                 diffuseColor: spheres.color
-                ambientIntensity: 0.4
-                diffuseIntensity: 0.8
+                ambientIntensity: 0.05
+                diffuseIntensity: 1.0
                 specularIntensity: 1.0
-                specular: false
+                specular: true
                 shininess: 40.0
-                attenuation: 0.001
+                attenuation: 0.0
                 position: camera.position
             }
 

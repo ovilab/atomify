@@ -11,6 +11,7 @@
 #include "mysimulator.h"
 #include "highlighter.h"
 #include "cpcompute.h"
+#include "cpvariable.h"
 #include "atomstyle.h"
 #include "fileio.h"
 #include "nvt.h"
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<LineGraphDataSource>("QMLPlot", 1, 0, "LineGraphDataSource");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
+    qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
 
     QApplication app(argc, argv);

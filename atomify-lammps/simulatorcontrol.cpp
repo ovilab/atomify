@@ -79,7 +79,7 @@ bool SimulatorControl::enabled() const
 
 QString SimulatorControl::identifier() const
 {
-    return m_identifier;
+    return m_commandPrefix+m_identifier;
 }
 
 QString SimulatorControl::command() const
