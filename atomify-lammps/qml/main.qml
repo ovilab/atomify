@@ -80,21 +80,21 @@ ApplicationWindow {
 //            command: "all gcmc 1 10 10 1 352534 1.0 -5.0 1.0"
 //        }
 
-        Compute {
-            property real maxValue: 0
-            id: computeTemp
-            identifier: "temperature"
-            command: "all temp"
-            onValueChanged: {
-                // console.log(value)
+//        Compute {
+//            property real maxValue: 0
+//            id: computeTemp
+//            identifier: "temperature"
+//            command: "all temp"
+//            onValueChanged: {
+//                 console.log("test" + value)
 
-                //tempGraph.addPoint(mySimulator.simulationTime, value)
-                //tempPlot.xMax = mySimulator.simulationTime
-                //tempPlot.xMin = mySimulator.simulationTime-1
-                //maxValue = Math.max(maxValue, value)
-                //tempPlot.yMax = maxValue
-            }
-        }
+//                //tempGraph.addPoint(mySimulator.simulationTime, value)
+//                //tempPlot.xMax = mySimulator.simulationTime
+//                //tempPlot.xMin = mySimulator.simulationTime-1
+//                //maxValue = Math.max(maxValue, value)
+//                //tempPlot.yMax = maxValue
+//            }
+//        }
     }
 
     Shortcut {
