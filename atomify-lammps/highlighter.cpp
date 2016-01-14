@@ -200,6 +200,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     format.setFontWeight(QFont::Normal);
     appendRule(patterns, format);
 
+    // TODO add double slashes
     // lammpsComment
     patterns.clear();
     patterns << "#\(.*&\s*\n\)*.*$";

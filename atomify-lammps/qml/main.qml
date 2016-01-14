@@ -15,7 +15,7 @@ import "desktop"
 
 ApplicationWindow {
     id: applicationRoot
-    property string mode: "desktop"
+    property string mode: "mobile"
 
     title: qsTr("Atomify")
     width: 320
