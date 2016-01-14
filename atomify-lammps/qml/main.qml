@@ -86,7 +86,7 @@ ApplicationWindow {
             identifier: "temperature"
             command: "all temp"
             onValueChanged: {
-                console.log(value)
+                // console.log(value)
 
                 //tempGraph.addPoint(mySimulator.simulationTime, value)
                 //tempPlot.xMax = mySimulator.simulationTime

@@ -42,6 +42,12 @@ bool ScriptParser::isAtomType(QString command)
     return regex.exactMatch(command);
 }
 
+bool ScriptParser::isStaticSystem(QString command)
+{
+    QRegExp regex("staticSystem");
+    return regex.exactMatch(command);
+}
+
 void ScriptParser::atomType(QString command, std::function<void(QString atomTypeName, int atomType)> action)
 {
     QRegExp regex("(atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)");
@@ -56,6 +62,7 @@ bool ScriptParser::isGUICommand(QString command) {
     bool isGUICommand = false;
     if(isAtomType(command)) isGUICommand = true;
     if(isAtomColorAndSize(command)) isGUICommand = true;
+    if(isStaticSystem(command)) isGUICommand = true;
     return isGUICommand;
 }
 

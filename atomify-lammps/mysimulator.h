@@ -59,9 +59,6 @@ public:
 
     // Simulator interface
     int simulationSpeed() const;
-    void addCompute(CPCompute *compute);
-    QMap<QString, CPCompute *> computes() const;
-    void setComputes(const QMap<QString, CPCompute *> &computes);
     AtomStyle* atomStyle() const;
     double simulationTime() const;
     bool paused() const;
@@ -112,9 +109,9 @@ protected:
 
 private:
     friend class MyWorker;
+    LammpsState lammpsState;
     int m_simulationSpeed = 1;
     bool m_paused = false;
-    QMap<QString, CPCompute*> m_computes;
     double m_simulationTime = 0.0;
     AtomStyle* m_atomStyle = nullptr;
     int m_numberOfAtoms;

@@ -37,7 +37,6 @@ LAMMPSController::LAMMPSController()
 LAMMPSController::~LAMMPSController()
 {
     setLammps(nullptr);
-    m_computes.clear();
 }
 
 LAMMPS_NS::LAMMPS *LAMMPSController::lammps() const
@@ -72,16 +71,6 @@ void LAMMPSController::setSimulationSpeed(int simulationSpeed)
     if(state.simulationSpeed != simulationSpeed) {
         state.simulationSpeed = simulationSpeed;
     }
-}
-
-QMap<QString, CPCompute *> LAMMPSController::computes() const
-{
-    return m_computes;
-}
-
-void LAMMPSController::setComputes(const QMap<QString, CPCompute *> &computes)
-{
-    m_computes = computes;
 }
 
 void LAMMPSController::executeCommandInLAMMPS(QString command) {
@@ -254,8 +243,8 @@ void LAMMPSController::reset()
 
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
-    // m_lammps->screen = NULL;
-    state = State(); // Reset current state variables
+    m_lammps->screen = NULL;
+    state = LammpsState(); // Reset current state variables
 }
 
 void LAMMPSController::tick()
@@ -288,6 +277,7 @@ void LAMMPSController::tick()
         processCommand(nextCommand.command());
     } else {
         if(state.paused) return;
+        if(state.staticSystem) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.
         QElapsedTimer t;
         t.start();
