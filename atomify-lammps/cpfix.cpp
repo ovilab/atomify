@@ -1,6 +1,6 @@
 #include "cpfix.h"
 #include "lammpscontroller.h"
-
+#include <fix.h>
 CPFix::CPFix(QObject *parent) : SimulatorControl(parent)
 {
 
@@ -30,6 +30,7 @@ void CPFix::updateCommand()
 
 bool CPFix::existsInLammps(LAMMPSController *lammpsController)
 {
+    // TODO: Use findFixIndex>=0 ?
     LAMMPS_NS::Fix *fix = lammpsController->findFixByIdentifier(identifier());
     return fix!=nullptr;
 }

@@ -59,6 +59,42 @@ ApplicationWindow {
         scriptHandler: ScriptHandler {
             atomStyle: myAtomStyle
         }
+
+//        Variable {
+//            id: myVariable
+//            identifier: "twoTemp"
+//            command: "equal 2.0*c_"+computeTemp.identifier
+//            dependencies: [computeTemp]
+//        }
+
+//        Fix {
+//            id: fixAveTime
+//            identifier: "tempout"
+//            command: "all ave/time 10 1 10 v_"+myVariable.identifier+" file /projects/test.txt"
+//            dependencies: [myVariable]
+//        }
+
+//        Fix {
+//            id: gcmcFix
+//            identifier: gcmc
+//            command: "all gcmc 1 10 10 1 352534 1.0 -5.0 1.0"
+//        }
+
+        Compute {
+            property real maxValue: 0
+            id: computeTemp
+            identifier: "temperature"
+            command: "all temp"
+            onValueChanged: {
+                console.log(value)
+
+                //tempGraph.addPoint(mySimulator.simulationTime, value)
+                //tempPlot.xMax = mySimulator.simulationTime
+                //tempPlot.xMin = mySimulator.simulationTime-1
+                //maxValue = Math.max(maxValue, value)
+                //tempPlot.yMax = maxValue
+            }
+        }
     }
 
     Button {

@@ -55,7 +55,8 @@ SOURCES += \
     graph.cpp \
     figure.cpp \
     cpfix.cpp \
-    cpcompute.cpp
+    cpcompute.cpp \
+    cpvariable.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -72,7 +73,8 @@ HEADERS += \
     graph.h \
     figure.h \
     cpfix.h \
-    cpcompute.h
+    cpcompute.h \
+    cpvariable.h
 
 DISTFILES += \
     iOS.plist \
