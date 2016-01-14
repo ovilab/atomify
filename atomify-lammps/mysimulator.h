@@ -27,6 +27,7 @@ private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
     LAMMPSController m_lammpsController;
+    float m_cameraToSystemCenterDistance = 1.0;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
@@ -53,6 +54,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(QString lammpsErrorMessage READ lammpsErrorMessage WRITE setLammpsErrorMessage NOTIFY lammpsErrorMessageChanged)
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
+    Q_PROPERTY(float cameraToSystemCenterDistance READ cameraToSystemCenterDistance WRITE setCameraToSystemCenterDistance NOTIFY cameraToSystemCenterDistanceChanged)
 public:
     AtomifySimulator() { }
     ~AtomifySimulator() { }
@@ -71,8 +73,9 @@ public:
     ScriptHandler* scriptHandler() const;
     bool willReset() const;
     int numberOfTimesteps() const;
-
     Q_INVOKABLE void clearSimulatorControls();
+    float cameraToSystemCenterDistance() const;
+
 public slots:
     void setSimulationSpeed(int arg);
     void setPaused(bool paused);
@@ -87,6 +90,7 @@ public slots:
     void setScriptHandler(ScriptHandler* scriptHandler);
     void setWillReset(bool willReset);
     void setNumberOfTimesteps(int numberOfTimesteps);
+    void setCameraToSystemCenterDistance(float cameraToSystemCenterDistance);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -104,6 +108,8 @@ signals:
     void scriptHandlerChanged(ScriptHandler* scriptHandler);
     void willResetChanged(bool willReset);
     void numberOfTimestepsChanged(int numberOfTimesteps);
+
+    void cameraToSystemCenterDistanceChanged(float cameraToSystemCenterDistance);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -124,6 +130,7 @@ private:
     ScriptHandler* m_scriptHandler = nullptr;
     bool m_willReset = false;
     int m_numberOfTimesteps = 0;
+    float m_cameraToSystemCenterDistance = 10;
 };
 
 #endif // MYSIMULATOR_H
