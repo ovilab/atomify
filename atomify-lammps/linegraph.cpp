@@ -18,6 +18,7 @@ bool LineGraph::isInValueRange(const QPointF &point, const float &xMin, const fl
 
 void LineGraph::paint(Figure *figure, QPainter *painter)
 {
+
     painter->save();
     QPen pen(m_style);
     pen.setColor(m_color);

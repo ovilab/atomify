@@ -52,10 +52,10 @@ void ScriptParser::atomType(QString command, std::function<void(QString atomType
 }
 
 bool ScriptParser::isGUICommand(QString command) {
+    command.remove(0,2);
     bool isGUICommand = false;
     if(isAtomType(command)) isGUICommand = true;
     if(isAtomColorAndSize(command)) isGUICommand = true;
-
     return isGUICommand;
 }
 

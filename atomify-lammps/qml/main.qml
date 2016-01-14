@@ -15,8 +15,7 @@ import "desktop"
 
 ApplicationWindow {
     id: applicationRoot
-
-    property string mode: "mobile"
+    property string mode: "desktop"
 
     title: qsTr("Atomify")
     width: 320
@@ -77,6 +76,15 @@ ApplicationWindow {
             }
         }
     }
+//    Button {
+//        id: switchButton
+//        text: "Switch mode"
+//        onClicked: (mode === "desktop") ? mode = "mobile" : mode = "desktop"
+//        anchors {
+//            right: parent.right
+//            top: parent.top
+//        }
+//    }
 
     Shortcut {
         sequence: StandardKey.FullScreen

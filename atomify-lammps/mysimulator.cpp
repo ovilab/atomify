@@ -40,6 +40,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(mySimulator->willReset()) {
+        double x = 10*rand() / (double)RAND_MAX;
         m_lammpsController.reset();
         mySimulator->setWillReset(false);
         emit mySimulator->lammpsDidReset();
@@ -99,19 +100,21 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         m_willPause = false;
     }
 
-    ScriptHandler *scriptHandler = mySimulator->m_scriptHandler;
-    ScriptParser &scriptParser = scriptHandler->parser();
-    ScriptCommand nextCommandObject = scriptHandler->nextCommand();
+    if(!m_lammpsController.state.runCommandActive) {
+        ScriptHandler *scriptHandler = mySimulator->m_scriptHandler;
+        ScriptParser &scriptParser = scriptHandler->parser();
+        ScriptCommand nextCommandObject = scriptHandler->nextCommand();
 
-    QString nextCommand = nextCommandObject.command();
-    if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {
-        scriptHandler->parseGUICommand(nextCommand);
-        m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
-    } else {
-        for(auto *simulatorControl : mySimulator->findChildren<SimulatorControl*>()) {
-            simulatorControl->handleCommand(nextCommandObject.command());
+        QString nextCommand = nextCommandObject.command();
+        if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {
+            scriptHandler->parseGUICommand(nextCommand);
+            m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
+        } else {
+            for(auto *simulatorControl : mySimulator->findChildren<SimulatorControl*>()) {
+                simulatorControl->handleCommand(nextCommandObject.command());
+            }
+            m_lammpsController.state.nextCommand = nextCommandObject;
         }
-        m_lammpsController.state.nextCommand = nextCommandObject;
     }
 }
 
@@ -159,6 +162,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
                 numVisibleAtoms++;
             }
         }
+
         colors.resize(numVisibleAtoms);
         scales.resize(numVisibleAtoms);
         positions.resize(numVisibleAtoms);

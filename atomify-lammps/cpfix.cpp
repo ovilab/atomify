@@ -4,6 +4,7 @@
 CPFix::CPFix(QQuickItem *parent) : SimulatorControl(parent)
 {
 
+
 }
 
 void CPFix::update(LAMMPSController *lammpsController)

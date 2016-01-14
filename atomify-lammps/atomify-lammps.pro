@@ -4,7 +4,8 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
-QMAKE_CXXFLAGS += -g
+QMAKE_CXXFLAGS += -g -fopenmp
+LIBS += -fopenmp
 CONFIG += warn_off
 
 # lammps.pri includes the path and libs to lammps
