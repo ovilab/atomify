@@ -25,44 +25,14 @@ protected:
 
 public:
     virtual bool existsInLammps(LAMMPSController *lammpsController);
-    int NEvery() const
-    {
-        return m_NEvery;
-    }
-    int NRepeat() const
-    {
-        return m_NRepeat;
-    }
-    int NFreq() const
-    {
-        return m_NFreq;
-    }
+    int NEvery() const;
+    int NRepeat() const;
+    int NFreq() const;
 
 public slots:
-    void setNEvery(int NEvery)
-    {
-        if (m_NEvery == NEvery)
-            return;
-
-        m_NEvery = NEvery;
-        emit NEveryChanged(NEvery);
-    }
-    void setNRepeat(int NRepeat)
-    {
-        if (m_NRepeat == NRepeat)
-            return;
-
-        m_NRepeat = NRepeat;
-        emit NRepeatChanged(NRepeat);
-    }
-    void setNFreq(int NFreq)
-    {
-        if (m_NFreq == NFreq)
-            return;
-
-        m_NFreq = NFreq;
-        emit NFreqChanged(NFreq);
-    }
+    void setNEvery(int NEvery);
+    void setNRepeat(int NRepeat);
+    void setNFreq(int NFreq);
 
 signals:
     void NEveryChanged(int NEvery);

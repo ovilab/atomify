@@ -81,19 +81,19 @@ ApplicationWindow {
 //        }
 
 //        Compute {
-//            property real maxValue: 0
 //            id: computeTemp
 //            identifier: "temperature"
 //            command: "all temp"
 //            onValueChanged: {
-//                 console.log("test" + value)
-
-//                //tempGraph.addPoint(mySimulator.simulationTime, value)
-//                //tempPlot.xMax = mySimulator.simulationTime
-//                //tempPlot.xMin = mySimulator.simulationTime-1
-//                //maxValue = Math.max(maxValue, value)
-//                //tempPlot.yMax = maxValue
+//                 console.log("T=" + value)
 //            }
+//        }
+
+//        FixAverageTime {
+//            id: fixTemp
+//            identifier: "lol"
+//            command: "all ave/time 1 10 1 c_atomify_temp file tmp.txt"
+//            dependencies: [computeTemp]
 //        }
     }
 

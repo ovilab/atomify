@@ -16,6 +16,7 @@
 #include "fileio.h"
 #include "nvt.h"
 #include "scripthandler.h"
+#include "fixaveragetime.h"
 #include "QMLPlot/figure.h"
 #include "QMLPlot/linegraph.h"
 
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
+    qmlRegisterType<FixAverageTime>("Atomify",1,0,"FixAverageTime");
 
     QApplication app(argc, argv);
 

@@ -197,13 +197,6 @@ Item {
 //    }
 
 //    Compute {
-//        id: temperature
-//        simulator: mySimulator
-//        identifier: "temperature"
-//        command: "compute temperature all temp"
-//    }
-
-//    Compute {
 //        id: pressure
 //        simulator: mySimulator
 //        identifier: "pressure"
