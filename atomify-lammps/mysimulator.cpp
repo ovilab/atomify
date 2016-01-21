@@ -138,7 +138,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 //    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
     m_lammpsController.setDataDirty(false);
     m_atomStyle.setDirty(false);
-
     if(spheres) {
         if(spheres->camera()) {
             QVector3D systemCenter(lammps->domain->prd_half[0], lammps->domain->prd_half[1], lammps->domain->prd_half[2]);
@@ -171,9 +170,9 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
                 position[2] = lammps->atom->x[i][2];
                 lammps->domain->remap(position);
 
-                positions[numVisibleAtoms][0] = position[0] - lammps->domain->prd_half[0];
-                positions[numVisibleAtoms][1] = position[1] - lammps->domain->prd_half[1];
-                positions[numVisibleAtoms][2] = position[2] - lammps->domain->prd_half[2];
+                positions[numVisibleAtoms][0] = position[0] - lammps->domain->boxlo[0] - lammps->domain->prd_half[0];
+                positions[numVisibleAtoms][1] = position[1] - lammps->domain->boxlo[1] - lammps->domain->prd_half[1];
+                positions[numVisibleAtoms][2] = position[2] - lammps->domain->boxlo[2] - lammps->domain->prd_half[2];
                 m_atomTypes[numVisibleAtoms] = atomType;
                 numVisibleAtoms++;
             }
