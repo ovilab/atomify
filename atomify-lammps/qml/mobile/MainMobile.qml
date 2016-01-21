@@ -56,7 +56,7 @@ Item {
         id: initialSimulationLoader
         folder: "qrc:/simulations/water/singlewater"
         onLoaded: {
-            // loadSimulation(item)
+             loadSimulation(item)
         }
     }
 

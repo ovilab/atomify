@@ -6,16 +6,20 @@ boundary	p p p
 atom_style	atomic
 
 read_data	singlewater.data
+replicate       10 10 10
 
 pair_style 	vashishta
 pair_coeff	* *  ../../potentialparameters/H2O.vashishta O H
 mass            1 15.9994
 mass            2 1.00794
 
-velocity	all create 300.0 277387 mom yes
+velocity	all create 500.0 86151 mom yes
 
 neighbor	0.3 bin
 neigh_modify	delay 10
 
 fix nve all nve
 timestep	0.0005
+
+#/atom 1 oxygen
+#/atom 2 hydrogen

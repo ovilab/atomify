@@ -8,9 +8,9 @@ LAMMPS Description
 
      2  atom types
 
-  -10 10 xlo xhi
-  -10 10 ylo yhi
-  -10 10 zlo zhi
+  -2 2 xlo xhi
+  -2 2 ylo yhi
+  -2 2 zlo zhi
 
 Atoms # atomic
 
