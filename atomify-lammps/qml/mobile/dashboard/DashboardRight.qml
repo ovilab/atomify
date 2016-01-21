@@ -80,7 +80,7 @@ Item {
 
                 function clear() {
                     for(var i in gridLayout.children) {
-                        var child = gridLayout.childAt(i)
+                        var child = gridLayout.children[i]
                         child.parent = null
                     }
                 }

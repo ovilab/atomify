@@ -15,11 +15,11 @@ import "desktop"
 
 ApplicationWindow {
     id: applicationRoot
-    property string mode: "desktop"
+    property string mode: "mobile"
 
     title: qsTr("Atomify")
-    width: 1920
-    height: 1050
+    width: 300
+    height: 480
     visible: true
 
     function resetStyle() {

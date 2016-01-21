@@ -56,8 +56,7 @@ Rectangle {
                     Repeater {
                         model: [
                             "qrc:/simulations/diffusion/simple_diffusion",
-                            "qrc:/simulations/other/water",
-                            "qrc:/simulations/diffusion/test",
+                            "qrc:/simulations/water/singlewater",
                             "qrc:/simulations/other/indent"
                         ]
                         delegate: Item {

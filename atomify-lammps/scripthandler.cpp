@@ -10,10 +10,42 @@
 #include <QMutexLocker>
 #include <QStandardPaths>
 #include <QFileInfo>
+#include <QDirIterator>
+#include <QRegularExpression>
+#include <QUuid>
+#include <fstream>
 
 ScriptHandler::ScriptHandler()
 {
-    m_tempLocation = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory);
+    m_tempLocation = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory)
+            + "atomify-lammps"; // + QUuid::createUuid().toString();
+
+    QDir dir;
+    dir.mkpath(m_tempLocation);
+
+    QDirIterator it(":/simulations", QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        QString qrcFileName = it.next();
+        QFileInfo qrcFileInfo(qrcFileName);
+        if(qrcFileInfo.isDir()) {
+            qDebug() << "Traversing directory" << qrcFileName;
+            continue;
+        }
+        QString newFileName = qrcFileName;
+        newFileName.replace(QRegularExpression("^\:\/"), "");
+        newFileName = m_tempLocation + QDir::separator() + newFileName;
+        QFileInfo newFileInfo(newFileName);
+        dir.mkpath(newFileInfo.absoluteDir().path());
+        qDebug() << "Copying" << qrcFileName << "to" << newFileName;
+        if(QFile::exists(newFileName)) {
+            if(!QFile::remove(newFileName)) {
+                qFatal("Could not remove existing");
+            }
+        }
+        if(!QFile::copy(qrcFileName, newFileName)) {
+            qFatal("Could not copy");
+        }
+    }
 }
 
 const ScriptCommand& ScriptHandler::nextCommand()
@@ -88,6 +120,15 @@ void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
 
 void ScriptHandler::runFile(QString filename)
 {
+    QString tmpFileName = filename;
+    tmpFileName.replace(QRegularExpression("^qrc\:\/"), "");
+    tmpFileName = m_tempLocation + QDir::separator() + tmpFileName;
+    QFileInfo fileInfo(tmpFileName);
+    qDebug() << "Changing directory to" << fileInfo.absoluteDir().path();
+    chdir(fileInfo.absoluteDir().path().toStdString().c_str());
+    std::ofstream out("lol.txt");
+    out << "woot";
+
     QString fileNameString = QQmlFile::urlToLocalFileOrQrc(filename);
     QFile f(fileNameString);
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -160,11 +201,12 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
 
             currentCommand = currentCommand.trimmed();
 
-            if(m_parser.isInclude(currentCommand)) {
-                QString filename = m_parser.includePath(currentCommand);
-                loadScriptFromFile(filename);
-                currentCommand.clear(); lineNumber++; continue; // This line is complete
-            }
+            // TODO add back parsing of included files, remember to chdir back after
+//            if(m_parser.isInclude(currentCommand)) {
+//                QString filename = m_parser.includePath(currentCommand);
+//                loadScriptFromFile(filename);
+//                currentCommand.clear(); lineNumber++; continue; // This line is complete
+//            }
 
             if(!currentCommand.isEmpty()) {
                 auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
@@ -237,6 +279,7 @@ QString ScriptHandler::readFile(QString filename)
 
 QString ScriptHandler::copyDataFileToReadablePath(QString filename)
 {
+    qWarning() << "Copy data chdir!!!!!";
     QString qrcFilename = ":/scripts/"+filename;
 
     bool fileFound = false;

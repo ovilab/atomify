@@ -16,7 +16,6 @@
 #include <SimVis/Lines>
 #include <SimVis/Cylinders>
 #include <SimVis/Points>
-#include <QUrl>
 #include <QString>
 #include <QQmlFile>
 #include <QDir>

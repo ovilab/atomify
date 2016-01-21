@@ -6,7 +6,7 @@ import sys
 import shutil
 from os.path import join, abspath
 from sys import platform as _platform
-
+import glob
 
 def run_command(cmd):
     print cmd
@@ -35,21 +35,24 @@ elif len(sys.argv) > 1 and sys.argv[1] == "android":
         exit()
     env["ANDROID_NDK_PATH"] = sys.argv[2]
     env["ANDROID_ABI"] = sys.argv[3]
-
+    
 root_path = os.path.abspath(".")
 patch_path = join(root_path, "lammps-patch")
 
 if not os.path.exists("lammps-build"):
     os.makedirs("lammps-build")
+
 os.chdir("lammps-build")
 if not os.path.exists("lammps-stable.tar.gz"):
     run_command("curl \"http://lammps.sandia.gov/tars/lammps-stable.tar.gz\" -o \"lammps-stable.tar.gz\"")
 if not os.path.exists("lammps-stable"):
     os.makedirs("lammps-stable")
     run_command("tar xzf lammps-stable.tar.gz -C lammps-stable --strip-components 1")
-os.chdir("lammps-stable")
-
 os.chdir(root_path)
+
+if os.path.exists("lammps-patch/water"):
+    for filename in glob.glob(os.path.join("lammps-patch/water", '*.*')):
+        shutil.copy(filename, "lammps-build/lammps-stable/src/")
 
 lammps_source_dir = join("lammps-build", "lammps-stable")
 if not os.path.isdir(lammps_source_dir):

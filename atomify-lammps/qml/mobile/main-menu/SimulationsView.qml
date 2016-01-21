@@ -14,10 +14,7 @@ Item {
             folder: "../../simulations/diffusion/simple_diffusion"
         }
         ListElement {
-            folder: "../../simulations/other/water"
-        }
-        ListElement {
-            folder: "../../simulations/diffusion/simple_diffusion"
+            folder: "../../simulations/water/singlewater"
         }
         ListElement {
             folder: "../../simulations/other/indent"
