@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += c++11
 DEFINES += LAMMPS_GZIP
 
-QT += qml quick widgets opengl openglextensions
+QT += qml quick widgets opengl openglextensions svg
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 #QMAKE_CXXFLAGS += -g -fopenmp
 #LIBS += -fopenmp
@@ -54,13 +54,13 @@ SOURCES += \
     nvt.cpp \
     simulatorcontrol.cpp \
     scriptcommand.cpp \
-    linegraph.cpp \
-    graph.cpp \
-    figure.cpp \
     cpfix.cpp \
     cpcompute.cpp \
     cpvariable.cpp \
-    fixaveragetime.cpp
+    fixaveragetime.cpp \
+    QMLPlot/figure.cpp \
+    QMLPlot/graph.cpp \
+    QMLPlot/linegraph.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -73,13 +73,13 @@ HEADERS += \
     nvt.h \
     simulatorcontrol.h \
     scriptcommand.h \
-    linegraph.h \
-    graph.h \
-    figure.h \
     cpfix.h \
     cpcompute.h \
     cpvariable.h \
-    fixaveragetime.h
+    fixaveragetime.h \
+    QMLPlot/figure.h \
+    QMLPlot/graph.h \
+    QMLPlot/linegraph.h
 
 DISTFILES += \
     iOS.plist \
