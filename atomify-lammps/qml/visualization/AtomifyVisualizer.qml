@@ -31,10 +31,6 @@ Item {
             camera: camera
         }
 
-        Lines {
-
-        }
-
         Spheres {
             id: spheres
             visible: true
