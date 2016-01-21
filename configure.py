@@ -106,6 +106,7 @@ if lammps_build_type == "android":
     shutil.copy(join(patch_path, "STUBS", "Makefile.android"), join(lammps_source_dir_src, "STUBS"))
 
     os.chdir(join(lammps_source_dir_src, "STUBS"))
+    run_command("make clean")
     run_command("make -f Makefile.android")
     os.chdir(root_path)
         
