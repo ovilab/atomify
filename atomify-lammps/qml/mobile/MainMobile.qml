@@ -56,7 +56,7 @@ Item {
         id: initialSimulationLoader
         folder: "qrc:/simulations/diffusion/simple_diffusion"
         onLoaded: {
-            loadSimulation(item)
+            // loadSimulation(item)
         }
     }
 

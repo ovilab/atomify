@@ -83,12 +83,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         }
     }
 
-    for(QObject* child : mySimulator->children()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            controls.append(control);
-        }
-    }
+//    for(QObject* child : mySimulator->children()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            controls.append(control);
+//        }
+//    }
 
     m_lammpsController.simulatorControls = controls;
     m_lammpsController.state.staticSystem = mySimulator->lammpsState.staticSystem;

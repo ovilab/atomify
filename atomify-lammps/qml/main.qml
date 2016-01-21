@@ -80,21 +80,24 @@ ApplicationWindow {
 //            command: "all gcmc 1 10 10 1 352534 1.0 -5.0 1.0"
 //        }
 
-//        Compute {
-//            id: computeTemp
-//            identifier: "temperature"
-//            command: "all temp"
-//            onValueChanged: {
-//                 console.log("T=" + value)
-//            }
-//        }
+        Compute {
+            id: computeTemp
+            identifier: "temperature"
+            command: "all temp"
+        }
 
-//        FixAverageTime {
-//            id: fixTemp
-//            identifier: "lol"
-//            command: "all ave/time 1 10 1 c_atomify_temp file tmp.txt"
-//            dependencies: [computeTemp]
-//        }
+        FixAverageTime {
+            id: fixTemp
+            identifier: "avetime"
+            nEvery: 1
+            nFreq: 10
+            nRepeat: 10
+            compute: computeTemp
+            dependencies: [computeTemp]
+            onValueChanged: {
+                console.log("T=" + value)
+            }
+        }
     }
 
     Shortcut {

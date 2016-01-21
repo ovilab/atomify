@@ -1,17 +1,20 @@
 #ifndef FIXAVERAGETIME_H
 #define FIXAVERAGETIME_H
-#include "simulatorcontrol.h"
+#include "cpcompute.h"
 
-class FixAverageTime : public SimulatorControl
+class FixAverageTime : public CPCompute
 {
     Q_OBJECT
-    Q_PROPERTY(int NEvery READ NEvery WRITE setNEvery NOTIFY NEveryChanged)
-    Q_PROPERTY(int NRepeat READ NRepeat WRITE setNRepeat NOTIFY NRepeatChanged)
-    Q_PROPERTY(int NFreq READ NFreq WRITE setNFreq NOTIFY NFreqChanged)
-private:
-    int m_NEvery = 10;
-    int m_NRepeat = 1;
-    int m_NFreq = 10;
+    Q_PROPERTY(int nEvery READ nEvery WRITE setNEvery NOTIFY nEveryChanged)
+    Q_PROPERTY(int nRepeat READ nRepeat WRITE setNRepeat NOTIFY nRepeatChanged)
+    Q_PROPERTY(int nFreq READ nFreq WRITE setNFreq NOTIFY nFreqChanged)
+    Q_PROPERTY(CPCompute* compute READ compute WRITE setCompute NOTIFY computeChanged)
+    CPCompute* m_compute = nullptr;
+
+protected:
+    int m_nEvery = 1;
+    int m_nRepeat = 10;
+    int m_nFreq = 1;
 
 public:
     FixAverageTime();
@@ -22,22 +25,26 @@ protected:
     virtual QList<QString> enabledCommands() override;
     virtual QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
+    virtual void update(LAMMPSController *lammpsController) override;
+    virtual bool existsInLammps(LAMMPSController *lammpsController) override;
 
 public:
-    virtual bool existsInLammps(LAMMPSController *lammpsController);
-    int NEvery() const;
-    int NRepeat() const;
-    int NFreq() const;
+    CPCompute* compute() const;
+    int nEvery() const;
+    int nRepeat() const;
+    int nFreq() const;
 
 public slots:
     void setNEvery(int NEvery);
     void setNRepeat(int NRepeat);
     void setNFreq(int NFreq);
+    void setCompute(CPCompute* compute);
 
 signals:
-    void NEveryChanged(int NEvery);
-    void NRepeatChanged(int NRepeat);
-    void NFreqChanged(int NFreq);
+    void nEveryChanged(int NEvery);
+    void nRepeatChanged(int NRepeat);
+    void nFreqChanged(int NFreq);
+    void computeChanged(CPCompute* compute);
 };
 
 #endif // FIXAVERAGETIME_H
