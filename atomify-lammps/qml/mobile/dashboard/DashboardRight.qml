@@ -32,6 +32,7 @@ Item {
 
     onSimulationChanged: {
         var menuIndex = 0
+        gridLayout.clear()
         for(var i in simulation.controllers) {
             var controller = simulation.controllers[i]
             var miniControl = simulation.controllers[i].miniControl
@@ -76,6 +77,13 @@ Item {
                 columnSpacing: 0
                 rowSpacing: 0
                 property real itemSize: gridLayout.width / gridLayout.columns - gridLayout.columnSpacing * (gridLayout.columns - 1)
+
+                function clear() {
+                    for(var i in gridLayout.children) {
+                        var child = gridLayout.childAt(i)
+                        child.parent = null
+                    }
+                }
 
 //                Repeater {
 //                    id: repeater
