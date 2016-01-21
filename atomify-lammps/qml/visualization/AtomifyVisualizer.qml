@@ -25,6 +25,12 @@ Item {
             atomifyVisualizerRoot.focus = true
         }
 
+        SkyBox {
+            id: skybox
+            camera: camera
+            texture: ":/1024.png"
+        }
+
         TrackballNavigator {
             id: navigator
             anchors.fill: parent
@@ -66,6 +72,12 @@ Item {
                 width: 5
                 enabled: false
             }
+
+//            SkyBoxReflection {
+//                id: reflection
+//                skybox: skybox
+//                reflectivity: 0.2
+//            }
         }
     }
 
