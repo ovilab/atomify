@@ -87,7 +87,10 @@ void FixAverageTime::setCompute(CPCompute *compute)
     if (m_compute == compute)
         return;
 
+    removeDependency(m_compute);
     m_compute = compute;
+    addDependency(compute);
+
     emit computeChanged(compute);
 }
 

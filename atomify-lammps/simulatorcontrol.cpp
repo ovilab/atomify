@@ -27,6 +27,33 @@ bool SimulatorControl::addToLammps(LAMMPSController *lammpsController) {
     return true;
 }
 
+void SimulatorControl::addDependency(SimulatorControl *control)
+{
+    bool found = false;
+    for(QVariant &variant : m_dependencies) {
+        SimulatorControl *thisControl = variant.value<SimulatorControl*>();
+        if(thisControl==control) {
+            found = true;
+            break;
+        }
+    }
+
+    if(!found) {
+        m_dependencies.push_back(QVariant::fromValue(control));
+    }
+}
+
+void SimulatorControl::removeDependency(SimulatorControl *control)
+{
+    for(QVariant &variant : m_dependencies) {
+        SimulatorControl *thisControl = variant.value<SimulatorControl*>();
+        if(thisControl==control) {
+            m_dependencies.removeOne(variant);
+            break;
+        }
+    }
+}
+
 bool SimulatorControl::dependenciesValid(LAMMPSController *lammpsController)
 {
     bool valid = true;

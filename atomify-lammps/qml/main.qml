@@ -93,7 +93,6 @@ ApplicationWindow {
             nFreq: 10
             nRepeat: 10
             compute: computeTemp
-            dependencies: [computeTemp]
             onValueChanged: {
                 console.log("T=" + value)
             }

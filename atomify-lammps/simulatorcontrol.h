@@ -25,7 +25,9 @@ protected:
     virtual QList<QString> enabledCommands() = 0;
     virtual QList<QString> disableCommands() = 0;
     virtual QList<QString> resetCommands() = 0;
+    void addDependency(SimulatorControl *control);
 
+    void removeDependency(SimulatorControl *control);
 public:
     explicit SimulatorControl(QQuickItem *parent = 0);
     ~SimulatorControl();
