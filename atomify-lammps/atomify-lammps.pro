@@ -16,7 +16,7 @@ android {
     SOURCES +=
     HEADERS +=
     include(../lammps-android.pri)
-} ios {
+} else:ios {
     include(../lammps-ios.pri)
 } else {
     include(../lammps.pri)
