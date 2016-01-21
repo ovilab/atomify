@@ -65,7 +65,7 @@ Item {
                 specularIntensity: 1.0
                 specular: true
                 shininess: 40.0
-                attenuation: 0.0
+                attenuation: 0.1/(Math.pow(simulator.cameraToSystemCenterDistance,1.75))
                 position: camera.position
             }
 

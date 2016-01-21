@@ -16,8 +16,8 @@
 #include "fileio.h"
 #include "nvt.h"
 #include "scripthandler.h"
-#include "figure.h"
-#include "linegraph.h"
+#include "QMLPlot/figure.h"
+#include "QMLPlot/linegraph.h"
 
 int main(int argc, char *argv[])
 {

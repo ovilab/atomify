@@ -42,6 +42,11 @@ void AtomifySimulator::clearSimulatorControls()
     }
 }
 
+float AtomifySimulator::cameraToSystemCenterDistance() const
+{
+    return m_cameraToSystemCenterDistance;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *mySimulator = qobject_cast<AtomifySimulator*>(simulator);
@@ -50,7 +55,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(mySimulator->willReset()) {
-        double x = 10*rand() / (double)RAND_MAX;
         m_lammpsController.reset();
         mySimulator->lammpsState = m_lammpsController.state;
         mySimulator->setWillReset(false);
@@ -88,7 +92,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
-
+    mySimulator->setCameraToSystemCenterDistance(m_cameraToSystemCenterDistance);
 
     m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
 
@@ -136,6 +140,10 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     m_atomStyle.setDirty(false);
 
     if(spheres) {
+        if(spheres->camera()) {
+            QVector3D systemCenter(lammps->domain->prd_half[0], lammps->domain->prd_half[1], lammps->domain->prd_half[2]);
+            m_cameraToSystemCenterDistance = (spheres->camera()->position() - systemCenter).length();
+        }
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
@@ -387,4 +395,13 @@ void AtomifySimulator::setNumberOfTimesteps(int numberOfTimesteps)
 
     m_numberOfTimesteps = numberOfTimesteps;
     emit numberOfTimestepsChanged(numberOfTimesteps);
+}
+
+void AtomifySimulator::setCameraToSystemCenterDistance(float cameraToSystemCenterDistance)
+{
+    if (m_cameraToSystemCenterDistance == cameraToSystemCenterDistance)
+        return;
+
+    m_cameraToSystemCenterDistance = cameraToSystemCenterDistance;
+    emit cameraToSystemCenterDistanceChanged(cameraToSystemCenterDistance);
 }
