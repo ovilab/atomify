@@ -31,23 +31,9 @@ Item {
             camera: camera
         }
 
-//        Cylinders {
-//            id: cylinders
-//            visible: true
-//            radius: 0.5
-//            Light {
-//                id: light2
-//                ambientColor: spheres.color
-//                specularColor: "white"
-//                diffuseColor: spheres.color
-//                ambientIntensity: 0.2
-//                diffuseIntensity: 0.5
-//                specularIntensity: 1.0
-//                shininess: 40.0
-//                attenuation: 0.001
-//                position: camera.position
-//            }
-//        }
+        Lines {
+
+        }
 
         Spheres {
             id: spheres
