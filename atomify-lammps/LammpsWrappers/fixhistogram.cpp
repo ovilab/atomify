@@ -10,12 +10,12 @@ FixHistogram::FixHistogram()
 
 void FixHistogram::updateCommand()
 {
-    setCommand(QString("fix %1 all ave/histo %2 %3 %4 %5 %6 %7 c_%8 file /projects/%9.txt ave running").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_min).arg(m_max).arg(m_numberOfBins).arg(m_compute->identifier(), identifier()));
+    setCommand(QString("fix %1 all ave/histo %2 %3 %4 %5 %6 %7 c_%8 file /projects/%1.txt ave running").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_min).arg(m_max).arg(m_numberOfBins).arg(m_compute->identifier()));
 }
 
 QList<QString> FixHistogram::enabledCommands()
 {
-    return {QString("fix %1 all ave/histo %2 %3 %4 %5 %6 %7 c_%8 file /projects/%9.txt ave running").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_min).arg(m_max).arg(m_numberOfBins).arg(m_compute->identifier(), identifier())};
+    return {QString("fix %1 all ave/histo %2 %3 %4 %5 %6 %7 c_%8 file /projects/%1.txt ave running").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_min).arg(m_max).arg(m_numberOfBins).arg(m_compute->identifier())};
 }
 
 QList<QString> FixHistogram::disableCommands()
@@ -25,15 +25,13 @@ QList<QString> FixHistogram::disableCommands()
 
 QList<QString> FixHistogram::resetCommands()
 {
-    return { QString("unfix %1").arg(identifier()), QString("fix %1 all ave/histo %2 %3 %4 %5 %6 %7 c_%8 file /projects/%9.txt ave running").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_min).arg(m_max).arg(m_numberOfBins).arg(m_compute->identifier(), identifier()) };
+    return { QString("unfix %1").arg(identifier()), QString("fix %1 all ave/histo %2 %3 %4 %5 %6 %7 c_%8 file /projects/%1.txt ave running").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_min).arg(m_max).arg(m_numberOfBins).arg(m_compute->identifier()) };
 }
 
 bool FixHistogram::existsInLammps(LAMMPSController *lammpsController)
 {
     return lammpsController->findFixIndex(identifier())>=0;
 }
-#include <iostream>
-using namespace std;
 
 void FixHistogram::update(LAMMPSController *lammpsController)
 {

@@ -57,7 +57,9 @@ Rectangle {
                         model: [
                             "qrc:/simulations/diffusion/simple_diffusion",
                             "qrc:/simulations/water/singlewater",
-                            "qrc:/simulations/other/indent"
+                            "qrc:/simulations/water/multiplewater",
+                            "qrc:/simulations/other/indent",
+                            "qrc:/simulations/silica/silica"
                         ]
                         delegate: Item {
                             width: Style.touchableSize * 3

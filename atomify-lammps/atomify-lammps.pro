@@ -28,7 +28,8 @@ RESOURCES += images.qrc \
     simulations/diffusion/diffusion.qrc \
     simulations/other/other.qrc \
     simulations/water/water.qrc \
-    simulations/potentialparameters/potentialparameters.qrc
+    simulations/potentialparameters/potentialparameters.qrc \
+    simulations/silica/silica.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -61,7 +62,8 @@ SOURCES += \
     QMLPlot/figure.cpp \
     QMLPlot/graph.cpp \
     QMLPlot/linegraph.cpp \
-    LammpsWrappers/fixhistogram.cpp
+    LammpsWrappers/fixhistogram.cpp \
+    LammpsWrappers/rdf.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -81,7 +83,8 @@ HEADERS += \
     QMLPlot/figure.h \
     QMLPlot/graph.h \
     QMLPlot/linegraph.h \
-    LammpsWrappers/fixhistogram.h
+    LammpsWrappers/fixhistogram.h \
+    LammpsWrappers/rdf.h
 
 DISTFILES += \
     iOS.plist \

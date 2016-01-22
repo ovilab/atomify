@@ -41,6 +41,10 @@ void CPCompute::update(LAMMPSController *lammpsController)
            for(int i=0; i<numValues; i++) {
                newValues.push_back(values[i]);
            }
+
+           if(m_dataSource) {
+
+           }
        } else {
            double value = lmp_compute->compute_scalar();
            newValues.push_back(value);
@@ -105,6 +109,11 @@ bool CPCompute::isVector() const
     return m_isVector;
 }
 
+LineGraphDataSource *CPCompute::dataSource() const
+{
+    return m_dataSource;
+}
+
 void CPCompute::setTime(double time)
 {
     if (m_time == time)
@@ -121,6 +130,15 @@ void CPCompute::setIsVector(bool isVector)
 
     m_isVector = isVector;
     emit isVectorChanged(isVector);
+}
+
+void CPCompute::setDataSource(LineGraphDataSource *dataSource)
+{
+    if (m_dataSource == dataSource)
+        return;
+
+    m_dataSource = dataSource;
+    emit dataSourceChanged(dataSource);
 }
 
 

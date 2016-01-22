@@ -18,6 +18,7 @@
 #include "scripthandler.h"
 #include "LammpsWrappers/fixaveragetime.h"
 #include "LammpsWrappers/fixhistogram.h"
+#include "LammpsWrappers/rdf.h"
 #include "QMLPlot/figure.h"
 #include "QMLPlot/linegraph.h"
 
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
     qmlRegisterType<FixAverageTime>("Atomify",1,0,"FixAverageTime");
     qmlRegisterType<FixHistogram>("Atomify", 1, 0, "FixHistogram");
+    qmlRegisterType<RDF>("Atomify", 1, 0, "RDF");
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
