@@ -25,14 +25,14 @@ protected:
     virtual QList<QString> enabledCommands() override;
     virtual QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
-    virtual void update(LAMMPSController *lammpsController) override;
-    virtual bool existsInLammps(LAMMPSController *lammpsController) override;
 
 public:
     CPCompute* compute() const;
     int nEvery() const;
     int nRepeat() const;
     int nFreq() const;
+    virtual void update(LAMMPSController *lammpsController) override;
+    virtual bool existsInLammps(LAMMPSController *lammpsController) override;
 
 public slots:
     void setNEvery(int NEvery);

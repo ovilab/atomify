@@ -51,16 +51,17 @@ SOURCES += \
     fileio.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
-    nvt.cpp \
-    simulatorcontrol.cpp \
     scriptcommand.cpp \
-    cpfix.cpp \
-    cpcompute.cpp \
-    cpvariable.cpp \
-    fixaveragetime.cpp \
+    LammpsWrappers/nvt.cpp \
+    LammpsWrappers/simulatorcontrol.cpp \
+    LammpsWrappers/cpfix.cpp \
+    LammpsWrappers/cpcompute.cpp \
+    LammpsWrappers/cpvariable.cpp \
+    LammpsWrappers/fixaveragetime.cpp \
     QMLPlot/figure.cpp \
     QMLPlot/graph.cpp \
-    QMLPlot/linegraph.cpp
+    QMLPlot/linegraph.cpp \
+    LammpsWrappers/fixhistogram.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -70,16 +71,17 @@ HEADERS += \
     fileio.h \
     scriptparser.h \
     scripthandler.h \
-    nvt.h \
-    simulatorcontrol.h \
     scriptcommand.h \
-    cpfix.h \
-    cpcompute.h \
-    cpvariable.h \
-    fixaveragetime.h \
+    LammpsWrappers/nvt.h \
+    LammpsWrappers/simulatorcontrol.h \
+    LammpsWrappers/cpfix.h \
+    LammpsWrappers/cpcompute.h \
+    LammpsWrappers/cpvariable.h \
+    LammpsWrappers/fixaveragetime.h \
     QMLPlot/figure.h \
     QMLPlot/graph.h \
-    QMLPlot/linegraph.h
+    QMLPlot/linegraph.h \
+    LammpsWrappers/fixhistogram.h
 
 DISTFILES += \
     iOS.plist \

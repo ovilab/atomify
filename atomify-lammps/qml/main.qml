@@ -15,7 +15,7 @@ import "desktop"
 
 ApplicationWindow {
     id: applicationRoot
-    property string mode: "mobile"
+    property string mode: "desktop"
 
     title: qsTr("Atomify")
     width: 300
@@ -84,17 +84,53 @@ ApplicationWindow {
             id: computeTemp
             identifier: "temperature"
             command: "all temp"
+            onValueChanged: {
+                // console.log("T="+value)
+            }
         }
 
-        FixAverageTime {
-            id: fixTemp
-            identifier: "avetime"
+//        FixAverageTime {
+//            id: fixTemp
+//            identifier: "avetime"
+//            nEvery: 1
+//            nFreq: 10
+//            nRepeat: 10
+//            compute: computeTemp
+//            onValueChanged: {
+//                console.log("T=" + value)
+//            }
+//        }
+
+        FixHistogram {
+            id: fixHist
+            identifier: "avehist"
             nEvery: 1
-            nFreq: 10
-            nRepeat: 10
+            nFreq: 1
+            nRepeat: 1
             compute: computeTemp
-            onValueChanged: {
-                console.log("T=" + value)
+            numberOfBins: 50
+            min: 550
+            max: 650
+            dataSource: tempDistribution
+        }
+
+        Figure {
+            id: figure
+            width: 400
+            height: 400
+            fitData: false
+            fitY: true
+            fitExact: true
+            xMin: fixHist.min
+            xMax: fixHist.max
+            LineGraph {
+                dataSource: LineGraphDataSource {
+                    id: tempDistribution
+                }
+            }
+            MouseArea {
+                anchors.fill: parent
+                drag.target: parent
             }
         }
     }

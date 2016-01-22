@@ -23,9 +23,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "cpcompute.h"
+#include "LammpsWrappers/cpcompute.h"
 #include "mysimulator.h"
-#include "simulatorcontrol.h"
+#include "LammpsWrappers/simulatorcontrol.h"
 #include "scriptcommand.h"
 using namespace std;
 
@@ -340,6 +340,12 @@ QVector3D LAMMPSController::systemSize() const
 {
     if(!m_lammps) return QVector3D();
     return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
+}
+
+QVector3D LAMMPSController::systemCenter() const
+{
+    if(!m_lammps) return QVector3D();
+    return QVector3D(m_lammps->domain->boxlo[0] + m_lammps->domain->xprd_half, m_lammps->domain->boxlo[1] + m_lammps->domain->yprd_half, m_lammps->domain->boxlo[2] + m_lammps->domain->zprd_half);
 }
 
 ScriptHandler *LAMMPSController::scriptHandler() const

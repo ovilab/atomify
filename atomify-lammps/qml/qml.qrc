@@ -41,11 +41,5 @@
         <file>mobile/dashboard/DashboardMiniControl.qml</file>
         <file>mobile/dashboard/DashboardFullControl.qml</file>
         <file>mobile/dashboard/controls/Thermometer.qml</file>
-        <file>face_1_1024.png</file>
-        <file>face_2_1024.png</file>
-        <file>face_3_1024.png</file>
-        <file>face_4_1024.png</file>
-        <file>face_5_1024.png</file>
-        <file>face_6_1024.png</file>
     </qresource>
 </RCC>
