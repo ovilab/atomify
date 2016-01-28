@@ -1,6 +1,6 @@
 # test Vashishta potential for quartz
-package omp 2
-suffix omp
+# package omp 2
+# suffix omp
 
 units		metal
 boundary	p p p
