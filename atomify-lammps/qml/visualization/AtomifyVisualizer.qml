@@ -44,9 +44,9 @@ Item {
 
         Spheres {
             id: spheres
-            visible: true
             scale: atomifyVisualizerRoot.scale
             color: "white"
+            visible: parent.visible
 
             Light {
                 id: light

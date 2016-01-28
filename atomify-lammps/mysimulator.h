@@ -27,6 +27,7 @@ private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
     LAMMPSController m_lammpsController;
+    bool m_addPeriodicCopies = false;
     float m_cameraToSystemCenterDistance = 1.0;
 
     // SimulatorWorker interface
@@ -55,6 +56,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
     Q_PROPERTY(float cameraToSystemCenterDistance READ cameraToSystemCenterDistance WRITE setCameraToSystemCenterDistance NOTIFY cameraToSystemCenterDistanceChanged)
+    Q_PROPERTY(bool addPeriodicCopies READ addPeriodicCopies WRITE setAddPeriodicCopies NOTIFY addPeriodicCopiesChanged)
 public:
     AtomifySimulator() { }
     ~AtomifySimulator() { }
@@ -75,6 +77,7 @@ public:
     int numberOfTimesteps() const;
     Q_INVOKABLE void clearSimulatorControls();
     float cameraToSystemCenterDistance() const;
+    bool addPeriodicCopies() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -91,6 +94,7 @@ public slots:
     void setWillReset(bool willReset);
     void setNumberOfTimesteps(int numberOfTimesteps);
     void setCameraToSystemCenterDistance(float cameraToSystemCenterDistance);
+    void setAddPeriodicCopies(bool addPeriodicCopies);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -108,8 +112,8 @@ signals:
     void scriptHandlerChanged(ScriptHandler* scriptHandler);
     void willResetChanged(bool willReset);
     void numberOfTimestepsChanged(int numberOfTimesteps);
-
     void cameraToSystemCenterDistanceChanged(float cameraToSystemCenterDistance);
+    void addPeriodicCopiesChanged(bool addPeriodicCopies);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -131,6 +135,7 @@ private:
     bool m_willReset = false;
     int m_numberOfTimesteps = 0;
     float m_cameraToSystemCenterDistance = 10;
+    bool m_addPeriodicCopies = false;
 };
 
 #endif // MYSIMULATOR_H
