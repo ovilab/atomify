@@ -35,7 +35,6 @@ private:
 public:
     ScriptHandler();
     const ScriptCommand &nextCommand();
-    void loadScriptFromFile(QString filename);
     AtomStyle* atomStyle() const;
     ScriptParser &parser() { return m_parser; }
     bool parseLammpsCommand(QString command, class LAMMPSController *lammpsController);
@@ -45,7 +44,7 @@ public:
     void setLammpsState(LammpsState *lammpsState);
 
 public slots:
-    void runScript(QString script, ScriptCommand::Type type = ScriptCommand::Type::Editor, QString filename = "");
+    void runScript(QString script, ScriptCommand::Type type = ScriptCommand::Type::Editor, QString filename = "", QString currentDir = "");
     void runCommand(QString command, bool addToPreviousCommands = false);
     void runFile(QString filename); // TODO Set cwd
     void addCommandToTop(ScriptCommand command);
@@ -56,7 +55,7 @@ public slots:
     QString readFile(QString filename);
     QString copyDataFileToReadablePath(QString filename);
 protected:
-    void doRunScript(QString script, ScriptCommand::Type type, QString filename);
+    void doRunScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir);
 };
 
 #endif // SCRIPTHANDLER_H

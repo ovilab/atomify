@@ -153,7 +153,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     m_lammpsController.setDataDirty(false);
     m_atomStyle.setDirty(false);
     if(spheres) {
-        qDebug() << this << " is visible: " << spheres->visible();
         if(spheres->camera()) {
             m_cameraToSystemCenterDistance = (spheres->camera()->position() - m_lammpsController.systemCenter()).length();
         }
@@ -217,7 +216,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
                 }
             }
         }
-        qDebug() << "Number of visible atoms: " << numVisibleAtoms;
         colors.resize(numVisibleAtoms);
         scales.resize(numVisibleAtoms);
         positions.resize(numVisibleAtoms);
