@@ -15,7 +15,7 @@ import "desktop"
 
 ApplicationWindow {
     id: applicationRoot
-    property string mode: "mobile"
+    property string mode: "desktop"
 
     title: qsTr("Atomify")
     width: 300
@@ -80,23 +80,59 @@ ApplicationWindow {
 //            command: "all gcmc 1 10 10 1 352534 1.0 -5.0 1.0"
 //        }
 
-        Compute {
-            id: computeTemp
-            identifier: "temperature"
-            command: "all temp"
-        }
+//        Compute {
+//            id: computeTemp
+//            identifier: "temperature"
+//            command: "all temp"
+//            onValueChanged: {
+//                // console.log("T="+value)
+//            }
+//        }
 
-        FixAverageTime {
-            id: fixTemp
-            identifier: "avetime"
-            nEvery: 1
-            nFreq: 10
-            nRepeat: 10
-            compute: computeTemp
-            onValueChanged: {
-                console.log("T=" + value)
-            }
-        }
+//        RDF {
+//            identifier: "rdf"
+//            atomPairs: [1, 1, 1, 2, 2, 2]
+//            dataSource: oo
+//            numberOfBins: 200
+//            dataSource1: oh
+//            dataSource2: hh
+//        }
+
+//        Figure {
+//            id: figure
+//            width: 1000
+//            height: 600
+//            fitData: false
+//            yMin: 0
+//            yMax: 3
+//            xMin: 0
+//            xMax: 5.5
+//            LineGraph {
+//                dataSource: LineGraphDataSource {
+//                    id: oo
+//                }
+//                width: 2
+//                color: "red"
+//            }
+//            LineGraph {
+//                dataSource: LineGraphDataSource {
+//                    id: oh
+//                }
+//                width: 2
+//                color: "blue"
+//            }
+//            LineGraph {
+//                dataSource: LineGraphDataSource {
+//                    id: hh
+//                }
+//                width: 2
+//                color: "black"
+//            }
+//            MouseArea {
+//                anchors.fill: parent
+//                drag.target: parent
+//            }
+//        }
     }
 
     Shortcut {

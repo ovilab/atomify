@@ -93,7 +93,6 @@ void SimulatorControl::update(LAMMPSController *lammpsController)
         QString currentCommand = command();
         updateCommand();
         if(currentCommand!=command()) {
-
             lammpsController->scriptHandler()->addCommandsToTop(resetCommands(), ScriptCommand::Type::SingleCommand);
         }
     }

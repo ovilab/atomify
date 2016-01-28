@@ -25,11 +25,11 @@ Item {
             atomifyVisualizerRoot.focus = true
         }
 
-        SkyBox {
-            id: skybox
-            camera: camera
-            texture: ":/1024.png"
-        }
+//        SkyBox {
+//            id: skybox
+//            camera: camera
+//            texture: ":/1024.png"
+//        }
 
         TrackballNavigator {
             id: navigator

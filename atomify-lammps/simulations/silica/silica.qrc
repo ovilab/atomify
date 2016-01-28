@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/simulations/silica">
+        <file>silica/silica.in</file>
+        <file>silica/betacristobalite.data</file>
+        <file>silica/silica.qml</file>
+        <file>silica/silica.png</file>
+    </qresource>
+</RCC>

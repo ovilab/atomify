@@ -6,7 +6,7 @@
 
 NVT::NVT(QQuickItem *parent) : CPFix(parent)
 {
-    setIdentifier(QString("cp_nvt"));
+    setIdentifier(QString("nvt"));
     updateCommand();
 }
 

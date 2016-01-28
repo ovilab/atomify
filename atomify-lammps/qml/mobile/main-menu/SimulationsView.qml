@@ -17,6 +17,9 @@ Item {
             folder: "../../simulations/water/singlewater"
         }
         ListElement {
+            folder: "../../simulations/water/multiplewater"
+        }
+        ListElement {
             folder: "../../simulations/other/indent"
         }
     }

@@ -1,5 +1,5 @@
 #include "mysimulator.h"
-#include "simulatorcontrol.h"
+#include "LammpsWrappers/simulatorcontrol.h"
 #include <library.h>
 #include <atom.h>
 #include <domain.h>
@@ -82,12 +82,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         }
     }
 
-//    for(QObject* child : mySimulator->children()) {
-//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-//        if(control) {
-//            controls.append(control);
-//        }
-//    }
+    for(QObject* child : mySimulator->children()) {
+        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+        if(control) {
+            if(!controls.contains(control)) {
+                controls.append(control);
+            }
+        }
+    }
 
     m_lammpsController.simulatorControls = controls;
     m_lammpsController.state.staticSystem = mySimulator->lammpsState.staticSystem;
@@ -147,8 +149,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     m_atomStyle.setDirty(false);
     if(spheres) {
         if(spheres->camera()) {
-            QVector3D systemCenter(lammps->domain->prd_half[0], lammps->domain->prd_half[1], lammps->domain->prd_half[2]);
-            m_cameraToSystemCenterDistance = (spheres->camera()->position() - systemCenter).length();
+            m_cameraToSystemCenterDistance = (spheres->camera()->position() - m_lammpsController.systemCenter()).length();
         }
         QVector<QVector3D> &positions = spheres->positions();
         QVector<float> &scales = spheres->scales();

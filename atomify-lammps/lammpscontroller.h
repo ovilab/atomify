@@ -10,7 +10,7 @@
 #include <modify.h>
 #include <variable.h>
 #include <lammpsexception.h>
-#include "cpcompute.h"
+#include "LammpsWrappers/cpcompute.h"
 #include "scripthandler.h"
 
 struct LammpsState {
@@ -66,6 +66,7 @@ public:
     int numberOfAtomTypes() const;
     void disableAllEnsembleFixes();
     QVector3D systemSize() const;
+    QVector3D systemCenter() const;
     ScriptHandler* scriptHandler() const;
     void setScriptHandler(ScriptHandler* scriptHandler);
     // Actions
