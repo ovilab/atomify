@@ -15,7 +15,17 @@ import "desktop"
 
 ApplicationWindow {
     id: applicationRoot
-    property string mode: "desktop"
+    property string mode: {
+        if(Qt.platform.os in ["android", "ios", "winphone"] ) {
+            return "mobile"
+        }
+        return "desktop"
+    }
+
+    Settings {
+        id: settings
+        property alias mode: applicationRoot.mode
+    }
 
     title: qsTr("Atomify")
     width: 300
@@ -80,15 +90,15 @@ ApplicationWindow {
 //            command: "all gcmc 1 10 10 1 352534 1.0 -5.0 1.0"
 //        }
 
-        Compute {
-            id: computeTemp
-            identifier: "temperature"
-            command: "all temp"
-            onValueChanged: {
-                // console.log("T="+value)
-                temp.addPoint(time, value)
-            }
-        }
+//        Compute {
+//            id: computeTemp
+//            identifier: "temperature"
+//            command: "all temp"
+//            onValueChanged: {
+//                // console.log("T="+value)
+//                temp.addPoint(time, value)
+//            }
+//        }
 
 //        Figure {
 //            id: figure
