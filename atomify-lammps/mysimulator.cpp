@@ -101,7 +101,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
-    // qDebug() << "Time per timestep: " << m_lammpsController.timePerTimestep();
     mySimulator->setCameraToSystemCenterDistance(m_cameraToSystemCenterDistance);
 
     m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
