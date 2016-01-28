@@ -26,16 +26,16 @@ Item {
             Layout.preferredHeight: parent.height*0.75
             simulator: editorTabRoot.simulator
 
-            Shortcut {
-                sequence: "Escape"
-                onActivated: {
-                    if(myLammpsEditor.textarea.focus) {
-                        myLammpsEditor.textarea.focus = false
-                    } else {
-                        editorTabRoot.paused = !editorTabRoot.paused
-                    }
-                }
-            }
+//            Shortcut {
+//                sequence: "Escape"
+//                onActivated: {
+//                    if(myLammpsEditor.textarea.focus) {
+//                        myLammpsEditor.textarea.focus = false
+//                    } else {
+//                        editorTabRoot.paused = !editorTabRoot.paused
+//                    }
+//                }
+//            }
         }
 
         Console {

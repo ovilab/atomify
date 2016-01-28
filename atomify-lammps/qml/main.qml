@@ -80,12 +80,35 @@ ApplicationWindow {
 //            command: "all gcmc 1 10 10 1 352534 1.0 -5.0 1.0"
 //        }
 
-//        Compute {
-//            id: computeTemp
-//            identifier: "temperature"
-//            command: "all temp"
-//            onValueChanged: {
-//                // console.log("T="+value)
+        Compute {
+            id: computeTemp
+            identifier: "temperature"
+            command: "all temp"
+            onValueChanged: {
+                // console.log("T="+value)
+                temp.addPoint(time, value)
+            }
+        }
+
+//        Figure {
+//            id: figure
+//            width: 500
+//            height: 500
+//            fitData: true
+//            fitExact: true
+//            xLabel: "t [fs]"
+//            yLabel: "T [K]"
+//            LineGraph {
+//                dataSource: LineGraphDataSource {
+//                    id: temp
+//                }
+//                width: 2
+//                color: "red"
+//            }
+
+//            MouseArea {
+//                anchors.fill: parent
+//                drag.target: parent
 //            }
 //        }
 
