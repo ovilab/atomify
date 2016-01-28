@@ -56,6 +56,7 @@ Rectangle {
                     Repeater {
                         model: [
                             "qrc:/simulations/diffusion/simple_diffusion",
+                            "qrc:/simulations/silica/nanoporous",
                             "qrc:/simulations/water/singlewater",
                             "qrc:/simulations/water/multiplewater",
                             "qrc:/simulations/other/indent",
