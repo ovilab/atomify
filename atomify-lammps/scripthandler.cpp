@@ -113,7 +113,8 @@ void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
 {
     m_atomStyle = atomStyle;
 }
-
+#include <iostream>
+using namespace std;
 void ScriptHandler::runFile(QString filename)
 {
     qDebug() << "runFile(" << filename << ")";
@@ -126,6 +127,7 @@ void ScriptHandler::runFile(QString filename)
     QFileInfo fileInfo(tmpFileName);
 
     QString currentDir = fileInfo.absoluteDir().path();
+    qDebug() << "Current dir: " << currentDir;
     chdir(currentDir.toStdString().c_str());
 
     qDebug() << "Filename string: " << tmpFileName;
@@ -202,9 +204,7 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
             currentCommand = currentCommand.trimmed();
 
             if(m_parser.isInclude(currentCommand)) {
-                qDebug() << "This is include: " << currentCommand;
                 QString filename = m_parser.includePath(currentCommand);
-                qDebug() << "File: " << filename;
                 runFile(filename);
                 if(!currentDir.isEmpty()) {
                     // TODO: fix so editor sends in default path

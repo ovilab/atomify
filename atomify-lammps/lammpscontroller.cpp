@@ -42,6 +42,7 @@ LAMMPSController::~LAMMPSController()
 LAMMPS_NS::LAMMPS *LAMMPSController::lammps() const
 {
     return m_lammps;
+
 }
 
 void LAMMPSController::setLammps(LAMMPS *lammps)

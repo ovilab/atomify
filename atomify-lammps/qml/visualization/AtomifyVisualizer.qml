@@ -31,16 +31,16 @@ Item {
 //            texture: ":/1024.png"
 //        }
 
-        TrackballNavigator {
-            id: navigator
-            anchors.fill: parent
-            camera: camera
-        }
-//        FlyModeNavigator {
+//        TrackballNavigator {
 //            id: navigator
 //            anchors.fill: parent
 //            camera: camera
 //        }
+        FlyModeNavigator {
+            id: navigator
+            anchors.fill: parent
+            camera: camera
+        }
 
         Spheres {
             id: spheres
