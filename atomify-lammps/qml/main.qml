@@ -15,7 +15,17 @@ import "desktop"
 
 ApplicationWindow {
     id: applicationRoot
-    property string mode: "desktop"
+    property string mode: {
+        if(Qt.platform.os in ["android", "ios", "winphone"] ) {
+            return "mobile"
+        }
+        return "desktop"
+    }
+
+    Settings {
+        id: settings
+        property alias mode: applicationRoot.mode
+    }
 
     title: qsTr("Atomify")
     width: 300
