@@ -24,7 +24,7 @@ DashboardControl {
                 var factor = 0.98
                 lowPassValue = factor * lowPassValue + (1 - factor) * value
                 lineSeries.append(temperatureCompute.time, lowPassValue)
-                if(lineSeries.count > 1000) {
+                if(lineSeries.count > 200) {
                     var firstPoint = lineSeries.at(0)
                     lineSeries.remove(firstPoint.x, firstPoint.y)
                 }
@@ -73,25 +73,18 @@ DashboardControl {
                 spacing: miniControl.height * 0.02
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "temperature"
+                    text: "Temperature"
                     horizontalAlignment: Text.AlignHCenter
                     font.weight: Font.Light
                     font.pixelSize: miniControl.height * 0.12
-                    color: "#cfcfcf"
+                    color: "black"
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: miniControl.lowPassValue.toFixed(2)
+                    text: miniControl.lowPassValue.toFixed(2)+" K"
                     font.weight: Font.Light
                     font.pixelSize: miniControl.height * 0.3
-                    color: "#ededed"
-                }
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "thermometer"
-                    font.weight: Font.Light
-                    font.pixelSize: miniControl.height * 0.10
-                    color: "#ababab"
+                    color: "black"
                 }
             }
         }
@@ -113,7 +106,7 @@ DashboardControl {
                 var factor = 0.98
                 lowPassValue = factor * lowPassValue + (1 - factor) * value
                 lineSeries.append(temperatureCompute.time, lowPassValue)
-                if(lineSeries.count > 1000) {
+                if(lineSeries.count > 200) {
                     var firstPoint = lineSeries.at(0)
                     lineSeries.remove(firstPoint.x, firstPoint.y)
                 }
@@ -131,17 +124,21 @@ DashboardControl {
                 anchors.fill: parent
                 antialiasing: true
                 legend.visible: false
+                title: "Temperature"
+
                 ValueAxis {
                     id: xAxis
                     min: 0
                     max: 1
                     tickCount: 3
+                    titleText: "t"
                 }
                 ValueAxis {
                     id: yAxis
                     min: 0
                     max: 0.2
                     tickCount: 3
+                    titleText: "T [K]"
                 }
                 LineSeries {
                     id: lineSeries
