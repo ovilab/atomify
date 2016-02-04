@@ -5,4 +5,10 @@
         <file>silica/silica.qml</file>
         <file>silica/silica.png</file>
     </qresource>
+    <qresource prefix="/simulations/silica">
+        <file>nanoporous/3_quenched.data</file>
+        <file>nanoporous/nanoporous.in</file>
+        <file>nanoporous/nanoporous.png</file>
+        <file>nanoporous/nanoporous.qml</file>
+    </qresource>
 </RCC>

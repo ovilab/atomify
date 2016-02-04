@@ -15,7 +15,8 @@
 #include <QUuid>
 #include <fstream>
 
-ScriptHandler::ScriptHandler()
+ScriptHandler::ScriptHandler() :
+    m_mutex(QMutex::Recursive)
 {
     m_tempLocation = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory)
             + "atomify-lammps"; // + QUuid::createUuid().toString();
@@ -60,11 +61,6 @@ const ScriptCommand& ScriptHandler::nextCommand()
     }
 
     return m_currentCommand;
-}
-
-void ScriptHandler::loadScriptFromFile(QString filename)
-{
-    doRunScript(readFile(filename), ScriptCommand::Type::File, filename);
 }
 
 AtomStyle *ScriptHandler::atomStyle() const
@@ -115,27 +111,33 @@ void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
 {
     m_atomStyle = atomStyle;
 }
-
+#include <iostream>
+using namespace std;
 void ScriptHandler::runFile(QString filename)
 {
+    qDebug() << "runFile(" << filename << ")";
     QString tmpFileName = filename;
-    tmpFileName.replace(QRegularExpression("^qrc\:\/"), "");
-    tmpFileName = m_tempLocation + QDir::separator() + tmpFileName;
+    bool isQRC = tmpFileName.contains(QRegularExpression("^qrc\:\/"));
+    if(isQRC) {
+        tmpFileName.replace(QRegularExpression("^qrc\:\/"), "");
+        tmpFileName = m_tempLocation + QDir::separator() + tmpFileName;
+    }
     QFileInfo fileInfo(tmpFileName);
-    qDebug() << "Changing directory to" << fileInfo.absoluteDir().path();
-    chdir(fileInfo.absoluteDir().path().toStdString().c_str());
-    std::ofstream out("lol.txt");
-    out << "woot";
 
-    QString fileNameString = QQmlFile::urlToLocalFileOrQrc(filename);
-    QFile f(fileNameString);
+    QString currentDir = fileInfo.absoluteDir().path();
+    qDebug() << "Current dir: " << currentDir;
+    chdir(currentDir.toStdString().c_str());
+
+    qDebug() << "Filename string: " << tmpFileName;
+
+    QFile f(tmpFileName);
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Could not open file: " << filename;
+        qDebug() << "Could not open file: " << tmpFileName;
         return;
     }
 
     QString script(f.readAll());
-    runScript(script, ScriptCommand::Type::File, filename);
+    runScript(script, ScriptCommand::Type::File, tmpFileName, currentDir);
 }
 
 bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammpsController) {
@@ -178,7 +180,7 @@ void ScriptHandler::parseGUICommand(QString command)
     }
 }
 
-void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename) {
+void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
     if(!script.isEmpty())
     {
         // If the file is not empty, load each command and add it to the queue.
@@ -199,12 +201,15 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
 
             currentCommand = currentCommand.trimmed();
 
-            // TODO add back parsing of included files, remember to chdir back after
-//            if(m_parser.isInclude(currentCommand)) {
-//                QString filename = m_parser.includePath(currentCommand);
-//                loadScriptFromFile(filename);
-//                currentCommand.clear(); lineNumber++; continue; // This line is complete
-//            }
+            if(m_parser.isInclude(currentCommand)) {
+                QString filename = m_parser.includePath(currentCommand);
+                runFile(filename);
+                if(!currentDir.isEmpty()) {
+                    // TODO: fix so editor sends in default path
+                    chdir(currentDir.toStdString().c_str());
+                }
+                currentCommand.clear(); lineNumber++; continue; // This line is complete
+            }
 
             if(!currentCommand.isEmpty()) {
                 auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
@@ -223,9 +228,10 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
     }
 }
 
-void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString filename) {
+void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
+    qDebug() << "Will run file: " << filename;
     QMutexLocker locker(&m_mutex);
-    doRunScript(script, type, filename);
+    doRunScript(script, type, filename, currentDir);
 }
 
 void ScriptHandler::runCommand(QString command, bool addToPreviousCommands)

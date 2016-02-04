@@ -47,6 +47,11 @@ float AtomifySimulator::cameraToSystemCenterDistance() const
     return m_cameraToSystemCenterDistance;
 }
 
+bool AtomifySimulator::addPeriodicCopies() const
+{
+    return m_addPeriodicCopies;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *mySimulator = qobject_cast<AtomifySimulator*>(simulator);
@@ -102,7 +107,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     mySimulator->setSystemSize(m_lammpsController.systemSize());
     mySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
     mySimulator->setCameraToSystemCenterDistance(m_cameraToSystemCenterDistance);
-
+    m_addPeriodicCopies = mySimulator->addPeriodicCopies();
     m_lammpsController.setScriptHandler(mySimulator->scriptHandler());
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
@@ -155,10 +160,14 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         QVector<float> &scales = spheres->scales();
         QVector<QColor> &colors = spheres->colors();
 
-        colors.resize(lammps->atom->natoms);
-        scales.resize(lammps->atom->natoms);
-        positions.resize(lammps->atom->natoms);
-        m_atomTypes.resize(lammps->atom->natoms);
+        if(m_addPeriodicCopies) {
+            // Each atom will have 27 copies
+            positions.resize(27*lammps->atom->natoms);
+            m_atomTypes.resize(27*lammps->atom->natoms);
+        } else {
+            positions.resize(lammps->atom->natoms);
+            m_atomTypes.resize(lammps->atom->natoms);
+        }
         double position[3];
         QList<QObject *> atomStyleDataList = m_atomStyle.data();
         int numVisibleAtoms = 0;
@@ -177,15 +186,36 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
                 position[1] = lammps->atom->x[i][1];
                 position[2] = lammps->atom->x[i][2];
                 lammps->domain->remap(position);
+                position[0] -= lammps->domain->boxlo[0] + lammps->domain->prd_half[0];
+                position[1] -= lammps->domain->boxlo[1] + lammps->domain->prd_half[1];
+                position[2] -= lammps->domain->boxlo[2] + lammps->domain->prd_half[2];
 
-                positions[numVisibleAtoms][0] = position[0] - lammps->domain->boxlo[0] - lammps->domain->prd_half[0];
-                positions[numVisibleAtoms][1] = position[1] - lammps->domain->boxlo[1] - lammps->domain->prd_half[1];
-                positions[numVisibleAtoms][2] = position[2] - lammps->domain->boxlo[2] - lammps->domain->prd_half[2];
-                m_atomTypes[numVisibleAtoms] = atomType;
-                numVisibleAtoms++;
+                if(spheres->camera() && m_addPeriodicCopies) {
+                    QVector3D systemSize = m_lammpsController.systemSize();
+                    for(int dx=-1; dx<=1; dx++) {
+                        for(int dy=-1; dy<=1; dy++) {
+                            for(int dz=-1; dz<=1; dz++) {
+                                QVector3D pos = QVector3D(position[0], position[1], position[2]) + QVector3D(dx*systemSize[0], dy*systemSize[1], dz*systemSize[2]);
+                                QVector3D cameraToPos = pos - spheres->camera()->position();
+                                if(QVector3D::dotProduct(cameraToPos, spheres->camera()->viewVector()) < 0) continue;
+
+                                positions[numVisibleAtoms][0] = pos[0];
+                                positions[numVisibleAtoms][1] = pos[1];
+                                positions[numVisibleAtoms][2] = pos[2];
+                                m_atomTypes[numVisibleAtoms] = atomType;
+                                numVisibleAtoms++;
+                            }
+                        }
+                    }
+                } else {
+                    positions[numVisibleAtoms][0] = position[0];
+                    positions[numVisibleAtoms][1] = position[1];
+                    positions[numVisibleAtoms][2] = position[2];
+                    m_atomTypes[numVisibleAtoms] = atomType;
+                    numVisibleAtoms++;
+                }
             }
         }
-
         colors.resize(numVisibleAtoms);
         scales.resize(numVisibleAtoms);
         positions.resize(numVisibleAtoms);
@@ -411,4 +441,13 @@ void AtomifySimulator::setCameraToSystemCenterDistance(float cameraToSystemCente
 
     m_cameraToSystemCenterDistance = cameraToSystemCenterDistance;
     emit cameraToSystemCenterDistanceChanged(cameraToSystemCenterDistance);
+}
+
+void AtomifySimulator::setAddPeriodicCopies(bool addPeriodicCopies)
+{
+    if (m_addPeriodicCopies == addPeriodicCopies)
+        return;
+
+    m_addPeriodicCopies = addPeriodicCopies;
+    emit addPeriodicCopiesChanged(addPeriodicCopies);
 }

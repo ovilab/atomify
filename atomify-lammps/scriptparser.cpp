@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QDebug>
 
@@ -86,12 +87,17 @@ bool ScriptParser::isInclude(QString command)
 
 QString ScriptParser::includePath(QString command)
 {
-    std::stringstream command_ss(command.toStdString());
-    std::string word;
-    command_ss >> word; // This is the word "include"
-    if(command_ss >> word) {
-        // This will be the filename
-        return QString::fromStdString(word);
-    } else return QString("");
+    QRegularExpression regexInsideQuotes("include\\s*\"([^\"]*)");
+    QRegularExpression regexNoQuotes("include\\s*([^\\s]*)");
+    if(command.contains(regexInsideQuotes)) {
+        QRegularExpressionMatch match = regexInsideQuotes.match(command);
+        return match.captured(1);
+    }
+
+    if(command.contains(regexNoQuotes)) {
+        QRegularExpressionMatch match = regexNoQuotes.match(command);
+        return match.captured(1);
+    }
+    return QString("");
 }
 

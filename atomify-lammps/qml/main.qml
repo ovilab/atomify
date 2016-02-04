@@ -16,7 +16,7 @@ import "desktop"
 ApplicationWindow {
     id: applicationRoot
     property string mode: {
-        if(Qt.platform.os in ["android", "ios", "winphone"] ) {
+        if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
             return "mobile"
         }
         return "desktop"
