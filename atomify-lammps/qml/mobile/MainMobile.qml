@@ -107,7 +107,7 @@ Item {
         }
     }
 
-    SimulationsViewNew {
+    SimulationsView {
         id: simulationsView
         width: parent.width
         height: parent.height

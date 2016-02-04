@@ -20,7 +20,6 @@
         <file>mobile/style/Style.qml</file>
         <file>core/Simulation.qml</file>
         <file>mobile/main-menu/SimulationButton.qml</file>
-        <file>mobile/main-menu/SimulationsView.qml</file>
         <file>mobile/main-menu/About.qml</file>
         <file>mobile/main-menu/SimulationLoader.qml</file>
         <file>mobile/style/Heading.qml</file>
@@ -31,7 +30,7 @@
         <file>mobile/hud/RevealDashboardButton.qml</file>
         <file>mobile/hud/RevealSimulationsViewButton.qml</file>
         <file>mobile/main-menu/MainMenuLeftButton.qml</file>
-        <file>mobile/simulations/SimulationsViewNew.qml</file>
+        <file>mobile/simulations/SimulationsView.qml</file>
         <file>mobile/simulations/SingleSimulationView.qml</file>
         <file>mobile/dashboard/DashboardRight.qml</file>
         <file>mobile/dashboard/DashboardControl.qml</file>
