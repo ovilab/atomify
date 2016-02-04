@@ -8,20 +8,8 @@ Item {
 
     signal clicked(var index)
 
-    property real itemSize
     property int menuIndex: 0
 
-    Layout.fillWidth: true
-    Layout.preferredHeight: itemSize * Layout.rowSpan
-
-    width: 10
-    height: 10
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            controlRoot.clicked(menuIndex)
-        }
-    }
+    anchors.fill: parent
 }
 

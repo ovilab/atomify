@@ -10,6 +10,6 @@ Item {
     property list<Item> simulatorControls
     property Item fullControl
     property Item miniControl
-    property real itemSize: 10
+    property real itemSize: 150
 }
 

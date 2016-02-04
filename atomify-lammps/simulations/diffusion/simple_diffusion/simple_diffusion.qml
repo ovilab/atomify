@@ -17,7 +17,7 @@ Simulation {
 
     controllers: [
         Thermometer {},
-        TemperatureControl {}
+        Thermostat {}
     ]
 }
 
