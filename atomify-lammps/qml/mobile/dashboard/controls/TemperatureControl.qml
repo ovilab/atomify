@@ -37,6 +37,7 @@ DashboardControl {
             }
         }
     }
+
     fullControl: DashboardFullControl {
         Item {
             Layout.fillHeight: true

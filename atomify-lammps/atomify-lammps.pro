@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += c++11
 DEFINES += LAMMPS_GZIP
 
-QT += qml quick widgets opengl openglextensions svg
+QT += qml quick widgets opengl openglextensions svg charts
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 #QMAKE_CXXFLAGS += -g -fopenmp
 #LIBS += -fopenmp
@@ -20,7 +20,6 @@ android {
     include(../lammps-ios.pri)
 } else {
     include(../lammps.pri)
-    LIBS += -fopenmp
 }
 RESOURCES += images.qrc \
     scripts.qrc \

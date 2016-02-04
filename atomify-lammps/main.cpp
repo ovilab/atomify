@@ -1,4 +1,5 @@
-#include <QGuiApplication>
+// #include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include <QSurfaceFormat>
@@ -39,7 +40,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<FixHistogram>("Atomify", 1, 0, "FixHistogram");
     qmlRegisterType<RDF>("Atomify", 1, 0, "RDF");
 
-    QGuiApplication app(argc, argv);
+    // QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     app.setOrganizationName("Ovilab");
     app.setOrganizationDomain("ovilab");
     app.setApplicationName("Atomify");

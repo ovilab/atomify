@@ -8,7 +8,6 @@
 #include <modify.h>
 #include <neighbor.h>
 #include <neigh_list.h>
-
 #include <core/camera.h>
 #include <string>
 #include <sstream>

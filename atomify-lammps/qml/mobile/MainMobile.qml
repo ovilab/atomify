@@ -54,7 +54,7 @@ Item {
 
     SimulationLoader {
         id: initialSimulationLoader
-        folder: "qrc:/simulations/water/multiplewater"
+        folder: "qrc:/simulations/diffusion/simple_diffusion"
         onLoaded: {
              loadSimulation(item)
         }
