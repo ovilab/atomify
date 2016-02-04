@@ -51,7 +51,7 @@ Item {
                 id: miniControlGrid
 
                 width: parent.width
-                columns: 1
+                columns: 2
                 columnSpacing: 0
                 rowSpacing: 0
                 property real itemSize: miniControlGrid.width / miniControlGrid.columns - miniControlGrid.columnSpacing * (miniControlGrid.columns - 1)
