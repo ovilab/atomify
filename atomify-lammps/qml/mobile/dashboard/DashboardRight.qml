@@ -51,7 +51,7 @@ Item {
                 id: miniControlGrid
 
                 width: parent.width
-                columns: 2
+                columns: 1
                 columnSpacing: 0
                 rowSpacing: 0
                 property real itemSize: miniControlGrid.width / miniControlGrid.columns - miniControlGrid.columnSpacing * (miniControlGrid.columns - 1)
@@ -63,6 +63,8 @@ Item {
                         id: miniControlLoader
                         Layout.fillWidth: true
                         Layout.preferredHeight: miniControlGrid.itemSize * Layout.rowSpan
+                        Layout.columnSpan: item ? item.Layout.columnSpan : 1
+                        Layout.rowSpan: item ? item.Layout.rowSpan : 1
 
                         sourceComponent: simulation.controllers[index].miniControl
 

@@ -15,6 +15,7 @@ DashboardControl {
     miniControl: Component {
         DashboardMiniControl {
             id: miniControl
+            Layout.columnSpan: 2
             Column {
                 anchors.centerIn: parent
                 width: parent.width
