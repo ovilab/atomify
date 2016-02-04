@@ -6,7 +6,6 @@ boundary	p p p
 atom_style	atomic
 
 read_data	singlewater.data
-replicate       10 10 10
 
 pair_style 	vashishta
 pair_coeff	* *  ../../potentialparameters/H2O.vashishta O H

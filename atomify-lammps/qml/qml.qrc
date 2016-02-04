@@ -25,7 +25,6 @@
         <file>mobile/main-menu/SimulationLoader.qml</file>
         <file>mobile/style/Heading.qml</file>
         <file>mobile/dashboard/Dashboard.qml</file>
-        <file>mobile/controls/Thermostat.qml</file>
         <file>mobile/controls/Plot.qml</file>
         <file>mobile/controls/PlotLabels.qml</file>
         <file>mobile/main-menu/MainMenuLeft.qml</file>
@@ -36,7 +35,7 @@
         <file>mobile/simulations/SingleSimulationView.qml</file>
         <file>mobile/dashboard/DashboardRight.qml</file>
         <file>mobile/dashboard/DashboardControl.qml</file>
-        <file>mobile/dashboard/controls/TemperatureControl.qml</file>
+        <file>mobile/dashboard/controls/Thermostat.qml</file>
         <file>mobile/dashboard/DashboardControlView.qml</file>
         <file>mobile/dashboard/DashboardMiniControl.qml</file>
         <file>mobile/dashboard/DashboardFullControl.qml</file>

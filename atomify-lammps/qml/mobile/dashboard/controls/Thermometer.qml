@@ -7,33 +7,35 @@ import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 
 DashboardControl {
-    miniControl: DashboardMiniControl {
-        id: miniControl
-        Column {
-            anchors.centerIn: parent
-            width: parent.width
-            spacing: miniControl.height * 0.02
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "temperature"
-                horizontalAlignment: Text.AlignHCenter
-                font.weight: Font.Light
-                font.pixelSize: miniControl.height * 0.12
-                color: "#cfcfcf"
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: temperatureCompute.lowPassValue.toFixed(2)
-                font.weight: Font.Light
-                font.pixelSize: miniControl.height * 0.3
-                color: "#ededed"
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "thermometer"
-                font.weight: Font.Light
-                font.pixelSize: miniControl.height * 0.10
-                color: "#ababab"
+    miniControl: Component {
+        DashboardMiniControl {
+            id: miniControl
+            Column {
+                anchors.centerIn: parent
+                width: parent.width
+                spacing: miniControl.height * 0.02
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "temperature"
+                    horizontalAlignment: Text.AlignHCenter
+                    font.weight: Font.Light
+                    font.pixelSize: miniControl.height * 0.12
+                    color: "#cfcfcf"
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: temperatureCompute.lowPassValue.toFixed(2)
+                    font.weight: Font.Light
+                    font.pixelSize: miniControl.height * 0.3
+                    color: "#ededed"
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "thermometer"
+                    font.weight: Font.Light
+                    font.pixelSize: miniControl.height * 0.10
+                    color: "#ababab"
+                }
             }
         }
     }

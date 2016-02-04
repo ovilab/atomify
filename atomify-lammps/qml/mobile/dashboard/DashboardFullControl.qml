@@ -10,8 +10,9 @@ Item {
     default property alias stuff: layout.children
     property AtomifyVisualizer visualizer
 
-    width: parent ? parent.itemWidth : 100
-    height: parent ? parent.itemHeight : 100
+
+//    width: 100
+//    height: 100
 
     GridLayout {
         id: layout

@@ -24,6 +24,10 @@ QtObject {
     property var simulator
     property list<Item> controllers
 
+    // TODO add properties:
+    // camera position and range
+    // light settings
+
     onDescriptionChanged: {
         var maximumCharacters = 210
         if(description.length > maximumCharacters) {

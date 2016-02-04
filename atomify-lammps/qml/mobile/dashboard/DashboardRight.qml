@@ -30,28 +30,6 @@ Item {
         bottom: parent.bottom
     }
 
-    onSimulationChanged: {
-        var menuIndex = 0
-        gridLayout.clear()
-        for(var i in simulation.controllers) {
-            var controller = simulation.controllers[i]
-            var miniControl = simulation.controllers[i].miniControl
-            if(!miniControl) {
-                continue
-            }
-            // TODO control should be removed again when changing simulation
-            miniControl.parent = gridLayout
-            miniControl.itemSize = Qt.binding(function() {return gridLayout.itemSize})
-            var fullControl = simulation.controllers[i].fullControl
-            if(!fullControl) {
-                continue
-            }
-            miniControl.menuIndex = menuIndex
-            miniControl.clicked.connect(controlClicked)
-            menuIndex += 1
-        }
-    }
-
     Rectangle {
         id: contents
         anchors {
@@ -68,57 +46,49 @@ Item {
                 fill: parent
                 margins: Style.baseMargin
             }
-            contentHeight: gridLayout.height
+            contentHeight: miniControlGrid.height
             GridLayout {
-                id: gridLayout
+                id: miniControlGrid
 
                 width: parent.width
                 columns: 2
                 columnSpacing: 0
                 rowSpacing: 0
-                property real itemSize: gridLayout.width / gridLayout.columns - gridLayout.columnSpacing * (gridLayout.columns - 1)
+                property real itemSize: miniControlGrid.width / miniControlGrid.columns - miniControlGrid.columnSpacing * (miniControlGrid.columns - 1)
 
-                function clear() {
-                    for(var i in gridLayout.children) {
-                        var child = gridLayout.children[i]
-                        child.parent = null
+                Repeater {
+                    id: repeater
+                    model: simulation.controllers.length
+                    Loader {
+                        id: miniControlLoader
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: miniControlGrid.itemSize * Layout.rowSpan
+
+                        sourceComponent: simulation.controllers[index].miniControl
+
+                        onLoaded: {
+                            if(!(item && item.fixes && simulator)) {
+                                return
+                            }
+
+                            item.visualizer = visualizer
+                            for(var j in item.fixes) {
+                                var fix = item.fixes[j]
+                                fix.parent = simulator
+                                console.log("Created " + fix + " on simulator " + simulator)
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                if(simulation.controllers[index].fullControl) {
+                                    controlClicked(index)
+                                }
+                            }
+                        }
                     }
                 }
-
-//                Repeater {
-//                    id: repeater
-//                    model: simulation.controllers.length
-//                    Loader {
-
-//                        Layout.fillWidth: true
-//                        //                        Layout.preferredWidth: itemSize
-//                        Layout.preferredHeight: itemSize * Layout.rowSpan
-//                        Layout.columnSpan: item ? item.Layout.columnSpan ? item.Layout.columnSpan : 1 : 1
-//                        Layout.rowSpan: item ? item.Layout.rowSpan ? item.Layout.rowSpan : 1 : 1
-
-//                        sourceComponent: simulation.controllers[index]
-
-//                        onLoaded: {
-//                            if(!(item && item.fixes && simulator)) {
-//                                return
-//                            }
-
-//                            item.visualizer = visualizer
-//                            for(var j in item.fixes) {
-//                                var fix = item.fixes[j]
-//                                fix.parent = simulator
-//                                console.log("Created " + fix + " on simulator " + simulator)
-//                            }
-//                        }
-
-//                        Connections {
-//                            target: item
-//                            onClicked: {
-//                                controlClicked(item.controlComponents)
-//                            }
-//                        }
-//                    }
-//                }
             }
         }
     }

@@ -25,19 +25,6 @@ Rectangle {
         flickable.contentX = flickable.width * index
     }
 
-    onSimulationChanged: {
-        for(var i in simulation.controllers) {
-            var controller = simulation.controllers[i]
-            var fullControl = controller.fullControl
-            if(!fullControl) {
-                continue
-            }
-
-            fullControl.parent = controlContainer
-            fullControl.visualizer = visualizer
-        }
-    }
-
     Image {
         id: backButton
         anchors {
@@ -72,14 +59,35 @@ Rectangle {
         contentWidth: controlContainer.width
         flickableDirection: Flickable.HorizontalFlick
 
-        Row {
+        RowLayout {
             id: controlContainer
 
             property real itemWidth: flickable.width
             property real itemHeight: flickable.height
 
             width: simulation.controllers.length * itemWidth
-            height: simulation.controllers.length * itemHeight
+            height: itemHeight
+
+            Repeater {
+                id: repeater
+                model: simulation.controllers.length
+                Loader {
+                    id: miniControlLoader
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: controlContainer.itemWidth
+
+                    sourceComponent: simulation.controllers[index].fullControl
+
+                    onLoaded: {
+                        console.log("Loaded fullControl")
+                        if(!item || !visualizer) {
+                            return
+                        }
+
+                        item.visualizer = visualizer
+                    }
+                }
+            }
         }
     }
 }
