@@ -28,7 +28,6 @@ ScriptHandler::ScriptHandler()
         QString qrcFileName = it.next();
         QFileInfo qrcFileInfo(qrcFileName);
         if(qrcFileInfo.isDir()) {
-            qDebug() << "Traversing directory" << qrcFileName;
             continue;
         }
         QString newFileName = qrcFileName;
@@ -36,7 +35,6 @@ ScriptHandler::ScriptHandler()
         newFileName = m_tempLocation + QDir::separator() + newFileName;
         QFileInfo newFileInfo(newFileName);
         dir.mkpath(newFileInfo.absoluteDir().path());
-        qDebug() << "Copying" << qrcFileName << "to" << newFileName;
         if(QFile::exists(newFileName)) {
             if(!QFile::remove(newFileName)) {
                 qFatal("Could not remove existing");
