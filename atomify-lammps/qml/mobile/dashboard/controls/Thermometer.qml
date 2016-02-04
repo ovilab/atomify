@@ -21,7 +21,6 @@ DashboardControl {
                 if(isNaN(value)) {
                     return;
                 }
-
                 var factor = 0.98
                 lowPassValue = factor * lowPassValue + (1 - factor) * value
                 lineSeries.append(temperatureCompute.time, lowPassValue)
@@ -82,7 +81,7 @@ DashboardControl {
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: temperatureCompute.lowPassValue.toFixed(2)
+                    text: miniControl.lowPassValue.toFixed(2)
                     font.weight: Font.Light
                     font.pixelSize: miniControl.height * 0.3
                     color: "#ededed"

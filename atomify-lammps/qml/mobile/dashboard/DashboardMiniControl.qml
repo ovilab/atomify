@@ -6,8 +6,6 @@ import "qrc:/visualization"
 Item {
     id: controlRoot
 
-    signal clicked(var index)
-
     property int menuIndex: 0
 
     anchors.fill: parent

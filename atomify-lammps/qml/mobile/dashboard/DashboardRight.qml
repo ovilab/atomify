@@ -59,25 +59,29 @@ Item {
                 Repeater {
                     id: repeater
                     model: simulation.controllers.length
-                    Loader {
-                        id: miniControlLoader
+                    Item {
+                        width: 1
                         Layout.fillWidth: true
                         Layout.preferredHeight: miniControlGrid.itemSize * Layout.rowSpan
-                        Layout.columnSpan: item ? item.Layout.columnSpan : 1
-                        Layout.rowSpan: item ? item.Layout.rowSpan : 1
+                        Layout.columnSpan: miniControlLoader.item ? miniControlLoader.item.Layout.columnSpan : 1
+                        Layout.rowSpan: miniControlLoader.item ? miniControlLoader.item.Layout.rowSpan : 1
 
-                        sourceComponent: simulation.controllers[index].miniControl
+                        Loader {
+                            id: miniControlLoader
+                            anchors.fill: parent
+                            sourceComponent: simulation.controllers[index].miniControl
 
-                        onLoaded: {
-                            if(!(item && item.fixes && simulator)) {
-                                return
-                            }
+                            onLoaded: {
+                                if(!(item && item.fixes && simulator)) {
+                                    return
+                                }
 
-                            item.visualizer = visualizer
-                            for(var j in item.fixes) {
-                                var fix = item.fixes[j]
-                                fix.parent = simulator
-                                console.log("Created " + fix + " on simulator " + simulator)
+                                item.visualizer = visualizer
+                                for(var j in item.fixes) {
+                                    var fix = item.fixes[j]
+                                    fix.parent = simulator
+                                    console.log("Created " + fix + " on simulator " + simulator)
+                                }
                             }
                         }
 
