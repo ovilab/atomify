@@ -26,7 +26,7 @@ Item {
 
         Item {
             id: headingObject
-            property color color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            property color color: Qt.rgba(0.5, 0.5, 0.5, 1.0)
             property real size: 2 * font.size
         }
 
