@@ -5,25 +5,43 @@ import Atomify 1.0
 import QtCharts 2.0
 import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
-
 DashboardControl {
     id: dashboardControlRoot
     miniControl: Component {
         DashboardMiniControl {
-            property ChartView chart: chart
-            property ValueAxis xAxis: xAxis
-            property ValueAxis yAxis: yAxis
-            property LineSeries lineSeries: lineSeries
-
             id: miniControl
             Layout.columnSpan: 2
 
+            property real value: temperatureCompute.value
+            property real lowPassValue: 0.0
+            property real yMin: 0
+            property real yMax: 0
+
+            onValueChanged: {
+                if(isNaN(value)) {
+                    return;
+                }
+
+                var factor = 0.98
+                lowPassValue = factor * lowPassValue + (1 - factor) * value
+                lineSeries.append(temperatureCompute.time, lowPassValue)
+                if(lineSeries.count > 1000) {
+                    var firstPoint = lineSeries.at(0)
+                    lineSeries.remove(firstPoint.x, firstPoint.y)
+                }
+
+                yMax = Math.max(yMax, lowPassValue)
+                yMin = Math.min(yMin, lowPassValue)
+                xAxis.max = temperatureCompute.time
+                xAxis.min = lineSeries.at(0).x
+                yAxis.min = yMin*0.9
+                yAxis.max = yMax*1.1
+            }
             ChartView {
                 id: chart
                 anchors.fill: parent
                 antialiasing: true
                 legend.visible: false
-
                 ValueAxis {
                     id: xAxis
                     min: 0
@@ -33,7 +51,6 @@ DashboardControl {
                     gridVisible: false
                     visible: false
                 }
-
                 ValueAxis {
                     id: yAxis
                     min: 0
@@ -43,17 +60,14 @@ DashboardControl {
                     gridVisible: false
                     visible: false
                 }
-
                 LineSeries {
                     id: lineSeries
                 }
-
                 Component.onCompleted: {
                     chart.setAxisX(xAxis, lineSeries)
                     chart.setAxisY(yAxis, lineSeries)
                 }
             }
-
             Column {
                 anchors.centerIn: parent
                 width: parent.width
@@ -83,76 +97,68 @@ DashboardControl {
             }
         }
     }
-
     fullControl: Component {
         DashboardFullControl {
-            Item {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                ChartView {
-                    id: chartFull
-                    anchors.fill: parent
-                    antialiasing: true
-                    legend.visible: false
-
-                    ValueAxis {
-                        id: xAxisFull
-                        min: 0
-                        max: 1
-                        tickCount: 5
-                    }
-
-                    ValueAxis {
-                        id: yAxisFull
-                        min: 0
-                        max: 0.2
-                        tickCount: 5
-                    }
-
-                    LineSeries {
-                        id: lineSeriesFull
-                    }
-
-                    Component.onCompleted: {
-                        chartFull.setAxisX(xAxisFull, lineSeriesFull)
-                        chartFull.setAxisY(yAxisFull, lineSeriesFull)
-                    }
-                }
-            }
-        }
-    }
-
-    simulatorControls: [
-        Compute {
-            id: temperatureCompute
+            property real value: temperatureCompute.value
             property real lowPassValue: 0.0
-            property real yMin: 1e9
-            property real yMax: -1e9
+            property real yMin: 0
+            property real yMax: 0
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
-            identifier: "temp"
-            command: "all temp"
             onValueChanged: {
+                if(isNaN(value)) {
+                    return;
+                }
+
                 var factor = 0.98
                 lowPassValue = factor * lowPassValue + (1 - factor) * value
-                dashboardControlRoot.miniControl.lineSeries.append(time, lowPassValue)
-                // lineSeriesFull.append(time, lowPassValue)
+                lineSeries.append(temperatureCompute.time, lowPassValue)
                 if(lineSeries.count > 1000) {
                     var firstPoint = lineSeries.at(0)
-                    dashboardControlRoot.lineSeries.remove(firstPoint.x, firstPoint.y)
-                    // lineSeriesFull.remove(firstPoint.x, firstPoint.y)
+                    lineSeries.remove(firstPoint.x, firstPoint.y)
                 }
 
                 yMax = Math.max(yMax, lowPassValue)
                 yMin = Math.min(yMin, lowPassValue)
-                dashboardControlRoot.xAxis.max = time
-                dashboardControlRoot.xAxis.min = lineSeries.at(0).x
-//                xAxisFull.max = time
-//                xAxisFull.min = lineSeries.at(0).x
-                dashboardControlRoot.yAxis.min = yMin*0.9
-                dashboardControlRoot.yAxis.max = yMax*1.1
-//                yAxisFull.min = yMin*0.9
-//                yAxisFull.max = yMax*1.1
+                xAxis.max = temperatureCompute.time
+                xAxis.min = lineSeries.at(0).x
+                yAxis.min = yMin*0.9
+                yAxis.max = yMax*1.1
             }
+
+            ChartView {
+                id: chart
+                anchors.fill: parent
+                antialiasing: true
+                legend.visible: false
+                ValueAxis {
+                    id: xAxis
+                    min: 0
+                    max: 1
+                    tickCount: 3
+                }
+                ValueAxis {
+                    id: yAxis
+                    min: 0
+                    max: 0.2
+                    tickCount: 3
+                }
+                LineSeries {
+                    id: lineSeries
+                }
+                Component.onCompleted: {
+                    chart.setAxisX(xAxis, lineSeries)
+                    chart.setAxisY(yAxis, lineSeries)
+                }
+            }
+        }
+    }
+    simulatorControls: [
+        Compute {
+            id: temperatureCompute
+            identifier: "temp"
+            command: "all temp"
         }
     ]
 }

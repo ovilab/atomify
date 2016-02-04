@@ -1,7 +1,7 @@
 #include "cpcompute.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
-
+#include <QDebug>
 CPCompute::CPCompute(QQuickItem *parent) : SimulatorControl(parent)
 {
 
