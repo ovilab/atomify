@@ -27,7 +27,7 @@ Rectangle {
             spacing: Style.baseMargin
 
             Image {
-                source: "qrc:/images/menu.png"
+                source: "qrc:/images/back.png"
                 width: Style.touchableSize
                 height: width
                 fillMode: Image.PreserveAspectFit

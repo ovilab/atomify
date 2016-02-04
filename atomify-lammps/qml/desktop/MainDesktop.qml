@@ -60,17 +60,23 @@ Item {
                 title: "Rendering"
                 RenderingTab {
                     anchors.fill: parent
-                    atomifyVisualizer: myVisualizer
+                    atomifyVisualizer: visualizer
                 }
             }
         }
 
         AtomifyVisualizer {
-            id: myVisualizer
+            id: visualizer
             simulator: desktopRoot.simulator
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true
+
+            FlyModeNavigator {
+                id: navigator
+                anchors.fill: parent
+                camera: visualizer.camera
+            }
 
             SimulationSummary {
                 simulator: desktopRoot.simulator
@@ -81,7 +87,7 @@ Item {
             Rectangle {
                 id: scaleRectangle
                 width: parent.width
-                anchors.bottom: myVisualizer.bottom
+                anchors.bottom: visualizer.bottom
 
                 height: 25
                 radius: 4
@@ -122,9 +128,9 @@ Item {
                         id: scaleSlider
                         minimumValue: 0.1
                         maximumValue: 10.0
-                        value: myVisualizer.scale
+                        value: visualizer.scale
                         onValueChanged: {
-                            myVisualizer.scale = value
+                            visualizer.scale = value
                         }
                         Settings {
                             property alias scaleValue: scaleSlider.value

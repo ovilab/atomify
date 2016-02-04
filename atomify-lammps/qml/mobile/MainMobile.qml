@@ -66,6 +66,12 @@ Item {
         width: parent.width
         height: parent.height
         scale: 0.8
+
+        TrackballNavigator {
+            id: navigator
+            anchors.fill: parent
+            camera: visualizer.camera
+        }
     }
 
     RevealDashboardButton {
@@ -120,7 +126,8 @@ Item {
             mobileRoot.state = "singleSimulation"
         }
         onBackClicked: {
-            mainMenu.revealed = true
+            mobileRoot.previousState = mobileRoot.state
+            mobileRoot.state = ""
         }
     }
 
