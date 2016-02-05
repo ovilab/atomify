@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE outline PUBLIC "-//omnigroup.com//DTD OUTLINE 3.0//EN" "http://www.omnigroup.com/namespace/OmniOutliner/xmloutline-v3.dtd">
+<outline xmlns="http://www.omnigroup.com/namespace/OmniOutliner/v3">
+  <style-attribute-registry>
+    <style-attribute version="0" key="font-family" group="font" name="family" class="string">Helvetica</style-attribute>
+    <style-attribute version="1" key="font-fill" group="font" name="fill color" class="color">
+      <color w="0"/>
+    </style-attribute>
+    <style-attribute version="0" key="font-italic" group="font" name="italic" class="bool">no</style-attribute>
+    <style-attribute version="0" key="font-size" group="font" name="size" class="number" integral="0" min="1" max="65536">12</style-attribute>
+    <style-attribute version="0" key="font-weight" group="font" name="weight" class="number" integral="1" min="1" max="14">5</style-attribute>
+    <style-attribute version="0" key="paragraph-alignment" group="paragraph" name="alignment" class="enum">
+      <enum-name-table default-value="4">
+        <enum-name-table-element value="0" name="left"/>
+        <enum-name-table-element value="1" name="right"/>
+        <enum-name-table-element value="2" name="center"/>
+        <enum-name-table-element value="3" name="justified"/>
+        <enum-name-table-element value="4" name="natural"/>
+      </enum-name-table>
+    </style-attribute>
+    <style-attribute version="0" key="paragraph-base-writing-direction" group="paragraph" name="writing direction" class="enum">
+      <enum-name-table default-value="-1">
+        <enum-name-table-element value="-1" name="natural"/>
+        <enum-name-table-element value="0" name="left-to-right"/>
+        <enum-name-table-element value="1" name="right-to-left"/>
+      </enum-name-table>
+    </style-attribute>
+    <style-attribute version="0" key="paragraph-line-height-multiple" group="paragraph" name="line height multiple" class="number" integral="0" min="0" max="1000">0</style-attribute>
+    <style-attribute version="0" key="text-background-color" group="text" name="background color" class="color">
+      <color w="0" a="0"/>
+    </style-attribute>
+  </style-attribute-registry>
+  <named-styles>
+    <named-style id="nU7Pax9sHwm" name="Highlight: Yellow" display-order="0">
+      <style>
+        <value key="text-background-color">
+          <color r="1" g="0.733334" b="0" a="0.25"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="m6c_M2fT6yP" name="Highlight: Red" display-order="1">
+      <style>
+        <value key="text-background-color">
+          <color r="0.94902" g="0.376471" b="0.466667" a="0.25"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="auoqZ5xVKeG" name="Highlight: Green" display-order="2">
+      <style>
+        <value key="text-background-color">
+          <color r="0.406736" g="0.736132" b="0.210461" a="0.25"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="hE9mXgl4a8m" name="Purple" display-order="3">
+      <style>
+        <value key="font-fill">
+          <color r="0.477101" g="0" b="1"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="l2kopvXC4ak" name="Blue" display-order="4">
+      <style>
+        <value key="font-fill">
+          <color r="0" g="0.469274" b="1"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="f7F2187eZ56" name="Bondi" display-order="5">
+      <style>
+        <value key="font-fill">
+          <color r="0.074595" g="0.744826" b="0.748556"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="kJhkVDl2Xsd" name="Green" display-order="6">
+      <style>
+        <value key="font-fill">
+          <color r="0.281438" g="0.753758" b="0"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="inNRQJ-da6E" name="Yellow" display-order="7">
+      <style>
+        <value key="font-fill">
+          <color r="0.796641" g="0.584204" b="0"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="nAm7imW-teW" name="Orange" display-order="8">
+      <style>
+        <value key="font-fill">
+          <color r="1" g="0.382022" b="0"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="jtC-ndQ7Pcw" name="Red" display-order="9">
+      <style>
+        <value key="font-fill">
+          <color r="0.900008" g="0" b="0.141782"/>
+        </value>
+      </style>
+    </named-style>
+    <named-style id="dI8s4BxgdIs" name="Graphite" display-order="10">
+      <style>
+        <value key="font-fill">
+          <color r="0.355246" g="0.411687" b="0.547809"/>
+        </value>
+      </style>
+    </named-style>
+  </named-styles>
+  <settings>
+    <base-style>
+      <style>
+        <value key="font-family">Hoefler Text</value>
+        <value key="font-size">14</value>
+        <value key="paragraph-base-writing-direction">left-to-right</value>
+        <value key="paragraph-line-height-multiple">1.1</value>
+        <value key="text-background-color">
+          <color r="0.96" g="0.9344" b="0.8832"/>
+        </value>
+      </style>
+    </base-style>
+    <print-info>
+      <print-info-key name="NSPaperSize" type="size">{595.27556705474854, 841.8897705078125}</print-info-key>
+      <print-info-key name="OOScaleDocumentToFitPageWidth" type="boolean">true</print-info-key>
+    </print-info>
+    <auto-generate-level-styles>no</auto-generate-level-styles>
+  </settings>
+  <editor content-size="{483, 684}" column-titles-display-mode="auto" status-visible="no" hide-attachment-tags="yes" is-spellchecking-enabled="yes">
+    <drawer display="sections" width="185" palette-height="479"/>
+    <note-split-view height="141"/>
+    <selected-rows ids="cUuv_nxKz4x"/>
+    <selected-columns ids="jFqHUGd_Dg1"/>
+    <selected-characters range="{0, 0}"/>
+  </editor>
+  <outline-title>
+    <text>
+      <p>
+        <run>
+          <style>
+            <value key="font-family">Helvetica</value>
+            <value key="paragraph-alignment">center</value>
+          </style>
+          <lit><cell variable="OODocumentFilenameVariableIdentifier"/></lit>
+        </run>
+      </p>
+    </text>
+  </outline-title>
+  <columns>
+    <column id="dTpN3JwYpBn" type="text" width="18" minimum-width="18" maximum-width="18" text-export-width="1" is-note-column="yes">
+      <style>
+        <value key="font-fill">
+          <color r="0.402365" g="0.402365" b="0.402365"/>
+        </value>
+        <value key="font-italic">yes</value>
+      </style>
+      <title>
+        <text>
+          <p/>
+        </text>
+      </title>
+    </column>
+    <column id="jFqHUGd_Dg1" type="text" width="462" minimum-width="13" maximum-width="1000000" text-export-width="72" is-outline-column="yes">
+      <title>
+        <text>
+          <p>
+            <run>
+              <lit>Topic</lit>
+            </run>
+          </p>
+        </text>
+      </title>
+    </column>
+  </columns>
+  <root>
+    <style/>
+    <style>
+      <value key="font-size">28</value>
+    </style>
+    <style>
+      <value key="font-size">20</value>
+    </style>
+    <style>
+      <value key="font-italic">yes</value>
+      <value key="font-weight">6</value>
+    </style>
+    <item id="k1zF9kNlCen" expanded="yes">
+      <values>
+        <text>
+          <p>
+            <run>
+              <lit>Simulations</lit>
+            </run>
+          </p>
+        </text>
+      </values>
+      <children>
+        <item id="msMo9BLBA1l" expanded="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Thermal equlibrium</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="hYfJm5a9v2G">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Two areas with different temperatures going towards same temp</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="o8SR0gwgHdi" expanded="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Mechanical equalibrium</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="mp3_068Gt28">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Pressure in two systems going towards equlibirum</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="cVx4yod8h2x" expanded="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Cheimcal equlibrium</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="dL7VECnGUFw">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Number of particles going towards equlibrium</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="lqK4d3rC0h6" expanded="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Water</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="bWWEMsBwSvm">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Single water molecule</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+            <item id="pY6s7Au8q4E">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Multiple water molecules</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="cawfze5EAaN" expanded="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Silica</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="bwJ_HCTvT72">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Nanoporous</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="gTz2W2aSsiN" expanded="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Silica+water</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="nyYqUAao7iW">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>Water inside nanopores. Maybe show difference in diffusion coefficient on the surface?</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="gXMOmOzUmtS">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Nanotube water flow</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+        </item>
+        <item id="elowSnPd4pc">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>Protein folding</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+        </item>
+        <item id="pQ0XpNJc1hb" expanded="yes">
+          <values>
+            <text>
+              <p>
+                <run>
+                  <lit>PV diagram</lit>
+                </run>
+              </p>
+            </text>
+          </values>
+          <children>
+            <item id="cp7FLDVNU9Z">
+              <values>
+                <text>
+                  <p>
+                    <run>
+                      <lit>LJ gas, van der waals</lit>
+                    </run>
+                  </p>
+                </text>
+              </values>
+            </item>
+          </children>
+        </item>
+        <item id="cUuv_nxKz4x">
+          <values>
+            <null/>
+          </values>
+        </item>
+      </children>
+    </item>
+  </root>
+</outline>
