@@ -16,6 +16,7 @@ install:
   - /opt/qt55/bin/qmake
   - make
   - sudo make install
+  - cd ..
 script:
   - ./configure.py
   - source /opt/qt55/bin/qt55-env.sh
