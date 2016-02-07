@@ -39,5 +39,7 @@
         <file>mobile/dashboard/DashboardMiniControl.qml</file>
         <file>mobile/dashboard/DashboardFullControl.qml</file>
         <file>mobile/dashboard/controls/Thermometer.qml</file>
+        <file>mobile/dashboard/controls/MiniChart.qml</file>
+        <file>mobile/dashboard/controls/ChartScroller.qml</file>
     </qresource>
 </RCC>

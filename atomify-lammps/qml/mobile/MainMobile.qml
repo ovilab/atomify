@@ -77,6 +77,10 @@ Item {
     RevealDashboardButton {
         id: revealDashboardButton
         revealed: mobileRoot.state == ""
+        onClicked: {
+            mainMenu.revealed = false
+            dashboard.revealed = true
+        }
     }
 
     RevealSimulationsViewButton {
@@ -84,6 +88,7 @@ Item {
         revealed: mobileRoot.state == ""
         onClicked: {
             mainMenu.revealed = true
+            dashboard.revealed = false
         }
     }
 
@@ -110,6 +115,7 @@ Item {
         }
         onBackClicked: {
             mobileRoot.state = mobileRoot.previousState
+            dashboard.revealed = true
         }
     }
 

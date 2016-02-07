@@ -16,6 +16,7 @@ import "../hud"
 
 Item {
     id: revealDashboardButton
+    signal clicked
     property bool revealed: true
     anchors {
         right: parent.right
@@ -65,9 +66,8 @@ Item {
     
     MouseArea {
         anchors.fill: parent
-        onPressed: {
-            mainMenu.revealed = false
-            dashboard.revealed = true
+        onClicked: {
+            revealDashboardButton.clicked()
         }
     }
 }

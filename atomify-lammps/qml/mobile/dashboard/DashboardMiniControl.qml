@@ -3,11 +3,12 @@ import QtQuick.Layouts 1.1
 
 import "qrc:/visualization"
 
-Item {
+Rectangle {
     id: controlRoot
 
     property int menuIndex: 0
 
     anchors.fill: parent
+    color: "#3d3d3d"
 }
 
