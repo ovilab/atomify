@@ -10,6 +10,7 @@ CPCompute::CPCompute(QQuickItem *parent) : SimulatorControl(parent)
 void CPCompute::setValues(double time, QVector<double> values)
 {
     m_time = time;
+    emit timeChanged(time);
     m_values.clear();
     m_values = QList<double>::fromVector(values);
     if(m_values.size()>0) {
@@ -112,15 +113,6 @@ bool CPCompute::isVector() const
 LineGraphDataSource *CPCompute::dataSource() const
 {
     return m_dataSource;
-}
-
-void CPCompute::setTime(double time)
-{
-    if (m_time == time)
-        return;
-
-    m_time = time;
-    emit timeChanged(time);
 }
 
 void CPCompute::setIsVector(bool isVector)

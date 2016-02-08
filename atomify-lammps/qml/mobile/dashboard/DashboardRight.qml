@@ -51,9 +51,9 @@ Item {
                 id: miniControlGrid
 
                 width: parent.width
-                columns: 2
-                columnSpacing: 0
-                rowSpacing: 0
+                columns: 1
+                columnSpacing: Style.spacing
+                rowSpacing: Style.spacing
                 property real itemSize: miniControlGrid.width / miniControlGrid.columns - miniControlGrid.columnSpacing * (miniControlGrid.columns - 1)
 
                 Repeater {
@@ -62,7 +62,7 @@ Item {
                     Item {
                         width: 1
                         Layout.fillWidth: true
-                        Layout.preferredHeight: miniControlGrid.itemSize * Layout.rowSpan
+                        Layout.preferredHeight: 10/16*miniControlGrid.itemSize * Layout.rowSpan
                         Layout.columnSpan: miniControlLoader.item ? miniControlLoader.item.Layout.columnSpan : 1
                         Layout.rowSpan: miniControlLoader.item ? miniControlLoader.item.Layout.rowSpan : 1
 

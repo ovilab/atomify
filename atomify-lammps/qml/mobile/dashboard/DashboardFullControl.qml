@@ -7,7 +7,7 @@ import "qrc:/visualization"
 Item {
     id: grid
 
-    default property alias stuff: layout.children
+    default property alias contents: layout.children
     property AtomifyVisualizer visualizer
 
 

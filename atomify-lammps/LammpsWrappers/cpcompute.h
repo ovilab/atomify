@@ -11,7 +11,7 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(double secondValue READ secondValue NOTIFY secondValueChanged)
     Q_PROPERTY(double thirdValue READ thirdValue NOTIFY thirdValueChanged)
     Q_PROPERTY(double fourthValue READ fourthValue NOTIFY fourthValueChanged)
-    Q_PROPERTY(double time READ time WRITE setTime NOTIFY timeChanged)
+    Q_PROPERTY(double time READ time NOTIFY timeChanged)
     Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
     Q_PROPERTY(LineGraphDataSource* dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
 
@@ -52,7 +52,6 @@ signals:
     void dataSourceChanged(LineGraphDataSource* dataSource);
 
 public slots:
-    void setTime(double time);
     void setIsVector(bool isVector);
     void setDataSource(LineGraphDataSource* dataSource);
 };
