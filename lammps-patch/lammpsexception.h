@@ -7,7 +7,7 @@ class LammpsException: public std::exception
 {
 public:
     LammpsException();
-    ~LammpsException();
+    ~LammpsException() throw();
 
     LammpsException(const char* file, const char* str, int line);
     std::string file();
