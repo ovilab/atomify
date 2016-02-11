@@ -10,6 +10,13 @@ install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install qt55declarative
   - sudo apt-get -qq install qt55svg
+  - source /opt/qt55/bin/qt55-env.sh
+  - git clone https://codereview.qt-project.org/qt/qtcharts
+  - cd qtcharts
+  - /opt/qt55/bin/qmake
+  - make
+  - sudo make install
+  - cd ..
 script:
   - ./configure.py
   - source /opt/qt55/bin/qt55-env.sh

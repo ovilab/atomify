@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick 2.5
+import QtCharts 2.0
 
 Item {
     id: styleRoot
@@ -15,6 +16,9 @@ Item {
 
     property alias font: fontObject
     property int renderType: Text.QtRendering
+    property QtObject chart: QtObject {
+        property color backgroundColor: "transparent"
+    }
 
     Item {
         id: fontObject

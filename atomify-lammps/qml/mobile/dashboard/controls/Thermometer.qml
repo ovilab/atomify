@@ -7,84 +7,46 @@ import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
     id: dashboardControlRoot
+    property real timeRange: 3
     miniControl: Component {
         DashboardMiniControl {
             id: miniControl
-            Layout.columnSpan: 2
 
-            property real value: temperatureCompute.value
-            property real lowPassValue: 0.0
-            property real yMin: 0
-            property real yMax: 0
-
-            onValueChanged: {
-                if(isNaN(value)) {
-                    return;
+            ColumnLayout {
+                id: textLayout
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    margins: Style.baseMargin * 0.5
+                    right: parent.right
+                    bottom: parent.bottom
                 }
-                var factor = 0.98
-                lowPassValue = factor * lowPassValue + (1 - factor) * value
-                lineSeries.append(temperatureCompute.time, lowPassValue)
-                if(lineSeries.count > 200) {
-                    var firstPoint = lineSeries.at(0)
-                    lineSeries.remove(firstPoint.x, firstPoint.y)
-                }
-
-                yMax = Math.max(yMax, lowPassValue)
-                yMin = Math.min(yMin, lowPassValue)
-                xAxis.max = temperatureCompute.time
-                xAxis.min = lineSeries.at(0).x
-                yAxis.min = yMin*0.9
-                yAxis.max = yMax*1.1
-            }
-            ChartView {
-                id: chart
-                anchors.fill: parent
-                antialiasing: true
-                legend.visible: false
-                ValueAxis {
-                    id: xAxis
-                    min: 0
-                    max: 1
-                    tickCount: 0
-                    labelsVisible: false
-                    gridVisible: false
-                    visible: false
-                }
-                ValueAxis {
-                    id: yAxis
-                    min: 0
-                    max: 0.2
-                    tickCount: 0
-                    labelsVisible: false
-                    gridVisible: false
-                    visible: false
-                }
-                LineSeries {
-                    id: lineSeries
-                }
-                Component.onCompleted: {
-                    chart.setAxisX(xAxis, lineSeries)
-                    chart.setAxisY(yAxis, lineSeries)
-                }
-            }
-            Column {
-                anchors.centerIn: parent
-                width: parent.width
-                spacing: miniControl.height * 0.02
+                spacing: Style.baseMargin * 0.2
                 Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Temperature"
-                    horizontalAlignment: Text.AlignHCenter
+                    id: temperatureText
                     font.weight: Font.Light
-                    font.pixelSize: miniControl.height * 0.12
-                    color: "black"
+                    font.pixelSize: Style.font.size
+                    color: "#cfcfcf"
+                    text: "temperature"
                 }
                 Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: miniControl.lowPassValue.toFixed(2)+" K"
-                    font.weight: Font.Light
-                    font.pixelSize: miniControl.height * 0.3
-                    color: "black"
+                    id: temperatureValueText
+                    font.pixelSize: Style.font.size * 3
+                    color: "#cdcdcd"
+                    text: miniChart.lowPassValue.toFixed(2)
+                }
+                MiniChart {
+                    id: miniChart
+
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    width: 1
+                    height: 1
+
+                    value: temperatureCompute.value
+                    time: temperatureCompute.time
+                    timeRange: dashboardControlRoot.timeRange
                 }
             }
         }
@@ -97,54 +59,47 @@ DashboardControl {
             property real yMax: 0
             Layout.fillHeight: true
             Layout.fillWidth: true
-            onValueChanged: {
-                if(isNaN(value)) {
-                    return;
-                }
-
-                var factor = 0.98
-                lowPassValue = factor * lowPassValue + (1 - factor) * value
-                lineSeries.append(temperatureCompute.time, lowPassValue)
-                if(lineSeries.count > 200) {
-                    var firstPoint = lineSeries.at(0)
-                    lineSeries.remove(firstPoint.x, firstPoint.y)
-                }
-
-                yMax = Math.max(yMax, lowPassValue)
-                yMin = Math.min(yMin, lowPassValue)
-                xAxis.max = temperatureCompute.time
-                xAxis.min = lineSeries.at(0).x
-                yAxis.min = yMin*0.9
-                yAxis.max = yMax*1.1
-            }
-
+            
             ChartView {
-                id: chart
+                id: miniChart
                 anchors.fill: parent
                 antialiasing: true
                 legend.visible: false
                 title: "Temperature"
+                backgroundColor: "transparent"
+                titleColor: "white"
+
+                ChartScroller {
+                    id: chartScroller
+                    xAxis: xAxis
+                    yAxis: yAxis
+                    lineSeries: lineSeries
+
+                    value: temperatureCompute.value
+                    time: temperatureCompute.time
+                    timeRange: dashboardControlRoot.timeRange
+                }
 
                 ValueAxis {
                     id: xAxis
-                    min: 0
-                    max: 1
                     tickCount: 3
                     titleText: "t"
+                    color: "white"
+                    labelsColor: "white"
                 }
                 ValueAxis {
                     id: yAxis
-                    min: 0
-                    max: 0.2
                     tickCount: 3
                     titleText: "T [K]"
+                    color: "white"
+                    labelsColor: "white"
                 }
                 LineSeries {
                     id: lineSeries
                 }
                 Component.onCompleted: {
-                    chart.setAxisX(xAxis, lineSeries)
-                    chart.setAxisY(yAxis, lineSeries)
+                    miniChart.setAxisX(xAxis, lineSeries)
+                    miniChart.setAxisY(yAxis, lineSeries)
                 }
             }
         }

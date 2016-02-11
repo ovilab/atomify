@@ -88,9 +88,12 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     try {
         lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
     } catch (LammpsException &exception) {
+        qDebug() << "ERROR: LAMMPS threw an exception!";
+        qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+        qDebug() << "ERROR: Command:" << command;
+        qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
         m_currentException = exception; // Store a copy of the exception to communicate to GUI
         state.crashed = true;
-        qDebug() << "Last command: " << command;
     }
 }
 

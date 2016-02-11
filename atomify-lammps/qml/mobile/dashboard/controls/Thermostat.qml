@@ -9,38 +9,49 @@ import "qrc:/mobile/dashboard"
 DashboardControl {
     id: thermostatRoot
 
+    property real timeRange: 3
+
     // TODO add properties:
     // min and max temperature
 
     miniControl: Component {
         DashboardMiniControl {
             id: miniControl
-            Layout.columnSpan: 2
-            Column {
-                anchors.centerIn: parent
-                width: parent.width
-                spacing: miniControl.height * 0.02
+            ColumnLayout {
+                id: textLayout
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    margins: Style.baseMargin * 0.5
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+                spacing: Style.baseMargin * 0.2
                 Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "temperature\ntarget"
-                    horizontalAlignment: Text.AlignHCenter
+                    id: temperatureText
                     font.weight: Font.Light
-                    font.pixelSize: miniControl.height * 0.12
+                    font.pixelSize: Style.font.size
                     color: "#cfcfcf"
-                }
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: nvt.targetTemperature.toFixed(2)
-                    font.weight: Font.Light
-                    font.pixelSize: miniControl.height * 0.3
-                    color: "#ededed"
-                }
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
                     text: "thermostat"
-                    font.weight: Font.Light
-                    font.pixelSize: miniControl.height * 0.10
-                    color: "#ababab"
+                }
+                Text {
+                    id: temperatureValueText
+                    font.pixelSize: Style.font.size * 3
+                    color: "#cdcdcd"
+                    text: miniChart.lowPassValue.toFixed(2) + " → " + nvt.targetTemperature.toFixed(2)
+                }
+                MiniChart {
+                    id: miniChart
+
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    width: 1
+                    height: 1
+
+                    value: temperatureCompute.value
+                    time: temperatureCompute.time
+                    timeRange: thermostatRoot.timeRange
                 }
             }
         }
@@ -164,6 +175,11 @@ DashboardControl {
             id: nvt
             temperatureDampening: 0.01
             //            targetTemperature: nvtSlider.value
+        },
+        Compute {
+            id: temperatureCompute
+            identifier: "thermostat_temp"
+            command: "all temp"
         }
     ]
 }
