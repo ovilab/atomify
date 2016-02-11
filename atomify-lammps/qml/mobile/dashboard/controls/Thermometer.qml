@@ -35,7 +35,7 @@ DashboardControl {
                     color: "#cdcdcd"
                     text: miniChart.lowPassValue.toFixed(2)
                 }
-                MiniChart {
+                AutoZoomMiniChart {
                     id: miniChart
 
                     Layout.fillHeight: true
@@ -71,8 +71,8 @@ DashboardControl {
 
                 ChartScroller {
                     id: chartScroller
-                    xAxis: xAxis
-                    yAxis: yAxis
+                    axisX: xAxis
+                    axisY: yAxis
                     lineSeries: lineSeries
 
                     value: temperatureCompute.value

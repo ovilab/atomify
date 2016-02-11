@@ -41,5 +41,6 @@
         <file>mobile/dashboard/controls/Thermometer.qml</file>
         <file>mobile/dashboard/controls/MiniChart.qml</file>
         <file>mobile/dashboard/controls/ChartScroller.qml</file>
+        <file>mobile/dashboard/controls/AutoZoomMiniChart.qml</file>
     </qresource>
 </RCC>

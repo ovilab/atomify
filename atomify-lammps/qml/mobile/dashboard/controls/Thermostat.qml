@@ -40,7 +40,7 @@ DashboardControl {
                     color: "#cdcdcd"
                     text: miniChart.lowPassValue.toFixed(2) + " → " + nvt.targetTemperature.toFixed(2)
                 }
-                MiniChart {
+                AutoZoomMiniChart {
                     id: miniChart
 
                     Layout.fillHeight: true
@@ -51,7 +51,7 @@ DashboardControl {
 
                     value: temperatureCompute.value
                     time: temperatureCompute.time
-                    timeRange: thermostatRoot.timeRange
+                    timeRange: dashboardControlRoot.timeRange
                 }
             }
         }

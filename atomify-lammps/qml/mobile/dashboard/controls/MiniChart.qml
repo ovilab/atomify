@@ -1,4 +1,4 @@
-import QtQuick 2.5
+﻿import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import Atomify 1.0
@@ -9,10 +9,8 @@ import "qrc:/mobile/dashboard"
 ChartView {
     id: miniChart
 
-    property alias value: chartScroller.value
-    property alias time: chartScroller.time
-    property alias timeRange: chartScroller.timeRange
-    property alias lowPassValue: chartScroller.lowPassValue
+    property alias axisX: _axisX
+    property alias axisY: _axisY
     
     antialiasing: true
     legend.visible: false
@@ -24,16 +22,9 @@ ChartView {
         left: 0
         right: 0
     }
-
-    ChartScroller {
-        id: chartScroller
-        xAxis: xAxis
-        yAxis: yAxis
-        lineSeries: lineSeries
-    }
     
     ValueAxis {
-        id: xAxis
+        id: _axisX
         tickCount: 0
         labelsVisible: false
         gridVisible: false
@@ -41,22 +32,11 @@ ChartView {
     }
 
     ValueAxis {
-        id: yAxis
+        id: _axisY
         tickCount: 0
         labelsVisible: false
         gridVisible: false
         visible: false
-    }
-
-    LineSeries {
-        id: lineSeries
-        width: 6.0
-        color: "steelblue"
-    }
-
-    Component.onCompleted: {
-        setAxisX(xAxis, lineSeries)
-        setAxisY(yAxis, lineSeries)
     }
 
 }

@@ -84,6 +84,9 @@ HEADERS += \
     LammpsWrappers/fixhistogram.h \
     LammpsWrappers/rdf.h
 
+# Temporary use of quickcontrols2 without install
+
+
 DISTFILES += \
     iOS.plist \
     simulations/diffusion/indent/indent.png \
