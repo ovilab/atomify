@@ -196,6 +196,14 @@ Item {
         }
     }
 
+    Button {
+        text: "Screenshot"
+        onClicked: {
+            visualizer.visualizer.grabScreenShot()
+            console.log("test")
+        }
+    }
+
 //    Temperature {
 //        id: temperature
 //        lammps: lammpsObject

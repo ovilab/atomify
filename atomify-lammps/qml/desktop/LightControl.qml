@@ -62,7 +62,7 @@ Item {
 
             Slider {
                 id: specularIntensity
-                maximumValue: 1.0
+                maximumValue: 3.0
                 minimumValue: 0.0
                 value: light.specularIntensity
                 onValueChanged: light.specularIntensity = value
@@ -79,10 +79,12 @@ Item {
 
             Slider {
                 id: shininessIntensity
-                maximumValue: 50
+                maximumValue: 100
                 minimumValue: 0.0
-                value: (maximumValue+1) - light.shininess
-                onValueChanged: light.shininess = (maximumValue+1) - value
+                value: light.shininess
+                onValueChanged: light.shininess = value
+//                value: (maximumValue+1) - light.shininess
+//                onValueChanged: light.shininess = (maximumValue+1) - value
             }
         }
 

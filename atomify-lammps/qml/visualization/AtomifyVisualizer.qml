@@ -1,4 +1,5 @@
 import QtQuick 2.5
+import QtQuick.Controls 1.4
 import Atomify 1.0
 import SimVis 1.0
 
@@ -13,8 +14,8 @@ Item {
     property bool addPeriodicCopies: false
 
     Visualizer {
-        property Spheres spheres: spheres
         id: visualizer
+        property Spheres spheres: spheres
         width: parent.width
         height: parent.height
         simulator: atomifyVisualizerRoot.simulator
@@ -55,9 +56,9 @@ Item {
                 diffuseColor: spheres.color
                 ambientIntensity: 0.05
                 diffuseIntensity: 1.0
-                specularIntensity: 1.0
+                specularIntensity: 2.0
                 specular: true
-                shininess: 40.0
+                shininess: 30.0
                 attenuation: 0.1/(Math.pow(simulator.cameraToSystemCenterDistance,1.75))
                 position: camera.position
             }
@@ -85,7 +86,6 @@ Item {
 //            }
         }
     }
-
 
     Camera {
         id: camera

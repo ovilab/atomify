@@ -97,7 +97,6 @@ DashboardControl {
             property real yMax: 0
             Layout.fillHeight: true
             Layout.fillWidth: true
-
             onValueChanged: {
                 if(isNaN(value)) {
                     return;
