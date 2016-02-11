@@ -22,7 +22,6 @@ android {
     include(../lammps.pri)
 }
 RESOURCES += images.qrc \
-    scripts.qrc \
     qml/qml.qrc \
     simulations/diffusion/diffusion.qrc \
     simulations/other/other.qrc \
