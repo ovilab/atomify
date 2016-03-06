@@ -14,12 +14,13 @@ import "mobile/style"
 import "desktop"
 
 ApplicationWindow {
+    id: applicationRoot
+
     title: qsTr("Atomify")
     width: 300
     height: 480
     visible: true
 
-    id: applicationRoot
     property string mode: {
         if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
             return "mobile"
@@ -30,6 +31,8 @@ ApplicationWindow {
     Settings {
         id: settings
         property alias mode: applicationRoot.mode
+        property alias width: applicationRoot.width
+        property alias height: applicationRoot.height
     }
 
     function resetStyle() {
