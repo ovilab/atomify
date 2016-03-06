@@ -42,7 +42,6 @@ LAMMPSController::~LAMMPSController()
 LAMMPS_NS::LAMMPS *LAMMPSController::lammps() const
 {
     return m_lammps;
-
 }
 
 void LAMMPSController::setLammps(LAMMPS *lammps)
@@ -86,7 +85,8 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     }
 
     try {
-        lammps_command((void*)m_lammps, (char*) command.toStdString().c_str());
+        QByteArray commandBytes = command.toUtf8();
+        lammps_command((void*)m_lammps, (char*)commandBytes.data());
     } catch (LammpsException &exception) {
         qDebug() << "ERROR: LAMMPS threw an exception!";
         qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
@@ -106,7 +106,8 @@ void LAMMPSController::processCommand(QString command) {
     //   This means that if the number of timesteps are given as a LAMMPS variable, we need to extract that.
     //
     //   We also added a fastrun command that act as a normal run command with no visualization.
-    stringstream command_ss(command.toStdString());
+    string commandString = command.toStdString();
+    stringstream command_ss(commandString);
     string word;
     QString processedCommand;
 
@@ -159,9 +160,12 @@ void LAMMPSController::processCommand(QString command) {
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {
-    if(!m_lammps) return -1;
+    if(!m_lammps) {
+        return -1;
+    }
     char identifier_cstr[1000];
-    strcpy(identifier_cstr, identifier.toStdString().c_str());
+    QByteArray identifierBytes = identifier.toUtf8();
+    strcpy(identifier_cstr, identifierBytes.constData());
     return m_lammps->input->variable->find(identifier_cstr);
 }
 
@@ -174,13 +178,19 @@ LAMMPS_NS::Variable* LAMMPSController::findVariableByIdentifier(QString identifi
 
 LAMMPS_NS::Fix* LAMMPSController::findFixByIdentifier(QString identifier) {
     int fixId = findFixIndex(identifier);
-    if(fixId < 0) return nullptr;
-    else return m_lammps->modify->fix[fixId];
+    if(fixId < 0) {
+        return nullptr;
+    } else {
+        return m_lammps->modify->fix[fixId];
+    }
 }
 
 int LAMMPSController::findFixIndex(QString identifier) {
-    if(!m_lammps) return -1;
-    return m_lammps->modify->find_fix(identifier.toStdString().c_str());
+    if(!m_lammps) {
+        return -1;
+    }
+    QByteArray identifierBytes = identifier.toUtf8();
+    return m_lammps->modify->find_fix(identifierBytes.constData());
 }
 
 bool LAMMPSController::fixExists(QString identifier) {
@@ -189,13 +199,19 @@ bool LAMMPSController::fixExists(QString identifier) {
 
 LAMMPS_NS::Compute* LAMMPSController::findComputeByIdentifier(QString identifier) {
     int computeId = findComputeId(identifier);
-    if(computeId < 0) return nullptr;
-    else return m_lammps->modify->compute[computeId];
+    if(computeId < 0) {
+        return nullptr;
+    } else {
+        return m_lammps->modify->compute[computeId];
+    }
 }
 
 int LAMMPSController::findComputeId(QString identifier) {
-    if(!m_lammps) return -1;
-    return m_lammps->modify->find_compute(identifier.toStdString().c_str());
+    if(!m_lammps) {
+        return -1;
+    }
+    QByteArray identifierBytes = identifier.toUtf8();
+    return m_lammps->modify->find_compute(identifierBytes.constData());
 }
 
 bool LAMMPSController::computeExists(QString identifier) {
@@ -238,9 +254,15 @@ void LAMMPSController::reset()
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];
     }
-    if(nargs>0) sprintf(argv[0], "myprogram");
-    if(nargs>1) sprintf(argv[1], "-sf");
-    if(nargs>2) sprintf(argv[2], "gpu");
+    if(nargs>0) {
+        sprintf(argv[0], "myprogram");
+    }
+    if(nargs>1) {
+        sprintf(argv[1], "-sf");
+    }
+    if(nargs>2) {
+        sprintf(argv[2], "gpu");
+    }
 //    sprintf(argv[3], "-pk");
 //    sprintf(argv[4], "gpu");
 //    sprintf(argv[5], "1");
@@ -253,8 +275,12 @@ void LAMMPSController::reset()
 
 void LAMMPSController::tick()
 {
-    if(m_lammps == nullptr) return;
-    if(state.crashed) return;
+    if(m_lammps == nullptr) {
+        return;
+    }
+    if(state.crashed) {
+        return;
+    }
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
@@ -303,13 +329,17 @@ void LAMMPSController::tick()
 
 int LAMMPSController::numberOfAtoms() const
 {
-    if(!m_lammps) return 0;
+    if(!m_lammps) {
+        return 0;
+    }
     return m_lammps->atom->natoms;
 }
 
 int LAMMPSController::numberOfAtomTypes() const
 {
-    if(!m_lammps) return 0;
+    if(!m_lammps) {
+        return 0;
+    }
     return m_lammps->atom->ntypes;
 }
 
@@ -342,13 +372,17 @@ void LAMMPSController::disableAllEnsembleFixes()
 
 QVector3D LAMMPSController::systemSize() const
 {
-    if(!m_lammps) return QVector3D();
+    if(!m_lammps) {
+        return QVector3D();
+    }
     return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
 }
 
 QVector3D LAMMPSController::systemCenter() const
 {
-    if(!m_lammps) return QVector3D();
+    if(!m_lammps) {
+        return QVector3D();
+    }
     return QVector3D(m_lammps->domain->boxlo[0] + m_lammps->domain->xprd_half, m_lammps->domain->boxlo[1] + m_lammps->domain->yprd_half, m_lammps->domain->boxlo[2] + m_lammps->domain->zprd_half);
 }
 
@@ -399,7 +433,9 @@ LammpsException &LAMMPSController::currentException()
 
 double LAMMPSController::simulationTime()
 {
-    if(!m_lammps) return 0;
+    if(!m_lammps) {
+        return 0;
+    }
     return m_lammps->update->atime;
 }
 

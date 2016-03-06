@@ -126,7 +126,8 @@ void ScriptHandler::runFile(QString filename)
 
     QString currentDir = fileInfo.absoluteDir().path();
     qDebug() << "Current dir: " << currentDir;
-    chdir(currentDir.toStdString().c_str());
+    QByteArray currentDirBytes = currentDir.toUtf8();
+    chdir(currentDirBytes.constData());
 
     qDebug() << "Filename string: " << tmpFileName;
 
@@ -206,7 +207,8 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
                 runFile(filename);
                 if(!currentDir.isEmpty()) {
                     // TODO: fix so editor sends in default path
-                    chdir(currentDir.toStdString().c_str());
+                    QByteArray currentDirBytes = currentDir.toUtf8();
+                    chdir(currentDirBytes.constData());
                 }
                 currentCommand.clear(); lineNumber++; continue; // This line is complete
             }
@@ -298,7 +300,8 @@ QString ScriptHandler::copyDataFileToReadablePath(QString filename)
         fileFound = fileInfo.exists();
     }
 
-    chdir(m_tempLocation.toStdString().c_str());
+    QByteArray tempLocationBytes = m_tempLocation.toUtf8();
+    chdir(tempLocationBytes.constData());
 
     QString newFilename=m_tempLocation+filename;
     if(fileFound) {

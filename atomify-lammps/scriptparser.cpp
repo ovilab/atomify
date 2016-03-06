@@ -75,7 +75,8 @@ bool ScriptParser::isEditorCommand(QString command)
 
 bool ScriptParser::isInclude(QString command)
 {
-    std::stringstream command_ss(command.toStdString());
+    std::string commandString = command.toStdString();
+    std::stringstream command_ss(commandString);
     std::string word;
     if(command_ss >> word) {
         if(word.compare("include") == 0) {

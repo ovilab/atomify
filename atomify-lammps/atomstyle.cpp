@@ -177,7 +177,8 @@ void AtomStyle::setModelData(const int index, const QString &key, const QVariant
 {
     QList<QObject*> content = m_model.value<QList<QObject*> >();
     AtomStyleData *obj = qobject_cast<AtomStyleData*>(content[index]);
-    obj->setProperty(key.toStdString().c_str(), value);
+    QByteArray keyBytes = key.toUtf8();
+    obj->setProperty(keyBytes.constData(), value);
     setDirty(true);
 }
 
