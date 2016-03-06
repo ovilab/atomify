@@ -51,7 +51,7 @@ DashboardControl {
 
                     value: temperatureCompute.value
                     time: temperatureCompute.time
-                    timeRange: dashboardControlRoot.timeRange
+                    timeRange: thermostatRoot.timeRange
                 }
             }
         }
