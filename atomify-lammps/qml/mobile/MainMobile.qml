@@ -36,14 +36,14 @@ Item {
 
         simulator.clearSimulatorControls()
 
-        for(var i in simulation.controllers) {
-            var controller = simulation.controllers[i]
-            for(var j in controller.simulatorControls) {
-                var control = controller.simulatorControls[j]
-                control.parent = simulator
-                console.log("Created " + control + " on simulator " + simulator)
-            }
-        }
+//        for(var i in simulation.controllers) {
+//            var controller = simulation.controllers[i]
+//            for(var j in controller.simulatorControls) {
+//                var control = controller.simulatorControls[j]
+//                control.parent = simulator
+//                console.log("Created " + control + " on simulator " + simulator)
+//            }
+//        }
 
         mobileRoot.state = ""
     }

@@ -2,6 +2,7 @@
 #define LAMMPSEXCEPTION_H
 #include <string>
 #include <exception>
+#include <iostream>
 
 class LammpsException: public std::exception
 {

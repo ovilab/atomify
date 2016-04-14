@@ -72,11 +72,11 @@ Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            FlyModeNavigator {
-                id: navigator
-                anchors.fill: parent
-                camera: visualizer.camera
-            }
+//            FlyModeNavigator {
+//                id: navigator
+//                anchors.fill: parent
+//                camera: visualizer.camera
+//            }
 
             SimulationSummary {
                 simulator: desktopRoot.simulator

@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
-    qmlRegisterType<FixAverageTime>("Atomify",1,0,"FixAverageTime");
+    qmlRegisterType<FixAverageTime>("Atomify",1, 0,"FixAverageTime");
     qmlRegisterType<FixHistogram>("Atomify", 1, 0, "FixHistogram");
     qmlRegisterType<RDF>("Atomify", 1, 0, "RDF");
 

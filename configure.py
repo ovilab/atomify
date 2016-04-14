@@ -113,5 +113,6 @@ if lammps_build_type == "android":
 print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
+run_command("make yes-rigid")
 run_command("make -j4 " + lammps_build_type + " mode=lib")
 os.chdir(root_path)
