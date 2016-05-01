@@ -56,33 +56,33 @@ void RDF::update(LAMMPSController *lammpsController)
     QString fixAveTimeIdentifier = QString("%1_ave").arg(identifier());
     LAMMPS_NS::FixAveTime *lmp_fix = dynamic_cast<LAMMPS_NS::FixAveTime*>(lammpsController->findFixByIdentifier(fixAveTimeIdentifier));
     if(lmp_fix != nullptr) {
-        if(m_dataSource)  m_dataSource->points().resize(m_numberOfBins);
-        if(m_dataSource1) m_dataSource1->points().resize(m_numberOfBins);
-        if(m_dataSource2) m_dataSource2->points().resize(m_numberOfBins);
-        if(m_dataSource3) m_dataSource3->points().resize(m_numberOfBins);
-        if(m_dataSource4) m_dataSource4->points().resize(m_numberOfBins);
+        if(m_dataSource)  m_dataSource->clear();
+        if(m_dataSource1) m_dataSource1->clear();
+        if(m_dataSource2) m_dataSource2->clear();
+        if(m_dataSource3) m_dataSource3->clear();
+        if(m_dataSource4) m_dataSource4->clear();
 
         for(int i=0; i<m_numberOfBins; i++) {
             float x = lmp_fix->compute_array(i,0);
             if(numberOfPairs() >= 1 && m_dataSource) {
-                m_dataSource->points()[i].setX(x);
-                m_dataSource->points()[i].setY(lmp_fix->compute_array(i,1));
+                float y = lmp_fix->compute_array(i,1);
+                m_dataSource->addPoint(x,y);
             }
             if(numberOfPairs() >= 2 && m_dataSource1) {
-                m_dataSource1->points()[i].setX(x);
-                m_dataSource1->points()[i].setY(lmp_fix->compute_array(i,3));
+                float y = lmp_fix->compute_array(i,3);
+                m_dataSource1->addPoint(x,y);
             }
             if(numberOfPairs() >= 3 && m_dataSource2) {
-                m_dataSource2->points()[i].setX(x);
-                m_dataSource2->points()[i].setY(lmp_fix->compute_array(i,5));
+                float y = lmp_fix->compute_array(i,5);
+                m_dataSource2->addPoint(x,y);
             }
             if(numberOfPairs() >= 4 && m_dataSource3) {
-                m_dataSource3->points()[i].setX(x);
-                m_dataSource3->points()[i].setY(lmp_fix->compute_array(i,7));
+                float y = lmp_fix->compute_array(i,7);
+                m_dataSource3->addPoint(x,y);
             }
             if(numberOfPairs() >= 5 && m_dataSource4) {
-                m_dataSource4->points()[i].setX(x);
-                m_dataSource4->points()[i].setY(lmp_fix->compute_array(i,9));
+                float y = lmp_fix->compute_array(i,9);
+                m_dataSource4->addPoint(x,y);
             }
         }
         if(m_dataSource) m_dataSource->update();
@@ -109,22 +109,22 @@ int RDF::numberOfBins() const
     return m_numberOfBins;
 }
 
-LineGraphDataSource *RDF::dataSource1() const
+DataSource *RDF::dataSource1() const
 {
     return m_dataSource1;
 }
 
-LineGraphDataSource *RDF::dataSource2() const
+DataSource *RDF::dataSource2() const
 {
     return m_dataSource2;
 }
 
-LineGraphDataSource *RDF::dataSource3() const
+DataSource *RDF::dataSource3() const
 {
     return m_dataSource3;
 }
 
-LineGraphDataSource *RDF::dataSource4() const
+DataSource *RDF::dataSource4() const
 {
     return m_dataSource4;
 }
@@ -157,7 +157,7 @@ void RDF::setNumberOfBins(int numberOfBins)
     emit numberOfBinsChanged(numberOfBins);
 }
 
-void RDF::setDataSource1(LineGraphDataSource *dataSource1)
+void RDF::setDataSource1(DataSource *dataSource1)
 {
     if (m_dataSource1 == dataSource1)
         return;
@@ -166,7 +166,7 @@ void RDF::setDataSource1(LineGraphDataSource *dataSource1)
     emit dataSource1Changed(dataSource1);
 }
 
-void RDF::setDataSource2(LineGraphDataSource *dataSource2)
+void RDF::setDataSource2(DataSource *dataSource2)
 {
     if (m_dataSource2 == dataSource2)
         return;
@@ -175,7 +175,7 @@ void RDF::setDataSource2(LineGraphDataSource *dataSource2)
     emit dataSource2Changed(dataSource2);
 }
 
-void RDF::setDataSource3(LineGraphDataSource *dataSource3)
+void RDF::setDataSource3(DataSource *dataSource3)
 {
     if (m_dataSource3 == dataSource3)
         return;
@@ -184,7 +184,7 @@ void RDF::setDataSource3(LineGraphDataSource *dataSource3)
     emit dataSource3Changed(dataSource3);
 }
 
-void RDF::setDataSource4(LineGraphDataSource *dataSource4)
+void RDF::setDataSource4(DataSource *dataSource4)
 {
     if (m_dataSource4 == dataSource4)
         return;

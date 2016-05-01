@@ -110,7 +110,7 @@ bool CPCompute::isVector() const
     return m_isVector;
 }
 
-LineGraphDataSource *CPCompute::dataSource() const
+DataSource *CPCompute::dataSource() const
 {
     return m_dataSource;
 }
@@ -124,7 +124,7 @@ void CPCompute::setIsVector(bool isVector)
     emit isVectorChanged(isVector);
 }
 
-void CPCompute::setDataSource(LineGraphDataSource *dataSource)
+void CPCompute::setDataSource(DataSource *dataSource)
 {
     if (m_dataSource == dataSource)
         return;

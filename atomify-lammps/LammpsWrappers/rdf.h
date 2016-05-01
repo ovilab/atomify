@@ -9,19 +9,19 @@ class RDF : public CPCompute
     Q_PROPERTY(QVariantList atomPairs READ atomPairs WRITE setAtomPairs NOTIFY atomPairsChanged)
     Q_PROPERTY(QString group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(int numberOfBins READ numberOfBins WRITE setNumberOfBins NOTIFY numberOfBinsChanged)
-    Q_PROPERTY(LineGraphDataSource* dataSource1 READ dataSource1 WRITE setDataSource1 NOTIFY dataSource1Changed)
-    Q_PROPERTY(LineGraphDataSource* dataSource2 READ dataSource2 WRITE setDataSource2 NOTIFY dataSource2Changed)
-    Q_PROPERTY(LineGraphDataSource* dataSource3 READ dataSource3 WRITE setDataSource3 NOTIFY dataSource3Changed)
-    Q_PROPERTY(LineGraphDataSource* dataSource4 READ dataSource4 WRITE setDataSource4 NOTIFY dataSource4Changed)
+    Q_PROPERTY(DataSource* dataSource1 READ dataSource1 WRITE setDataSource1 NOTIFY dataSource1Changed)
+    Q_PROPERTY(DataSource* dataSource2 READ dataSource2 WRITE setDataSource2 NOTIFY dataSource2Changed)
+    Q_PROPERTY(DataSource* dataSource3 READ dataSource3 WRITE setDataSource3 NOTIFY dataSource3Changed)
+    Q_PROPERTY(DataSource* dataSource4 READ dataSource4 WRITE setDataSource4 NOTIFY dataSource4Changed)
 
 public:
     RDF();
 
 protected:
-    LineGraphDataSource* m_dataSource1 = nullptr;
-    LineGraphDataSource* m_dataSource2 = nullptr;
-    LineGraphDataSource* m_dataSource3 = nullptr;
-    LineGraphDataSource* m_dataSource4 = nullptr;
+    DataSource* m_dataSource1 = nullptr;
+    DataSource* m_dataSource2 = nullptr;
+    DataSource* m_dataSource3 = nullptr;
+    DataSource* m_dataSource4 = nullptr;
     QVariantList m_atomPairs;
     QString m_group = "all";
     QString generatePairString();
@@ -37,28 +37,28 @@ public:
     QString group() const;
     int numberOfBins() const;
 
-    LineGraphDataSource* dataSource1() const;
-    LineGraphDataSource* dataSource2() const;
-    LineGraphDataSource* dataSource3() const;
-    LineGraphDataSource* dataSource4() const;
+    DataSource* dataSource1() const;
+    DataSource* dataSource2() const;
+    DataSource* dataSource3() const;
+    DataSource* dataSource4() const;
 
 public slots:
     void setAtomPairs(QVariantList atomPairs);
     void setGroup(QString group);
     void setNumberOfBins(int numberOfBins);
-    void setDataSource1(LineGraphDataSource* dataSource1);
-    void setDataSource2(LineGraphDataSource* dataSource2);
-    void setDataSource3(LineGraphDataSource* dataSource3);
-    void setDataSource4(LineGraphDataSource* dataSource4);
+    void setDataSource1(DataSource* dataSource1);
+    void setDataSource2(DataSource* dataSource2);
+    void setDataSource3(DataSource* dataSource3);
+    void setDataSource4(DataSource* dataSource4);
 
 signals:
     void atomPairsChanged(QVariantList atomPairs);
     void groupChanged(QString group);
     void numberOfBinsChanged(int numberOfBins);
-    void dataSource1Changed(LineGraphDataSource* dataSource1);
-    void dataSource2Changed(LineGraphDataSource* dataSource2);
-    void dataSource3Changed(LineGraphDataSource* dataSource3);
-    void dataSource4Changed(LineGraphDataSource* dataSource4);
+    void dataSource1Changed(DataSource* dataSource1);
+    void dataSource2Changed(DataSource* dataSource2);
+    void dataSource3Changed(DataSource* dataSource3);
+    void dataSource4Changed(DataSource* dataSource4);
 
     // SimulatorControl interface
 protected:

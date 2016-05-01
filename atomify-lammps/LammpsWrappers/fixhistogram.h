@@ -1,7 +1,7 @@
 #ifndef FIXHISTOGRAM_H
 #define FIXHISTOGRAM_H
 #include "cpcompute.h"
-
+#include "datasource.h"
 class FixHistogram : public SimulatorControl
 {
     Q_OBJECT
@@ -13,7 +13,7 @@ class FixHistogram : public SimulatorControl
     Q_PROPERTY(int numberOfBins READ numberOfBins WRITE setNumberOfBins NOTIFY numberOfBinsChanged)
     Q_PROPERTY(CPCompute* compute READ compute WRITE setCompute NOTIFY computeChanged)
     Q_PROPERTY(QVariantList values READ values WRITE setValues NOTIFY valuesChanged)
-    Q_PROPERTY(LineGraphDataSource* dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
+    Q_PROPERTY(DataSource* dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
 private:
     CPCompute* m_compute = nullptr;
     int m_nEvery = 1;
@@ -23,7 +23,7 @@ private:
     float m_min = 10;
     int m_numberOfBins = 100;
     QVariantList m_values;
-    LineGraphDataSource* m_dataSource = nullptr;
+    DataSource* m_dataSource = nullptr;
 
 public:
     FixHistogram();
@@ -37,7 +37,7 @@ public:
     float min() const;
     int numberOfBins() const;
     QVariantList values() const;
-    LineGraphDataSource* dataSource() const;
+    DataSource* dataSource() const;
 
 protected:
     virtual void updateCommand() override;
@@ -54,7 +54,7 @@ public slots:
     void setMin(float min);
     void setNumberOfBins(int numberOfBins);
     void setValues(QVariantList values);
-    void setDataSource(LineGraphDataSource* dataSource);
+    void setDataSource(DataSource* dataSource);
 
 signals:
     void nEveryChanged(int nEvery);
@@ -65,7 +65,7 @@ signals:
     void minChanged(float min);
     void numberOfBinsChanged(int numberOfBins);
     void valuesChanged(QVariantList values);
-    void dataSourceChanged(LineGraphDataSource* dataSource);
+    void dataSourceChanged(DataSource* dataSource);
 };
 
 #endif // FIXHISTOGRAM_H

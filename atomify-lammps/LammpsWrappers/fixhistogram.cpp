@@ -46,16 +46,15 @@ void FixHistogram::update(LAMMPSController *lammpsController)
         }
 
         if(m_dataSource) {
-            QVector<QPointF> &data = m_dataSource->points();
-            data.clear();
+            QVector<QPointF> data;
             data.reserve(m_numberOfBins);
             float deltaX = (m_max - m_min) / m_numberOfBins;
             for(int n=0; n<m_numberOfBins; n++) {
                 double x = m_min + n*deltaX;
                 double y = m_values[n].value<double>();
-                if( !(y!=y)) data.push_back(QPointF(x,y));
+                if( !(y!=y)) data.push_back(QPointF(x,y)); // y!=y is the test for isNaN
             }
-            m_dataSource->update();
+            m_dataSource->setPoints(data);
         }
 
         emit valuesChanged(m_values);
@@ -102,7 +101,7 @@ QVariantList FixHistogram::values() const
     return m_values;
 }
 
-LineGraphDataSource *FixHistogram::dataSource() const
+DataSource *FixHistogram::dataSource() const
 {
     return m_dataSource;
 }
@@ -182,7 +181,7 @@ void FixHistogram::setValues(QVariantList values)
     emit valuesChanged(values);
 }
 
-void FixHistogram::setDataSource(LineGraphDataSource *dataSource)
+void FixHistogram::setDataSource(DataSource *dataSource)
 {
     if (m_dataSource == dataSource)
         return;

@@ -7,7 +7,6 @@ import QtGraphicalEffects 1.0
 import Atomify 1.0
 import SimVis 1.0
 import Qt.labs.settings 1.0
-import QMLPlot 1.0
 import QtCharts  2.0
 import "mobile"
 import "mobile/style"

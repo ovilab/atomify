@@ -4,8 +4,8 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions svg charts
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
-#QMAKE_CXXFLAGS += -g -fopenmp
-#LIBS += -fopenmp
+QMAKE_CXXFLAGS += -g -fopenmp
+LIBS += -fopenmp
 CONFIG += warn_off
 
 # lammps.pri includes the path and libs to lammps
@@ -58,7 +58,8 @@ SOURCES += \
     LammpsWrappers/cpvariable.cpp \
     LammpsWrappers/fixaveragetime.cpp \
     LammpsWrappers/fixhistogram.cpp \
-    LammpsWrappers/rdf.cpp
+    LammpsWrappers/rdf.cpp \
+    datasource.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -76,7 +77,8 @@ HEADERS += \
     LammpsWrappers/cpvariable.h \
     LammpsWrappers/fixaveragetime.h \
     LammpsWrappers/fixhistogram.h \
-    LammpsWrappers/rdf.h
+    LammpsWrappers/rdf.h \
+    datasource.h
 
 # Temporary use of quickcontrols2 without install
 

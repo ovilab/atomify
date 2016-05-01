@@ -1,6 +1,7 @@
 #ifndef COMPUTE_H
 #define COMPUTE_H
 #include "simulatorcontrol.h"
+#include "datasource.h"
 class CPCompute : public SimulatorControl
 {
     Q_OBJECT
@@ -12,14 +13,14 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(double fourthValue READ fourthValue NOTIFY fourthValueChanged)
     Q_PROPERTY(double time READ time NOTIFY timeChanged)
     Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
-    Q_PROPERTY(LineGraphDataSource* dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
+    Q_PROPERTY(DataSource* dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
 
 protected:
     bool m_isVector = false;
     double m_time = 0;
     QList<double> m_values;
     void setValues(double time, QVector<double> values);
-    LineGraphDataSource* m_dataSource = nullptr;
+    DataSource* m_dataSource = nullptr;
 
     virtual void updateCommand() override;
     QList<QString> enabledCommands() override;
@@ -38,7 +39,7 @@ public:
     double fourthValue() const;
     double time() const;
     bool isVector() const;
-    LineGraphDataSource* dataSource() const;
+    DataSource* dataSource() const;
 
 signals:
     void valuesChanged(QList<double> values);
@@ -48,11 +49,11 @@ signals:
     void fourthValueChanged(double fourthValue);
     void timeChanged(double time);
     void isVectorChanged(bool isVector);
-    void dataSourceChanged(LineGraphDataSource* dataSource);
+    void dataSourceChanged(DataSource* dataSource);
 
 public slots:
     void setIsVector(bool isVector);
-    void setDataSource(LineGraphDataSource* dataSource);
+    void setDataSource(DataSource* dataSource);
 };
 
 #endif // COMPUTE_H
