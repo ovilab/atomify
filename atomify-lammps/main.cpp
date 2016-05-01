@@ -20,8 +20,6 @@
 #include "LammpsWrappers/fixaveragetime.h"
 #include "LammpsWrappers/fixhistogram.h"
 #include "LammpsWrappers/rdf.h"
-#include "QMLPlot/figure.h"
-#include "QMLPlot/linegraph.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,9 +27,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
     qmlRegisterType<AtomStyle>("Atomify", 1, 0, "AtomStyle");
     qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
-    qmlRegisterType<Figure>("QMLPlot", 1, 0, "Figure");
-    qmlRegisterType<LineGraph>("QMLPlot", 1, 0, "LineGraph");
-    qmlRegisterType<LineGraphDataSource>("QMLPlot", 1, 0, "LineGraphDataSource");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");

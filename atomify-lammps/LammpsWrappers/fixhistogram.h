@@ -1,7 +1,6 @@
 #ifndef FIXHISTOGRAM_H
 #define FIXHISTOGRAM_H
 #include "cpcompute.h"
-#include "QMLPlot/linegraph.h"
 
 class FixHistogram : public SimulatorControl
 {

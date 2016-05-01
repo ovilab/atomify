@@ -2,7 +2,6 @@
 #define RDF_H
 
 #include "cpcompute.h"
-#include "QMLPlot/linegraph.h"
 #include <QMap>
 class RDF : public CPCompute
 {

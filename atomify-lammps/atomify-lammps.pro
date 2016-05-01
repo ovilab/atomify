@@ -57,9 +57,6 @@ SOURCES += \
     LammpsWrappers/cpcompute.cpp \
     LammpsWrappers/cpvariable.cpp \
     LammpsWrappers/fixaveragetime.cpp \
-    QMLPlot/figure.cpp \
-    QMLPlot/graph.cpp \
-    QMLPlot/linegraph.cpp \
     LammpsWrappers/fixhistogram.cpp \
     LammpsWrappers/rdf.cpp
 
@@ -78,9 +75,6 @@ HEADERS += \
     LammpsWrappers/cpcompute.h \
     LammpsWrappers/cpvariable.h \
     LammpsWrappers/fixaveragetime.h \
-    QMLPlot/figure.h \
-    QMLPlot/graph.h \
-    QMLPlot/linegraph.h \
     LammpsWrappers/fixhistogram.h \
     LammpsWrappers/rdf.h
 

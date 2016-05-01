@@ -1,7 +1,6 @@
 #ifndef COMPUTE_H
 #define COMPUTE_H
 #include "simulatorcontrol.h"
-#include "QMLPlot/linegraph.h"
 class CPCompute : public SimulatorControl
 {
     Q_OBJECT
