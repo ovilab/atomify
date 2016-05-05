@@ -52,6 +52,11 @@ SphereData *AtomifySimulator::sphereData() const
     return m_sphereData;
 }
 
+CylinderData *AtomifySimulator::cylinderData() const
+{
+    return m_cylinderData;
+}
+
 void MyWorker::synchronizePositions(AtomifySimulator *simulator)
 {
     LAMMPS *lammps = m_lammpsController.lammps();
@@ -71,6 +76,67 @@ void MyWorker::synchronizePositions(AtomifySimulator *simulator)
     double position[3];
     QList<QObject *> atomStyleDataList = m_atomStyle.data();
     int numVisibleAtoms = 0;
+
+    m_cylinders.clear();
+    bool hasNeighborLists = lammps->neighbor->nlist > 0;
+    if(hasNeighborLists) {
+        float maxR = 2.0;
+        NeighList *list = lammps->neighbor->lists[0];
+        int inum = list->inum;
+        int *ilist = list->ilist;
+        int *numneigh = list->numneigh;
+        int **firstneigh = list->firstneigh;
+        double **x = lammps->atom->x;
+        int *type = lammps->atom->type;
+
+        for (int ii = 0; ii < inum; ii++) {
+            int i = ilist[ii];
+            double xi[3];
+            xi[0] = x[i][0];
+            xi[1] = x[i][1];
+            xi[2] = x[i][2];
+            int itype = type[i];
+            int *jlist = firstneigh[i];
+            int jnum = numneigh[i];
+            for (int jj = 0; jj < jnum; jj++) {
+                int j = jlist[jj];
+                j &= NEIGHMASK;
+                double xj[3];
+                xj[0] = x[j][0];
+                xj[1] = x[j][1];
+                xj[2] = x[j][2];
+                lammps->domain->remap(xi);
+                lammps->domain->remap(xj);
+
+                double delx = xi[0] - xj[0];
+                double dely = xi[1] - xj[1];
+                double delz = xi[2] - xj[2];
+                double rsq = delx*delx + dely*dely + delz*delz;
+                int jtype = type[j];
+                bool correctTypes = (itype==1 && jtype==2) || (itype==2 && jtype==1);
+                if(correctTypes && rsq < maxR*maxR ) {
+                    xi[0] -= lammps->domain->boxlo[0] + lammps->domain->prd_half[0];
+                    xi[1] -= lammps->domain->boxlo[1] + lammps->domain->prd_half[1];
+                    xi[2] -= lammps->domain->boxlo[2] + lammps->domain->prd_half[2];
+
+                    xj[0] -= lammps->domain->boxlo[0] + lammps->domain->prd_half[0];
+                    xj[1] -= lammps->domain->boxlo[1] + lammps->domain->prd_half[1];
+                    xj[2] -= lammps->domain->boxlo[2] + lammps->domain->prd_half[2];
+
+                    CylinderVBOData cylinder;
+                    QVector3D diff(delx, dely, delz);
+                    cylinder.vertex1 = QVector3D(xi[0], xi[1], xi[2]) - diff.normalized() * 0.3;
+                    cylinder.vertex2 = QVector3D(xj[0], xj[1], xj[2]) + diff.normalized() * 0.3;
+                    cylinder.radius1 = 0.05;
+                    cylinder.radius2 = 0.05;
+
+                    m_cylinders.push_back(cylinder);
+                }
+            }
+        }
+        simulator->cylinderData()->setData(m_cylinders);
+    }
+
     for(unsigned int i=0; i<lammps->atom->natoms; i++) {
         bool addAtom = true;
         int atomType = lammps->atom->type[i];
@@ -311,9 +377,12 @@ int AtomifySimulator::numberOfTimesteps() const
 }
 
 AtomifySimulator::AtomifySimulator()
-    : m_sphereData(new SphereData(this))
+    : m_sphereData(new SphereData(this)),
+    m_cylinderData(new CylinderData(this))
 {
 }
+
+AtomifySimulator::~AtomifySimulator() { }
 
 int AtomifySimulator::simulationSpeed() const
 {

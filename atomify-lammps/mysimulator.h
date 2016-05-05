@@ -1,6 +1,7 @@
 #ifndef MYSIMULATOR_H
 #define MYSIMULATOR_H
 #include <SimVis/Simulator>
+#include <SimVis/CylinderData>
 #include <QMap>
 #include <QElapsedTimer>
 #include <memory>
@@ -28,6 +29,7 @@ private:
     LAMMPSController m_lammpsController;
     bool m_addPeriodicCopies = false;
     float m_cameraToSystemCenterDistance = 1.0;
+    QVector<CylinderVBOData> m_cylinders;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
@@ -57,9 +59,10 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(float cameraToSystemCenterDistance READ cameraToSystemCenterDistance WRITE setCameraToSystemCenterDistance NOTIFY cameraToSystemCenterDistanceChanged)
     Q_PROPERTY(bool addPeriodicCopies READ addPeriodicCopies WRITE setAddPeriodicCopies NOTIFY addPeriodicCopiesChanged)
     Q_PROPERTY(SphereData* sphereData READ sphereData NOTIFY sphereDataChanged)
+    Q_PROPERTY(CylinderData* cylinderData READ cylinderData CONSTANT)
 public:
     AtomifySimulator();
-    ~AtomifySimulator() { }
+    ~AtomifySimulator();
 
     // Simulator interface
     int simulationSpeed() const;
@@ -79,6 +82,7 @@ public:
     float cameraToSystemCenterDistance() const;
     bool addPeriodicCopies() const;
     class SphereData* sphereData() const;
+    class CylinderData* cylinderData() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -115,7 +119,6 @@ signals:
     void numberOfTimestepsChanged(int numberOfTimesteps);
     void cameraToSystemCenterDistanceChanged(float cameraToSystemCenterDistance);
     void addPeriodicCopiesChanged(bool addPeriodicCopies);
-
     void sphereDataChanged(SphereData* sphereData);
 
 protected:
@@ -139,9 +142,9 @@ private:
     int m_numberOfTimesteps = 0;
     float m_cameraToSystemCenterDistance = 10;
     bool m_addPeriodicCopies = false;
-
+    SphereData* m_sphereData = nullptr;
+    CylinderData* m_cylinderData = nullptr;
     QT3D_CLONEABLE(AtomifySimulator)
-    SphereData* m_sphereData;
 };
 
 #endif // MYSIMULATOR_H

@@ -36,6 +36,17 @@ Scene3D {
             }
         }
 
+        Cylinders {
+            cylinderData: simulator.cylinderData
+            fragmentColor: StandardMaterial {
+                lights: ShaderGroup {
+                    Light {
+                        position: Qt.vector3d(5, 5, 5)
+                    }
+                }
+            }
+        }
+
         Spheres {
             id: spheres
             camera: visualizer.camera
