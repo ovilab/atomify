@@ -39,10 +39,9 @@ Item {
                 atomifyVisualizer.slice.enabled = checked
             }
 
-            SliceControl {
-                id: sliceControl
-                slice: atomifyVisualizer.slice
-            }
+//            SliceControl {
+//                id: sliceControl
+//            }
         }
 
         GroupBox {
@@ -51,10 +50,10 @@ Item {
             width: parent.width
             title: "Light"
 
-            LightControl {
-                id: lightControl
-                light: atomifyVisualizer.light
-            }
+//            LightControl {
+//                id: lightControl
+//                light: atomifyVisualizer.light
+//            }
         }
 
         CheckBox {

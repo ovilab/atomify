@@ -60,19 +60,11 @@ Item {
         }
     }
 
-    AtomifyVisualizer {
-        id: visualizer
-        simulator: mobileRoot.simulator
-        width: parent.width
-        height: parent.height
-        scale: 0.8
-
-        TrackballNavigator {
-            id: navigator
-            anchors.fill: parent
-            camera: visualizer.camera
-        }
-    }
+//    AtomifyVisualizer {
+//        id: visualizer
+////        anchors.fill: parent
+//        simulator: mobileRoot.simulator
+//    }
 
     RevealDashboardButton {
         id: revealDashboardButton
@@ -123,9 +115,9 @@ Item {
         id: simulationsView
         width: parent.width
         height: parent.height
-        anchors {
-            top: visualizer.bottom
-        }
+//        anchors {
+//            top: visualizer.bottom
+//        }
         onSimulationClicked: {
             singleSimulation.simulation = simulation
             mobileRoot.previousState = mobileRoot.state

@@ -5,7 +5,6 @@ import SimVis 1.0
 
 Item {
     id: lightControlRoot
-    property Light light
     height: columnLayout.height
     width: parent.width
     property real labelWidth: 80

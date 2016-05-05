@@ -32,11 +32,11 @@ private:
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
-    virtual void synchronizeRenderer(Renderable *renderableObject) override;
     virtual void work() override;
     bool m_willPause = false;
     AtomStyle m_atomStyle;
     QVector<int> m_atomTypes;
+    void synchronizePositions(AtomifySimulator *simulator);
 };
 
 class AtomifySimulator : public Simulator
@@ -57,8 +57,9 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
     Q_PROPERTY(float cameraToSystemCenterDistance READ cameraToSystemCenterDistance WRITE setCameraToSystemCenterDistance NOTIFY cameraToSystemCenterDistanceChanged)
     Q_PROPERTY(bool addPeriodicCopies READ addPeriodicCopies WRITE setAddPeriodicCopies NOTIFY addPeriodicCopiesChanged)
+    Q_PROPERTY(SphereData* sphereData READ sphereData NOTIFY sphereDataChanged)
 public:
-    AtomifySimulator() { }
+    AtomifySimulator();
     ~AtomifySimulator() { }
 
     // Simulator interface
@@ -78,6 +79,7 @@ public:
     Q_INVOKABLE void clearSimulatorControls();
     float cameraToSystemCenterDistance() const;
     bool addPeriodicCopies() const;
+    class SphereData* sphereData() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -115,6 +117,8 @@ signals:
     void cameraToSystemCenterDistanceChanged(float cameraToSystemCenterDistance);
     void addPeriodicCopiesChanged(bool addPeriodicCopies);
 
+    void sphereDataChanged(SphereData* sphereData);
+
 protected:
     virtual MyWorker *createWorker() override;
 
@@ -138,6 +142,7 @@ private:
     bool m_addPeriodicCopies = false;
 
     QT3D_CLONEABLE(AtomifySimulator)
+    SphereData* m_sphereData;
 };
 
 #endif // MYSIMULATOR_H
