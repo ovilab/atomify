@@ -136,6 +136,8 @@ private:
     int m_numberOfTimesteps = 0;
     float m_cameraToSystemCenterDistance = 10;
     bool m_addPeriodicCopies = false;
+
+    QT3D_CLONEABLE(AtomifySimulator)
 };
 
 #endif // MYSIMULATOR_H
