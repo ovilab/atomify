@@ -12,10 +12,10 @@ import "mobile"
 import "mobile/style"
 import "desktop"
 
-ApplicationWindow {
+Rectangle {
     id: applicationRoot
+    property alias mySimulator: mainDesktop.simulator
 
-    title: qsTr("Atomify")
     width: 300
     height: 480
     visible: true
@@ -51,26 +51,15 @@ ApplicationWindow {
     }
 
     MainDesktop {
+        id: mainDesktop
         visible: mode === "desktop"
         anchors.fill: parent
-        simulator: mySimulator
     }
 
     MainMobile {
         visible: mode === "mobile"
         anchors.fill: parent
         simulator: mySimulator
-    }
-
-    AtomifySimulator {
-        id: mySimulator
-        simulationSpeed: 1
-        atomStyle: AtomStyle {
-            id: myAtomStyle
-        }
-        scriptHandler: ScriptHandler {
-            atomStyle: myAtomStyle
-        }
     }
 
     Shortcut {

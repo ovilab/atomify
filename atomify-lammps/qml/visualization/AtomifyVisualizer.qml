@@ -12,7 +12,7 @@ import SimVis.ShaderNodes 1.0
 
 Scene3D {
     id: atomifyVisualizerRoot
-    property AtomifySimulator simulator
+    property alias simulator: mySimulator
     property real scale: 0.23
     property bool addPeriodicCopies: false
 
@@ -24,6 +24,17 @@ Scene3D {
 
         clearColor: "#012"
         camera.aspectRatio: atomifyVisualizerRoot.width / atomifyVisualizerRoot.height
+
+        AtomifySimulator {
+            id: mySimulator
+            simulationSpeed: 1
+            atomStyle: AtomStyle {
+                id: myAtomStyle
+            }
+            scriptHandler: ScriptHandler {
+                atomStyle: myAtomStyle
+            }
+        }
 
         Spheres {
             id: spheres
@@ -56,42 +67,36 @@ Scene3D {
                 color: "lightgreen"
                 lights: ShaderGroup {
                     Light {
-                        position: Qt.vector3d(20, -20, -60)
-                    }
-                    Light {
-                        position: Qt.vector3d(-20, 20, 60)
-                    }
-                    Light {
-                        position: Qt.vector3d(20, 20, -60)
+                        position: Qt.vector3d(50, 50, 50)
                     }
                 }
             }
         }
 
-        CylinderMesh {
-            id: mesh
-            radius: 1
-            length: 3
-            rings: 100
-            slices: 20
-        }
+//        CylinderMesh {
+//            id: mesh
+//            radius: 1
+//            length: 3
+//            rings: 100
+//            slices: 20
+//        }
 
-        Transform {
-            id: transform
-            scale: 1.5
-            rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 45)
-        }
+//        Transform {
+//            id: transform
+//            scale: 1.5
+//            rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 45)
+//        }
 
-        Material {
-            id: material
-            effect: Effect {}
-        }
+//        Material {
+//            id: material
+//            effect: Effect {}
+//        }
 
-        Entity {
-            id: mainEntity
-            objectName: "mainEntity"
-            components: [ mesh, material, transform ]
-        }
+//        Entity {
+//            id: mainEntity
+//            objectName: "mainEntity"
+//            components: [ mesh, material, transform ]
+//        }
 
 
     }

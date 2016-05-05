@@ -13,7 +13,7 @@ import "../visualization"
 Item {
     id: desktopRoot
 
-    property AtomifySimulator simulator: null
+    property alias simulator: visualizer.simulator
 
     Component.onCompleted: {
         simulator.errorInLammpsScript.connect(editorTab.reportError)
@@ -68,7 +68,6 @@ Item {
         AtomifyVisualizer {
             id: visualizer
             focus: true
-            simulator: desktopRoot.simulator
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true

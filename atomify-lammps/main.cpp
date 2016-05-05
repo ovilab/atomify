@@ -5,6 +5,7 @@
 #include <QSurfaceFormat>
 #include <QOpenGLContext>
 #include <QQuickWindow>
+#include <QQuickView>
 #ifdef Q_OS_LINUX
 #include <locale>
 #endif
@@ -42,10 +43,17 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("ovilab");
     app.setApplicationName("Atomify");
 
-    QQmlApplicationEngine engine;
-    qpm::init(app, engine);
+    QQuickView view;
+    qpm::init(app, *view.engine());
+    QSurfaceFormat format;
+    format.setMajorVersion(4);
+    format.setMinorVersion(3);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    view.setFormat(format);
+    view.setSource(QUrl("qrc:/main.qml"));
+    // view.setSource(QUrl("qrc:/main_spherestmp.qml"));
+    view.show();
 
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 #ifdef Q_OS_LINUX
     setlocale(LC_ALL, "C");
     setlocale(LC_NUMERIC, "C");

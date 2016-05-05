@@ -60,7 +60,6 @@ void MyWorker::synchronizePositions(AtomifySimulator *simulator)
     m_lammpsController.setDataDirty(false);
     m_atomStyle.setDirty(false);
     QVector<QVector3D> positions;
-
     if(m_addPeriodicCopies) {
         // Each atom will have 27 copies
         positions.resize(27*lammps->atom->natoms);
