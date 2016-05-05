@@ -8,13 +8,9 @@
 #include <modify.h>
 #include <neighbor.h>
 #include <neigh_list.h>
-#include <core/camera.h>
 #include <string>
 #include <sstream>
 #include <SimVis/SphereData>
-#include <SimVis/Lines>
-#include <SimVis/Cylinders>
-#include <SimVis/Points>
 #include <QString>
 #include <QQmlFile>
 #include <QDir>

@@ -8,7 +8,6 @@
 #include <QVector3D>
 #include <mpi.h>
 #include <lammps.h>
-
 #include "lammpscontroller.h"
 #include "atomstyle.h"
 #include "scripthandler.h"
@@ -32,7 +31,7 @@ private:
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
-    virtual void synchronizeRenderer(Renderable *renderableObject) override;
+    virtual void synchronizeRenderer(class Renderable *renderableObject);
     virtual void work() override;
     bool m_willPause = false;
     AtomStyle m_atomStyle;
