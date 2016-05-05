@@ -6,7 +6,7 @@ import SimVis 1.0
 
 Item {
     id: sliceRoot
-    property Slice slice
+//    property Slice slice
     width: parent.width
     height: columnLayout.height
     property real labelWidth: 90

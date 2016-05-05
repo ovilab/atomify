@@ -67,6 +67,7 @@ Item {
 
         AtomifyVisualizer {
             id: visualizer
+            focus: true
             simulator: desktopRoot.simulator
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
@@ -78,77 +79,78 @@ Item {
 //                camera: visualizer.camera
 //            }
 
-            SimulationSummary {
-                simulator: desktopRoot.simulator
-//                pressure: pressure
-//                temperature: temperature
-            }
+//            SimulationSummary {
+//                simulator: desktopRoot.simulator
+////                pressure: pressure
+////                temperature: temperature
+//            }
 
-            Rectangle {
-                id: scaleRectangle
-                width: parent.width
-                anchors.bottom: visualizer.bottom
+//            Rectangle {
+//                id: scaleRectangle
+//                width: parent.width
+//                anchors.bottom: visualizer.bottom
 
-                height: 25
-                radius: 4
-                color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
+//                height: 25
+//                radius: 4
+//                color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
 
-                RowLayout {
-                    id: scaleRow
-                    x: 10
-                    y: 3
-                    spacing: 10
+//                RowLayout {
+//                    id: scaleRow
+//                    x: 10
+//                    y: 3
+//                    spacing: 10
 
-                    Label {
-                        id: speedLabel
-                        text: "Simulation speed"
-                    }
+//                    Label {
+//                        id: speedLabel
+//                        text: "Simulation speed"
+//                    }
 
-                    Slider {
-                        id: speedSlider
-                        minimumValue: 1
-                        maximumValue: 1000
-                        stepSize: 1
-                        value: simulator.simulationSpeed
-                        onValueChanged: {
-                            if(simulator) {
-                                simulator.simulationSpeed = value
-                            }
-                        }
-                        Settings {
-                            property alias speedValue: speedSlider.value
-                        }
-                    }
+//                    Slider {
+//                        id: speedSlider
+//                        minimumValue: 1
+//                        maximumValue: 1000
+//                        stepSize: 1
+//                        value: simulator.simulationSpeed
+//                        onValueChanged: {
+//                            if(simulator) {
+//                                simulator.simulationSpeed = value
+//                            }
+//                        }
+//                        Settings {
+//                            property alias speedValue: speedSlider.value
+//                        }
+//                    }
 
-                    Label {
-                        text: "Sphere size"
-                    }
+//                    Label {
+//                        text: "Sphere size"
+//                    }
 
-                    Slider {
-                        id: scaleSlider
-                        minimumValue: 0.1
-                        maximumValue: 10.0
-                        value: visualizer.scale
-                        onValueChanged: {
-                            visualizer.scale = value
-                        }
-                        Settings {
-                            property alias scaleValue: scaleSlider.value
-                        }
-                    }
-                }
-            }
+//                    Slider {
+//                        id: scaleSlider
+//                        minimumValue: 0.1
+//                        maximumValue: 10.0
+//                        value: visualizer.scale
+//                        onValueChanged: {
+//                            visualizer.scale = value
+//                        }
+//                        Settings {
+//                            property alias scaleValue: scaleSlider.value
+//                        }
+//                    }
+//                }
+//            }
 
-            Label {
-                x: 0.5*(parent.width - width)
-                y: 25
-                color: Qt.rgba(1,1,1,0.5)
-                width: 200
-                height: 50
-                font.pixelSize: 50
-                text: "Paused"
-                visible: simulator.paused
-            }
+//            Label {
+//                x: 0.5*(parent.width - width)
+//                y: 25
+//                color: Qt.rgba(1,1,1,0.5)
+//                width: 200
+//                height: 50
+//                font.pixelSize: 50
+//                text: "Paused"
+//                visible: simulator.paused
+//            }
+//        }
         }
     }
 

@@ -1,95 +1,98 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import Atomify 1.0
-import SimVis 1.0
 
-Item {
+import Qt3D.Core 2.0
+import Qt3D.Render 2.0
+
+import QtQuick.Scene3D 2.0
+
+import SimVis 1.0
+import SimVis.ShaderNodes 1.0
+
+Scene3D {
     id: atomifyVisualizerRoot
-    property Visualizer visualizer: visualizer
     property AtomifySimulator simulator
     property real scale: 0.23
-    property Light light: light
-    property Slice slice: mySlice
-    property Camera camera: camera
     property bool addPeriodicCopies: false
+
+    aspects: ["render", "input"]
 
     Visualizer {
         id: visualizer
         property Spheres spheres: spheres
-        width: parent.width
-        height: parent.height
-        simulator: atomifyVisualizerRoot.simulator
-        camera: camera
-        backgroundColor: "#111"
-        navigator: navigator
-        onTouched: {
-            atomifyVisualizerRoot.focus = true
-        }
 
-//        SkyBox {
-//            id: skybox
-//            camera: camera
-//            texture: ":/1024.png"
-//        }
-
-        TrackballNavigator {
-            id: navigator
-            anchors.fill: parent
-            camera: camera
-        }
-//        FlyModeNavigator {
-//            id: navigator
-//            anchors.fill: parent
-//            camera: camera
-//        }
+        clearColor: "#012"
+        camera.aspectRatio: atomifyVisualizerRoot.width / atomifyVisualizerRoot.height
 
         Spheres {
             id: spheres
-            scale: atomifyVisualizerRoot.scale
-            color: "white"
-            visible: parent.visible
+            camera: visualizer.camera
+            sphereData: simulator.sphereData
 
-            Light {
-                id: light
-                ambientColor: spheres.color
-                specularColor: "white"
-                diffuseColor: spheres.color
-                ambientIntensity: 0.05
-                diffuseIntensity: 1.0
-                specularIntensity: 2.0
-                specular: true
-                shininess: 30.0
-                attenuation: 0.0
-                position: camera.position
-            }
+//            PeriodicCopies {
+//                id: periodicCopies
+//                systemSize: simulator.systemSize
+//                enabled: addPeriodicCopies
+//            }
 
-            PeriodicCopies {
-                id: periodicCopies
-                systemSize: simulator.systemSize
-                enabled: addPeriodicCopies
-            }
-
-            Slice {
-                id: mySlice
-                systemSize: simulator.systemSize
-                origo: Qt.vector3d(0,0,0)
-                distance: 0
-                normal: Qt.vector3d(1.0, 0.0, 0.0)
-                width: 5
-                enabled: false
-            }
+//            Slice {
+//                id: mySlice
+//                systemSize: simulator.systemSize
+//                origo: Qt.vector3d(0,0,0)
+//                distance: 0
+//                normal: Qt.vector3d(1.0, 0.0, 0.0)
+//                width: 5
+//                enabled: false
+//            }
 
 //            SkyBoxReflection {
 //                id: reflection
 //                skybox: skybox
 //                reflectivity: 0.2
 //            }
-        }
-    }
 
-    Camera {
-        id: camera
-        nearPlane: 0.1
-        farPlane: 100000
+            fragmentColor: StandardMaterial {
+                color: "lightgreen"
+                lights: ShaderGroup {
+                    Light {
+                        position: Qt.vector3d(20, -20, -60)
+                    }
+                    Light {
+                        position: Qt.vector3d(-20, 20, 60)
+                    }
+                    Light {
+                        position: Qt.vector3d(20, 20, -60)
+                    }
+                }
+            }
+        }
+
+        CylinderMesh {
+            id: mesh
+            radius: 1
+            length: 3
+            rings: 100
+            slices: 20
+        }
+
+        Transform {
+            id: transform
+            scale: 1.5
+            rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 45)
+        }
+
+        Material {
+            id: material
+            effect: Effect {}
+        }
+
+        Entity {
+            id: mainEntity
+            objectName: "mainEntity"
+            components: [ mesh, material, transform ]
+        }
+
+
     }
 }
