@@ -25,6 +25,8 @@ MyWorker::MyWorker() {
     m_sinceStart.start();
     m_elapsed.start();
     m_lammpsController.setWorker(this);
+    bondsData.bondLengths[1][2] = 2.0;
+    bondsData.bondLengths[2][1] = 2.0;
 }
 
 void AtomifySimulator::clearSimulatorControls()
@@ -57,27 +59,10 @@ CylinderData *AtomifySimulator::cylinderData() const
     return m_cylinderData;
 }
 
-void MyWorker::synchronizePositions(AtomifySimulator *simulator)
-{
-    LAMMPS *lammps = m_lammpsController.lammps();
+void MyWorker::updateBonds(LAMMPS *lammps) {
     if(!lammps) return;
-    //    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
-    m_lammpsController.setDataDirty(false);
-    m_atomStyle.setDirty(false);
-    QVector<QVector3D> positions;
-    if(m_addPeriodicCopies) {
-        // Each atom will have 27 copies
-        positions.resize(27*lammps->atom->natoms);
-        m_atomTypes.resize(27*lammps->atom->natoms);
-    } else {
-        positions.resize(lammps->atom->natoms);
-        m_atomTypes.resize(lammps->atom->natoms);
-    }
-    double position[3];
-    QList<QObject *> atomStyleDataList = m_atomStyle.data();
-    int numVisibleAtoms = 0;
-
     m_cylinders.clear();
+
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
     if(hasNeighborLists) {
         float maxR = 2.0;
@@ -113,8 +98,7 @@ void MyWorker::synchronizePositions(AtomifySimulator *simulator)
                 double delz = xi[2] - xj[2];
                 double rsq = delx*delx + dely*dely + delz*delz;
                 int jtype = type[j];
-                bool correctTypes = (itype==1 && jtype==2) || (itype==2 && jtype==1);
-                if(correctTypes && rsq < maxR*maxR ) {
+                if(rsq < bondsData.bondLengths[itype][jtype]*bondsData.bondLengths[itype][jtype] ) {
                     xi[0] -= lammps->domain->boxlo[0] + lammps->domain->prd_half[0];
                     xi[1] -= lammps->domain->boxlo[1] + lammps->domain->prd_half[1];
                     xi[2] -= lammps->domain->boxlo[2] + lammps->domain->prd_half[2];
@@ -134,8 +118,28 @@ void MyWorker::synchronizePositions(AtomifySimulator *simulator)
                 }
             }
         }
-        simulator->cylinderData()->setData(m_cylinders);
     }
+}
+
+void MyWorker::synchronizePositions(AtomifySimulator *simulator)
+{
+    LAMMPS *lammps = m_lammpsController.lammps();
+    if(!lammps) return;
+    //    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
+    m_lammpsController.setDataDirty(false);
+    m_atomStyle.setDirty(false);
+    QVector<QVector3D> positions;
+    if(m_addPeriodicCopies) {
+        // Each atom will have 27 copies
+        positions.resize(27*lammps->atom->natoms);
+        m_atomTypes.resize(27*lammps->atom->natoms);
+    } else {
+        positions.resize(lammps->atom->natoms);
+        m_atomTypes.resize(lammps->atom->natoms);
+    }
+    double position[3];
+    QList<QObject *> atomStyleDataList = m_atomStyle.data();
+    int numVisibleAtoms = 0;
 
     for(unsigned int i=0; i<lammps->atom->natoms; i++) {
         bool addAtom = true;
@@ -189,6 +193,9 @@ void MyWorker::synchronizePositions(AtomifySimulator *simulator)
 //    positions.resize(numVisibleAtoms);
 
     simulator->sphereData()->setPositions(positions);
+
+    updateBonds(lammps);
+    simulator->cylinderData()->setData(m_cylinders);
     m_atomTypes.resize(numVisibleAtoms);
 //    m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
 }
