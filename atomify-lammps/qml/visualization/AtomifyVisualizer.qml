@@ -73,15 +73,6 @@ Scene3D {
 //                skybox: skybox
 //                reflectivity: 0.2
 //            }
-
-            fragmentColor: StandardMaterial {
-                color: "lightgreen"
-                lights: ShaderGroup {
-                    Light {
-                        position: Qt.vector3d(50, 50, 50)
-                    }
-                }
-            }
         }
 
 //        CylinderMesh {

@@ -192,7 +192,7 @@ void MyWorker::synchronizePositions(AtomifySimulator *simulator)
 //    scales.resize(numVisibleAtoms);
 //    positions.resize(numVisibleAtoms);
 
-    simulator->sphereData()->setPositions(positions, QVector3D(1.0, 0.5, 1.0), 0.6);
+    simulator->sphereData()->setPositions(positions, QVector3D(1.0, 0.0, 0.0), 0.6);
 
     updateBonds(lammps);
     simulator->cylinderData()->setData(m_cylinders);
