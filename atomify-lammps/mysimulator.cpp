@@ -25,8 +25,8 @@ MyWorker::MyWorker() {
     m_sinceStart.start();
     m_elapsed.start();
     m_lammpsController.setWorker(this);
-    bondsData.bondLengths[1][2] = 2.0;
-    bondsData.bondLengths[2][1] = 2.0;
+    bondsData.bondLengths[1][2] = 2.6;
+    bondsData.bondLengths[2][1] = 2.6;
 }
 
 void AtomifySimulator::clearSimulatorControls()
@@ -111,8 +111,8 @@ void MyWorker::updateBonds(LAMMPS *lammps) {
                     QVector3D diff(delx, dely, delz);
                     cylinder.vertex1 = QVector3D(xi[0], xi[1], xi[2]) - diff.normalized() * 0.3;
                     cylinder.vertex2 = QVector3D(xj[0], xj[1], xj[2]) + diff.normalized() * 0.3;
-                    cylinder.radius1 = 0.05;
-                    cylinder.radius2 = 0.05;
+                    cylinder.radius1 = 0.15;
+                    cylinder.radius2 = 0.15;
 
                     m_cylinders.push_back(cylinder);
                 }
@@ -188,16 +188,18 @@ void MyWorker::synchronizePositions(AtomifySimulator *simulator)
 //            }
         }
     }
-//    colors.resize(numVisibleAtoms);
-//    scales.resize(numVisibleAtoms);
-//    positions.resize(numVisibleAtoms);
+    QVector<QVector3D> colors;
+    QVector<float> scales;
+    colors.resize(numVisibleAtoms);
+    scales.resize(numVisibleAtoms);
+    positions.resize(numVisibleAtoms);
+    m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
 
-    simulator->sphereData()->setPositions(positions, QVector3D(1.0, 0.0, 0.0), 0.6);
+    simulator->sphereData()->setData(positions, colors, scales);
 
     updateBonds(lammps);
     simulator->cylinderData()->setData(m_cylinders);
     m_atomTypes.resize(numVisibleAtoms);
-//    m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
 }
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)

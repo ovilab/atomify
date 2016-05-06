@@ -41,7 +41,7 @@ Scene3D {
             fragmentColor: StandardMaterial {
                 lights: ShaderGroup {
                     Light {
-                        position: Qt.vector3d(5, 5, 5)
+                        position: visualizer.camera.position
                     }
                 }
             }

@@ -1,5 +1,7 @@
 #include "atomstyle.h"
 
+#include <QVector3D>
+
 void AtomStyleData::fillInAtomStyleTypes()
 {
     m_atomStyleTypes.insert("hydrogen", QPair<float, QString>(1.20, "#FFFFFF"));
@@ -123,11 +125,11 @@ QVariant AtomStyle::model() const
     return m_model;
 }
 
-void AtomStyle::setColorsAndScales(QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes)
+void AtomStyle::setColorsAndScales(QVector<QVector3D> &colors, QVector<float> &scales, QVector<int> &atomTypes)
 {
     int numberOfAtoms = colors.size();
-    QColor defaultColor = QColor(255.0, 0.0, 0.0);
-    double defaultScale = 1.0;
+    QVector3D defaultColor = QVector3D(1.0, 0.0, 0.0);
+    double defaultScale = 0.6;
     int numberOfAtomsInStyle = m_data.size();
 
     for(unsigned int i=0; i<numberOfAtoms; i++) {
@@ -138,8 +140,8 @@ void AtomStyle::setColorsAndScales(QVector<QColor> &colors, QVector<float> &scal
             scales[i] = defaultScale;
         } else {
             AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(m_data[atomType-1]); // LAMMPS atom types start at 1
-            colors[i] = atomStyleData->color();
-            scales[i] = atomStyleData->scale();
+            colors[i] = QVector3D(atomStyleData->color().redF(), atomStyleData->color().greenF(), atomStyleData->color().blueF());
+            scales[i] = atomStyleData->scale()*defaultScale;
         }
     }
 }

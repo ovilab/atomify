@@ -50,7 +50,7 @@ public:
     explicit AtomStyle(QObject *parent = 0);
     ~AtomStyle();
     QVariant model() const;
-    void setColorsAndScales(QVector<QColor> &colors, QVector<float> &scales, QVector<int> &atomTypes);
+    void setColorsAndScales(QVector<QVector3D> &colors, QVector<float> &scales, QVector<int> &atomTypes);
     void setScaleAndColorForAtom(float scale, QString color, int atomType);
     void setData(QList<QObject*> data);
     QList<QObject*> data();
