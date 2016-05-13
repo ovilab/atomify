@@ -47,7 +47,6 @@ SOURCES += \
     lammpscontroller.cpp \
     highlighter.cpp \
     atomstyle.cpp \
-    fileio.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
     scriptcommand.cpp \
@@ -66,7 +65,6 @@ HEADERS += \
     lammpscontroller.h \
     highlighter.h \
     atomstyle.h \
-    fileio.h \
     scriptparser.h \
     scripthandler.h \
     scriptcommand.h \
