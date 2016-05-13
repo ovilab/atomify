@@ -22,6 +22,7 @@
 #include "LammpsWrappers/fixhistogram.h"
 #include "LammpsWrappers/rdf.h"
 #include "vendor.h"
+#include "datasource.h"
 
 int main(int argc, char *argv[])
 {
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<FixAverageTime>("Atomify",1, 0,"FixAverageTime");
     qmlRegisterType<FixHistogram>("Atomify", 1, 0, "FixHistogram");
     qmlRegisterType<RDF>("Atomify", 1, 0, "RDF");
+    qmlRegisterType<DataSource>("Atomify", 1, 0, "DataSource");
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
