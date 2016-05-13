@@ -12,7 +12,9 @@ import SimVis.ShaderNodes 1.0
 
 Scene3D {
     id: atomifyVisualizerRoot
+    property alias visualizer: visualizer
     property alias simulator: mySimulator
+    // property alias rdf: rdf
     property real scale: 0.23
     property bool addPeriodicCopies: false
 
@@ -34,6 +36,15 @@ Scene3D {
             scriptHandler: ScriptHandler {
                 atomStyle: myAtomStyle
             }
+
+//            RDF {
+//                id: rdf
+//                identifier: "rdf"
+//                atomPairs: [1, 1, 1, 2, 2, 2]
+//                numberOfBins: 100
+//                group: "all"
+//            }
+
         }
 
         Cylinders {
