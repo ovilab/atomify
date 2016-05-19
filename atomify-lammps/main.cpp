@@ -15,7 +15,6 @@
 #include "LammpsWrappers/cpcompute.h"
 #include "LammpsWrappers/cpvariable.h"
 #include "atomstyle.h"
-#include "fileio.h"
 #include "LammpsWrappers/nvt.h"
 #include "scripthandler.h"
 #include "LammpsWrappers/fixaveragetime.h"
