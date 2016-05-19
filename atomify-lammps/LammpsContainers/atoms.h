@@ -10,16 +10,16 @@
 #include <mpi.h>
 #include <lammps.h>
 
-struct AtomStyle {
-    int atomType;
-    QColor color;
-    float scale;
-    AtomStyle(int atomType, QColor color, float scale) {
-        this->atomType = atomType;
-        this->color = color;
-        this->scale = scale;
-    }
-};
+//struct AtomStyle {
+//    int atomType;
+//    QColor color;
+//    float scale;
+//    AtomStyle(int atomType, QColor color, float scale) {
+//        this->atomType = atomType;
+//        this->color = color;
+//        this->scale = scale;
+//    }
+//};
 
 struct AtomData {
     QVector<QVector3D> positions;

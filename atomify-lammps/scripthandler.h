@@ -25,7 +25,7 @@ private:
     QVector<ScriptCommand> m_previousSingleCommands;
     int m_currentPreviousSingleCommandIndex = 0;
     class LammpsState *m_lammpsState = nullptr;
-    AtomStyle* m_atomStyle = nullptr;
+    class AtomStyle* m_atomStyle = nullptr;
     QString m_tempLocation;
 
     Q_INVOKABLE QString previousSingleCommandString();

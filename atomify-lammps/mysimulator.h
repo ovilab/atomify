@@ -12,6 +12,8 @@
 #include "lammpscontroller.h"
 #include "atomstyle.h"
 #include "scripthandler.h"
+#include "LammpsContainers/atoms.h"
+#include "LammpsContainers/system.h"
 
 using namespace LAMMPS_NS;
 struct BondsData {
@@ -75,6 +77,8 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(bool addPeriodicCopies READ addPeriodicCopies WRITE setAddPeriodicCopies NOTIFY addPeriodicCopiesChanged)
     Q_PROPERTY(SphereData* sphereData READ sphereData NOTIFY sphereDataChanged)
     Q_PROPERTY(CylinderData* cylinderData READ cylinderData CONSTANT)
+    Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
+    Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
 public:
     AtomifySimulator();
     ~AtomifySimulator();
@@ -98,6 +102,8 @@ public:
     bool addPeriodicCopies() const;
     class SphereData* sphereData() const;
     class CylinderData* cylinderData() const;
+    Atoms* atoms() const;
+    System* system() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -115,6 +121,10 @@ public slots:
     void setNumberOfTimesteps(int numberOfTimesteps);
     void setCameraToSystemCenterDistance(float cameraToSystemCenterDistance);
     void setAddPeriodicCopies(bool addPeriodicCopies);
+
+    void setAtoms(Atoms* atoms);
+
+    void setSystem(System* system);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -135,6 +145,10 @@ signals:
     void cameraToSystemCenterDistanceChanged(float cameraToSystemCenterDistance);
     void addPeriodicCopiesChanged(bool addPeriodicCopies);
     void sphereDataChanged(SphereData* sphereData);
+
+    void atomsChanged(Atoms* atoms);
+
+    void systemChanged(System* system);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -160,6 +174,8 @@ private:
     SphereData* m_sphereData = nullptr;
     CylinderData* m_cylinderData = nullptr;
     QT3D_CLONEABLE(AtomifySimulator)
+    Atoms* m_atoms;
+    System* m_system;
 };
 
 #endif // MYSIMULATOR_H

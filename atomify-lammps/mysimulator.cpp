@@ -59,6 +59,16 @@ CylinderData *AtomifySimulator::cylinderData() const
     return m_cylinderData;
 }
 
+Atoms *AtomifySimulator::atoms() const
+{
+    return m_atoms;
+}
+
+System *AtomifySimulator::system() const
+{
+    return m_system;
+}
+
 void MyWorker::updateBonds(LAMMPS *lammps) {
     if(!lammps) return;
     m_cylinders.clear();
@@ -532,4 +542,22 @@ void AtomifySimulator::setAddPeriodicCopies(bool addPeriodicCopies)
 
     m_addPeriodicCopies = addPeriodicCopies;
     emit addPeriodicCopiesChanged(addPeriodicCopies);
+}
+
+void AtomifySimulator::setAtoms(Atoms *atoms)
+{
+    if (m_atoms == atoms)
+        return;
+
+    m_atoms = atoms;
+    emit atomsChanged(atoms);
+}
+
+void AtomifySimulator::setSystem(System *system)
+{
+    if (m_system == system)
+        return;
+
+    m_system = system;
+    emit systemChanged(system);
 }
