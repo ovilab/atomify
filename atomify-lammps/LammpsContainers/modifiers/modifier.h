@@ -5,7 +5,7 @@
 #include "../atoms.h"
 class Modifier
 {
-private:
+protected:
     class Atoms *m_atoms;
     class System *m_system;
 public:

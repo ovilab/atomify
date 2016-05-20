@@ -63,9 +63,9 @@ const ScriptCommand& ScriptHandler::nextCommand()
     return m_currentCommand;
 }
 
-AtomStyle *ScriptHandler::atomStyle() const
+Atoms *ScriptHandler::atoms() const
 {
-    return m_atomStyle;
+    return m_atoms;
 }
 
 
@@ -107,10 +107,11 @@ QString ScriptHandler::lastSingleCommandString()
     else return QString("");
 }
 
-void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
+void ScriptHandler::setAtoms(Atoms *atoms)
 {
-    m_atomStyle = atomStyle;
+    m_atoms = atoms;
 }
+
 #include <iostream>
 using namespace std;
 void ScriptHandler::runFile(QString filename)
@@ -162,17 +163,18 @@ void ScriptHandler::parseGUICommand(QString command)
 
     if(m_parser.isAtomType(command)) {
         m_parser.atomType(command, [&](QString atomTypeName, int atomType) {
-            if(m_atomStyle) m_atomStyle->setAtomType(atomTypeName, atomType);
+            // TODO: Switch arguments so they match the m_atoms->setAtomType call
+            if(m_atoms) m_atoms->setAtomType(atomType, atomTypeName);
         });
         return;
     }
 
-    if(m_parser.isAtomColorAndSize(command)) {
-        m_parser.AtomColorAndSize(command, [&](float scale, QString color, int atomType) {
-            if(m_atomStyle) m_atomStyle->setScaleAndColorForAtom(scale, color, atomType);
-        });
-        return;
-    }
+//    if(m_parser.isAtomColorAndSize(command)) {
+//        m_parser.AtomColorAndSize(command, [&](float scale, QString color, int atomType) {
+//            if(m_atomStyle) m_atomStyle->setScaleAndColorForAtom(scale, color, atomType);
+//        });
+//        return;
+//    }
 
     if(m_lammpsState) {
         if(m_parser.isStaticSystem(command)) {

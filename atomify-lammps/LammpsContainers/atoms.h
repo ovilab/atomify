@@ -10,22 +10,21 @@
 #include <mpi.h>
 #include <lammps.h>
 
-//struct AtomStyle {
-//    int atomType;
-//    QColor color;
-//    float scale;
-//    AtomStyle(int atomType, QColor color, float scale) {
-//        this->atomType = atomType;
-//        this->color = color;
-//        this->scale = scale;
-//    }
-//};
+struct AtomStyle {
+    QColor color;
+    float scale;
+    AtomStyle(float scale, QColor color) {
+        this->color = color;
+        this->scale = scale;
+    }
+};
 
 struct AtomData {
     QVector<QVector3D> positions;
     QVector<QVector3D> colors;
     QVector<float> radii;
-    QVector<int> atomTypes;
+    QVector<int> types;
+    bool isValid();
 };
 
 class Atoms : public QObject
@@ -39,6 +38,9 @@ public:
     void updateData();
     SphereData* sphereData() const;
     CylinderData* cylinderData() const;
+    QVector<class Modifier*> &modifiers();
+    QVector<AtomStyle*> &atomStyles();
+    void setAtomType(int atomType, QString atomTypeName);
 
 public slots:
     void setSphereData(SphereData* sphereData);
@@ -50,6 +52,8 @@ signals:
 
 private:
     AtomData m_atomData;
+    QMap<QString, AtomStyle*> m_atomStyleTypes;
+    QVector<AtomStyle*> m_atomStyles;
     SphereData* m_sphereData = nullptr;
     CylinderData* m_cylinderData = nullptr;
     QVector<class Modifier*> m_modifiers;

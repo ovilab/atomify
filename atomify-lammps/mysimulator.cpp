@@ -18,7 +18,8 @@
 #include <fstream>
 #include <memory>
 #include <QStandardPaths>
-
+#include "LammpsContainers/atoms.h"
+#include "LammpsContainers/modifiers/modifiers.h"
 using namespace std;
 
 MyWorker::MyWorker() {
@@ -133,83 +134,82 @@ void MyWorker::updateBonds(LAMMPS *lammps) {
 
 void MyWorker::synchronizePositions(AtomifySimulator *simulator)
 {
-    LAMMPS *lammps = m_lammpsController.lammps();
-    if(!lammps) return;
-    //    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
-    m_lammpsController.setDataDirty(false);
-    m_atomStyle.setDirty(false);
-    QVector<QVector3D> positions;
-    if(m_addPeriodicCopies) {
-        // Each atom will have 27 copies
-        positions.resize(27*lammps->atom->natoms);
-        m_atomTypes.resize(27*lammps->atom->natoms);
-    } else {
-        positions.resize(lammps->atom->natoms);
-        m_atomTypes.resize(lammps->atom->natoms);
-    }
-    double position[3];
-    QList<QObject *> atomStyleDataList = m_atomStyle.data();
-    int numVisibleAtoms = 0;
+//    LAMMPS *lammps = m_lammpsController.lammps();
+//    if(!lammps) return;
+//    //    if(!m_lammpsController.dataDirty() && !m_atomStyle.dirty()) return;
+//    m_lammpsController.setDataDirty(false);
+//    QVector<QVector3D> positions;
+//    if(m_addPeriodicCopies) {
+//        // Each atom will have 27 copies
+//        positions.resize(27*lammps->atom->natoms);
+//        m_atomTypes.resize(27*lammps->atom->natoms);
+//    } else {
+//        positions.resize(lammps->atom->natoms);
+//        m_atomTypes.resize(lammps->atom->natoms);
+//    }
+//    double position[3];
+//    QList<QObject *> atomStyleDataList = m_atomStyle.data();
+//    int numVisibleAtoms = 0;
 
-    for(unsigned int i=0; i<lammps->atom->natoms; i++) {
-        bool addAtom = true;
-        int atomType = lammps->atom->type[i];
+//    for(unsigned int i=0; i<lammps->atom->natoms; i++) {
+//        bool addAtom = true;
+//        int atomType = lammps->atom->type[i];
 
-        if(atomType-1 < atomStyleDataList.size()) {
-            // If not, we haven't added this atom to the list yet. Skip this atom type then
-            AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(atomStyleDataList[atomType-1]); // LAMMPS atom types start at 1
-            if(!atomStyleData->visible()) addAtom = false;
-        } else {
-            addAtom = false;
-        }
+//        if(atomType-1 < atomStyleDataList.size()) {
+//            // If not, we haven't added this atom to the list yet. Skip this atom type then
+//            AtomStyleData *atomStyleData = qobject_cast<AtomStyleData*>(atomStyleDataList[atomType-1]); // LAMMPS atom types start at 1
+//            if(!atomStyleData->visible()) addAtom = false;
+//        } else {
+//            addAtom = false;
+//        }
 
-        if(addAtom) {
-            position[0] = lammps->atom->x[i][0];
-            position[1] = lammps->atom->x[i][1];
-            position[2] = lammps->atom->x[i][2];
-            lammps->domain->remap(position);
-            position[0] -= lammps->domain->boxlo[0] + lammps->domain->prd_half[0];
-            position[1] -= lammps->domain->boxlo[1] + lammps->domain->prd_half[1];
-            position[2] -= lammps->domain->boxlo[2] + lammps->domain->prd_half[2];
+//        if(addAtom) {
+//            position[0] = lammps->atom->x[i][0];
+//            position[1] = lammps->atom->x[i][1];
+//            position[2] = lammps->atom->x[i][2];
+//            lammps->domain->remap(position);
+//            position[0] -= lammps->domain->boxlo[0] + lammps->domain->prd_half[0];
+//            position[1] -= lammps->domain->boxlo[1] + lammps->domain->prd_half[1];
+//            position[2] -= lammps->domain->boxlo[2] + lammps->domain->prd_half[2];
 
-//            if(spheres->camera() && m_addPeriodicCopies) {
-//                QVector3D systemSize = m_lammpsController.systemSize();
-//                for(int dx=-1; dx<=1; dx++) {
-//                    for(int dy=-1; dy<=1; dy++) {
-//                        for(int dz=-1; dz<=1; dz++) {
-//                            QVector3D pos = QVector3D(position[0], position[1], position[2]) + QVector3D(dx*systemSize[0], dy*systemSize[1], dz*systemSize[2]);
-//                            QVector3D cameraToPos = pos - spheres->camera()->position();
-//                            if(QVector3D::dotProduct(cameraToPos, spheres->camera()->viewVector()) < 0) continue;
+////            if(spheres->camera() && m_addPeriodicCopies) {
+////                QVector3D systemSize = m_lammpsController.systemSize();
+////                for(int dx=-1; dx<=1; dx++) {
+////                    for(int dy=-1; dy<=1; dy++) {
+////                        for(int dz=-1; dz<=1; dz++) {
+////                            QVector3D pos = QVector3D(position[0], position[1], position[2]) + QVector3D(dx*systemSize[0], dy*systemSize[1], dz*systemSize[2]);
+////                            QVector3D cameraToPos = pos - spheres->camera()->position();
+////                            if(QVector3D::dotProduct(cameraToPos, spheres->camera()->viewVector()) < 0) continue;
 
-//                            positions[numVisibleAtoms][0] = pos[0];
-//                            positions[numVisibleAtoms][1] = pos[1];
-//                            positions[numVisibleAtoms][2] = pos[2];
-//                            m_atomTypes[numVisibleAtoms] = atomType;
-//                            numVisibleAtoms++;
-//                        }
-//                    }
-//                }
-//            } else {
-                positions[numVisibleAtoms][0] = position[0];
-                positions[numVisibleAtoms][1] = position[1];
-                positions[numVisibleAtoms][2] = position[2];
-                m_atomTypes[numVisibleAtoms] = atomType;
-                numVisibleAtoms++;
-//            }
-        }
-    }
-    QVector<QVector3D> colors;
-    QVector<float> scales;
-    colors.resize(numVisibleAtoms);
-    scales.resize(numVisibleAtoms);
-    positions.resize(numVisibleAtoms);
-    m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
+////                            positions[numVisibleAtoms][0] = pos[0];
+////                            positions[numVisibleAtoms][1] = pos[1];
+////                            positions[numVisibleAtoms][2] = pos[2];
+////                            m_atomTypes[numVisibleAtoms] = atomType;
+////                            numVisibleAtoms++;
+////                        }
+////                    }
+////                }
+////            } else {
+//                positions[numVisibleAtoms][0] = position[0];
+//                positions[numVisibleAtoms][1] = position[1];
+//                positions[numVisibleAtoms][2] = position[2];
+//                m_atomTypes[numVisibleAtoms] = atomType;
+//                numVisibleAtoms++;
+////            }
+//        }
+//    }
+//    QVector<QVector3D> colors;
+//    QVector<float> scales;
+//    colors.resize(numVisibleAtoms);
+//    scales.resize(numVisibleAtoms);
+//    positions.resize(numVisibleAtoms);
+//    m_atomStyle.setColorsAndScales(colors, scales, m_atomTypes);
 
-    simulator->sphereData()->setData(positions, colors, scales);
+//    simulator->sphereData()->setData(positions, colors, scales);
 
-    updateBonds(lammps);
-    simulator->cylinderData()->setData(m_cylinders);
-    m_atomTypes.resize(numVisibleAtoms);
+//    updateBonds(lammps);
+//    simulator->cylinderData()->setData(m_cylinders);
+//    m_atomTypes.resize(numVisibleAtoms);
 }
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
@@ -227,16 +227,11 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         emit atomifySimulator->lammpsDidReset();
     }
 
-    if(atomifySimulator->atomStyle() != nullptr) {
-        // Sync new atom styles from Simulator (QML) to Worker
-        if(atomifySimulator->atomStyle()->dirty()) {
-            m_atomStyle.setData(atomifySimulator->atomStyle()->data());
-            m_atomStyle.setDirty(atomifySimulator->atomStyle()->dirty());
-            atomifySimulator->atomStyle()->setDirty(false);
-        }
-    }
-
-    synchronizePositions(atomifySimulator);
+    // synchronizePositions(atomifySimulator);
+    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->atoms());
+    atomifySimulator->atoms()->synchronize(m_lammpsController.lammps());
+    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
+    atomifySimulator->atoms()->updateData();
 
     // Sync values from QML and simulator
     m_lammpsController.setPaused(atomifySimulator->paused());
@@ -345,11 +340,6 @@ double AtomifySimulator::simulationTime() const
     return m_simulationTime;
 }
 
-AtomStyle *AtomifySimulator::atomStyle() const
-{
-    return m_atomStyle;
-}
-
 int AtomifySimulator::numberOfAtoms() const
 {
     return m_numberOfAtoms;
@@ -397,8 +387,12 @@ int AtomifySimulator::numberOfTimesteps() const
 
 AtomifySimulator::AtomifySimulator()
     : m_sphereData(new SphereData(this)),
-    m_cylinderData(new CylinderData(this))
+    m_cylinderData(new CylinderData(this)),
+    m_scriptHandler(new ScriptHandler()),
+    m_atoms(new Atoms()),
+    m_system(new System())
 {
+    m_atoms->modifiers().append(new ColorModifier(m_atoms, m_system));
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -435,15 +429,6 @@ void AtomifySimulator::setSimulationTime(double simulationTime)
     emit simulationTimeChanged(simulationTime);
 }
 
-void AtomifySimulator::setAtomStyle(AtomStyle *atomStyle)
-{
-    if (m_atomStyle == atomStyle)
-        return;
-
-    m_atomStyle = atomStyle;
-    emit atomStyleChanged(atomStyle);
-}
-
 void AtomifySimulator::setNumberOfAtoms(int numberOfAtoms)
 {
     if (m_numberOfAtoms == numberOfAtoms)
@@ -459,7 +444,6 @@ void AtomifySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
         return;
 
     m_numberOfAtomTypes = numberOfAtomTypes;
-    if(m_atomStyle) m_atomStyle->setMinimumSize(numberOfAtomTypes);
     emit numberOfAtomTypesChanged(numberOfAtomTypes);
 }
 

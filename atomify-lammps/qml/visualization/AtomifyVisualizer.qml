@@ -30,12 +30,6 @@ Scene3D {
         AtomifySimulator {
             id: mySimulator
             simulationSpeed: 1
-            atomStyle: AtomStyle {
-                id: myAtomStyle
-            }
-            scriptHandler: ScriptHandler {
-                atomStyle: myAtomStyle
-            }
 
 //            RDF {
 //                id: rdf
@@ -47,21 +41,21 @@ Scene3D {
 
         }
 
-        Cylinders {
-            cylinderData: simulator.cylinderData
-            fragmentColor: StandardMaterial {
-                lights: ShaderGroup {
-                    Light {
-                        position: visualizer.camera.position
-                    }
-                }
-            }
-        }
+//        Cylinders {
+//            cylinderData: simulator.atoms.cylinderData
+//            fragmentColor: StandardMaterial {
+//                lights: ShaderGroup {
+//                    Light {
+//                        position: visualizer.camera.position
+//                    }
+//                }
+//            }
+//        }
 
         Spheres {
             id: spheres
             camera: visualizer.camera
-            sphereData: simulator.sphereData
+            sphereData: simulator.atoms.sphereData
 
 //            PeriodicCopies {
 //                id: periodicCopies
