@@ -14,7 +14,7 @@ void ColorModifier::apply(AtomData &atomData)
         int atomType = atomData.types[i];
         const QColor &color = atomStyles[atomType]->color;
 
-        atomData.radii[i] = atomStyles[atomType]->scale;
+        atomData.radii[i] = atomStyles[atomType]->radius*0.4; // factor because it looks better
         atomData.colors[i] = QVector3D(color.redF(), color.greenF(), color.blueF());
     }
 }

@@ -15,19 +15,6 @@
 #include "LammpsContainers/system.h"
 
 using namespace LAMMPS_NS;
-struct BondsData {
-    QVector<QVector<float>> bondLengths;
-    BondsData() {
-        int numTypes = 10;
-        bondLengths.resize(numTypes);
-        for(QVector<float> &vec : bondLengths) {
-            vec.resize(numTypes);
-            for(float &length : vec) {
-                length = 0.0;
-            }
-        }
-    }
-};
 
 class MyWorker : public SimulatorWorker
 {
@@ -44,7 +31,6 @@ private:
     bool m_addPeriodicCopies = false;
     float m_cameraToSystemCenterDistance = 1.0;
     QVector<CylinderVBOData> m_cylinders;
-    BondsData bondsData;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
@@ -52,7 +38,6 @@ private:
     bool m_willPause = false;
     QVector<int> m_atomTypes;
     void synchronizePositions(AtomifySimulator *simulator);
-    void updateBonds(LAMMPS *lammps);
 };
 
 class AtomifySimulator : public Simulator

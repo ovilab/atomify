@@ -1,6 +1,8 @@
 #include "atoms.h"
 #include <atom.h>
 #include <domain.h>
+#include <neighbor.h>
+#include <neigh_list.h>
 #include "modifiers/modifiers.h"
 using namespace LAMMPS_NS;
 
@@ -10,7 +12,7 @@ Atoms::Atoms()
     // Atomic radii from wikipedia (van der waals radius)
 
     m_sphereData = new SphereData();
-    m_cylinderData = new CylinderData();
+    m_bondData = new BondData();
     m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#FFFFFF"));
     m_atomStyleTypes.insert("helium", new AtomStyle(1.40, "#D9FFFF"));
     m_atomStyleTypes.insert("lithium", new AtomStyle(1.82, "#CC80FF"));
@@ -91,6 +93,8 @@ void Atoms::synchronize(LAMMPS *lammps)
         m_atomData.positions[i][1] = position[1];
         m_atomData.positions[i][2] = position[2];
     }
+
+    copyNeighborlist(lammps);
 }
 
 void Atoms::updateData()
@@ -111,24 +115,83 @@ void Atoms::updateData()
     }
 
     generateSphereData(atomData);
+    generateBondData(atomData);
 }
 
 void Atoms::generateSphereData(AtomData &atomData) {
-    m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
+    // m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
+    QVector<SphereVBOData> spheres;
+    SphereVBOData sphere1;
+    sphere1.position = QVector3D(4, 0, 0);
+    sphere1.radius = 1.0;
+    sphere1.color = QVector3D(1.0, 0.0, 0.0);
+
+    SphereVBOData sphere2;
+    sphere2.position = QVector3D(-4, -2, 0);
+    sphere2.radius = 1.0;
+    sphere2.color = QVector3D(0.0, 1.0, 0.0);
+
+    BondVBOData bond;
+    bond.vertex1 = sphere1.position;
+    bond.vertex2 = sphere2.position;
+    bond.radius1 = 0.2;
+    bond.radius2 = 0.2;
+    bond.sphereRadius1 = sphere1.radius;
+    bond.sphereRadius2 = sphere2.radius;
+
+    spheres.push_back(sphere1);
+    spheres.push_back(sphere2);
+    m_sphereData->setData(spheres);
 }
 
-void Atoms::generateCylinderData(AtomData &atomData) {
+void Atoms::generateBondData(AtomData &atomData) {
+//    QVector<BondVBOData> bonds;
+//    if(neighborlist.numNeighbors.size()==0) return;
 
+//    for(int i=0; i<atomData.positions.size(); i++) {
+//        const QVector3D &position_i = atomData.positions[i];
+//        for(int jj=0; jj<neighborlist.numNeighbors[i]; jj++) {
+//            int j = neighborlist.neighbors[i][jj];
+//            const QVector3D &position_j = atomData.positions[j];
+//            BondVBOData bond;
+//            bond.vertex1 = position_i;
+//            bond.vertex2 = position_j;
+//            bond.radius1 = 0.15;
+//            bond.radius2 = 0.15;
+//            bond.sphereRadius1 = atomData.radii[i];
+//            bond.sphereRadius2 = atomData.radii[j];
+
+//            bonds.push_back(bond);
+//        }
+//    }
+//    m_bondData->setData(bonds);
+
+    QVector<BondVBOData> bonds;
+    SphereVBOData sphere1;
+    sphere1.position = QVector3D(4, 0, 0);
+    sphere1.radius = 1.0;
+    sphere1.color = QVector3D(1.0, 0.0, 0.0);
+
+    SphereVBOData sphere2;
+    sphere2.position = QVector3D(-4, -2, 0);
+    sphere2.radius = 1.0;
+    sphere2.color = QVector3D(0.0, 1.0, 0.0);
+
+    BondVBOData bond;
+    bond.vertex1 = sphere1.position;
+    bond.vertex2 = sphere2.position;
+    bond.radius1 = 0.2;
+    bond.radius2 = 0.2;
+    bond.sphereRadius1 = 0.1;
+    bond.sphereRadius2 = 0.1;
+
+    bonds.push_back(bond);
+    m_bondData->setData(bonds);
 }
 
 SphereData *Atoms::sphereData() const
 {
     return m_sphereData;
-}
-
-CylinderData *Atoms::cylinderData() const
-{
-    return m_cylinderData;
 }
 
 QVector<Modifier *> &Atoms::modifiers()
@@ -151,22 +214,60 @@ void Atoms::setAtomType(int atomType, QString elementName)
     m_atomStyles[atomType] = m_atomStyleTypes[elementName];
 }
 
-void Atoms::setSphereData(SphereData *sphereData)
+BondData *Atoms::bondData() const
 {
-    if (m_sphereData == sphereData)
-        return;
-
-    m_sphereData = sphereData;
-    emit sphereDataChanged(sphereData);
+    return m_bondData;
 }
 
-void Atoms::setCylinderData(CylinderData *cylinderData)
+void Atoms::copyNeighborlist(LAMMPS *lammps)
 {
-    if (m_cylinderData == cylinderData)
-        return;
+    bool hasNeighborLists = lammps->neighbor->nlist > 0;
+    if(hasNeighborLists) {
+        NeighList *list = lammps->neighbor->lists[0];
+        int inum = list->inum;
+        int *ilist = list->ilist;
+        int *numneigh = list->numneigh;
+        int **firstneigh = list->firstneigh;
+        double **x = lammps->atom->x;
+        int *type = lammps->atom->type;
+        neighborlist.neighbors.resize(inum);
+        neighborlist.numNeighbors.resize(inum);
 
-    m_cylinderData = cylinderData;
-    emit cylinderDataChanged(cylinderData);
+        for (int ii = 0; ii < inum; ii++) {
+            int i = ilist[ii];
+            double xi[3];
+            xi[0] = x[i][0];
+            xi[1] = x[i][1];
+            xi[2] = x[i][2];
+            int itype = type[i];
+            int *jlist = firstneigh[i];
+            int jnum = numneigh[i];
+            neighborlist.numNeighbors[i] = 0;
+            neighborlist.neighbors[i].resize(jnum);
+
+            for (int jj = 0; jj < jnum; jj++) {
+                int j = jlist[jj];
+                j &= NEIGHMASK;
+                double xj[3];
+                xj[0] = x[j][0];
+                xj[1] = x[j][1];
+                xj[2] = x[j][2];
+                lammps->domain->remap(xi);
+                lammps->domain->remap(xj);
+
+                double delx = xi[0] - xj[0];
+                double dely = xi[1] - xj[1];
+                double delz = xi[2] - xj[2];
+                double rsq = delx*delx + dely*dely + delz*delz;
+                int jtype = type[j];
+                if(rsq < bondsStyle.bondLengths[itype][jtype]*bondsStyle.bondLengths[itype][jtype] ) {
+                    neighborlist.neighbors[i][ neighborlist.numNeighbors[i] ] = j;
+                    neighborlist.numNeighbors[i]++;
+                }
+            }
+            neighborlist.neighbors.resize(neighborlist.numNeighbors[i]);
+        }
+    }
 }
 
 bool AtomData::isValid()

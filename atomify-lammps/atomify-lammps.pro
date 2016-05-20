@@ -34,8 +34,8 @@ QML_IMPORT_PATH =
 
 # Default rules for deployment.
 include(deployment.pri)
-include(../SimVis/examples/examples_vendor.pri) # replace with qpm installation
-#include(../SimVis/package_vendor.pri)
+#include(../SimVis/examples/examples_vendor.pri) # replace with qpm installation
+include(../SimVis/package_vendor.pri)
 
 ios {
     QMAKE_INFO_PLIST = iOS.plist

@@ -30,81 +30,17 @@ Scene3D {
         AtomifySimulator {
             id: mySimulator
             simulationSpeed: 1
-
-//            RDF {
-//                id: rdf
-//                identifier: "rdf"
-//                atomPairs: [1, 1, 1, 2, 2, 2]
-//                numberOfBins: 100
-//                group: "all"
-//            }
-
         }
-
-//        Cylinders {
-//            cylinderData: simulator.atoms.cylinderData
-//            fragmentColor: StandardMaterial {
-//                lights: ShaderGroup {
-//                    Light {
-//                        position: visualizer.camera.position
-//                    }
-//                }
-//            }
-//        }
 
         Spheres {
             id: spheres
             camera: visualizer.camera
             sphereData: simulator.atoms.sphereData
-
-//            PeriodicCopies {
-//                id: periodicCopies
-//                systemSize: simulator.systemSize
-//                enabled: addPeriodicCopies
-//            }
-
-//            Slice {
-//                id: mySlice
-//                systemSize: simulator.systemSize
-//                origo: Qt.vector3d(0,0,0)
-//                distance: 0
-//                normal: Qt.vector3d(1.0, 0.0, 0.0)
-//                width: 5
-//                enabled: false
-//            }
-
-//            SkyBoxReflection {
-//                id: reflection
-//                skybox: skybox
-//                reflectivity: 0.2
-//            }
         }
 
-//        CylinderMesh {
-//            id: mesh
-//            radius: 1
-//            length: 3
-//            rings: 100
-//            slices: 20
-//        }
-
-//        Transform {
-//            id: transform
-//            scale: 1.5
-//            rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 45)
-//        }
-
-//        Material {
-//            id: material
-//            effect: Effect {}
-//        }
-
-//        Entity {
-//            id: mainEntity
-//            objectName: "mainEntity"
-//            components: [ mesh, material, transform ]
-//        }
-
-
+        Bonds {
+            id: bonds
+            bondData: simulator.atoms.bondData
+        }
     }
 }
