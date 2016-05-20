@@ -5,7 +5,6 @@ import Atomify 1.0
 import QtQuick.Dialogs 1.2
 
 Item {
-    property AtomStyle atomStyle
     height: listview.height+button.height
     width: parent.width
 
@@ -109,8 +108,7 @@ Item {
 
     ListModel {
         id: atomDataModel
-        // Colors from JMOL: http://jmol.sourceforge.net/jscolors/
-        // Atomic radii from wikipedia (van der waals radius)
+
         ListElement { text: "Custom"; radius: 100; color: "#FFFFFF" }
         ListElement { text: "1: Hydrogen (H)"; radius: 120; color: "#FFFFFF" }
         ListElement { text: "2: Helium (He)"; radius: 140; color: "#D9FFFF" }

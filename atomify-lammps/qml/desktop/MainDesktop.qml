@@ -14,6 +14,7 @@ Item {
     id: desktopRoot
 
     property alias simulator: visualizer.simulator
+    property alias visualizer: visualizer
 
     Component.onCompleted: {
         simulator.errorInLammpsScript.connect(editorTab.reportError)
@@ -51,6 +52,10 @@ Item {
                     id: myEditorTab
                     anchors.fill: parent
                     simulator: desktopRoot.simulator
+                    visualizer: desktopRoot.visualizer
+                    onVisualizerChanged: {
+                        console.log("Visualizer: ", visualizer)
+                    }
                 }
             }
 

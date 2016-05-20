@@ -4,8 +4,8 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions svg charts
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
-#QMAKE_CXXFLAGS += -g -fopenmp
-#LIBS += -fopenmp
+QMAKE_CXXFLAGS += -g -fopenmp
+LIBS += -fopenmp
 CONFIG += warn_off
 
 # lammps.pri includes the path and libs to lammps
@@ -34,8 +34,8 @@ QML_IMPORT_PATH =
 
 # Default rules for deployment.
 include(deployment.pri)
-include(../SimVis/examples/examples_vendor.pri) # replace with qpm installation
-
+#include(../SimVis/examples/examples_vendor.pri) # replace with qpm installation
+include(../SimVis/package_vendor.pri)
 
 ios {
     QMAKE_INFO_PLIST = iOS.plist
@@ -47,7 +47,6 @@ SOURCES += \
     lammpscontroller.cpp \
     highlighter.cpp \
     atomstyle.cpp \
-    fileio.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
     scriptcommand.cpp \
@@ -59,14 +58,17 @@ SOURCES += \
     LammpsWrappers/fixaveragetime.cpp \
     LammpsWrappers/fixhistogram.cpp \
     LammpsWrappers/rdf.cpp \
-    datasource.cpp
+    datasource.cpp \
+    LammpsContainers/atoms.cpp \
+    LammpsContainers/system.cpp \
+    LammpsContainers/modifiers/modifier.cpp \
+    LammpsContainers/modifiers/colormodifier.cpp
 
 HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
     atomstyle.h \
-    fileio.h \
     scriptparser.h \
     scripthandler.h \
     scriptcommand.h \
@@ -78,7 +80,12 @@ HEADERS += \
     LammpsWrappers/fixaveragetime.h \
     LammpsWrappers/fixhistogram.h \
     LammpsWrappers/rdf.h \
-    datasource.h
+    datasource.h \
+    LammpsContainers/atoms.h \
+    LammpsContainers/system.h \
+    LammpsContainers/modifiers/modifier.h \
+    LammpsContainers/modifiers/colormodifier.h \
+    LammpsContainers/modifiers/modifiers.h
 
 # Temporary use of quickcontrols2 without install
 

@@ -54,7 +54,8 @@ Item {
 
     SimulationLoader {
         id: initialSimulationLoader
-        folder: "qrc:/simulations/diffusion/simple_diffusion"
+        // folder: "qrc:/simulations/diffusion/simple_diffusion"
+        folder: "qrc:/simulations/silica/nanoporous"
         onLoaded: {
              loadSimulation(item)
         }
