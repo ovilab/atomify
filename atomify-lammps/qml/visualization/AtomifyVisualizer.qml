@@ -39,11 +39,11 @@ Scene3D {
         Cylinders {
             cylinderData: simulator.cylinderData
             fragmentColor: StandardMaterial {
-                lights: ShaderGroup {
+                lights: [
                     Light {
                         position: Qt.vector3d(5, 5, 5)
                     }
-                }
+                ]
             }
         }
 
