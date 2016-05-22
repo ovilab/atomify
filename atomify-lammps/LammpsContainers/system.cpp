@@ -1,5 +1,7 @@
 #include "system.h"
 #include <domain.h>
+#include <atom.h>
+
 using namespace LAMMPS_NS;
 
 System::System()
@@ -10,9 +12,27 @@ System::System()
 void System::synchronize(LAMMPS *lammps)
 {
     Domain *domain = lammps->domain;
+    Atom *atom = lammps->atom;
+    if(!domain || !atom) return; // These may not be set in LAMMPS (they probably are, but an easy test).
+
+    bool originDidChange = false;
+    bool sizeDidChange = false;
     for(int i=0; i<3; i++) {
-        m_origin[i] = domain->boxlo[i];
-        m_size[i] = domain->prd[i];
+        if(m_origin[i] != domain->boxlo[i]) {
+            m_origin[i] = domain->boxlo[i];
+            originDidChange  = true;
+        }
+        if(m_size[i] != domain->prd[i]) {
+            m_size[i] = domain->prd[i];
+            sizeDidChange = true;
+        }
+    }
+
+    if(originDidChange) emit originChanged(m_origin);
+    if(sizeDidChange) emit sizeChanged(m_size);
+    if(m_numberOfAtoms != lammps->atom->natoms) {
+        m_numberOfAtoms = lammps->atom->natoms;
+        emit numberOfAtomsChanged(m_numberOfAtoms);
     }
 }
 
@@ -26,20 +46,7 @@ QVector3D System::size() const
     return m_size;
 }
 
-void System::setOrigin(QVector3D origin)
+int System::numberOfAtoms() const
 {
-    if (m_origin == origin)
-        return;
-
-    m_origin = origin;
-    emit originChanged(origin);
-}
-
-void System::setSize(QVector3D size)
-{
-    if (m_size == size)
-        return;
-
-    m_size = size;
-    emit sizeChanged(size);
+    return m_numberOfAtoms;
 }
