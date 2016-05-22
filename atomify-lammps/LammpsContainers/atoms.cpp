@@ -4,15 +4,16 @@
 #include <neighbor.h>
 #include <neigh_list.h>
 #include "modifiers/modifiers.h"
+#include "mysimulator.h"
 using namespace LAMMPS_NS;
 
-Atoms::Atoms()
+Atoms::Atoms(AtomifySimulator *simulator)
 {
     // Colors from JMOL: http://jmol.sourceforge.net/jscolors/
     // Atomic radii from wikipedia (van der waals radius)
 
-    m_sphereData = new SphereData();
-    m_bondData = new BondData();
+    m_sphereData = new SphereData(simulator);
+    m_bondData = new BondData(simulator);
     m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#FFFFFF"));
     m_atomStyleTypes.insert("helium", new AtomStyle(1.40, "#D9FFFF"));
     m_atomStyleTypes.insert("lithium", new AtomStyle(1.82, "#CC80FF"));

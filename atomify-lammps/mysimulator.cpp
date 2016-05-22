@@ -245,7 +245,7 @@ AtomifySimulator::AtomifySimulator()
     : m_sphereData(new SphereData(this)),
     m_cylinderData(new CylinderData(this)),
     m_scriptHandler(new ScriptHandler()),
-    m_atoms(new Atoms()),
+    m_atoms(new Atoms(this)),
     m_system(new System())
 {
     m_atoms->modifiers().append(new ColorModifier(m_atoms, m_system));

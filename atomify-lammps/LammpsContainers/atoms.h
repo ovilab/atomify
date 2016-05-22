@@ -59,7 +59,7 @@ class Atoms : public QObject
     Q_PROPERTY(SphereData* sphereData READ sphereData NOTIFY sphereDataChanged)
     Q_PROPERTY(BondData* bondData READ bondData NOTIFY bondDataChanged)
 public:
-    Atoms();
+    Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPS_NS::LAMMPS *lammps);
     void updateData();
     SphereData* sphereData() const;
