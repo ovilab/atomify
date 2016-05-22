@@ -120,73 +120,42 @@ void Atoms::updateData()
 }
 
 void Atoms::generateSphereData(AtomData &atomData) {
-    // m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
-    QVector<SphereVBOData> spheres;
-    SphereVBOData sphere1;
-    sphere1.position = QVector3D(4, 0, 0);
-    sphere1.radius = 1.0;
-    sphere1.color = QVector3D(1.0, 0.0, 0.0);
-
-    SphereVBOData sphere2;
-    sphere2.position = QVector3D(-4, -2, 0);
-    sphere2.radius = 1.0;
-    sphere2.color = QVector3D(0.0, 1.0, 0.0);
-
-    BondVBOData bond;
-    bond.vertex1 = sphere1.position;
-    bond.vertex2 = sphere2.position;
-    bond.radius1 = 0.2;
-    bond.radius2 = 0.2;
-    bond.sphereRadius1 = sphere1.radius;
-    bond.sphereRadius2 = sphere2.radius;
-
-    spheres.push_back(sphere1);
-    spheres.push_back(sphere2);
-    m_sphereData->setData(spheres);
+    m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
 }
 
 void Atoms::generateBondData(AtomData &atomData) {
-//    QVector<BondVBOData> bonds;
-//    if(neighborlist.numNeighbors.size()==0) return;
-
-//    for(int i=0; i<atomData.positions.size(); i++) {
-//        const QVector3D &position_i = atomData.positions[i];
-//        for(int jj=0; jj<neighborlist.numNeighbors[i]; jj++) {
-//            int j = neighborlist.neighbors[i][jj];
-//            const QVector3D &position_j = atomData.positions[j];
-//            BondVBOData bond;
-//            bond.vertex1 = position_i;
-//            bond.vertex2 = position_j;
-//            bond.radius1 = 0.15;
-//            bond.radius2 = 0.15;
-//            bond.sphereRadius1 = atomData.radii[i];
-//            bond.sphereRadius2 = atomData.radii[j];
-
-//            bonds.push_back(bond);
-//        }
-//    }
-//    m_bondData->setData(bonds);
-
     QVector<BondVBOData> bonds;
-    SphereVBOData sphere1;
-    sphere1.position = QVector3D(4, 0, 0);
-    sphere1.radius = 1.0;
-    sphere1.color = QVector3D(1.0, 0.0, 0.0);
+    if(neighborlist.numNeighbors.size()==0) return;
 
-    SphereVBOData sphere2;
-    sphere2.position = QVector3D(-4, -2, 0);
-    sphere2.radius = 1.0;
-    sphere2.color = QVector3D(0.0, 1.0, 0.0);
+    double maxDelta = 0;
+    int maxI = -1;
+    int maxJ = -1;
+    for(int i=0; i<atomData.positions.size(); i++) {
+        const QVector3D &position_i = atomData.positions[i];
+        int atomType_i = atomData.types[i];
+        for(int jj=0; jj<neighborlist.numNeighbors[i]; jj++) {
+            int j = neighborlist.neighbors[i][jj];
+            const QVector3D &position_j = atomData.positions[j];
+            int atomType_j = atomData.types[j];
 
-    BondVBOData bond;
-    bond.vertex1 = sphere1.position;
-    bond.vertex2 = sphere2.position;
-    bond.radius1 = 0.2;
-    bond.radius2 = 0.2;
-    bond.sphereRadius1 = 0.1;
-    bond.sphereRadius2 = 0.1;
+            float rsq = (position_i - position_j).lengthSquared();
+            if(rsq > bondsStyle.bondLengths[atomType_i][atomType_j]*bondsStyle.bondLengths[atomType_i][atomType_j] ) continue;
 
-    bonds.push_back(bond);
+            BondVBOData bond;
+            bond.vertex1 = position_i;
+            bond.vertex2 = position_j;
+            bond.radius1 = 0.10;
+            bond.radius2 = 0.10;
+            bond.sphereRadius1 = atomData.radii[i];
+            bond.sphereRadius2 = atomData.radii[j];
+            // bond.sphereRadius1 = 0.15;
+            // bond.sphereRadius2 = 0.15;
+
+
+            bonds.push_back(bond);
+        }
+    }
+
     m_bondData->setData(bonds);
 }
 
