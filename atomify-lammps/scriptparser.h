@@ -15,6 +15,7 @@ public:
     ScriptParser();
     bool isAtomColorAndSize(QString command);
     bool isStaticSystem(QString command);
+    bool isDisableBonds(QString command);
     void atomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action);
     void bond(QString command, std::function<void (int atomType1, int atomType2, float bondLength)> action);
     bool isAtomType(QString command);

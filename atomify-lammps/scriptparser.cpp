@@ -67,6 +67,12 @@ bool ScriptParser::isStaticSystem(QString command)
     return regex.match(command).hasMatch();
 }
 
+bool ScriptParser::isDisableBonds(QString command)
+{
+    QRegularExpression regex("^disableBonds$");
+    return regex.match(command).hasMatch();
+}
+
 void ScriptParser::atomType(QString command, std::function<void(QString atomTypeName, int atomType)> action)
 {
     QRegularExpression regex ("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
@@ -78,11 +84,13 @@ void ScriptParser::atomType(QString command, std::function<void(QString atomType
 
 bool ScriptParser::isGUICommand(QString command) {
     command.remove(0,2);
-    bool isGUICommand = false;
-    if(isAtomType(command)) isGUICommand = true;
-    if(isAtomColorAndSize(command)) isGUICommand = true;
-    if(isStaticSystem(command)) isGUICommand = true;
-    return isGUICommand;
+    if(isAtomType(command)) return true;
+    if(isBond(command)) return true;
+    if(isAtomColorAndSize(command)) return true;
+    if(isStaticSystem(command)) return true;
+    if(isDisableBonds(command)) return true;
+
+    return false;
 }
 
 bool ScriptParser::isEditorCommand(QString command)

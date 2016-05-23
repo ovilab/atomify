@@ -5,6 +5,7 @@
 #include <neigh_list.h>
 #include "modifiers/modifiers.h"
 #include "mysimulator.h"
+#include "bonds.h"
 using namespace LAMMPS_NS;
 
 Atoms::Atoms(AtomifySimulator *simulator)
@@ -14,6 +15,8 @@ Atoms::Atoms(AtomifySimulator *simulator)
 
     m_sphereData = new SphereData(simulator);
     m_bondData = new BondData(simulator);
+    m_bonds = new Bonds();
+
     m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#FFFFFF"));
     m_atomStyleTypes.insert("helium", new AtomStyle(1.40, "#D9FFFF"));
     m_atomStyleTypes.insert("lithium", new AtomStyle(1.82, "#CC80FF"));
@@ -125,6 +128,11 @@ void Atoms::generateSphereData(AtomData &atomData) {
 
 void Atoms::generateBondData(AtomData &atomData) {
     QVector<BondVBOData> bonds;
+    if(!m_bonds->enabled()) {
+        m_bondData->setData(bonds);
+        return;
+    }
+
     const Neighborlist &neighborList = atomData.neighborList;
     if(neighborList.numNeighbors.size()==0) return;
 
@@ -137,7 +145,7 @@ void Atoms::generateBondData(AtomData &atomData) {
             int atomType_j = atomData.types[j];
 
             float rsq = (position_i - position_j).lengthSquared();
-            if(rsq > bondsStyle.bondLengths[atomType_i][atomType_j]*bondsStyle.bondLengths[atomType_i][atomType_j] ) continue;
+            if(rsq > m_bonds->bondLengths()[atomType_i][atomType_j]*m_bonds->bondLengths()[atomType_i][atomType_j] ) continue;
 
             BondVBOData bond;
             bond.vertex1 = position_i;
@@ -178,9 +186,22 @@ void Atoms::setAtomType(int atomType, QString elementName)
     m_atomStyles[atomType] = m_atomStyleTypes[elementName];
 }
 
+void Atoms::setAtomColorAndScale(int atomType, QColor color, float radius)
+{
+    if(atomType >= m_atomStyles.size()) return;
+
+    m_atomStyles[atomType]->color = color;
+    m_atomStyles[atomType]->radius = radius;
+}
+
 BondData *Atoms::bondData() const
 {
     return m_bondData;
+}
+
+Bonds *Atoms::bonds() const
+{
+    return m_bonds;
 }
 
 void Atoms::copyNeighborlist(LAMMPS *lammps)
@@ -226,7 +247,7 @@ void Atoms::copyNeighborlist(LAMMPS *lammps)
                 double delz = xi[2] - xj[2];
                 double rsq = delx*delx + dely*dely + delz*delz;
                 int jtype = type[j];
-                if(rsq < bondsStyle.bondLengths[itype][jtype]*bondsStyle.bondLengths[itype][jtype] ) {
+                if(rsq < m_bonds->bondLengths()[itype][jtype]*m_bonds->bondLengths()[itype][jtype] ) {
                     neighborList.neighbors[i][ neighborList.numNeighbors[i] ] = j;
                     neighborList.numNeighbors[i]++;
                 }

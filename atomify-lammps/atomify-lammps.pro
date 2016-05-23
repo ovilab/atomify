@@ -70,7 +70,8 @@ SOURCES += \
     LammpsWrappers/groups.cpp \
     LammpsWrappers/regions/region.cpp \
     LammpsWrappers/regions/blockregion.cpp \
-    LammpsWrappers/neighborlist.cpp
+    LammpsWrappers/neighborlist.cpp \
+    LammpsWrappers/bonds.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -101,7 +102,8 @@ HEADERS += \
     LammpsWrappers/groups.h \
     LammpsWrappers/regions/region.h \
     LammpsWrappers/regions/blockregion.h \
-    LammpsWrappers/neighborlist.h
+    LammpsWrappers/neighborlist.h \
+    LammpsWrappers/bonds.h
 
 # Temporary use of quickcontrols2 without install
 
