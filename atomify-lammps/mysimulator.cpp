@@ -18,8 +18,11 @@
 #include <fstream>
 #include <memory>
 #include <QStandardPaths>
+#include "scripthandler.h"
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
+#include "LammpsWrappers/system.h"
+
 using namespace std;
 
 MyWorker::MyWorker() {
@@ -36,11 +39,6 @@ void AtomifySimulator::clearSimulatorControls()
             control->setParentItem(nullptr);
         }
     }
-}
-
-Atoms *AtomifySimulator::atoms() const
-{
-    return m_atoms;
 }
 
 System *AtomifySimulator::system() const
@@ -63,11 +61,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         emit atomifySimulator->lammpsDidReset();
     }
 
-    // synchronizePositions(atomifySimulator);
-    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->atoms());
-    atomifySimulator->atoms()->synchronize(m_lammpsController.lammps());
+    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
     atomifySimulator->system()->synchronize(m_lammpsController.lammps());
-    atomifySimulator->atoms()->updateData();
+    atomifySimulator->system()->atoms()->updateData();
 
     // Sync values from QML and simulator
     m_lammpsController.setPaused(atomifySimulator->paused());
@@ -186,10 +182,9 @@ bool AtomifySimulator::willReset() const
 
 AtomifySimulator::AtomifySimulator() :
     m_scriptHandler(new ScriptHandler()),
-    m_atoms(new Atoms(this)),
-    m_system(new System())
+    m_system(new System(this))
 {
-    m_atoms->modifiers().append(new ColorModifier(m_atoms, m_system));
+    m_system->atoms()->modifiers().append(new ColorModifier(m_system));
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -251,15 +246,6 @@ void AtomifySimulator::setWillReset(bool willReset)
 
     m_willReset = willReset;
     emit willResetChanged(willReset);
-}
-
-void AtomifySimulator::setAtoms(Atoms *atoms)
-{
-    if (m_atoms == atoms)
-        return;
-
-    m_atoms = atoms;
-    emit atomsChanged(atoms);
 }
 
 void AtomifySimulator::setSystem(System *system)

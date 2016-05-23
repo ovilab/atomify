@@ -1,6 +1,7 @@
 #include "colormodifier.h"
+#include "../system.h"
 
-ColorModifier::ColorModifier(Atoms *atoms, System *system) : Modifier(atoms, system)
+ColorModifier::ColorModifier(System *system) : Modifier(system)
 {
 
 }
@@ -8,7 +9,7 @@ ColorModifier::ColorModifier(Atoms *atoms, System *system) : Modifier(atoms, sys
 
 void ColorModifier::apply(AtomData &atomData)
 {
-    QVector<AtomStyle*> &atomStyles = m_atoms->atomStyles();
+    QVector<AtomStyle*> &atomStyles = m_system->atoms()->atomStyles();
     for(int i=0; i<atomData.positions.size(); i++) {
         // TODO: Validate all atomdata first
         int atomType = atomData.types[i];

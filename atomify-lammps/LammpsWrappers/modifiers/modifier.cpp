@@ -1,6 +1,7 @@
 #include "modifier.h"
+#include "../system.h"
 
-Modifier::Modifier(Atoms *atoms, System *system) : m_atoms(atoms), m_system(system)
+Modifier::Modifier(System *system) : m_system(system)
 {
 
 }

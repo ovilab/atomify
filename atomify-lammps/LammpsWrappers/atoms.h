@@ -2,7 +2,6 @@
 #define ATOMS_H
 
 #include <SimVis/SphereData>
-#include <SimVis/CylinderData>
 #include <SimVis/BondData>
 
 #include <QColor>
@@ -11,6 +10,7 @@
 #include <QVariantList>
 #include <mpi.h>
 #include <lammps.h>
+#include "atomdata.h"
 
 struct BondsStyle {
     QVector<QVector<float>> bondLengths;
@@ -43,14 +43,6 @@ struct AtomStyle {
         this->color = color;
         this->radius = scale;
     }
-};
-
-struct AtomData {
-    QVector<QVector3D> positions;
-    QVector<QVector3D> colors;
-    QVector<float> radii;
-    QVector<int> types;
-    bool isValid();
 };
 
 class Atoms : public QObject

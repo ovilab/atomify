@@ -16,7 +16,7 @@ class PeriodicImages : public Modifier
     int m_numberOfCopiesZ = 1;
 
 public:
-    PeriodicImages(Atoms *atoms, System *system);
+    PeriodicImages(class System *system);
 
     // Modifier interface
 public:

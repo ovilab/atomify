@@ -2,12 +2,13 @@
 #include <domain.h>
 #include <atom.h>
 #include <update.h>
+#include "../mysimulator.h"
 
 using namespace LAMMPS_NS;
 
-System::System()
+System::System(AtomifySimulator *simulator)
 {
-
+    setAtoms(new Atoms(simulator));
 }
 
 void System::synchronize(LAMMPS *lammps)
@@ -48,6 +49,8 @@ void System::synchronize(LAMMPS *lammps)
         m_timesteps = update->atimestep;
         emit timestepsChanged(m_timesteps);
     }
+
+    m_atoms->synchronize(lammps);
 }
 
 QVector3D System::origin() const
@@ -73,4 +76,18 @@ float System::simulationTime() const
 int System::timesteps() const
 {
     return m_timesteps;
+}
+
+Atoms *System::atoms() const
+{
+    return m_atoms;
+}
+
+void System::setAtoms(Atoms *atoms)
+{
+    if (m_atoms == atoms)
+        return;
+
+    m_atoms = atoms;
+    emit atomsChanged(atoms);
 }

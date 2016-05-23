@@ -1,6 +1,7 @@
 #include "periodicimages.h"
+#include "../system.h"
 
-PeriodicImages::PeriodicImages(Atoms *atoms, System *system) : Modifier(atoms, system)
+PeriodicImages::PeriodicImages(System *system) : Modifier(system)
 {
 
 }

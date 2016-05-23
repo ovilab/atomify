@@ -35,12 +35,12 @@ Scene3D {
         Spheres {
             id: spheres
             camera: visualizer.camera
-            sphereData: simulator.atoms.sphereData
+            sphereData: simulator.system.atoms.sphereData
         }
 
         Bonds {
             id: bonds
-            bondData: simulator.atoms.bondData
+            bondData: simulator.system.atoms.bondData
         }
     }
 }

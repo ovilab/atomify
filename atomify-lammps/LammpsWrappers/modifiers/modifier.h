@@ -3,15 +3,15 @@
 #include <QObject>
 #include <SimVis/SphereData>
 #include <SimVis/CylinderData>
-#include "../atoms.h"
+#include "../atomdata.h"
+
 class Modifier : public QObject
 {
     Q_OBJECT
 protected:
-    class Atoms *m_atoms;
     class System *m_system;
 public:
-    Modifier(Atoms *atoms, System *system);
+    Modifier(class System *system);
     virtual void apply(AtomData &atomData) = 0;
 };
 

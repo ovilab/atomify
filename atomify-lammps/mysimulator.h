@@ -3,16 +3,13 @@
 #include <SimVis/Simulator>
 #include <SimVis/CylinderData>
 #include <QMap>
+#include <QVector3D>
 #include <QElapsedTimer>
 #include <memory>
 #include <cmath>
-#include <QVector3D>
 #include <mpi.h>
 #include <lammps.h>
 #include "lammpscontroller.h"
-#include "scripthandler.h"
-#include "LammpsWrappers/atoms.h"
-#include "LammpsWrappers/system.h"
 
 using namespace LAMMPS_NS;
 
@@ -44,7 +41,6 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(QString lammpsErrorMessage READ lammpsErrorMessage WRITE setLammpsErrorMessage NOTIFY lammpsErrorMessageChanged)
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
-    Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
 public:
     AtomifySimulator();
@@ -58,8 +54,7 @@ public:
     ScriptHandler* scriptHandler() const;
     bool willReset() const;
     Q_INVOKABLE void clearSimulatorControls();
-    Atoms* atoms() const;
-    System* system() const;
+    class System* system() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -68,8 +63,7 @@ public slots:
     void setLammpsErrorMessage(QString lammpsErrorMessage);
     void setScriptHandler(ScriptHandler* scriptHandler);
     void setWillReset(bool willReset);
-    void setAtoms(Atoms* atoms);
-    void setSystem(System* system);
+    void setSystem(class System* system);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -80,8 +74,7 @@ signals:
     void lammpsDidReset();
     void scriptHandlerChanged(ScriptHandler* scriptHandler);
     void willResetChanged(bool willReset);
-    void atomsChanged(Atoms* atoms);
-    void systemChanged(System* system);
+    void systemChanged(class System* system);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -95,8 +88,7 @@ private:
     QString m_lammpsErrorMessage;
     ScriptHandler* m_scriptHandler = nullptr;
     bool m_willReset = false;
-    Atoms* m_atoms = nullptr;
-    System* m_system = nullptr;
+    class System* m_system = nullptr;
     QT3D_CLONEABLE(AtomifySimulator)
 };
 
