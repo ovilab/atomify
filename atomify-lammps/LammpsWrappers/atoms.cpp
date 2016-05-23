@@ -125,16 +125,14 @@ void Atoms::generateSphereData(AtomData &atomData) {
 
 void Atoms::generateBondData(AtomData &atomData) {
     QVector<BondVBOData> bonds;
-    if(neighborlist.numNeighbors.size()==0) return;
+    const Neighborlist &neighborList = atomData.neighborList;
+    if(neighborList.numNeighbors.size()==0) return;
 
-    double maxDelta = 0;
-    int maxI = -1;
-    int maxJ = -1;
     for(int i=0; i<atomData.positions.size(); i++) {
         const QVector3D &position_i = atomData.positions[i];
         int atomType_i = atomData.types[i];
-        for(int jj=0; jj<neighborlist.numNeighbors[i]; jj++) {
-            int j = neighborlist.neighbors[i][jj];
+        for(int jj=0; jj<neighborList.numNeighbors[i]; jj++) {
+            int j = neighborList.neighbors[i][jj];
             const QVector3D &position_j = atomData.positions[j];
             int atomType_j = atomData.types[j];
 
@@ -148,10 +146,6 @@ void Atoms::generateBondData(AtomData &atomData) {
             bond.radius2 = 0.10;
             bond.sphereRadius1 = atomData.radii[i];
             bond.sphereRadius2 = atomData.radii[j];
-            // bond.sphereRadius1 = 0.15;
-            // bond.sphereRadius2 = 0.15;
-
-
             bonds.push_back(bond);
         }
     }
@@ -200,8 +194,10 @@ void Atoms::copyNeighborlist(LAMMPS *lammps)
         int **firstneigh = list->firstneigh;
         double **x = lammps->atom->x;
         int *type = lammps->atom->type;
-        neighborlist.neighbors.resize(inum);
-        neighborlist.numNeighbors.resize(inum);
+        Neighborlist &neighborList = m_atomData.neighborList;
+
+        neighborList.neighbors.resize(inum);
+        neighborList.numNeighbors.resize(inum);
 
         for (int ii = 0; ii < inum; ii++) {
             int i = ilist[ii];
@@ -212,8 +208,8 @@ void Atoms::copyNeighborlist(LAMMPS *lammps)
             int itype = type[i];
             int *jlist = firstneigh[i];
             int jnum = numneigh[i];
-            neighborlist.numNeighbors[i] = 0;
-            neighborlist.neighbors[i].resize(jnum);
+            neighborList.numNeighbors[i] = 0;
+            neighborList.neighbors[i].resize(jnum);
 
             for (int jj = 0; jj < jnum; jj++) {
                 int j = jlist[jj];
@@ -231,11 +227,11 @@ void Atoms::copyNeighborlist(LAMMPS *lammps)
                 double rsq = delx*delx + dely*dely + delz*delz;
                 int jtype = type[j];
                 if(rsq < bondsStyle.bondLengths[itype][jtype]*bondsStyle.bondLengths[itype][jtype] ) {
-                    neighborlist.neighbors[i][ neighborlist.numNeighbors[i] ] = j;
-                    neighborlist.numNeighbors[i]++;
+                    neighborList.neighbors[i][ neighborList.numNeighbors[i] ] = j;
+                    neighborList.numNeighbors[i]++;
                 }
             }
-            neighborlist.neighbors.resize(neighborlist.numNeighbors[i]);
+            neighborList.neighbors.resize(neighborList.numNeighbors[i]);
         }
     }
 }

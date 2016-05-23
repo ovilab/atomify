@@ -1,5 +1,8 @@
 # USC (Anders Hafreager, UiO)
 # using metal units: http://lammps.sandia.gov/doc/units.html
+#package omp 8
+#suffix omp
+
 units		metal
 atom_style	atomic
 

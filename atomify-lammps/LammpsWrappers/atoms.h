@@ -31,11 +31,6 @@ struct BondsStyle {
     }
 };
 
-struct Neighborlist {
-    QVector<int> numNeighbors;
-    QVector<QVector<int>> neighbors;
-};
-
 struct AtomStyle {
     QColor color;
     float radius;
@@ -60,8 +55,6 @@ public:
     void setAtomType(int atomType, QString atomTypeName);
     BondData* bondData() const;
 
-public slots:
-
 signals:
     void sphereDataChanged(SphereData* sphereData);
     void bondDataChanged(BondData* bondData);
@@ -70,12 +63,11 @@ private:
     AtomData m_atomData;
     QMap<QString, AtomStyle*> m_atomStyleTypes;
     QVector<AtomStyle*> m_atomStyles;
-    void copyNeighborlist(LAMMPS_NS::LAMMPS *lammps);
     SphereData* m_sphereData = nullptr;
     BondData* m_bondData = nullptr;
     BondsStyle bondsStyle;
-    Neighborlist neighborlist;
     QVector<class Modifier*> m_modifiers;
+    void copyNeighborlist(LAMMPS_NS::LAMMPS *lammps);
     void generateBondData(AtomData &atomData);
     void generateSphereData(AtomData &atomData);
 };
