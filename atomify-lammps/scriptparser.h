@@ -17,6 +17,7 @@ public:
     bool isStaticSystem(QString command);
     void AtomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action);
     bool isAtomType(QString command);
+    bool isBond(QString command);
     void atomType(QString command, std::function<void(QString atomTypeName, int atomType)> action);
     bool isEditorCommand(QString command);
     bool isInclude(QString command);
