@@ -23,9 +23,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "LammpsWrappers/cpcompute.h"
+#include "LammpsWrappers/simulatorcontrols/cpcompute.h"
 #include "mysimulator.h"
-#include "LammpsWrappers/simulatorcontrol.h"
+#include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include "scriptcommand.h"
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include "slice.h"
 
-Slice::Slice()
+Slice::Slice(Atoms *atoms, System *system) : Modifier(atoms, system)
 {
 
 }

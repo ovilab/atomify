@@ -13,7 +13,7 @@ class Slice : public Modifier
     float m_width = 0;
 
 public:
-    Slice();
+    Slice(Atoms *atoms, System *system);
 
     // Modifier interface
 public:

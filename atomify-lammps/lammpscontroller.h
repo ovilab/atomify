@@ -10,7 +10,7 @@
 #include <modify.h>
 #include <variable.h>
 #include <lammpsexception.h>
-#include "LammpsWrappers/cpcompute.h"
+#include "LammpsWrappers/simulatorcontrols/cpcompute.h"
 #include "scripthandler.h"
 
 struct LammpsState {

@@ -12,18 +12,18 @@
 
 #include "mysimulator.h"
 #include "highlighter.h"
-#include "LammpsWrappers/cpcompute.h"
-#include "LammpsWrappers/cpvariable.h"
+#include "LammpsWrappers/simulatorcontrols/cpcompute.h"
+#include "LammpsWrappers/simulatorcontrols/cpvariable.h"
 #include "atomstyle.h"
-#include "LammpsWrappers/nvt.h"
+#include "LammpsWrappers/simulatorcontrols/nvt.h"
 #include "scripthandler.h"
-#include "LammpsWrappers/fixaveragetime.h"
-#include "LammpsWrappers/fixhistogram.h"
-#include "LammpsWrappers/rdf.h"
+#include "LammpsWrappers/simulatorcontrols/fixaveragetime.h"
+#include "LammpsWrappers/simulatorcontrols/fixhistogram.h"
+#include "LammpsWrappers/simulatorcontrols/rdf.h"
 #include "vendor.h"
 #include "datasource.h"
-#include "LammpsContainers/atoms.h"
-#include "LammpsContainers/system.h"
+#include "LammpsWrappers/atoms.h"
+#include "LammpsWrappers/system.h"
 
 int main(int argc, char *argv[])
 {

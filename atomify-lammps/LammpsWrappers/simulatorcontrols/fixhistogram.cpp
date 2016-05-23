@@ -1,5 +1,5 @@
 #include "fixhistogram.h"
-#include "../lammpscontroller.h"
+#include "../../lammpscontroller.h"
 #include <fix_ave_histo.h>
 
 FixHistogram::FixHistogram()

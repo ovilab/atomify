@@ -1,5 +1,5 @@
 #include "mysimulator.h"
-#include "LammpsWrappers/simulatorcontrol.h"
+#include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include <library.h>
 #include <atom.h>
 #include <domain.h>
@@ -18,8 +18,8 @@
 #include <fstream>
 #include <memory>
 #include <QStandardPaths>
-#include "LammpsContainers/atoms.h"
-#include "LammpsContainers/modifiers/modifiers.h"
+#include "LammpsWrappers/atoms.h"
+#include "LammpsWrappers/modifiers/modifiers.h"
 using namespace std;
 
 MyWorker::MyWorker() {

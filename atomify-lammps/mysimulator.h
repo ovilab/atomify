@@ -11,8 +11,8 @@
 #include <lammps.h>
 #include "lammpscontroller.h"
 #include "scripthandler.h"
-#include "LammpsContainers/atoms.h"
-#include "LammpsContainers/system.h"
+#include "LammpsWrappers/atoms.h"
+#include "LammpsWrappers/system.h"
 
 using namespace LAMMPS_NS;
 

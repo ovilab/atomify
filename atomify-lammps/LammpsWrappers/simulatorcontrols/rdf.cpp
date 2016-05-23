@@ -1,5 +1,5 @@
 #include "rdf.h"
-#include "../lammpscontroller.h"
+#include "../../lammpscontroller.h"
 #include <compute_rdf.h>
 #include <fix_ave_time.h>
 RDF::RDF()

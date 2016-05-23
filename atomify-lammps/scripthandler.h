@@ -9,7 +9,7 @@
 #include "scriptcommand.h"
 #include "scriptparser.h"
 #include "atomstyle.h"
-#include "LammpsContainers/atoms.h"
+#include "LammpsWrappers/atoms.h"
 
 class AtomifySimulator;
 
