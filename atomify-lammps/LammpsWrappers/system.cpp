@@ -2,6 +2,9 @@
 #include <domain.h>
 #include <atom.h>
 #include <update.h>
+#include "atoms.h"
+#include "regions.h"
+#include "groups.h"
 #include "../mysimulator.h"
 
 using namespace LAMMPS_NS;
@@ -9,6 +12,8 @@ using namespace LAMMPS_NS;
 System::System(AtomifySimulator *simulator)
 {
     setAtoms(new Atoms(simulator));
+    setGroups(new Groups(simulator));
+    setRegions(new Regions(simulator));
 }
 
 void System::synchronize(LAMMPS *lammps)
@@ -83,6 +88,16 @@ Atoms *System::atoms() const
     return m_atoms;
 }
 
+Regions *System::regions() const
+{
+    return m_regions;
+}
+
+Groups *System::groups() const
+{
+    return m_groups;
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -90,4 +105,22 @@ void System::setAtoms(Atoms *atoms)
 
     m_atoms = atoms;
     emit atomsChanged(atoms);
+}
+
+void System::setRegions(Regions *regions)
+{
+    if (m_regions == regions)
+        return;
+
+    m_regions = regions;
+    emit regionsChanged(regions);
+}
+
+void System::setGroups(Groups *groups)
+{
+    if (m_groups == groups)
+        return;
+
+    m_groups = groups;
+    emit groupsChanged(groups);
 }

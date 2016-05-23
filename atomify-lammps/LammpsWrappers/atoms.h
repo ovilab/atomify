@@ -52,7 +52,7 @@ class Atoms : public QObject
     Q_PROPERTY(BondData* bondData READ bondData NOTIFY bondDataChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
-    void synchronize(class LAMMPS_NS::LAMMPS *lammps);
+    void synchronize(LAMMPS_NS::LAMMPS *lammps);
     void updateData();
     SphereData* sphereData() const;
     QVector<class Modifier*> &modifiers();
