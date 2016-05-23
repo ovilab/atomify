@@ -16,6 +16,7 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_sphereData = new SphereData(simulator);
     m_bondData = new BondData(simulator);
     m_bonds = new Bonds();
+    m_atomData.neighborList.bonds = m_bonds;
 
     m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#FFFFFF"));
     m_atomStyleTypes.insert("helium", new AtomStyle(1.40, "#D9FFFF"));
@@ -98,7 +99,7 @@ void Atoms::synchronize(LAMMPS *lammps)
         m_atomData.positions[i][2] = position[2];
     }
 
-    copyNeighborlist(lammps);
+    if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
 }
 
 void Atoms::updateData()
@@ -202,57 +203,4 @@ BondData *Atoms::bondData() const
 Bonds *Atoms::bonds() const
 {
     return m_bonds;
-}
-
-void Atoms::copyNeighborlist(LAMMPS *lammps)
-{
-    bool hasNeighborLists = lammps->neighbor->nlist > 0;
-    if(hasNeighborLists) {
-        NeighList *list = lammps->neighbor->lists[0];
-        int inum = list->inum;
-        int *ilist = list->ilist;
-        int *numneigh = list->numneigh;
-        int **firstneigh = list->firstneigh;
-        double **x = lammps->atom->x;
-        int *type = lammps->atom->type;
-        Neighborlist &neighborList = m_atomData.neighborList;
-
-        neighborList.neighbors.resize(inum);
-        neighborList.numNeighbors.resize(inum);
-
-        for (int ii = 0; ii < inum; ii++) {
-            int i = ilist[ii];
-            double xi[3];
-            xi[0] = x[i][0];
-            xi[1] = x[i][1];
-            xi[2] = x[i][2];
-            int itype = type[i];
-            int *jlist = firstneigh[i];
-            int jnum = numneigh[i];
-            neighborList.numNeighbors[i] = 0;
-            neighborList.neighbors[i].resize(jnum);
-
-            for (int jj = 0; jj < jnum; jj++) {
-                int j = jlist[jj];
-                j &= NEIGHMASK;
-                double xj[3];
-                xj[0] = x[j][0];
-                xj[1] = x[j][1];
-                xj[2] = x[j][2];
-                lammps->domain->remap(xi);
-                lammps->domain->remap(xj);
-
-                double delx = xi[0] - xj[0];
-                double dely = xi[1] - xj[1];
-                double delz = xi[2] - xj[2];
-                double rsq = delx*delx + dely*dely + delz*delz;
-                int jtype = type[j];
-                if(rsq < m_bonds->bondLengths()[itype][jtype]*m_bonds->bondLengths()[itype][jtype] ) {
-                    neighborList.neighbors[i][ neighborList.numNeighbors[i] ] = j;
-                    neighborList.numNeighbors[i]++;
-                }
-            }
-            neighborList.neighbors.resize(neighborList.numNeighbors[i]);
-        }
-    }
 }

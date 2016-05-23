@@ -52,7 +52,6 @@ private:
     BondData* m_bondData = nullptr;
     class Bonds* m_bonds;
     QVector<class Modifier*> m_modifiers;
-    void copyNeighborlist(LAMMPS_NS::LAMMPS *lammps);
     void generateBondData(AtomData &atomData);
     void generateSphereData(AtomData &atomData);
 };

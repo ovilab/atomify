@@ -11,6 +11,7 @@ struct AtomData {
     QVector<int> types;
     Neighborlist neighborList;
     bool isValid();
+    ~AtomData();
 };
 
 #endif // ATOMDATA_H
