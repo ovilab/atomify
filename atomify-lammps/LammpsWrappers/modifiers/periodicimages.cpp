@@ -8,6 +8,7 @@ PeriodicImages::PeriodicImages(Atoms *atoms, System *system) : Modifier(atoms, s
 
 void PeriodicImages::apply(AtomData &atomData)
 {
+
 }
 
 int PeriodicImages::numberOfCopiesX() const

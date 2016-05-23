@@ -45,10 +45,6 @@ ColumnLayout {
 //                sequence: "Up"
 //                onActivated: {
 //                    if(singleCommand.text == "") {
-//                        for(var myObj in simulator.scriptHandler) {
-//                            console.log(myObj)
-//                        }
-
 //                        singleCommand.text = simulator.scriptHandler.lastSingleCommandString();
 //                    } else {
 //                        singleCommand.text = simulator.scriptHandler.previousSingleCommandString();
