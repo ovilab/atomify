@@ -4,6 +4,11 @@
 #include <mpi.h>
 #include <lammps.h>
 
+
+struct Group {
+    QString name;
+};
+
 class Groups : public QObject
 {
     Q_OBJECT

@@ -67,7 +67,9 @@ SOURCES += \
     LammpsWrappers/modifiers/periodicimages.cpp \
     LammpsWrappers/atomdata.cpp \
     LammpsWrappers/regions.cpp \
-    LammpsWrappers/groups.cpp
+    LammpsWrappers/groups.cpp \
+    LammpsWrappers/regions/region.cpp \
+    LammpsWrappers/regions/blockregion.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -95,7 +97,9 @@ HEADERS += \
     LammpsWrappers/modifiers/periodicimages.h \
     LammpsWrappers/atomdata.h \
     LammpsWrappers/regions.h \
-    LammpsWrappers/groups.h
+    LammpsWrappers/groups.h \
+    LammpsWrappers/regions/region.h \
+    LammpsWrappers/regions/blockregion.h
 
 # Temporary use of quickcontrols2 without install
 
