@@ -21,7 +21,7 @@ bool ScriptParser::isAtomColorAndSize(QString command)
     return regex.match(command).hasMatch();
 }
 
-void ScriptParser::AtomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action) {
+void ScriptParser::atomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action) {
     QRegularExpression regex(QString("^(?:atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)$").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
     QRegularExpressionMatch match = regex.match(command);
     bool castOk;
@@ -43,8 +43,22 @@ bool ScriptParser::isAtomType(QString command)
 
 bool ScriptParser::isBond(QString command)
 {
-    QRegularExpression regex("^(bond)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\d*.\\d*)$");
+    QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
     return regex.match(command).hasMatch();
+}
+
+void ScriptParser::bond(QString command, std::function<void(int atomType1, int atomType2, float bondLength)> action) {
+    QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
+    QRegularExpressionMatch match = regex.match(command);
+    bool castOk;
+    int atomType1 = match.captured(1).toInt(&castOk);
+    if(!castOk) return;
+    int atomType2 = match.captured(2).toInt(&castOk);
+    if(!castOk) return;
+    int bondLength = match.captured(3).toFloat(&castOk);
+    if(!castOk) return;
+
+    action(atomType1, atomType2, bondLength);
 }
 
 bool ScriptParser::isStaticSystem(QString command)
