@@ -20,3 +20,5 @@ thermo 100
 fix nvt all nvt temp 300 300 0.5
 #/atom 1 silicon
 #/atom 2 oxygen
+variable steps equal 100
+run ${steps}

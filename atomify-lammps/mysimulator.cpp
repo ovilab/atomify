@@ -72,6 +72,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     // Sync values from QML and simulator
     m_lammpsController.setPaused(atomifySimulator->paused());
     m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed());
+    m_lammpsController.setSystem(atomifySimulator->system());
     QList<SimulatorControl*> controls;
 
     // TODO review if this can be removed

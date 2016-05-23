@@ -28,16 +28,11 @@ private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
     LAMMPSController m_lammpsController;
-    bool m_addPeriodicCopies = false;
-    float m_cameraToSystemCenterDistance = 1.0;
-    QVector<CylinderVBOData> m_cylinders;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
     virtual void work() override;
     bool m_willPause = false;
-    QVector<int> m_atomTypes;
-    void synchronizePositions(AtomifySimulator *simulator);
 };
 
 class AtomifySimulator : public Simulator

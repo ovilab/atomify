@@ -1,6 +1,7 @@
 #include "cpcompute.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
+#include "../system.h"
 #include <QDebug>
 CPCompute::CPCompute(QQuickItem *parent) : SimulatorControl(parent)
 {
@@ -51,7 +52,7 @@ void CPCompute::update(LAMMPSController *lammpsController)
            newValues.push_back(value);
        }
 
-       setValues(lammpsController->simulationTime(), newValues);
+       setValues(lammpsController->system()->simulationTime(), newValues);
     }
 }
 
