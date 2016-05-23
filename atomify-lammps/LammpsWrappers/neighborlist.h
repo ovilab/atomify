@@ -6,12 +6,14 @@
 
 struct Neighborlist {
     class Bonds *bonds;
-    QVector<int> numNeighbors;
     QVector<QVector<int>> neighbors;
     Neighborlist();
     Neighborlist(const Neighborlist &old);
     ~Neighborlist();
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
+
+private:
+    void reset(int numberOfAtoms, int maxNeighbors);
 };
 
 #endif // NEIGHBORLIST_H

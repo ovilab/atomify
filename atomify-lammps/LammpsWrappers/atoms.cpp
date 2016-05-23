@@ -135,29 +135,39 @@ void Atoms::generateBondData(AtomData &atomData) {
     }
 
     const Neighborlist &neighborList = atomData.neighborList;
-    if(neighborList.numNeighbors.size()==0) return;
+    if(neighborList.neighbors.size()==0) return;
+
+//    QElapsedTimer t;
+//    t.start();
+    bonds.reserve(atomData.positions.size()*5);
 
     for(int i=0; i<atomData.positions.size(); i++) {
         const QVector3D &position_i = atomData.positions[i];
-        int atomType_i = atomData.types[i];
-        for(int jj=0; jj<neighborList.numNeighbors[i]; jj++) {
-            int j = neighborList.neighbors[i][jj];
+        const int &atomType_i = atomData.types[i];
+
+        for(const int &j : neighborList.neighbors[i]) {
             const QVector3D &position_j = atomData.positions[j];
-            int atomType_j = atomData.types[j];
+            const int &atomType_j = atomData.types[j];
 
-            float rsq = (position_i - position_j).lengthSquared();
-            if(rsq > m_bonds->bondLengths()[atomType_i][atomType_j]*m_bonds->bondLengths()[atomType_i][atomType_j] ) continue;
+            float dx = position_i[0] - position_j[0];
+            float dy = position_i[1] - position_j[1];
+            float dz = position_i[2] - position_j[2];
+            float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
 
-            BondVBOData bond;
-            bond.vertex1 = position_i;
-            bond.vertex2 = position_j;
-            bond.radius1 = 0.10;
-            bond.radius2 = 0.10;
-            bond.sphereRadius1 = atomData.radii[i];
-            bond.sphereRadius2 = atomData.radii[j];
-            bonds.push_back(bond);
+            if(rsq < m_bonds->bondLengths()[atomType_i][atomType_j]*m_bonds->bondLengths()[atomType_i][atomType_j] ) {
+                BondVBOData bond;
+                bond.vertex1 = position_i;
+                bond.vertex2 = position_j;
+                bond.radius1 = 0.10;
+                bond.radius2 = 0.10;
+                bond.sphereRadius1 = atomData.radii[i];
+                bond.sphereRadius2 = atomData.radii[j];
+                bonds.push_back(bond);
+            }
         }
     }
+
+    // qDebug() << bonds.size() << " bonds created in " << t.elapsed()  << " ms";
 
     m_bondData->setData(bonds);
 }

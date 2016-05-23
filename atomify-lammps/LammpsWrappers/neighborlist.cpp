@@ -4,7 +4,8 @@
 #include <neigh_list.h>
 #include <domain.h>
 #include "bonds.h"
-
+#include <QDebug>
+#include <QElapsedTimer>
 using namespace LAMMPS_NS;
 
 Neighborlist::Neighborlist()
@@ -14,7 +15,6 @@ Neighborlist::Neighborlist()
 
 Neighborlist::Neighborlist(const Neighborlist &old)
 {
-    numNeighbors = old.numNeighbors;
     neighbors = old.neighbors;
     bonds = old.bonds;
 }
@@ -22,14 +22,23 @@ Neighborlist::Neighborlist(const Neighborlist &old)
 Neighborlist::~Neighborlist()
 {
     bonds = nullptr;
-    numNeighbors.clear();
     neighbors.clear();
+}
+
+void Neighborlist::reset(int numberOfAtoms, int maxNeighbors) {
+    neighbors.resize(numberOfAtoms);
+    for(int i=0; i<numberOfAtoms; i++) {
+        if(neighbors[i].capacity() < maxNeighbors) {
+            neighbors[i].reserve(maxNeighbors);
+        }
+        neighbors[i].resize(0);
+    }
 }
 
 void Neighborlist::synchronize(LAMMPS *lammps)
 {
+    // QElapsedTimer t;
     if(!lammps) return;
-
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
     if(hasNeighborLists) {
         NeighList *list = lammps->neighbor->lists[0];
@@ -37,45 +46,23 @@ void Neighborlist::synchronize(LAMMPS *lammps)
         int *ilist = list->ilist;
         int *numneigh = list->numneigh;
         int **firstneigh = list->firstneigh;
-        double **x = lammps->atom->x;
-        int *type = lammps->atom->type;
-        neighbors.resize(inum);
-        numNeighbors.resize(inum);
+        reset(inum, 100);
 
+        // t.start();
         for (int ii = 0; ii < inum; ii++) {
             int i = ilist[ii];
-            double xi[3];
-            xi[0] = x[i][0];
-            xi[1] = x[i][1];
-            xi[2] = x[i][2];
-            int itype = type[i];
             int *jlist = firstneigh[i];
             int jnum = numneigh[i];
-            numNeighbors[i] = 0;
-            neighbors[i].resize(jnum);
 
             for (int jj = 0; jj < jnum; jj++) {
                 int j = jlist[jj];
                 j &= NEIGHMASK;
-                double xj[3];
-                xj[0] = x[j][0];
-                xj[1] = x[j][1];
-                xj[2] = x[j][2];
-                lammps->domain->remap(xi);
-                lammps->domain->remap(xj);
-
-                double delx = xi[0] - xj[0];
-                double dely = xi[1] - xj[1];
-                double delz = xi[2] - xj[2];
-                double rsq = delx*delx + dely*dely + delz*delz;
-                int jtype = type[j];
-                if(rsq < bonds->bondLengths()[itype][jtype]*bonds->bondLengths()[itype][jtype] ) {
-                    neighbors[i][ numNeighbors[i] ] = j;
-                    numNeighbors[i]++;
+                if(j < lammps->atom->natoms) {
+                    neighbors[i].push_back(j);
                 }
             }
-            neighbors.resize(numNeighbors[i]);
         }
     }
+    // qDebug() << "Neighborlist copy synced in " << t.elapsed();
 }
 
