@@ -46,6 +46,7 @@ signals:
 
 private:
     AtomData m_atomData;
+    QVector<BondVBOData> bondsDataRaw;
     QMap<QString, AtomStyle*> m_atomStyleTypes;
     QVector<AtomStyle*> m_atomStyles;
     SphereData* m_sphereData = nullptr;

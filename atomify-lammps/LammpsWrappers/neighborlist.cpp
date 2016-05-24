@@ -38,10 +38,11 @@ void Neighborlist::reset(int numberOfAtoms, int maxNeighbors) {
 
 void Neighborlist::synchronize(LAMMPS *lammps)
 {
-    QElapsedTimer t;
     if(!lammps) return;
+    QElapsedTimer t;
+    t.start();
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
-    if(hasNeighborLists) {
+    if(hasNeighborLists && lammps->neighbor->ago==0) {
         NeighList *list = lammps->neighbor->lists[0];
         int inum = list->inum;
         int *ilist = list->ilist;

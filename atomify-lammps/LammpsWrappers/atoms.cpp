@@ -128,9 +128,9 @@ void Atoms::generateSphereData(AtomData &atomData) {
 }
 
 void Atoms::generateBondData(AtomData &atomData) {
-    QVector<BondVBOData> bonds;
+    bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
-        m_bondData->setData(bonds);
+        m_bondData->setData(bondsDataRaw);
         return;
     }
 
@@ -139,7 +139,8 @@ void Atoms::generateBondData(AtomData &atomData) {
 
     QElapsedTimer t;
     t.start();
-    bonds.reserve(atomData.positions.size()*5);
+    bondsDataRaw.reserve(atomData.positions.size());
+
     for(int i=0; i<atomData.positions.size(); i++) {
         const QVector3D &position_i = atomData.positions[i];
         const int &atomType_i = atomData.types[i];
@@ -163,14 +164,14 @@ void Atoms::generateBondData(AtomData &atomData) {
                 bond.radius2 = 0.10;
                 bond.sphereRadius1 = atomData.radii[i];
                 bond.sphereRadius2 = atomData.radii[j];
-                bonds.push_back(bond);
+                bondsDataRaw.push_back(bond);
             }
         }
     }
 
-    qDebug() << bonds.size() << " bonds created in " << t.elapsed()  << " ms";
+    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
 
-    m_bondData->setData(bonds);
+    m_bondData->setData(bondsDataRaw);
 }
 
 SphereData *Atoms::sphereData() const
