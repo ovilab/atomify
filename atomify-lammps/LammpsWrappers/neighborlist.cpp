@@ -65,7 +65,7 @@ void Neighborlist::synchronize(LAMMPS *lammps)
             }
         }
     }
-    qDebug() << "Neighborlist copy synced in " << t.elapsed();
+    // qDebug() << "Neighborlist copy synced in " << t.elapsed();
 }
 
 void Neighborlist::build(QVector<QVector3D> &positions, System *system)

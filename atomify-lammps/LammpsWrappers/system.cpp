@@ -47,6 +47,11 @@ void System::synchronize(LAMMPS *lammps)
         emit numberOfAtomsChanged(m_numberOfAtoms);
     }
 
+    if(m_numberOfAtomTypes != atom->ntypes) {
+        m_numberOfAtomTypes = atom->ntypes;
+        emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
+    }
+
     if(m_simulationTime != update->atime) {
         m_simulationTime = update->atime;
         emit simulationTimeChanged(m_simulationTime);
@@ -56,6 +61,7 @@ void System::synchronize(LAMMPS *lammps)
         m_timesteps = update->atimestep;
         emit timestepsChanged(m_timesteps);
     }
+
 
     m_atoms->synchronize(lammps);
 //    QElapsedTimer t;
@@ -104,6 +110,11 @@ Groups *System::groups() const
     return m_groups;
 }
 
+int System::numberOfAtomTypes() const
+{
+    return m_numberOfAtomTypes;
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -129,4 +140,13 @@ void System::setGroups(Groups *groups)
 
     m_groups = groups;
     emit groupsChanged(groups);
+}
+
+void System::setNumberOfAtomTypes(int numberOfAtomTypes)
+{
+    if (m_numberOfAtomTypes == numberOfAtomTypes)
+        return;
+
+    m_numberOfAtomTypes = numberOfAtomTypes;
+    emit numberOfAtomTypesChanged(numberOfAtomTypes);
 }

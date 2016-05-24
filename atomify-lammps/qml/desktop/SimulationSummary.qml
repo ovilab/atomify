@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.2
 import Atomify 1.0
 
 Rectangle {
-    property AtomifySimulator simulator
+    property System system
 //    property Compute pressure
 //    property Compute temperature
     x: 20
@@ -18,42 +18,31 @@ Rectangle {
         id: statusColumn
         Text {
             font.bold: true
-            text: "Number of atoms: "+simulator.numberOfAtoms
+            text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
         }
         Text {
             font.bold: true
-            text: "Number of atom types: "+simulator.numberOfAtomTypes
+            text: "Number of atoms: "+system.numberOfAtoms
         }
-
         Text {
             font.bold: true
-            text: "Tiemsteps: "+simulator.numberOfTimesteps
-        }
-
-        Text {
-            font.bold: true
-            text: "Time: "+simulator.simulationTime.toFixed(2)
+            text: "Number of atom types: "+system.numberOfAtomTypes
         }
 
         Text {
             font.bold: true
-            text: "Time per timestep [ms]: "+simulator.timePerTimestep.toFixed(2)
+            text: "Timesteps: "+system.timesteps
         }
 
-//        Text {
-//            font.bold: true
-//            text: "Temperature: "+ (temperature ? temperature.value : "N/A")
-//        }
-
-//        Text {
-//            font.bold: true
-//            text: "Pressure: " + (pressure ? pressure.value : "N/A")
-//        }
+        Text {
+            font.bold: true
+            text: "Time: "+system.simulationTime.toFixed(2)
+        }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        drag.target: parent
-        drag.axis: Drag.XAndYAxis
-    }
+//    MouseArea {
+//        anchors.fill: parent
+//        drag.target: parent
+//        drag.axis: Drag.XAndYAxis
+//    }
 }

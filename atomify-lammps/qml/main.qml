@@ -40,9 +40,11 @@ Rectangle {
 
     onWidthChanged: {
         resetStyle()
+        console.log("Width changed")
     }
 
     onHeightChanged: {
+        console.log("Width changed")
         resetStyle()
     }
 

@@ -16,7 +16,7 @@ Item {
         id: miniChart
         anchors.fill: parent
         antialiasing: true
-        legend.visible: false
+        legend.visible: true
         title: "Pair distribution function"
         // backgroundColor: "transparent"
         titleColor: "white"
@@ -26,6 +26,22 @@ Item {
             axisY: _axisY
             dataSource: DataSource {
                 id: dataSource0
+            }
+        }
+
+        CPLineSeries {
+            axisX: _axisX
+            axisY: _axisY
+            dataSource: DataSource {
+                id: dataSource1
+            }
+        }
+
+        CPLineSeries {
+            axisX: _axisX
+            axisY: _axisY
+            dataSource: DataSource {
+                id: dataSource2
             }
         }
 
@@ -55,5 +71,7 @@ Item {
         group: "all"
         atomPairs: ["1", "2", "1", "1", "2", "2"]
         dataSource: dataSource0
+        dataSource1: dataSource1
+        dataSource2: dataSource2
     }
 }

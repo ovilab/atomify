@@ -173,7 +173,7 @@ void Atoms::generateBondData(AtomData &atomData) {
         }
     }
 
-    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
+    // qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
 
     m_bondData->setData(bondsDataRaw);
 }

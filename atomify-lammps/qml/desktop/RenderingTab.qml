@@ -11,8 +11,10 @@ Item {
     property AtomifyVisualizer atomifyVisualizer
     property var items: []
 
-    Row {
-        id: row
+    Grid {
+        id: grid
+        width: parent.width
+        columns: 2
     }
 
     function addThing() {
@@ -22,7 +24,9 @@ Item {
             if(QMLObject===null) {
                 console.log("Could not add RDF...")
             } else {
-                QMLObject.parent = row
+                QMLObject.parent = grid
+                QMLObject.width = grid.width/2
+                QMLObject.height = grid.width/2
                 items.push(QMLObject)
                 console.log("doing items changed")
                 itemsChanged(items)
