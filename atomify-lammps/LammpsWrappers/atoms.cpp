@@ -137,13 +137,14 @@ void Atoms::generateBondData(AtomData &atomData) {
     const Neighborlist &neighborList = atomData.neighborList;
     if(neighborList.neighbors.size()==0) return;
 
-//    QElapsedTimer t;
-//    t.start();
+    QElapsedTimer t;
+    t.start();
     bonds.reserve(atomData.positions.size()*5);
-
     for(int i=0; i<atomData.positions.size(); i++) {
         const QVector3D &position_i = atomData.positions[i];
         const int &atomType_i = atomData.types[i];
+
+        const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
 
         for(const int &j : neighborList.neighbors[i]) {
             const QVector3D &position_j = atomData.positions[j];
@@ -154,7 +155,7 @@ void Atoms::generateBondData(AtomData &atomData) {
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
 
-            if(rsq < m_bonds->bondLengths()[atomType_i][atomType_j]*m_bonds->bondLengths()[atomType_i][atomType_j] ) {
+            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
                 BondVBOData bond;
                 bond.vertex1 = position_i;
                 bond.vertex2 = position_j;
@@ -167,7 +168,7 @@ void Atoms::generateBondData(AtomData &atomData) {
         }
     }
 
-    // qDebug() << bonds.size() << " bonds created in " << t.elapsed()  << " ms";
+    qDebug() << bonds.size() << " bonds created in " << t.elapsed()  << " ms";
 
     m_bondData->setData(bonds);
 }

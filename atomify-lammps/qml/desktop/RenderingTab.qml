@@ -13,9 +13,6 @@ Item {
 
     Row {
         id: row
-//        RDFItem {
-//            id: rdf
-//        }
     }
 
     function addThing() {

@@ -38,7 +38,7 @@ void Neighborlist::reset(int numberOfAtoms, int maxNeighbors) {
 
 void Neighborlist::synchronize(LAMMPS *lammps)
 {
-    // QElapsedTimer t;
+    QElapsedTimer t;
     if(!lammps) return;
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
     if(hasNeighborLists) {
@@ -49,7 +49,7 @@ void Neighborlist::synchronize(LAMMPS *lammps)
         int **firstneigh = list->firstneigh;
         reset(inum, 100);
 
-        // t.start();
+        t.start();
         for (int ii = 0; ii < inum; ii++) {
             int i = ilist[ii];
             int *jlist = firstneigh[i];
@@ -64,7 +64,7 @@ void Neighborlist::synchronize(LAMMPS *lammps)
             }
         }
     }
-    // qDebug() << "Neighborlist copy synced in " << t.elapsed();
+    qDebug() << "Neighborlist copy synced in " << t.elapsed();
 }
 
 void Neighborlist::build(QVector<QVector3D> &positions, System *system)
