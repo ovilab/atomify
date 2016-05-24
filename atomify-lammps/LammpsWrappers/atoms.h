@@ -38,7 +38,7 @@ public:
     void setAtomColorAndScale(int atomType, QColor color, float radius);
     BondData* bondData() const;
     class Bonds* bonds() const;
-
+    AtomData &atomData();
 signals:
     void sphereDataChanged(SphereData* sphereData);
     void bondDataChanged(BondData* bondData);

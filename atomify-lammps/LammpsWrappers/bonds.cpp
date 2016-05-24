@@ -24,6 +24,17 @@ QVector<QVector<float> > &Bonds::bondLengths()
     return m_bondLengths;
 }
 
+float Bonds::maxBondLength()
+{
+    float maxBondLength = 0;
+    for(const QVector<float> &vec : m_bondLengths) {
+        for(const float &length : vec) {
+            maxBondLength = std::max(length, maxBondLength);
+        }
+    }
+    return maxBondLength;
+}
+
 void Bonds::setEnabled(bool enabled)
 {
     if (m_enabled == enabled)

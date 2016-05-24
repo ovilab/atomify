@@ -58,6 +58,10 @@ void System::synchronize(LAMMPS *lammps)
     }
 
     m_atoms->synchronize(lammps);
+//    QElapsedTimer t;
+//    t.start();
+//    m_atoms->atomData().neighborList.build(m_atoms->atomData().positions, this);
+//    qDebug() << "Cell list built in " << t.elapsed() << " ms.";
 }
 
 QVector3D System::origin() const

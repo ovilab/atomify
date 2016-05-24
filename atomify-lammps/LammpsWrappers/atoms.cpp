@@ -214,3 +214,8 @@ Bonds *Atoms::bonds() const
 {
     return m_bonds;
 }
+
+AtomData &Atoms::atomData()
+{
+    return m_atomData;
+}

@@ -13,7 +13,7 @@ public:
     Bonds();
     bool enabled() const;
     QVector<QVector<float>> &bondLengths();
-
+    float maxBondLength();
 public slots:
     void setEnabled(bool enabled);
 
