@@ -45,5 +45,6 @@
         <file>desktop/MeasureTab.qml</file>
         <file>RDFItem.qml</file>
         <file>CPLineSeries.qml</file>
+        <file>desktop/ShortcutsTab.qml</file>
     </qresource>
 </RCC>

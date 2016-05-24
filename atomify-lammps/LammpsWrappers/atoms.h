@@ -58,11 +58,12 @@ private:
     QVector<AtomStyle*> m_atomStyles;
     SphereData* m_sphereData = nullptr;
     BondData* m_bondData = nullptr;
-    class Bonds* m_bonds;
+    class Bonds* m_bonds = nullptr;
+    float m_bondRadius = 0.1;
     QVector<class Modifier*> m_modifiers;
     void generateBondData(AtomData &atomData);
     void generateSphereData(AtomData &atomData);
-    float m_bondRadius = 0.1;
+    void applyDeltaPositions(AtomData &atomData);
 };
 
 #endif // ATOMS_H

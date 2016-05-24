@@ -24,11 +24,15 @@ Item {
         anchors.fill: parent
         Layout.alignment: Qt.AlignTop
         Layout.fillHeight: true
+        Layout.fillWidth: true
 
         TabView {
             id: tabview
-            width: desktopRoot.width*0.4
-            height: parent.height
+            // width: desktopRoot.width*0.4
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            width: 1
+            // height: parent.height
 
             Tab {
                 id: editorTab
@@ -66,14 +70,13 @@ Item {
                 RenderingTab {
                     anchors.fill: parent
                     atomifyVisualizer: visualizer
+                    system: simulator.system
                     onItemsChanged: {
-                        console.log("Yeah, items changed: ", items.length)
                         for(var i in items) {
                             var controller = items[i]
                             for(var j in controller.simulatorControls) {
                                 var control = controller.simulatorControls[j]
                                 control.parent = simulator
-                                console.log("Created " + control + " on simulator " + simulator)
                             }
                         }
                     }
@@ -87,9 +90,16 @@ Item {
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.minimumWidth: desktopRoot.width*0.5
+            //width: desktopRoot.width*0.6
         }
+
         SimulationSummary {
             system: simulator.system ? simulator.system : null
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.maximumWidth: 300
+            Layout.minimumWidth: 300
         }
     }
 

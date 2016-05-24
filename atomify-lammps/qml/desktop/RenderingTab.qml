@@ -8,39 +8,60 @@ import "../visualization"
 import ".."
 Item {
     id: renderingRoot
+    anchors.fill: parent
     property AtomifyVisualizer atomifyVisualizer
+    property System system
     property var items: []
 
-    Grid {
-        id: grid
-        width: parent.width
-        columns: 2
+    ColumnLayout {
+        anchors.fill: parent
+
+        ComboBox {
+            model: [ "Add compute", "RDF", "Energy" ]
+            onCurrentIndexChanged: {
+                if(currentText === "RDF") {
+                    addMeasure("../RDFItem.qml")
+                    currentIndex = 0
+                }
+            }
+        }
+
+        GridLayout {
+            id: grid
+            // Layout.fillHeight: true
+            Layout.fillWidth: true
+            columns: 2
+        }
     }
 
-    function addThing() {
-        var component = Qt.createComponent("../RDFItem.qml");
+    function addMeasure(qmlFile) {
+        var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
-            var QMLObject = component.createObject(null, {});
+            var QMLObject = component.createObject(grid, {});
             if(QMLObject===null) {
-                console.log("Could not add RDF...")
+                console.log("Could not add...")
             } else {
-                QMLObject.parent = grid
-                QMLObject.width = grid.width/2
-                QMLObject.height = grid.width/2
+                // QMLObject.parent = grid
+                QMLObject.system = system
+                QMLObject.Layout.fillWidth = true
+                QMLObject.Layout.fillHeight = true
+                QMLObject.Layout.preferredWidth = 1
+                QMLObject.Layout.preferredHeight = 1
+                QMLObject.Layout.maximumHeight = 100
+
                 items.push(QMLObject)
-                console.log("doing items changed")
                 itemsChanged(items)
             }
         } else {
-            console.log("Could not add RDF2...")
+            console.log("Could not add...")
         }
     }
 
-    Button {
-        text: "Add"
-        onClicked: {
-            addThing()
-        }
-    }
+//    Button {
+//        text: "Add"
+//        onClicked: {
+//            addThing()
+//        }
+//    }
 }
 

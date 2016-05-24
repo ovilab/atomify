@@ -1,69 +1,89 @@
 import QtQuick 2.6
+import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.4
 import QtCharts 2.1
 import Atomify 1.0
 import "mobile/dashboard/controls"
 
 Item {
     property alias compute: rdf
+    property System system
     property var simulatorControls: [
         rdf
     ]
 
-    width: 400
-    height: 400
+    width: parent.width*0.5
+    height: width
 
-    ChartView {
-        id: miniChart
-        anchors.fill: parent
-        antialiasing: true
-        legend.visible: true
-        title: "Pair distribution function"
-        // backgroundColor: "transparent"
-        titleColor: "white"
-
-        CPLineSeries {
-            axisX: _axisX
-            axisY: _axisY
-            dataSource: DataSource {
-                id: dataSource0
-            }
-        }
-
-        CPLineSeries {
-            axisX: _axisX
-            axisY: _axisY
-            dataSource: DataSource {
-                id: dataSource1
-            }
-        }
-
-        CPLineSeries {
-            axisX: _axisX
-            axisY: _axisY
-            dataSource: DataSource {
-                id: dataSource2
-            }
-        }
-
-        ValueAxis {
-            id: _axisX
-            tickCount: 3
-            min: 0
-            max: 5.5
-            titleText: "r [Å]"
-            color: "white"
-            labelsColor: "black"
-        }
-        ValueAxis {
-            id: _axisY
-            tickCount: 3
-            min: 0
-            max: 5.0
-            titleText: "g(r)"
-            color: "white"
-            labelsColor: "black"
-        }
+    onWidthChanged: {
+        console.log("RDF width: ", width)
     }
+
+    onHeightChanged: {
+        console.log("RDF height: ", height)
+    }
+
+    // ColumnLayout {
+        ChartView {
+            id: miniChart
+            anchors.fill: parent
+            antialiasing: true
+            legend.visible: true
+            title: "Pair distribution function"
+            titleColor: "black"
+
+            CPLineSeries {
+                axisX: _axisX
+                axisY: _axisY
+                dataSource: DataSource {
+                    id: dataSource0
+                }
+            }
+
+            CPLineSeries {
+                axisX: _axisX
+                axisY: _axisY
+                dataSource: DataSource {
+                    id: dataSource1
+                }
+            }
+
+            CPLineSeries {
+                axisX: _axisX
+                axisY: _axisY
+                dataSource: DataSource {
+                    id: dataSource2
+                }
+            }
+
+            ValueAxis {
+                id: _axisX
+                tickCount: 3
+                min: 0
+                max: 5.5
+                titleText: "r [Å]"
+                color: "white"
+                labelsColor: "black"
+            }
+            ValueAxis {
+                id: _axisY
+                tickCount: 3
+                min: 0
+                max: 5.0
+                titleText: "g(r)"
+                color: "white"
+                labelsColor: "black"
+            }
+        }
+//        Column {
+//            Button {
+//                text: "hello"
+//            }
+//            Button {
+//                text: "hello you"
+//            }
+//        }
+//    }
 
     RDF {
         id: rdf

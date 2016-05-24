@@ -74,6 +74,10 @@ void Atoms::synchronize(LAMMPS *lammps)
     if(m_atomData.positions.size() != numberOfAtoms) {
         m_atomData.positions.resize(numberOfAtoms);
     }
+    if(m_atomData.deltaPositions.size() != numberOfAtoms) {
+        m_atomData.deltaPositions.resize(numberOfAtoms);
+        for(QVector3D &delta : m_atomData.deltaPositions) delta = QVector3D(); // Reset delta
+    }
     if(m_atomData.types.size() != numberOfAtoms) {
         m_atomData.types.resize(numberOfAtoms);
     }
@@ -119,8 +123,20 @@ void Atoms::updateData()
          }
     }
 
+
+    applyDeltaPositions(atomData);
     generateSphereData(atomData);
     generateBondData(atomData);
+}
+
+void Atoms::applyDeltaPositions(AtomData &atomData) {
+    for(int i=0; i<atomData.positions.size(); i++) {
+        QVector3D &position = atomData.positions[i];
+        QVector3D &deltaPosition = atomData.deltaPositions[i];
+        position[0] += deltaPosition[0];
+        position[1] += deltaPosition[1];
+        position[2] += deltaPosition[2];
+    }
 }
 
 void Atoms::generateSphereData(AtomData &atomData) {

@@ -8,6 +8,7 @@ bool AtomData::isValid()
 AtomData::~AtomData()
 {
     positions.clear();
+    deltaPositions.clear();
     colors.clear();
     radii.clear();
     types.clear();

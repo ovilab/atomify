@@ -6,6 +6,7 @@
 
 struct AtomData {
     QVector<QVector3D> positions;
+    QVector<QVector3D> deltaPositions; // For periodic copies
     QVector<QVector3D> colors;
     QVector<float> radii;
     QVector<int> types;

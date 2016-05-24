@@ -56,9 +56,10 @@ int main(int argc, char *argv[])
     view.setFormat(format);
     view.setSource(QUrl("qrc:/main.qml"));
     // view.setSource(QUrl("qrc:/main_spherestmp.qml"));
-    view.setWidth(1000);
-    view.setHeight(1000);
-    view.show();
+//    view.setWidth(1000);
+//    view.setHeight(1000);
+    // view.show();
+    view.showMaximized();
 
 #ifdef Q_OS_LINUX
     setlocale(LC_ALL, "C");
