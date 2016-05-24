@@ -16,8 +16,9 @@ Rectangle {
     id: applicationRoot
     property alias mySimulator: mainDesktop.simulator
 
-    width: 300
-    height: 480
+//    width: 1000
+//    height: 1000
+    anchors.fill: parent
     visible: true
 
     property string mode: {
@@ -34,23 +35,26 @@ Rectangle {
         property alias height: applicationRoot.height
     }
 
-    function resetStyle() {
-        Style.reset(width, height, Screen)
-    }
+//    function resetStyle() {
+//        console.log("Resetting style")
+//        width = Math.max(width, 1650)
+//        height = Math.max(height, 1080)
+//        Style.reset(width, height, Screen)
+//    }
 
-    onWidthChanged: {
-        resetStyle()
-        console.log("Width changed")
-    }
+//    onWidthChanged: {
+//        resetStyle()
+//        console.log("Width changed")
+//    }
 
-    onHeightChanged: {
-        console.log("Width changed")
-        resetStyle()
-    }
+//    onHeightChanged: {
+//        console.log("Height changed")
+//        resetStyle()
+//    }
 
-    Component.onCompleted: {
-        resetStyle()
-    }
+//    Component.onCompleted: {
+//        resetStyle()
+//    }
 
     MainDesktop {
         id: mainDesktop
