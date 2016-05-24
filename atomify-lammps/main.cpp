@@ -24,7 +24,7 @@
 #include "datasource.h"
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/system.h"
-
+#include "LammpsWrappers/modifiers/modifiers.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -40,6 +40,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<DataSource>("Atomify", 1, 0, "DataSource");
     qmlRegisterType<Atoms>("Atomify", 1, 0, "Atoms");
     qmlRegisterType<System>("Atomify", 1, 0, "System");
+    qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");
+    qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");
+    qmlRegisterType<Slice>("Atomify", 1, 0, "Slice");
+
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);

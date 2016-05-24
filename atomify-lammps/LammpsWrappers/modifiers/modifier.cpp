@@ -1,7 +1,7 @@
 #include "modifier.h"
 #include "../system.h"
 
-Modifier::Modifier(System *system) : m_system(system)
+Modifier::Modifier()
 {
 
 }
@@ -9,6 +9,11 @@ Modifier::Modifier(System *system) : m_system(system)
 bool Modifier::enabled() const
 {
     return m_enabled;
+}
+
+void Modifier::setSystem(System *system)
+{
+    m_system = system;
 }
 
 void Modifier::setEnabled(bool enabled)

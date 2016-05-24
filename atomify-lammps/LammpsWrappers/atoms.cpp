@@ -162,16 +162,21 @@ void Atoms::generateBondData(AtomData &atomData) {
     t.start();
     bondsDataRaw.reserve(atomData.positions.size());
 
-    for(int ii=0; ii<atomData.positions.size(); ii++) {
+    for(int ii=0; ii<atomData.size(); ii++) {
         int i = atomData.originalIndex[ii];
         const QVector3D position_i = atomData.positions[ii];
+        const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
         const int atomType_i = atomData.types[ii];
 
         const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
         const float sphereRadius_i = atomData.radii[ii];
 
-        for(const int &j : neighborList.neighbors[ii]) {
-            const QVector3D position_j = atomData.positions[j];
+        for(const int &j : neighborList.neighbors[i]) {
+            QVector3D position_j = atomData.positions[j];
+            position_j[0] += deltaPosition_i[0];
+            position_j[1] += deltaPosition_i[1];
+            position_j[2] += deltaPosition_i[2];
+
             const int &atomType_j = atomData.types[j];
 
             float dx = position_i[0] - position_j[0];

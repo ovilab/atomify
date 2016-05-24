@@ -30,6 +30,21 @@ Scene3D {
         AtomifySimulator {
             id: simulator
             simulationSpeed: 1
+            system.atoms.modifiers: [
+                colorModifier,
+                periodicImages
+            ]
+        }
+
+        ColorModifier {
+            id: colorModifier
+        }
+
+        PeriodicImages {
+            id: periodicImages
+            numberOfCopiesX: 2
+            numberOfCopiesY: 1
+            numberOfCopiesZ: 1
         }
 
         Spheres {

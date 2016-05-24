@@ -13,9 +13,10 @@ protected:
     class System *m_system = nullptr;
 
 public:
-    Modifier(class System *system);
+    Modifier();
     virtual void apply(AtomData &atomData) = 0;
     bool enabled() const;
+    void setSystem(class System *system);
 
 public slots:
     void setEnabled(bool enabled);

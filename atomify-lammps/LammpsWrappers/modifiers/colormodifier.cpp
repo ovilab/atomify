@@ -2,7 +2,7 @@
 #include "../system.h"
 #include "../atoms.h"
 
-ColorModifier::ColorModifier(System *system) : Modifier(system)
+ColorModifier::ColorModifier()
 {
 
 }

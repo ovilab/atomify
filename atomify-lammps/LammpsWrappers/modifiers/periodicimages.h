@@ -17,12 +17,12 @@ class PeriodicImages : public Modifier
     int m_numberOfCopiesX = 1;
     int m_numberOfCopiesY = 1;
     int m_numberOfCopiesZ = 1;
-    bool m_showImagesX = false;
-    bool m_showImagesY = false;
-    bool m_showImagesZ = false;
+    bool m_showImagesX = true;
+    bool m_showImagesY = true;
+    bool m_showImagesZ = true;
 
 public:
-    PeriodicImages(class System *system);
+    PeriodicImages();
 
     // Modifier interface
 public:

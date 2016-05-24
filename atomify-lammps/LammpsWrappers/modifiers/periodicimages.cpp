@@ -1,7 +1,7 @@
 #include "periodicimages.h"
 #include "../system.h"
 
-PeriodicImages::PeriodicImages(System *system) : Modifier(system)
+PeriodicImages::PeriodicImages()
 {
 
 }
@@ -31,7 +31,6 @@ void PeriodicImages::apply(AtomData &atomData)
 
     int nextIndex = atomData.size();
     int originalCount = atomData.size();
-
     atomData.resize(numberOfCopies*atomData.size());
     for(int imageX = imageLow[0]; imageX <= imageHigh[0]; imageX++) {
         for(int imageY = imageLow[1]; imageY <= imageHigh[1]; imageY++) {

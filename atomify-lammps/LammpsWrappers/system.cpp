@@ -6,6 +6,7 @@
 #include "regions.h"
 #include "groups.h"
 #include "../mysimulator.h"
+#include "modifiers/modifier.h"
 
 using namespace LAMMPS_NS;
 
@@ -64,6 +65,10 @@ void System::synchronize(LAMMPS *lammps)
 
 
     m_atoms->synchronize(lammps);
+    for(QVariant modifier_ : m_atoms->modifiers()) {
+        Modifier *modifier = modifier_.value<Modifier*>();
+        modifier->setSystem(this);
+    }
 //    QElapsedTimer t;
 //    t.start();
 //    m_atoms->atomData().neighborList.build(m_atoms->atomData().positions, this);
