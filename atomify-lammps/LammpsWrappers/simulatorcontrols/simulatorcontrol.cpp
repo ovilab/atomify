@@ -3,9 +3,15 @@
 #include "scripthandler.h"
 #include "mysimulator.h"
 
-SimulatorControl::SimulatorControl(QQuickItem *parent) : QQuickItem(parent)
+SimulatorControl::SimulatorControl(Qt3DCore::QNode *parent) : Qt3DCore::QNode(parent)
 {
 
+}
+
+int SimulatorControl::getNextId()
+{
+    static int nextId = 0;
+    return nextId++;
 }
 
 SimulatorControl::~SimulatorControl()
@@ -128,6 +134,7 @@ void SimulatorControl::setEnabled(bool enabled)
 
 void SimulatorControl::setIdentifier(QString identifier)
 {
+    identifier = identifier+QString("%1").arg(SimulatorControl::getNextId());
     if (m_identifier == identifier)
         return;
 

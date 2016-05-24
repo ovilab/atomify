@@ -26,7 +26,7 @@ private:
     DataSource* m_dataSource = nullptr;
 
 public:
-    FixHistogram();
+    FixHistogram(Qt3DCore::QNode *parent = 0);
     virtual bool existsInLammps(LAMMPSController *lammpsController) override;
     virtual void update(LAMMPSController *lammpsController) override;
     int nEvery() const;
@@ -66,6 +66,8 @@ signals:
     void numberOfBinsChanged(int numberOfBins);
     void valuesChanged(QVariantList values);
     void dataSourceChanged(DataSource* dataSource);
+private:
+    QT3D_CLONEABLE(FixHistogram)
 };
 
 #endif // FIXHISTOGRAM_H

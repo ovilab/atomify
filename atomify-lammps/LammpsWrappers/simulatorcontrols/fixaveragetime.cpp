@@ -5,7 +5,7 @@
 /* The Nevery, Nrepeat, and Nfreq arguments specify on what timesteps the input values will be used in order to contribute to the average. The final averaged quantities are generated on timesteps that are a mlutiple of Nfreq. The average is over Nrepeat quantities, computed in the preceding portion of the simulation every Nevery timesteps. Nfreq must be a multiple of Nevery and Nevery must be non-zero even if Nrepeat is 1. Also, the timesteps contributing to the average value cannot overlap, i.e. Nrepeat*Nevery can not exceed Nfreq.
  * */
 
-FixAverageTime::FixAverageTime()
+FixAverageTime::FixAverageTime(Qt3DCore::QNode *parent) : CPCompute(parent)
 {
 
 }

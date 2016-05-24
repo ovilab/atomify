@@ -2,7 +2,7 @@
 #include "../../lammpscontroller.h"
 #include <compute_rdf.h>
 #include <fix_ave_time.h>
-RDF::RDF()
+RDF::RDF(Qt3DCore::QNode *parent) : CPCompute(parent)
 {
 
 }
@@ -30,7 +30,7 @@ QList<QString> RDF::enabledCommands()
 {
     return {
         QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()),
-        QString("fix %1_ave all ave/time 1 1 1 c_%1 file %1.txt mode vector").arg(identifier())
+        QString("fix %1_ave all ave/time 1 1 1 c_%1 file %1.txt mode vector ave running").arg(identifier())
     };
 }
 

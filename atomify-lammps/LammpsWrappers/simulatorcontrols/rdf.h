@@ -15,7 +15,7 @@ class RDF : public CPCompute
     Q_PROPERTY(DataSource* dataSource4 READ dataSource4 WRITE setDataSource4 NOTIFY dataSource4Changed)
 
 public:
-    RDF();
+    RDF(Qt3DCore::QNode *parent = nullptr);
 
 protected:
     DataSource* m_dataSource1 = nullptr;
@@ -63,6 +63,8 @@ signals:
     // SimulatorControl interface
 protected:
     virtual QList<QString> disableCommands();
+private:
+    QT3D_CLONEABLE(RDF)
 };
 
 #endif // RDF_H

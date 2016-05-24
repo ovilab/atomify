@@ -13,7 +13,7 @@ import SimVis.ShaderNodes 1.0
 Scene3D {
     id: atomifyVisualizerRoot
     property alias visualizer: visualizer
-    property alias simulator: mySimulator
+    property alias simulator: simulator
     // property alias rdf: rdf
     property real scale: 0.23
     property bool addPeriodicCopies: false
@@ -28,7 +28,7 @@ Scene3D {
         camera.aspectRatio: atomifyVisualizerRoot.width / atomifyVisualizerRoot.height
 
         AtomifySimulator {
-            id: mySimulator
+            id: simulator
             simulationSpeed: 1
         }
 

@@ -28,7 +28,7 @@ protected:
     virtual QList<QString> resetCommands() override;
 
 public:
-    explicit CPCompute(QQuickItem *parent = 0);
+    CPCompute(Qt3DCore::QNode *parent = 0);
     ~CPCompute() { }
     void update(LAMMPSController *lammpsController) override;
     bool existsInLammps(LAMMPSController *lammpsController) override;
@@ -54,6 +54,9 @@ signals:
 public slots:
     void setIsVector(bool isVector);
     void setDataSource(DataSource* dataSource);
+
+private:
+    QT3D_CLONEABLE(CPCompute)
 };
 
 #endif // COMPUTE_H

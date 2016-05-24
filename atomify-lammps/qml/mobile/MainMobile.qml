@@ -33,7 +33,6 @@ Item {
         simulator.scriptHandler.reset()
         simulator.scriptHandler.runFile(simulation.scriptSource)
         mobileRoot.simulation = simulation
-
         simulator.clearSimulatorControls()
 
 //        for(var i in simulation.controllers) {

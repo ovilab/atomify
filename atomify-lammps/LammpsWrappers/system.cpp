@@ -18,6 +18,8 @@ System::System(AtomifySimulator *simulator)
 
 void System::synchronize(LAMMPS *lammps)
 {
+    if(!lammps) return;
+
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
     Update *update = lammps->update;

@@ -3,8 +3,9 @@
 #include "simulatorcontrol.h"
 class CPVariable : public SimulatorControl
 {
+    Q_OBJECT
 public:
-    CPVariable();
+    CPVariable(Qt3DCore::QNode *parent = 0);
 
     // SimulatorControl interface
 protected:
@@ -15,6 +16,9 @@ protected:
 
 public:
     virtual bool existsInLammps(class LAMMPSController *lammpsController);
+
+private:
+    QT3D_CLONEABLE(CPVariable)
 };
 
 #endif // CPVARIABLE_H

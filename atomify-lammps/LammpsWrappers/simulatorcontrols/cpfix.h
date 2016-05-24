@@ -13,7 +13,7 @@ protected:
     virtual QList<QString> resetCommands() override;
 
 public:
-    explicit CPFix(QQuickItem *parent = 0);
+    CPFix(Qt3DCore::QNode *parent = 0);
     ~CPFix() { }
     void update(LAMMPSController *lammpsController) override;
     virtual bool existsInLammps(LAMMPSController *lammpsController);
@@ -21,7 +21,8 @@ public:
 signals:
 
 public slots:
-
+private:
+    QT3D_CLONEABLE(CPFix)
 };
 
 #endif // CPFIX_H

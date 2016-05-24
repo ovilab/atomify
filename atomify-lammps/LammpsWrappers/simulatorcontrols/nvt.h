@@ -14,7 +14,7 @@ private:
     double m_temperatureDampening = 1.0;
 
 public:
-    explicit NVT(QQuickItem *parent = 0);
+    NVT(Qt3DCore::QNode *parent = 0);
     ~NVT() { }
     double targetTemperature() const;
     double temperatureDampening() const;
@@ -32,6 +32,8 @@ protected:
     virtual void updateCommand() override;
     virtual QList<QString> enabledCommands();
     virtual QList<QString> disableCommands();
+private:
+    QT3D_CLONEABLE(NVT)
 };
 
 #endif // NVT_H

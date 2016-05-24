@@ -2,7 +2,7 @@
 #include "../../lammpscontroller.h"
 #include <fix_ave_histo.h>
 
-FixHistogram::FixHistogram()
+FixHistogram::FixHistogram(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
 
 }

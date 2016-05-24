@@ -66,6 +66,26 @@ Item {
                 RenderingTab {
                     anchors.fill: parent
                     atomifyVisualizer: visualizer
+                    onItemsChanged: {
+                        console.log("Yeah, items changed: ", items.length)
+                        for(var i in items) {
+                            var controller = items[i]
+                            for(var j in controller.simulatorControls) {
+                                var control = controller.simulatorControls[j]
+                                control.parent = simulator
+                                console.log("Created " + control + " on simulator " + simulator)
+                            }
+                        }
+
+                        //        for(var i in simulation.controllers) {
+                        //            var controller = simulation.controllers[i]
+                        //            for(var j in controller.simulatorControls) {
+                        //                var control = controller.simulatorControls[j]
+                        //                control.parent = simulator
+                        //                console.log("Created " + control + " on simulator " + simulator)
+                        //            }
+                        //        }
+                    }
                 }
             }
         }
@@ -76,85 +96,6 @@ Item {
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true
-
-//            FlyModeNavigator {
-//                id: navigator
-//                anchors.fill: parent
-//                camera: visualizer.camera
-//            }
-
-//            SimulationSummary {
-//                simulator: desktopRoot.simulator
-////                pressure: pressure
-////                temperature: temperature
-//            }
-
-//            Rectangle {
-//                id: scaleRectangle
-//                width: parent.width
-//                anchors.bottom: visualizer.bottom
-
-//                height: 25
-//                radius: 4
-//                color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
-
-//                RowLayout {
-//                    id: scaleRow
-//                    x: 10
-//                    y: 3
-//                    spacing: 10
-
-//                    Label {
-//                        id: speedLabel
-//                        text: "Simulation speed"
-//                    }
-
-//                    Slider {
-//                        id: speedSlider
-//                        minimumValue: 1
-//                        maximumValue: 1000
-//                        stepSize: 1
-//                        value: simulator.simulationSpeed
-//                        onValueChanged: {
-//                            if(simulator) {
-//                                simulator.simulationSpeed = value
-//                            }
-//                        }
-//                        Settings {
-//                            property alias speedValue: speedSlider.value
-//                        }
-//                    }
-
-//                    Label {
-//                        text: "Sphere size"
-//                    }
-
-//                    Slider {
-//                        id: scaleSlider
-//                        minimumValue: 0.1
-//                        maximumValue: 10.0
-//                        value: visualizer.scale
-//                        onValueChanged: {
-//                            visualizer.scale = value
-//                        }
-//                        Settings {
-//                            property alias scaleValue: scaleSlider.value
-//                        }
-//                    }
-//                }
-//            }
-
-//            Label {
-//                x: 0.5*(parent.width - width)
-//                y: 25
-//                color: Qt.rgba(1,1,1,0.5)
-//                width: 200
-//                height: 50
-//                font.pixelSize: 50
-//                text: "Paused"
-//                visible: simulator.paused
-//            }
-//        }
         }
     }
 
@@ -201,18 +142,4 @@ Item {
             }
         }
     }
-
-//    Temperature {
-//        id: temperature
-//        lammps: lammpsObject
-//        targetValue: slider.value
-//    }
-
-//    Compute {
-//        id: pressure
-//        simulator: mySimulator
-//        identifier: "pressure"
-//        command: "compute pressure all pressure temperature"
-//        dependencies: ["temperature"]
-//    }
 }

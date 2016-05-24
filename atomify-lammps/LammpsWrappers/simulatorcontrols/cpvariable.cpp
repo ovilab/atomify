@@ -1,7 +1,7 @@
 #include "cpvariable.h"
 #include <variable.h>
 #include "lammpscontroller.h"
-CPVariable::CPVariable()
+CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
 
 }

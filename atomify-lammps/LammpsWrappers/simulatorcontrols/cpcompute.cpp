@@ -3,7 +3,7 @@
 #include "mysimulator.h"
 #include "../system.h"
 #include <QDebug>
-CPCompute::CPCompute(QQuickItem *parent) : SimulatorControl(parent)
+CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
 
 }

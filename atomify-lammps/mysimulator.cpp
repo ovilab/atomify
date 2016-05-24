@@ -36,7 +36,7 @@ void AtomifySimulator::clearSimulatorControls()
     for(QObject* child : children()) {
         SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
         if(control) {
-            control->setParentItem(nullptr);
+            control->setParent((QNode*) 0);
         }
     }
 }
@@ -49,15 +49,13 @@ System *AtomifySimulator::system() const
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
-    if(atomifySimulator->scriptHandler() == nullptr) {
-        return;
-    }
 
     if(atomifySimulator->willReset()) {
         m_lammpsController.reset();
         atomifySimulator->lammpsState = m_lammpsController.state;
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
+        atomifySimulator->clearSimulatorControls();
         emit atomifySimulator->lammpsDidReset();
     }
 
@@ -78,7 +76,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     //            controls.append(control);
     //        }
     //    }
-
     for(QObject* child : atomifySimulator->children()) {
         SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
         if(control) {

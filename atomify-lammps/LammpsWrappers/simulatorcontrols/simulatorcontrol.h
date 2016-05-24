@@ -1,12 +1,12 @@
 #ifndef SIMULATORCONTROL_H
 #define SIMULATORCONTROL_H
-
+#include <Qt3DCore>
 #include <QQuickItem>
 #include <QVariantList>
 
 class LAMMPSController;
 class AtomifySimulator;
-class SimulatorControl : public QQuickItem
+class SimulatorControl : public Qt3DCore::QNode
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
@@ -29,7 +29,8 @@ protected:
 
     void removeDependency(SimulatorControl *control);
 public:
-    explicit SimulatorControl(QQuickItem *parent = 0);
+    explicit SimulatorControl(Qt3DCore::QNode *parent = 0);
+    static int getNextId();
     ~SimulatorControl();
     bool enabled() const;
     QString identifier() const;

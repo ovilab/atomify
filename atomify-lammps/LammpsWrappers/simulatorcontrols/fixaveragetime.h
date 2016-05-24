@@ -17,7 +17,7 @@ protected:
     int m_nFreq = 1;
 
 public:
-    FixAverageTime();
+    FixAverageTime(Qt3DCore::QNode *parent = 0);
 
     // SimulatorControl interface
 protected:
@@ -45,6 +45,8 @@ signals:
     void nRepeatChanged(int NRepeat);
     void nFreqChanged(int NFreq);
     void computeChanged(CPCompute* compute);
+private:
+    QT3D_CLONEABLE(FixAverageTime)
 };
 
 #endif // FIXAVERAGETIME_H

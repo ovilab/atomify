@@ -4,6 +4,8 @@
 #include <QVector>
 #include <QVariantList>
 #include <QPointF>
+#include <QLineSeries>
+
 class DataSource : public QObject
 {
     Q_OBJECT
