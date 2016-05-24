@@ -85,6 +85,9 @@ void Atoms::synchronize(LAMMPS *lammps)
         m_atomData.colors.resize(numberOfAtoms);
         for(QVector3D &color : m_atomData.colors) color = QVector3D(0.9, 0.2, 0.1);
     }
+    if(m_atomData.originalIndex.size() != numberOfAtoms) {
+        m_atomData.originalIndex.resize(numberOfAtoms);
+    }
     if(m_atomData.radii.size() != numberOfAtoms) {
         m_atomData.radii.resize(numberOfAtoms);
         for(float &radii : m_atomData.radii) radii = 1.0;
@@ -101,6 +104,7 @@ void Atoms::synchronize(LAMMPS *lammps)
         m_atomData.positions[i][0] = position[0];
         m_atomData.positions[i][1] = position[1];
         m_atomData.positions[i][2] = position[2];
+        m_atomData.originalIndex[i] = i;
     }
 
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
@@ -157,14 +161,15 @@ void Atoms::generateBondData(AtomData &atomData) {
     t.start();
     bondsDataRaw.reserve(atomData.positions.size());
 
-    for(int i=0; i<atomData.positions.size(); i++) {
-        const QVector3D position_i = atomData.positions[i];
-        const int atomType_i = atomData.types[i];
+    for(int ii=0; ii<atomData.positions.size(); ii++) {
+        int i = atomData.originalIndex[ii];
+        const QVector3D position_i = atomData.positions[ii];
+        const int atomType_i = atomData.types[ii];
 
         const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
-        const float sphereRadius_i = atomData.radii[i];
+        const float sphereRadius_i = atomData.radii[ii];
 
-        for(const int &j : neighborList.neighbors[i]) {
+        for(const int &j : neighborList.neighbors[ii]) {
             const QVector3D position_j = atomData.positions[j];
             const int &atomType_j = atomData.types[j];
 

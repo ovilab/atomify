@@ -9,6 +9,7 @@ struct AtomData {
     QVector<QVector3D> deltaPositions; // For periodic copies
     QVector<QVector3D> colors;
     QVector<float> radii;
+    QVector<int> originalIndex;
     QVector<int> types;
     Neighborlist neighborList;
     bool isValid();
