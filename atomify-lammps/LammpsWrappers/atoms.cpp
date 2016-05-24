@@ -142,27 +142,31 @@ void Atoms::generateBondData(AtomData &atomData) {
     bondsDataRaw.reserve(atomData.positions.size());
 
     for(int i=0; i<atomData.positions.size(); i++) {
-        const QVector3D &position_i = atomData.positions[i];
-        const int &atomType_i = atomData.types[i];
+        const QVector3D position_i = atomData.positions[i];
+        const int atomType_i = atomData.types[i];
 
-        const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
+        const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
+        const float sphereRadius_i = atomData.radii[i];
 
         for(const int &j : neighborList.neighbors[i]) {
-            const QVector3D &position_j = atomData.positions[j];
+            const QVector3D position_j = atomData.positions[j];
             const int &atomType_j = atomData.types[j];
 
             float dx = position_i[0] - position_j[0];
             float dy = position_i[1] - position_j[1];
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
-
             if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
                 BondVBOData bond;
-                bond.vertex1 = position_i;
-                bond.vertex2 = position_j;
-                bond.radius1 = 0.10;
-                bond.radius2 = 0.10;
-                bond.sphereRadius1 = atomData.radii[i];
+                bond.vertex1[0] = position_i[0];
+                bond.vertex1[1] = position_i[1];
+                bond.vertex1[2] = position_i[2];
+                bond.vertex2[0] = position_j[0];
+                bond.vertex2[1] = position_j[1];
+                bond.vertex2[2] = position_j[2];
+                bond.radius1 = m_bondRadius;
+                bond.radius2 = m_bondRadius;
+                bond.sphereRadius1 = sphereRadius_i;
                 bond.sphereRadius2 = atomData.radii[j];
                 bondsDataRaw.push_back(bond);
             }
@@ -220,4 +224,18 @@ Bonds *Atoms::bonds() const
 AtomData &Atoms::atomData()
 {
     return m_atomData;
+}
+
+float Atoms::bondRadius() const
+{
+    return m_bondRadius;
+}
+
+void Atoms::setBondRadius(float bondRadius)
+{
+    if (m_bondRadius == bondRadius)
+        return;
+
+    m_bondRadius = bondRadius;
+    emit bondRadiusChanged(bondRadius);
 }

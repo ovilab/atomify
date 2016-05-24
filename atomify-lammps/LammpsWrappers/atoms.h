@@ -27,6 +27,7 @@ class Atoms : public QObject
     Q_PROPERTY(SphereData* sphereData READ sphereData NOTIFY sphereDataChanged)
     Q_PROPERTY(BondData* bondData READ bondData NOTIFY bondDataChanged)
     Q_PROPERTY(Bonds* bonds READ bonds NOTIFY bondsChanged)
+    Q_PROPERTY(float bondRadius READ bondRadius WRITE setBondRadius NOTIFY bondRadiusChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
@@ -39,10 +40,16 @@ public:
     BondData* bondData() const;
     class Bonds* bonds() const;
     AtomData &atomData();
+    float bondRadius() const;
+
+public slots:
+    void setBondRadius(float bondRadius);
+
 signals:
     void sphereDataChanged(SphereData* sphereData);
     void bondDataChanged(BondData* bondData);
     void bondsChanged(class Bonds* bonds);
+    void bondRadiusChanged(float bondRadius);
 
 private:
     AtomData m_atomData;
@@ -55,6 +62,7 @@ private:
     QVector<class Modifier*> m_modifiers;
     void generateBondData(AtomData &atomData);
     void generateSphereData(AtomData &atomData);
+    float m_bondRadius = 0.1;
 };
 
 #endif // ATOMS_H
