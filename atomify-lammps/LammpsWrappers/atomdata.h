@@ -4,7 +4,8 @@
 #include <QVector>
 #include "neighborlist.h"
 
-struct AtomData {
+class AtomData {
+public:
     QVector<QVector3D> positions;
     QVector<QVector3D> deltaPositions; // For periodic copies
     QVector<QVector3D> colors;
@@ -13,6 +14,8 @@ struct AtomData {
     QVector<int> types;
     Neighborlist neighborList;
     bool isValid();
+    void resize(int size);
+    int size();
     ~AtomData();
 };
 

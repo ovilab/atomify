@@ -9,6 +9,7 @@ Slice::Slice(System *system) : Modifier(system)
 
 void Slice::apply(AtomData &atomData)
 {
+    if(!enabled()) return;
 }
 
 float Slice::distance() const
