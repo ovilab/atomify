@@ -27,13 +27,14 @@ class Atoms : public QObject
     Q_PROPERTY(SphereData* sphereData READ sphereData NOTIFY sphereDataChanged)
     Q_PROPERTY(BondData* bondData READ bondData NOTIFY bondDataChanged)
     Q_PROPERTY(Bonds* bonds READ bonds NOTIFY bondsChanged)
+    Q_PROPERTY(QVariantList modifiers READ modifiers WRITE setModifiers NOTIFY modifiersChanged)
     Q_PROPERTY(float bondRadius READ bondRadius WRITE setBondRadius NOTIFY bondRadiusChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
     void updateData();
     SphereData* sphereData() const;
-    QVector<class Modifier*> &modifiers();
+    QVariantList modifiers() const;
     QVector<AtomStyle*> &atomStyles();
     void setAtomType(int atomType, QString atomTypeName);
     void setAtomColorAndScale(int atomType, QColor color, float radius);
@@ -44,12 +45,14 @@ public:
 
 public slots:
     void setBondRadius(float bondRadius);
+    void setModifiers(QVariantList modifiers);
 
 signals:
     void sphereDataChanged(SphereData* sphereData);
     void bondDataChanged(BondData* bondData);
     void bondsChanged(class Bonds* bonds);
     void bondRadiusChanged(float bondRadius);
+    void modifiersChanged(QVariantList modifiers);
 
 private:
     AtomData m_atomData;
@@ -59,8 +62,8 @@ private:
     SphereData* m_sphereData = nullptr;
     BondData* m_bondData = nullptr;
     class Bonds* m_bonds = nullptr;
+    QVariantList m_modifiers;
     float m_bondRadius = 0.1;
-    QVector<class Modifier*> m_modifiers;
     void generateBondData(AtomData &atomData);
     void generateSphereData(AtomData &atomData);
     void applyDeltaPositions(AtomData &atomData);

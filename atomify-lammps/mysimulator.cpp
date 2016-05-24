@@ -181,7 +181,7 @@ AtomifySimulator::AtomifySimulator() :
     m_scriptHandler(new ScriptHandler()),
     m_system(new System(this))
 {
-    m_system->atoms()->modifiers().append(new ColorModifier(m_system));
+    // m_system->atoms()->modifiers().append(new ColorModifier(m_system));
 }
 
 AtomifySimulator::~AtomifySimulator() { }

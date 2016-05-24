@@ -118,7 +118,8 @@ void Atoms::updateData()
         exit(1);
     }
 
-    for(Modifier *modifier : m_modifiers) {
+    for(QVariant &modifier_ : m_modifiers) {
+        Modifier *modifier = modifier_.value<Modifier*>();
          modifier->apply(atomData);
          if(!atomData.isValid()) {
              // TODO: insert modifier name to debug message
@@ -204,10 +205,10 @@ SphereData *Atoms::sphereData() const
     return m_sphereData;
 }
 
-QVector<Modifier *> &Atoms::modifiers()
-{
-    return m_modifiers;
-}
+//QVector<Modifier *> &Atoms::modifiers()
+//{
+//    return m_modifiers;
+//}
 
 QVector<AtomStyle *> &Atoms::atomStyles()
 {
@@ -252,6 +253,11 @@ float Atoms::bondRadius() const
     return m_bondRadius;
 }
 
+QVariantList Atoms::modifiers() const
+{
+    return m_modifiers;
+}
+
 void Atoms::setBondRadius(float bondRadius)
 {
     if (m_bondRadius == bondRadius)
@@ -259,4 +265,13 @@ void Atoms::setBondRadius(float bondRadius)
 
     m_bondRadius = bondRadius;
     emit bondRadiusChanged(bondRadius);
+}
+
+void Atoms::setModifiers(QVariantList modifiers)
+{
+    if (m_modifiers == modifiers)
+        return;
+
+    m_modifiers = modifiers;
+    emit modifiersChanged(modifiers);
 }
