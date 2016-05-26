@@ -7,9 +7,16 @@ TabView {
     property AtomifySimulator simulator
     property EditorTab editorTab
     property alias renderingTab: renderingTab
+    property string controlName: {
+        if(Qt.platform.os === "osx") {
+            return "⌘"
+        }
+        return "Ctrl"
+    }
+
     Tab {
         id: editorTab
-        title: "Script editor"
+        title: "Script editor ("+controlName+"1)"
         anchors.fill: parent
         property TextArea consoleOutput: item ? item.consoleOutput : null
         property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
@@ -43,7 +50,7 @@ TabView {
     Tab {
         id: renderingTab
         anchors.fill: parent
-        title: "Rendering"
+        title: "Analysis ("+controlName+"2)"
         AnalysisTab {
             anchors.fill: parent
             atomifyVisualizer: visualizer

@@ -90,7 +90,7 @@ Rectangle {
                         text: "Run script "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"+R"
+                        text: ": "+shortcutRoot.controlName+"R"
                     }
                 }
 
@@ -102,7 +102,7 @@ Rectangle {
                         text: "Show editor tab "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"+1"
+                        text: ": "+shortcutRoot.controlName+"1"
                     }
                 }
 
@@ -114,7 +114,7 @@ Rectangle {
                         text: "Show analysis tab "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"+2"
+                        text: ": "+shortcutRoot.controlName+"2"
                     }
                 }
 
