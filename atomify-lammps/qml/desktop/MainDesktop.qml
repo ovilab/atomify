@@ -15,6 +15,8 @@ Item {
 
     property alias simulator: visualizer.simulator
     property alias visualizer: visualizer
+    property var lastEditorWidth: 500
+    property bool focusMode: false
 
     Component.onCompleted: {
         simulator.errorInLammpsScript.connect(editorTab.reportError)
@@ -25,13 +27,20 @@ Item {
 
         SplitView {
             height: parent.height
-            width: parent.width-300
+            width: parent.width-simulationSummary.width
             Layout.alignment: Qt.AlignTop
             orientation: Qt.Horizontal
 
             AtomifyTabView {
+                id: tabView
                 Layout.fillHeight: true
                 simulator: simulator
+                width: 500
+                onWidthChanged: {
+                    if(width != 0) {
+                        lastEditorWidth = width
+                    }
+                }
             }
 
             AtomifyVisualizer {
@@ -44,9 +53,22 @@ Item {
         }
 
         SimulationSummary {
+            id: simulationSummary
             width: 300
             height: parent.height
             system: simulator.system ? simulator.system : null
+        }
+    }
+
+    function toggleFocusMode() {
+        if(focusMode) {
+            simulationSummary.width = 300
+            tabView.visible = true
+            focusMode = false
+        } else {
+            simulationSummary.width = 0
+            tabView.visible = false
+            focusMode = true
         }
     }
 
@@ -59,17 +81,15 @@ Item {
         }
         Shortcut {
             sequence: "Ctrl+1"
-            onActivated: tabview.currentIndex = 0
+            onActivated: tabView.currentIndex = 0
         }
         Shortcut {
             sequence: "Ctrl+2"
-            onActivated: tabview.currentIndex = 1
+            onActivated: tabView.currentIndex = 1
         }
         Shortcut {
-            sequence: "Space"
-            onActivated: {
-                simulator.paused = !simulator.paused
-            }
+            sequence: "x"
+            onActivated: toggleFocusMode()
         }
         Shortcut {
             sequence: "1"
