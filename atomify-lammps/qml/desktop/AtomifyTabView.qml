@@ -6,7 +6,11 @@ TabView {
     id: tabViewRoot
     property AtomifySimulator simulator
     property Tab editorTab
-    property alias renderingTab: renderingTab
+    property alias renderingTab: analysisTab
+    onSimulatorChanged: {
+        console.log("Tab view simulator changed: ", simulator)
+    }
+
     property string controlName: {
         if(Qt.platform.os === "osx") {
             return "⌘"
@@ -50,7 +54,7 @@ TabView {
     }
 
     Tab {
-        id: renderingTab
+        id: analysisTab
         anchors.fill: parent
         title: "Analysis "+controlName+"2"
         AnalysisTab {

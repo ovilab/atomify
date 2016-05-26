@@ -13,12 +13,9 @@ import "../visualization"
 Item {
     id: desktopRoot
 
-    property alias simulator: visualizer.simulator
+    property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
     property bool focusMode: false
-    onSimulatorChanged: {
-        console.log("Simulator here: ", simulator)
-    }
 
     Row {
         anchors.fill: parent
@@ -32,11 +29,10 @@ Item {
             AtomifyTabView {
                 id: tabView
                 Layout.fillHeight: true
-                simulator: simulator
+                simulator: desktopRoot.simulator
                 width: 500
 
                 onEditorTabChanged: {
-                    console.log("Editor changed. Simulator: ", simulator)
                     if(simulator && tabView.editorTab) {
                         simulator.errorInLammpsScript.connect(tabView.editorTab.editorTab.reportError)
                     }
