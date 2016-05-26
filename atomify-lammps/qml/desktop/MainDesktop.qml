@@ -34,7 +34,7 @@ Item {
 
                 onEditorTabChanged: {
                     if(simulator && tabView.editorTab) {
-                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
+                        simulator.errorInLammpsScript.connect(tabView.editorTab.editorTab.reportError)
                     }
                 }
             }
@@ -77,7 +77,7 @@ Item {
         Shortcut {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
-            onActivated: editorTab.runScript()
+            onActivated: tabView.editorTab.runScript()
         }
         Shortcut {
             sequence: "Ctrl+1"

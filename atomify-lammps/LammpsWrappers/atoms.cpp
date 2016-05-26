@@ -258,6 +258,15 @@ float Atoms::bondRadius() const
     return m_bondRadius;
 }
 
+void Atoms::reset()
+{
+    QVector<SphereVBOData> emptySphereVBOData;
+    QVector<BondVBOData> emptyBondVBOData;
+    m_sphereData->setData(emptySphereVBOData);
+    m_bondData->setData(emptyBondVBOData);
+    m_atomData.reset();
+}
+
 QVariantList Atoms::modifiers() const
 {
     return m_modifiers;

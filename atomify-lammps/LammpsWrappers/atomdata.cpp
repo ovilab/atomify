@@ -20,7 +20,7 @@ int AtomData::size()
     return positions.size();
 }
 
-AtomData::~AtomData()
+void AtomData::reset()
 {
     positions.clear();
     deltaPositions.clear();
@@ -28,4 +28,10 @@ AtomData::~AtomData()
     radii.clear();
     types.clear();
     originalIndex.clear();
+    neighborList.reset(0);
+}
+
+AtomData::~AtomData()
+{
+    reset();
 }

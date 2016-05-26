@@ -16,6 +16,7 @@ public:
     bool isValid();
     void resize(int size);
     int size();
+    void reset();
     ~AtomData();
 };
 

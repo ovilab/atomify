@@ -12,7 +12,7 @@ class System : public QObject
     Q_PROPERTY(QVector3D size READ size NOTIFY sizeChanged)
     Q_PROPERTY(QVector3D origin READ origin NOTIFY originChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
-    Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes WRITE setNumberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
+    Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
     Q_PROPERTY(int timesteps READ timesteps NOTIFY timestepsChanged)
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
@@ -31,12 +31,12 @@ public:
     class Regions* regions() const;
     class Groups* groups() const;
     int numberOfAtomTypes() const;
+    void reset();
 
 public slots:
     void setAtoms(class Atoms* atoms);
     void setRegions(class Regions* regions);
     void setGroups(class Groups* groups);
-    void setNumberOfAtomTypes(int numberOfAtomTypes);
 
 signals:
     void originChanged(QVector3D origin);

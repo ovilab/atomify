@@ -117,6 +117,23 @@ int System::numberOfAtomTypes() const
     return m_numberOfAtomTypes;
 }
 
+void System::reset()
+{
+    m_timesteps = 0;
+    m_simulationTime = 0;
+    m_size = QVector3D();
+    m_origin = QVector3D();
+    m_numberOfAtoms = 0;
+    m_numberOfAtomTypes = 0;
+    emit timestepsChanged(m_timesteps);
+    emit simulationTimeChanged(m_simulationTime);
+    emit sizeChanged(m_size);
+    emit originChanged(m_origin);
+    emit numberOfAtomsChanged(m_numberOfAtoms);
+    emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
+    m_atoms->reset();
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -142,13 +159,4 @@ void System::setGroups(Groups *groups)
 
     m_groups = groups;
     emit groupsChanged(groups);
-}
-
-void System::setNumberOfAtomTypes(int numberOfAtomTypes)
-{
-    if (m_numberOfAtomTypes == numberOfAtomTypes)
-        return;
-
-    m_numberOfAtomTypes = numberOfAtomTypes;
-    emit numberOfAtomTypesChanged(numberOfAtomTypes);
 }

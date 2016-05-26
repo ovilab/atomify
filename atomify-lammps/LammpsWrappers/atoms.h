@@ -42,7 +42,7 @@ public:
     class Bonds* bonds() const;
     AtomData &atomData();
     float bondRadius() const;
-
+    void reset();
 public slots:
     void setBondRadius(float bondRadius);
     void setModifiers(QVariantList modifiers);

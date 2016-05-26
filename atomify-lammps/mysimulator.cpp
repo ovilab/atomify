@@ -56,6 +56,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
         atomifySimulator->clearSimulatorControls();
+        atomifySimulator->system()->reset();
         emit atomifySimulator->lammpsDidReset();
     }
 

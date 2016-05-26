@@ -5,7 +5,7 @@ import Atomify 1.0
 TabView {
     id: tabViewRoot
     property AtomifySimulator simulator
-    property EditorTab editorTab
+    property Tab editorTab
     property alias renderingTab: renderingTab
     property string controlName: {
         if(Qt.platform.os === "osx") {
@@ -20,6 +20,11 @@ TabView {
         anchors.fill: parent
         property TextArea consoleOutput: item ? item.consoleOutput : null
         property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
+        property EditorTab editorTab
+        Component.onCompleted: {
+            tabViewRoot.editorTab = editorTab
+        }
+
         function runScript() {
             if(lammpsEditor) {
                 lammpsEditor.runScript()
@@ -35,7 +40,7 @@ TabView {
         EditorTab {
             id: myEditorTab
             Component.onCompleted: {
-                tabViewRoot.editorTab = myEditorTab
+                editorTab.editorTab = myEditorTab
             }
 
             anchors.fill: parent
