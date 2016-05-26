@@ -4,12 +4,6 @@ import Atomify 1.0
 
 Rectangle {
     property System system
-//    property Compute pressure
-//    property Compute temperature
-    x: 20
-    y: 20
-    width: statusColumn.width+20
-    height: statusColumn.height+20
     radius: 4
     color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
     ColumnLayout {
@@ -39,10 +33,4 @@ Rectangle {
             text: "Time: "+system.simulationTime.toFixed(2)
         }
     }
-
-//    MouseArea {
-//        anchors.fill: parent
-//        drag.target: parent
-//        drag.axis: Drag.XAndYAxis
-//    }
 }

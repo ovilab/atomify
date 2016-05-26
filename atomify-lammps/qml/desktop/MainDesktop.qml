@@ -20,37 +20,33 @@ Item {
         simulator.errorInLammpsScript.connect(editorTab.reportError)
     }
 
-    SplitView {
+    Row {
         anchors.fill: parent
-        Layout.alignment: Qt.AlignTop
-        Layout.fillHeight: true
-        Layout.fillWidth: true
 
-        AtomifyTabView {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            width: 1
-            simulator: simulator
-        }
+        SplitView {
+            height: parent.height
+            width: parent.width-300
+            Layout.alignment: Qt.AlignTop
+            orientation: Qt.Horizontal
 
-        AtomifyVisualizer {
-            id: visualizer
-            focus: true
-            Layout.alignment: Qt.AlignLeft
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.minimumWidth: 1
-            width: 2
+            AtomifyTabView {
+                Layout.fillHeight: true
+                simulator: simulator
+            }
 
-            //width: desktopRoot.width*0.6
+            AtomifyVisualizer {
+                id: visualizer
+                focus: true
+                Layout.alignment: Qt.AlignLeft
+                Layout.fillHeight: true
+                Layout.minimumWidth: 1
+            }
         }
 
         SimulationSummary {
+            width: 300
+            height: parent.height
             system: simulator.system ? simulator.system : null
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.maximumWidth: 300
-            Layout.minimumWidth: 300
         }
     }
 
