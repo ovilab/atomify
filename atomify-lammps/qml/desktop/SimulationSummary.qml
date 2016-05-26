@@ -46,12 +46,24 @@ Rectangle {
 
             ColumnLayout {
                 id: shortcutRoot
-                property int labelWidth: 130
+                property int labelWidth: 115
                 property string controlName: {
                     if(Qt.platform.os === "osx") {
                         return "⌘"
                     }
                     return "Ctrl"
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "Run script "
+                    }
+                    Label {
+                        text: ": "+shortcutRoot.controlName+"+R"
+                    }
                 }
 
                 RowLayout {
