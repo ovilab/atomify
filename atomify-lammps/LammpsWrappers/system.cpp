@@ -63,17 +63,13 @@ void System::synchronize(LAMMPS *lammps)
         emit timestepsChanged(m_timesteps);
     }
 
-    m_regions->synchronize(lammps);
-    m_groups->synchronize(lammps);
-    m_atoms->synchronize(lammps);
     for(QVariant modifier_ : m_atoms->modifiers()) {
         Modifier *modifier = modifier_.value<Modifier*>();
         modifier->setSystem(this);
     }
-//    QElapsedTimer t;
-//    t.start();
-//    m_atoms->atomData().neighborList.build(m_atoms->atomData().positions, this);
-//    qDebug() << "Cell list built in " << t.elapsed() << " ms.";
+    m_regions->synchronize(lammps);
+    m_groups->synchronize(lammps);
+    m_atoms->synchronize(lammps);
 }
 
 QVector3D System::origin() const
