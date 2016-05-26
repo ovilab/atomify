@@ -7,6 +7,7 @@ ColumnLayout {
     id: consoleRoot
     property AtomifySimulator simulator
     property TextArea output: consoleOutput
+    property alias textField: singleCommand
     Layout.fillHeight: true
     Layout.fillWidth: true
     TextArea {
