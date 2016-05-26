@@ -6,31 +6,55 @@ import SimVis 1.0
 
 import "../visualization"
 import ".."
-Item {
+ScrollView {
     id: renderingRoot
     anchors.fill: parent
     property AtomifyVisualizer atomifyVisualizer
     property System system
     property var items: []
 
-    ColumnLayout {
+
+    contentItem: Column {
+        id: column
         anchors.fill: parent
 
         ComboBox {
-            model: [ "Add compute", "RDF", "Energy" ]
+            model: [ "Add compute", "Pair distribution function", "Energy" ]
             onCurrentIndexChanged: {
-                if(currentText === "RDF") {
+                if(currentText === "Pair distribution function") {
                     addMeasure("../RDFItem.qml")
-                    currentIndex = 0
                 }
+
+                currentIndex = 0
+                focus = false
             }
         }
 
-        GridLayout {
+        Grid {
             id: grid
-            // Layout.fillHeight: true
-            Layout.fillWidth: true
+            width: Math.max(renderingRoot.viewport.width, 300)
             columns: 2
+            function updateColumns() {
+                if(children.length === 1) {
+                    columns = 1
+                } else {
+                    if(width < 800) {
+                        columns = 1
+                    } else columns = 2
+                }
+                console.log("Columns: ", columns)
+            }
+
+            onWidthChanged: {
+                console.log("Width changed: ", width)
+                updateColumns()
+            }
+
+            onChildrenChanged: {
+                console.log("Children changed")
+                updateColumns()
+            }
+
         }
     }
 
@@ -41,13 +65,7 @@ Item {
             if(QMLObject===null) {
                 console.log("Could not add...")
             } else {
-                // QMLObject.parent = grid
                 QMLObject.system = system
-                QMLObject.Layout.fillWidth = true
-                QMLObject.Layout.fillHeight = true
-                QMLObject.Layout.preferredWidth = 1
-                QMLObject.Layout.preferredHeight = 1
-                QMLObject.Layout.maximumHeight = 100
 
                 items.push(QMLObject)
                 itemsChanged(items)

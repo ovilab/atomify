@@ -42,7 +42,8 @@ Scene3D {
 
         PeriodicImages {
             id: periodicImages
-            numberOfCopiesX: 2
+            enabled: false
+            numberOfCopiesX: 1
             numberOfCopiesY: 1
             numberOfCopiesZ: 1
         }

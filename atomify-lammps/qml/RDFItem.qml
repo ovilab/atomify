@@ -12,7 +12,7 @@ Item {
         rdf
     ]
 
-    width: parent.width*0.5
+    width: parent.columns===1 ? parent.width : parent.width*0.5
     height: width
 
     onWidthChanged: {

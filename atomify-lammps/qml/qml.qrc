@@ -46,5 +46,7 @@
         <file>RDFItem.qml</file>
         <file>CPLineSeries.qml</file>
         <file>desktop/ShortcutsTab.qml</file>
+        <file>TemperatureItem.qml</file>
+        <file>desktop/AtomifyTabView.qml</file>
     </qresource>
 </RCC>

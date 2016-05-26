@@ -26,62 +26,11 @@ Item {
         Layout.fillHeight: true
         Layout.fillWidth: true
 
-        TabView {
-            id: tabview
-            // width: desktopRoot.width*0.4
+        AtomifyTabView {
             Layout.fillHeight: true
             Layout.fillWidth: true
             width: 1
-            // height: parent.height
-
-            Tab {
-                id: editorTab
-                title: "Script editor"
-                anchors.fill: parent
-                property TextArea consoleOutput: item ? item.consoleOutput : null
-                property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
-                function runScript() {
-                    if(lammpsEditor) {
-                        lammpsEditor.runScript()
-                    }
-                }
-
-                function reportError() {
-                    if(item) {
-                        item.reportError()
-                    }
-                }
-
-                EditorTab {
-                    id: myEditorTab
-                    anchors.fill: parent
-                    simulator: desktopRoot.simulator
-                    visualizer: desktopRoot.visualizer
-                    onVisualizerChanged: {
-                        console.log("Visualizer: ", visualizer)
-                    }
-                }
-            }
-
-            Tab {
-                id: renderingTab
-                anchors.fill: parent
-                title: "Rendering"
-                RenderingTab {
-                    anchors.fill: parent
-                    atomifyVisualizer: visualizer
-                    system: simulator.system
-                    onItemsChanged: {
-                        for(var i in items) {
-                            var controller = items[i]
-                            for(var j in controller.simulatorControls) {
-                                var control = controller.simulatorControls[j]
-                                control.parent = simulator
-                            }
-                        }
-                    }
-                }
-            }
+            simulator: simulator
         }
 
         AtomifyVisualizer {
@@ -90,7 +39,9 @@ Item {
             Layout.alignment: Qt.AlignLeft
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.minimumWidth: desktopRoot.width*0.5
+            Layout.minimumWidth: 1
+            width: 2
+
             //width: desktopRoot.width*0.6
         }
 
