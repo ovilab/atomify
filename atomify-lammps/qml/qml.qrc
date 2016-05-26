@@ -3,7 +3,7 @@
         <file>desktop/MainDesktop.qml</file>
         <file>visualization/AtomifyVisualizer.qml</file>
         <file>desktop/LammpsEditor.qml</file>
-        <file>desktop/RenderingTab.qml</file>
+        <file>desktop/AnalysisTab.qml</file>
         <file>desktop/SliceControl.qml</file>
         <file>desktop/AtomStyleControl.qml</file>
         <file>desktop/LightControl.qml</file>

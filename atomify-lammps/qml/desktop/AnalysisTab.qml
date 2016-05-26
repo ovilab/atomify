@@ -7,7 +7,7 @@ import SimVis 1.0
 import "../visualization"
 import ".."
 ScrollView {
-    id: renderingRoot
+    id: analysisRoot
     anchors.fill: parent
     property AtomifyVisualizer atomifyVisualizer
     property System system
@@ -32,7 +32,7 @@ ScrollView {
 
         Grid {
             id: grid
-            width: Math.max(renderingRoot.viewport.width, 300)
+            width: Math.max(analysisRoot.viewport.width, 300)
             columns: 2
             function updateColumns() {
                 if(children.length === 1) {
