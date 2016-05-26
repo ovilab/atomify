@@ -65,7 +65,6 @@ void Regions::synchronize(LAMMPS *lammps)
         Region *lammpsRegion = regions[regionIndex];
         int count = lammpsGroup->count(0,regionIndex);
         QString name = QString::fromUtf8(lammpsRegion->id);
-        qDebug() << "Found region with name: " << name << " and count: " << count;
         if(!m_dataMap.contains(name)) {
             update(lammps);
             return;

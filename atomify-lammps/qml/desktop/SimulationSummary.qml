@@ -99,18 +99,6 @@ Rectangle {
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Toggle focus mode "
-                    }
-                    Label {
-                        text: ": x"
-                    }
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.minimumWidth: shortcutRoot.labelWidth
-                        Layout.maximumWidth: shortcutRoot.labelWidth
                         text: "Show editor tab "
                     }
                     Label {
@@ -127,6 +115,18 @@ Rectangle {
                     }
                     Label {
                         text: ": "+shortcutRoot.controlName+"+2"
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "Toggle focus mode "
+                    }
+                    Label {
+                        text: ": x"
                     }
                 }
             }
