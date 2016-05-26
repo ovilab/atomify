@@ -42,16 +42,13 @@ ScrollView {
                         columns = 1
                     } else columns = 2
                 }
-                console.log("Columns: ", columns)
             }
 
             onWidthChanged: {
-                console.log("Width changed: ", width)
                 updateColumns()
             }
 
             onChildrenChanged: {
-                console.log("Children changed")
                 updateColumns()
             }
 
@@ -68,18 +65,12 @@ ScrollView {
                 QMLObject.system = system
 
                 items.push(QMLObject)
+                console.log("Added thing")
                 itemsChanged(items)
             }
         } else {
             console.log("Could not add...")
         }
     }
-
-//    Button {
-//        text: "Add"
-//        onClicked: {
-//            addThing()
-//        }
-//    }
 }
 

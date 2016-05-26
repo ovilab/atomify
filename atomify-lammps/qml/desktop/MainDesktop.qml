@@ -16,6 +16,9 @@ Item {
     property alias simulator: visualizer.simulator
     property alias visualizer: visualizer
     property bool focusMode: false
+    onSimulatorChanged: {
+        console.log("Simulator here: ", simulator)
+    }
 
     Row {
         anchors.fill: parent
@@ -33,6 +36,7 @@ Item {
                 width: 500
 
                 onEditorTabChanged: {
+                    console.log("Editor changed. Simulator: ", simulator)
                     if(simulator && tabView.editorTab) {
                         simulator.errorInLammpsScript.connect(tabView.editorTab.editorTab.reportError)
                     }

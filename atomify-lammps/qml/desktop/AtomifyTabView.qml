@@ -15,14 +15,14 @@ TabView {
     }
 
     Tab {
-        id: editorTab
+        id: editorTabRoot
         title: "Script editor "+controlName+"1‌‌"
         anchors.fill: parent
         property TextArea consoleOutput: item ? item.consoleOutput : null
         property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
         property EditorTab editorTab
         Component.onCompleted: {
-            tabViewRoot.editorTab = editorTab
+            tabViewRoot.editorTab = editorTabRoot
         }
 
         function runScript() {
@@ -40,7 +40,7 @@ TabView {
         EditorTab {
             id: myEditorTab
             Component.onCompleted: {
-                editorTab.editorTab = myEditorTab
+                editorTabRoot.editorTab = myEditorTab
             }
 
             anchors.fill: parent
@@ -62,6 +62,7 @@ TabView {
                     var controller = items[i]
                     for(var j in controller.simulatorControls) {
                         var control = controller.simulatorControls[j]
+                        console.log("Simulator: ", simulator)
                         control.parent = simulator
                     }
                 }
