@@ -63,6 +63,7 @@ void System::synchronize(LAMMPS *lammps)
         emit timestepsChanged(m_timesteps);
     }
 
+    m_regions->synchronize(lammps);
     m_groups->synchronize(lammps);
     m_atoms->synchronize(lammps);
     for(QVariant modifier_ : m_atoms->modifiers()) {

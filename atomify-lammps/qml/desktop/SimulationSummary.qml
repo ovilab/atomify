@@ -56,6 +56,20 @@ Rectangle {
 
         GroupBox {
             width: parent.width
+            title: "Regions"
+            visible: system.regions.count>0
+
+            ListView {
+                model: system ? system.regions.model : null
+                height: count*26
+                delegate: Label {
+                    text: model.modelData.name+": "+model.modelData.count+" atoms"
+                }
+            }
+        }
+
+        GroupBox {
+            width: parent.width
             title: "Keyboard shortcuts"
 
             ColumnLayout {

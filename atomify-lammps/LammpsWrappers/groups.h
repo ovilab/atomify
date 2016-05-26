@@ -13,7 +13,7 @@ class CPGroup : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
 public:
-    CPGroup(QObject *parent);
+    CPGroup(QObject *parent = nullptr);
     QString name() const;
     int count() const;
 
@@ -33,22 +33,27 @@ class Groups : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
 public:
     Groups(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
     QVariant model() const;
+    int count() const;
 
 public slots:
     void setModel(QVariant model);
+    void setCount(int count);
 
 signals:
     void modelChanged(QVariant model);
+    void countChanged(int count);
 
 private:
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;
     void update(class LAMMPS_NS::Group *group);
+    int m_count = 0;
 };
 
 #endif // GROUPS_H

@@ -17,9 +17,9 @@ void Groups::update(Group *group)
     if(group == nullptr) return;
 
     int numGroups = group->ngroup;
-    for(int groupId=0; groupId<numGroups; groupId++) {
-        QString name = QString::fromUtf8(group->names[groupId]);
-        int count = group->count(groupId);
+    for(int groupIndex=0; groupIndex<numGroups; groupIndex++) {
+        QString name = QString::fromUtf8(group->names[groupIndex]);
+        int count = group->count(groupIndex);
 
         CPGroup *newGroup = new CPGroup(this);
         newGroup->setName(name);
@@ -27,7 +27,7 @@ void Groups::update(Group *group)
         m_data.push_back(newGroup);
         m_dataMap.insert(name, newGroup);
     }
-
+    setCount(m_data.size());
     setModel(QVariant::fromValue(m_data));
 }
 
@@ -47,9 +47,9 @@ void Groups::synchronize(LAMMPS *lammps)
         return;
     }
 
-    for(int groupId=0; groupId<numGroups; groupId++) {
-        QString groupName = QString::fromUtf8(lammpsGroup->names[groupId]);
-        int count = lammpsGroup->count(groupId);
+    for(int groupIndex=0; groupIndex<numGroups; groupIndex++) {
+        QString groupName = QString::fromUtf8(lammpsGroup->names[groupIndex]);
+        int count = lammpsGroup->count(groupIndex);
 
         if(!m_dataMap.contains(groupName)) {
             update(lammpsGroup);
@@ -68,6 +68,11 @@ QVariant Groups::model() const
     return m_model;
 }
 
+int Groups::count() const
+{
+    return m_count;
+}
+
 void Groups::setModel(QVariant model)
 {
     if (m_model == model)
@@ -75,6 +80,15 @@ void Groups::setModel(QVariant model)
 
     m_model = model;
     emit modelChanged(model);
+}
+
+void Groups::setCount(int count)
+{
+    if (m_count == count)
+        return;
+
+    m_count = count;
+    emit countChanged(count);
 }
 
 
