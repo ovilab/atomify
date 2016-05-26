@@ -16,7 +16,7 @@ TabView {
 
     Tab {
         id: editorTab
-        title: "Script editor ("+controlName+"1)"
+        title: "Script editor "+controlName+"1‌‌"
         anchors.fill: parent
         property TextArea consoleOutput: item ? item.consoleOutput : null
         property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
@@ -50,7 +50,7 @@ TabView {
     Tab {
         id: renderingTab
         anchors.fill: parent
-        title: "Analysis ("+controlName+"2)"
+        title: "Analysis "+controlName+"2"
         AnalysisTab {
             anchors.fill: parent
             atomifyVisualizer: visualizer
