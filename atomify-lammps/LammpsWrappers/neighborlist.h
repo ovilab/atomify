@@ -13,6 +13,7 @@ struct Neighborlist {
     int m_numCellsX = 0;
     int m_numCellsY = 0;
     int m_numCellsZ = 0;
+    int m_lastNeighborListSync = -1;
 
     Neighborlist();
     Neighborlist(const Neighborlist &old);

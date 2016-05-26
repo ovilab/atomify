@@ -42,7 +42,9 @@ void Neighborlist::synchronize(LAMMPS *lammps)
     QElapsedTimer t;
     t.start();
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
-    if(hasNeighborLists && lammps->neighbor->ago==0) {
+    if(hasNeighborLists && m_lastNeighborListSync != lammps->neighbor->lastcall) {
+        m_lastNeighborListSync = lammps->neighbor->lastcall;
+
         NeighList *list = lammps->neighbor->lists[0];
         int inum = list->inum;
         int *ilist = list->ilist;
