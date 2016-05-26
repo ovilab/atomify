@@ -62,11 +62,13 @@ Item {
             simulationSummary.visible = true
             tabView.visible = true
             focusMode = false
+            tabDisable.hideTabDisable.start()
         } else {
             simulationSummary.width = 0
             tabView.visible = false
             simulationSummary.visible = false
             focusMode = true
+            tabDisable.showTabDisable.start()
         }
     }
 
@@ -108,6 +110,42 @@ Item {
             onActivated: {
                 var isVisible = simulator.atomStyle.isVisible(2)
                 simulator.atomStyle.setModelData(2, "visible", !isVisible)
+            }
+        }
+    }
+
+    Rectangle {
+        id: tabDisable
+        property bool isVisible: false
+        property alias showTabDisable: show
+        property alias hideTabDisable: hide
+        x: parent.width*0.5 - 0.5*width
+        y: 10
+        width: tabDisableLabel.width + 16
+        height: tabDisableLabel.height + 10
+        opacity: 0
+        radius: 5
+
+        NumberAnimation on opacity {
+            id: hide
+            to: 0; duration: 200
+        }
+
+        NumberAnimation on opacity {
+            id: show
+            to: 0.5; duration: 200
+        }
+
+        Label {
+            id: tabDisableLabel
+            x: 8
+            y: 5
+            text: "Press Tab to disable focus mode (click to hide)"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                hide.start()
             }
         }
     }
