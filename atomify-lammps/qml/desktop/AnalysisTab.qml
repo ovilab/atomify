@@ -11,18 +11,20 @@ ScrollView {
     anchors.fill: parent
     property AtomifyVisualizer atomifyVisualizer
     property System system
-    property var items: []
-
+    property var items: [temp]
 
     contentItem: Column {
         id: column
         anchors.fill: parent
 
         ComboBox {
-            model: [ "Add compute", "Pair distribution function", "Energy" ]
+            model: [ "Add compute", "Pair distribution function", "Temperature" ]
             onCurrentIndexChanged: {
                 if(currentText === "Pair distribution function") {
                     addMeasure("../RDFItem.qml")
+                }
+                if(currentText === "Temperature") {
+                    addMeasure("../Temperature.qml")
                 }
 
                 currentIndex = 0
@@ -52,6 +54,10 @@ ScrollView {
                 updateColumns()
             }
 
+            TemperatureItem {
+                id: temp
+                parent: grid
+            }
         }
     }
 

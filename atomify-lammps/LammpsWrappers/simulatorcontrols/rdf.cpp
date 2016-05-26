@@ -29,11 +29,7 @@ void RDF::updateCommand()
 QList<QString> RDF::enabledCommands()
 {
     updateCommand();
-    qDebug() << "Command: " << command();
-    qDebug() << "Prefix: " << createCommandPrefix();
-    qDebug() << "Enabled commands: " << fullCommand();
     return {
-        // QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()),
         fullCommand(),
         QString("fix %1_ave all ave/time 1 1 1 c_%1 file %1.txt mode vector ave running").arg(identifier())
     };
@@ -50,7 +46,6 @@ QList<QString> RDF::resetCommands()
 {
     return { QString("unfix %1_ave").arg(identifier()),
              QString("uncompute %1").arg(identifier()),
-             // QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()),
              fullCommand(),
              QString("fix %1_ave all ave/time 1 1 1 c_%1 file %1.txt mode vector ave running").arg(identifier())
     };

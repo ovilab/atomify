@@ -47,6 +47,14 @@ Item {
             }
         }
 
+        CPLineSeries {
+            axisX: _axisX
+            axisY: _axisY
+            dataSource: DataSource {
+                id: dataSource3
+            }
+        }
+
         ValueAxis {
             id: _axisX
             tickCount: 3
@@ -75,5 +83,6 @@ Item {
         dataSource: dataSource0
         dataSource1: dataSource1
         dataSource2: dataSource2
+        dataSource3: dataSource3
     }
 }

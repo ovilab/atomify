@@ -58,7 +58,7 @@ private:
     DataSource* m_dataSource = nullptr;
     bool m_isVector = false;
     double m_time = 0;
-    QString m_group;
+    QString m_group = "all";
     QList<double> m_values;
 
     QT3D_CLONEABLE(CPCompute)

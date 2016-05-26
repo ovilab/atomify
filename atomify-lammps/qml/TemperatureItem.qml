@@ -5,89 +5,67 @@ import QtCharts 2.1
 import Atomify 1.0
 import "mobile/dashboard/controls"
 
-Item {
-    property alias compute: rdf
+Rectangle {
+    property alias compute: temperature
     property System system
     property var simulatorControls: [
-        rdf
+        temperature
     ]
 
-    width: parent.width*0.5
+    width: parent.columns===1 ? parent.width : parent.width*0.5
     height: width
 
-    onWidthChanged: {
-        console.log("RDF width: ", width)
-    }
-
-    onHeightChanged: {
-        console.log("RDF height: ", height)
-    }
-
     ChartView {
-        id: miniChart
         anchors.fill: parent
         antialiasing: true
         legend.visible: true
-        title: "Pair distribution function"
+        title: "Temperature"
         titleColor: "black"
 
-        CPLineSeries {
+        LineSeries {
+            id: lineSeries
+            width: 1.0
             axisX: _axisX
             axisY: _axisY
-            dataSource: DataSource {
-                id: dataSource0
-            }
-        }
-
-        CPLineSeries {
-            axisX: _axisX
-            axisY: _axisY
-            dataSource: DataSource {
-                id: dataSource1
-            }
-        }
-
-        CPLineSeries {
-            axisX: _axisX
-            axisY: _axisY
-            dataSource: DataSource {
-                id: dataSource2
-            }
         }
 
         ValueAxis {
             id: _axisX
             tickCount: 3
             min: 0
-            max: 5.5
-            titleText: "r [Å]"
+            max: 100
+            titleText: "Time"
             color: "white"
             labelsColor: "black"
         }
+
         ValueAxis {
             id: _axisY
             tickCount: 3
             min: 0
-            max: 5.0
-            titleText: "g(r)"
+            max: 1000
+            titleText: "Temperature"
             color: "white"
             labelsColor: "black"
+        }
+
+        ChartScroller {
+            id: chartScroller
+            timeRange: 0.1
+
+            axisX: _axisX
+            axisY: _axisY
+            lineSeries: lineSeries
         }
     }
 
     Compute {
         id: temperature
         identifier: "temperature"
-        command: "all "
-    }
-
-    RDF {
-        id: rdf
-        identifier: "rdf"
-        group: "all"
-        atomPairs: ["1", "2", "1", "1", "2", "2"]
-        dataSource: dataSource0
-        dataSource1: dataSource1
-        dataSource2: dataSource2
+        command: "temp"
+        onValueChanged: {
+            chartScroller.time = time
+            chartScroller.value = value
+        }
     }
 }
