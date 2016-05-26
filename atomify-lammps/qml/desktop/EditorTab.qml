@@ -37,23 +37,36 @@ Item {
             Layout.preferredHeight: parent.height*0.75
             simulator: editorTabRoot.simulator
 
-            Shortcut {
-                sequence: "Escape"
-                onActivated: {
-                    if(myLammpsEditor.textarea.focus) {
-                        myLammpsEditor.textarea.focus = false
-                        console.log("Visualizer: "+visualizer)
-                        visualizer.focus = true
-                    } else {
-                        editorTabRoot.paused = !editorTabRoot.paused
-                    }
-                }
-            }
+//            Shortcut {
+//                sequence: "Escape"
+//                onActivated: {
+//                    if(myLammpsEditor.textarea.focus) {
+//                        myLammpsEditor.textarea.focus = false
+//                        console.log("Visualizer: "+visualizer)
+//                        visualizer.focus = true
+//                    } else {
+//                        editorTabRoot.paused = !editorTabRoot.paused
+//                    }
+//                }
+//            }
         }
 
         Console {
             id: myConsole
             simulator: editorTabRoot.simulator
+        }
+    }
+
+    Shortcut {
+        sequence: "Escape"
+        onActivated: {
+            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
+                myLammpsEditor.textarea.focus = false
+                myConsole.textField.focus = false
+                visualizer.focus = true
+            } else {
+                editorTabRoot.paused = !editorTabRoot.paused
+            }
         }
     }
 }
