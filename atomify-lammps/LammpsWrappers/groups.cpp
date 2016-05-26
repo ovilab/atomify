@@ -8,41 +8,102 @@ Groups::Groups(AtomifySimulator *simulator)
     Q_UNUSED(simulator)
 }
 
-void Groups::synchronize(LAMMPS *lammps)
+void Groups::update(Group *group)
 {
-    if(!lammps || !lammps->group) return;
-    Group *group = lammps->group;
-    int numGroups = group->ngroup;
-    QList<QString> newGroups;
+    for(QObject *obj : m_data) delete obj; // Clean up the old ones
+    m_dataMap.clear();
+    m_data.clear();
 
-    for(int i=0; i<numGroups; i++) {
-        QString groupName = QString::fromUtf8(group->names[i]);
-        newGroups.push_back(groupName);
+    if(group == nullptr) return;
+
+    int numGroups = group->ngroup;
+    for(int groupId=0; groupId<numGroups; groupId++) {
+        QString name = QString::fromUtf8(group->names[groupId]);
+        int count = group->count(groupId);
+
+        CPGroup *newGroup = new CPGroup(this);
+        newGroup->setName(name);
+        newGroup->setCount(count);
+        m_data.push_back(newGroup);
+        m_dataMap.insert(name, newGroup);
     }
 
-    if(numGroups != m_groups.size()) {
-        setGroups(newGroups);
-    } else {
-        for(const QString &groupName : newGroups) {
-            if(!m_groups.contains(groupName)) {
-                setGroups(newGroups);
-                return;
-            }
+    setModel(QVariant::fromValue(m_data));
+}
+
+void Groups::synchronize(LAMMPS *lammps)
+{
+    QList<QString> newGroups;
+    if(!lammps || !lammps->group) {
+        update(nullptr);
+        return;
+    }
+
+    Group *lammpsGroup = lammps->group;
+    int numGroups = lammpsGroup->ngroup;
+
+    if(m_data.count() != numGroups) {
+        update(lammpsGroup);
+        return;
+    }
+
+    for(int groupId=0; groupId<numGroups; groupId++) {
+        QString groupName = QString::fromUtf8(lammpsGroup->names[groupId]);
+        int count = lammpsGroup->count(groupId);
+
+        if(!m_dataMap.contains(groupName)) {
+            update(lammpsGroup);
+            return;
+        }
+        CPGroup *group = qobject_cast<CPGroup*>(m_dataMap[groupName]);
+        if(group && group->count() != count) {
+            update(lammpsGroup);
+            return;
         }
     }
 }
 
-QList<QString> Groups::groups() const
+QVariant Groups::model() const
 {
-    return m_groups;
+    return m_model;
 }
 
-void Groups::setGroups(QList<QString> groups)
+void Groups::setModel(QVariant model)
 {
-    if (m_groups == groups)
+    if (m_model == model)
         return;
 
-    m_groups = groups;
-    emit groupsChanged(groups);
+    m_model = model;
+    emit modelChanged(model);
 }
 
+
+CPGroup::CPGroup(QObject *parent) : QObject(parent) { }
+
+QString CPGroup::name() const
+{
+    return m_name;
+}
+
+int CPGroup::count() const
+{
+    return m_count;
+}
+
+void CPGroup::setName(QString name)
+{
+    if (m_name == name)
+        return;
+
+    m_name = name;
+    emit nameChanged(name);
+}
+
+void CPGroup::setCount(int count)
+{
+    if (m_count == count)
+        return;
+
+    m_count = count;
+    emit countChanged(count);
+}

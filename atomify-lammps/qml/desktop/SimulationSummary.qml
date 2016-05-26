@@ -7,9 +7,10 @@ Rectangle {
     property System system
     radius: 4
     color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
+
     Column {
         anchors.fill: parent
-        spacing: 30
+        spacing: 10
         GroupBox {
             width: parent.width
             title: "Simulation summary"
@@ -36,6 +37,19 @@ Rectangle {
                 Text {
                     font.bold: true
                     text: "Time: "+system.simulationTime.toFixed(2)
+                }
+            }
+        }
+
+        GroupBox {
+            width: parent.width
+            title: "Groups"
+
+            ListView {
+                model: system ? system.groups.model : null
+                height: count*26
+                delegate: Label {
+                    text: model.modelData.name+": "+model.modelData.count+" atoms"
                 }
             }
         }
