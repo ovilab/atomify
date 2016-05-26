@@ -103,7 +103,7 @@ Item {
         simulator: mobileRoot.simulator
         simulation: mobileRoot.simulation
         anchors {
-            bottom: visualizer.top
+            // bottom: visualizer.top
         }
         onBackClicked: {
             mobileRoot.state = mobileRoot.previousState

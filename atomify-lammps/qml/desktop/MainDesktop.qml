@@ -15,12 +15,7 @@ Item {
 
     property alias simulator: visualizer.simulator
     property alias visualizer: visualizer
-    property var lastEditorWidth: 500
     property bool focusMode: false
-
-    Component.onCompleted: {
-        simulator.errorInLammpsScript.connect(editorTab.reportError)
-    }
 
     Row {
         anchors.fill: parent
@@ -36,9 +31,10 @@ Item {
                 Layout.fillHeight: true
                 simulator: simulator
                 width: 500
-                onWidthChanged: {
-                    if(width != 0) {
-                        lastEditorWidth = width
+
+                onEditorTabChanged: {
+                    if(simulator && tabView.editorTab) {
+                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
                     }
                 }
             }
@@ -63,11 +59,13 @@ Item {
     function toggleFocusMode() {
         if(focusMode) {
             simulationSummary.width = 300
+            simulationSummary.visible = true
             tabView.visible = true
             focusMode = false
         } else {
             simulationSummary.width = 0
             tabView.visible = false
+            simulationSummary.visible = false
             focusMode = true
         }
     }
