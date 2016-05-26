@@ -41,9 +41,6 @@ TabView {
             anchors.fill: parent
             simulator: desktopRoot.simulator
             visualizer: desktopRoot.visualizer
-            onVisualizerChanged: {
-                console.log("Visualizer: ", visualizer)
-            }
         }
     }
 
