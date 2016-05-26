@@ -23,13 +23,18 @@ int RDF::numberOfPairs()
 
 void RDF::updateCommand()
 {
-    setCommand(QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()));
+    setCommand(QString("rdf %2 %3").arg(numberOfBins()).arg(generatePairString()));
 }
 
 QList<QString> RDF::enabledCommands()
 {
+    updateCommand();
+    qDebug() << "Command: " << command();
+    qDebug() << "Prefix: " << createCommandPrefix();
+    qDebug() << "Enabled commands: " << fullCommand();
     return {
-        QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()),
+        // QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()),
+        fullCommand(),
         QString("fix %1_ave all ave/time 1 1 1 c_%1 file %1.txt mode vector ave running").arg(identifier())
     };
 }
@@ -45,7 +50,8 @@ QList<QString> RDF::resetCommands()
 {
     return { QString("unfix %1_ave").arg(identifier()),
              QString("uncompute %1").arg(identifier()),
-             QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()),
+             // QString("compute %1 %2 rdf %3 %4").arg(identifier()).arg(m_group).arg(m_numberOfBins).arg(generatePairString()),
+             fullCommand(),
              QString("fix %1_ave all ave/time 1 1 1 c_%1 file %1.txt mode vector ave running").arg(identifier())
     };
 }
@@ -56,40 +62,40 @@ void RDF::update(LAMMPSController *lammpsController)
     QString fixAveTimeIdentifier = QString("%1_ave").arg(identifier());
     LAMMPS_NS::FixAveTime *lmp_fix = dynamic_cast<LAMMPS_NS::FixAveTime*>(lammpsController->findFixByIdentifier(fixAveTimeIdentifier));
     if(lmp_fix != nullptr) {
-        if(m_dataSource)  m_dataSource->clear();
-        if(m_dataSource1) m_dataSource1->clear();
-        if(m_dataSource2) m_dataSource2->clear();
-        if(m_dataSource3) m_dataSource3->clear();
-        if(m_dataSource4) m_dataSource4->clear();
+        if(dataSource())  dataSource()->clear();
+        if(dataSource1()) dataSource1()->clear();
+        if(dataSource2()) dataSource2()->clear();
+        if(dataSource3()) dataSource3()->clear();
+        if(dataSource4()) dataSource4()->clear();
 
-        for(int i=0; i<m_numberOfBins; i++) {
+        for(int i=0; i<numberOfBins(); i++) {
             float x = lmp_fix->compute_array(i,0);
-            if(numberOfPairs() >= 1 && m_dataSource) {
+            if(numberOfPairs() >= 1 && dataSource()) {
                 float y = lmp_fix->compute_array(i,1);
-                m_dataSource->addPoint(x,y);
+                dataSource()->addPoint(x,y);
             }
-            if(numberOfPairs() >= 2 && m_dataSource1) {
+            if(numberOfPairs() >= 2 && dataSource1()) {
                 float y = lmp_fix->compute_array(i,3);
-                m_dataSource1->addPoint(x,y);
+                dataSource1()->addPoint(x,y);
             }
-            if(numberOfPairs() >= 3 && m_dataSource2) {
+            if(numberOfPairs() >= 3 && dataSource2()) {
                 float y = lmp_fix->compute_array(i,5);
-                m_dataSource2->addPoint(x,y);
+                dataSource2()->addPoint(x,y);
             }
-            if(numberOfPairs() >= 4 && m_dataSource3) {
+            if(numberOfPairs() >= 4 && dataSource3()) {
                 float y = lmp_fix->compute_array(i,7);
-                m_dataSource3->addPoint(x,y);
+                dataSource3()->addPoint(x,y);
             }
-            if(numberOfPairs() >= 5 && m_dataSource4) {
+            if(numberOfPairs() >= 5 && dataSource4()) {
                 float y = lmp_fix->compute_array(i,9);
-                m_dataSource4->addPoint(x,y);
+                dataSource4()->addPoint(x,y);
             }
         }
-        if(m_dataSource) m_dataSource->update();
-        if(m_dataSource1) m_dataSource1->update();
-        if(m_dataSource2) m_dataSource2->update();
-        if(m_dataSource3) m_dataSource3->update();
-        if(m_dataSource4) m_dataSource4->update();
+        if(dataSource())  dataSource()->update();
+        if(dataSource1()) dataSource1()->update();
+        if(dataSource2()) dataSource2()->update();
+        if(dataSource3()) dataSource3()->update();
+        if(dataSource4()) dataSource4()->update();
 
     }
 }
@@ -97,11 +103,6 @@ void RDF::update(LAMMPSController *lammpsController)
 QVariantList RDF::atomPairs() const
 {
     return m_atomPairs;
-}
-
-QString RDF::group() const
-{
-    return m_group;
 }
 
 int RDF::numberOfBins() const
@@ -137,15 +138,6 @@ void RDF::setAtomPairs(QVariantList atomPairs)
     m_atomPairs = atomPairs;
 
     emit atomPairsChanged(atomPairs);
-}
-
-void RDF::setGroup(QString group)
-{
-    if (m_group == group)
-        return;
-
-    m_group = group;
-    emit groupChanged(group);
 }
 
 void RDF::setNumberOfBins(int numberOfBins)

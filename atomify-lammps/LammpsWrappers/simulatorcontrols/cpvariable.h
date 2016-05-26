@@ -13,7 +13,7 @@ protected:
     virtual QList<QString> enabledCommands();
     virtual QList<QString> disableCommands();
     virtual QList<QString> resetCommands();
-
+    QString createCommandPrefix();
 public:
     virtual bool existsInLammps(class LAMMPSController *lammpsController);
 

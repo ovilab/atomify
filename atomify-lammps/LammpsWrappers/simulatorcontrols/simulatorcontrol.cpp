@@ -104,6 +104,11 @@ void SimulatorControl::update(LAMMPSController *lammpsController)
     }
 }
 
+QString SimulatorControl::fullCommand()
+{
+    return QString("%1 %2").arg(createCommandPrefix()).arg(command());
+}
+
 bool SimulatorControl::enabled() const
 {
     return m_enabled;
@@ -111,7 +116,7 @@ bool SimulatorControl::enabled() const
 
 QString SimulatorControl::identifier() const
 {
-    return m_commandPrefix+m_identifier;
+    return m_identifierPrefix+m_identifier;
 }
 
 QString SimulatorControl::command() const

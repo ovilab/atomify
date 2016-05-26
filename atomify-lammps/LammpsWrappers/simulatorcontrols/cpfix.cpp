@@ -5,6 +5,8 @@ CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
 }
 
+CPFix::~CPFix() { }
+
 void CPFix::update(LAMMPSController *lammpsController)
 {
     SimulatorControl::update(lammpsController);
@@ -12,7 +14,7 @@ void CPFix::update(LAMMPSController *lammpsController)
 
 QList<QString> CPFix::enabledCommands()
 {
-    return {QString("fix %1 %2").arg(identifier()).arg(command())};
+    return { fullCommand() };
 }
 
 QList<QString> CPFix::disableCommands()
@@ -30,8 +32,27 @@ bool CPFix::existsInLammps(LAMMPSController *lammpsController)
     return lammpsController->findFixIndex(identifier())>=0;
 }
 
+QString CPFix::group() const
+{
+    return m_group;
+}
+
+void CPFix::setGroup(QString group)
+{
+    if (m_group == group)
+        return;
+
+    m_group = group;
+    emit groupChanged(group);
+}
+
 
 QList<QString> CPFix::resetCommands()
 {
-    return { QString("unfix %1").arg(identifier()), QString("fix %1 %2").arg(identifier()).arg(command()) };
+    return { QString("unfix %1").arg(identifier()), fullCommand() };
+}
+
+QString CPFix::createCommandPrefix()
+{
+    return QString("fix %1 %2 ").arg(identifier()).arg(group());
 }

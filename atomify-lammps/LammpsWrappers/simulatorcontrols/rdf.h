@@ -7,7 +7,6 @@ class RDF : public CPCompute
 {
     Q_OBJECT
     Q_PROPERTY(QVariantList atomPairs READ atomPairs WRITE setAtomPairs NOTIFY atomPairsChanged)
-    Q_PROPERTY(QString group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(int numberOfBins READ numberOfBins WRITE setNumberOfBins NOTIFY numberOfBinsChanged)
     Q_PROPERTY(DataSource* dataSource1 READ dataSource1 WRITE setDataSource1 NOTIFY dataSource1Changed)
     Q_PROPERTY(DataSource* dataSource2 READ dataSource2 WRITE setDataSource2 NOTIFY dataSource2Changed)
@@ -23,18 +22,15 @@ protected:
     DataSource* m_dataSource3 = nullptr;
     DataSource* m_dataSource4 = nullptr;
     QVariantList m_atomPairs;
-    QString m_group = "all";
     QString generatePairString();
     int m_numberOfBins = 100;
     int numberOfPairs();
     virtual void updateCommand() override;
     virtual QList<QString> enabledCommands() override;
     virtual QList<QString> resetCommands() override;
-
 public:
     virtual void update(LAMMPSController *lammpsController) override;
     QVariantList atomPairs() const;
-    QString group() const;
     int numberOfBins() const;
 
     DataSource* dataSource1() const;
@@ -44,7 +40,6 @@ public:
 
 public slots:
     void setAtomPairs(QVariantList atomPairs);
-    void setGroup(QString group);
     void setNumberOfBins(int numberOfBins);
     void setDataSource1(DataSource* dataSource1);
     void setDataSource2(DataSource* dataSource2);
@@ -53,7 +48,6 @@ public slots:
 
 signals:
     void atomPairsChanged(QVariantList atomPairs);
-    void groupChanged(QString group);
     void numberOfBinsChanged(int numberOfBins);
     void dataSource1Changed(DataSource* dataSource1);
     void dataSource2Changed(DataSource* dataSource2);

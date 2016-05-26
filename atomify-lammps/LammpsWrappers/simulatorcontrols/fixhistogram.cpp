@@ -28,6 +28,11 @@ QList<QString> FixHistogram::resetCommands()
     return { QString("unfix %1").arg(identifier()), QString("fix %1 all ave/histo %2 %3 %4 %5 %6 %7 c_%8 file /projects/%1.txt ave running").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_min).arg(m_max).arg(m_numberOfBins).arg(m_compute->identifier()) };
 }
 
+QString FixHistogram::createCommandPrefix()
+{
+
+}
+
 bool FixHistogram::existsInLammps(LAMMPSController *lammpsController)
 {
     return lammpsController->findFixIndex(identifier())>=0;
@@ -104,6 +109,11 @@ QVariantList FixHistogram::values() const
 DataSource *FixHistogram::dataSource() const
 {
     return m_dataSource;
+}
+
+QString FixHistogram::group() const
+{
+    return m_group;
 }
 
 void FixHistogram::setNEvery(int nEvery)
@@ -188,4 +198,13 @@ void FixHistogram::setDataSource(DataSource *dataSource)
 
     m_dataSource = dataSource;
     emit dataSourceChanged(dataSource);
+}
+
+void FixHistogram::setGroup(QString group)
+{
+    if (m_group == group)
+        return;
+
+    m_group = group;
+    emit groupChanged(group);
 }

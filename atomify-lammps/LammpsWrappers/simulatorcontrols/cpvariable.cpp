@@ -14,7 +14,7 @@ void CPVariable::updateCommand()
 
 QList<QString> CPVariable::enabledCommands()
 {
-    return {QString("variable %1 %2").arg(identifier()).arg(command())};
+    return { fullCommand() };
 }
 
 QList<QString> CPVariable::disableCommands()
@@ -25,6 +25,11 @@ QList<QString> CPVariable::disableCommands()
 QList<QString> CPVariable::resetCommands()
 {
     return { QString("variable %1 delete").arg(identifier()), QString("variable %1 %2").arg(identifier()).arg(command()) };
+}
+
+QString CPVariable::createCommandPrefix()
+{
+    return QString("variable %1 ").arg(identifier());
 }
 
 bool CPVariable::existsInLammps(LAMMPSController *lammpsController)

@@ -8,6 +8,8 @@ CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 
 }
 
+CPCompute::~CPCompute() { }
+
 void CPCompute::setValues(double time, QVector<double> values)
 {
     m_time = time;
@@ -58,7 +60,7 @@ void CPCompute::update(LAMMPSController *lammpsController)
 
 QList<QString> CPCompute::enabledCommands()
 {
-    return { QString("compute %1 %2").arg(identifier()).arg(command()) };
+    return { fullCommand() };
 }
 
 QList<QString> CPCompute::disableCommands()
@@ -116,6 +118,11 @@ DataSource *CPCompute::dataSource() const
     return m_dataSource;
 }
 
+QString CPCompute::group() const
+{
+    return m_group;
+}
+
 void CPCompute::setIsVector(bool isVector)
 {
     if (m_isVector == isVector)
@@ -134,8 +141,22 @@ void CPCompute::setDataSource(DataSource *dataSource)
     emit dataSourceChanged(dataSource);
 }
 
+void CPCompute::setGroup(QString group)
+{
+    if (m_group == group)
+        return;
+
+    m_group = group;
+    emit groupChanged(group);
+}
+
 
 QList<QString> CPCompute::resetCommands()
 {
-    return { QString("uncompute %1").arg(identifier()), QString("compute %1 %2").arg(identifier()).arg(command()) };
+    return { QString("uncompute %1").arg(identifier()), fullCommand() };
+}
+
+QString CPCompute::createCommandPrefix()
+{
+    return QString("compute %1 %2 ").arg(identifier()).arg(group());
 }

@@ -7,6 +7,7 @@ class CPCompute : public SimulatorControl
     Q_OBJECT
     Q_PROPERTY(QList<double> values READ values NOTIFY valuesChanged)
     Q_PROPERTY(double value READ firstValue NOTIFY firstValueChanged)
+    Q_PROPERTY(QString group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(double firstValue READ firstValue NOTIFY firstValueChanged)
     Q_PROPERTY(double secondValue READ secondValue NOTIFY secondValueChanged)
     Q_PROPERTY(double thirdValue READ thirdValue NOTIFY thirdValueChanged)
@@ -16,20 +17,15 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(DataSource* dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
 
 protected:
-    bool m_isVector = false;
-    double m_time = 0;
-    QList<double> m_values;
     void setValues(double time, QVector<double> values);
-    DataSource* m_dataSource = nullptr;
-
     virtual void updateCommand() override;
     QList<QString> enabledCommands() override;
     QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
-
+    QString createCommandPrefix() override;
 public:
     CPCompute(Qt3DCore::QNode *parent = 0);
-    ~CPCompute() { }
+    ~CPCompute();
     void update(LAMMPSController *lammpsController) override;
     bool existsInLammps(LAMMPSController *lammpsController) override;
     QList<double> values() const;
@@ -40,6 +36,7 @@ public:
     double time() const;
     bool isVector() const;
     DataSource* dataSource() const;
+    QString group() const;
 
 signals:
     void valuesChanged(QList<double> values);
@@ -50,12 +47,20 @@ signals:
     void timeChanged(double time);
     void isVectorChanged(bool isVector);
     void dataSourceChanged(DataSource* dataSource);
+    void groupChanged(QString group);
 
 public slots:
     void setIsVector(bool isVector);
     void setDataSource(DataSource* dataSource);
+    void setGroup(QString group);
 
 private:
+    DataSource* m_dataSource = nullptr;
+    bool m_isVector = false;
+    double m_time = 0;
+    QString m_group;
+    QList<double> m_values;
+
     QT3D_CLONEABLE(CPCompute)
 };
 

@@ -17,7 +17,7 @@ class SimulatorControl : public Qt3DCore::QNode
 protected:
     QString m_command;
     QString m_identifier;
-    QString m_commandPrefix = "atomify_";
+    QString m_identifierPrefix = "atomify_";
     QVariantList m_dependencies;
     bool m_enabled = true;
     bool addToLammps(LAMMPSController *lammpsController);
@@ -25,8 +25,8 @@ protected:
     virtual QList<QString> enabledCommands() = 0;
     virtual QList<QString> disableCommands() = 0;
     virtual QList<QString> resetCommands() = 0;
+    virtual QString createCommandPrefix() = 0;
     void addDependency(SimulatorControl *control);
-
     void removeDependency(SimulatorControl *control);
 public:
     explicit SimulatorControl(Qt3DCore::QNode *parent = 0);
@@ -40,6 +40,7 @@ public:
     virtual bool existsInLammps(LAMMPSController *lammpsController) = 0;
     virtual void update(LAMMPSController *lammpsController);
     virtual void handleCommand(QString command) { /* TODO */ }
+    virtual QString fullCommand();
 
 signals:
     void enabledChanged(bool enabled);
