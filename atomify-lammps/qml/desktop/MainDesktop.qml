@@ -86,7 +86,7 @@ Item {
             onActivated: tabView.currentIndex = 1
         }
         Shortcut {
-            sequence: "x"
+            sequence: "Tab"
             onActivated: toggleFocusMode()
         }
         Shortcut {

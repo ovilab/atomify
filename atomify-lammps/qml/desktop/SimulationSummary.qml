@@ -126,7 +126,7 @@ Rectangle {
                         text: "Toggle focus mode "
                     }
                     Label {
-                        text: ": x"
+                        text: ": Tab"
                     }
                 }
             }
