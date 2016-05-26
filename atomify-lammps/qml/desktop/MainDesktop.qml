@@ -133,7 +133,7 @@ Item {
 
         NumberAnimation on opacity {
             id: show
-            to: 0.5; duration: 200
+            to: 0.8; duration: 200
         }
 
         Label {
