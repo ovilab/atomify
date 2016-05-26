@@ -15,75 +15,57 @@ Item {
     width: parent.columns===1 ? parent.width : parent.width*0.5
     height: width
 
-    onWidthChanged: {
-        console.log("RDF width: ", width)
-    }
+    ChartView {
+        id: miniChart
+        anchors.fill: parent
+        antialiasing: true
+        legend.visible: true
+        title: "Pair distribution function"
+        titleColor: "black"
 
-    onHeightChanged: {
-        console.log("RDF height: ", height)
-    }
-
-    // ColumnLayout {
-        ChartView {
-            id: miniChart
-            anchors.fill: parent
-            antialiasing: true
-            legend.visible: true
-            title: "Pair distribution function"
-            titleColor: "black"
-
-            CPLineSeries {
-                axisX: _axisX
-                axisY: _axisY
-                dataSource: DataSource {
-                    id: dataSource0
-                }
-            }
-
-            CPLineSeries {
-                axisX: _axisX
-                axisY: _axisY
-                dataSource: DataSource {
-                    id: dataSource1
-                }
-            }
-
-            CPLineSeries {
-                axisX: _axisX
-                axisY: _axisY
-                dataSource: DataSource {
-                    id: dataSource2
-                }
-            }
-
-            ValueAxis {
-                id: _axisX
-                tickCount: 3
-                min: 0
-                max: 5.5
-                titleText: "r [Å]"
-                color: "white"
-                labelsColor: "black"
-            }
-            ValueAxis {
-                id: _axisY
-                tickCount: 3
-                min: 0
-                max: 5.0
-                titleText: "g(r)"
-                color: "white"
-                labelsColor: "black"
+        CPLineSeries {
+            axisX: _axisX
+            axisY: _axisY
+            dataSource: DataSource {
+                id: dataSource0
             }
         }
-//        Column {
-//            Button {
-//                text: "hello"
-//            }
-//            Button {
-//                text: "hello you"
-//            }
-//        }
-//    }
+
+        CPLineSeries {
+            axisX: _axisX
+            axisY: _axisY
+            dataSource: DataSource {
+                id: dataSource1
+            }
+        }
+
+        CPLineSeries {
+            axisX: _axisX
+            axisY: _axisY
+            dataSource: DataSource {
+                id: dataSource2
+            }
+        }
+
+        ValueAxis {
+            id: _axisX
+            tickCount: 3
+            min: 0
+            max: 5.5
+            titleText: "r [Å]"
+            color: "white"
+            labelsColor: "black"
+        }
+        ValueAxis {
+            id: _axisY
+            tickCount: 3
+            min: 0
+            max: 5.0
+            titleText: "g(r)"
+            color: "white"
+            labelsColor: "black"
+        }
+    }
 
     RDF {
         id: rdf

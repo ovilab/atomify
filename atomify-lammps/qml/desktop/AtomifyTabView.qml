@@ -7,9 +7,6 @@ TabView {
     property AtomifySimulator simulator
     property Tab editorTab
     property alias renderingTab: analysisTab
-    onSimulatorChanged: {
-        console.log("Tab view simulator changed: ", simulator)
-    }
 
     property string controlName: {
         if(Qt.platform.os === "osx") {
