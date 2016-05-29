@@ -11,6 +11,7 @@ Rectangle {
     onSystemChanged: {
         if(system) {
             system.groups.onActiveChanged.connect(updateGroups)
+            system.regions.onActiveChanged.connect(updateRegions)
         }
     }
 
@@ -20,6 +21,15 @@ Rectangle {
             collapseGroups.source = "qrc:/images/collapse.gif"
         } else {
             collapseGroups.source = "qrc:/images/expand.gif"
+        }
+    }
+
+    function updateRegions() {
+        regionsList.visible = system.regions.active
+        if(system.regions.active) {
+            collapseRegions.source = "qrc:/images/collapse.gif"
+        } else {
+            collapseRegions.source = "qrc:/images/expand.gif"
         }
     }
 
@@ -70,7 +80,6 @@ Rectangle {
                         id: groupsRow
                         spacing: 2
                         height: groupsLabel.height
-                        onHeightChanged: console.log("Row height: ", height)
 
                         Image {
                             id: collapseGroups
@@ -93,7 +102,6 @@ Rectangle {
                         x: groupsLabel.x
                         model: system ? system.groups.model : null
                         height: visible ? count*26 : 0
-                        onHeightChanged: console.log("List height: ", height)
                         visible: false
                         delegate: Label {
                             visible: groupsList.visible
@@ -101,40 +109,42 @@ Rectangle {
                         }
                     }
                 }
-            }
-        }
 
-//        GroupBox {
-//            width: parent.width
-//            title: "Groups"
-//            Button {
-//                text: "Show/Hide"
-//                onClicked: {
-//                    groupsList.visible = !groupsList.visible
-//                }
-//            }
+                Column {
+                    height: regionsRow.height + regionsList.height
 
-//            ListView {
-//                id: groupsList
-//                model: system ? system.groups.model : null
-//                height: count*26
-//                delegate: Label {
-//                    visible: groupsList.visible
-//                    text: model.modelData.name+": "+model.modelData.count+" atoms"
-//                }
-//            }
-//        }
+                    Row {
+                        id: regionsRow
+                        spacing: 2
+                        height: regionsLabel.height
 
-        GroupBox {
-            width: parent.width
-            title: "Regions"
-            visible: system.regions.count>0
+                        Image {
+                            id: collapseRegions
+                            y: 3
+                            source: "qrc:/images/expand.gif"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.regions.active = !system.regions.active
+                            }
+                        }
+                        Label {
+                            id: regionsLabel
+                            text: "Regions: "+system.regions.count
+                        }
+                    }
 
-            ListView {
-                model: system ? system.regions.model : null
-                height: count*26
-                delegate: Label {
-                    text: model.modelData.name+": "+model.modelData.count+" atoms"
+                    ListView {
+                        id: regionsList
+                        anchors.top: regionsRow.bottom
+                        x: regionsLabel.x
+                        model: system ? system.regions.model : null
+                        height: visible ? count*26 : 0
+                        visible: false
+                        delegate: Label {
+                            visible: regionsList.visible
+                            text: model.modelData.name+": "+model.modelData.count+" atoms"
+                        }
+                    }
                 }
             }
         }

@@ -46,6 +46,9 @@ void Regions::synchronize(LAMMPS *lammps)
     Region **regions = lammpsDomain->regions;
 
     int numRegions = lammpsDomain->nregion;
+    setCount(numRegions);
+    if(!m_active) return;
+
     Group *lammpsGroup = lammps->group;
     bool firstGroupIsAll = false;
 
@@ -58,6 +61,11 @@ void Regions::synchronize(LAMMPS *lammps)
 
     if(!firstGroupIsAll) {
         qDebug() << "Error, group all doesn't exist?";
+        return;
+    }
+
+    if(m_data.size() != numRegions) {
+        update(lammps);
         return;
     }
 
@@ -88,6 +96,11 @@ int Regions::count() const
     return m_count;
 }
 
+bool Regions::active() const
+{
+    return m_active;
+}
+
 void Regions::setModel(QVariant model)
 {
     if (m_model == model)
@@ -104,6 +117,15 @@ void Regions::setCount(int count)
 
     m_count = count;
     emit countChanged(count);
+}
+
+void Regions::setActive(bool active)
+{
+    if (m_active == active)
+        return;
+
+    m_active = active;
+    emit activeChanged(active);
 }
 
 CPRegion::CPRegion(QObject *parent) : QObject(parent)
