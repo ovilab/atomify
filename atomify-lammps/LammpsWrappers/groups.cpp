@@ -33,7 +33,6 @@ void Groups::update(Group *group)
 
 void Groups::synchronize(LAMMPS *lammps)
 {
-    QList<QString> newGroups;
     if(!lammps || !lammps->group) {
         update(nullptr);
         return;
@@ -41,6 +40,9 @@ void Groups::synchronize(LAMMPS *lammps)
 
     Group *lammpsGroup = lammps->group;
     int numGroups = lammpsGroup->ngroup;
+    setCount(numGroups);
+
+    if(!m_active) return;
 
     if(m_data.count() != numGroups) {
         update(lammpsGroup);
@@ -73,6 +75,11 @@ int Groups::count() const
     return m_count;
 }
 
+bool Groups::active() const
+{
+    return m_active;
+}
+
 void Groups::setModel(QVariant model)
 {
     if (m_model == model)
@@ -89,6 +96,15 @@ void Groups::setCount(int count)
 
     m_count = count;
     emit countChanged(count);
+}
+
+void Groups::setActive(bool active)
+{
+    if (m_active == active)
+        return;
+
+    m_active = active;
+    emit activeChanged(active);
 }
 
 

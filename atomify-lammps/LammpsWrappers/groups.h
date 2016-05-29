@@ -25,7 +25,7 @@ signals:
     void nameChanged(QString name);
     void countChanged(int count);
 private:
-    int m_count;
+    int m_count = 0;
     QString m_name;
 };
 
@@ -34,19 +34,24 @@ class Groups : public QObject
     Q_OBJECT
     Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
+    Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
+
 public:
     Groups(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
     QVariant model() const;
     int count() const;
+    bool active() const;
 
 public slots:
     void setModel(QVariant model);
     void setCount(int count);
+    void setActive(bool active);
 
 signals:
     void modelChanged(QVariant model);
     void countChanged(int count);
+    void activeChanged(bool active);
 
 private:
     QList<QObject*> m_data;
@@ -54,6 +59,7 @@ private:
     QVariant m_model;
     void update(class LAMMPS_NS::Group *group);
     int m_count = 0;
+    bool m_active = false;
 };
 
 #endif // GROUPS_H

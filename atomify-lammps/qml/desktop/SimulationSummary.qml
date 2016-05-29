@@ -8,14 +8,30 @@ Rectangle {
     radius: 4
     color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
 
+    onSystemChanged: {
+        if(system) {
+            system.groups.onActiveChanged.connect(updateGroups)
+        }
+    }
+
+    function updateGroups() {
+        groupsList.visible = system.groups.active
+        if(system.groups.active) {
+            collapseGroups.source = "qrc:/images/collapse.gif"
+        } else {
+            collapseGroups.source = "qrc:/images/expand.gif"
+        }
+    }
+
     Column {
         anchors.fill: parent
         spacing: 10
         GroupBox {
             width: parent.width
             title: "Simulation summary"
+            onHeightChanged: console.log("GroupBox height: ", height)
 
-            ColumnLayout {
+            Column {
                 Text {
                     font.bold: true
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
@@ -46,21 +62,68 @@ Rectangle {
                     font.bold: true
                     text: "Time: "+system.simulationTime.toFixed(2)
                 }
-            }
-        }
 
-        GroupBox {
-            width: parent.width
-            title: "Groups"
+                Column {
+                    height: groupsRow.height + groupsList.height
 
-            ListView {
-                model: system ? system.groups.model : null
-                height: count*26
-                delegate: Label {
-                    text: model.modelData.name+": "+model.modelData.count+" atoms"
+                    Row {
+                        id: groupsRow
+                        spacing: 2
+                        height: groupsLabel.height
+                        onHeightChanged: console.log("Row height: ", height)
+
+                        Image {
+                            id: collapseGroups
+                            y: 3
+                            source: "qrc:/images/expand.gif"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.groups.active = !system.groups.active
+                            }
+                        }
+                        Label {
+                            id: groupsLabel
+                            text: "Groups: "+system.groups.count
+                        }
+                    }
+
+                    ListView {
+                        id: groupsList
+                        anchors.top: groupsRow.bottom
+                        x: groupsLabel.x
+                        model: system ? system.groups.model : null
+                        height: visible ? count*26 : 0
+                        onHeightChanged: console.log("List height: ", height)
+                        visible: false
+                        delegate: Label {
+                            visible: groupsList.visible
+                            text: model.modelData.name+": "+model.modelData.count+" atoms"
+                        }
+                    }
                 }
             }
         }
+
+//        GroupBox {
+//            width: parent.width
+//            title: "Groups"
+//            Button {
+//                text: "Show/Hide"
+//                onClicked: {
+//                    groupsList.visible = !groupsList.visible
+//                }
+//            }
+
+//            ListView {
+//                id: groupsList
+//                model: system ? system.groups.model : null
+//                height: count*26
+//                delegate: Label {
+//                    visible: groupsList.visible
+//                    text: model.modelData.name+": "+model.modelData.count+" atoms"
+//                }
+//            }
+//        }
 
         GroupBox {
             width: parent.width
