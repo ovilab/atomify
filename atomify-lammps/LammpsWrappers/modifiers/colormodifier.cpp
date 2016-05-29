@@ -11,7 +11,6 @@ ColorModifier::ColorModifier()
 void ColorModifier::apply(AtomData &atomData)
 {
     if(!enabled()) return;
-    m_scale = 0.1;
     QVector<AtomStyle*> &atomStyles = m_system->atoms()->atomStyles();
     for(int i=0; i<atomData.positions.size(); i++) {
         // TODO: Validate all atomdata first

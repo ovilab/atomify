@@ -38,6 +38,7 @@ Scene3D {
 
         ColorModifier {
             id: colorModifier
+            scale: 0.2
         }
 
         PeriodicImages {
