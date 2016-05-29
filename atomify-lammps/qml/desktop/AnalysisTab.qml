@@ -11,11 +11,10 @@ ScrollView {
     anchors.fill: parent
     property AtomifyVisualizer atomifyVisualizer
     property System system
-    property var items: [temp]
+    property var items: []
 
     contentItem: Column {
         id: column
-        anchors.fill: parent
 
         ComboBox {
             model: [ "Add compute", "Pair distribution function", "Temperature" ]
@@ -24,7 +23,7 @@ ScrollView {
                     addMeasure("../RDFItem.qml")
                 }
                 if(currentText === "Temperature") {
-                    addMeasure("../Temperature.qml")
+                    addMeasure("../TemperatureItem.qml")
                 }
 
                 currentIndex = 0
@@ -35,6 +34,7 @@ ScrollView {
         Grid {
             id: grid
             width: Math.max(analysisRoot.viewport.width, 300)
+
             columns: 2
             function updateColumns() {
                 if(children.length === 1) {
@@ -53,11 +53,6 @@ ScrollView {
             onChildrenChanged: {
                 updateColumns()
             }
-
-            TemperatureItem {
-                id: temp
-                parent: grid
-            }
         }
     }
 
@@ -69,13 +64,11 @@ ScrollView {
                 console.log("Could not add...")
             } else {
                 QMLObject.system = system
-
                 items.push(QMLObject)
-                console.log("Added thing")
                 itemsChanged(items)
             }
         } else {
-            console.log("Could not add...")
+            console.log("Could not add way 2...")
         }
     }
 }
