@@ -22,7 +22,15 @@ Rectangle {
                 }
                 Text {
                     font.bold: true
+                    text: "System volume: "+system.volume
+                }
+                Text {
+                    font.bold: true
                     text: "Number of atoms: "+system.numberOfAtoms
+                }
+                Text {
+                    font.bold: true
+                    text: "Average density: "+(system.numberOfAtoms/system.volume).toFixed(4)
                 }
                 Text {
                     font.bold: true
