@@ -161,15 +161,17 @@ void Atoms::generateBondData(AtomData &atomData) {
     QElapsedTimer t;
     t.start();
     bondsDataRaw.reserve(atomData.positions.size());
-
     for(int ii=0; ii<atomData.size(); ii++) {
         int i = atomData.originalIndex[ii];
+
         const QVector3D position_i = atomData.positions[ii];
         const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
         const int atomType_i = atomData.types[ii];
 
         const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
         const float sphereRadius_i = atomData.radii[ii];
+
+        if(neighborList.neighbors.size() <= i) continue;
 
         for(const int &j : neighborList.neighbors[i]) {
             QVector3D position_j = atomData.positions[j];
