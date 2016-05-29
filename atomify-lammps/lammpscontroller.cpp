@@ -311,9 +311,9 @@ void LAMMPSController::tick()
     if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return;
 
     if(nextCommand.type() != ScriptCommand::Type::NoCommand) {
-        if(nextCommand.type() == ScriptCommand::Type::SingleCommand) {
-            state.preRunNeeded = true;
-        }
+//        if(nextCommand.type() == ScriptCommand::Type::SingleCommand) {
+//        }
+        state.preRunNeeded = true;
 
         bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
         if(didProcessCommand) {
