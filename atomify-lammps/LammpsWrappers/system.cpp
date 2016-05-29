@@ -67,6 +67,9 @@ void System::synchronize(LAMMPS *lammps)
         Modifier *modifier = modifier_.value<Modifier*>();
         modifier->setSystem(this);
     }
+    m_volume = m_size[0]*m_size[1]*m_size[2];
+    emit volumeChanged(m_volume);
+
     m_regions->synchronize(lammps);
     m_groups->synchronize(lammps);
     m_atoms->synchronize(lammps);
@@ -132,6 +135,11 @@ void System::reset()
     emit numberOfAtomsChanged(m_numberOfAtoms);
     emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
     m_atoms->reset();
+}
+
+float System::volume() const
+{
+    return m_volume;
 }
 
 void System::setAtoms(Atoms *atoms)
