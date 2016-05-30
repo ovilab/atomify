@@ -110,7 +110,7 @@ void Atoms::synchronize(LAMMPS *lammps)
         m_atomData.originalIndex[i] = i;
     }
 
-    // if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
+    if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
 void Atoms::updateData(LAMMPS *lammps)
@@ -133,8 +133,8 @@ void Atoms::updateData(LAMMPS *lammps)
 
     applyDeltaPositions(atomData);
     generateSphereData(atomData);
-    // generateBondData(atomData);
-    generateBondDataFromLammpsNeighborlist(atomData, *lammps);
+    generateBondData(atomData);
+    // generateBondDataFromLammpsNeighborlist(atomData, *lammps);
 }
 
 void Atoms::applyDeltaPositions(AtomData &atomData) {
@@ -161,6 +161,9 @@ void Atoms::generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS &l
     }
 
     NeighList *list = lammps.neighbor->lists[0];
+    if(!list) {
+        qDebug() << "WTF, list is nothing?";
+    }
     int inum = list->inum;
     int *ilist = list->ilist;
     int *numneigh = list->numneigh;
