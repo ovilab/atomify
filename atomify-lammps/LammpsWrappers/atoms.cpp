@@ -65,7 +65,10 @@ Atoms::Atoms(AtomifySimulator *simulator)
 
 void Atoms::synchronize(LAMMPS *lammps)
 {
-    if(!lammps) return;
+    if(!lammps) {
+        m_atomData.reset();
+        return;
+    }
     Atom *atom = lammps->atom;
     Domain *domain = lammps->domain;
     int *types = lammps->atom->type;
@@ -162,7 +165,7 @@ void Atoms::generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS &l
     int *ilist = list->ilist;
     int *numneigh = list->numneigh;
     int **firstneigh = list->firstneigh;
-
+    bondsDataRaw.reserve(atomData.size()*5);
     for(int ii=0; ii<atomData.size(); ii++) {
         int i = atomData.originalIndex[ii]; // A copy of an atom with index ii has original index i.
 

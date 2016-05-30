@@ -19,7 +19,7 @@ class System : public QObject
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
     Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
     Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
-
+    Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
@@ -34,11 +34,13 @@ public:
     int numberOfAtomTypes() const;
     void reset();
     float volume() const;
+    bool isValid() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
     void setRegions(class Regions* regions);
     void setGroups(class Groups* groups);
+    void setIsValid(bool isValid);
 
 signals:
     void originChanged(QVector3D origin);
@@ -51,6 +53,7 @@ signals:
     void groupsChanged(class Groups* groups);
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void volumeChanged(float volume);
+    void isValidChanged(bool isValid);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -63,6 +66,7 @@ private:
     int m_timesteps = 0;
     int m_numberOfAtomTypes = 0;
     float m_volume = 0;
+    bool m_isValid = false;
 };
 
 #endif // SYSTEM_H

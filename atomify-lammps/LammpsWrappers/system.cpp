@@ -19,7 +19,15 @@ System::System(AtomifySimulator *simulator)
 
 void System::synchronize(LAMMPS *lammps)
 {
-    if(!lammps) return;
+    m_regions->synchronize(lammps);
+    m_groups->synchronize(lammps);
+    m_atoms->synchronize(lammps);
+
+    if(!lammps) {
+        setIsValid(false);
+        return;
+    }
+    setIsValid(true);
 
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
@@ -69,10 +77,6 @@ void System::synchronize(LAMMPS *lammps)
     }
     m_volume = m_size[0]*m_size[1]*m_size[2];
     emit volumeChanged(m_volume);
-
-    m_regions->synchronize(lammps);
-    m_groups->synchronize(lammps);
-    m_atoms->synchronize(lammps);
 }
 
 QVector3D System::origin() const
@@ -142,6 +146,11 @@ float System::volume() const
     return m_volume;
 }
 
+bool System::isValid() const
+{
+    return m_isValid;
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -167,4 +176,13 @@ void System::setGroups(Groups *groups)
 
     m_groups = groups;
     emit groupsChanged(groups);
+}
+
+void System::setIsValid(bool isValid)
+{
+    if (m_isValid == isValid)
+        return;
+
+    m_isValid = isValid;
+    emit isValidChanged(isValid);
 }
