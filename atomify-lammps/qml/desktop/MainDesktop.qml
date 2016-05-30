@@ -32,11 +32,11 @@ Item {
                 simulator: desktopRoot.simulator
                 width: 500
 
-//                onEditorTabChanged: {
-//                    if(simulator && tabView.editorTab) {
-//                        simulator.errorInLammpsScript.connect(tabView.editorTab.editorTab.reportError)
-//                    }
-//                }
+                onEditorTabChanged: {
+                    if(simulator && tabView.editorTab) {
+                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
+                    }
+                }
             }
 
             AtomifyVisualizer {
