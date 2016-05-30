@@ -10,6 +10,7 @@
 #include <mpi.h>
 #include <lammps.h>
 #include "lammpscontroller.h"
+#include "LammpsWrappers/lammpserror.h"
 
 using namespace LAMMPS_NS;
 
@@ -37,10 +38,9 @@ class AtomifySimulator : public Simulator
     Q_OBJECT
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
     Q_PROPERTY(bool paused READ paused WRITE setPaused NOTIFY pausedChanged)
-    Q_PROPERTY(QString lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
-    Q_PROPERTY(QString lammpsErrorMessage READ lammpsErrorMessage WRITE setLammpsErrorMessage NOTIFY lammpsErrorMessageChanged)
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
+    Q_PROPERTY(LammpsError* lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
 public:
     AtomifySimulator();
@@ -49,46 +49,42 @@ public:
     // Simulator interface
     int simulationSpeed() const;
     bool paused() const;
-    QString lammpsError() const;
-    QString lammpsErrorMessage() const;
     ScriptHandler* scriptHandler() const;
     bool willReset() const;
     Q_INVOKABLE void clearSimulatorControls();
     class System* system() const;
+    LammpsError* lammpsError() const;
 
 public slots:
     void setSimulationSpeed(int arg);
     void setPaused(bool paused);
-    void setLammpsError(QString lammpsError);
-    void setLammpsErrorMessage(QString lammpsErrorMessage);
     void setScriptHandler(ScriptHandler* scriptHandler);
     void setWillReset(bool willReset);
     void setSystem(class System* system);
+    void setLammpsError(LammpsError* lammpsError);
 
 signals:
     void simulationSpeedChanged(int arg);
     void pausedChanged(bool paused);
     void errorInLammpsScript();
-    void lammpsErrorChanged(QString lammpsError);
-    void lammpsErrorMessageChanged(QString lammpsErrorMessage);
     void lammpsDidReset();
     void scriptHandlerChanged(ScriptHandler* scriptHandler);
     void willResetChanged(bool willReset);
     void systemChanged(class System* system);
+    void lammpsErrorChanged(LammpsError* lammpsError);
 
 protected:
     virtual MyWorker *createWorker() override;
 
 private:
     friend class MyWorker;
+    ScriptHandler* m_scriptHandler = nullptr;
+    class System* m_system = nullptr;
+    LammpsError* m_lammpsError = nullptr;
     LammpsState lammpsState;
     int m_simulationSpeed = 1;
     bool m_paused = false;
-    QString m_lammpsError;
-    QString m_lammpsErrorMessage;
-    ScriptHandler* m_scriptHandler = nullptr;
     bool m_willReset = false;
-    class System* m_system = nullptr;
     QT3D_CLONEABLE(AtomifySimulator)
 };
 

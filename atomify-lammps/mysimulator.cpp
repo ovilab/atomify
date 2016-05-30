@@ -46,6 +46,11 @@ System *AtomifySimulator::system() const
     return m_system;
 }
 
+LammpsError *AtomifySimulator::lammpsError() const
+{
+    return m_lammpsError;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
@@ -57,12 +62,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
         atomifySimulator->clearSimulatorControls();
         atomifySimulator->system()->reset();
+        atomifySimulator->setLammpsError(nullptr);
         emit atomifySimulator->lammpsDidReset();
     }
-
-    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
-    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
-    atomifySimulator->system()->atoms()->updateData(m_lammpsController.lammps());
 
     // Sync values from QML and simulator
     m_lammpsController.setPaused(atomifySimulator->paused());
@@ -70,13 +72,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setSystem(atomifySimulator->system());
     QList<SimulatorControl*> controls;
 
-    // TODO review if this can be removed
-    //    for(QQuickItem* child : mySimulator->childItems()) {
-    //        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-    //        if(control) {
-    //            controls.append(control);
-    //        }
-    //    }
     for(QObject* child : atomifySimulator->children()) {
         SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
         if(control) {
@@ -93,14 +88,22 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setScriptHandler(atomifySimulator->scriptHandler());
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
-        qDebug() << "LAMMPS crashed";
-        atomifySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
-        atomifySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+        qDebug() << "Did crash again :/";
+        LammpsError *error = new LammpsError(atomifySimulator);
+        error->setMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+        error->setCommand(m_lammpsController.state.nextCommand.command());
+        error->setScriptFile(m_lammpsController.state.nextCommand.filename());
+        error->setLine(m_lammpsController.state.nextCommand.line());
+        atomifySimulator->setLammpsError(error);
         m_lammpsController.currentException().setIsReported(true);
 
         emit atomifySimulator->errorInLammpsScript();
         return;
     }
+
+    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
+    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
+    atomifySimulator->system()->atoms()->updateData(m_lammpsController.lammps());
 
     if(m_willPause) {
         m_lammpsController.setPaused(true);
@@ -158,16 +161,6 @@ bool AtomifySimulator::paused() const
     return m_paused;
 }
 
-QString AtomifySimulator::lammpsError() const
-{
-    return m_lammpsError;
-}
-
-QString AtomifySimulator::lammpsErrorMessage() const
-{
-    return m_lammpsErrorMessage;
-}
-
 ScriptHandler *AtomifySimulator::scriptHandler() const
 {
     return m_scriptHandler;
@@ -182,7 +175,7 @@ AtomifySimulator::AtomifySimulator() :
     m_scriptHandler(new ScriptHandler()),
     m_system(new System(this))
 {
-    // m_system->atoms()->modifiers().append(new ColorModifier(m_system));
+
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -210,24 +203,6 @@ void AtomifySimulator::setPaused(bool paused)
     emit pausedChanged(paused);
 }
 
-void AtomifySimulator::setLammpsError(QString lammpsError)
-{
-    if (m_lammpsError == lammpsError)
-        return;
-
-    m_lammpsError = lammpsError;
-    emit lammpsErrorChanged(lammpsError);
-}
-
-void AtomifySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
-{
-    if (m_lammpsErrorMessage == lammpsErrorMessage)
-        return;
-
-    m_lammpsErrorMessage = lammpsErrorMessage;
-    emit lammpsErrorMessageChanged(lammpsErrorMessage);
-}
-
 void AtomifySimulator::setScriptHandler(ScriptHandler *scriptHandler)
 {
     if (m_scriptHandler == scriptHandler)
@@ -253,4 +228,13 @@ void AtomifySimulator::setSystem(System *system)
 
     m_system = system;
     emit systemChanged(system);
+}
+
+void AtomifySimulator::setLammpsError(LammpsError *lammpsError)
+{
+    if (m_lammpsError == lammpsError)
+        return;
+
+    m_lammpsError = lammpsError;
+    emit lammpsErrorChanged(lammpsError);
 }

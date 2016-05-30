@@ -12,8 +12,18 @@ Item {
     property AtomifyVisualizer visualizer
 
     function reportError() {
-//        consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '" + simulator.scriptHandler.currentCommand + "'")
-        consoleOutput.append(" LAMMPS error message: '" + simulator.lammpsErrorMessage + "'")
+        if(simulator.lammpsError) {
+            if(simulator.lammpsError.scriptFile === "") {
+                consoleOutput.append(" Simulation crashed on line "+simulator.lammpsError.line)
+                consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
+                consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
+            } else {
+                consoleOutput.append(" Simulation crashed.")
+                consoleOutput.append(" File: " + simulator.lammpsError.scriptFile + " on line " + simulator.lammpsError.line)
+                consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
+                consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
+            }
+        }
     }
 
     SplitView {
