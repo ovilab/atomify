@@ -60,9 +60,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         emit atomifySimulator->lammpsDidReset();
     }
 
+    QElapsedTimer t;
+    t.start();
     atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
     atomifySimulator->system()->synchronize(m_lammpsController.lammps());
-    atomifySimulator->system()->atoms()->updateData();
+    atomifySimulator->system()->atoms()->updateData(m_lammpsController.lammps());
+    qDebug() << "Data syncing took " << t.elapsed() << " ms.";
 
     // Sync values from QML and simulator
     m_lammpsController.setPaused(atomifySimulator->paused());
@@ -128,7 +131,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
 void MyWorker::work()
 {
+    QElapsedTimer t;
+    t.start();
     m_lammpsController.tick();
+    qDebug() << "Tick took " << t.elapsed() << " ms.";
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
     if(delta > 0) {

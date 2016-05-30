@@ -107,10 +107,10 @@ void Atoms::synchronize(LAMMPS *lammps)
         m_atomData.originalIndex[i] = i;
     }
 
-    if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
+    // if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
-void Atoms::updateData()
+void Atoms::updateData(LAMMPS *lammps)
 {
     AtomData atomData = m_atomData;
     if(!atomData.isValid()) {
@@ -128,10 +128,10 @@ void Atoms::updateData()
          }
     }
 
-
     applyDeltaPositions(atomData);
     generateSphereData(atomData);
-    generateBondData(atomData);
+    // generateBondData(atomData);
+    generateBondDataFromLammpsNeighborlist(atomData, *lammps);
 }
 
 void Atoms::applyDeltaPositions(AtomData &atomData) {
@@ -146,6 +146,68 @@ void Atoms::applyDeltaPositions(AtomData &atomData) {
 
 void Atoms::generateSphereData(AtomData &atomData) {
     m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
+}
+
+void Atoms::generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS &lammps) {
+    bondsDataRaw.resize(0);
+
+    bool hasNeighborLists = lammps.neighbor->nlist > 0;
+    if(!hasNeighborLists || !m_bonds->enabled()) {
+        m_bondData->setData(bondsDataRaw);
+        return;
+    }
+
+    NeighList *list = lammps.neighbor->lists[0];
+    int inum = list->inum;
+    int *ilist = list->ilist;
+    int *numneigh = list->numneigh;
+    int **firstneigh = list->firstneigh;
+
+    for(int ii=0; ii<atomData.size(); ii++) {
+        int i = atomData.originalIndex[ii]; // A copy of an atom with index ii has original index i.
+
+        const QVector3D position_i = atomData.positions[ii];
+        const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
+        const int atomType_i = atomData.types[ii];
+
+        const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
+        const float sphereRadius_i = atomData.radii[ii];
+
+        // Now use the neighbor list from lammps
+        int *jlist = firstneigh[i];
+        int jnum = numneigh[i];
+        for (int jj = 0; jj < jnum; jj++) {
+            int j = jlist[jj];
+            j &= NEIGHMASK;
+            QVector3D position_j = atomData.positions[j];
+            position_j[0] += deltaPosition_i[0];
+            position_j[1] += deltaPosition_i[1];
+            position_j[2] += deltaPosition_i[2];
+
+            const int &atomType_j = atomData.types[j];
+
+            float dx = position_i[0] - position_j[0];
+            float dy = position_i[1] - position_j[1];
+            float dz = position_i[2] - position_j[2];
+            float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
+            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
+                BondVBOData bond;
+                bond.vertex1[0] = position_i[0];
+                bond.vertex1[1] = position_i[1];
+                bond.vertex1[2] = position_i[2];
+                bond.vertex2[0] = position_j[0];
+                bond.vertex2[1] = position_j[1];
+                bond.vertex2[2] = position_j[2];
+                bond.radius1 = m_bondRadius;
+                bond.radius2 = m_bondRadius;
+                bond.sphereRadius1 = sphereRadius_i;
+                bond.sphereRadius2 = atomData.radii[j];
+                bondsDataRaw.push_back(bond);
+            }
+        }
+    }
+
+    m_bondData->setData(bondsDataRaw);
 }
 
 void Atoms::generateBondData(AtomData &atomData) {

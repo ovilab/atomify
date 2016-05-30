@@ -32,7 +32,7 @@ class Atoms : public QObject
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
-    void updateData();
+    void updateData(LAMMPS_NS::LAMMPS *lammps);
     SphereData* sphereData() const;
     QVariantList modifiers() const;
     QVector<AtomStyle*> &atomStyles();
@@ -65,6 +65,7 @@ private:
     QVariantList m_modifiers;
     float m_bondRadius = 0.1;
     void generateBondData(AtomData &atomData);
+    void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     void applyDeltaPositions(AtomData &atomData);
 };
