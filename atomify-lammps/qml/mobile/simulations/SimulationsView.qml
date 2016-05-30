@@ -101,9 +101,6 @@ Rectangle {
                                         Image {
                                             id: simulationImage
                                             property int simulationsCount: simulationsViewRoot.width / (Style.touchableSize * 2.5 + Style.baseMargin)
-                                            onSimulationsCountChanged: {
-                                                console.log(simulationsCount)
-                                            }
 
                                             width: (simulationsViewRoot.width - Style.baseMargin) / (simulationsCount + 0.3) - simulationsRow.spacing
                                             height: width * 16.0 / 10.0
