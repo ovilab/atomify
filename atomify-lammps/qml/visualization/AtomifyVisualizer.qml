@@ -49,15 +49,29 @@ Scene3D {
             numberOfCopiesZ: 1
         }
 
+        property list<Light> lights: [
+            Light {
+                position: visualizer.camera.position
+            }
+        ]
+
         Spheres {
             id: spheres
             camera: visualizer.camera
             sphereData: simulator.system.atoms.sphereData
+            fragmentColor: StandardMaterial {
+                id: spheresFragColor
+                lights: visualizer.lights
+                color: spheres.fragmentBuilder.color
+            }
         }
 
         Bonds {
             id: bonds
             bondData: simulator.system.atoms.bondData
+            fragmentColor: StandardMaterial {
+                lights: visualizer.lights
+            }
         }
     }
 }

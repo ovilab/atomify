@@ -282,7 +282,6 @@ void LAMMPSController::reset()
 //    sprintf(argv[3], "-pk");
 //    sprintf(argv[4], "gpu");
 //    sprintf(argv[5], "1");
-
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
