@@ -55,6 +55,33 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
 
+    // Sync properties from lammps controller and back
+    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
+    m_lammpsController.setScriptHandler(atomifySimulator->scriptHandler());
+    m_lammpsController.setPaused(atomifySimulator->paused());
+    m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed());
+    m_lammpsController.setSystem(atomifySimulator->system());
+    m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
+
+    if(m_willPause) {
+        m_lammpsController.setPaused(true);
+        atomifySimulator->setPaused(true);
+        m_willPause = false;
+    }
+
+
+    // Sync values from QML and simulator
+    QList<SimulatorControl*> controls;
+    for(QObject* child : atomifySimulator->children()) {
+        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+        if(control) {
+            if(!controls.contains(control)) {
+                controls.append(control);
+            }
+        }
+    }
+    m_lammpsController.simulatorControls = controls;
+
     if(atomifySimulator->willReset()) {
         m_lammpsController.reset();
         atomifySimulator->lammpsState = m_lammpsController.state;
@@ -66,29 +93,13 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         emit atomifySimulator->lammpsDidReset();
     }
 
-    // Sync values from QML and simulator
-    m_lammpsController.setPaused(atomifySimulator->paused());
-    m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed());
-    m_lammpsController.setSystem(atomifySimulator->system());
-    QList<SimulatorControl*> controls;
-
-    for(QObject* child : atomifySimulator->children()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            if(!controls.contains(control)) {
-                controls.append(control);
-            }
-        }
+    if(!m_lammpsController.lammps()) {
+        atomifySimulator->system()->synchronize(nullptr);
+        atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
+        return;
     }
 
-    m_lammpsController.simulatorControls = controls;
-    m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
-
-    // Sync properties from lammps controller
-    m_lammpsController.setScriptHandler(atomifySimulator->scriptHandler());
-
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
-        qDebug() << "Did crash again :/";
         LammpsError *error = new LammpsError(atomifySimulator);
         error->setMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
         error->setCommand(m_lammpsController.state.nextCommand.command());
@@ -101,15 +112,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
 
-    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
-    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
-    atomifySimulator->system()->atoms()->updateData(m_lammpsController.lammps());
 
-    if(m_willPause) {
-        m_lammpsController.setPaused(true);
-        atomifySimulator->setPaused(true);
-        m_willPause = false;
-    }
+    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
+    atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
 
     if(!m_lammpsController.state.runCommandActive) {
         ScriptHandler *scriptHandler = atomifySimulator->m_scriptHandler;

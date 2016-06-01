@@ -52,6 +52,7 @@ Scene3D {
         property list<Light> lights: [
             Light {
                 position: visualizer.camera.position
+                attenuation: 0.1
             }
         ]
 
@@ -63,6 +64,7 @@ Scene3D {
                 id: spheresFragColor
                 lights: visualizer.lights
                 color: spheres.fragmentBuilder.color
+                ambientIntensity: 2.0
             }
         }
 
@@ -71,6 +73,7 @@ Scene3D {
             bondData: simulator.system.atoms.bondData
             fragmentColor: StandardMaterial {
                 lights: visualizer.lights
+                ambientIntensity: 2.0
             }
         }
     }

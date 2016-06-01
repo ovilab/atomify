@@ -6,6 +6,7 @@
 #include "modifiers/modifiers.h"
 #include "mysimulator.h"
 #include "bonds.h"
+#include "system.h"
 using namespace LAMMPS_NS;
 
 Atoms::Atoms(AtomifySimulator *simulator)
@@ -113,7 +114,7 @@ void Atoms::synchronize(LAMMPS *lammps)
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
-void Atoms::updateData(LAMMPS *lammps)
+void Atoms::updateData(System *system, LAMMPS *lammps)
 {
     AtomData atomData = m_atomData;
     if(!atomData.isValid()) {
@@ -123,6 +124,7 @@ void Atoms::updateData(LAMMPS *lammps)
 
     for(QVariant &modifier_ : m_modifiers) {
         Modifier *modifier = modifier_.value<Modifier*>();
+        modifier->setSystem(system);
          modifier->apply(atomData);
          if(!atomData.isValid()) {
              // TODO: insert modifier name to debug message

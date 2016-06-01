@@ -11,8 +11,10 @@ ColorModifier::ColorModifier()
 void ColorModifier::apply(AtomData &atomData)
 {
     if(!enabled()) return;
+    qDebug() << "System: " << m_system;
+    qDebug() << "Atoms: " << m_system->atoms();
     QVector<AtomStyle*> &atomStyles = m_system->atoms()->atomStyles();
-    for(int i=0; i<atomData.positions.size(); i++) {
+    for(int i=0; i<atomData.size(); i++) {
         // TODO: Validate all atomdata first
         int atomType = atomData.types[i];
         const QColor &color = atomStyles[atomType]->color;

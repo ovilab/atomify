@@ -62,11 +62,11 @@ Rectangle {
         anchors.fill: parent
     }
 
-    MainMobile {
-        visible: mode === "mobile"
-        anchors.fill: parent
-        simulator: mySimulator
-    }
+//    MainMobile {
+//        visible: mode === "mobile"
+//        anchors.fill: parent
+//        simulator: mySimulator
+//    }
 
     Shortcut {
         sequence: StandardKey.AddTab

@@ -13,6 +13,7 @@ void AtomData::resize(int size)
     radii.resize(size);
     types.resize(size);
     originalIndex.resize(size);
+    neighborList.reset(size);
 }
 
 int AtomData::size()
