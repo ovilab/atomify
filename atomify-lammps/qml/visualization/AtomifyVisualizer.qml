@@ -10,6 +10,8 @@ import QtQuick.Scene3D 2.0
 import SimVis 1.0
 import SimVis.ShaderNodes 1.0
 
+import "../desktop" // TODO should be separate controllers for desktop and mobile
+
 Scene3D {
     id: atomifyVisualizerRoot
     property alias visualizer: visualizer
@@ -18,7 +20,7 @@ Scene3D {
     property real scale: 0.23
     property bool addPeriodicCopies: false
 
-    aspects: ["render", "input"]
+    aspects: ["render", "input", "logic"]
 
     Visualizer {
         id: visualizer
@@ -34,6 +36,11 @@ Scene3D {
                 colorModifier,
                 periodicImages
             ]
+        }
+
+        DesktopController {
+            id: navigationController
+            camera: visualizer.camera
         }
 
         ColorModifier {

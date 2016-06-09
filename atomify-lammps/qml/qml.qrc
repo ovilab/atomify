@@ -48,5 +48,6 @@
         <file>desktop/ShortcutsTab.qml</file>
         <file>TemperatureItem.qml</file>
         <file>desktop/AtomifyTabView.qml</file>
+        <file>desktop/DesktopController.qml</file>
     </qresource>
 </RCC>

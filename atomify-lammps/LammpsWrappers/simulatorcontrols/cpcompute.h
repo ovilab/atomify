@@ -60,8 +60,6 @@ private:
     double m_time = 0;
     QString m_group = "all";
     QList<double> m_values;
-
-    QT3D_CLONEABLE(CPCompute)
 };
 
 #endif // COMPUTE_H

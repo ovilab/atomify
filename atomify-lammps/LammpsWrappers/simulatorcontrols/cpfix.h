@@ -29,7 +29,6 @@ public slots:
 
 private:
     QString m_group = "all";
-    QT3D_CLONEABLE(CPFix)
 };
 
 #endif // CPFIX_H

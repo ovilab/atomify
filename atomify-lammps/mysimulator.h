@@ -85,7 +85,6 @@ private:
     int m_simulationSpeed = 1;
     bool m_paused = false;
     bool m_willReset = false;
-    QT3D_CLONEABLE(AtomifySimulator)
 };
 
 #endif // MYSIMULATOR_H

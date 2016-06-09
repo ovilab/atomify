@@ -16,9 +16,6 @@ protected:
     QString createCommandPrefix();
 public:
     virtual bool existsInLammps(class LAMMPSController *lammpsController);
-
-private:
-    QT3D_CLONEABLE(CPVariable)
 };
 
 #endif // CPVARIABLE_H

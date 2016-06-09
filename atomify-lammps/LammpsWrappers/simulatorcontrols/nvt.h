@@ -32,8 +32,6 @@ protected:
     virtual void updateCommand() override;
     virtual QList<QString> enabledCommands();
     virtual QList<QString> disableCommands();
-private:
-    QT3D_CLONEABLE(NVT)
 };
 
 #endif // NVT_H
