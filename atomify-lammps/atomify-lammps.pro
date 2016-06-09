@@ -50,19 +50,29 @@ SOURCES += \
     scriptparser.cpp \
     scripthandler.cpp \
     scriptcommand.cpp \
-    LammpsWrappers/nvt.cpp \
-    LammpsWrappers/simulatorcontrol.cpp \
-    LammpsWrappers/cpfix.cpp \
-    LammpsWrappers/cpcompute.cpp \
-    LammpsWrappers/cpvariable.cpp \
-    LammpsWrappers/fixaveragetime.cpp \
-    LammpsWrappers/fixhistogram.cpp \
-    LammpsWrappers/rdf.cpp \
     datasource.cpp \
-    LammpsContainers/atoms.cpp \
-    LammpsContainers/system.cpp \
-    LammpsContainers/modifiers/modifier.cpp \
-    LammpsContainers/modifiers/colormodifier.cpp
+    LammpsWrappers/simulatorcontrols/nvt.cpp \
+    LammpsWrappers/simulatorcontrols/simulatorcontrol.cpp \
+    LammpsWrappers/simulatorcontrols/cpfix.cpp \
+    LammpsWrappers/simulatorcontrols/cpcompute.cpp \
+    LammpsWrappers/simulatorcontrols/cpvariable.cpp \
+    LammpsWrappers/simulatorcontrols/fixaveragetime.cpp \
+    LammpsWrappers/simulatorcontrols/fixhistogram.cpp \
+    LammpsWrappers/simulatorcontrols/rdf.cpp \
+    LammpsWrappers/atoms.cpp \
+    LammpsWrappers/system.cpp \
+    LammpsWrappers/modifiers/modifier.cpp \
+    LammpsWrappers/modifiers/colormodifier.cpp \
+    LammpsWrappers/modifiers/slice.cpp \
+    LammpsWrappers/modifiers/periodicimages.cpp \
+    LammpsWrappers/atomdata.cpp \
+    LammpsWrappers/regions.cpp \
+    LammpsWrappers/groups.cpp \
+    LammpsWrappers/regions/region.cpp \
+    LammpsWrappers/regions/blockregion.cpp \
+    LammpsWrappers/neighborlist.cpp \
+    LammpsWrappers/bonds.cpp \
+    LammpsWrappers/lammpserror.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -72,20 +82,30 @@ HEADERS += \
     scriptparser.h \
     scripthandler.h \
     scriptcommand.h \
-    LammpsWrappers/nvt.h \
-    LammpsWrappers/simulatorcontrol.h \
-    LammpsWrappers/cpfix.h \
-    LammpsWrappers/cpcompute.h \
-    LammpsWrappers/cpvariable.h \
-    LammpsWrappers/fixaveragetime.h \
-    LammpsWrappers/fixhistogram.h \
-    LammpsWrappers/rdf.h \
     datasource.h \
-    LammpsContainers/atoms.h \
-    LammpsContainers/system.h \
-    LammpsContainers/modifiers/modifier.h \
-    LammpsContainers/modifiers/colormodifier.h \
-    LammpsContainers/modifiers/modifiers.h
+    LammpsWrappers/simulatorcontrols/nvt.h \
+    LammpsWrappers/simulatorcontrols/simulatorcontrol.h \
+    LammpsWrappers/simulatorcontrols/cpfix.h \
+    LammpsWrappers/simulatorcontrols/cpcompute.h \
+    LammpsWrappers/simulatorcontrols/cpvariable.h \
+    LammpsWrappers/simulatorcontrols/fixaveragetime.h \
+    LammpsWrappers/simulatorcontrols/fixhistogram.h \
+    LammpsWrappers/simulatorcontrols/rdf.h \
+    LammpsWrappers/atoms.h \
+    LammpsWrappers/system.h \
+    LammpsWrappers/modifiers/modifier.h \
+    LammpsWrappers/modifiers/colormodifier.h \
+    LammpsWrappers/modifiers/modifiers.h \
+    LammpsWrappers/modifiers/slice.h \
+    LammpsWrappers/modifiers/periodicimages.h \
+    LammpsWrappers/atomdata.h \
+    LammpsWrappers/regions.h \
+    LammpsWrappers/groups.h \
+    LammpsWrappers/regions/region.h \
+    LammpsWrappers/regions/blockregion.h \
+    LammpsWrappers/neighborlist.h \
+    LammpsWrappers/bonds.h \
+    LammpsWrappers/lammpserror.h
 
 # Temporary use of quickcontrols2 without install
 

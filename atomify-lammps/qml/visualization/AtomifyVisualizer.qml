@@ -13,7 +13,7 @@ import SimVis.ShaderNodes 1.0
 Scene3D {
     id: atomifyVisualizerRoot
     property alias visualizer: visualizer
-    property alias simulator: mySimulator
+    property alias simulator: simulator
     // property alias rdf: rdf
     property real scale: 0.23
     property bool addPeriodicCopies: false
@@ -28,36 +28,53 @@ Scene3D {
         camera.aspectRatio: atomifyVisualizerRoot.width / atomifyVisualizerRoot.height
 
         AtomifySimulator {
-            id: mySimulator
+            id: simulator
             simulationSpeed: 1
-            atomStyle: AtomStyle {
-                id: myAtomStyle
-            }
-            scriptHandler: ScriptHandler {
-                atomStyle: myAtomStyle
-            }
+            system.atoms.modifiers: [
+                colorModifier,
+                periodicImages
+            ]
         }
 
-        Cylinders {
-            cylinderData: simulator.cylinderData
-            fragmentColor: StandardMaterial {
-                lights: [
-                    Light {
-                        position: Qt.vector3d(5, 5, 5)
-                    }
-                ]
-            }
+        ColorModifier {
+            id: colorModifier
+            scale: 0.2
         }
+
+        PeriodicImages {
+            id: periodicImages
+            enabled: false
+            numberOfCopiesX: 1
+            numberOfCopiesY: 1
+            numberOfCopiesZ: 1
+        }
+
+        property list<Light> lights: [
+            Light {
+                position: visualizer.camera.position
+                attenuation: 0.1
+            }
+        ]
 
         Spheres {
             id: spheres
             camera: visualizer.camera
-            sphereData: simulator.atoms.sphereData
+            sphereData: simulator.system.atoms.sphereData
+            fragmentColor: StandardMaterial {
+                id: spheresFragColor
+                lights: visualizer.lights
+                color: spheres.fragmentBuilder.color
+                ambientIntensity: 2.0
+            }
         }
 
         Bonds {
             id: bonds
-            bondData: simulator.atoms.bondData
+            bondData: simulator.system.atoms.bondData
+            fragmentColor: StandardMaterial {
+                lights: visualizer.lights
+                ambientIntensity: 2.0
+            }
         }
     }
 }

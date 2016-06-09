@@ -12,19 +12,21 @@
 
 #include "mysimulator.h"
 #include "highlighter.h"
-#include "LammpsWrappers/cpcompute.h"
-#include "LammpsWrappers/cpvariable.h"
+#include "LammpsWrappers/simulatorcontrols/cpcompute.h"
+#include "LammpsWrappers/simulatorcontrols/cpvariable.h"
 #include "atomstyle.h"
-#include "LammpsWrappers/nvt.h"
+#include "LammpsWrappers/simulatorcontrols/nvt.h"
 #include "scripthandler.h"
-#include "LammpsWrappers/fixaveragetime.h"
-#include "LammpsWrappers/fixhistogram.h"
-#include "LammpsWrappers/rdf.h"
+#include "LammpsWrappers/simulatorcontrols/fixaveragetime.h"
+#include "LammpsWrappers/simulatorcontrols/fixhistogram.h"
+#include "LammpsWrappers/simulatorcontrols/rdf.h"
 #include "vendor.h"
 #include "datasource.h"
-#include "LammpsContainers/atoms.h"
-#include "LammpsContainers/system.h"
-
+#include "LammpsWrappers/atoms.h"
+#include "LammpsWrappers/system.h"
+#include "LammpsWrappers/groups.h"
+#include "LammpsWrappers/regions.h"
+#include "LammpsWrappers/modifiers/modifiers.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -40,6 +42,12 @@ int main(int argc, char *argv[])
     qmlRegisterType<DataSource>("Atomify", 1, 0, "DataSource");
     qmlRegisterType<Atoms>("Atomify", 1, 0, "Atoms");
     qmlRegisterType<System>("Atomify", 1, 0, "System");
+    qmlRegisterType<Groups>("Atomify", 1, 0, "Groups");
+    qmlRegisterType<Regions>("Atomify", 1, 0, "Regions");
+    qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");
+    qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");
+    qmlRegisterType<Slice>("Atomify", 1, 0, "Slice");
+
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
@@ -56,7 +64,10 @@ int main(int argc, char *argv[])
     view.setFormat(format);
     view.setSource(QUrl("qrc:/main.qml"));
     // view.setSource(QUrl("qrc:/main_spherestmp.qml"));
-    view.show();
+//    view.setWidth(1000);
+//    view.setHeight(1000);
+    // view.show();
+    view.showMaximized();
 
 #ifdef Q_OS_LINUX
     setlocale(LC_ALL, "C");

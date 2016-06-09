@@ -11,18 +11,19 @@ Item {
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
 
-    onVisualizerChanged: {
-        console.log("EditorTabVisChanged: ", visualizer)
-    }
-
-    onSimulatorChanged: {
-        console.log("EditorTabSimChanged: ", simulator)
-    }
-
-
     function reportError() {
-//        consoleOutput.append(" Simulation crashed. Error in parsing LAMMPS command: '" + simulator.scriptHandler.currentCommand + "'")
-        consoleOutput.append(" LAMMPS error message: '" + simulator.lammpsErrorMessage + "'")
+        if(simulator.lammpsError) {
+            if(simulator.lammpsError.scriptFile === "") {
+                consoleOutput.append(" Simulation crashed on line "+simulator.lammpsError.line)
+                consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
+                consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
+            } else {
+                consoleOutput.append(" Simulation crashed.")
+                consoleOutput.append(" File: " + simulator.lammpsError.scriptFile + " on line " + simulator.lammpsError.line)
+                consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
+                consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
+            }
+        }
     }
 
     SplitView {
@@ -34,26 +35,25 @@ Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: 200
-            Layout.preferredHeight: parent.height*0.75
             simulator: editorTabRoot.simulator
-
-            Shortcut {
-                sequence: "Escape"
-                onActivated: {
-                    if(myLammpsEditor.textarea.focus) {
-                        myLammpsEditor.textarea.focus = false
-                        console.log("Visualizer: "+visualizer)
-                        visualizer.focus = true
-                    } else {
-                        editorTabRoot.paused = !editorTabRoot.paused
-                    }
-                }
-            }
         }
 
         Console {
             id: myConsole
             simulator: editorTabRoot.simulator
+        }
+    }
+
+    Shortcut {
+        sequence: "Escape"
+        onActivated: {
+            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
+                myLammpsEditor.textarea.focus = false
+                myConsole.textField.focus = false
+                visualizer.focus = true
+            } else {
+                editorTabRoot.paused = !editorTabRoot.paused
+            }
         }
     }
 }

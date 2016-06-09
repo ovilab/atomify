@@ -28,5 +28,7 @@
         <file>images/tools.svg</file>
         <file>images/menu.png</file>
         <file>images/menu.svg</file>
+        <file>images/expand.gif</file>
+        <file>images/collapse.gif</file>
     </qresource>
 </RCC>

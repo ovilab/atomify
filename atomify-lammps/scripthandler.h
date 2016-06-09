@@ -9,7 +9,7 @@
 #include "scriptcommand.h"
 #include "scriptparser.h"
 #include "atomstyle.h"
-#include "LammpsContainers/atoms.h"
+#include "LammpsWrappers/atoms.h"
 
 class AtomifySimulator;
 
@@ -28,10 +28,6 @@ private:
     Atoms* m_atoms = nullptr;
     QString m_tempLocation;
 
-    Q_INVOKABLE QString previousSingleCommandString();
-    Q_INVOKABLE QString nextSingleCommandString();
-    Q_INVOKABLE QString lastSingleCommandString();
-
 public:
     ScriptHandler();
     const ScriptCommand &nextCommand();
@@ -41,6 +37,9 @@ public:
     void parseGUICommand(QString command);
     LammpsState *lammpsState() const;
     void setLammpsState(LammpsState *lammpsState);
+    Q_INVOKABLE QString previousSingleCommandString();
+    Q_INVOKABLE QString nextSingleCommandString();
+    Q_INVOKABLE QString lastSingleCommandString();
 
 public slots:
     void runScript(QString script, ScriptCommand::Type type = ScriptCommand::Type::Editor, QString filename = "", QString currentDir = "");

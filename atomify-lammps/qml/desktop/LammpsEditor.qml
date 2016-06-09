@@ -92,6 +92,10 @@ fix 1 all nve"
                     lammpsEditorRoot.simulator.setPaused(!lammpsEditorRoot.simulator.paused)
                 }
             }
+
+            Label {
+                text: "(Press escape to escape editor focus)"
+            }
         }
 
     }

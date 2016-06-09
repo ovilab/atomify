@@ -7,6 +7,7 @@ ColumnLayout {
     id: consoleRoot
     property AtomifySimulator simulator
     property TextArea output: consoleOutput
+    property alias textField: singleCommand
     Layout.fillHeight: true
     Layout.fillWidth: true
     TextArea {
@@ -17,13 +18,14 @@ ColumnLayout {
         readOnly: true
     }
 
-    Row {
+    RowLayout {
         Layout.fillWidth: true
 
         TextField {
             property int previousCommandCounter: 0
             id: singleCommand
-            width: parent.width - runSingleCommand.width
+            // width: parent.width - runSingleCommand.width
+            Layout.fillWidth: true
 
             Keys.onPressed: {
                 if(singleCommand.text == "") {
@@ -45,10 +47,6 @@ ColumnLayout {
 //                sequence: "Up"
 //                onActivated: {
 //                    if(singleCommand.text == "") {
-//                        for(var myObj in simulator.scriptHandler) {
-//                            console.log(myObj)
-//                        }
-
 //                        singleCommand.text = simulator.scriptHandler.lastSingleCommandString();
 //                    } else {
 //                        singleCommand.text = simulator.scriptHandler.previousSingleCommandString();
@@ -70,6 +68,13 @@ ColumnLayout {
                 simulator.scriptHandler.runCommand(singleCommand.text, true)
                 consoleOutput.append(singleCommand.text)
                 singleCommand.text = ""
+            }
+        }
+        Button {
+            id: clear
+            text: "Clear"
+            onClicked: {
+                consoleOutput.text = ""
             }
         }
     }

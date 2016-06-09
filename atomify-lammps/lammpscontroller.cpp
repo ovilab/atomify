@@ -23,9 +23,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "LammpsWrappers/cpcompute.h"
+#include "LammpsWrappers/simulatorcontrols/cpcompute.h"
 #include "mysimulator.h"
-#include "LammpsWrappers/simulatorcontrol.h"
+#include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include "scriptcommand.h"
 using namespace std;
 
@@ -129,8 +129,9 @@ void LAMMPSController::processCommand(QString command) {
                 wordCopy.erase(word.length()-3,1);
                 const char *word_c_str = wordCopy.c_str();
 
-                int found = m_lammps->input->variable->find((char*)word_c_str);
-                if(found > -1) {
+                // int found = m_lammps->input->variable->find((char*)word_c_str);
+                if(variableExists(QString::fromStdString(wordCopy))) {
+                // if(found > -1) {
                     char *numberOfTimestepsString = m_lammps->input->variable->retrieve((char*)word_c_str);
                     numberOfTimesteps = atoi(numberOfTimestepsString);
                 }
@@ -197,6 +198,11 @@ bool LAMMPSController::fixExists(QString identifier) {
     return findFixIndex(identifier) >= 0;
 }
 
+bool LAMMPSController::variableExists(QString identifier)
+{
+    return findVariableIndex(identifier) >= 0;
+}
+
 LAMMPS_NS::Compute* LAMMPSController::findComputeByIdentifier(QString identifier) {
     int computeId = findComputeId(identifier);
     if(computeId < 0) {
@@ -222,6 +228,16 @@ void LAMMPSController::processSimulatorControls() {
     for(SimulatorControl *control : simulatorControls) {
         control->update(this);
     }
+}
+
+System *LAMMPSController::system() const
+{
+    return m_system;
+}
+
+void LAMMPSController::setSystem(System *system)
+{
+    m_system = system;
 }
 
 void LAMMPSController::executeActiveRunCommand() {
@@ -266,7 +282,6 @@ void LAMMPSController::reset()
 //    sprintf(argv[3], "-pk");
 //    sprintf(argv[4], "gpu");
 //    sprintf(argv[5], "1");
-
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
@@ -295,9 +310,9 @@ void LAMMPSController::tick()
     if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return;
 
     if(nextCommand.type() != ScriptCommand::Type::NoCommand) {
-        if(nextCommand.type() == ScriptCommand::Type::SingleCommand) {
-            state.preRunNeeded = true;
-        }
+//        if(nextCommand.type() == ScriptCommand::Type::SingleCommand) {
+//        }
+        state.preRunNeeded = true;
 
         bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
         if(didProcessCommand) {
@@ -327,22 +342,6 @@ void LAMMPSController::tick()
     state.dataDirty = true;
 }
 
-int LAMMPSController::numberOfAtoms() const
-{
-    if(!m_lammps) {
-        return 0;
-    }
-    return m_lammps->atom->natoms;
-}
-
-int LAMMPSController::numberOfAtomTypes() const
-{
-    if(!m_lammps) {
-        return 0;
-    }
-    return m_lammps->atom->ntypes;
-}
-
 void LAMMPSController::disableAllEnsembleFixes()
 {
     if(!m_scriptHandler) {
@@ -370,22 +369,6 @@ void LAMMPSController::disableAllEnsembleFixes()
     }
 }
 
-QVector3D LAMMPSController::systemSize() const
-{
-    if(!m_lammps) {
-        return QVector3D();
-    }
-    return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
-}
-
-QVector3D LAMMPSController::systemCenter() const
-{
-    if(!m_lammps) {
-        return QVector3D();
-    }
-    return QVector3D(m_lammps->domain->boxlo[0] + m_lammps->domain->xprd_half, m_lammps->domain->boxlo[1] + m_lammps->domain->yprd_half, m_lammps->domain->boxlo[2] + m_lammps->domain->zprd_half);
-}
-
 ScriptHandler *LAMMPSController::scriptHandler() const
 {
     return m_scriptHandler;
@@ -406,40 +389,12 @@ void LAMMPSController::setPaused(bool value)
     state.paused = value;
 }
 
-bool LAMMPSController::dataDirty() const
-{
-    return state.dataDirty;
-}
-
-void LAMMPSController::setDataDirty(bool value)
-{
-    state.dataDirty = value;
-}
-
 bool LAMMPSController::crashed() const
 {
     return state.crashed;
 }
 
-double LAMMPSController::timePerTimestep()
-{
-    return ((double)state.timeSpentInLammps) / (state.numberOfTimesteps ? state.numberOfTimesteps : 1); // Measured in ms
-}
-
 LammpsException &LAMMPSController::currentException()
 {
     return m_currentException;
-}
-
-double LAMMPSController::simulationTime()
-{
-    if(!m_lammps) {
-        return 0;
-    }
-    return m_lammps->update->atime;
-}
-
-unsigned long LAMMPSController::numberOfTimesteps()
-{
-    return state.numberOfTimesteps;
 }

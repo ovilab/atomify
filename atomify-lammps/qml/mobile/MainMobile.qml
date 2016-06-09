@@ -33,7 +33,6 @@ Item {
         simulator.scriptHandler.reset()
         simulator.scriptHandler.runFile(simulation.scriptSource)
         mobileRoot.simulation = simulation
-
         simulator.clearSimulatorControls()
 
 //        for(var i in simulation.controllers) {
@@ -57,7 +56,7 @@ Item {
         // folder: "qrc:/simulations/diffusion/simple_diffusion"
         folder: "qrc:/simulations/silica/nanoporous"
         onLoaded: {
-             loadSimulation(item)
+             // loadSimulation(item)
         }
     }
 
@@ -104,7 +103,7 @@ Item {
         simulator: mobileRoot.simulator
         simulation: mobileRoot.simulation
         anchors {
-            bottom: visualizer.top
+            // bottom: visualizer.top
         }
         onBackClicked: {
             mobileRoot.state = mobileRoot.previousState

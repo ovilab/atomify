@@ -13,148 +13,62 @@ import "../visualization"
 Item {
     id: desktopRoot
 
-    property alias simulator: visualizer.simulator
+    property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
+    property bool focusMode: false
 
-    Component.onCompleted: {
-        simulator.errorInLammpsScript.connect(editorTab.reportError)
-    }
-
-    SplitView {
+    Row {
         anchors.fill: parent
-        Layout.alignment: Qt.AlignTop
-        Layout.fillHeight: true
 
-        TabView {
-            id: tabview
-            width: desktopRoot.width*0.4
+        SplitView {
             height: parent.height
+            width: parent.width-simulationSummary.width
+            Layout.alignment: Qt.AlignTop
+            orientation: Qt.Horizontal
 
-            Tab {
-                id: editorTab
-                title: "Script editor"
-                anchors.fill: parent
-                property TextArea consoleOutput: item ? item.consoleOutput : null
-                property LammpsEditor lammpsEditor: item ? item.lammpsEditor : null
-                function runScript() {
-                    if(lammpsEditor) {
-                        lammpsEditor.runScript()
-                    }
-                }
+            AtomifyTabView {
+                id: tabView
+                Layout.fillHeight: true
+                simulator: desktopRoot.simulator
+                width: 500
 
-                function reportError() {
-                    if(item) {
-                        item.reportError()
-                    }
-                }
-
-                EditorTab {
-                    id: myEditorTab
-                    anchors.fill: parent
-                    simulator: desktopRoot.simulator
-                    visualizer: desktopRoot.visualizer
-                    onVisualizerChanged: {
-                        console.log("Visualizer: ", visualizer)
+                onEditorTabChanged: {
+                    if(simulator && tabView.editorTab) {
+                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
                     }
                 }
             }
 
-            Tab {
-                id: renderingTab
-                anchors.fill: parent
-                title: "Rendering"
-                RenderingTab {
-                    anchors.fill: parent
-                    atomifyVisualizer: visualizer
-                }
+            AtomifyVisualizer {
+                id: visualizer
+                focus: true
+                Layout.alignment: Qt.AlignLeft
+                Layout.fillHeight: true
+                Layout.minimumWidth: 1
             }
         }
 
-        AtomifyVisualizer {
-            id: visualizer
-            focus: true
-            Layout.alignment: Qt.AlignLeft
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+        SimulationSummary {
+            id: simulationSummary
+            width: 300
+            height: parent.height
+            system: simulator.system ? simulator.system : null
+        }
+    }
 
-//            FlyModeNavigator {
-//                id: navigator
-//                anchors.fill: parent
-//                camera: visualizer.camera
-//            }
-
-//            SimulationSummary {
-//                simulator: desktopRoot.simulator
-////                pressure: pressure
-////                temperature: temperature
-//            }
-
-//            Rectangle {
-//                id: scaleRectangle
-//                width: parent.width
-//                anchors.bottom: visualizer.bottom
-
-//                height: 25
-//                radius: 4
-//                color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
-
-//                RowLayout {
-//                    id: scaleRow
-//                    x: 10
-//                    y: 3
-//                    spacing: 10
-
-//                    Label {
-//                        id: speedLabel
-//                        text: "Simulation speed"
-//                    }
-
-//                    Slider {
-//                        id: speedSlider
-//                        minimumValue: 1
-//                        maximumValue: 1000
-//                        stepSize: 1
-//                        value: simulator.simulationSpeed
-//                        onValueChanged: {
-//                            if(simulator) {
-//                                simulator.simulationSpeed = value
-//                            }
-//                        }
-//                        Settings {
-//                            property alias speedValue: speedSlider.value
-//                        }
-//                    }
-
-//                    Label {
-//                        text: "Sphere size"
-//                    }
-
-//                    Slider {
-//                        id: scaleSlider
-//                        minimumValue: 0.1
-//                        maximumValue: 10.0
-//                        value: visualizer.scale
-//                        onValueChanged: {
-//                            visualizer.scale = value
-//                        }
-//                        Settings {
-//                            property alias scaleValue: scaleSlider.value
-//                        }
-//                    }
-//                }
-//            }
-
-//            Label {
-//                x: 0.5*(parent.width - width)
-//                y: 25
-//                color: Qt.rgba(1,1,1,0.5)
-//                width: 200
-//                height: 50
-//                font.pixelSize: 50
-//                text: "Paused"
-//                visible: simulator.paused
-//            }
-//        }
+    function toggleFocusMode() {
+        if(focusMode) {
+            simulationSummary.width = 300
+            simulationSummary.visible = true
+            tabView.visible = true
+            focusMode = false
+            tabDisable.hideTabDisable.start()
+        } else {
+            simulationSummary.width = 0
+            tabView.visible = false
+            simulationSummary.visible = false
+            focusMode = true
+            tabDisable.showTabDisable.start()
         }
     }
 
@@ -163,21 +77,19 @@ Item {
         Shortcut {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
-            onActivated: editorTab.runScript()
+            onActivated: tabView.editorTab.runScript()
         }
         Shortcut {
             sequence: "Ctrl+1"
-            onActivated: tabview.currentIndex = 0
+            onActivated: tabView.currentIndex = 0
         }
         Shortcut {
             sequence: "Ctrl+2"
-            onActivated: tabview.currentIndex = 1
+            onActivated: tabView.currentIndex = 1
         }
         Shortcut {
-            sequence: "Space"
-            onActivated: {
-                simulator.paused = !simulator.paused
-            }
+            sequence: "Tab"
+            onActivated: toggleFocusMode()
         }
         Shortcut {
             sequence: "1"
@@ -202,17 +114,39 @@ Item {
         }
     }
 
-//    Temperature {
-//        id: temperature
-//        lammps: lammpsObject
-//        targetValue: slider.value
-//    }
+    Rectangle {
+        id: tabDisable
+        property bool isVisible: false
+        property alias showTabDisable: show
+        property alias hideTabDisable: hide
+        x: parent.width*0.5 - 0.5*width
+        y: 10
+        width: tabDisableLabel.width + 16
+        height: tabDisableLabel.height + 10
+        opacity: 0
+        radius: 5
 
-//    Compute {
-//        id: pressure
-//        simulator: mySimulator
-//        identifier: "pressure"
-//        command: "compute pressure all pressure temperature"
-//        dependencies: ["temperature"]
-//    }
+        NumberAnimation on opacity {
+            id: hide
+            to: 0; duration: 200
+        }
+
+        NumberAnimation on opacity {
+            id: show
+            to: 0.8; duration: 200
+        }
+
+        Label {
+            id: tabDisableLabel
+            x: 8
+            y: 5
+            text: "Press Tab to disable focus mode (click to hide)"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                hide.start()
+            }
+        }
+    }
 }

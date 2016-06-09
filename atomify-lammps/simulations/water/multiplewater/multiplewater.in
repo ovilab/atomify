@@ -5,7 +5,7 @@ boundary	p p p
 
 atom_style	molecular
 
-read_data	multiplewater.data
+read_restart multiplewater.bin
 
 pair_style 	vashishta
 pair_coeff	* * ../../potentialparameters/H2O.vashishta O H

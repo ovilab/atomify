@@ -3,7 +3,7 @@
         <file>desktop/MainDesktop.qml</file>
         <file>visualization/AtomifyVisualizer.qml</file>
         <file>desktop/LammpsEditor.qml</file>
-        <file>desktop/RenderingTab.qml</file>
+        <file>desktop/AnalysisTab.qml</file>
         <file>desktop/SliceControl.qml</file>
         <file>desktop/AtomStyleControl.qml</file>
         <file>desktop/LightControl.qml</file>
@@ -42,5 +42,11 @@
         <file>mobile/dashboard/controls/MiniChart.qml</file>
         <file>mobile/dashboard/controls/ChartScroller.qml</file>
         <file>mobile/dashboard/controls/AutoZoomMiniChart.qml</file>
+        <file>desktop/MeasureTab.qml</file>
+        <file>RDFItem.qml</file>
+        <file>CPLineSeries.qml</file>
+        <file>desktop/ShortcutsTab.qml</file>
+        <file>TemperatureItem.qml</file>
+        <file>desktop/AtomifyTabView.qml</file>
     </qresource>
 </RCC>

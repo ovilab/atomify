@@ -1,5 +1,5 @@
 #include "mysimulator.h"
-#include "LammpsWrappers/simulatorcontrol.h"
+#include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include <library.h>
 #include <atom.h>
 #include <domain.h>
@@ -18,8 +18,11 @@
 #include <fstream>
 #include <memory>
 #include <QStandardPaths>
-#include "LammpsContainers/atoms.h"
-#include "LammpsContainers/modifiers/modifiers.h"
+#include "scripthandler.h"
+#include "LammpsWrappers/atoms.h"
+#include "LammpsWrappers/modifiers/modifiers.h"
+#include "LammpsWrappers/system.h"
+
 using namespace std;
 
 MyWorker::MyWorker() {
@@ -33,34 +36,9 @@ void AtomifySimulator::clearSimulatorControls()
     for(QObject* child : children()) {
         SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
         if(control) {
-            control->setParentItem(nullptr);
+            control->setParent((QNode*) 0);
         }
     }
-}
-
-float AtomifySimulator::cameraToSystemCenterDistance() const
-{
-    return m_cameraToSystemCenterDistance;
-}
-
-bool AtomifySimulator::addPeriodicCopies() const
-{
-    return m_addPeriodicCopies;
-}
-
-SphereData *AtomifySimulator::sphereData() const
-{
-    return m_sphereData;
-}
-
-CylinderData *AtomifySimulator::cylinderData() const
-{
-    return m_cylinderData;
-}
-
-Atoms *AtomifySimulator::atoms() const
-{
-    return m_atoms;
 }
 
 System *AtomifySimulator::system() const
@@ -68,40 +46,32 @@ System *AtomifySimulator::system() const
     return m_system;
 }
 
+LammpsError *AtomifySimulator::lammpsError() const
+{
+    return m_lammpsError;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
-    if(atomifySimulator->scriptHandler() == nullptr) {
-        return;
-    }
 
-    if(atomifySimulator->willReset()) {
-        m_lammpsController.reset();
-        atomifySimulator->lammpsState = m_lammpsController.state;
-        atomifySimulator->setWillReset(false);
-        atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
-        emit atomifySimulator->lammpsDidReset();
-    }
-
-    // synchronizePositions(atomifySimulator);
-    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->atoms());
-    atomifySimulator->atoms()->synchronize(m_lammpsController.lammps());
-    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
-    atomifySimulator->atoms()->updateData();
-
-    // Sync values from QML and simulator
+    // Sync properties from lammps controller and back
+    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
+    m_lammpsController.setScriptHandler(atomifySimulator->scriptHandler());
     m_lammpsController.setPaused(atomifySimulator->paused());
     m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed());
+    m_lammpsController.setSystem(atomifySimulator->system());
+    m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
+
+    if(m_willPause) {
+        m_lammpsController.setPaused(true);
+        atomifySimulator->setPaused(true);
+        m_willPause = false;
+    }
+
+
+    // Sync values from QML and simulator
     QList<SimulatorControl*> controls;
-
-    // TODO review if this can be removed
-    //    for(QQuickItem* child : mySimulator->childItems()) {
-    //        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-    //        if(control) {
-    //            controls.append(control);
-    //        }
-    //    }
-
     for(QObject* child : atomifySimulator->children()) {
         SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
         if(control) {
@@ -110,36 +80,41 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             }
         }
     }
-
     m_lammpsController.simulatorControls = controls;
-    m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
 
-    // Sync properties from lammps controller
-    atomifySimulator->setNumberOfTimesteps(m_lammpsController.numberOfTimesteps());
-    atomifySimulator->setSimulationTime(m_lammpsController.simulationTime());
-    atomifySimulator->setNumberOfAtoms(m_lammpsController.numberOfAtoms());
-    atomifySimulator->setNumberOfAtomTypes(m_lammpsController.numberOfAtomTypes());
-    atomifySimulator->setSystemSize(m_lammpsController.systemSize());
-    atomifySimulator->setTimePerTimestep(m_lammpsController.timePerTimestep());
-    atomifySimulator->setCameraToSystemCenterDistance(m_cameraToSystemCenterDistance);
-    m_addPeriodicCopies = atomifySimulator->addPeriodicCopies();
-    m_lammpsController.setScriptHandler(atomifySimulator->scriptHandler());
+    if(atomifySimulator->willReset()) {
+        m_lammpsController.reset();
+        atomifySimulator->lammpsState = m_lammpsController.state;
+        atomifySimulator->setWillReset(false);
+        atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
+        atomifySimulator->clearSimulatorControls();
+        atomifySimulator->system()->reset();
+        atomifySimulator->setLammpsError(nullptr);
+        emit atomifySimulator->lammpsDidReset();
+    }
+
+    if(!m_lammpsController.lammps()) {
+        atomifySimulator->system()->synchronize(nullptr);
+        atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
+        return;
+    }
 
     if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
-        qDebug() << "LAMMPS crashed";
-        atomifySimulator->setLammpsError(QString(m_lammpsController.currentException().file().c_str()).trimmed());
-        atomifySimulator->setLammpsErrorMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+        LammpsError *error = new LammpsError(atomifySimulator);
+        error->setMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+        error->setCommand(m_lammpsController.state.nextCommand.command());
+        error->setScriptFile(m_lammpsController.state.nextCommand.filename());
+        error->setLine(m_lammpsController.state.nextCommand.line());
+        atomifySimulator->setLammpsError(error);
         m_lammpsController.currentException().setIsReported(true);
 
         emit atomifySimulator->errorInLammpsScript();
         return;
     }
 
-    if(m_willPause) {
-        m_lammpsController.setPaused(true);
-        atomifySimulator->setPaused(true);
-        m_willPause = false;
-    }
+
+    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
+    atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
 
     if(!m_lammpsController.state.runCommandActive) {
         ScriptHandler *scriptHandler = atomifySimulator->m_scriptHandler;
@@ -191,41 +166,6 @@ bool AtomifySimulator::paused() const
     return m_paused;
 }
 
-double AtomifySimulator::simulationTime() const
-{
-    return m_simulationTime;
-}
-
-int AtomifySimulator::numberOfAtoms() const
-{
-    return m_numberOfAtoms;
-}
-
-int AtomifySimulator::numberOfAtomTypes() const
-{
-    return m_numberOfAtomTypes;
-}
-
-QVector3D AtomifySimulator::systemSize() const
-{
-    return m_systemSize;
-}
-
-double AtomifySimulator::timePerTimestep() const
-{
-    return m_timePerTimestep;
-}
-
-QString AtomifySimulator::lammpsError() const
-{
-    return m_lammpsError;
-}
-
-QString AtomifySimulator::lammpsErrorMessage() const
-{
-    return m_lammpsErrorMessage;
-}
-
 ScriptHandler *AtomifySimulator::scriptHandler() const
 {
     return m_scriptHandler;
@@ -236,19 +176,11 @@ bool AtomifySimulator::willReset() const
     return m_willReset;
 }
 
-int AtomifySimulator::numberOfTimesteps() const
-{
-    return m_numberOfTimesteps;
-}
-
-AtomifySimulator::AtomifySimulator()
-    : m_sphereData(new SphereData(this)),
-    m_cylinderData(new CylinderData(this)),
+AtomifySimulator::AtomifySimulator() :
     m_scriptHandler(new ScriptHandler()),
-    m_atoms(new Atoms()),
-    m_system(new System())
+    m_system(new System(this))
 {
-    m_atoms->modifiers().append(new ColorModifier(m_atoms, m_system));
+
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -276,69 +208,6 @@ void AtomifySimulator::setPaused(bool paused)
     emit pausedChanged(paused);
 }
 
-void AtomifySimulator::setSimulationTime(double simulationTime)
-{
-    if (m_simulationTime == simulationTime)
-        return;
-
-    m_simulationTime = simulationTime;
-    emit simulationTimeChanged(simulationTime);
-}
-
-void AtomifySimulator::setNumberOfAtoms(int numberOfAtoms)
-{
-    if (m_numberOfAtoms == numberOfAtoms)
-        return;
-
-    m_numberOfAtoms = numberOfAtoms;
-    emit numberOfAtomsChanged(numberOfAtoms);
-}
-
-void AtomifySimulator::setNumberOfAtomTypes(int numberOfAtomTypes)
-{
-    if (m_numberOfAtomTypes == numberOfAtomTypes)
-        return;
-
-    m_numberOfAtomTypes = numberOfAtomTypes;
-    emit numberOfAtomTypesChanged(numberOfAtomTypes);
-}
-
-void AtomifySimulator::setSystemSize(QVector3D systemSize)
-{
-    if (m_systemSize == systemSize)
-        return;
-
-    m_systemSize = systemSize;
-    emit systemSizeChanged(systemSize);
-}
-
-void AtomifySimulator::setTimePerTimestep(double timePerTimestep)
-{
-    if (m_timePerTimestep == timePerTimestep)
-        return;
-
-    m_timePerTimestep = timePerTimestep;
-    emit timePerTimestepChanged(timePerTimestep);
-}
-
-void AtomifySimulator::setLammpsError(QString lammpsError)
-{
-    if (m_lammpsError == lammpsError)
-        return;
-
-    m_lammpsError = lammpsError;
-    emit lammpsErrorChanged(lammpsError);
-}
-
-void AtomifySimulator::setLammpsErrorMessage(QString lammpsErrorMessage)
-{
-    if (m_lammpsErrorMessage == lammpsErrorMessage)
-        return;
-
-    m_lammpsErrorMessage = lammpsErrorMessage;
-    emit lammpsErrorMessageChanged(lammpsErrorMessage);
-}
-
 void AtomifySimulator::setScriptHandler(ScriptHandler *scriptHandler)
 {
     if (m_scriptHandler == scriptHandler)
@@ -357,42 +226,6 @@ void AtomifySimulator::setWillReset(bool willReset)
     emit willResetChanged(willReset);
 }
 
-void AtomifySimulator::setNumberOfTimesteps(int numberOfTimesteps)
-{
-    if (m_numberOfTimesteps == numberOfTimesteps)
-        return;
-
-    m_numberOfTimesteps = numberOfTimesteps;
-    emit numberOfTimestepsChanged(numberOfTimesteps);
-}
-
-void AtomifySimulator::setCameraToSystemCenterDistance(float cameraToSystemCenterDistance)
-{
-    if (m_cameraToSystemCenterDistance == cameraToSystemCenterDistance)
-        return;
-
-    m_cameraToSystemCenterDistance = cameraToSystemCenterDistance;
-    emit cameraToSystemCenterDistanceChanged(cameraToSystemCenterDistance);
-}
-
-void AtomifySimulator::setAddPeriodicCopies(bool addPeriodicCopies)
-{
-    if (m_addPeriodicCopies == addPeriodicCopies)
-        return;
-
-    m_addPeriodicCopies = addPeriodicCopies;
-    emit addPeriodicCopiesChanged(addPeriodicCopies);
-}
-
-void AtomifySimulator::setAtoms(Atoms *atoms)
-{
-    if (m_atoms == atoms)
-        return;
-
-    m_atoms = atoms;
-    emit atomsChanged(atoms);
-}
-
 void AtomifySimulator::setSystem(System *system)
 {
     if (m_system == system)
@@ -400,4 +233,13 @@ void AtomifySimulator::setSystem(System *system)
 
     m_system = system;
     emit systemChanged(system);
+}
+
+void AtomifySimulator::setLammpsError(LammpsError *lammpsError)
+{
+    if (m_lammpsError == lammpsError)
+        return;
+
+    m_lammpsError = lammpsError;
+    emit lammpsErrorChanged(lammpsError);
 }

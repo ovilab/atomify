@@ -1,3 +1,4 @@
+
 //#include "atomstyle.h"
 
 //#include <QVector3D>
