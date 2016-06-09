@@ -33,12 +33,11 @@ class LAMMPSController
 {
 private:
     ScriptHandler *m_scriptHandler = nullptr;
-    LammpsException m_currentException;
     LAMMPS *m_lammps = nullptr;
     class MyWorker *m_worker = nullptr;
     class System *m_system = nullptr;
+    LammpsException m_currentException;
     void executeActiveRunCommand();
-    void notifySimulatorControlsAboutCommand();
 public:
     LammpsState state;
 
@@ -68,7 +67,6 @@ public:
     void reset();
     void tick();
 
-    //
     int findComputeId(QString identifier);
     int findVariableIndex(QString identifier);
     int findFixIndex(QString identifier);

@@ -19,14 +19,14 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_bonds = new Bonds();
     m_atomData.neighborList.bonds = m_bonds;
 
-    m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#FFFFFF"));
+    m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#CCCCCC"));
     m_atomStyleTypes.insert("helium", new AtomStyle(1.40, "#D9FFFF"));
     m_atomStyleTypes.insert("lithium", new AtomStyle(1.82, "#CC80FF"));
     m_atomStyleTypes.insert("beryllium", new AtomStyle(1.53, "#C2FF00"));
     m_atomStyleTypes.insert("boron", new AtomStyle(1.92, "#FFB5B5"));
     m_atomStyleTypes.insert("carbon", new AtomStyle(1.70, "#909090"));
     m_atomStyleTypes.insert("nitrogen", new AtomStyle(1.55, "#3050F8"));
-    m_atomStyleTypes.insert("oxygen", new AtomStyle(1.52, "#FF0D0D"));
+    m_atomStyleTypes.insert("oxygen", new AtomStyle(1.52, "#AA0000"));
     m_atomStyleTypes.insert("fluorine", new AtomStyle(1.35, "#90E050"));
     m_atomStyleTypes.insert("neon", new AtomStyle(1.54, "#3050F8"));
     m_atomStyleTypes.insert("sodium", new AtomStyle(2.27, "#AB5CF2"));

@@ -75,7 +75,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     for(QObject* child : atomifySimulator->children()) {
         SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
         if(control) {
-            if(!controls.contains(control)) {
+            if(control->enabled() && !controls.contains(control)) {
                 controls.append(control);
             }
         }
@@ -87,7 +87,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->lammpsState = m_lammpsController.state;
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
-        atomifySimulator->clearSimulatorControls();
+        // atomifySimulator->clearSimulatorControls();
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
         emit atomifySimulator->lammpsDidReset();
