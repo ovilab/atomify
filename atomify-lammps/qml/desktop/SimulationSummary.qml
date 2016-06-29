@@ -12,6 +12,7 @@ Rectangle {
         if(system) {
             system.groups.onActiveChanged.connect(updateGroups)
             system.regions.onActiveChanged.connect(updateRegions)
+            system.computes.onActiveChanged.connect(updateComputes)
         }
     }
 
@@ -30,6 +31,15 @@ Rectangle {
             collapseRegions.source = "qrc:/images/collapse.gif"
         } else {
             collapseRegions.source = "qrc:/images/expand.gif"
+        }
+    }
+
+    function updateComputes() {
+        computesList.visible = system.computes.active
+        if(system.computes.active) {
+            collapseComputes.source = "qrc:/images/collapse.gif"
+        } else {
+            collapseComputes.source = "qrc:/images/expand.gif"
         }
     }
 
@@ -143,6 +153,43 @@ Rectangle {
                         delegate: Label {
                             visible: regionsList.visible
                             text: model.modelData.name+": "+model.modelData.count+" atoms"
+                        }
+                    }
+                }
+
+                Column {
+                    height: computesRow.height + computesList.height
+
+                    Row {
+                        id: computesRow
+                        spacing: 2
+                        height: computesLabel.height
+
+                        Image {
+                            id: collapseComputes
+                            y: 3
+                            source: "qrc:/images/expand.gif"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.computes.active = !system.computes.active
+                            }
+                        }
+                        Label {
+                            id: computesLabel
+                            text: "Computes: "+system.computes.count
+                        }
+                    }
+
+                    ListView {
+                        id: computesList
+                        anchors.top: computesRow.bottom
+                        x: computesLabel.x
+                        model: system ? system.computes.model : null
+                        height: visible ? count*26 : 0
+                        visible: false
+                        delegate: Label {
+                            visible: computesList.visible
+                            text: model.modelData.identifier+": "+model.modelData.scalarData.current.toFixed(3)
                         }
                     }
                 }

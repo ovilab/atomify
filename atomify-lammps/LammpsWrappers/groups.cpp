@@ -31,8 +31,9 @@ void Groups::update(Group *group)
     setModel(QVariant::fromValue(m_data));
 }
 
-void Groups::synchronize(LAMMPS *lammps)
+void Groups::synchronize(LAMMPSController *lammpsController)
 {
+    LAMMPS *lammps = lammpsController->lammps();
     if(!lammps || !lammps->group) {
         update(nullptr);
         return;

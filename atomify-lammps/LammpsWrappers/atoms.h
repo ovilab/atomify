@@ -31,7 +31,7 @@ class Atoms : public QObject
     Q_PROPERTY(float bondRadius READ bondRadius WRITE setBondRadius NOTIFY bondRadiusChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
-    void synchronize(LAMMPS_NS::LAMMPS *lammps);
+    void synchronize(class LAMMPSController *lammpsController);
     void updateData(class System *system, LAMMPS_NS::LAMMPS *lammps);
     SphereData* sphereData() const;
     QVariantList modifiers() const;

@@ -71,16 +71,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
 
     // Sync values from QML and simulator
-    QList<SimulatorControl*> controls;
-    for(QObject* child : atomifySimulator->children()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            if(!controls.contains(control)) {
-                controls.append(control);
-            }
-        }
-    }
-    m_lammpsController.simulatorControls = controls;
 
     if(atomifySimulator->willReset()) {
         m_lammpsController.reset();
@@ -94,7 +84,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(!m_lammpsController.lammps()) {
-        atomifySimulator->system()->synchronize(nullptr);
+        atomifySimulator->system()->synchronize(&m_lammpsController);
         atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
         return;
     }
@@ -112,8 +102,24 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
 
+    QMap<QString, SimulatorControl*> controls;
+    for(QObject* child : atomifySimulator->children()) {
+        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+        if(control) {
+            if(!controls.contains(control->identifier())) {
+                controls.insert(control->identifier(), control);
+            }
+        }
+    }
+    m_lammpsController.simulatorControls = controls; // This object is visible from the Computes class
 
-    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
+    if(m_lammpsController.state.canProcessSimulatorControls) {
+        foreach(SimulatorControl *control, controls) {
+            control->update(&m_lammpsController);
+        }
+    }
+
+    atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
 
     if(!m_lammpsController.state.runCommandActive) {

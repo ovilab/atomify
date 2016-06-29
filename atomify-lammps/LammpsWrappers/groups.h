@@ -38,7 +38,7 @@ class Groups : public QObject
 
 public:
     Groups(class AtomifySimulator *simulator = nullptr);
-    void synchronize(LAMMPS_NS::LAMMPS *lammps);
+    void synchronize(class LAMMPSController *lammpsController);
     QVariant model() const;
     int count() const;
     bool active() const;

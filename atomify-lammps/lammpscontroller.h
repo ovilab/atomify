@@ -20,6 +20,7 @@ struct LammpsState {
     bool staticSystem = false;
     bool runCommandActive = false;
     bool preRunNeeded = true;
+    bool canProcessSimulatorControls = false;
     int  simulationSpeed = 1;
     unsigned long timeSpentInLammps = 0;
     int numberOfTimesteps = 1;
@@ -38,7 +39,6 @@ private:
     class MyWorker *m_worker = nullptr;
     class System *m_system = nullptr;
     void executeActiveRunCommand();
-    void notifySimulatorControlsAboutCommand();
 public:
     LammpsState state;
 
@@ -46,7 +46,7 @@ public:
     ~LAMMPSController();
 
     // Getters/setters
-    QList<class SimulatorControl*> simulatorControls;
+    QMap<QString, class SimulatorControl*> simulatorControls;
     LAMMPS *lammps() const;
     void setLammps(LAMMPS *lammps);
     void setWorker(class MyWorker *worker);

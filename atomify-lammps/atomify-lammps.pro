@@ -72,7 +72,10 @@ SOURCES += \
     LammpsWrappers/regions/blockregion.cpp \
     LammpsWrappers/neighborlist.cpp \
     LammpsWrappers/bonds.cpp \
-    LammpsWrappers/lammpserror.cpp
+    LammpsWrappers/lammpserror.cpp \
+    LammpsWrappers/simulatorcontrols/cpdata.cpp \
+    LammpsWrappers/computes.cpp \
+    LammpsWrappers/cpscalardata.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -105,7 +108,10 @@ HEADERS += \
     LammpsWrappers/regions/blockregion.h \
     LammpsWrappers/neighborlist.h \
     LammpsWrappers/bonds.h \
-    LammpsWrappers/lammpserror.h
+    LammpsWrappers/lammpserror.h \
+    LammpsWrappers/simulatorcontrols/cpdata.h \
+    LammpsWrappers/computes.h \
+    LammpsWrappers/cpscalardata.h
 
 # Temporary use of quickcontrols2 without install
 

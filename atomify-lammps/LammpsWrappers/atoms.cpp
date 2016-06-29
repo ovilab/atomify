@@ -64,8 +64,9 @@ Atoms::Atoms(AtomifySimulator *simulator)
 
 }
 
-void Atoms::synchronize(LAMMPS *lammps)
+void Atoms::synchronize(LAMMPSController *lammpsController)
 {
+    LAMMPS *lammps = lammpsController->lammps();
     if(!lammps) {
         m_atomData.reset();
         return;

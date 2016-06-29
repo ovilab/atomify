@@ -78,6 +78,8 @@ bool SimulatorControl::dependenciesValid(LAMMPSController *lammpsController)
 
 void SimulatorControl::update(LAMMPSController *lammpsController)
 {
+    if(m_isMirror) return; // If this object is only a mirror object, we shouldn't mess with adding or removing things from LAMMPS.
+
     if(!lammpsController->scriptHandler()) {
         return;
     }
@@ -104,9 +106,16 @@ void SimulatorControl::update(LAMMPSController *lammpsController)
     }
 }
 
+void SimulatorControl::handleCommand(QString command) { /* TODO */ }
+
 QString SimulatorControl::fullCommand()
 {
     return QString("%1 %2").arg(createCommandPrefix()).arg(command());
+}
+
+bool SimulatorControl::isMirror() const
+{
+    return m_isMirror;
 }
 
 bool SimulatorControl::enabled() const
@@ -139,7 +148,7 @@ void SimulatorControl::setEnabled(bool enabled)
 
 void SimulatorControl::setIdentifier(QString identifier)
 {
-    identifier = identifier+QString("%1").arg(SimulatorControl::getNextId());
+    if(!isMirror()) identifier = identifier+QString("%1").arg(SimulatorControl::getNextId());
     if (m_identifier == identifier)
         return;
 
@@ -163,4 +172,18 @@ void SimulatorControl::setDependencies(QVariantList dependencies)
 
     m_dependencies = dependencies;
     emit dependenciesChanged(dependencies);
+}
+
+void SimulatorControl::setIsMirror(bool isMirror)
+{
+    if (m_isMirror == isMirror)
+        return;
+
+    m_isMirror = isMirror;
+    if(m_isMirror) {
+        m_identifierPrefix = "";
+    } else {
+        m_identifierPrefix = "atomify_";
+    }
+    emit isMirrorChanged(isMirror);
 }

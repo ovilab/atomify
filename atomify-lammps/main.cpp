@@ -27,6 +27,7 @@
 #include "LammpsWrappers/groups.h"
 #include "LammpsWrappers/regions.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
+#include "LammpsWrappers/computes.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Atoms>("Atomify", 1, 0, "Atoms");
     qmlRegisterType<System>("Atomify", 1, 0, "System");
     qmlRegisterType<Groups>("Atomify", 1, 0, "Groups");
+    qmlRegisterType<Computes>("Atomify", 1, 0, "Computes");
     qmlRegisterType<Regions>("Atomify", 1, 0, "Regions");
     qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");
     qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");

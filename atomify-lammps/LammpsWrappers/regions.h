@@ -36,7 +36,7 @@ class Regions : public QObject
     Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
 public:
     Regions(class AtomifySimulator *simulator = nullptr);
-    void synchronize(LAMMPS_NS::LAMMPS *lammps);
+    void synchronize(class LAMMPSController *lammpsController);
     QVariant model() const;
     int count() const;
     bool active() const;

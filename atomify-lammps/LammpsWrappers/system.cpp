@@ -5,6 +5,7 @@
 #include "atoms.h"
 #include "regions.h"
 #include "groups.h"
+#include "computes.h"
 #include "../mysimulator.h"
 #include "modifiers/modifier.h"
 
@@ -15,14 +16,17 @@ System::System(AtomifySimulator *simulator)
     setAtoms(new Atoms(simulator));
     setGroups(new Groups(simulator));
     setRegions(new Regions(simulator));
+    setComputes(new Computes(simulator));
 }
 
-void System::synchronize(LAMMPS *lammps)
+void System::synchronize(LAMMPSController *lammpsController)
 {
-    m_regions->synchronize(lammps);
-    m_groups->synchronize(lammps);
-    m_atoms->synchronize(lammps);
+    m_regions->synchronize(lammpsController);
+    m_groups->synchronize(lammpsController);
+    m_atoms->synchronize(lammpsController);
+    m_computes->synchronize(lammpsController);
 
+    LAMMPS *lammps = lammpsController->lammps();
     if(!lammps) {
         setIsValid(false);
         return;
@@ -151,6 +155,11 @@ bool System::isValid() const
     return m_isValid;
 }
 
+Computes *System::computes() const
+{
+    return m_computes;
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -185,4 +194,13 @@ void System::setIsValid(bool isValid)
 
     m_isValid = isValid;
     emit isValidChanged(isValid);
+}
+
+void System::setComputes(Computes *computes)
+{
+    if (m_computes == computes)
+        return;
+
+    m_computes = computes;
+    emit computesChanged(computes);
 }

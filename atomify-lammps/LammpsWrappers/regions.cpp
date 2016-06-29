@@ -1,5 +1,6 @@
 #include "regions.h"
 #include "../mysimulator.h"
+#include "../lammpscontroller.h"
 #include <domain.h>
 #include <region.h>
 #include <group.h>
@@ -36,8 +37,9 @@ void Regions::update(LAMMPS *lammps) {
     setModel(QVariant::fromValue(m_data));
 }
 
-void Regions::synchronize(LAMMPS *lammps)
+void Regions::synchronize(LAMMPSController *lammpsController)
 {
+    LAMMPS *lammps = lammpsController->lammps();
     if(!lammps) {
         update(nullptr);
         return;
