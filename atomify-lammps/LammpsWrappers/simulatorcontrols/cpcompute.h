@@ -21,6 +21,7 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(QVariantMap data1D READ data1D WRITE setData1D NOTIFY data1DChanged)
     Q_PROPERTY(QString xLabel READ xLabel WRITE setXLabel NOTIFY xLabelChanged)
     Q_PROPERTY(QString yLabel READ yLabel WRITE setYLabel NOTIFY yLabelChanged)
+    Q_PROPERTY(int maxCount READ maxCount WRITE setMaxCount NOTIFY maxCountChanged)
 
 protected:
     virtual void updateCommand() override;
@@ -42,6 +43,7 @@ public:
     QVariantMap data1D() const;
     QString xLabel() const;
     QString yLabel() const;
+    int maxCount() const;
 
 signals:
     void isVectorChanged(bool isVector);
@@ -53,6 +55,7 @@ signals:
     void data1DChanged(QVariantMap data1D);
     void xLabelChanged(QString xLabel);
     void yLabelChanged(QString yLabel);
+    void maxCountChanged(int maxCount);
 
 public slots:
     void setIsVector(bool isVector);
@@ -64,6 +67,7 @@ public slots:
     void setData1D(QVariantMap data1D);
     void setXLabel(QString xLabel);
     void setYLabel(QString yLabel);
+    void setMaxCount(int maxCount);
 
 private:
     bool copyData(ComputePressure *compute, LAMMPSController *lammpsController);
@@ -88,6 +92,7 @@ private:
     QMap<QString, CP1DData*> m_data1DRaw;
     QString m_xLabel;
     QString m_yLabel;
+    int m_maxCount = 1000;
 };
 
 #endif // COMPUTE_H

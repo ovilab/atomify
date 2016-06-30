@@ -1,9 +1,10 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.2
 import Atomify 1.0
 import QtCharts 2.1
+import QtQuick.Controls.Styles 1.4
 
 Window {
     id: root
@@ -83,24 +84,12 @@ Window {
         }
     }
 
-    Rectangle {
-        anchors.fill: parent
-        border.color: "black"
-        border.width: 1
-
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            onHoveredChanged: {
-                if(!containsMouse) {
-                    root.hide()
-                }
-            }
-        }
-
+    Column {
+        spacing: 5
         ChartView {
             id: chart
-            anchors.fill: parent
+            width: root.width
+            height: root.height * 0.8
             antialiasing: true
             legend.visible: true
             title: compute ? compute.identifier : ""
@@ -124,6 +113,44 @@ Window {
                 titleText: compute ? compute.yLabel : ""
                 color: "white"
                 labelsColor: "black"
+            }
+        }
+
+        Row {
+            Button {
+                text: "Max count: "
+                tooltip: "Sets a limit on how many data points that is plotted. Useful for limiting the x-axis in timeseries for i.e. only showing the last 100 timesteps."
+                style: ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 24
+                        border.width: 0
+                        border.color: "#888"
+                        radius: 0
+                    }
+                }
+            }
+
+            TextField {
+                id: maxCountText
+                validator: IntValidator {bottom: 0; top: 100000;}
+                text: compute ? compute.maxCount : 0
+                style: TextFieldStyle {
+                    textColor: "black"
+                    background: Rectangle {
+                        radius: 2
+                        implicitWidth: 100
+                        implicitHeight: 24
+                        border.color: "#333"
+                        border.width: 1
+                    }
+                }
+            }
+            Button {
+                text: "Apply"
+                onClicked: {
+                    compute.maxCount = parseInt(maxCountText.text)
+                }
             }
         }
     }

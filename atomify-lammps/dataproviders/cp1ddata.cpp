@@ -56,6 +56,11 @@ bool CP1DData::enabled() const
     return m_enabled;
 }
 
+int CP1DData::maxCount() const
+{
+    return m_maxCount;
+}
+
 void CP1DData::clear()
 {
     m_points.clear();
@@ -64,6 +69,11 @@ void CP1DData::clear()
 void CP1DData::add(float x, float y, bool silent)
 {
     m_points.append(QPointF(x,y));
+    if(m_maxCount > 0) {
+        while(m_points.size() > m_maxCount) {
+            m_points.pop_front();
+        }
+    }
     if(!silent) emit updated();
 }
 
@@ -110,4 +120,13 @@ void CP1DData::setEnabled(bool enabled)
 
     m_enabled = enabled;
     emit enabledChanged(enabled);
+}
+
+void CP1DData::setMaxCount(int maxCount)
+{
+    if (m_maxCount == maxCount)
+        return;
+
+    m_maxCount = maxCount;
+    emit maxCountChanged(maxCount);
 }

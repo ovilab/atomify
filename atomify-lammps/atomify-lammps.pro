@@ -73,7 +73,6 @@ SOURCES += \
     LammpsWrappers/neighborlist.cpp \
     LammpsWrappers/bonds.cpp \
     LammpsWrappers/lammpserror.cpp \
-    LammpsWrappers/simulatorcontrols/cpdata.cpp \
     LammpsWrappers/computes.cpp \
     dataproviders/dataprovider.cpp \
     dataproviders/cp1ddata.cpp
@@ -110,7 +109,6 @@ HEADERS += \
     LammpsWrappers/neighborlist.h \
     LammpsWrappers/bonds.h \
     LammpsWrappers/lammpserror.h \
-    LammpsWrappers/simulatorcontrols/cpdata.h \
     LammpsWrappers/computes.h \
     dataproviders/dataprovider.h \
     dataproviders/cp1ddata.h

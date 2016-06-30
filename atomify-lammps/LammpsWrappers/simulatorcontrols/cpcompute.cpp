@@ -1,7 +1,6 @@
 #include "cpcompute.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
-#include "cpdata.h"
 #include "../system.h"
 #include <QDebug>
 
@@ -297,6 +296,11 @@ QString CPCompute::yLabel() const
     return m_yLabel;
 }
 
+int CPCompute::maxCount() const
+{
+    return m_maxCount;
+}
+
 void CPCompute::setIsVector(bool isVector)
 {
     if (m_isVector == isVector)
@@ -376,6 +380,18 @@ void CPCompute::setYLabel(QString yLabel)
 
     m_yLabel = yLabel;
     emit yLabelChanged(yLabel);
+}
+
+void CPCompute::setMaxCount(int maxCount)
+{
+    if (m_maxCount == maxCount)
+        return;
+
+    m_maxCount = maxCount;
+    foreach (CP1DData *data, m_data1DRaw) {
+        data->setMaxCount(m_maxCount);
+    }
+    emit maxCountChanged(maxCount);
 }
 
 QList<QString> CPCompute::resetCommands()
