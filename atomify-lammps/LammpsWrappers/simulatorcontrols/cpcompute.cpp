@@ -111,6 +111,23 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
     return true;
 }
 
+bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+    compute->compute_vector();
+
+    QStringList components = {"∆x2", "∆y2", "∆z2", "∆r2"};
+
+    int numVectorValues = 4;
+    for(int i=1; i<=numVectorValues; i++) {
+        QString key = components[i-1];
+        CP1DData *data = ensureExists(key, false);
+        double value = compute->vector[i-1];
+        data->add(lammpsController->system()->simulationTime(), value);
+    }
+
+    return true;
+}
+
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
     if(lammpsController->system()->timesteps() % m_frequency != 0) return;
@@ -122,6 +139,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(copyData(dynamic_cast<ComputeKE*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputePE*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
+    if(copyData(dynamic_cast<ComputeMSD*>(lmp_compute), lammpsController)) return;
 
     if(lmp_compute->scalar_flag == 1) {
         double value = lmp_compute->compute_scalar();
