@@ -25,7 +25,19 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             scalarData->add(lammpsController->system()->simulationTime(), value);
         }
         if(lmp_compute->vector_flag == 1) {
-
+            lmp_compute->compute_vector();
+            int numVectorValues = lmp_compute->size_vector;
+            for(int i=1; i<=numVectorValues; i++) {
+                QString key = QString("%1").arg(i);
+                if(!m_data1DRaw.contains(key)) {
+                    CP1DData *data = new CP1DData(this);
+                    m_data1DRaw.insert(key, data);
+                    m_data1D.insert(key, QVariant::fromValue<CP1DData*>(data));
+                }
+                CP1DData *data = m_data1DRaw[key];
+                double value = lmp_compute->vector[i-1];
+                data->add(lammpsController->system()->simulationTime(), value);
+            }
         }
         if(lmp_compute->array_flag == 1) {
 

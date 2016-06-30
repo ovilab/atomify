@@ -74,7 +74,6 @@ Window {
             for(var key in compute.data1D) {
                 var series = chart.createSeries(ChartView.SeriesTypeLine, key, _axisX, _axisY);
                 dataSeries[key] = series
-
             }
         } else {
             for(key in compute.data1D) {
