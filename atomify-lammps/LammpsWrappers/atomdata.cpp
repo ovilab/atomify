@@ -2,7 +2,11 @@
 
 bool AtomData::isValid()
 {
-    return positions.size() == colors.size() && colors.size() == radii.size() && radii.size() == types.size();
+    return positions.size() == colors.size() &&
+            colors.size() == radii.size() &&
+            radii.size() == types.size() &&
+            types.size() == originalIndex.size() &&
+            originalIndex.size() == bitmask.size();
 }
 
 void AtomData::resize(int size)
@@ -14,6 +18,7 @@ void AtomData::resize(int size)
     types.resize(size);
     originalIndex.resize(size);
     neighborList.reset(size);
+    bitmask.resize(size);
 }
 
 int AtomData::size()
@@ -29,6 +34,7 @@ void AtomData::reset()
     radii.clear();
     types.clear();
     originalIndex.clear();
+    bitmask.clear();
     neighborList.reset(0);
 }
 

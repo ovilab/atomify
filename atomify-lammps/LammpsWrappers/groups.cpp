@@ -24,6 +24,7 @@ void Groups::update(Group *group)
         CPGroup *newGroup = new CPGroup(this);
         newGroup->setName(name);
         newGroup->setCount(count);
+        newGroup->setBitmask(group->bitmask[groupIndex]);
         m_data.push_back(newGroup);
         m_dataMap.insert(name, newGroup);
     }
@@ -81,6 +82,17 @@ bool Groups::active() const
     return m_active;
 }
 
+QList<CPGroup *> Groups::groups()
+{
+    QList<CPGroup *> groups;
+    for(QObject *obj : m_data) {
+        CPGroup *group = qobject_cast<CPGroup*>(obj);
+        if(group) groups.append(group);
+    }
+
+    return groups;
+}
+
 void Groups::setModel(QVariant model)
 {
     if (m_model == model)
@@ -121,6 +133,16 @@ int CPGroup::count() const
     return m_count;
 }
 
+int CPGroup::bitmask() const
+{
+    return m_bitmask;
+}
+
+bool CPGroup::hovered() const
+{
+    return m_hovered;
+}
+
 void CPGroup::setName(QString name)
 {
     if (m_name == name)
@@ -137,4 +159,22 @@ void CPGroup::setCount(int count)
 
     m_count = count;
     emit countChanged(count);
+}
+
+void CPGroup::setBitmask(int bitmask)
+{
+    if (m_bitmask == bitmask)
+        return;
+
+    m_bitmask = bitmask;
+    emit bitmaskChanged(bitmask);
+}
+
+void CPGroup::setHovered(bool hovered)
+{
+    if (m_hovered == hovered)
+        return;
+
+    m_hovered = hovered;
+    emit hoveredChanged(hovered);
 }

@@ -144,6 +144,13 @@ Rectangle {
                         delegate: Label {
                             visible: groupsList.visible
                             text: model.modelData.name+": "+model.modelData.count+" atoms"
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onHoveredChanged: {
+                                    model.modelData.hovered = containsMouse
+                                }
+                            }
                         }
                     }
                 }

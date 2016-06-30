@@ -11,6 +11,7 @@ public:
     QVector<QVector3D> colors;
     QVector<float> radii;
     QVector<int> originalIndex;
+    QVector<int> bitmask; // For detecting group membership
     QVector<int> types;
     Neighborlist neighborList;
     bool isValid();

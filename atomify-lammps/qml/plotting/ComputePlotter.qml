@@ -12,7 +12,6 @@ Window {
     property Compute compute
     width: 500
     height: 500
-    // flags: Qt.Popup
     onComputeChanged: {
         updateSeries("line")
         for(var key in compute.data1D) {
@@ -96,6 +95,7 @@ Window {
             legend.visible: true
             title: compute ? compute.identifier : ""
             titleColor: "black"
+
 
             ValueAxis {
                 id: _axisX

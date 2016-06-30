@@ -86,6 +86,9 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     if(m_atomData.types.size() != numberOfAtoms) {
         m_atomData.types.resize(numberOfAtoms);
     }
+    if(m_atomData.bitmask.size() != numberOfAtoms) {
+        m_atomData.bitmask.resize(numberOfAtoms);
+    }
     if(m_atomData.colors.size() != numberOfAtoms) {
         m_atomData.colors.resize(numberOfAtoms);
         for(QVector3D &color : m_atomData.colors) color = QVector3D(0.9, 0.2, 0.1);
@@ -110,6 +113,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         m_atomData.positions[i][1] = position[1];
         m_atomData.positions[i][2] = position[2];
         m_atomData.originalIndex[i] = i;
+        m_atomData.bitmask[i] = atom->mask[i];
     }
 
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
