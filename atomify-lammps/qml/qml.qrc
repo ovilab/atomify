@@ -50,5 +50,6 @@
         <file>desktop/AtomifyTabView.qml</file>
         <file>desktop/DesktopController.qml</file>
         <file>plotting/ComputePlotter.qml</file>
+        <file>plotting/LabelButton.qml</file>
     </qresource>
 </RCC>

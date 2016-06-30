@@ -55,6 +55,8 @@ Window {
         _axisX.max = (xMax<0) ? 0.95*xMax : 1.05*xMax
         _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
         _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
+        _axisY.applyNiceNumbers()
+        _axisX.applyNiceNumbers()
     }
 
     Timer {
@@ -120,15 +122,7 @@ Window {
             Button {
                 text: "Max count: "
                 tooltip: "Sets a limit on how many data points that is plotted. Useful for limiting the x-axis in timeseries for i.e. only showing the last 100 timesteps."
-                style: ButtonStyle {
-                    background: Rectangle {
-                        implicitWidth: 100
-                        implicitHeight: 24
-                        border.width: 0
-                        border.color: "#888"
-                        radius: 0
-                    }
-                }
+                style: LabelButton { }
             }
 
             TextField {
