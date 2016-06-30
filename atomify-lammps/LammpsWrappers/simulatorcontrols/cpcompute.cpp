@@ -147,6 +147,52 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
     return true;
 }
 
+bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+    compute->compute_vector();
+
+    // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
+    QStringList components = {"x_cm", "y_cm", "z_cm"};
+
+    int numVectorValues = 3;
+    for(int i=1; i<=numVectorValues; i++) {
+        QString key = components[i-1];
+        CP1DData *data = ensureExists(key, false);
+        double value = compute->vector[i-1];
+        data->add(lammpsController->system()->simulationTime(), value);
+    }
+
+    return true;
+}
+
+bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+
+    // First compute scalar Rg
+    double value = compute->compute_scalar();
+    setHasScalarData(true);
+    setScalarValue(value);
+    CP1DData *data = ensureExists(QString("Radius of gyration"), true);
+    setXLabel("Time");
+    setYLabel("Pressure");
+    data->add(lammpsController->system()->simulationTime(), value);
+
+    compute->compute_vector();
+
+    // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
+    QStringList components = {"xx", "yy", "zz", "xy", "xz", "yz"};
+
+    int numVectorValues = 6;
+    for(int i=1; i<=numVectorValues; i++) {
+        QString key = components[i-1];
+        CP1DData *data = ensureExists(key, false);
+        double value = compute->vector[i-1];
+        data->add(lammpsController->system()->simulationTime(), value);
+    }
+
+    return true;
+}
+
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
     if(lammpsController->system()->timesteps() % m_frequency != 0) return;
@@ -160,6 +206,8 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeMSD*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
+    if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
+    if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
 
     if(lmp_compute->scalar_flag == 1) {
         double value = lmp_compute->compute_scalar();

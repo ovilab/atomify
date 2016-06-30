@@ -50,10 +50,10 @@ Window {
             yMin = Math.min(yMin, data.yMin)
             yMax = Math.max(yMax, data.yMax)
         }
-        _axisX.min = xMin
-        _axisX.max = xMax
-        _axisY.min = yMin
-        _axisY.max = yMax
+        _axisX.min = (xMin>0) ? 0.95*xMin : 1.05*xMin
+        _axisX.max = (xMax<0) ? 0.95*xMax : 1.05*xMax
+        _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
+        _axisY.max = (yMax<0) ? 0.95*xMax : 1.05*yMax
     }
 
     Timer {
