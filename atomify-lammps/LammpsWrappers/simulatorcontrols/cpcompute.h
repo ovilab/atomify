@@ -72,6 +72,7 @@ private:
     bool copyData(ComputeKE *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeRDF *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeMSD *compute, LAMMPSController *lammpsController);
+    bool copyData(ComputeVACF *compute, LAMMPSController *lammpsController);
     CP1DData *ensureExists(QString key, bool enabledByDefault);
 
     bool m_isVector = false;

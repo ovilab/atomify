@@ -115,7 +115,26 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
     if(!compute) return false;
     compute->compute_vector();
 
-    QStringList components = {"∆x2", "∆y2", "∆z2", "∆r2"};
+    // http://www.ascii.cl/htmlcodes.htm
+    QStringList components = {"∆x<sup>2</sup>", "∆y<sup>2</sup>", "∆z<sup>2</sup>", "∆r<sup>2</sup>"};
+
+    int numVectorValues = 4;
+    for(int i=1; i<=numVectorValues; i++) {
+        QString key = components[i-1];
+        CP1DData *data = ensureExists(key, false);
+        double value = compute->vector[i-1];
+        data->add(lammpsController->system()->simulationTime(), value);
+    }
+
+    return true;
+}
+
+bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+    compute->compute_vector();
+
+    // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
+    QStringList components = {"&lt;vx, vx0\&gt;", "&lt;vy, vy0&gt;", "&lt;vz, vz0&gt;", "&lt;v, v0&gt;"};
 
     int numVectorValues = 4;
     for(int i=1; i<=numVectorValues; i++) {
@@ -140,6 +159,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(copyData(dynamic_cast<ComputePE*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeMSD*>(lmp_compute), lammpsController)) return;
+    if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
 
     if(lmp_compute->scalar_flag == 1) {
         double value = lmp_compute->compute_scalar();
