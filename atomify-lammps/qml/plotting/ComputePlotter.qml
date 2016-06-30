@@ -111,7 +111,7 @@ Window {
                 tickCount: 3
                 min: 0
                 max: 100
-                titleText: "Time"
+                titleText: compute ? compute.xLabel : ""
                 color: "white"
                 labelsColor: "black"
             }
@@ -121,7 +121,7 @@ Window {
                 tickCount: 3
                 min: 0
                 max: 1000
-                titleText: "Temperature"
+                titleText: compute ? compute.yLabel : ""
                 color: "white"
                 labelsColor: "black"
             }

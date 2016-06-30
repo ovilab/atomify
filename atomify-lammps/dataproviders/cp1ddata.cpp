@@ -51,6 +51,11 @@ void CP1DData::updateData(QAbstractSeries *series)
     }
 }
 
+bool CP1DData::enabled() const
+{
+    return m_enabled;
+}
+
 void CP1DData::clear()
 {
 
@@ -96,4 +101,13 @@ void CP1DData::setYMax(float yMax)
 
     m_yMax = yMax;
     emit yMaxChanged(yMax);
+}
+
+void CP1DData::setEnabled(bool enabled)
+{
+    if (m_enabled == enabled)
+        return;
+
+    m_enabled = enabled;
+    emit enabledChanged(enabled);
 }
