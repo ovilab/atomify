@@ -219,11 +219,14 @@ Rectangle {
                             visible: computesList.visible
                             Label {
                                 id: computeTitleLabel
+                                font.underline: true
+                                color: "steelblue"
                                 text: {
                                     model.modelData.identifier
                                 }
                                 MouseArea {
                                     anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
                                     onClicked: {
                                         var point = Qt.point(mouseX, mouseY)
                                         point = getGlobalPosition(point, computeTitleLabel)
