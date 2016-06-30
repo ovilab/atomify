@@ -16,7 +16,7 @@ class CP1DData : public QObject
 public:
     explicit CP1DData(QObject *parent = 0);
     void clear();
-    void add(float x, float y);
+    void add(float x, float y, bool silent = false);
     float xMin() const;
     float xMax() const;
     float yMin() const;

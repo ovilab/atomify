@@ -84,6 +84,33 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     return true;
 }
 
+bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+    compute->compute_array();
+    /*
+       size_array_rows = nbin;
+       size_array_cols = 1 + 2*npairs;
+    */
+    int numBins = compute->size_array_rows;      // rows in global array
+    int numColumns = compute->size_array_cols;      // columns in global array
+    int numPairs = (numColumns - 1)/2;
+
+    for(int pairId=0; pairId<numPairs; pairId++) {
+        QString key = QString("Pair %1").arg(pairId+1);
+        CP1DData *data = ensureExists(key, true);
+        data->clear();
+
+        for(int bin=0; bin<numBins; bin++) {
+            double r = compute->array[bin][0];
+            double rdf = compute->array[bin][1+2*pairId];
+            data->add(r,rdf,true);
+        }
+        emit data->updated();
+    }
+
+    return true;
+}
+
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
     if(lammpsController->system()->timesteps() % m_frequency != 0) return;
@@ -94,6 +121,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(copyData(dynamic_cast<ComputeTemp*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeKE*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputePE*>(lmp_compute), lammpsController)) return;
+    if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
 
     if(lmp_compute->scalar_flag == 1) {
         double value = lmp_compute->compute_scalar();

@@ -58,13 +58,13 @@ bool CP1DData::enabled() const
 
 void CP1DData::clear()
 {
-
+    m_points.clear();
 }
 
-void CP1DData::add(float x, float y)
+void CP1DData::add(float x, float y, bool silent)
 {
     m_points.append(QPointF(x,y));
-    emit updated();
+    if(!silent) emit updated();
 }
 
 void CP1DData::setXMin(float xMin)
