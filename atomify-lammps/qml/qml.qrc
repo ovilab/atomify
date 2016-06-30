@@ -49,5 +49,6 @@
         <file>TemperatureItem.qml</file>
         <file>desktop/AtomifyTabView.qml</file>
         <file>desktop/DesktopController.qml</file>
+        <file>plotting/ComputePlotter.qml</file>
     </qresource>
 </RCC>

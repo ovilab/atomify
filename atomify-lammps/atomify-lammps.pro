@@ -75,7 +75,8 @@ SOURCES += \
     LammpsWrappers/lammpserror.cpp \
     LammpsWrappers/simulatorcontrols/cpdata.cpp \
     LammpsWrappers/computes.cpp \
-    LammpsWrappers/cpscalardata.cpp
+    dataproviders/dataprovider.cpp \
+    dataproviders/cp1ddata.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -111,7 +112,8 @@ HEADERS += \
     LammpsWrappers/lammpserror.h \
     LammpsWrappers/simulatorcontrols/cpdata.h \
     LammpsWrappers/computes.h \
-    LammpsWrappers/cpscalardata.h
+    dataproviders/dataprovider.h \
+    dataproviders/cp1ddata.h
 
 # Temporary use of quickcontrols2 without install
 

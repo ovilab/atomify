@@ -2,8 +2,9 @@ import QtQuick 2.5
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 1.4
 import Atomify 1.0
-
+import "../plotting"
 Rectangle {
+    id: rectangleRoot
     property System system
     radius: 4
     color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
@@ -14,6 +15,19 @@ Rectangle {
             system.regions.onActiveChanged.connect(updateRegions)
             system.computes.onActiveChanged.connect(updateComputes)
         }
+    }
+
+    function getGlobalPosition(p, item) {
+        console.log("Item: ", item)
+        console.log("Parent: ", item.parent)
+        var globalX = p.x
+        var globalY = p.y
+        while(item.parent != undefined) {
+            globalX = globalX + item.x
+            globalY = globalY + item.y
+            item = item.parent
+        }
+        return Qt.point(globalX, globalY)
     }
 
     function updateGroups() {
@@ -41,6 +55,20 @@ Rectangle {
         } else {
             collapseComputes.source = "qrc:/images/expand.gif"
         }
+    }
+
+    function createComputeWindow(compute, point) {
+        var component = Qt.createComponent("../plotting/ComputePlotter.qml");
+        if (component.status == Component.Ready) {
+            var computePlotter = component.createObject(rectangleRoot);
+            computePlotter.x = point.x - computePlotter.width*0.5
+            computePlotter.y = point.y - computePlotter.height*0.5
+            computePlotter.compute = compute
+            computePlotter.show()
+        }
+
+//        else
+//            component.statusChanged.connect(finishComputeWindow);
     }
 
     Column {
@@ -187,9 +215,31 @@ Rectangle {
                         model: system ? system.computes.model : null
                         height: visible ? count*26 : 0
                         visible: false
-                        delegate: Label {
+                        delegate: Row {
                             visible: computesList.visible
-                            text: model.modelData.identifier+": "+model.modelData.scalarData.current.toFixed(3)
+                            Label {
+                                id: computeTitleLabel
+                                text: {
+                                    model.modelData.identifier
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        var point = Qt.point(mouseX, mouseY)
+                                        point = getGlobalPosition(point, computeTitleLabel)
+                                        createComputeWindow(model.modelData, point)
+                                    }
+                                }
+                            }
+                            Label {
+                                text: {
+                                    if(model.modelData.hasScalarData) {
+                                        ": "+model.modelData.scalarValue.toFixed(3)
+                                    } else {
+                                        ""
+                                    }
+                                }
+                            }
                         }
                     }
                 }

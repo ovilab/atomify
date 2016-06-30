@@ -6,19 +6,23 @@
 #include <QDebug>
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
-    m_scalarData = new CPScalarData();
+
 }
 
 CPCompute::~CPCompute() { }
 
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
+    if(lammpsController->system()->timesteps() % m_frequency != 0) return;
+
     LAMMPS_NS::Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute != nullptr) {
         if(lmp_compute->scalar_flag == 1) {
             double value = lmp_compute->compute_scalar();
-            if(!m_scalarData) m_scalarData = new CPScalarData();
-            m_scalarData->add(lammpsController->system()->simulationTime(), value);
+            setHasScalarData(true);
+            setScalarValue(value);
+            CP1DData *scalarData = m_data1DRaw["scalar"];
+            scalarData->add(lammpsController->system()->simulationTime(), value);
         }
         if(lmp_compute->vector_flag == 1) {
 
@@ -60,9 +64,29 @@ QString CPCompute::group() const
     return m_group;
 }
 
-CPScalarData *CPCompute::scalarData() const
+int CPCompute::frequency() const
 {
-    return m_scalarData;
+    return m_frequency;
+}
+
+bool CPCompute::hasScalarData() const
+{
+    return m_hasScalarData;
+}
+
+float CPCompute::scalarValue() const
+{
+    return m_scalarValue;
+}
+
+int CPCompute::num1DData() const
+{
+    return m_num1DData;
+}
+
+QVariantMap CPCompute::data1D() const
+{
+    return m_data1D;
 }
 
 void CPCompute::setIsVector(bool isVector)
@@ -83,13 +107,53 @@ void CPCompute::setGroup(QString group)
     emit groupChanged(group);
 }
 
-void CPCompute::setScalarData(CPScalarData *scalarData)
+void CPCompute::setFrequency(int frequency)
 {
-    if (m_scalarData == scalarData)
+    if (m_frequency == frequency)
         return;
 
-    m_scalarData = scalarData;
-    emit scalarDataChanged(scalarData);
+    m_frequency = frequency;
+    emit frequencyChanged(frequency);
+}
+
+void CPCompute::setHasScalarData(bool hasScalarData)
+{
+    if (m_hasScalarData == hasScalarData)
+        return;
+
+    m_hasScalarData = hasScalarData;
+    if(m_hasScalarData) {
+        m_data1DRaw["scalar"] = new CP1DData(this);
+        m_data1D.insert(QString("scalar"), QVariant::fromValue<CP1DData*>(m_data1DRaw["scalar"]));
+    }
+    emit hasScalarDataChanged(hasScalarData);
+}
+
+void CPCompute::setScalarValue(float scalarValue)
+{
+    if (m_scalarValue == scalarValue)
+        return;
+
+    m_scalarValue = scalarValue;
+    emit scalarValueChanged(scalarValue);
+}
+
+void CPCompute::setNum1DData(int num1DData)
+{
+    if (m_num1DData == num1DData)
+        return;
+
+    m_num1DData = num1DData;
+    emit num1DDataChanged(num1DData);
+}
+
+void CPCompute::setData1D(QVariantMap data1D)
+{
+    if (m_data1D == data1D)
+        return;
+
+    m_data1D = data1D;
+    emit data1DChanged(data1D);
 }
 
 QList<QString> CPCompute::resetCommands()
