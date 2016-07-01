@@ -11,6 +11,7 @@ Entity {
     property real lookSpeed: 500.0
     property real zoomSpeed: 20.0
     property real zoomLimit: 2.0
+    property real moveSpeed: 1.0
 
     QtObject {
         id: d
@@ -101,7 +102,6 @@ Entity {
                         axis: MouseDevice.Y
                     }
                 },
-
                 // Keyboard
                 Axis {
                     id: keyboardXAxis
@@ -114,19 +114,6 @@ Entity {
                         sourceDevice: keyboardSourceDevice
                         buttons: [Qt.Key_D]
                         scale: 1.0
-                    }
-                },
-                Axis {
-                    id: keyboardZAxis
-                    ButtonAxisInput {
-                        sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_W]
-                        scale: d.shiftPressed ? 1.0 : 0.0
-                    }
-                    ButtonAxisInput {
-                        sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_S]
-                        scale: d.shiftPressed ? -1.0 : 0.0
                     }
                 },
                 Axis {
@@ -151,8 +138,8 @@ Entity {
                 if(!root.enabled) {
                     return
                 }
-
-                root.camera.translate(Qt.vector3d(keyboardXAxis.value, 0.0, keyboardYAxis.value))
+                var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
+                root.camera.translate(Qt.vector3d(keyboardXAxis.value*speed, 0.0, keyboardYAxis.value*speed))
 
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt

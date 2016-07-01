@@ -17,7 +17,7 @@ Window {
         for(var key in compute.data1D) {
             compute.data1D[key].updated.connect(updateGraphs(key))
         }
-        title = "Timeseries of compute "+compute.identifier
+        title = "Compute '"+compute.identifier+"'"
     }
 
     onVisibleChanged: {
@@ -50,12 +50,12 @@ Window {
             yMin = Math.min(yMin, data.yMin)
             yMax = Math.max(yMax, data.yMax)
         }
-        _axisX.min = (xMin>0) ? 0.95*xMin : 1.05*xMin
-        _axisX.max = (xMax<0) ? 0.95*xMax : 1.05*xMax
+        _axisX.min = xMin
+        _axisX.max = xMax
         _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
         _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
+
         _axisY.applyNiceNumbers()
-        _axisX.applyNiceNumbers()
     }
 
     Timer {
@@ -95,7 +95,6 @@ Window {
             legend.visible: true
             title: compute ? compute.identifier : ""
             titleColor: "black"
-
 
             ValueAxis {
                 id: _axisX
@@ -146,6 +145,13 @@ Window {
                     compute.maxCount = parseInt(maxCountText.text)
                 }
             }
+        }
+    }
+
+    Shortcut {
+        sequence: StandardKey.Close
+        onActivated: {
+            root.close()
         }
     }
 }

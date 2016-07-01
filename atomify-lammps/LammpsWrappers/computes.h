@@ -17,6 +17,7 @@ class Computes : public QObject
 public:
     explicit Computes(QObject *parent = 0);
     void synchronize(class LAMMPSController *lammpsController);
+    void reset();
     int count() const;
     QVariant model() const;
     bool active() const;
@@ -33,12 +34,11 @@ public slots:
 
 private:
     void addCompute(QString identifier, LAMMPSController *lammpsController);
-    void removeCompute(QString identifier, LAMMPSController *lammpsController);
+    void removeCompute(QString identifier);
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;
     int m_count = 0;
-    void reset(LAMMPSController *lammpsController);
     bool m_active = false;
 };
 

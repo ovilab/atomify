@@ -23,24 +23,23 @@ void Computes::addCompute(QString identifier, LAMMPSController *lammpsController
     }
 }
 
-void Computes::removeCompute(QString identifier, LAMMPSController *lammpsController) {
-    if(lammpsController->simulatorControls.contains(identifier)) {
-        CPCompute *compute = qobject_cast<CPCompute*>(m_dataMap[identifier]);
-        m_data.removeOne(compute);
-        m_dataMap.remove(identifier);
-    } else {
-        CPCompute *compute = qobject_cast<CPCompute*>(m_dataMap[identifier]);
+void Computes::removeCompute(QString identifier) {
+    CPCompute *compute = qobject_cast<CPCompute*>(m_dataMap[identifier]);
+    if(compute->isMirror()) {
         m_data.removeOne(compute);
         m_dataMap.remove(identifier);
         delete compute;
+    } else {
+        m_data.removeOne(compute);
+        m_dataMap.remove(identifier);
     }
 }
 
-void Computes::reset(LAMMPSController *lammpsController) {
+void Computes::reset() {
     QList<QObject*> data = m_data;
     for(QObject *object : data) {
         CPCompute *compute = qobject_cast<CPCompute*>(object);
-        removeCompute(compute->identifier(), lammpsController);
+        removeCompute(compute->identifier());
     }
     data.clear();
 }
@@ -49,7 +48,7 @@ void Computes::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
     if(!lammps || !lammps->modify) {
-        reset(lammpsController);
+        reset();
         return;
     }
 
@@ -76,7 +75,7 @@ void Computes::synchronize(LAMMPSController *lammpsController)
     }
 
     for(CPCompute *compute : computesToBeRemoved) {
-        removeCompute(compute->identifier(), lammpsController);
+        removeCompute(compute->identifier());
     }
 
     setCount(m_data.size());
