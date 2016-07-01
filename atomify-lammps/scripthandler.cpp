@@ -152,6 +152,10 @@ bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammps
             lammpsController->disableAllEnsembleFixes();
             return true;
         }
+
+        if(m_parser.isSimulationSpeed(command)) {
+            // TODO: set simulation speed here
+        }
     }
 
     return false;

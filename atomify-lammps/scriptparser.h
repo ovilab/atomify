@@ -26,6 +26,7 @@ public:
     QString includePath(QString command);
     bool isDisableAllEnsembleFixes(QString command);
     bool isGUICommand(QString command);
+    bool isSimulationSpeed(QString command);
 };
 
 #endif // SCRIPTPARSER_H
