@@ -84,15 +84,6 @@ fix 1 all nve"
                 }
             }
 
-            Button {
-                id: pauseButton
-                Layout.alignment: Qt.AlignCenter
-                text: "Toggle pause"
-                onClicked: {
-                    lammpsEditorRoot.simulator.setPaused(!lammpsEditorRoot.simulator.paused)
-                }
-            }
-
             Label {
                 text: "(Press escape to escape editor focus)"
             }
