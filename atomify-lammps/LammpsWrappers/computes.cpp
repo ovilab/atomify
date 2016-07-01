@@ -83,7 +83,6 @@ void Computes::synchronize(LAMMPSController *lammpsController)
     setModel(QVariant::fromValue(m_data));
 
     if(!lammpsController->state.canProcessSimulatorControls) return;
-
     for(QObject *object : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(object);
         compute->copyData(lammpsController);

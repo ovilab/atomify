@@ -3,6 +3,7 @@
 #include "mysimulator.h"
 #include "../system.h"
 #include <QDebug>
+#include <update.h>
 
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
@@ -59,6 +60,9 @@ bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController)
 
 bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
+    bool virialComputed = lammpsController->lammps()->update->ntimestep == lammpsController->lammps()->update->vflag_global;
+    if(!virialComputed) return true;
+
     // First compute scalar pressure
     double value = compute->compute_scalar();
     setHasScalarData(true);
