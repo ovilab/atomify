@@ -187,6 +187,7 @@ void Atoms::generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS &l
     NeighList *list = lammps.neighbor->lists[0];
     if(!list) {
         qDebug() << "WTF, list is nothing?";
+        return;
     }
     int inum = list->inum;
     int *ilist = list->ilist;
