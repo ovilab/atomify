@@ -51,8 +51,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<Regions>("Atomify", 1, 0, "Regions");
     qmlRegisterType<DataProvider>("Atomify", 1, 0, "DataProvider");
     qmlRegisterType<CP1DData>("Atomify", 1, 0, "CP1DData");
+
     qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");
     qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");
+    qmlRegisterType<GroupModifier>("Atomify", 1, 0, "GroupModifier");
+    qmlRegisterType<RegionModifier>("Atomify", 1, 0, "RegionModifier");
     qmlRegisterType<Slice>("Atomify", 1, 0, "Slice");
 
 

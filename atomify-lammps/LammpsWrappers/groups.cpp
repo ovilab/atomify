@@ -143,6 +143,11 @@ bool CPGroup::hovered() const
     return m_hovered;
 }
 
+bool CPGroup::visible() const
+{
+    return m_visible;
+}
+
 void CPGroup::setName(QString name)
 {
     if (m_name == name)
@@ -177,4 +182,13 @@ void CPGroup::setHovered(bool hovered)
 
     m_hovered = hovered;
     emit hoveredChanged(hovered);
+}
+
+void CPGroup::setVisible(bool visible)
+{
+    if (m_visible == visible)
+        return;
+
+    m_visible = visible;
+    emit visibleChanged(visible);
 }

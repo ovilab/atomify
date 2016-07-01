@@ -114,6 +114,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         m_atomData.positions[i][2] = position[2];
         m_atomData.originalIndex[i] = i;
         m_atomData.bitmask[i] = atom->mask[i];
+        m_atomData.visible[i] = true;
     }
 
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead

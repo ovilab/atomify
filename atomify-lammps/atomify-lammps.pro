@@ -68,15 +68,15 @@ SOURCES += \
     LammpsWrappers/atomdata.cpp \
     LammpsWrappers/regions.cpp \
     LammpsWrappers/groups.cpp \
-    LammpsWrappers/regions/region.cpp \
-    LammpsWrappers/regions/blockregion.cpp \
     LammpsWrappers/neighborlist.cpp \
     LammpsWrappers/bonds.cpp \
     LammpsWrappers/lammpserror.cpp \
     LammpsWrappers/computes.cpp \
     dataproviders/dataprovider.cpp \
     dataproviders/cp1ddata.cpp \
-    LammpsWrappers/variables.cpp
+    LammpsWrappers/variables.cpp \
+    LammpsWrappers/modifiers/groupmodifier.cpp \
+    LammpsWrappers/modifiers/regionmodifier.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -105,15 +105,15 @@ HEADERS += \
     LammpsWrappers/atomdata.h \
     LammpsWrappers/regions.h \
     LammpsWrappers/groups.h \
-    LammpsWrappers/regions/region.h \
-    LammpsWrappers/regions/blockregion.h \
     LammpsWrappers/neighborlist.h \
     LammpsWrappers/bonds.h \
     LammpsWrappers/lammpserror.h \
     LammpsWrappers/computes.h \
     dataproviders/dataprovider.h \
     dataproviders/cp1ddata.h \
-    LammpsWrappers/variables.h
+    LammpsWrappers/variables.h \
+    LammpsWrappers/modifiers/groupmodifier.h \
+    LammpsWrappers/modifiers/regionmodifier.h
 
 # Temporary use of quickcontrols2 without install
 

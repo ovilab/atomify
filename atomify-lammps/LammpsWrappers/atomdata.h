@@ -13,6 +13,7 @@ public:
     QVector<int> originalIndex;
     QVector<int> bitmask; // For detecting group membership
     QVector<int> types;
+    QVector<bool> visible;
     Neighborlist neighborList;
     bool isValid();
     void resize(int size);
