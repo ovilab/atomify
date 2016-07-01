@@ -51,5 +51,7 @@
         <file>desktop/DesktopController.qml</file>
         <file>plotting/ComputePlotter.qml</file>
         <file>plotting/LabelButton.qml</file>
+        <file>desktop/ControlBar.qml</file>
+        <file>desktop/DisableMessage.qml</file>
     </qresource>
 </RCC>

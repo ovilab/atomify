@@ -304,7 +304,7 @@ void LAMMPSController::reset()
 void LAMMPSController::tick()
 {
     state.canProcessSimulatorControls = false;
-    if(m_lammps == nullptr || state.crashed) {
+    if(m_lammps == nullptr || state.crashed || state.paused) {
         return;
     }
 

@@ -114,39 +114,23 @@ Item {
         }
     }
 
-    Rectangle {
+    DisableMessage {
         id: tabDisable
-        property bool isVisible: false
-        property alias showTabDisable: show
-        property alias hideTabDisable: hide
         x: parent.width*0.5 - 0.5*width
         y: 10
-        width: tabDisableLabel.width + 16
-        height: tabDisableLabel.height + 10
-        opacity: 0
-        radius: 5
+    }
 
-        NumberAnimation on opacity {
-            id: hide
-            to: 0; duration: 200
-        }
-
-        NumberAnimation on opacity {
-            id: show
-            to: 0.8; duration: 200
+    ControlBar {
+        id: controlBar1
+        simulator: desktopRoot.simulator
+        visible: !desktopRoot.focusMode
+        x: visualizer.x + visualizer.width*0.5 - 0.5*width
+        onXChanged: {
+            console.log("parent width: ", parent.width)
         }
 
-        Label {
-            id: tabDisableLabel
-            x: 8
-            y: 5
-            text: "Press Tab to disable focus mode (click to hide)"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                hide.start()
-            }
-        }
+        y: parent.height - 100
+        width: 300
+        height: 50
     }
 }

@@ -88,13 +88,10 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
 }
 
 bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController) {
+    Q_UNUSED(lammpsController);
     if(!compute) return false;
     compute->compute_array();
-    /*
-       size_array_rows = nbin;
-       size_array_cols = 1 + 2*npairs;
-    */
-    int numBins = compute->size_array_rows;      // rows in global array
+    int numBins = compute->size_array_rows;         // rows in global array
     int numColumns = compute->size_array_cols;      // columns in global array
     int numPairs = (numColumns - 1)/2;
 

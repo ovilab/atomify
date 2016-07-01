@@ -32,5 +32,8 @@
         <file>images/collapse.gif</file>
         <file>images/eye-off.png</file>
         <file>images/eye-on.png</file>
+        <file>images/pause2.png</file>
+        <file>images/play2.png</file>
+        <file>images/camera.png</file>
     </qresource>
 </RCC>
