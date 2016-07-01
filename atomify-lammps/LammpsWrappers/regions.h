@@ -6,26 +6,40 @@
 #include <lammps.h>
 #include <QMap>
 #include <QVariant>
+#include <QVector>
 class CPRegion : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
+    Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
 public:
     CPRegion(QObject *parent = nullptr);
-    QString name() const;
     int count() const;
-
+    QString identifier() const;
+    bool visible() const;
+    bool hovered() const;
+    void update(LAMMPS_NS::LAMMPS *lammps);
+    bool containsAtom(int atomIndex);
 public slots:
-    void setName(QString name);
     void setCount(int count);
+    void setIdentifier(QString identifier);
+    void setVisible(bool visible);
+    void setHovered(bool hovered);
 
 signals:
-    void nameChanged(QString name);
     void countChanged(int count);
+    void identifierChanged(QString identifier);
+    void visibleChanged(bool visible);
+    void hoveredChanged(bool hovered);
+
 private:
-    QString m_name;
     int m_count = 0;
+    QString m_identifier;
+    bool m_visible = true;
+    bool m_hovered = false;
+    QVector<int> m_containsAtom;
 };
 
 class Regions : public QObject
@@ -40,6 +54,8 @@ public:
     QVariant model() const;
     int count() const;
     bool active() const;
+    void reset();
+    QList<CPRegion*> regions();
 
 public slots:
     void setModel(QVariant model);
@@ -52,10 +68,11 @@ signals:
     void activeChanged(bool active);
 
 private:
+    void remove(QString identifier);
+    void add(QString identifier);
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;
-    void update(LAMMPS_NS::LAMMPS *lammps);
     int m_count = 0;
     bool m_active = false;
 };

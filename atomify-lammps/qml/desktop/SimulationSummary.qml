@@ -156,6 +156,7 @@ Rectangle {
                                 }
                             }
                             Label {
+                                id: groupLabel
                                 visible: groupsList.visible
                                 text: model.modelData.identifier+": "+model.modelData.count+" atoms"
                                 MouseArea {
@@ -200,9 +201,33 @@ Rectangle {
                         model: system ? system.regions.model : null
                         height: visible ? count*26 : 0
                         visible: false
-                        delegate: Label {
-                            visible: regionsList.visible
-                            text: model.modelData.name+": "+model.modelData.count+" atoms"
+                        delegate: Row {
+                            spacing: 5
+                            Image {
+                                id: regionVisible
+                                width: 15
+                                height: 15
+                                y: 1
+                                source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: model.modelData.visible = !model.modelData.visible
+                                    cursorShape: Qt.PointingHandCursor
+                                }
+                            }
+
+                            Label {
+                                visible: regionsList.visible
+                                text: model.modelData.identifier+": "+model.modelData.count+" atoms"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
+                                }
+                            }
+
                         }
                     }
                 }

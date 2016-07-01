@@ -213,6 +213,15 @@ bool LAMMPSController::groupExists(QString identifier)
     return m_lammps->group->find(identifierBytes.constData())>=0; // -1 means not found
 }
 
+bool LAMMPSController::regionExists(QString identifier)
+{
+    if(!m_lammps) {
+        return -1;
+    }
+    QByteArray identifierBytes = identifier.toUtf8();
+    return m_lammps->domain->find_region(identifierBytes.data())>=0; // -1 means not found
+}
+
 LAMMPS_NS::Compute* LAMMPSController::findComputeByIdentifier(QString identifier) {
     int computeId = findComputeId(identifier);
     if(computeId < 0) {

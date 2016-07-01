@@ -76,6 +76,7 @@ public:
     bool fixExists(QString identifier);
     bool variableExists(QString identifier);
     bool groupExists(QString identifier);
+    bool regionExists(QString identifier);
     LAMMPS_NS::Compute *findComputeByIdentifier(QString identifier);
     LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
     LAMMPS_NS::Variable *findVariableByIdentifier(QString identifier);
