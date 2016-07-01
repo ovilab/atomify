@@ -10,42 +10,40 @@
 class CPGroup : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(int bitmask READ bitmask WRITE setBitmask NOTIFY bitmaskChanged)
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
 public:
     CPGroup(QObject *parent = nullptr);
-    QString name() const;
+    void update(LAMMPS_NS::LAMMPS *lammps);
+    QString identifier() const;
     int count() const;
     int bitmask() const;
     bool hovered() const;
-
     bool visible() const;
 
 public slots:
-    void setName(QString name);
     void setCount(int count);
     void setBitmask(int bitmask);
     void setHovered(bool hovered);
-
     void setVisible(bool visible);
+    void setIdentifier(QString identifier);
 
 signals:
-    void nameChanged(QString name);
     void countChanged(int count);
     void bitmaskChanged(int bitmask);
     void hoveredChanged(bool hovered);
-
     void visibleChanged(bool visible);
+    void identifierChanged(QString identifier);
 
 private:
     bool m_hovered = false;
     bool m_visible = true;
     int m_count = 0;
     int m_bitmask = 0;
-    QString m_name;
+    QString m_identifier;
 };
 
 class Groups : public QObject
@@ -61,6 +59,7 @@ public:
     int count() const;
     bool active() const;
     QList<CPGroup*> groups();
+    void reset();
 
 public slots:
     void setModel(QVariant model);
@@ -76,9 +75,10 @@ private:
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;
-    void update(class LAMMPS_NS::Group *group);
     int m_count = 0;
     bool m_active = false;
+    void remove(QString identifier);
+    void add(QString identifier);
 };
 
 #endif // GROUPS_H

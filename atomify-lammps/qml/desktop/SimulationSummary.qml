@@ -141,14 +141,29 @@ Rectangle {
                         model: system ? system.groups.model : null
                         height: visible ? count*26 : 0
                         visible: false
-                        delegate: Label {
-                            visible: groupsList.visible
-                            text: model.modelData.name+": "+model.modelData.count+" atoms"
-                            MouseArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                onHoveredChanged: {
-                                    model.modelData.hovered = containsMouse
+                        delegate: Row {
+                            spacing: 5
+                            Image {
+                                id: groupVisible
+                                width: 15
+                                height: 15
+                                y: 1
+                                source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: model.modelData.visible = !model.modelData.visible
+                                    cursorShape: Qt.PointingHandCursor
+                                }
+                            }
+                            Label {
+                                visible: groupsList.visible
+                                text: model.modelData.identifier+": "+model.modelData.count+" atoms"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
                                 }
                             }
                         }

@@ -30,5 +30,7 @@
         <file>images/menu.svg</file>
         <file>images/expand.gif</file>
         <file>images/collapse.gif</file>
+        <file>images/eye-off.png</file>
+        <file>images/eye-on.png</file>
     </qresource>
 </RCC>

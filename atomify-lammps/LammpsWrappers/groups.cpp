@@ -8,35 +8,28 @@ Groups::Groups(AtomifySimulator *simulator)
     Q_UNUSED(simulator)
 }
 
-void Groups::update(Group *group)
-{
-    for(QObject *obj : m_data) delete obj; // Clean up the old ones
-    m_dataMap.clear();
-    m_data.clear();
+void Groups::add(QString identifier) {
+    if(m_dataMap.contains(identifier)) return;
+    CPGroup *newGroup = new CPGroup(this);
+    newGroup->setIdentifier(identifier);
+    m_data.push_back(newGroup);
+    m_dataMap.insert(identifier, newGroup);
+}
 
-    if(group == nullptr) return;
+void Groups::remove(QString identifier) {
+    if(!m_dataMap.contains(identifier)) return;
 
-    int numGroups = group->ngroup;
-    for(int groupIndex=0; groupIndex<numGroups; groupIndex++) {
-        QString name = QString::fromUtf8(group->names[groupIndex]);
-        int count = group->count(groupIndex);
-
-        CPGroup *newGroup = new CPGroup(this);
-        newGroup->setName(name);
-        newGroup->setCount(count);
-        newGroup->setBitmask(group->bitmask[groupIndex]);
-        m_data.push_back(newGroup);
-        m_dataMap.insert(name, newGroup);
-    }
-    setCount(m_data.size());
-    setModel(QVariant::fromValue(m_data));
+    CPGroup *group = static_cast<CPGroup*>(m_dataMap[identifier]);
+    m_data.removeOne(group);
+    m_dataMap.remove(identifier);
+    delete group;
 }
 
 void Groups::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
     if(!lammps || !lammps->group) {
-        update(nullptr);
+        reset();
         return;
     }
 
@@ -44,27 +37,29 @@ void Groups::synchronize(LAMMPSController *lammpsController)
     int numGroups = lammpsGroup->ngroup;
     setCount(numGroups);
 
-    if(!m_active) return;
-
-    if(m_data.count() != numGroups) {
-        update(lammpsGroup);
-        return;
-    }
-
     for(int groupIndex=0; groupIndex<numGroups; groupIndex++) {
         QString groupName = QString::fromUtf8(lammpsGroup->names[groupIndex]);
-        int count = lammpsGroup->count(groupIndex);
-
         if(!m_dataMap.contains(groupName)) {
-            update(lammpsGroup);
-            return;
-        }
-        CPGroup *group = qobject_cast<CPGroup*>(m_dataMap[groupName]);
-        if(group && group->count() != count) {
-            update(lammpsGroup);
-            return;
+            add(groupName);
         }
     }
+
+    QList<QString> groupsToBeRemoved;
+    for(QObject *obj : m_data) {
+        CPGroup *group = static_cast<CPGroup*>(obj);
+        if(!lammpsController->groupExists(group->identifier())) groupsToBeRemoved.append(group->identifier());
+    }
+
+    for(QString identifier : groupsToBeRemoved) {
+        remove(identifier);
+    }
+
+    for(QObject *obj : m_data) {
+        CPGroup *group = static_cast<CPGroup*>(obj);
+        group->update(lammpsController->lammps());
+    }
+
+    setModel(QVariant::fromValue(m_data));
 }
 
 QVariant Groups::model() const
@@ -91,6 +86,17 @@ QList<CPGroup *> Groups::groups()
     }
 
     return groups;
+}
+
+void Groups::reset()
+{
+    for(QObject *obj : m_data) {
+        CPGroup *group = static_cast<CPGroup*>(group);
+        delete group;
+    }
+    m_data.clear();
+    m_dataMap.clear();
+    setModel(QVariant::fromValue(m_data));
 }
 
 void Groups::setModel(QVariant model)
@@ -123,11 +129,6 @@ void Groups::setActive(bool active)
 
 CPGroup::CPGroup(QObject *parent) : QObject(parent) { }
 
-QString CPGroup::name() const
-{
-    return m_name;
-}
-
 int CPGroup::count() const
 {
     return m_count;
@@ -148,13 +149,9 @@ bool CPGroup::visible() const
     return m_visible;
 }
 
-void CPGroup::setName(QString name)
+QString CPGroup::identifier() const
 {
-    if (m_name == name)
-        return;
-
-    m_name = name;
-    emit nameChanged(name);
+    return m_identifier;
 }
 
 void CPGroup::setCount(int count)
@@ -191,4 +188,22 @@ void CPGroup::setVisible(bool visible)
 
     m_visible = visible;
     emit visibleChanged(visible);
+}
+
+void CPGroup::setIdentifier(QString identifier)
+{
+    if (m_identifier == identifier)
+        return;
+
+    m_identifier = identifier;
+    emit identifierChanged(identifier);
+}
+
+void CPGroup::update(LAMMPS *lammps)
+{
+    Group *group = lammps->group;
+    QByteArray identifierBytes = m_identifier.toUtf8();
+    int index = group->find(identifierBytes.constData());
+    setBitmask(group->bitmask[index]);
+    setCount(group->count(index));
 }

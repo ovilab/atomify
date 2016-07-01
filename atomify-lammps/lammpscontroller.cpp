@@ -4,6 +4,7 @@
 #include <integrate.h>
 #include <library.h>
 #include <atom.h>
+#include <group.h>
 #include <input.h>
 #include <variable.h>
 #include <update.h>
@@ -201,6 +202,15 @@ bool LAMMPSController::fixExists(QString identifier) {
 bool LAMMPSController::variableExists(QString identifier)
 {
     return findVariableIndex(identifier) >= 0;
+}
+
+bool LAMMPSController::groupExists(QString identifier)
+{
+    if(!m_lammps) {
+        return -1;
+    }
+    QByteArray identifierBytes = identifier.toUtf8();
+    return m_lammps->group->find(identifierBytes.constData())>=0; // -1 means not found
 }
 
 LAMMPS_NS::Compute* LAMMPSController::findComputeByIdentifier(QString identifier) {

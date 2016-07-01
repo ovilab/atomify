@@ -89,6 +89,9 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     if(m_atomData.bitmask.size() != numberOfAtoms) {
         m_atomData.bitmask.resize(numberOfAtoms);
     }
+    if(m_atomData.visible.size() != numberOfAtoms) {
+        m_atomData.visible.resize(numberOfAtoms);
+    }
     if(m_atomData.colors.size() != numberOfAtoms) {
         m_atomData.colors.resize(numberOfAtoms);
         for(QVector3D &color : m_atomData.colors) color = QVector3D(0.9, 0.2, 0.1);
@@ -156,6 +159,19 @@ void Atoms::applyDeltaPositions(AtomData &atomData) {
 }
 
 void Atoms::generateSphereData(AtomData &atomData) {
+    int visibleAtomCount = 0;
+    for(int atomIndex = 0; atomIndex<atomData.size(); atomIndex++) {
+        if(atomData.visible[atomIndex]) {
+            atomData.positions[visibleAtomCount] = atomData.positions[atomIndex];
+            atomData.colors[visibleAtomCount] = atomData.colors[atomIndex];
+            atomData.radii[visibleAtomCount] = atomData.radii[atomIndex];
+            visibleAtomCount++;
+        }
+    }
+    atomData.positions.resize(visibleAtomCount);
+    atomData.colors.resize(visibleAtomCount);
+    atomData.radii.resize(visibleAtomCount);
+
     m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
 }
 
