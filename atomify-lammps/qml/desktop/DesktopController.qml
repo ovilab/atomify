@@ -8,7 +8,7 @@ Entity {
     id: root
     property Camera camera
     property real linearSpeed: 40.0
-    property real lookSpeed: 10.0
+    property real lookSpeed: 500.0
     property real zoomSpeed: 20.0
     property real zoomLimit: 2.0
 
@@ -28,7 +28,7 @@ Entity {
 
     MouseDevice {
         id: mouseSourceDevice
-        sensitivity: 0.1
+        sensitivity: 0.001
     }
 
     components: [
@@ -107,12 +107,12 @@ Entity {
                     id: keyboardXAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Left]
+                        buttons: [Qt.Key_A]
                         scale: -1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Right]
+                        buttons: [Qt.Key_D]
                         scale: 1.0
                     }
                 },
@@ -120,12 +120,12 @@ Entity {
                     id: keyboardZAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Up]
+                        buttons: [Qt.Key_W]
                         scale: d.shiftPressed ? 1.0 : 0.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Down]
+                        buttons: [Qt.Key_S]
                         scale: d.shiftPressed ? -1.0 : 0.0
                     }
                 },
@@ -133,12 +133,12 @@ Entity {
                     id: keyboardYAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Up]
+                        buttons: [Qt.Key_W]
                         scale: d.shiftPressed ? 0.0 : 1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Down]
+                        buttons: [Qt.Key_S]
                         scale: d.shiftPressed ? 0.0 : -1.0
                     }
                 }
@@ -151,6 +151,8 @@ Entity {
                 if(!root.enabled) {
                     return
                 }
+
+                root.camera.translate(Qt.vector3d(keyboardXAxis.value, 0.0, keyboardYAxis.value))
 
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt
@@ -176,7 +178,6 @@ Entity {
                     fov = Math.max(10.0, Math.min(160.0, fov))
                     root.camera.fieldOfView = fov
                 }
-                root.camera.translate(Qt.vector3d(keyboardXAxis.value, 0.0, keyboardYAxis.value))
             }
         }
     ] // components
