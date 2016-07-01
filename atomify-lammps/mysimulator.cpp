@@ -132,10 +132,21 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             scriptHandler->parseGUICommand(nextCommand);
             m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
         } else {
-            for(auto *simulatorControl : atomifySimulator->findChildren<SimulatorControl*>()) {
-                simulatorControl->handleCommand(nextCommandObject.command());
+            QString command = nextCommand;
+            command = command.trimmed();
+            command.remove(0,2);
+
+            if(scriptHandler->parser().isSimulationSpeed(command)) {
+                int speed = scriptHandler->parser().simulationSpeed(command);
+                if(speed > 0) atomifySimulator->setSimulationSpeed(speed);
+                m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
+
+            } else {
+                for(auto *simulatorControl : atomifySimulator->findChildren<SimulatorControl*>()) {
+                    simulatorControl->handleCommand(nextCommandObject.command());
+                }
+                m_lammpsController.state.nextCommand = nextCommandObject;
             }
-            m_lammpsController.state.nextCommand = nextCommandObject;
         }
     }
 }
