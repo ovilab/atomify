@@ -22,7 +22,7 @@ Scene3D {
 
     Visualizer {
         id: visualizer
-        property Spheres spheres: spheres
+        property Spheres spheres
 
         clearColor: "#012"
         camera.aspectRatio: atomifyVisualizerRoot.width / atomifyVisualizerRoot.height
@@ -64,7 +64,8 @@ Scene3D {
                 id: spheresFragColor
                 lights: visualizer.lights
                 color: spheres.fragmentBuilder.color
-                ambientIntensity: 2.0
+                ambientIntensity: 1.0
+                specularColor: "white"
             }
         }
 

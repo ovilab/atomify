@@ -43,22 +43,24 @@ ColumnLayout {
                     }
                 }
             }
-//            Shortcut {
-//                sequence: "Up"
-//                onActivated: {
-//                    if(singleCommand.text == "") {
-//                        singleCommand.text = simulator.scriptHandler.lastSingleCommandString();
-//                    } else {
-//                        singleCommand.text = simulator.scriptHandler.previousSingleCommandString();
-//                    }
-//                }
-//            }
-//            Shortcut {
-//                sequence: "Down"
-//                onActivated: {
-//                    singleCommand.text = simulator.scriptHandler.nextSingleCommandString();
-//                }
-//            }
+            Shortcut {
+                sequence: "Up"
+                enabled: singleCommand.activeFocus
+                onActivated: {
+                    if(singleCommand.text == "") {
+                        singleCommand.text = simulator.scriptHandler.lastSingleCommandString();
+                    } else {
+                        singleCommand.text = simulator.scriptHandler.previousSingleCommandString();
+                    }
+                }
+            }
+            Shortcut {
+                sequence: "Down"
+                enabled: singleCommand.activeFocus
+                onActivated: {
+                    singleCommand.text = simulator.scriptHandler.nextSingleCommandString();
+                }
+            }
         }
 
         Button {
