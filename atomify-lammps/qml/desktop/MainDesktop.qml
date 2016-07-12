@@ -69,12 +69,12 @@ Item {
         if(focusMode) {
             simulationSummary.width = 300
             simulationSummary.visible = true
-            tabView.visible = true
+            editorTab.visible = true
             focusMode = false
             tabDisable.hideTabDisable.start()
         } else {
             simulationSummary.width = 0
-            tabView.visible = false
+            editorTab.visible = false
             simulationSummary.visible = false
             focusMode = true
             tabDisable.showTabDisable.start()
