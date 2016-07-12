@@ -14,7 +14,6 @@
 #include "highlighter.h"
 #include "LammpsWrappers/simulatorcontrols/cpcompute.h"
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
-#include "atomstyle.h"
 #include "LammpsWrappers/simulatorcontrols/nvt.h"
 #include "scripthandler.h"
 #include "LammpsWrappers/simulatorcontrols/fixaveragetime.h"

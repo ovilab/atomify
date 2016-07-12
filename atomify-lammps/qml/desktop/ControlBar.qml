@@ -70,6 +70,9 @@ Rectangle {
         }
     }
 
+    Settings {
+        property alias lastOpenedFolder: fileDialogSave.folder
+    }
 
     FileDialog {
         id: fileDialogSave
@@ -79,9 +82,6 @@ Rectangle {
 
         nameFilters: [ "Image files (*.jpg *.png)" ]
 
-        Settings {
-            property alias lastOpenedFolder: fileDialogSave.folder
-        }
 
         onAccepted: {
             if(cb != undefined) {

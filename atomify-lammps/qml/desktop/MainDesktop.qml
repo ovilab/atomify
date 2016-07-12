@@ -26,19 +26,6 @@ Item {
             Layout.alignment: Qt.AlignTop
             orientation: Qt.Horizontal
 
-            //            AtomifyTabView {
-            //                id: tabView
-            //                Layout.fillHeight: true
-            //                simulator: desktopRoot.simulator
-            //                width: 500
-
-            //                onEditorTabChanged: {
-            //                    if(simulator && tabView.editorTab) {
-            //                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
-            //                    }
-            //                }
-            //            }
-
             EditorTab {
                 id: editorTab
                 Layout.fillHeight: true

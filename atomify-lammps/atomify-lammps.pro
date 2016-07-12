@@ -46,7 +46,6 @@ SOURCES += \
     mysimulator.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
-    atomstyle.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
     scriptcommand.cpp \
@@ -84,7 +83,6 @@ HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
-    atomstyle.h \
     scriptparser.h \
     scripthandler.h \
     scriptcommand.h \
