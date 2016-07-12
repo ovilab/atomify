@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.5
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -26,17 +26,26 @@ Item {
             Layout.alignment: Qt.AlignTop
             orientation: Qt.Horizontal
 
-            AtomifyTabView {
-                id: tabView
+//            AtomifyTabView {
+//                id: tabView
+//                Layout.fillHeight: true
+//                simulator: desktopRoot.simulator
+//                width: 500
+
+//                onEditorTabChanged: {
+//                    if(simulator && tabView.editorTab) {
+//                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
+//                    }
+//                }
+//            }
+
+            EditorTab {
+                id: editorTab
                 Layout.fillHeight: true
-                simulator: desktopRoot.simulator
                 width: 500
 
-                onEditorTabChanged: {
-                    if(simulator && tabView.editorTab) {
-                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
-                    }
-                }
+                simulator: desktopRoot.simulator
+                visualizer: desktopRoot.visualizer
             }
 
             AtomifyVisualizer {
@@ -77,7 +86,7 @@ Item {
         Shortcut {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
-            onActivated: tabView.editorTab.runScript()
+            onActivated: editorTab.lammpsEditor.runScript()
         }
         Shortcut {
             sequence: "Ctrl+1"

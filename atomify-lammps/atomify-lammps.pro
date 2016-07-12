@@ -76,7 +76,9 @@ SOURCES += \
     dataproviders/cp1ddata.cpp \
     LammpsWrappers/variables.cpp \
     LammpsWrappers/modifiers/groupmodifier.cpp \
-    LammpsWrappers/modifiers/regionmodifier.cpp
+    LammpsWrappers/modifiers/regionmodifier.cpp \
+    codeeditorbackend.cpp \
+    linenumbers.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -113,7 +115,9 @@ HEADERS += \
     dataproviders/cp1ddata.h \
     LammpsWrappers/variables.h \
     LammpsWrappers/modifiers/groupmodifier.h \
-    LammpsWrappers/modifiers/regionmodifier.h
+    LammpsWrappers/modifiers/regionmodifier.h \
+    codeeditorbackend.h \
+    linenumbers.h
 
 # Temporary use of quickcontrols2 without install
 

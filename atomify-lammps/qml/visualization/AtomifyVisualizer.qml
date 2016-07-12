@@ -25,6 +25,7 @@ Scene3D {
     Visualizer {
         id: visualizer
         property Spheres spheres: spheres
+        property alias visualizerRoot: atomifyVisualizerRoot
 
         clearColor: "#012"
         camera.aspectRatio: atomifyVisualizerRoot.width / atomifyVisualizerRoot.height
@@ -43,6 +44,8 @@ Scene3D {
         DesktopController {
             id: navigationController
             camera: visualizer.camera
+
+
         }
 
         ColorModifier {

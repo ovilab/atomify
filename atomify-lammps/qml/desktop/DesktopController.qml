@@ -138,6 +138,10 @@ Entity {
                 if(!root.enabled) {
                     return
                 }
+                if(leftMouseButtonAction.active) {
+                    root.parent.visualizerRoot.focus = true
+                }
+
                 var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
                 root.camera.translate(Qt.vector3d(keyboardXAxis.value*speed, 0.0, keyboardYAxis.value*speed))
 

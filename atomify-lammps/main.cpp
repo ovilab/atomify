@@ -30,7 +30,8 @@
 #include "LammpsWrappers/computes.h"
 #include "dataproviders/cp1ddata.h"
 #include "dataproviders/dataprovider.h"
-
+#include "linenumbers.h"
+#include "codeeditorbackend.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -57,6 +58,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<GroupModifier>("Atomify", 1, 0, "GroupModifier");
     qmlRegisterType<RegionModifier>("Atomify", 1, 0, "RegionModifier");
     qmlRegisterType<Slice>("Atomify", 1, 0, "Slice");
+
+    qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");
+    qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
+    qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
 
 
     // QGuiApplication app(argc, argv);
