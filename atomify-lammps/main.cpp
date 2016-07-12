@@ -65,19 +65,23 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("ovilab");
     app.setApplicationName("Atomify");
 
-    QQuickView view;
-    qpm::init(app, *view.engine());
     QSurfaceFormat format;
     format.setMajorVersion(4);
     format.setMinorVersion(3);
     format.setProfile(QSurfaceFormat::CoreProfile);
-    view.setFormat(format);
-    view.setSource(QUrl("qrc:/main.qml"));
-    // view.setSource(QUrl("qrc:/main_spherestmp.qml"));
-//    view.setWidth(1000);
-//    view.setHeight(1000);
-    // view.show();
-    view.showMaximized();
+    QSurfaceFormat::setDefaultFormat(format);
+
+    // View version
+//    QQuickView view;
+//    qpm::init(app, *view.engine());
+//    view.setFormat(format); // TODO see if this is necessary on all platforms still
+//    view.setSource(QUrl("qrc:/main.qml"));
+//    view.show();
+
+    // Application version
+    QQmlApplicationEngine engine;
+    qpm::init(app, engine);
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
 #ifdef Q_OS_LINUX
     setlocale(LC_ALL, "C");

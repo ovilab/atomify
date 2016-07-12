@@ -19,7 +19,7 @@ import "qrc:/visualization"
 Item {
     id: mobileRoot
 
-    property AtomifySimulator simulator: null
+    property alias simulator: visualizer.simulator
     property Simulation simulation: null
     property string previousState: ""
 
@@ -60,11 +60,11 @@ Item {
         }
     }
 
-//    AtomifyVisualizer {
-//        id: visualizer
-////        anchors.fill: parent
+    AtomifyVisualizer {
+        id: visualizer
+        anchors.fill: parent
 //        simulator: mobileRoot.simulator
-//    }
+    }
 
     RevealDashboardButton {
         id: revealDashboardButton

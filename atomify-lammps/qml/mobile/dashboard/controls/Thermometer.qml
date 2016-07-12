@@ -104,11 +104,11 @@ DashboardControl {
             }
         }
     }
-    simulatorControls: [
-        Compute {
-            id: temperatureCompute
-            identifier: "temp"
-            command: "all temp"
-        }
-    ]
+//    simulatorControls: [
+//        Compute {
+//            id: temperatureCompute
+//            identifier: "temp"
+//            command: "all temp"
+//        }
+//    ]
 }
