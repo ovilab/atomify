@@ -7,7 +7,7 @@ Item {
     id: controlRoot
     signal clicked
 
-    property list<Item> simulatorControls
+    property list<QtObject> simulatorControls
     property Item fullControl
     property Item miniControl
     property real itemSize: 150

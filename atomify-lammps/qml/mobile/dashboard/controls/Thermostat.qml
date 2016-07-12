@@ -170,16 +170,16 @@ DashboardControl {
 
         }
     }
-//    simulatorControls: [
-//        NVT {
-//            id: nvt
-//            temperatureDampening: 0.01
-//            //            targetTemperature: nvtSlider.value
-//        },
-//        Compute {
-//            id: temperatureCompute
-//            identifier: "thermostat_temp"
-//            command: "all temp"
-//        }
-//    ]
+    simulatorControls: [
+        NVT {
+            id: nvt
+            temperatureDampening: 0.01
+            //            targetTemperature: nvtSlider.value
+        },
+        Compute {
+            id: temperatureCompute
+            identifier: "thermostat_temp"
+            command: "all temp"
+        }
+    ]
 }
