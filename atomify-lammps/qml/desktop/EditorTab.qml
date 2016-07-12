@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick 2.7
 import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.2
 import Atomify 1.0
@@ -48,13 +48,14 @@ Item {
         sequence: "Escape"
         onActivated: {
             console.log("Escape pressed")
-            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
-                myLammpsEditor.textarea.focus = false
-                myConsole.textField.focus = false
-                visualizer.focus = true
-            } else {
-                editorTabRoot.paused = !editorTabRoot.paused
-            }
+            visualizer.focus = true
+//            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
+//                myLammpsEditor.textarea.focus = false
+//                myConsole.textField.focus = false
+//                visualizer.focus = true
+//            } else {
+//                editorTabRoot.paused = !editorTabRoot.paused
+//            }
         }
     }
 }

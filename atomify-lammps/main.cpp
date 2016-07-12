@@ -35,7 +35,6 @@
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
-    qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
     qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
@@ -62,7 +61,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");
     qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
     qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
-
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);

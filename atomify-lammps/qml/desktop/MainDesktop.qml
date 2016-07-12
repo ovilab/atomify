@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick 2.7
 import QtQuick.Controls 1.5
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
@@ -46,6 +46,9 @@ Item {
 
                 simulator: desktopRoot.simulator
                 visualizer: desktopRoot.visualizer
+                Component.onCompleted: {
+                    simulator.errorInLammpsScript.connect(editorTab.reportError)
+                }
             }
 
             AtomifyVisualizer {

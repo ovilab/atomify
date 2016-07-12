@@ -16,6 +16,7 @@ Item {
         backend.fileUrl = fileUrl
         backend.load()
         textArea.text = backend.text
+        console.log("Text: ", backend.text)
         isUnsavedFile = false
         changedSinceLastSave = false
     }

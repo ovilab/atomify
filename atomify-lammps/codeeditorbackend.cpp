@@ -50,7 +50,7 @@ void CodeEditorBackend::setFileName(QString fileName)
 
 bool CodeEditorBackend::save()
 {
-    QFile file(m_fileName);
+    QFile file(m_fileUrl.toLocalFile());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         return false;
     }
@@ -62,11 +62,13 @@ bool CodeEditorBackend::save()
 
 bool CodeEditorBackend::load()
 {
-    QFile file(m_fileName);
+    QFile file(m_fileUrl.toLocalFile());
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Could not open file " << m_fileUrl;
         return false;
     }
     QByteArray content = file.readAll();
+    qDebug() << "Content in file " << m_fileName << ": " << content;
     setText(QString::fromUtf8(content.constData(), content.length()));
 
     file.close();

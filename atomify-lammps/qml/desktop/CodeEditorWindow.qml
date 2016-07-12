@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 
@@ -66,7 +66,6 @@ Item {
     }
 
     function openTab() {
-        editorCount = editorCount+1
         fileDialogLoad.cb = function() {
             if(currentEditor.title === "untitled" && currentEditor.text === "") {
                 currentEditor.open(fileDialogLoad.fileUrl)
@@ -78,7 +77,7 @@ Item {
                 newCodeEditor.changedSinceLastSave = false
                 tabBar.setCurrentIndex(tabBar.count-1)
                 newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
-                focusCurrentEditor()
+                // focusCurrentEditor()
             }
 
         }

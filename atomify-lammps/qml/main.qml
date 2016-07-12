@@ -1,5 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick 2.7
+import QtQuick.Controls 1.5
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -52,9 +52,9 @@ Rectangle {
 //        resetStyle()
 //    }
 
-//    Component.onCompleted: {
-//        resetStyle()
-//    }
+    Component.onCompleted: {
+        // resetStyle()
+    }
 
     MainDesktop {
         id: mainDesktop
@@ -68,21 +68,21 @@ Rectangle {
 //        simulator: mySimulator
 //    }
 
-    Shortcut {
-        sequence: StandardKey.AddTab
-        context: Qt.ApplicationShortcut
-        onActivated: {
-            if(mode === "desktop") {
-                mode = "mobile"
-            } else {
-                mode = "desktop"
-                //                tempPlot.xMax = mySimulator.simulationTime
-                //                tempPlot.xMin = mySimulator.simulationTime-1
-                //                maxValue = Math.max(maxValue, value)
-                //                tempPlot.yMax = maxValue
-            }
-        }
-    }
+//    Shortcut {
+//        sequence: StandardKey.AddTab
+//        context: Qt.ApplicationShortcut
+//        onActivated: {
+//            if(mode === "desktop") {
+//                mode = "mobile"
+//            } else {
+//                mode = "desktop"
+//                //                tempPlot.xMax = mySimulator.simulationTime
+//                //                tempPlot.xMin = mySimulator.simulationTime-1
+//                //                maxValue = Math.max(maxValue, value)
+//                //                tempPlot.yMax = maxValue
+//            }
+//        }
+//    }
 
     Shortcut {
         sequence: StandardKey.FullScreen
