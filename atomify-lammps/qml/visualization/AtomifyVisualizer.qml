@@ -20,6 +20,7 @@ Scene3D {
     property real scale: 0.23
     property bool addPeriodicCopies: false
 
+
     aspects: ["render", "input", "logic"]
 
     Visualizer {

@@ -26,18 +26,18 @@ Item {
             Layout.alignment: Qt.AlignTop
             orientation: Qt.Horizontal
 
-//            AtomifyTabView {
-//                id: tabView
-//                Layout.fillHeight: true
-//                simulator: desktopRoot.simulator
-//                width: 500
+            //            AtomifyTabView {
+            //                id: tabView
+            //                Layout.fillHeight: true
+            //                simulator: desktopRoot.simulator
+            //                width: 500
 
-//                onEditorTabChanged: {
-//                    if(simulator && tabView.editorTab) {
-//                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
-//                    }
-//                }
-//            }
+            //                onEditorTabChanged: {
+            //                    if(simulator && tabView.editorTab) {
+            //                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
+            //                    }
+            //                }
+            //            }
 
             EditorTab {
                 id: editorTab
@@ -53,11 +53,12 @@ Item {
 
             AtomifyVisualizer {
                 id: visualizer
-                focus: true
                 Layout.alignment: Qt.AlignLeft
                 Layout.fillHeight: true
                 Layout.minimumWidth: 1
+                focus: true
             }
+
         }
 
         SimulationSummary {
@@ -135,11 +136,9 @@ Item {
     ControlBar {
         id: controlBar1
         simulator: desktopRoot.simulator
+        visualizer: desktopRoot.visualizer
         visible: !desktopRoot.focusMode
         x: visualizer.x + visualizer.width*0.5 - 0.5*width
-        onXChanged: {
-            console.log("parent width: ", parent.width)
-        }
 
         y: parent.height - 100
         width: 300
