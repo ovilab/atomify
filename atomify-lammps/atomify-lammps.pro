@@ -34,7 +34,7 @@ QML_IMPORT_PATH =
 
 # Default rules for deployment.
 include(deployment.pri)
-include(../SimVis/library_deployment.pri)
+include(../SimVis/package_vendor.pri)
 
 
 ios {

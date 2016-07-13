@@ -7,7 +7,7 @@ SHELL = /bin/sh
 # specify flags and libraries needed for your compiler
 
 CC =		$(ANDROID_NDK_PATH)/toolchains/arm-linux-androideabi-$(ANDROID_ABI)/prebuilt/linux-x86_64/bin/arm-linux-androideabi-g++
-CCFLAGS =	-c -Wno-psabi -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -DANDROID -Wa,--noexecstack -fno-builtin-memmove -std=c++11 -Wno-unused-parameter -Wno-unused-variable -g -O2 -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -mthumb -Wno-psabi -D_REENTRANT -fPIC -DLAMMPS_GZIP -DLAMMPS_XDR -I. -isystem $(ANDROID_NDK_PATH)/sources/cxx-stl/gnu-libstdc++/4.8/include -isystem $(ANDROID_NDK_PATH)/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi-v7a/include -isystem $(ANDROID_NDK_PATH)/platforms/android-9/arch-arm/usr/include -D__STDC_LIMIT_MACROS
+CCFLAGS =	-c -Wno-psabi -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -DANDROID -Wa,--noexecstack -fno-builtin-memmove -std=c++11 -Wno-unused-parameter -Wno-unused-variable -g -O2 -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -mthumb -Wno-psabi -D_REENTRANT -fPIC -DLAMMPS_GZIP -DLAMMPS_XDR -I. -isystem $(ANDROID_NDK_PATH)/sources/cxx-stl/gnu-libstdc++/4.8/include -isystem $(ANDROID_NDK_PATH)/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi-v7a/include -isystem $(ANDROID_NDK_PATH)/platforms/android-9/arch-arm/usr/include -D__STDC_LIMIT_MACROS -Dlog2\(x\)=\(log\(x\)/log\(2\)\)
 SHFLAGS =	-fPIC
 DEPFLAGS =	-M
 

@@ -21,6 +21,8 @@
 #include "LammpsWrappers/fixhistogram.h"
 #include "LammpsWrappers/rdf.h"
 
+#include <vendor.h>
+
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -42,6 +44,7 @@ int main(int argc, char *argv[])
     app.setApplicationName("Atomify");
 
     QQmlApplicationEngine engine;
+    qpm::init(app, engine);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 #ifdef Q_OS_LINUX
