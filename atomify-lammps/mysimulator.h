@@ -34,6 +34,8 @@ private:
     virtual void synchronizeSimulator(Simulator *simulator) override;
     virtual void synchronizeRenderer(Renderable *renderableObject) override;
     virtual void work() override;
+    void synchronizeSpheres(class Spheres *spheres);
+    void synchronizeBonds(class Bonds *bonds);
     bool m_willPause = false;
     AtomStyle m_atomStyle;
     QVector<int> m_atomTypes;
