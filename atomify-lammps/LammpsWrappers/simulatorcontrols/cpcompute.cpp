@@ -3,6 +3,7 @@
 #include "mysimulator.h"
 #include "../system.h"
 #include <QDebug>
+#include <lammpsexception.h>
 #include <update.h>
 
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
@@ -36,6 +37,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
 
 bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
+    if(lammpsController->lammps()->update->ntimestep != lammpsController->lammps()->update->eflag_global) return true;
     double value = compute->compute_scalar();
     setHasScalarData(true);
     setScalarValue(value);
@@ -210,20 +212,32 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
 
     if(lmp_compute->scalar_flag == 1) {
-        double value = lmp_compute->compute_scalar();
-        setHasScalarData(true);
-        setScalarValue(value);
-        CP1DData *data = ensureExists("scalar", true);
-        data->add(lammpsController->system()->simulationTime(), value);
+        try {
+            double value = lmp_compute->compute_scalar();
+            setHasScalarData(true);
+            setScalarValue(value);
+            CP1DData *data = ensureExists("scalar", true);
+            data->add(lammpsController->system()->simulationTime(), value);
+        } catch (LammpsException &exception) {
+            qDebug() << "ERROR: LAMMPS threw an exception!";
+            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        }
     }
     if(lmp_compute->vector_flag == 1) {
-        lmp_compute->compute_vector();
-        int numVectorValues = lmp_compute->size_vector;
-        for(int i=1; i<=numVectorValues; i++) {
-            QString key = QString("%1").arg(i);
-            CP1DData *data = ensureExists(key, true);
-            double value = lmp_compute->vector[i-1];
-            data->add(lammpsController->system()->simulationTime(), value);
+        try {
+            lmp_compute->compute_vector();
+            int numVectorValues = lmp_compute->size_vector;
+            for(int i=1; i<=numVectorValues; i++) {
+                QString key = QString("%1").arg(i);
+                CP1DData *data = ensureExists(key, true);
+                double value = lmp_compute->vector[i-1];
+                data->add(lammpsController->system()->simulationTime(), value);
+            }
+        } catch (LammpsException &exception) {
+            qDebug() << "ERROR: LAMMPS threw an exception!";
+            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
         }
     }
     if(lmp_compute->array_flag == 1) {

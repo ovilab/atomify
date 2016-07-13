@@ -8,7 +8,6 @@
 #include <QString>
 #include "scriptcommand.h"
 #include "scriptparser.h"
-#include "atomstyle.h"
 #include "LammpsWrappers/atoms.h"
 
 class AtomifySimulator;

@@ -1,5 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick 2.7
+import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 import SimVis 1.0
@@ -7,7 +7,7 @@ import "../visualization"
 Item {
     id: editorTabRoot
     property TextArea consoleOutput: myConsole.output
-    property LammpsEditor lammpsEditor: myLammpsEditor
+    property alias lammpsEditor: myLammpsEditor
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
 
@@ -32,10 +32,10 @@ Item {
 
         LammpsEditor {
             id: myLammpsEditor
+            simulator: editorTabRoot.simulator
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: 200
-            simulator: editorTabRoot.simulator
         }
 
         Console {
@@ -47,13 +47,15 @@ Item {
     Shortcut {
         sequence: "Escape"
         onActivated: {
-            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
-                myLammpsEditor.textarea.focus = false
-                myConsole.textField.focus = false
-                visualizer.focus = true
-            } else {
-                editorTabRoot.paused = !editorTabRoot.paused
-            }
+            console.log("Escape pressed")
+            visualizer.focus = true
+//            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
+//                myLammpsEditor.textarea.focus = false
+//                myConsole.textField.focus = false
+//                visualizer.focus = true
+//            } else {
+//                editorTabRoot.paused = !editorTabRoot.paused
+//            }
         }
     }
 }

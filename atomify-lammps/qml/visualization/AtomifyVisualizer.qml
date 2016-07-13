@@ -20,11 +20,13 @@ Scene3D {
     property real scale: 0.23
     property bool addPeriodicCopies: false
 
+
     aspects: ["render", "input", "logic"]
 
     Visualizer {
         id: visualizer
         property Spheres spheres: spheres
+        property alias visualizerRoot: atomifyVisualizerRoot
 
         clearColor: "#012"
         camera.aspectRatio: atomifyVisualizerRoot.width / atomifyVisualizerRoot.height
@@ -43,6 +45,8 @@ Scene3D {
         DesktopController {
             id: navigationController
             camera: visualizer.camera
+
+
         }
 
         ColorModifier {

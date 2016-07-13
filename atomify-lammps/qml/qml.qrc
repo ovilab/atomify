@@ -47,11 +47,13 @@
         <file>CPLineSeries.qml</file>
         <file>desktop/ShortcutsTab.qml</file>
         <file>TemperatureItem.qml</file>
-        <file>desktop/AtomifyTabView.qml</file>
         <file>desktop/DesktopController.qml</file>
         <file>plotting/ComputePlotter.qml</file>
         <file>plotting/LabelButton.qml</file>
         <file>desktop/ControlBar.qml</file>
         <file>desktop/DisableMessage.qml</file>
+        <file>desktop/CodeEditor.qml</file>
+        <file>desktop/CodeEditorTabButton.qml</file>
+        <file>desktop/CodeEditorWindow.qml</file>
     </qresource>
 </RCC>

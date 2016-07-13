@@ -14,7 +14,6 @@
 #include "highlighter.h"
 #include "LammpsWrappers/simulatorcontrols/cpcompute.h"
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
-#include "atomstyle.h"
 #include "LammpsWrappers/simulatorcontrols/nvt.h"
 #include "scripthandler.h"
 #include "LammpsWrappers/simulatorcontrols/fixaveragetime.h"
@@ -30,11 +29,11 @@
 #include "LammpsWrappers/computes.h"
 #include "dataproviders/cp1ddata.h"
 #include "dataproviders/dataprovider.h"
-
+#include "linenumbers.h"
+#include "codeeditorbackend.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
-    qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
     qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
@@ -58,6 +57,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<RegionModifier>("Atomify", 1, 0, "RegionModifier");
     qmlRegisterType<Slice>("Atomify", 1, 0, "Slice");
 
+    qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");
+    qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
+    qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);

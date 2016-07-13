@@ -1,5 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick 2.7
+import QtQuick.Controls 1.5
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -26,26 +26,26 @@ Item {
             Layout.alignment: Qt.AlignTop
             orientation: Qt.Horizontal
 
-            AtomifyTabView {
-                id: tabView
+            EditorTab {
+                id: editorTab
                 Layout.fillHeight: true
-                simulator: desktopRoot.simulator
                 width: 500
 
-                onEditorTabChanged: {
-                    if(simulator && tabView.editorTab) {
-                        simulator.errorInLammpsScript.connect(tabView.editorTab.reportError)
-                    }
+                simulator: desktopRoot.simulator
+                visualizer: desktopRoot.visualizer
+                Component.onCompleted: {
+                    simulator.errorInLammpsScript.connect(editorTab.reportError)
                 }
             }
 
             AtomifyVisualizer {
                 id: visualizer
-                focus: true
                 Layout.alignment: Qt.AlignLeft
                 Layout.fillHeight: true
                 Layout.minimumWidth: 1
+                focus: true
             }
+
         }
 
         SimulationSummary {
@@ -60,12 +60,12 @@ Item {
         if(focusMode) {
             simulationSummary.width = 300
             simulationSummary.visible = true
-            tabView.visible = true
+            editorTab.visible = true
             focusMode = false
             tabDisable.hideTabDisable.start()
         } else {
             simulationSummary.width = 0
-            tabView.visible = false
+            editorTab.visible = false
             simulationSummary.visible = false
             focusMode = true
             tabDisable.showTabDisable.start()
@@ -77,7 +77,7 @@ Item {
         Shortcut {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
-            onActivated: tabView.editorTab.runScript()
+            onActivated: editorTab.lammpsEditor.runScript()
         }
         Shortcut {
             sequence: "Ctrl+1"
@@ -123,11 +123,9 @@ Item {
     ControlBar {
         id: controlBar1
         simulator: desktopRoot.simulator
+        visualizer: desktopRoot.visualizer
         visible: !desktopRoot.focusMode
         x: visualizer.x + visualizer.width*0.5 - 0.5*width
-        onXChanged: {
-            console.log("parent width: ", parent.width)
-        }
 
         y: parent.height - 100
         width: 300
