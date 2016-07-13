@@ -103,7 +103,7 @@ bool Regions::active() const
 void Regions::reset()
 {
     for(QObject *obj : m_data) {
-        CPRegion *region = static_cast<CPRegion*>(region);
+        CPRegion *region = static_cast<CPRegion*>(obj);
         delete region;
     }
     m_data.clear();

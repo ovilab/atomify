@@ -91,7 +91,7 @@ QList<CPGroup *> Groups::groups()
 void Groups::reset()
 {
     for(QObject *obj : m_data) { // TODO obj not used
-        CPGroup *group = static_cast<CPGroup*>(group); // TODO what? group cannot be cast from itself...
+        CPGroup *group = static_cast<CPGroup*>(obj); // TODO what? group cannot be cast from itself...
         delete group; // TODO crashes here because of the above line
     }
     m_data.clear();
