@@ -46,6 +46,13 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     qpm::init(app, engine);
 
+//    QSurfaceFormat format;
+//    format.setMajorVersion(3);
+//    format.setMinorVersion(0);
+//    format.setRenderableType(QSurfaceFormat::OpenGLES);
+//    format.setProfile(QSurfaceFormat::CoreProfile);
+//    QSurfaceFormat::setDefaultFormat(format);
+
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 #ifdef Q_OS_LINUX
     setlocale(LC_ALL, "C");
