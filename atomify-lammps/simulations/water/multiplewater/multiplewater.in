@@ -1,5 +1,3 @@
-#package omp 8
-#suffix omp
 units		metal
 boundary	p p p
 
@@ -22,3 +20,4 @@ thermo_style custom step time atoms density temp etotal
 thermo 1000
 #/atom 1 oxygen
 #/atom 2 hydrogen
+#/bond 1 2 2.0

@@ -129,7 +129,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 //    }
 //    m_lammpsController.simulatorControls = controls; // This object is visible from the Computes class
     if(m_lammpsController.state.canProcessSimulatorControls) {
-        qDebug() << atomifySimulator->m_simulatorControls.length();
         foreach(SimulatorControl *control, atomifySimulator->m_simulatorControls) {
             control->update(&m_lammpsController);
         }
