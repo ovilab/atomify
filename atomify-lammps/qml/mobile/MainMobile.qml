@@ -113,8 +113,6 @@ Item {
         onClicked: {
             mobileRoot.previousState = mobileRoot.state
             mobileRoot.state = "tools"
-            console.log("Index was " + index)
-            controlView.gotoIndex(index)
         }
     }
 

@@ -6,12 +6,17 @@ import QtCharts 2.0
 import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
-    id: dashboardControlRoot
-    property real timeRange: 3
+    id: root
+    property real timeRange: 1
+    property string timeLabel: "t [ps]"
+    property string temperatureLabel: "T [K]"
+    property real timeScale: 1.0
+    property real temperatureScale: 1.0
+
+    name: "Temperature"
     miniControl: Component {
         DashboardMiniControl {
             id: miniControl
-
             ColumnLayout {
                 id: textLayout
                 anchors {
@@ -46,61 +51,60 @@ DashboardControl {
 
                     value: temperatureCompute.value
                     time: temperatureCompute.time
-                    timeRange: dashboardControlRoot.timeRange
+                    timeRange: root.timeRange
                 }
             }
         }
     }
-    fullControl: Component {
-        DashboardFullControl {
-//        Rectangle {
+    fullControl: Item {
+        ChartView {
+            id: miniChart
+
             property real value: temperatureCompute.value
             property real lowPassValue: 0.0
             property real yMin: 0
             property real yMax: 0
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            
-            ChartView {
-                id: miniChart
-                anchors.fill: parent
-                antialiasing: true
-                legend.visible: false
-                title: "Temperature"
-                theme: ChartView.ChartThemeDark
 
-                ChartScroller {
-                    id: chartScroller
-                    axisX: xAxis
-                    axisY: yAxis
-                    lineSeries: lineSeries
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            height: width * 3 / 4
 
-                    value: temperatureCompute.value
-                    time: temperatureCompute.time
-                    timeRange: dashboardControlRoot.timeRange
-                }
+            antialiasing: true
+            legend.visible: false
+            theme: ChartView.ChartThemeDark
 
-                ValueAxis {
-                    id: xAxis
-                    tickCount: 3
-                    titleText: "t"
-                    color: "white"
-                    labelsColor: "white"
-                }
-                ValueAxis {
-                    id: yAxis
-                    tickCount: 3
-                    titleText: "T [K]"
-                    color: "white"
-                    labelsColor: "white"
-                }
-                LineSeries {
-                    id: lineSeries
-                }
-                Component.onCompleted: {
-                    miniChart.setAxisX(xAxis, lineSeries)
-                    miniChart.setAxisY(yAxis, lineSeries)
-                }
+            ChartScroller {
+                id: chartScroller
+                axisX: xAxis
+                axisY: yAxis
+                lineSeries: lineSeries
+                value: temperatureCompute.value * temperatureScale
+                time: temperatureCompute.time * timeScale
+                timeRange: root.timeRange * timeScale
+            }
+
+            ValueAxis {
+                id: xAxis
+                tickCount: 4
+                titleText: root.timeLabel
+                color: "white"
+                labelsColor: "white"
+            }
+            ValueAxis {
+                id: yAxis
+                tickCount: 4
+                titleText: root.temperatureLabel
+                color: "white"
+                labelsColor: "white"
+            }
+            LineSeries {
+                id: lineSeries
+            }
+            Component.onCompleted: {
+                miniChart.setAxisX(xAxis, lineSeries)
+                miniChart.setAxisY(yAxis, lineSeries)
             }
         }
     }

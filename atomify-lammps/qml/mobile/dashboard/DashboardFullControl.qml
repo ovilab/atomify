@@ -10,7 +10,6 @@ Item {
 //    default property alias contents: layout.children
     property AtomifyVisualizer visualizer
 
-
     width: 100
     height: 100
 

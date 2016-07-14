@@ -8,8 +8,10 @@ Item {
     signal clicked
 
     property list<Item> simulatorControls
-    property Item fullControl
+    property Component fullControl
     property Item miniControl
+    property list<Component> components
+    property string name: "Untitled"
     property real itemSize: 150
 }
 
