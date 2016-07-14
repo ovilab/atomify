@@ -11,8 +11,13 @@ Item {
     property AtomifyVisualizer visualizer
 
 
-//    width: 100
-//    height: 100
+    width: 100
+    height: 100
+
+//    Rectangle {
+//        id: layout
+//        anchors.fill: parent
+//    }
 
     GridLayout {
         id: layout

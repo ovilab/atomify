@@ -78,6 +78,7 @@ public:
     bool willReset() const;
     int numberOfTimesteps() const;
     Q_INVOKABLE void clearSimulatorControls();
+    Q_INVOKABLE void addSimulatorControl(SimulatorControl *simulatorControl);
     float cameraToSystemCenterDistance() const;
     bool addPeriodicCopies() const;
 
@@ -138,6 +139,7 @@ private:
     int m_numberOfTimesteps = 0;
     float m_cameraToSystemCenterDistance = 10;
     bool m_addPeriodicCopies = false;
+    QList<SimulatorControl*> m_simulatorControls;
 };
 
 #endif // MYSIMULATOR_H

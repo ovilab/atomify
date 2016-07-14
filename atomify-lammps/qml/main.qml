@@ -53,49 +53,32 @@ ApplicationWindow {
     MainDesktop {
         visible: mode === "desktop"
         anchors.fill: parent
-        simulator: mySimulator
     }
 
     MainMobile {
         visible: mode === "mobile"
         anchors.fill: parent
-        simulator: mySimulator
     }
 
-    AtomifySimulator {
-        id: mySimulator
-        simulationSpeed: 1
-        atomStyle: AtomStyle {
-            id: myAtomStyle
-        }
-        scriptHandler: ScriptHandler {
-            atomStyle: myAtomStyle
-        }
-
-        Shortcut {
-            sequence: StandardKey.AddTab
-            context: Qt.ApplicationShortcut
-            onActivated: {
-                if(mode === "desktop") {
-                    mode = "mobile"
-                } else {
-                    mode = "desktop"
-                    //                tempPlot.xMax = mySimulator.simulationTime
-                    //                tempPlot.xMin = mySimulator.simulationTime-1
-                    //                maxValue = Math.max(maxValue, value)
-                    //                tempPlot.yMax = maxValue
-                }
+    Shortcut {
+        sequence: StandardKey.AddTab
+        context: Qt.ApplicationShortcut
+        onActivated: {
+            if(mode === "desktop") {
+                mode = "mobile"
+            } else {
+                mode = "desktop"
             }
         }
-        Shortcut {
-            sequence: StandardKey.FullScreen
-            context: Qt.ApplicationShortcut
-            onActivated: {
-                if(visibility === Window.FullScreen) {
-                    visibility = Window.AutomaticVisibility
-                } else {
-                    visibility = Window.FullScreen
-                }
+    }
+    Shortcut {
+        sequence: StandardKey.FullScreen
+        context: Qt.ApplicationShortcut
+        onActivated: {
+            if(visibility === Window.FullScreen) {
+                visibility = Window.AutomaticVisibility
+            } else {
+                visibility = Window.FullScreen
             }
         }
     }

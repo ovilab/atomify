@@ -275,9 +275,12 @@ void LAMMPSController::reset()
 
 void LAMMPSController::tick()
 {
+    state.canProcessSimulatorControls = false;
+
     if(m_lammps == nullptr) {
         return;
     }
+
     if(state.crashed) {
         return;
     }
@@ -285,7 +288,8 @@ void LAMMPSController::tick()
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
         executeActiveRunCommand();
-        processSimulatorControls();
+//        processSimulatorControls();
+        state.canProcessSimulatorControls = true;
         state.dataDirty = true;
         return;
     }
@@ -319,7 +323,8 @@ void LAMMPSController::tick()
             executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
         }
 
-        processSimulatorControls();
+//        processSimulatorControls();
+        state.canProcessSimulatorControls = true;
         state.numberOfTimesteps += state.simulationSpeed;
         state.timeSpentInLammps += t.elapsed();
     }

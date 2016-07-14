@@ -19,7 +19,16 @@ import "qrc:/visualization"
 Item {
     id: mobileRoot
 
-    property AtomifySimulator simulator: null
+    property AtomifySimulator simulator: AtomifySimulator {
+        id: mySimulator
+        simulationSpeed: 1
+        atomStyle: AtomStyle {
+            id: myAtomStyle
+        }
+        scriptHandler: ScriptHandler {
+            atomStyle: myAtomStyle
+        }
+    }
     property Simulation simulation: null
     property string previousState: ""
 
@@ -40,8 +49,9 @@ Item {
             var controller = simulation.controllers[i]
             for(var j in controller.simulatorControls) {
                 var control = controller.simulatorControls[j]
-                control.parent = simulator
-                console.log("Created " + control + " on simulator " + simulator)
+//                control.parent = simulator
+                simulator.addSimulatorControl(control);
+                console.log("Added", control, "to simulator", simulator)
             }
         }
 

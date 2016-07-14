@@ -34,12 +34,18 @@ MyWorker::MyWorker() {
 
 void AtomifySimulator::clearSimulatorControls()
 {
-    for(QQuickItem* child : childItems()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            control->setParentItem(nullptr);
-        }
-    }
+//    for(QQuickItem* child : childItems()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            control->setParentItem(nullptr);
+//        }
+//    }
+    m_simulatorControls.clear();
+}
+
+void AtomifySimulator::addSimulatorControl(SimulatorControl *simulatorControl)
+{
+    m_simulatorControls.append(simulatorControl);
 }
 
 float AtomifySimulator::cameraToSystemCenterDistance() const
@@ -79,24 +85,39 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     // Sync values from QML and simulator
     m_lammpsController.setPaused(mySimulator->paused());
     m_lammpsController.setSimulationSpeed(mySimulator->simulationSpeed());
-    QList<SimulatorControl*> controls;
-    for(QQuickItem* child : mySimulator->childItems()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            controls.append(control);
+//    QList<SimulatorControl*> controls;
+//    for(QQuickItem* child : mySimulator->childItems()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            controls.append(control);
+//        }
+//    }
+
+//    for(QObject* child : mySimulator->children()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            if(!controls.contains(control)) {
+//                controls.append(control);
+//            }
+//        }
+//    }
+
+//    QMap<QString, SimulatorControl*> controls;
+//    for(QObject* child : mySimulator->children()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            if(!controls.contains(control->identifier())) {
+//                controls.insert(control->identifier(), control);
+//            }
+//        }
+//    }
+//    m_lammpsController.simulatorControls = controls; // This object is visible from the Computes class
+    if(m_lammpsController.state.canProcessSimulatorControls) {
+        foreach(SimulatorControl *control, mySimulator->m_simulatorControls) {
+            control->update(&m_lammpsController);
         }
     }
 
-    for(QObject* child : mySimulator->children()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            if(!controls.contains(control)) {
-                controls.append(control);
-            }
-        }
-    }
-
-    m_lammpsController.simulatorControls = controls;
     m_lammpsController.state.staticSystem = mySimulator->lammpsState.staticSystem;
 
     // Sync properties from lammps controller

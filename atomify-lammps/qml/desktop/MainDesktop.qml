@@ -13,7 +13,16 @@ import "../visualization"
 Item {
     id: desktopRoot
 
-    property AtomifySimulator simulator: null
+    property AtomifySimulator simulator: AtomifySimulator {
+        id: mySimulator
+        simulationSpeed: 1
+        atomStyle: AtomStyle {
+            id: myAtomStyle
+        }
+        scriptHandler: ScriptHandler {
+            atomStyle: myAtomStyle
+        }
+    }
 
     Component.onCompleted: {
         simulator.errorInLammpsScript.connect(editorTab.reportError)

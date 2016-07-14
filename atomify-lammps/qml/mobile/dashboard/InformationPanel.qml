@@ -55,14 +55,14 @@ Item {
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     font.pixelSize: Style.font.heading.size
                     color: Style.font.heading.color
-                    text: simulation.name
+                    text: simulation ?  simulation.name : ""
                 }
                 Text {
                     width: parent.width
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     font.pixelSize: Style.font.size
                     color: Style.font.color
-                    text: simulation.description
+                    text: simulation ? simulation.description : ""
                 }
             }
         }
