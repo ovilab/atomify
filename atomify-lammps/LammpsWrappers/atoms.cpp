@@ -142,7 +142,6 @@ void Atoms::generateSphereData(AtomData &atomData) {
             visibleAtomCount++;
         }
     }
-    qDebug() << "We now have " << visibleAtomCount << " visible atoms";
     m_spheresData.resize(visibleAtomCount);
 }
 

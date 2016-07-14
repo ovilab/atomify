@@ -256,9 +256,7 @@ void MyWorker::work()
     }
     m_elapsed.restart();
     if(m_lammpsController.lammps() && m_lammpsController.system()) {
-        qDebug() << "Synchronize system";
         m_lammpsController.system()->synchronize(m_lammpsController.lammps());
-        qDebug() << "Updating data";
         m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
     }
 }
