@@ -17,17 +17,13 @@ Item {
     id: revealSimulationsViewButton
     property bool revealed: true
     signal clicked
-    
-    anchors {
-        top: parent.top
-        left: parent.left
-    }
+
     width: Style.touchableSize * 1.5
     height: width
-    
+
     enabled: revealed
     state: revealed ? "revealed" : "hidden"
-    
+
     states: [
         State {
             name: "hidden"
@@ -44,7 +40,7 @@ Item {
             }
         }
     ]
-    
+
     transitions: [
         Transition {
             NumberAnimation {
@@ -54,15 +50,15 @@ Item {
             }
         }
     ]
-    
+
     Image {
         anchors {
             fill: parent
             margins: parent.width * 0.2
         }
-        source: "qrc:/images/ic_menu_white_48dp.png"
+        source: "qrc:/images/ic_info_white_48dp.png"
     }
-    
+
     MouseArea {
         anchors.fill: parent
         onClicked: {

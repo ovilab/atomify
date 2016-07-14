@@ -28,5 +28,11 @@
         <file>images/tools.svg</file>
         <file>images/menu.png</file>
         <file>images/menu.svg</file>
+        <file>images/dashboard-plot.png</file>
+        <file>images/ic_help_white_48dp.png</file>
+        <file>images/ic_remove_from_queue_white_48dp.png</file>
+        <file>images/ic_trending_up_white_48dp.png</file>
+        <file>images/ic_menu_white_48dp.png</file>
+        <file>images/ic_info_white_48dp.png</file>
     </qresource>
 </RCC>
