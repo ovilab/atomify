@@ -9,7 +9,7 @@ import "qrc:/mobile/dashboard"
 QtObject {
     id: chartScroller
     
-    property real timeRange: 3
+    property real timeRange: 1
     
     property real value
     property real time
@@ -53,7 +53,9 @@ QtObject {
         yMin = minMaxFactor * lowPassValue + (1 - minMaxFactor) * Math.min(yMin, lowPassValue)
         axisX.min = time - timeRange
         axisX.max = time
-        axisY.min = yMin*0.99 // TODO: Make this into a property
-        axisY.max = yMax*1.01
+        axisY.min = yMin// TODO: Make this into a property
+        axisY.max = yMax
+        axisX.applyNiceNumbers()
+        axisY.applyNiceNumbers()
     }
 }

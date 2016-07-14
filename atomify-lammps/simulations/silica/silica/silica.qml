@@ -5,7 +5,11 @@ import "qrc:/mobile/dashboard/controls"
 Simulation {
     name: "Silica"
     controllers: [
-        Thermometer {},
+        Thermometer {
+            timeLabel: "t [fs]"
+            timeScale: 1000
+            timeRange: 0.1
+        },
         Thermostat {}
     ]
 }

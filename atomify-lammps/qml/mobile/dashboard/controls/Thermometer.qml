@@ -6,13 +6,17 @@ import QtCharts 2.0
 import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
-    id: dashboardControlRoot
-    property real timeRange: 3
+    id: root
+    property real timeRange: 1
+    property string timeLabel: "t [ps]"
+    property string temperatureLabel: "T [K]"
+    property real timeScale: 1.0
+    property real temperatureScale: 1.0
+
     name: "Temperature"
     miniControl: Component {
         DashboardMiniControl {
             id: miniControl
-
             ColumnLayout {
                 id: textLayout
                 anchors {
@@ -47,7 +51,7 @@ DashboardControl {
 
                     value: temperatureCompute.value
                     time: temperatureCompute.time
-                    timeRange: dashboardControlRoot.timeRange
+                    timeRange: root.timeRange
                 }
             }
         }
@@ -69,7 +73,6 @@ DashboardControl {
 
             antialiasing: true
             legend.visible: false
-            title: "Temperature"
             theme: ChartView.ChartThemeDark
 
             ChartScroller {
@@ -77,23 +80,22 @@ DashboardControl {
                 axisX: xAxis
                 axisY: yAxis
                 lineSeries: lineSeries
-
-                value: temperatureCompute.value
-                time: temperatureCompute.time
-                timeRange: dashboardControlRoot.timeRange
+                value: temperatureCompute.value * temperatureScale
+                time: temperatureCompute.time * timeScale
+                timeRange: root.timeRange * timeScale
             }
 
             ValueAxis {
                 id: xAxis
-                tickCount: 3
-                titleText: "t"
+                tickCount: 4
+                titleText: root.timeLabel
                 color: "white"
                 labelsColor: "white"
             }
             ValueAxis {
                 id: yAxis
-                tickCount: 3
-                titleText: "T [K]"
+                tickCount: 4
+                titleText: root.temperatureLabel
                 color: "white"
                 labelsColor: "white"
             }

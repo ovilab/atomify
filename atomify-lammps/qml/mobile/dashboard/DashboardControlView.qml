@@ -90,7 +90,7 @@ Rectangle {
     }
 
     Repeater {
-        model: simulation.controllers.length
+        model: simulation ? simulation.controllers.length : undefined
         Loader {
             anchors {
                 left: parent.left
