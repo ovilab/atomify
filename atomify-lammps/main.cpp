@@ -68,9 +68,11 @@ int main(int argc, char *argv[])
     app.setApplicationName("Atomify");
 
     QSurfaceFormat format;
+#ifndef Q_OS_ANDROID
     format.setMajorVersion(4);
     format.setMinorVersion(3);
     format.setProfile(QSurfaceFormat::CoreProfile);
+#endif
     QSurfaceFormat::setDefaultFormat(format);
 
     // View version

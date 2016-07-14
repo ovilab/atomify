@@ -53,10 +53,10 @@ ApplicationWindow {
         // resetStyle()
     }
 
-    MainDesktop {
-        visible: mode === "desktop"
-        anchors.fill: parent
-    }
+//    MainDesktop {
+//        visible: mode === "desktop"
+//        anchors.fill: parent
+//    }
 
     MainMobile {
         visible: mode === "mobile"
