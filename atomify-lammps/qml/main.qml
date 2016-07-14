@@ -21,15 +21,15 @@ ApplicationWindow {
     visible: true
 
     property string mode: {
-        if(["android", "ios", "winphone"].indexOf(Qt.platform.os) > -1) {
+//        if(["android", "ios", "winphone"].indexOf(Qt.platform.os) > -1) {
             return "mobile"
-        }
-        return "desktop"
+//        }
+//        return "desktop"
     }
 
     Settings {
         id: settings
-//        property alias mode: applicationRoot.mode
+        //        property alias mode: applicationRoot.mode
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
     }
@@ -53,28 +53,11 @@ ApplicationWindow {
 //    MainDesktop {
 //        visible: mode === "desktop"
 //        anchors.fill: parent
-//        simulator: mySimulator
 //    }
 
     MainMobile {
         visible: mode === "mobile"
         anchors.fill: parent
-
-        system.atoms.modifiers: [
-            colorModifier,
-            periodicImages
-        ]
-
-        PeriodicImages {
-            id: periodicImages
-            enabled: false
-            numberOfCopiesX: 1
-            numberOfCopiesY: 1
-            numberOfCopiesZ: 1
-
-        ColorModifier {
-            id: colorModifier
-            scale: 0.2
     }
 
     Shortcut {

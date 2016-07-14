@@ -23,7 +23,6 @@ struct LammpsState {
     bool canProcessSimulatorControls = false;
     int  simulationSpeed = 1;
     unsigned long timeSpentInLammps = 0;
-    bool canProcessSimulatorControls = false;
     int numberOfTimesteps = 1;
     unsigned int runCommandStart = 0;
     unsigned int runCommandEnd = 0;

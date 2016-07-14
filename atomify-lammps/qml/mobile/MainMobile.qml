@@ -22,11 +22,22 @@ Item {
     property AtomifySimulator simulator: AtomifySimulator {
         id: mySimulator
         simulationSpeed: 1
-        atomStyle: AtomStyle {
-            id: myAtomStyle
+        system.atoms.modifiers: [
+            colorModifier,
+            periodicImages
+        ]
+
+        PeriodicImages {
+            id: periodicImages
+            enabled: false
+            numberOfCopiesX: 1
+            numberOfCopiesY: 1
+            numberOfCopiesZ: 1
         }
-        scriptHandler: ScriptHandler {
-            atomStyle: myAtomStyle
+
+        ColorModifier {
+            id: colorModifier
+            scale: 0.2
         }
     }
     property Simulation simulation: null

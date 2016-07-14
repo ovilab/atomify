@@ -14,18 +14,18 @@ Item {
     width: 100
     height: 100
 
-//    Rectangle {
-//        id: layout
-//        anchors.fill: parent
-//    }
-
-    GridLayout {
+    Rectangle {
         id: layout
-        columns: width > height ? 2 : 1
-        anchors {
-            fill: parent
-            margins: Style.baseMargin
-        }
+        anchors.fill: parent
     }
+
+//    GridLayout {
+//        id: layout
+//        columns: width > height ? 2 : 1
+//        anchors {
+//            fill: parent
+//            margins: Style.baseMargin
+//        }
+//    }
 }
 

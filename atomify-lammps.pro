@@ -1,4 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = SimVis atomify-lammps
+SUBDIRS = atomify-lammps
 CONFIG += ordered
-atomify-lammps.depends = SimVis
