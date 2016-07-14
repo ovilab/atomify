@@ -42,6 +42,8 @@ void Neighborlist::synchronize(LAMMPS *lammps)
     QElapsedTimer t;
     t.start();
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
+    int numNeighbors = 0;
+
     if(hasNeighborLists && m_lastNeighborListSync != lammps->neighbor->lastcall) {
         m_lastNeighborListSync = lammps->neighbor->lastcall;
         NeighList *list = lammps->neighbor->lists[0];
@@ -50,7 +52,6 @@ void Neighborlist::synchronize(LAMMPS *lammps)
         int *numneigh = list->numneigh;
         int **firstneigh = list->firstneigh;
         reset(inum);
-
         t.start();
         for (int ii = 0; ii < inum; ii++) {
             int i = ilist[ii];
@@ -62,9 +63,10 @@ void Neighborlist::synchronize(LAMMPS *lammps)
                 j &= NEIGHMASK;
                 if(j < lammps->atom->natoms) {
                     neighbors[i].push_back(j);
+                    numNeighbors++;
                 }
             }
         }
     }
-    // qDebug() << "Neighborlist copy synced in " << t.elapsed();
+    // qDebug() << "Neighborlist copy with " << numNeighbors << " neighbors synced in " << t.elapsed();
 }

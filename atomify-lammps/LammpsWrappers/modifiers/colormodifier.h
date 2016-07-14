@@ -7,7 +7,7 @@ class ColorModifier : public Modifier
 {
     Q_OBJECT
     Q_PROPERTY(float scale READ scale WRITE setScale NOTIFY scaleChanged)
-    float m_scale = 0.3;
+    float m_scale = 0.6;
 public:
     ColorModifier();
     virtual void apply(AtomData &atomData) override;
