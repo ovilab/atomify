@@ -193,8 +193,8 @@ void Atoms::generateBondData(AtomData &atomData) {
                 bond.vertex2Position[2] = position_j[2];
                 bond.radius1 = m_bondRadius;
                 bond.radius2 = m_bondRadius;
-                bond.sphereRadius1 = 0.5*sphereRadius_i;
-                bond.sphereRadius2 = 0.5*atomData.radii[j];
+                bond.sphereRadius1 = 0.5*sphereRadius_i*0.9;
+                bond.sphereRadius2 = 0.5*atomData.radii[j]*0.9;
                 m_bondsData.push_back(bond);
             }
         }

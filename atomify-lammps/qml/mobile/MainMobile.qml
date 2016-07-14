@@ -37,7 +37,7 @@ Item {
 
         ColorModifier {
             id: colorModifier
-            scale: 0.2
+            scale: 0.4
         }
     }
     property Simulation simulation: null
