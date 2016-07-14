@@ -19,11 +19,12 @@ struct LammpsState {
     bool staticSystem = false;
     bool runCommandActive = false;
     bool preRunNeeded = true;
+    bool dataDirty = true;
+    bool canProcessSimulatorControls = false;
     int  simulationSpeed = 1;
     unsigned long timeSpentInLammps = 0;
     bool canProcessSimulatorControls = false;
     int numberOfTimesteps = 1;
-    bool dataDirty = false;
     unsigned int runCommandStart = 0;
     unsigned int runCommandEnd = 0;
     ScriptCommand nextCommand;
@@ -39,9 +40,8 @@ private:
     LammpsException m_currentException;
     LAMMPS *m_lammps = nullptr;
     MyWorker *m_worker = nullptr;
-
+    class System *m_system = nullptr;
     void executeActiveRunCommand();
-    void notifySimulatorControlsAboutCommand();
 public:
     LammpsState state;
 
@@ -56,20 +56,17 @@ public:
     void setSimulationSpeed(int simulationSpeed);
     bool paused() const;
     void setPaused(bool value);
-    bool dataDirty() const;
-    void setDataDirty(bool value);
     bool crashed() const;
     double timePerTimestep();
     LammpsException &currentException();
-    double simulationTime();
     unsigned long numberOfTimesteps();
-    int numberOfAtoms() const;
-    int numberOfAtomTypes() const;
     void disableAllEnsembleFixes();
-    QVector3D systemSize() const;
-    QVector3D systemCenter() const;
     ScriptHandler* scriptHandler() const;
     void setScriptHandler(ScriptHandler* scriptHandler);
+    class System *system() const;
+    void setSystem(class System *system);
+    double simulationTime();
+
     // Actions
     void executeCommandInLAMMPS(QString command);
     void processCommand(QString command);
@@ -81,12 +78,10 @@ public:
     bool fixExists(QString identifier);
     LAMMPS_NS::Compute *findComputeByIdentifier(QString identifier);
     LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
-    QList<SimulatorControl*> simulatorControls;
-    template<class T>
-    T *findFixByType();
-    void processSimulatorControls();
     LAMMPS_NS::Variable *findVariableByIdentifier(QString identifier);
     int findVariableIndex(QString identifier);
+    template<class T>
+    T *findFixByType();
 };
 
 template<class T>

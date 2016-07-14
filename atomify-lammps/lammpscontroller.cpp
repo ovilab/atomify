@@ -22,7 +22,7 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
-
+#include "LammpsWrappers/system.h"
 #include "LammpsWrappers/cpcompute.h"
 #include "mysimulator.h"
 #include "LammpsWrappers/simulatorcontrol.h"
@@ -218,12 +218,6 @@ bool LAMMPSController::computeExists(QString identifier) {
     return (findComputeId(identifier) >= 0);
 }
 
-void LAMMPSController::processSimulatorControls() {
-    for(SimulatorControl *control : simulatorControls) {
-        control->update(this);
-    }
-}
-
 void LAMMPSController::executeActiveRunCommand() {
     unsigned int currentTimestep = m_lammps->update->ntimestep;
     int maxSimulationSpeed = state.runCommandEnd - currentTimestep; // We cannot exceed the last timestep in the active run command
@@ -277,18 +271,15 @@ void LAMMPSController::tick()
 {
     state.canProcessSimulatorControls = false;
 
-    if(m_lammps == nullptr) {
-        return;
-    }
+    if(m_lammps == nullptr || state.crashed || state.paused) {
 
-    if(state.crashed) {
         return;
     }
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
         executeActiveRunCommand();
-//        processSimulatorControls();
+        state.canProcessSimulatorControls = true;
         state.canProcessSimulatorControls = true;
         state.dataDirty = true;
         return;
@@ -307,7 +298,6 @@ void LAMMPSController::tick()
         if(didProcessCommand) {
             return;
         }
-
         processCommand(nextCommand.command());
     } else {
         if(state.paused) return;
@@ -330,22 +320,6 @@ void LAMMPSController::tick()
     }
 
     state.dataDirty = true;
-}
-
-int LAMMPSController::numberOfAtoms() const
-{
-    if(!m_lammps) {
-        return 0;
-    }
-    return m_lammps->atom->natoms;
-}
-
-int LAMMPSController::numberOfAtomTypes() const
-{
-    if(!m_lammps) {
-        return 0;
-    }
-    return m_lammps->atom->ntypes;
 }
 
 void LAMMPSController::disableAllEnsembleFixes()
@@ -375,22 +349,6 @@ void LAMMPSController::disableAllEnsembleFixes()
     }
 }
 
-QVector3D LAMMPSController::systemSize() const
-{
-    if(!m_lammps) {
-        return QVector3D();
-    }
-    return QVector3D(m_lammps->domain->xprd, m_lammps->domain->yprd, m_lammps->domain->zprd);
-}
-
-QVector3D LAMMPSController::systemCenter() const
-{
-    if(!m_lammps) {
-        return QVector3D();
-    }
-    return QVector3D(m_lammps->domain->boxlo[0] + m_lammps->domain->xprd_half, m_lammps->domain->boxlo[1] + m_lammps->domain->yprd_half, m_lammps->domain->boxlo[2] + m_lammps->domain->zprd_half);
-}
-
 ScriptHandler *LAMMPSController::scriptHandler() const
 {
     return m_scriptHandler;
@@ -411,16 +369,6 @@ void LAMMPSController::setPaused(bool value)
     state.paused = value;
 }
 
-bool LAMMPSController::dataDirty() const
-{
-    return state.dataDirty;
-}
-
-void LAMMPSController::setDataDirty(bool value)
-{
-    state.dataDirty = value;
-}
-
 bool LAMMPSController::crashed() const
 {
     return state.crashed;
@@ -436,15 +384,25 @@ LammpsException &LAMMPSController::currentException()
     return m_currentException;
 }
 
+unsigned long LAMMPSController::numberOfTimesteps()
+{
+    return state.numberOfTimesteps;
+}
+
+System *LAMMPSController::system() const
+{
+    return m_system;
+}
+
+void LAMMPSController::setSystem(System *system)
+{
+    m_system = system;
+}
+
 double LAMMPSController::simulationTime()
 {
     if(!m_lammps) {
         return 0;
     }
     return m_lammps->update->atime;
-}
-
-unsigned long LAMMPSController::numberOfTimesteps()
-{
-    return state.numberOfTimesteps;
 }
