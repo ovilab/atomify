@@ -11,16 +11,21 @@ Item {
     property AtomifyVisualizer visualizer
 
 
-//    width: 100
-//    height: 100
+    width: 100
+    height: 100
 
-    GridLayout {
+    Rectangle {
         id: layout
-        columns: width > height ? 2 : 1
-        anchors {
-            fill: parent
-            margins: Style.baseMargin
-        }
+        anchors.fill: parent
     }
+
+//    GridLayout {
+//        id: layout
+//        columns: width > height ? 2 : 1
+//        anchors {
+//            fill: parent
+//            margins: Style.baseMargin
+//        }
+//    }
 }
 

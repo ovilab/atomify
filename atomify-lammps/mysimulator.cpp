@@ -35,12 +35,18 @@ MyWorker::MyWorker() {
 
 void AtomifySimulator::clearSimulatorControls()
 {
-    for(QQuickItem* child : childItems()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            control->setParentItem(nullptr);
-        }
-    }
+//    for(QQuickItem* child : childItems()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            control->setParentItem(nullptr);
+//        }
+//    }
+    m_simulatorControls.clear();
+}
+
+void AtomifySimulator::addSimulatorControl(SimulatorControl *simulatorControl)
+{
+    m_simulatorControls.append(simulatorControl);
 }
 
 System *AtomifySimulator::system() const
@@ -102,21 +108,27 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
 
-//    atomifySimulator->system()->synchronize(m_lammpsController.lammps());
-//    atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
+//    for(QObject* child : mySimulator->children()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            if(!controls.contains(control)) {
+//                controls.append(control);
+//            }
+//        }
+//    }
 
-    QMap<QString, SimulatorControl*> controls;
-    for(QObject* child : atomifySimulator->children()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            if(!controls.contains(control->identifier())) {
-                controls.insert(control->identifier(), control);
-            }
-        }
-    }
-
+//    QMap<QString, SimulatorControl*> controls;
+//    for(QObject* child : mySimulator->children()) {
+//        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
+//        if(control) {
+//            if(!controls.contains(control->identifier())) {
+//                controls.insert(control->identifier(), control);
+//            }
+//        }
+//    }
+//    m_lammpsController.simulatorControls = controls; // This object is visible from the Computes class
     if(m_lammpsController.state.canProcessSimulatorControls) {
-        foreach(SimulatorControl *control, controls) {
+        foreach(SimulatorControl *control, atomifySimulator->m_simulatorControls) {
             control->update(&m_lammpsController);
         }
     }

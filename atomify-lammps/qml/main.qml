@@ -21,15 +21,15 @@ ApplicationWindow {
     visible: true
 
     property string mode: {
-        if(["android", "ios", "winphone"].indexOf(Qt.platform.os) > -1) {
+//        if(["android", "ios", "winphone"].indexOf(Qt.platform.os) > -1) {
             return "mobile"
-        }
-        return "desktop"
+//        }
+//        return "desktop"
     }
 
     Settings {
         id: settings
-//        property alias mode: applicationRoot.mode
+        //        property alias mode: applicationRoot.mode
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
     }
@@ -53,61 +53,32 @@ ApplicationWindow {
 //    MainDesktop {
 //        visible: mode === "desktop"
 //        anchors.fill: parent
-//        simulator: mySimulator
 //    }
 
     MainMobile {
         visible: mode === "mobile"
         anchors.fill: parent
-        simulator: mySimulator
     }
 
-    AtomifySimulator {
-        id: mySimulator
-        simulationSpeed: 1
-
-        system.atoms.modifiers: [
-            colorModifier,
-            periodicImages
-        ]
-
-        PeriodicImages {
-            id: periodicImages
-            enabled: false
-            numberOfCopiesX: 1
-            numberOfCopiesY: 1
-            numberOfCopiesZ: 1
-        }
-
-        ColorModifier {
-            id: colorModifier
-            scale: 0.2
-        }
-
-        Shortcut {
-            sequence: StandardKey.AddTab
-            context: Qt.ApplicationShortcut
-            onActivated: {
-                if(mode === "desktop") {
-                    mode = "mobile"
-                } else {
-                    mode = "desktop"
-                    //                tempPlot.xMax = mySimulator.simulationTime
-                    //                tempPlot.xMin = mySimulator.simulationTime-1
-                    //                maxValue = Math.max(maxValue, value)
-                    //                tempPlot.yMax = maxValue
-                }
+    Shortcut {
+        sequence: StandardKey.AddTab
+        context: Qt.ApplicationShortcut
+        onActivated: {
+            if(mode === "desktop") {
+                mode = "mobile"
+            } else {
+                mode = "desktop"
             }
         }
-        Shortcut {
-            sequence: StandardKey.FullScreen
-            context: Qt.ApplicationShortcut
-            onActivated: {
-                if(visibility === Window.FullScreen) {
-                    visibility = Window.AutomaticVisibility
-                } else {
-                    visibility = Window.FullScreen
-                }
+    }
+    Shortcut {
+        sequence: StandardKey.FullScreen
+        context: Qt.ApplicationShortcut
+        onActivated: {
+            if(visibility === Window.FullScreen) {
+                visibility = Window.AutomaticVisibility
+            } else {
+                visibility = Window.FullScreen
             }
         }
     }

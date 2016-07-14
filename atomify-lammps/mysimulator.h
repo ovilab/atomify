@@ -60,6 +60,7 @@ public:
     ScriptHandler* scriptHandler() const;
     bool willReset() const;
     Q_INVOKABLE void clearSimulatorControls();
+    Q_INVOKABLE void addSimulatorControl(SimulatorControl *simulatorControl);
     class System* system() const;
     LammpsError* lammpsError() const;
 
@@ -94,6 +95,7 @@ private:
     int m_simulationSpeed = 1;
     bool m_paused = false;
     bool m_willReset = false;
+    QList<SimulatorControl*> m_simulatorControls;
 };
 
 #endif // MYSIMULATOR_H

@@ -116,9 +116,6 @@ Item {
                             simulationsClicked()
                         }
                     }
-                    MainMenuLeftButton {
-                        text: qsTr("About")
-                    }
                 }
             }
         }

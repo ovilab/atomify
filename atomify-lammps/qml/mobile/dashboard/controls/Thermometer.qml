@@ -53,6 +53,7 @@ DashboardControl {
     }
     fullControl: Component {
         DashboardFullControl {
+//        Rectangle {
             property real value: temperatureCompute.value
             property real lowPassValue: 0.0
             property real yMin: 0

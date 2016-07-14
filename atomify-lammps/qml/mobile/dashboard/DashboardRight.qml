@@ -58,7 +58,7 @@ Item {
 
                 Repeater {
                     id: repeater
-                    model: simulation.controllers.length
+                    model: simulation ? simulation.controllers.length : undefined
                     Item {
                         width: 1
                         Layout.fillWidth: true
@@ -69,7 +69,7 @@ Item {
                         Loader {
                             id: miniControlLoader
                             anchors.fill: parent
-                            sourceComponent: simulation.controllers[index].miniControl
+                            sourceComponent: simulation ? simulation.controllers[index].miniControl : null
 
                             onLoaded: {
                                 if(!(item && item.fixes && simulator)) {
