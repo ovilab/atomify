@@ -44,6 +44,27 @@ Item {
 //            camera: camera
 //        }
 
+        Spheres {
+            id: spheres
+            // scale: atomifyVisualizerRoot.scale
+            color: "white"
+            visible: parent.visible
+
+            Light {
+                id: light1
+                ambientColor: spheres.color
+                specularColor: "white"
+                diffuseColor: spheres.color
+                ambientIntensity: 0.05
+                diffuseIntensity: 1.0
+                specularIntensity: 2.0
+                specular: true
+                shininess: 30.0
+                attenuation: 0.0
+                position: camera.position
+            }
+        }
+
         Bonds {
             id: bonds
             color: "white"
@@ -62,33 +83,6 @@ Item {
                 attenuation: 0.0
                 position: camera.position
             }
-        }
-
-        Spheres {
-            id: spheres
-            scale: atomifyVisualizerRoot.scale
-            color: "white"
-            visible: parent.visible
-
-            Light {
-                id: light1
-                ambientColor: spheres.color
-                specularColor: "white"
-                diffuseColor: spheres.color
-                ambientIntensity: 0.05
-                diffuseIntensity: 1.0
-                specularIntensity: 2.0
-                specular: true
-                shininess: 30.0
-                attenuation: 0.0
-                position: camera.position
-            }
-
-//            SkyBoxReflection {
-//                id: reflection
-//                skybox: skybox
-//                reflectivity: 0.2
-//            }
         }
     }
 

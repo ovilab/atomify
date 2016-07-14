@@ -37,7 +37,7 @@ Item {
 
         ColorModifier {
             id: colorModifier
-            scale: 0.2
+            scale: 0.25
         }
     }
     property Simulation simulation: null
@@ -75,7 +75,9 @@ Item {
 
     SimulationLoader {
         id: initialSimulationLoader
-        folder: "qrc:/simulations/diffusion/simple_diffusion"
+        // folder: "qrc:/simulations/diffusion/simple_diffusion"
+        // folder: "qrc:/simulations/water/singlewater"
+        folder: "qrc:/simulations/silica/silica"
         onLoaded: {
              loadSimulation(item)
         }

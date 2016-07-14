@@ -73,11 +73,13 @@ void Atoms::synchronize(LAMMPS *lammps)
     int *types = lammps->atom->type;
 
     int numberOfAtoms = atom->natoms;
+    // if(m_atomData.size() != numberOfAtoms) m_atomData.neighborList.reset(numberOfAtoms, 10);
     m_atomData.resize(numberOfAtoms);
+
 
     for(QVector3D &delta : m_atomData.deltaPositions) delta = QVector3D(); // Reset delta
     for(QVector3D &color : m_atomData.colors) color = QVector3D(0.9, 0.2, 0.1);
-    for(float &radii : m_atomData.radii) radii = 1.0;
+    for(float &radius : m_atomData.radii) radius = m_sphereRadius;
     for(bool &visible : m_atomData.visible) visible = true;
 
     for(int i=0; i<numberOfAtoms; i++) {
@@ -88,13 +90,13 @@ void Atoms::synchronize(LAMMPS *lammps)
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
-        m_atomData.positions[i][0] = position[0];
-        m_atomData.positions[i][1] = position[1];
-        m_atomData.positions[i][2] = position[2];
+        m_atomData.positions[i][0] = position[0] - (lammps->domain->boxlo[0] + lammps->domain->prd_half[0]);
+        m_atomData.positions[i][1] = position[1] - (lammps->domain->boxlo[1] + lammps->domain->prd_half[1]);
+        m_atomData.positions[i][2] = position[2] - (lammps->domain->boxlo[2] + lammps->domain->prd_half[2]);
         m_atomData.originalIndex[i] = i;
     }
 
-    // if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
+    if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
 void Atoms::updateData(System *system, LAMMPS *lammps)
@@ -146,62 +148,63 @@ void Atoms::generateSphereData(AtomData &atomData) {
 }
 
 void Atoms::generateBondData(AtomData &atomData) {
-//    bondsDataRaw.resize(0);
-//    if(!m_bonds->enabled()) {
-//        // m_bondData->setData(bondsDataRaw);
-//        return;
-//    }
+    m_bondsData.resize(0);
+    if(!m_bonds->enabled()) {
+        return;
+    }
 
-//    const Neighborlist &neighborList = atomData.neighborList;
-//    if(neighborList.neighbors.size()==0) return;
+    const Neighborlist &neighborList = atomData.neighborList;
+    if(neighborList.neighbors.size()==0) return;
 
-//    QElapsedTimer t;
-//    t.start();
-//    bondsDataRaw.reserve(atomData.positions.size());
-//    for(int ii=0; ii<atomData.size(); ii++) {
-//        int i = atomData.originalIndex[ii];
+    QElapsedTimer t;
+    t.start();
+    m_bondsData.reserve(atomData.positions.size());
+    for(int ii=0; ii<atomData.size(); ii++) {
+        int i = atomData.originalIndex[ii];
 
-//        const QVector3D position_i = atomData.positions[ii];
-//        const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
-//        const int atomType_i = atomData.types[ii];
+        const QVector3D position_i = atomData.positions[ii];
+        const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
+        const int atomType_i = atomData.types[ii];
 
-//        const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
-//        const float sphereRadius_i = atomData.radii[ii];
+        const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
+        // const float sphereRadius_i = atomData.radii[ii];
 
-//        if(neighborList.neighbors.size() <= i) continue;
+        if(neighborList.neighbors.size() <= i) continue;
 
-//        for(const int &j : neighborList.neighbors[i]) {
-//            QVector3D position_j = atomData.positions[j];
-//            position_j[0] += deltaPosition_i[0];
-//            position_j[1] += deltaPosition_i[1];
-//            position_j[2] += deltaPosition_i[2];
+        for(const int &j : neighborList.neighbors[i]) {
+            // if(j<ii) continue;
 
-//            const int &atomType_j = atomData.types[j];
+            QVector3D position_j = atomData.positions[j];
+            position_j[0] += deltaPosition_i[0];
+            position_j[1] += deltaPosition_i[1];
+            position_j[2] += deltaPosition_i[2];
 
-//            float dx = position_i[0] - position_j[0];
-//            float dy = position_i[1] - position_j[1];
-//            float dz = position_i[2] - position_j[2];
-//            float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
-//            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
-////                BondVBOData bond;
-////                bond.vertex1[0] = position_i[0];
-////                bond.vertex1[1] = position_i[1];
-////                bond.vertex1[2] = position_i[2];
-////                bond.vertex2[0] = position_j[0];
-////                bond.vertex2[1] = position_j[1];
-////                bond.vertex2[2] = position_j[2];
-////                bond.radius1 = m_bondRadius;
-////                bond.radius2 = m_bondRadius;
-////                bond.sphereRadius1 = sphereRadius_i;
-////                bond.sphereRadius2 = atomData.radii[j];
-////                bondsDataRaw.push_back(bond);
-//            }
-//        }
-//    }
+            const int &atomType_j = atomData.types[j];
 
-//    // qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
+            float dx = position_i[0] - position_j[0];
+            float dy = position_i[1] - position_j[1];
+            float dz = position_i[2] - position_j[2];
+            float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
+            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
+                BondData bond;
+                bond.vertex1Position[0] = position_i[0];
+                bond.vertex1Position[1] = position_i[1];
+                bond.vertex1Position[2] = position_i[2];
 
-//    // m_bondData->setData(bondsDataRaw);
+                bond.vertex2Position[0] = position_j[0];
+                bond.vertex2Position[1] = position_j[1];
+                bond.vertex2Position[2] = position_j[2];
+
+                bond.radius1 = m_bondRadius;
+                bond.radius2 = m_bondRadius;
+
+                bond.sphereRadius1 = atomData.radii[ii];
+                bond.sphereRadius2 = atomData.radii[j];
+                m_bondsData.push_back(bond);
+            }
+        }
+    }
+    qDebug() << m_bondsData.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << m_bondsData.size()*sizeof(BondData);
 }
 
 QVector<AtomStyle *> &Atoms::atomStyles()
@@ -270,9 +273,23 @@ void Atoms::setModifiers(QVariantList modifiers)
     emit modifiersChanged(modifiers);
 }
 
+void Atoms::setSphereRadius(float sphereRadius)
+{
+    if (m_sphereRadius == sphereRadius)
+            return;
+
+        m_sphereRadius = sphereRadius;
+        emit bondSphereChanged(sphereRadius);
+}
+
 QVector<BondData> &Atoms::bondsData()
 {
     return m_bondsData;
+}
+
+float Atoms::sphereRadius() const
+{
+    return m_sphereRadius;
 }
 
 QVector<SphereData> &Atoms::spheresData()
