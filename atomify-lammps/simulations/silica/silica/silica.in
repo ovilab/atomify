@@ -9,7 +9,7 @@ atom_style	atomic
 
 read_data	betacristobalite.data
 
-replicate   8 8 8
+replicate    2 2 2
 
 pair_style 	vashishta
 pair_coeff	* * ../../potentialparameters/SiO2.vashishta Si O
