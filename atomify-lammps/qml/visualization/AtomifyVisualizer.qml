@@ -9,7 +9,8 @@ Item {
     property AtomifySimulator simulator
     property real scale: 0.23
     property Light light: light
-    property Slice slice: mySlice
+    // property Slice slice: mySlice
+    property Slice slice
     property Camera camera: camera
     property bool addPeriodicCopies: false
 
@@ -43,6 +44,26 @@ Item {
 //            camera: camera
 //        }
 
+        Bonds {
+            id: bonds
+            color: "white"
+            visible: parent.visible
+
+            Light {
+                id: light
+                ambientColor: bonds.color
+                specularColor: "white"
+                diffuseColor: bonds.color
+                ambientIntensity: 0.05
+                diffuseIntensity: 1.0
+                specularIntensity: 2.0
+                specular: true
+                shininess: 30.0
+                attenuation: 0.0
+                position: camera.position
+            }
+        }
+
         Spheres {
             id: spheres
             scale: atomifyVisualizerRoot.scale
@@ -50,7 +71,7 @@ Item {
             visible: parent.visible
 
             Light {
-                id: light
+                id: light1
                 ambientColor: spheres.color
                 specularColor: "white"
                 diffuseColor: spheres.color
@@ -61,22 +82,6 @@ Item {
                 shininess: 30.0
                 attenuation: 0.0
                 position: camera.position
-            }
-
-            PeriodicCopies {
-                id: periodicCopies
-                systemSize: simulator.systemSize
-                enabled: addPeriodicCopies
-            }
-
-            Slice {
-                id: mySlice
-                systemSize: simulator.systemSize
-                origo: Qt.vector3d(0,0,0)
-                distance: 0
-                normal: Qt.vector3d(1.0, 0.0, 0.0)
-                width: 5
-                enabled: false
             }
 
 //            SkyBoxReflection {
