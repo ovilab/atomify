@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
-import Atomify 1.0
 import SimVis 1.0
+import Atomify 1.0
 
 Item {
     id: atomifyVisualizerRoot

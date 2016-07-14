@@ -74,20 +74,35 @@ Item {
         }
     }
 
-    RevealDashboardButton {
-        id: revealDashboardButton
-        revealed: mobileRoot.state == ""
-        onClicked: {
-            mainMenu.revealed = false
-            dashboard.revealed = true
-        }
-    }
-
     RevealSimulationsViewButton {
         id: revealSimulationsViewButton
         revealed: mobileRoot.state == ""
         onClicked: {
             mainMenu.revealed = true
+            dashboard.revealed = false
+            informationPanel.revealed = false
+        }
+    }
+
+    RevealDashboardButton {
+        id: revealDashboardButton
+        revealed: mobileRoot.state == ""
+        onClicked: {
+            dashboard.revealed = true
+            mainMenu.revealed = false
+            informationPanel.revealed = false
+        }
+    }
+
+    AboutButton {
+        anchors {
+            top: revealDashboardButton.bottom
+            right: parent.right
+        }
+        revealed: mobileRoot.state == ""
+        onClicked: {
+            informationPanel.revealed = true
+            mainMenu.revealed = false
             dashboard.revealed = false
         }
     }
@@ -103,6 +118,11 @@ Item {
             console.log("Index was " + index)
             controlView.gotoIndex(index)
         }
+    }
+
+    InformationPanel {
+        id: informationPanel
+        simulation: mobileRoot.simulation
     }
 
     DashboardControlView {

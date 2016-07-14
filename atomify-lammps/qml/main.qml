@@ -21,7 +21,7 @@ ApplicationWindow {
     visible: true
 
     property string mode: {
-        if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
+        if(["android", "ios", "winphone"].indexOf(Qt.platform.os) > -1) {
             return "mobile"
         }
         return "desktop"
@@ -29,7 +29,7 @@ ApplicationWindow {
 
     Settings {
         id: settings
-        property alias mode: applicationRoot.mode
+//        property alias mode: applicationRoot.mode
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
     }

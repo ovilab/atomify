@@ -24,7 +24,7 @@ Item {
     }
     enabled: revealed
     state: revealed ? "revealed" : "hidden"
-    width: Style.touchableSize * 2.5
+    width: Style.touchableSize * 1.5
     height: width
     
     states: [
@@ -57,11 +57,11 @@ Item {
     Image {
         anchors {
             fill: parent
-            margins: mobileRoot.width * 0.01
+            margins: parent.width * 0.2
         }
         smooth: true
         
-        source: "qrc:/images/dashboard.png"
+        source: "qrc:/images/dashboard-plot.png"
     }
     
     MouseArea {

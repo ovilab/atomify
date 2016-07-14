@@ -54,9 +54,9 @@ Item {
                 pixelDensity = 6.0
             }
         }
-        if(pixelDensity < 4.0) {
-            console.warn("Pixel density reported as too small. Assuming 10 % of width or height.")
-            styleRoot.pixelDensity = Math.max(windowWidth, windowHeight) * 0.1
+        if(pixelDensity < 5.0) {
+            console.warn("Pixel density reported as too small. Using width or height.")
+            styleRoot.pixelDensity = Math.max(windowWidth, windowHeight) * 0.01
         }
         console.log("Done resetting style")
     }

@@ -23,6 +23,8 @@
 #include "LammpsWrappers/system.h"
 #include <vendor.h>
 
+#include <vendor.h>
+
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -48,6 +50,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     qpm::init(app, engine);
+
 //    QSurfaceFormat format;
 //    format.setMajorVersion(3);
 //    format.setMinorVersion(0);

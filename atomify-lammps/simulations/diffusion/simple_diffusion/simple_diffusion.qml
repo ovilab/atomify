@@ -15,9 +15,9 @@ Simulation {
     longDescription: "Play with the thermostat and see how the diffusion process is slowed when " +
                      "lowering the temperature and sped up when raising the temperature."
 
-    controllers: [
-        Thermometer {},
-        Thermostat {}
-    ]
+//    controllers: [
+//        Thermometer {},
+//        Thermostat {}
+//    ]
 }
 
