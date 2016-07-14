@@ -109,9 +109,10 @@ Item {
         id: revealDashboardButton
         revealed: mobileRoot.state == ""
         onClicked: {
-            dashboard.revealed = true
-            mainMenu.revealed = false
-            informationPanel.revealed = false
+            mobileRoot.previousState = mobileRoot.state
+            mobileRoot.state = "tools"
+            console.log("Index was " + index)
+            controlView.gotoIndex(index)
         }
     }
 
@@ -156,7 +157,7 @@ Item {
         }
         onBackClicked: {
             mobileRoot.state = mobileRoot.previousState
-            dashboard.revealed = true
+//            dashboard.revealed = true
         }
     }
 

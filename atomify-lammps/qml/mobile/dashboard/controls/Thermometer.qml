@@ -67,8 +67,7 @@ DashboardControl {
                 antialiasing: true
                 legend.visible: false
                 title: "Temperature"
-                backgroundColor: "transparent"
-                titleColor: "white"
+                theme: ChartView.ChartThemeDark
 
                 ChartScroller {
                     id: chartScroller

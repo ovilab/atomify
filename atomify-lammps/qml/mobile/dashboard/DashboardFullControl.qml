@@ -7,17 +7,17 @@ import "qrc:/visualization"
 Item {
     id: grid
 
-    default property alias contents: layout.children
+//    default property alias contents: layout.children
     property AtomifyVisualizer visualizer
 
 
     width: 100
     height: 100
 
-    Rectangle {
-        id: layout
-        anchors.fill: parent
-    }
+//    Rectangle {
+//        id: layout
+//        anchors.fill: parent
+//    }
 
 //    GridLayout {
 //        id: layout

@@ -42,10 +42,12 @@ void AtomifySimulator::clearSimulatorControls()
 //        }
 //    }
     m_simulatorControls.clear();
+    qDebug() << "Clear simulator controls";
 }
 
 void AtomifySimulator::addSimulatorControl(SimulatorControl *simulatorControl)
 {
+    qDebug() << "Add simulator control";
     m_simulatorControls.append(simulatorControl);
 }
 
@@ -83,7 +85,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->lammpsState = m_lammpsController.state;
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
-        atomifySimulator->clearSimulatorControls();
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
         emit atomifySimulator->lammpsDidReset();
@@ -128,6 +129,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 //    }
 //    m_lammpsController.simulatorControls = controls; // This object is visible from the Computes class
     if(m_lammpsController.state.canProcessSimulatorControls) {
+        qDebug() << atomifySimulator->m_simulatorControls.length();
         foreach(SimulatorControl *control, atomifySimulator->m_simulatorControls) {
             control->update(&m_lammpsController);
         }
