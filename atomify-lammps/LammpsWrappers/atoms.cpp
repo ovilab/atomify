@@ -172,7 +172,7 @@ void Atoms::generateBondData(AtomData &atomData) {
         if(neighborList.neighbors.size() <= i) continue;
 
         for(const int &j : neighborList.neighbors[i]) {
-            // if(j<ii) continue;
+            if(j<ii) continue; // TODO: fix so we get this "newton's 3rd law" on bonds if neighbor lists are full
 
             QVector3D position_j = atomData.positions[j];
             position_j[0] += deltaPosition_i[0];
@@ -204,7 +204,7 @@ void Atoms::generateBondData(AtomData &atomData) {
             }
         }
     }
-    qDebug() << m_bondsData.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << m_bondsData.size()*sizeof(BondData);
+    // qDebug() << m_bondsData.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << m_bondsData.size()*sizeof(BondData);
 }
 
 QVector<AtomStyle *> &Atoms::atomStyles()
