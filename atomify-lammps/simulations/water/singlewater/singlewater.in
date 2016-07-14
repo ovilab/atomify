@@ -18,7 +18,7 @@ neighbor	0.3 bin
 neigh_modify	delay 10
 
 fix nve all nve
-timestep	0.000005
+timestep	0.0000001
 
 #/atom 1 oxygen
 #/atom 2 hydrogen

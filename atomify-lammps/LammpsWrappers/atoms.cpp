@@ -167,11 +167,13 @@ void Atoms::generateBondData(AtomData &atomData) {
         const int atomType_i = atomData.types[ii];
 
         const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
-        const float sphereRadius_i = atomData.radii[ii];
+        // const float sphereRadius_i = atomData.radii[ii];
 
         if(neighborList.neighbors.size() <= i) continue;
 
         for(const int &j : neighborList.neighbors[i]) {
+            // if(j<ii) continue;
+
             QVector3D position_j = atomData.positions[j];
             position_j[0] += deltaPosition_i[0];
             position_j[1] += deltaPosition_i[1];
@@ -188,18 +190,21 @@ void Atoms::generateBondData(AtomData &atomData) {
                 bond.vertex1Position[0] = position_i[0];
                 bond.vertex1Position[1] = position_i[1];
                 bond.vertex1Position[2] = position_i[2];
+
                 bond.vertex2Position[0] = position_j[0];
                 bond.vertex2Position[1] = position_j[1];
                 bond.vertex2Position[2] = position_j[2];
+
                 bond.radius1 = m_bondRadius;
                 bond.radius2 = m_bondRadius;
-                bond.sphereRadius1 = 0.5*sphereRadius_i*0.9;
-                bond.sphereRadius2 = 0.5*atomData.radii[j]*0.9;
+
+                bond.sphereRadius1 = atomData.radii[ii];
+                bond.sphereRadius2 = atomData.radii[j];
                 m_bondsData.push_back(bond);
             }
         }
     }
-    // qDebug() << m_bondsData.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << m_bondsData.size()*sizeof(BondData);
+    qDebug() << m_bondsData.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << m_bondsData.size()*sizeof(BondData);
 }
 
 QVector<AtomStyle *> &Atoms::atomStyles()
