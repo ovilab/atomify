@@ -38,7 +38,7 @@ QtObject {
         if(lineSeries.count > 0) {
             var firstPoint = lineSeries.at(0)
             var lastPoint = lineSeries.at(lineSeries.count - 1)
-            if(lastPoint.x - firstPoint.x > timeRange) {
+            if(lastPoint.x - firstPoint.x > timeRange * 2.0) {
                 lineSeries.remove(firstPoint.x, firstPoint.y)
             }
         }
@@ -55,7 +55,7 @@ QtObject {
         axisX.max = time
         axisY.min = yMin// TODO: Make this into a property
         axisY.max = yMax
-        axisX.applyNiceNumbers()
-        axisY.applyNiceNumbers()
+//        axisX.applyNiceNumbers()
+//        axisY.applyNiceNumbers()
     }
 }
