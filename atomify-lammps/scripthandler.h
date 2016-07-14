@@ -8,14 +8,13 @@
 #include <QString>
 #include "scriptcommand.h"
 #include "scriptparser.h"
-#include "atomstyle.h"
+#include "LammpsWrappers/atoms.h"
 
 class AtomifySimulator;
 
 class ScriptHandler : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(AtomStyle* atomStyle READ atomStyle WRITE setAtomStyle)
 private:
     ScriptParser m_parser;
     QMutex m_mutex;
@@ -25,23 +24,21 @@ private:
     QVector<ScriptCommand> m_previousSingleCommands;
     int m_currentPreviousSingleCommandIndex = 0;
     class LammpsState *m_lammpsState = nullptr;
-    AtomStyle* m_atomStyle = nullptr;
+    Atoms* m_atoms = nullptr;
     QString m_tempLocation;
-
-    Q_INVOKABLE QString previousSingleCommandString();
-    Q_INVOKABLE QString nextSingleCommandString();
-    Q_INVOKABLE QString lastSingleCommandString();
 
 public:
     ScriptHandler();
     const ScriptCommand &nextCommand();
-    AtomStyle* atomStyle() const;
+    Atoms* atoms() const;
     ScriptParser &parser() { return m_parser; }
     bool parseLammpsCommand(QString command, class LAMMPSController *lammpsController);
     void parseGUICommand(QString command);
-
     LammpsState *lammpsState() const;
     void setLammpsState(LammpsState *lammpsState);
+    Q_INVOKABLE QString previousSingleCommandString();
+    Q_INVOKABLE QString nextSingleCommandString();
+    Q_INVOKABLE QString lastSingleCommandString();
 
 public slots:
     void runScript(QString script, ScriptCommand::Type type = ScriptCommand::Type::Editor, QString filename = "", QString currentDir = "");
@@ -50,7 +47,7 @@ public slots:
     void addCommandToTop(ScriptCommand command);
     void addCommandsToTop(QList<QString> commands, ScriptCommand::Type commandType);
     void reset();
-    void setAtomStyle(AtomStyle* atomStyle);
+    void setAtoms(Atoms* atoms);
 
     QString readFile(QString filename);
     QString copyDataFileToReadablePath(QString filename);

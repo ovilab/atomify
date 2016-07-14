@@ -1,7 +1,6 @@
 #include "scriptparser.h"
 #include <string>
 #include <sstream>
-#include <QRegExp>
 #include <QRegularExpression>
 #include <QStringList>
 #include <QDebug>
@@ -12,59 +11,101 @@ ScriptParser::ScriptParser()
 }
 
 bool ScriptParser::isDisableAllEnsembleFixes(QString command) {
-    QRegExp regex("disableAllEnsembleFixes");
-    return regex.exactMatch(command);
+    QRegularExpression regex("^disableAllEnsembleFixes$");
+    return regex.match(command).hasMatch();
 }
 
 bool ScriptParser::isAtomColorAndSize(QString command)
 {
-    QRegExp regex = QRegExp(QString("(atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
-    return regex.exactMatch(command);
+    QRegularExpression regex(QString("^(?:atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)$").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
+    return regex.match(command).hasMatch();
 }
 
-void ScriptParser::AtomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action) {
-    QRegExp regex = QRegExp(QString("(atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
-    regex.exactMatch(command);
-    QString color = regex.capturedTexts().at(regex.capturedTexts().length()-1);
-    QString scale = regex.capturedTexts().at(regex.capturedTexts().length()-2);
-    QString atomType = regex.capturedTexts().at(regex.capturedTexts().length()-3);
+void ScriptParser::atomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action) {
+    QRegularExpression regex(QString("^(?:atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)$").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
+    QRegularExpressionMatch match = regex.match(command);
     bool castOk;
-    float scalef = scale.toFloat(&castOk);
+    int atomType = match.captured(1).toInt(&castOk);
     if(!castOk) return;
-    int atomTypeInt = atomType.toInt(&castOk);
+    float scale = match.captured(2).toFloat(&castOk);
     if(!castOk) return;
 
-    action(scalef, color, atomTypeInt);
+    QString color = match.captured(3);
+
+    action(scale, color, atomType);
 }
 
 bool ScriptParser::isAtomType(QString command)
 {
-    QRegExp regex("(atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)");
-    return regex.exactMatch(command);
+    QRegularExpression regex("^(atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
+    return regex.match(command).hasMatch();
+}
+
+bool ScriptParser::isBond(QString command)
+{
+    QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
+    return regex.match(command).hasMatch();
+}
+
+bool ScriptParser::isSimulationSpeed(QString command)
+{
+    QRegularExpression regex(QString("^(?:speed)(?:%1)(%2)$").arg(regexTabOrSpace).arg(regexInt));
+    return regex.match(command).hasMatch();
+}
+
+int ScriptParser::simulationSpeed(QString command) {
+    QRegularExpression regex(QString("^(?:speed)(?:%1)(%2)$").arg(regexTabOrSpace).arg(regexInt));
+    QRegularExpressionMatch match = regex.match(command);
+    bool castOk;
+    int speed = match.captured(1).toInt(&castOk);
+    if(castOk) return speed;
+    else return -1;
+}
+
+void ScriptParser::bond(QString command, std::function<void(int atomType1, int atomType2, float bondLength)> action) {
+    QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
+    QRegularExpressionMatch match = regex.match(command);
+    bool castOk;
+    int atomType1 = match.captured(1).toInt(&castOk);
+    if(!castOk) return;
+    int atomType2 = match.captured(2).toInt(&castOk);
+    if(!castOk) return;
+    int bondLength = match.captured(3).toFloat(&castOk);
+    if(!castOk) return;
+
+    action(atomType1, atomType2, bondLength);
 }
 
 bool ScriptParser::isStaticSystem(QString command)
 {
-    QRegExp regex("staticSystem");
-    return regex.exactMatch(command);
+    QRegularExpression regex("^staticSystem$");
+    return regex.match(command).hasMatch();
+}
+
+bool ScriptParser::isDisableBonds(QString command)
+{
+    QRegularExpression regex("^disableBonds$");
+    return regex.match(command).hasMatch();
 }
 
 void ScriptParser::atomType(QString command, std::function<void(QString atomTypeName, int atomType)> action)
 {
-    QRegExp regex("(atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)");
-    regex.exactMatch(command);
-    QString atomTypeName = regex.capturedTexts().last();
-    int atomType = regex.capturedTexts().at(regex.capturedTexts().length()-2).toInt();
+    QRegularExpression regex ("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
+    QRegularExpressionMatch match = regex.match(command);
+    int atomType = match.captured(1).toInt();
+    QString atomTypeName = match.captured(2);
     action(atomTypeName, atomType);
 }
 
 bool ScriptParser::isGUICommand(QString command) {
     command.remove(0,2);
-    bool isGUICommand = false;
-    if(isAtomType(command)) isGUICommand = true;
-    if(isAtomColorAndSize(command)) isGUICommand = true;
-    if(isStaticSystem(command)) isGUICommand = true;
-    return isGUICommand;
+    if(isAtomType(command)) return true;
+    if(isBond(command)) return true;
+    if(isAtomColorAndSize(command)) return true;
+    if(isStaticSystem(command)) return true;
+    if(isDisableBonds(command)) return true;
+
+    return false;
 }
 
 bool ScriptParser::isEditorCommand(QString command)
@@ -101,4 +142,3 @@ QString ScriptParser::includePath(QString command)
     }
     return QString("");
 }
-

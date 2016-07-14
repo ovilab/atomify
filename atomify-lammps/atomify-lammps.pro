@@ -34,8 +34,7 @@ QML_IMPORT_PATH =
 
 # Default rules for deployment.
 include(deployment.pri)
-include(../SimVis/library_deployment.pri)
-
+include(../SimVis/package_vendor.pri)
 
 ios {
     QMAKE_INFO_PLIST = iOS.plist
@@ -46,8 +45,6 @@ SOURCES += \
     mysimulator.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
-    atomstyle.cpp \
-    fileio.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
     scriptcommand.cpp \
@@ -59,14 +56,21 @@ SOURCES += \
     LammpsWrappers/fixaveragetime.cpp \
     LammpsWrappers/fixhistogram.cpp \
     LammpsWrappers/rdf.cpp \
-    datasource.cpp
+    datasource.cpp \
+    LammpsWrappers/system.cpp \
+    LammpsWrappers/atoms.cpp \
+    LammpsWrappers/neighborlist.cpp \
+    LammpsWrappers/lammpserror.cpp \
+    LammpsWrappers/atomdata.cpp \
+    LammpsWrappers/modifiers/colormodifier.cpp \
+    LammpsWrappers/modifiers/modifier.cpp \
+    LammpsWrappers/modifiers/periodicimages.cpp \
+    LammpsWrappers/cpbonds.cpp
 
 HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
-    atomstyle.h \
-    fileio.h \
     scriptparser.h \
     scripthandler.h \
     scriptcommand.h \
@@ -78,7 +82,17 @@ HEADERS += \
     LammpsWrappers/fixaveragetime.h \
     LammpsWrappers/fixhistogram.h \
     LammpsWrappers/rdf.h \
-    datasource.h
+    datasource.h \
+    LammpsWrappers/system.h \
+    LammpsWrappers/atoms.h \
+    LammpsWrappers/neighborlist.h \
+    LammpsWrappers/lammpserror.h \
+    LammpsWrappers/atomdata.h \
+    LammpsWrappers/modifiers/colormodifier.h \
+    LammpsWrappers/modifiers/modifier.h \
+    LammpsWrappers/modifiers/modifiers.h \
+    LammpsWrappers/modifiers/periodicimages.h \
+    LammpsWrappers/cpbonds.h
 
 # Temporary use of quickcontrols2 without install
 

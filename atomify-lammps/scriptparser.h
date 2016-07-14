@@ -15,14 +15,19 @@ public:
     ScriptParser();
     bool isAtomColorAndSize(QString command);
     bool isStaticSystem(QString command);
-    void AtomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action);
+    bool isDisableBonds(QString command);
+    void atomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action);
+    void bond(QString command, std::function<void (int atomType1, int atomType2, float bondLength)> action);
     bool isAtomType(QString command);
+    bool isBond(QString command);
     void atomType(QString command, std::function<void(QString atomTypeName, int atomType)> action);
     bool isEditorCommand(QString command);
     bool isInclude(QString command);
     QString includePath(QString command);
     bool isDisableAllEnsembleFixes(QString command);
     bool isGUICommand(QString command);
+    bool isSimulationSpeed(QString command);
+    int simulationSpeed(QString command);
 };
 
 #endif // SCRIPTPARSER_H

@@ -14,6 +14,7 @@
 #include <QRegularExpression>
 #include <QUuid>
 #include <fstream>
+#include "LammpsWrappers/cpbonds.h"
 
 ScriptHandler::ScriptHandler() :
     m_mutex(QMutex::Recursive)
@@ -63,9 +64,9 @@ const ScriptCommand& ScriptHandler::nextCommand()
     return m_currentCommand;
 }
 
-AtomStyle *ScriptHandler::atomStyle() const
+Atoms *ScriptHandler::atoms() const
 {
-    return m_atomStyle;
+    return m_atoms;
 }
 
 
@@ -107,10 +108,11 @@ QString ScriptHandler::lastSingleCommandString()
     else return QString("");
 }
 
-void ScriptHandler::setAtomStyle(AtomStyle *atomStyle)
+void ScriptHandler::setAtoms(Atoms *atoms)
 {
-    m_atomStyle = atomStyle;
+    m_atoms = atoms;
 }
+
 #include <iostream>
 using namespace std;
 void ScriptHandler::runFile(QString filename)
@@ -150,6 +152,10 @@ bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammps
             lammpsController->disableAllEnsembleFixes();
             return true;
         }
+
+        if(m_parser.isSimulationSpeed(command)) {
+            // TODO: set simulation speed here
+        }
     }
 
     return false;
@@ -162,14 +168,29 @@ void ScriptHandler::parseGUICommand(QString command)
 
     if(m_parser.isAtomType(command)) {
         m_parser.atomType(command, [&](QString atomTypeName, int atomType) {
-            if(m_atomStyle) m_atomStyle->setAtomType(atomTypeName, atomType);
+            // TODO: Switch arguments so they match the m_atoms->setAtomType call
+            if(m_atoms) m_atoms->setAtomType(atomType, atomTypeName);
         });
         return;
     }
 
+    if(m_parser.isBond(command)) {
+        m_parser.bond(command, [&](int atomType1, int atomType2, float bondLength) {
+            if(m_atoms) {
+                if(m_atoms->bonds()->bondLengths().size() > std::max(atomType1, atomType2)) {
+                    m_atoms->bonds()->bondLengths()[atomType1][atomType2] = bondLength;
+                    m_atoms->bonds()->bondLengths()[atomType2][atomType1] = bondLength;
+                    m_atoms->bonds()->setEnabled(true);
+                }
+            }
+        });
+    }
+
     if(m_parser.isAtomColorAndSize(command)) {
-        m_parser.AtomColorAndSize(command, [&](float scale, QString color, int atomType) {
-            if(m_atomStyle) m_atomStyle->setScaleAndColorForAtom(scale, color, atomType);
+        m_parser.atomColorAndSize(command, [&](float radius, QString color, int atomType) {
+            if(m_atoms) {
+                m_atoms->setAtomColorAndScale(atomType, color, radius);
+            }
         });
         return;
     }
@@ -177,8 +198,14 @@ void ScriptHandler::parseGUICommand(QString command)
     if(m_lammpsState) {
         if(m_parser.isStaticSystem(command)) {
             m_lammpsState->staticSystem = true;
+            return;
         }
     }
+
+    if(m_parser.isDisableBonds(command)) {
+        m_atoms->bonds()->setEnabled(false);
+    }
+
 }
 
 void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
