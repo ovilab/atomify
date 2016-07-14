@@ -5,7 +5,8 @@ import "qrc:/mobile/dashboard/controls"
 Simulation {
     name: "Silica"
     controllers: [
-        Thermometer {}
+        Thermometer {},
+        Thermostat {}
     ]
 }
 
