@@ -1,0 +1,55 @@
+# PREREQUISITES:
+#
+#     You must use moltemplate.sh to create 3 files:
+#        system.data  system.in.init  system.in.settings
+#     (You do not need to run LAMMPS to equilibrate the system before
+#      using this file.)
+
+# ----------------------------- Initialization Section --------------------
+
+include system.in.init
+
+
+# ----------------------------- Atom Definition Section -------------------
+
+read_data system.data
+
+
+# ----------------------------- Settings Section --------------------------
+
+include system.in.settings
+
+
+# ----------------------------- Run Section -------------------------------
+
+
+
+# Only the Cgraphene atoms are immobile.
+group mobile subtract all Cgraphene
+
+# (Note: The "Cgraphene" group was defined in system.in.settings.)
+
+
+
+# -- minimization protocol --
+
+# Unfortunately you can not use the LAMMPS "minimize" command on this system
+# because there is no way to immobilize the carbon graphene & nanotube atoms
+# during minimization.  Instead, we can use langevin dynamics with a large 
+# damping parameter and a small timestep.
+
+print "--------- beginning minimization (using fix langevin) ---------"
+
+#/atom 1 carbon
+#/atom 2 oxygen
+#/atom 3 hydrogen
+#/bond 2 3 2.0
+#/bond 1 1 2.0
+timestep        0.1
+thermo          100
+fix gravity mobile gravity 1.0 vector 0 0 1
+timestep        1.0
+fix fxMoveStuff mobile nvt temp 300.0 300.0 100.0
+compute tempMobile mobile temp
+fix_modify fxMoveStuff temp tempMobile
+

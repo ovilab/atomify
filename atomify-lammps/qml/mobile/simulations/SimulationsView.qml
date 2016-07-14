@@ -48,6 +48,7 @@ Rectangle {
                         simulations: [
                             "qrc:/simulations/water/singlewater",
                             "qrc:/simulations/water/multiplewater",
+                            "qrc:/simulations/water/nanotube"
                         ]
                     },
                     {

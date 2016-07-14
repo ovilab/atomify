@@ -76,8 +76,8 @@ Item {
     SimulationLoader {
         id: initialSimulationLoader
         // folder: "qrc:/simulations/diffusion/simple_diffusion"
-        // folder: "qrc:/simulations/water/singlewater"
-        folder: "qrc:/simulations/silica/silica"
+        folder: "qrc:/simulations/water/singlewater"
+        // folder: "qrc:/simulations/silica/silica"
         onLoaded: {
              loadSimulation(item)
         }

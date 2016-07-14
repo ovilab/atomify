@@ -8,5 +8,12 @@
         <file>multiplewater/multiplewater.in</file>
         <file>multiplewater/multiplewater.qml</file>
         <file>multiplewater/multiplewater.png</file>
+        <file>nanotube/nanotube.in</file>
+        <file>nanotube/system.data</file>
+        <file>nanotube/system.in</file>
+        <file>nanotube/system.in.init</file>
+        <file>nanotube/system.in.settings</file>
+        <file>nanotube/nanotube.png</file>
+        <file>nanotube/nanotube.qml</file>
     </qresource>
 </RCC>
