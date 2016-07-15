@@ -185,6 +185,9 @@ void MyWorker::synchronizeSpheres(Spheres *spheres) {
 
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
+    if(!m_running) {
+        return;
+    }
     LAMMPS *lammps = m_lammpsController.lammps();
     if(!lammps) return;
 
