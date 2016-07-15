@@ -6,10 +6,13 @@ import "qrc:/mobile/dashboard"
 Simulation {
     name: "Zeolite ZSM-5"
     description: "A group of silicon and oxygen atoms can form different forms of zeolites. Zeolites are nanoporous structures with lots of pores (channels) where flow can occur."
-    periodicImagesX: 2
-    periodicImagesY: 2
-    periodicImagesZ: 2
     controllers: [
+        Thermometer {
+            timeLabel: "t [fs]"
+            timeScale: 1000
+            timeRange: 0.5
+        },
+        Thermostat {}
     ]
 }
 
