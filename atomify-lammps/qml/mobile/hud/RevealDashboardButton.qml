@@ -20,7 +20,7 @@ Item {
     property bool revealed: true
     anchors {
         right: parent.right
-        top: parent.top
+        bottom: parent.bottom
     }
     enabled: revealed
     state: revealed ? "revealed" : "hidden"

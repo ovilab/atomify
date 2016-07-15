@@ -30,6 +30,7 @@ private:
     bool m_addPeriodicCopies = false;
     float m_cameraToSystemCenterDistance = 1.0;
     Atoms *m_atoms = nullptr;
+    bool m_running = false;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
@@ -50,6 +51,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(LammpsError* lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
     Q_PROPERTY(bool hasExecutedRunCommand READ hasExecutedRunCommand WRITE setHasExecutedRunCommand NOTIFY hasExecutedRunCommandChanged)
+    Q_PROPERTY(bool running READ running WRITE setRunning NOTIFY runningChanged)
 
 public:
     AtomifySimulator();
@@ -65,6 +67,7 @@ public:
     class System* system() const;
     LammpsError* lammpsError() const;
     bool hasExecutedRunCommand() const;
+    bool running() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -74,6 +77,7 @@ public slots:
     void setSystem(class System* system);
     void setLammpsError(LammpsError* lammpsError);
     void setHasExecutedRunCommand(bool hasExecutedRunCommand);
+    void setRunning(bool running);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -86,6 +90,7 @@ signals:
     void systemChanged(class System* system);
     void lammpsErrorChanged(LammpsError* lammpsError);
     void hasExecutedRunCommandChanged(bool hasExecutedRunCommand);
+    void runningChanged(bool running);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -101,6 +106,7 @@ private:
     bool m_willReset = false;
     QList<SimulatorControl*> m_simulatorControls;
     bool m_hasExecutedRunCommand = false;
+    bool m_running;
 };
 
 #endif // MYSIMULATOR_H
