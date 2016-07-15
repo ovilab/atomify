@@ -57,70 +57,65 @@ DashboardControl {
             }
         }
     }
-    fullControl: Item {
-        Column {
+    fullControl: Column {
+        spacing: Style.spacing
+        Item {
             anchors {
-                fill: parent
+                left: parent.left
+                right: parent.right
             }
-            spacing: Style.spacing
-            Item {
+            height: Style.touchableSize
+            Label {
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Enabled"
+                font.pixelSize: Style.font.size
+                color: Style.font.color
+            }
+            Switch {
+                id: nvtCheck
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                checked: nvt.enabled
+                onCheckedChanged: {
+                    nvt.enabled = checked
+                }
+            }
+        }
+        Text {
+            text: "Target:"
+            color: Style.font.color
+            font.pixelSize: Style.font.size
+        }
+        Item {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            height: Style.touchableSize
+            Slider {
+                id: nvtSlider
                 anchors {
                     left: parent.left
-                    right: parent.right
+                    right: targetText.left
+                    rightMargin: Style.spacing
                 }
-                height: Style.touchableSize
-                Label {
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "Enabled"
-                    font.pixelSize: Style.font.size
-                    color: Style.font.color
-                }
-                Switch {
-                    id: nvtCheck
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    checked: nvt.enabled
-                    onCheckedChanged: {
-                        nvt.enabled = checked
-                    }
+
+                minimumValue: 0.1
+                maximumValue: 6
+                value: nvt.targetTemperature
+                onValueChanged: {
+                    nvt.targetTemperature = value
                 }
             }
             Text {
-                text: "Target:"
-                color: Style.font.color
-                font.pixelSize: Style.font.size
-            }
-            Item {
+                id: targetText
                 anchors {
-                    left: parent.left
                     right: parent.right
                 }
-                height: Style.touchableSize
-                Slider {
-                    id: nvtSlider
-                    anchors {
-                        left: parent.left
-                        right: targetText.left
-                        rightMargin: Style.spacing
-                    }
-
-                    minimumValue: 0.1
-                    maximumValue: 6
-                    value: nvt.targetTemperature
-                    onValueChanged: {
-                        nvt.targetTemperature = value
-                    }
-                }
-                Text {
-                    id: targetText
-                    anchors {
-                        right: parent.right
-                    }
-                    text: nvtSlider.value.toFixed(2)
-                    color: Style.font.color
-                    font.pixelSize: Style.font.size
-                }
+                text: nvtSlider.value.toFixed(2)
+                color: Style.font.color
+                font.pixelSize: Style.font.size
             }
         }
     }

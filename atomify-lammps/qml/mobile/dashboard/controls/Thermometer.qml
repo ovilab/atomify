@@ -56,7 +56,7 @@ DashboardControl {
             }
         }
     }
-    fullControl: Item {
+    fullControl: Column {
         ChartView {
             id: miniChart
 
