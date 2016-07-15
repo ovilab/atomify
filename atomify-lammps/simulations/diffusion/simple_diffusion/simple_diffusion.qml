@@ -18,8 +18,12 @@ Simulation {
                      "lowering the temperature and sped up when raising the temperature."
 
     controllers: [
-//        Thermometer {},
-//        Thermostat {}
+        Thermometer {
+            timeLabel: "t [fs]"
+            timeScale: 117
+            timeRange: 0.5
+        },
+        Thermostat {}
     ]
 }
 
