@@ -29,9 +29,10 @@ QtObject {
         }
         var lowPassFactor = 0.99 // TODO: Make this into a property
         // lowPassFilter smooths over a few tenth's of the time range
-        if(lineSeries.count > 1) {
-            lowPassFactor = 1.0 - 10 * (lineSeries.at(1).x - lineSeries.at(0).x) / timeRange
-        }
+        // TODO: fix this factor again?
+//        if(lineSeries.count > 1) {
+//            lowPassFactor = 1.0 - 10 * (lineSeries.at(1).x - lineSeries.at(0).x) / timeRange
+//        }
         lowPassValue = lowPassFactor * lowPassValue + (1 - lowPassFactor) * value
         lineSeries.append(time, lowPassValue)
 

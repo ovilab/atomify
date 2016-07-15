@@ -16,9 +16,9 @@ void CPCompute::setValues(double time, QVector<double> values)
     if(m_values.size()>0) {
        emit valuesChanged(m_values);
        emit firstValueChanged(m_values.at(0));
-       if(values.size() > 1) secondValueChanged(m_values.at(1));
-       if(values.size() > 2) thirdValueChanged(m_values.at(2));
-       if(values.size() > 3) fourthValueChanged(m_values.at(3));
+       if(values.size() > 1) emit secondValueChanged(m_values.at(1));
+       if(values.size() > 2) emit thirdValueChanged(m_values.at(2));
+       if(values.size() > 3) emit fourthValueChanged(m_values.at(3));
     }
 }
 
