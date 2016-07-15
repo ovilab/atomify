@@ -18,27 +18,7 @@ import "qrc:/visualization"
 
 Item {
     id: mobileRoot
-    property AtomifySimulator simulator: AtomifySimulator {
-        id: mySimulator
-        simulationSpeed: 1
-        system.atoms.modifiers: [
-            colorModifier,
-            periodicImages
-        ]
-
-        PeriodicImages {
-            id: periodicImages
-            enabled: false
-            numberOfCopiesX: 1
-            numberOfCopiesY: 1
-            numberOfCopiesZ: 1
-        }
-
-        ColorModifier {
-            id: colorModifier
-            scale: 0.25
-        }
-    }
+    property alias simulator: mySimulator
     property Simulation simulation: null
     property string previousState: ""
 
@@ -64,7 +44,7 @@ Item {
             var controller = simulation.controllers[i]
             for(var j in controller.simulatorControls) {
                 var control = controller.simulatorControls[j]
-//                control.parent = simulator
+                //                control.parent = simulator
                 simulator.addSimulatorControl(control);
                 console.log("Added", control, "to simulator", simulator)
             }
@@ -77,13 +57,37 @@ Item {
         dashboard.revealed = false
     }
 
+    AtomifySimulator {
+        id: mySimulator
+
+        running: mobileRoot.state === "" || mobileRoot.state === "tools"
+        simulationSpeed: 1
+        system.atoms.modifiers: [
+            colorModifier,
+            periodicImages
+        ]
+
+        PeriodicImages {
+            id: periodicImages
+            enabled: false
+            numberOfCopiesX: 1
+            numberOfCopiesY: 1
+            numberOfCopiesZ: 1
+        }
+
+        ColorModifier {
+            id: colorModifier
+            scale: 0.25
+        }
+    }
+
     SimulationLoader {
         id: initialSimulationLoader
         // folder: "qrc:/simulations/diffusion/simple_diffusion"
         folder: "qrc:/simulations/water/singlewater"
         // folder: "qrc:/simulations/silica/silica"
         onLoaded: {
-             loadSimulation(item)
+            loadSimulation(item)
         }
     }
 
@@ -161,7 +165,7 @@ Item {
         }
         onBackClicked: {
             mobileRoot.state = mobileRoot.previousState
-//            dashboard.revealed = true
+            //            dashboard.revealed = true
         }
     }
 
