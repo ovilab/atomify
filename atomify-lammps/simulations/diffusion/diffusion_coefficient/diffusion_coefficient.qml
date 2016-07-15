@@ -13,7 +13,7 @@ Simulation {
 //                 "will diffuse into the blue solution with time."
     description: "The diffusion coefficient can be measured as the slope of the mean square displacement r^2(t) (MSD)."+
                  "The MSD is defined as the average distance atoms have to their original position a time t earlier."
-
+    initialCameraPosition: Qt.vector3d(0,0,20)
     controllers: [
         Thermometer {},
         Thermostat {}

@@ -9,6 +9,8 @@ Simulation {
     periodicImagesX: 1
     periodicImagesY: 1
     periodicImagesZ: 1
+    initialCameraPosition: Qt.vector3d(21.0025, -63.4384, 40.7256)
+    initialUpVector: Qt.vector3d(0.530134, 0.575353, 0.622839)
     controllers: [
         Thermometer {
             timeLabel: "t [fs]"

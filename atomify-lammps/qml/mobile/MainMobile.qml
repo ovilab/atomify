@@ -53,6 +53,9 @@ Item {
         simulator.scriptHandler.runFile(simulation.scriptSource)
         mobileRoot.simulation = simulation
 
+        console.log("Will load simulation")
+        visualizer.animateCameraTo(simulation.initialCameraPosition, simulation.initialUpVector, simulation.initialViewCenter, 1000)
+
         periodicImages.enabled = (simulation.periodicImagesX !== 1) || (simulation.periodicImagesY !== 1) || (simulation.periodicImagesZ !== 1)
         periodicImages.numberOfCopiesX = simulation.periodicImagesX
         periodicImages.numberOfCopiesY = simulation.periodicImagesY

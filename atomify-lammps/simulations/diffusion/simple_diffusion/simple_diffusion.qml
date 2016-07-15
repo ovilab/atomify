@@ -16,7 +16,7 @@ Simulation {
 
     longDescription: "Play with the thermostat and see how the diffusion process is slowed when " +
                      "lowering the temperature and sped up when raising the temperature."
-
+    initialCameraPosition: Qt.vector3d(0,0,20)
     controllers: [
         Thermometer {
             timeLabel: "t [fs]"
