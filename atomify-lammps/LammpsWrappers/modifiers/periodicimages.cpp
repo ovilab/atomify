@@ -1,6 +1,6 @@
 #include "periodicimages.h"
 #include "../system.h"
-
+#include <QDebug>
 PeriodicImages::PeriodicImages()
 {
 
@@ -28,7 +28,6 @@ void PeriodicImages::apply(AtomData &atomData)
     imageHigh[1] = numImages[1]/2;
     imageHigh[2] = numImages[2]/2;
 
-
     int nextIndex = atomData.size();
     int originalCount = atomData.size();
     atomData.resize(numberOfCopies*atomData.size());
@@ -46,6 +45,7 @@ void PeriodicImages::apply(AtomData &atomData)
                     atomData.positions[nextIndex] = atomData.positions[atomIndex];
                     atomData.originalIndex[nextIndex] = atomIndex;
                     atomData.deltaPositions[nextIndex] = deltaPosition;
+                    atomData.visible[nextIndex] = atomData.visible[atomIndex];
                     nextIndex++;
                 }
             }

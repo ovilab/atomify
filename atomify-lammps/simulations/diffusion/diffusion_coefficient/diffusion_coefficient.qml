@@ -15,8 +15,8 @@ Simulation {
                  "The MSD is defined as the average distance atoms have to their original position a time t earlier."
 
     controllers: [
-//        Thermometer {},
-//        Thermostat {}
+        Thermometer {},
+        Thermostat {}
     ]
 }
 

@@ -62,8 +62,8 @@ Rectangle {
                     {
                         name: "Porous media",
                         simulations: [
-                            "qrc:/simulations/silica/nanoporous",
                             "qrc:/simulations/silica/betacristobalite",
+                            "qrc:/simulations/silica/generate_nanoporous",
                             "qrc:/simulations/silica/zeolite_zsm5"
                         ]
                     },

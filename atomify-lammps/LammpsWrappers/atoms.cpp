@@ -77,7 +77,6 @@ void Atoms::synchronize(LAMMPS *lammps)
     // if(m_atomData.size() != numberOfAtoms) m_atomData.neighborList.reset(numberOfAtoms, 10);
     m_atomData.resize(numberOfAtoms);
 
-
     for(QVector3D &delta : m_atomData.deltaPositions) delta = QVector3D(); // Reset delta
     for(QVector3D &color : m_atomData.colors) color = QVector3D(0.9, 0.2, 0.1);
     for(float &radius : m_atomData.radii) radius = m_sphereRadius;
@@ -173,7 +172,7 @@ void Atoms::generateBondData(AtomData &atomData) {
         if(neighborList.neighbors.size() <= i) continue;
 
         for(const int &j : neighborList.neighbors[i]) {
-            if(j<ii) continue; // TODO: fix so we get this "newton's 3rd law" on bonds if neighbor lists are full
+            // if(j<ii) continue; // TODO: fix so we get this "newton's 3rd law" on bonds if neighbor lists are full
 
             QVector3D position_j = atomData.positions[j];
             position_j[0] += deltaPosition_i[0];
