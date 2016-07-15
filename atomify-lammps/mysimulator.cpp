@@ -61,6 +61,11 @@ LammpsError *AtomifySimulator::lammpsError() const
     return m_lammpsError;
 }
 
+bool AtomifySimulator::hasExecutedRunCommand() const
+{
+    return m_hasExecutedRunCommand;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
@@ -73,6 +78,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setSystem(atomifySimulator->system());
     m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
     m_atoms = atomifySimulator->system()->atoms();
+    atomifySimulator->setHasExecutedRunCommand(m_lammpsController.state.hasExecutedRunCommand);
 
     if(m_willPause) {
         m_lammpsController.setPaused(true);
@@ -87,6 +93,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
+        atomifySimulator->setHasExecutedRunCommand(false);
         emit atomifySimulator->lammpsDidReset();
     }
 
@@ -128,6 +135,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 //        }
 //    }
 //    m_lammpsController.simulatorControls = controls; // This object is visible from the Computes class
+
     if(m_lammpsController.state.canProcessSimulatorControls) {
         foreach(SimulatorControl *control, atomifySimulator->m_simulatorControls) {
             control->update(&m_lammpsController);
@@ -300,4 +308,13 @@ void AtomifySimulator::setLammpsError(LammpsError *lammpsError)
 
     m_lammpsError = lammpsError;
     emit lammpsErrorChanged(lammpsError);
+}
+
+void AtomifySimulator::setHasExecutedRunCommand(bool hasExecutedRunCommand)
+{
+    if (m_hasExecutedRunCommand == hasExecutedRunCommand)
+        return;
+
+    m_hasExecutedRunCommand = hasExecutedRunCommand;
+    emit hasExecutedRunCommandChanged(hasExecutedRunCommand);
 }

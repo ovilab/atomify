@@ -13,6 +13,10 @@ Simulation {
             timeLabel: "t [fs]"
             timeScale: 1000
             timeRange: 0.5
+        },
+        Thermostat {
+            minimumValue: 10
+            maximumValue: 1000
         }
     ]
 }
