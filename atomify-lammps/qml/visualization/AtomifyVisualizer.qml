@@ -14,6 +14,19 @@ Item {
     property Camera camera: camera
     property bool addPeriodicCopies: false
 
+    function animateCameraTo(position, upVector, viewCenter, duration) {
+        console.log("Starting animation ? ")
+        animateCamera.duration = 1000
+        animateCameraPosition.from = camera.position
+        animateCameraPosition.to = position
+        animateCameraUpVector.from = camera.upVector
+        animateCameraUpVector.to = upVector
+        animateCameraViewCenter.from = camera.viewCenter
+        animateCameraViewCenter.to = viewCenter
+        animateCamera.running = true
+        console.log("Yep, starting animation")
+    }
+
     Visualizer {
         id: visualizer
         property Spheres spheres: spheres
@@ -90,5 +103,36 @@ Item {
         id: camera
         nearPlane: 0.1
         farPlane: 100000
+        position: Qt.vector3d(0,0,5)
+//        onPositionChanged: {
+//            console.log("Pos: "+ position + "    up: "+ upVector + "    viewCenter: " + viewCenter)
+//        }
+    }
+
+    ParallelAnimation {
+        id: animateCamera
+        property int duration: 1000
+
+        Vector3dAnimation {
+            id: animateCameraPosition
+            target: camera
+            property: "position"
+            duration: animateCamera.duration
+            easing.type: Easing.InOutQuad
+        }
+        Vector3dAnimation {
+            id: animateCameraUpVector
+            target: camera
+            property: "upVector"
+            duration: animateCamera.duration
+            easing.type: Easing.InOutQuad
+        }
+        Vector3dAnimation {
+            id: animateCameraViewCenter
+            target: camera
+            property: "viewCenter"
+            duration: animateCamera.duration
+            easing.type: Easing.InOutQuad
+        }
     }
 }
