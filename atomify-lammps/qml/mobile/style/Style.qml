@@ -13,12 +13,29 @@ Item {
     property real baseSize: pixelDensity
     property real baseMargin: 4 * baseSize
     property real spacing: 2 * baseSize
+    property alias color: colorsObject
+    property alias border: borderObject
 
     property alias font: fontObject
     property int renderType: Text.QtRendering
     property QtObject chart: QtObject {
         property color backgroundColor: "transparent"
     }
+
+    QtObject {
+        id: colorsObject
+        property color background: "#f7fbff"
+        property color foreground: "#deebf7"
+        property alias border: borderObject.color
+    }
+
+
+    QtObject {
+        id: borderObject
+        property color color: "#9ecae1"
+        property color lightColor: "#d5e8f2"
+        property real width: 2.0
+}
 
     Item {
         id: fontObject
