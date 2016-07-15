@@ -56,6 +56,7 @@ Rectangle {
                         name: "Diffusion",
                         simulations: [
                             "qrc:/simulations/diffusion/simple_diffusion",
+                            "qrc:/simulations/diffusion/diffusion_coefficient"
                         ]
                     },
                     {

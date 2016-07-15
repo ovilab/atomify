@@ -6,5 +6,8 @@
         <file>test/test.in</file>
         <file>test/test.png</file>
         <file>test/test.qml</file>
+        <file>diffusion_coefficient/diffusion_coefficient.qml</file>
+        <file>diffusion_coefficient/diffusion_coefficient.png</file>
+        <file>diffusion_coefficient/diffusion_coefficient.in</file>
     </qresource>
 </RCC>

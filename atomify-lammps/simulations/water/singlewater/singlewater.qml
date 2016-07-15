@@ -3,5 +3,7 @@ import "qrc:/core"
 
 Simulation {
     name: "Water molecule"
+    description: "Watch a single water molecule jiggle around. We clearly see a preferred angle between the hydrogen atoms and the oxygen atom." +
+                 "See how the hydrogen atoms vibrate?"
 }
 
