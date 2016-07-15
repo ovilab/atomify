@@ -1,0 +1,20 @@
+# USC (Anders Hafreager, UiO)
+# using metal units: http://lammps.sandia.gov/doc/units.html
+units		metal
+atom_style	atomic
+
+read_data zeolite_zsm5.data
+replicate 3 3 3
+
+pair_style	vashishta
+pair_coeff	* * ../../potentialparameters/SiO2.vashishta Si O
+mass            1 28.08
+mass            2 15.9994
+
+velocity all create 300 376847 loop geom
+
+timestep	0.002
+
+#/atom 1 silicon
+#/atom 2 oxygen
+#/bond 1 2 2.6

@@ -1,14 +1,16 @@
- <RCC>
+<RCC>
     <qresource prefix="/simulations/silica">
-        <file>silica/silica.in</file>
-        <file>silica/betacristobalite.data</file>
-        <file>silica/silica.qml</file>
-        <file>silica/silica.png</file>
-    </qresource>
-    <qresource prefix="/simulations/silica">
+        <file>betacristobalite/betacristobalite.in</file>
+        <file>betacristobalite/betacristobalite.data</file>
+        <file>betacristobalite/betacristobalite.qml</file>
+        <file>betacristobalite/betacristobalite.png</file>
         <file>nanoporous/3_quenched.data</file>
         <file>nanoporous/nanoporous.in</file>
         <file>nanoporous/nanoporous.png</file>
         <file>nanoporous/nanoporous.qml</file>
+        <file>zeolite_zsm5/zeolite_zsm5.qml</file>
+        <file>zeolite_zsm5/zeolite_zsm5.in</file>
+        <file>zeolite_zsm5/zeolite_zsm5.png</file>
+        <file>zeolite_zsm5/zeolite_zsm5.data</file>
     </qresource>
 </RCC>
