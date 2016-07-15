@@ -129,7 +129,7 @@ Item {
 
     AboutButton {
         anchors {
-            top: revealDashboardButton.bottom
+            bottom: revealDashboardButton.top
             right: parent.right
         }
         revealed: mobileRoot.state == ""
