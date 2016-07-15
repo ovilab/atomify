@@ -1,0 +1,20 @@
+LAMMPS Description
+
+     3  atoms
+     0  bonds
+     0  angles
+     0  dihedrals
+     0  impropers
+
+     2  atom types
+
+  -10 10 xlo xhi
+  -10 10 ylo yhi
+  -10 10 zlo zhi
+
+Atoms # atomic
+
+1 1 0.0 0.0 0.0
+2 2 0.8164904 0.577359 0.0
+3 2 -0.8164904 0.577359 0.0
+

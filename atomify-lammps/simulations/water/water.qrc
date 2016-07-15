@@ -15,5 +15,9 @@
         <file>nanotube/system.in.settings</file>
         <file>nanotube/nanotube.png</file>
         <file>nanotube/nanotube.qml</file>
+        <file>vapor/vapor.in</file>
+        <file>vapor/vapor.data</file>
+        <file>vapor/vapor.png</file>
+        <file>vapor/vapor.qml</file>
     </qresource>
 </RCC>
