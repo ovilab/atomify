@@ -34,5 +34,15 @@
         <file>images/ic_trending_up_white_48dp.png</file>
         <file>images/ic_menu_white_48dp.png</file>
         <file>images/ic_info_white_48dp.png</file>
+        <file>images/tools/back.png</file>
+        <file>images/tools/create.png</file>
+        <file>images/tools/delete.png</file>
+        <file>images/tools/done.png</file>
+        <file>images/tools/mainmenu.png</file>
+        <file>images/tools/playback.png</file>
+        <file>images/tools/properties.png</file>
+        <file>images/tools/mainmenu.svg</file>
+        <file>images/tools/properties.svg</file>
+        <file>images/tools/tools.svg</file>
     </qresource>
 </RCC>

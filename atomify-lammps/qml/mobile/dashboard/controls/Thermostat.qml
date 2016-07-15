@@ -3,13 +3,19 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import Atomify 1.0
 
-import "qrc:/mobile/style"
+import "qrc:/mobile/controls"
 import "qrc:/mobile/dashboard"
+import "qrc:/mobile/style"
 
 DashboardControl {
-    id: thermostatRoot
+    id: root
 
     property real timeRange: 3
+    property string unit: "K"
+    property real unitScale: 1.0
+    property int precision: 1
+    property real minimumValue: 0.0
+    property real maximumValue: 10.0
 
     // TODO add properties:
     // min and max temperature
@@ -52,7 +58,7 @@ DashboardControl {
 
                     value: temperatureCompute.value
                     time: temperatureCompute.time
-                    timeRange: thermostatRoot.timeRange
+                    timeRange: root.timeRange
                 }
             }
         }
@@ -87,36 +93,17 @@ DashboardControl {
             color: Style.font.color
             font.pixelSize: Style.font.size
         }
-        Item {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            height: Style.touchableSize
-            Slider {
-                id: nvtSlider
-                anchors {
-                    left: parent.left
-                    right: targetText.left
-                    rightMargin: Style.spacing
-                }
+        BoundSlider {
+            id: nvtSlider
+            minimumValue: root.minimumValue
+            maximumValue: root.maximumValue
+            precision: root.precision
+            unitScale: root.unitScale
+            unit: root.unit
 
-                minimumValue: 0.1
-                maximumValue: 6
-                value: nvt.targetTemperature
-                onValueChanged: {
-                    nvt.targetTemperature = value
-                }
-            }
-            Text {
-                id: targetText
-                anchors {
-                    right: parent.right
-                }
-                text: nvtSlider.value.toFixed(2)
-                color: Style.font.color
-                font.pixelSize: Style.font.size
-            }
+            target: nvt
+            property: "targetTemperature"
+            text: "Target temperature"
         }
     }
 

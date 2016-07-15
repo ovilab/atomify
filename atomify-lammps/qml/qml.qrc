@@ -44,5 +44,6 @@
         <file>mobile/dashboard/controls/AutoZoomMiniChart.qml</file>
         <file>mobile/hud/AboutButton.qml</file>
         <file>mobile/dashboard/InformationPanel.qml</file>
+        <file>mobile/controls/BoundSlider.qml</file>
     </qresource>
 </RCC>

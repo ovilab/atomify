@@ -24,7 +24,7 @@ QtObject {
     property LineSeries lineSeries
     
     onValueChanged: {
-        if(isNaN(value)) {
+        if(isNaN(value) || !isFinite(value)) {
             return;
         }
         var lowPassFactor = 0.99 // TODO: Make this into a property
