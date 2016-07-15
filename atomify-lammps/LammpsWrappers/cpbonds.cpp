@@ -2,16 +2,7 @@
 
 CPBonds::CPBonds()
 {
-    int numTypes = 32;
-    m_bondLengths.resize(numTypes);
-    for(QVector<float> &vec : m_bondLengths) {
-        vec.resize(numTypes);
-        for(float &length : vec) {
-            length = 0.0;
-        }
-    }
 
-    m_enabled = true;
 }
 
 bool CPBonds::enabled() const
@@ -33,6 +24,20 @@ float CPBonds::maxBondLength()
         }
     }
     return maxBondLength;
+}
+
+void CPBonds::reset()
+{
+    int numTypes = 64;
+    m_bondLengths.resize(numTypes);
+    for(QVector<float> &vec : m_bondLengths) {
+        vec.resize(numTypes);
+        for(float &length : vec) {
+            length = 0.0;
+        }
+    }
+
+    m_enabled = true;
 }
 
 void CPBonds::setEnabled(bool enabled)

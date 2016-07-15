@@ -38,27 +38,28 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_atomStyleTypes.insert("potassium", new AtomStyle(2.75, "#8F40D4"));
     m_atomStyleTypes.insert("calcium", new AtomStyle(2.31, "#3DFF00"));
 
-
-    m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
-    m_atomStyles.push_back(m_atomStyleTypes["helium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["beryllium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["boron"]);
-    m_atomStyles.push_back(m_atomStyleTypes["carbon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["nitrogen"]);
-    m_atomStyles.push_back(m_atomStyleTypes["oxygen"]);
-    m_atomStyles.push_back(m_atomStyleTypes["fluorine"]);
-    m_atomStyles.push_back(m_atomStyleTypes["neon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["sodium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["magnesium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["aluminium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["silicon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["phosphorus"]);
-    m_atomStyles.push_back(m_atomStyleTypes["sulfur"]);
-    m_atomStyles.push_back(m_atomStyleTypes["chlorine"]);
-    m_atomStyles.push_back(m_atomStyleTypes["argon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["potassium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["calcium"]);
+    for(int i=0; i<50; i++) {
+        m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["helium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["beryllium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["boron"]);
+        m_atomStyles.push_back(m_atomStyleTypes["carbon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["nitrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["oxygen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["fluorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["neon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sodium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["magnesium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["aluminium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["silicon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["phosphorus"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sulfur"]);
+        m_atomStyles.push_back(m_atomStyleTypes["chlorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["argon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["potassium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["calcium"]);
+    }
 
 }
 
@@ -166,7 +167,7 @@ void Atoms::generateBondData(AtomData &atomData) {
         const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
         const int atomType_i = atomData.types[ii];
 
-        const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
+        const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
         // const float sphereRadius_i = atomData.radii[ii];
 
         if(neighborList.neighbors.size() <= i) continue;
@@ -247,7 +248,33 @@ float Atoms::bondRadius() const
 
 void Atoms::reset()
 {
+    m_spheresData.clear();
+    m_bondsData.clear();
     m_atomData.reset();
+    m_bonds->reset();
+    m_atomStyles.clear();
+    for(int i=0; i<50; i++) {
+        m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["helium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["beryllium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["boron"]);
+        m_atomStyles.push_back(m_atomStyleTypes["carbon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["nitrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["oxygen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["fluorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["neon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sodium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["magnesium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["aluminium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["silicon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["phosphorus"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sulfur"]);
+        m_atomStyles.push_back(m_atomStyleTypes["chlorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["argon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["potassium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["calcium"]);
+    }
 }
 
 QVariantList Atoms::modifiers() const

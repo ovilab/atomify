@@ -14,6 +14,7 @@ public:
     bool enabled() const;
     QVector<QVector<float>> &bondLengths();
     float maxBondLength();
+    void reset();
 public slots:
     void setEnabled(bool enabled);
 
