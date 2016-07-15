@@ -7,6 +7,9 @@ Simulation {
     description: "In this simulation we show how to generate a nanoporous silica structure (amorphous glass)."
     longDescription: "We first heat the system to 4500 Kelvin before we expand the system to a lower density."+
                      "We can the quickly lower the temperature (quench the system) to reach a nice nanoporous glass structure."
+    periodicImagesX: 2
+    periodicImagesY: 2
+    periodicImagesZ: 2
     controllers: [
 
     ]

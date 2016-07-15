@@ -13,6 +13,10 @@ QtObject {
     property real pan: -10
     property real tilt: -20
     property real zoom: -20
+    property int periodicImagesX: 1
+    property int periodicImagesY: 1
+    property int periodicImagesZ: 1
+
     property string identifier: {
         var names = folder.split("/")
         if(folder === "") {

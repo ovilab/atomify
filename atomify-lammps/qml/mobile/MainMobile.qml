@@ -18,7 +18,6 @@ import "qrc:/visualization"
 
 Item {
     id: mobileRoot
-
     property AtomifySimulator simulator: AtomifySimulator {
         id: mySimulator
         simulationSpeed: 1
@@ -53,6 +52,11 @@ Item {
         simulator.scriptHandler.reset()
         simulator.scriptHandler.runFile(simulation.scriptSource)
         mobileRoot.simulation = simulation
+
+        periodicImages.enabled = (simulation.periodicImagesX !== 1) || (simulation.periodicImagesY !== 1) || (simulation.periodicImagesZ !== 1)
+        periodicImages.numberOfCopiesX = simulation.periodicImagesX
+        periodicImages.numberOfCopiesY = simulation.periodicImagesY
+        periodicImages.numberOfCopiesZ = simulation.periodicImagesZ
 
         simulator.clearSimulatorControls()
 

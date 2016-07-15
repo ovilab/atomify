@@ -6,7 +6,7 @@ boundary	p p p
 atom_style	atomic
 
 read_data	vapor.data
-replicate 20 20 20
+replicate 10 10 10
 
 pair_style 	vashishta
 pair_coeff	* *  ../../potentialparameters/H2O.vashishta O H
