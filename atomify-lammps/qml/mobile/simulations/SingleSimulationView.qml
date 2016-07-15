@@ -1,10 +1,12 @@
 import QtQuick 2.5
+import QtGraphicalEffects 1.0
 
 import "qrc:/core"
 import "qrc:/mobile/style"
 
+
 Rectangle {
-    id: simulationRoot
+    id: root
     property Simulation simulation: null
     signal playClicked(var simulation)
     signal backClicked
@@ -30,30 +32,49 @@ Rectangle {
                     left: parent.left
                     right: parent.right
                 }
-                height: simulationRoot.height * 0.3
+                height: root.width > root.height ? root.height * 0.6 : root.height * 0.4
 
                 source: simulation ? simulation.screenshotSource : ""
                 smooth: true
                 antialiasing: true
                 fillMode: Image.PreserveAspectCrop
 
-                Image {
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: playClicked(simulation)
+                }
+
+                Rectangle {
                     anchors {
                         left: parent.left
+                        right: parent.right
                         top: parent.top
-                        margins: Style.baseMargin
                     }
-
-                    width: Style.touchableSize
-                    height: width
-
-                    source: "qrc:/images/back.png"
-                    smooth: true
-                    antialiasing: true
+                    height: Style.touchableSize + Style.baseMargin
+                    color: "#aa000000"
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: backClicked()
+                    }
+
+                    Image {
+                        anchors {
+                            left: parent.left
+                            top: parent.top
+                            bottom: parent.bottom
+                            margins: Style.baseMargin / 2
+                        }
+
+                        width: height
+
+                        source: "qrc:/images/back.png"
+                        smooth: true
+                        antialiasing: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: backClicked()
+                        }
                     }
                 }
 
@@ -65,10 +86,28 @@ Rectangle {
                     source: "qrc:/images/play.png"
                     smooth: true
                     antialiasing: true
+                }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: playClicked(simulation)
+                LinearGradient {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+
+                    height: Style.touchableSize * 1.5
+                    start: Qt.point(0, 0)
+                    end: Qt.point(0, height)
+
+                    gradient: Gradient {
+                        GradientStop {
+                            position: 0
+                            color: "#00000000"
+                        }
+                        GradientStop {
+                            position: 1
+                            color: "#333333"
+                        }
                     }
                 }
             }
@@ -96,6 +135,13 @@ Rectangle {
                     font.pixelSize: Style.font.size
                     text: simulation ? simulation.description : "N/A"
                 }
+            }
+            Item {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                height: Style.baseMargin * 4
             }
         }
     }

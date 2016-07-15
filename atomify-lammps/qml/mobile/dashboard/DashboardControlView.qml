@@ -10,7 +10,7 @@ import "qrc:/mobile/style"
 import "qrc:/visualization"
 
 Rectangle {
-    id: viewRoot
+    id: root
 
     signal backClicked
 
@@ -22,132 +22,116 @@ Rectangle {
     width: parent.width
     height: parent.height
     color: "#222"
+    clip: true
 
     function gotoIndex(index) {
         flickable.contentX = flickable.width * index
     }
 
-    Image {
-        id: backButton
+    Flickable {
         anchors {
-            left: parent.left
-            top: parent.top
-            margins: Style.baseMargin
+            fill: parent
         }
+        contentWidth: width
+        contentHeight: dummy.height
 
-        width: Style.touchableSize
-        height: width
-
-        source: "qrc:/images/back.png"
-        smooth: true
-        antialiasing: true
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: backClicked()
-        }
-    }
-
-    Text {
-        anchors {
-            top: backButton.top
-            horizontalCenter: parent.horizontalCenter
-        }
-        text: "Dashboard"
-        font.pixelSize: Style.font.heading.size
-        color: Style.font.heading.color
-    }
-
-    Row {
-        id: controlList
-        anchors {
-            top: backButton.bottom
-            left: parent.left
-            right: parent.right
-            margins: Style.baseMargin
-        }
-        Repeater {
-            model: simulation ? simulation.controllers.length : undefined
-            Rectangle {
-                width: 120
-                height: 48
-                color: currentIndex === index ? "white" : "transparent"
-                border {
-                    color: "white"
-                    width: 2.0
-                }
-                Text {
-                    text: simulation.controllers[index].name
-                    color: currentIndex === index ? "black" : Style.font.color
-                    anchors.centerIn: parent
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: currentIndex = index
-                }
-            }
-        }
-    }
-
-    Repeater {
-        model: simulation ? simulation.controllers.length : undefined
-        Loader {
+        Item {
+            id: dummy
             anchors {
+                top: parent.top
                 left: parent.left
                 right: parent.right
-                top: controlList.bottom
-                bottom: parent.bottom
+                bottom: controllerColumn.bottom
+            }
+        }
+
+        Image {
+            id: backButton
+            anchors {
+                left: parent.left
+                top: parent.top
                 margins: Style.baseMargin
             }
-            visible: currentIndex === index
 
-            sourceComponent: simulation.controllers[index].fullControl
+            width: Style.touchableSize
+            height: width
+
+            source: "qrc:/images/back.png"
+            smooth: true
+            antialiasing: true
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: backClicked()
+            }
+        }
+
+        Text {
+            anchors {
+                top: backButton.top
+                horizontalCenter: parent.horizontalCenter
+            }
+            text: "Dashboard"
+            font.pixelSize: Style.font.heading.size
+            color: Style.font.heading.color
+        }
+
+        Grid {
+            id: controlList
+            anchors {
+                top: backButton.bottom
+                left: parent.left
+                margins: Style.baseMargin
+            }
+            rows: root.width > root.height ? 0 : 1
+            columns: root.width > root.height ? 1 : 0
+            Repeater {
+                model: simulation ? simulation.controllers.length : undefined
+                Rectangle {
+                    width: Style.touchableSize * 3.5
+                    height: Style.touchableSize * 1.5
+                    color: currentIndex === index ? "white" : "transparent"
+                    border {
+                        color: "white"
+                        width: 2.0
+                    }
+                    Text {
+                        text: simulation.controllers[index].name
+                        color: currentIndex === index ? "black" : Style.font.color
+                        anchors.centerIn: parent
+                        font.pixelSize: Style.font.size
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: currentIndex = index
+                    }
+                }
+            }
+        }
+
+        Column {
+            id: controllerColumn
+            anchors {
+                left: root.width > root.height ? controlList.right : parent.left
+                right: parent.right
+                top: root.width > root.height ? backButton.bottom : controlList.bottom
+                margins: Style.baseMargin
+            }
+
+            Repeater {
+                id: repeater
+                model: simulation ? simulation.controllers.length : undefined
+                Loader {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    visible: currentIndex === index
+
+                    sourceComponent: simulation.controllers[index].fullControl
+                }
+            }
         }
     }
-
-//    Flickable {
-//        id: flickable
-//        anchors {
-//            top: controlList.bottom
-//            left: parent.left
-//            right: parent.right
-//            bottom: parent.bottom
-//        }
-
-//        contentHeight: controlContainer.height
-//        contentWidth: controlContainer.width
-//        flickableDirection: Flickable.HorizontalFlick
-
-//        RowLayout {
-//            id: controlContainer
-
-//            property real itemWidth: flickable.width
-//            property real itemHeight: flickable.height
-
-//            width: simulation ? simulation.controllers.length * itemWidth : 0
-//            height: itemHeight
-
-//            Repeater {
-//                id: repeater
-//                model: simulation ? simulation.controllers.length : undefined
-//                Loader {
-//                    id: miniControlLoader
-//                    Layout.fillHeight: true
-//                    Layout.preferredWidth: controlContainer.itemWidth
-
-//                    sourceComponent: simulation ? simulation.controllers[index].fullControl : undefined
-
-//                    onLoaded: {
-//                        console.log("Loaded fullControl")
-//                        if(!item || !visualizer) {
-//                            return
-//                        }
-
-//                        item.visualizer = visualizer
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
 
