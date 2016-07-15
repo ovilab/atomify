@@ -120,6 +120,10 @@ Rectangle {
                 spacing: Style.baseMargin
 
                 Text {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                     font.pixelSize: Style.font.heading.size
                     color: Style.font.heading.color
                     text: simulation ? simulation.name : "N/A"
@@ -133,6 +137,7 @@ Rectangle {
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     color: Style.font.color
                     font.pixelSize: Style.font.size
+                    textFormat: Text.RichText
                     text: simulation ? simulation.description : "N/A"
                 }
             }

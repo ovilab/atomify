@@ -204,7 +204,6 @@ void MyWorker::work()
     if(!m_running) {
         return;
     }
-        qDebug() << "Work work work work work";
     m_lammpsController.tick();
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
