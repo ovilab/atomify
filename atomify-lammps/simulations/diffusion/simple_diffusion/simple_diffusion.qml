@@ -8,11 +8,22 @@ import "qrc:/mobile/dashboard/controls"
 Simulation {
     name: "Diffusion"
 
-//    description: "In gases and solids, there is net movement from regions of high concentration " +
-//                 "to regions of low concentration. In this simulation, a group of red particles " +
-//                 "will diffuse into the blue solution with time."
-    description: "Watch how a liquid mixes due to diffusion. The white ones in the middle will move randomly and mix with with the red ones." +
-                 "After some time, you'll see that it is completely mixed. Think about this the next time you mix a drink."
+    description: "
+<p>Watch how a liquid mixes due to diffusion.
+The white particles in the middle will move randomly and mix with the red particles.
+After some time, you'll see that it is completely mixed.</p>
+
+<p>Think about this the next time you mix a drink.</p>
+
+<p><b>A versatile simulation</b></p>
+
+<p>The forces between the particles in this simulation are
+modeled with a Lennard-Jones potential.
+This is typically a good model for noble gases and other
+neutral atoms and molecules.
+This is in other words a good simulations for diffusion with
+many different types of particles.</p>
+"
 
     longDescription: "Play with the thermostat and see how the diffusion process is slowed when " +
                      "lowering the temperature and sped up when raising the temperature."

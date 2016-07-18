@@ -1,4 +1,5 @@
-import QtQuick 2.0
+import QtQuick 2.5
+import QtQuick.Controls 2.0
 
 import "qrc:/mobile/style"
 import "../main-menu"
@@ -8,6 +9,7 @@ Rectangle {
 
     signal simulationClicked(var simulation)
     signal backClicked
+    property alias model: simulationListRepeater.model
     clip: true
     color: "#222"
 
@@ -42,38 +44,7 @@ Rectangle {
                 }
             }
             Repeater {
-                model: [
-                    {
-                        name: "Water",
-                        simulations: [
-                            "qrc:/simulations/water/singlewater",
-                            //"qrc:/simulations/water/multiplewater",
-                            "qrc:/simulations/water/vapor",
-                            "qrc:/simulations/water/nanotube"
-                        ]
-                    },
-                    {
-                        name: "Diffusion",
-                        simulations: [
-                            "qrc:/simulations/diffusion/simple_diffusion",
-                            "qrc:/simulations/diffusion/diffusion_coefficient"
-                        ]
-                    },
-                    {
-                        name: "Porous media",
-                        simulations: [
-                            "qrc:/simulations/silica/betacristobalite",
-                            "qrc:/simulations/silica/generate_nanoporous",
-                            "qrc:/simulations/silica/zeolite_zsm5"
-                        ]
-                    },
-                    {
-                        name: "Other",
-                        simulations: [
-                            "qrc:/simulations/other/indent",
-                        ]
-                    }
-                ]
+                id: simulationListRepeater
                 Column {
                     spacing: Style.baseMargin
                     Text {

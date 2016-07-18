@@ -45,5 +45,6 @@
         <file>mobile/hud/AboutButton.qml</file>
         <file>mobile/dashboard/InformationPanel.qml</file>
         <file>mobile/controls/BoundSlider.qml</file>
+        <file>mobile/SearchView.qml</file>
     </qresource>
 </RCC>

@@ -24,8 +24,8 @@ Item {
 
     QtObject {
         id: colorsObject
-        property color background: "#f7fbff"
-        property color foreground: "#deebf7"
+        property color background: "#444444"
+        property color foreground: "#888888"
         property alias border: borderObject.color
     }
 

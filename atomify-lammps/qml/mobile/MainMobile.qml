@@ -21,6 +21,37 @@ Item {
     property alias simulator: mySimulator
     property Simulation simulation: null
     property string previousState: ""
+    property var simulationsModel: [
+        {
+            name: "Water",
+            simulations: [
+                "qrc:/simulations/water/singlewater",
+                "qrc:/simulations/water/vapor",
+                "qrc:/simulations/water/nanotube"
+            ]
+        },
+        {
+            name: "Diffusion",
+            simulations: [
+                "qrc:/simulations/diffusion/simple_diffusion",
+                "qrc:/simulations/diffusion/diffusion_coefficient"
+            ]
+        },
+        {
+            name: "Porous media",
+            simulations: [
+                "qrc:/simulations/silica/betacristobalite",
+                "qrc:/simulations/silica/generate_nanoporous",
+                "qrc:/simulations/silica/zeolite_zsm5"
+            ]
+        },
+        {
+            name: "Other",
+            simulations: [
+                "qrc:/simulations/other/indent",
+            ]
+        }
+    ]
 
     function loadSimulation(simulation) {
         if(!simulator.scriptHandler) {
@@ -86,9 +117,7 @@ Item {
 
     SimulationLoader {
         id: initialSimulationLoader
-        // folder: "qrc:/simulations/diffusion/simple_diffusion"
         folder: "qrc:/simulations/water/singlewater"
-        // folder: "qrc:/simulations/silica/silica"
         onLoaded: {
             loadSimulation(item)
         }
@@ -174,6 +203,7 @@ Item {
 
     SimulationsView {
         id: simulationsView
+        model: simulationsModel
         width: parent.width
         height: parent.height
         anchors {
@@ -220,6 +250,29 @@ Item {
             mainMenu.revealed = false
             mobileRoot.previousState = mobileRoot.state
             mobileRoot.state = "singleSimulation"
+        }
+    }
+
+    SearchView {
+        id: searchView
+        visible: false
+        model: simulationsModel
+        onLoadSimulation: {
+            mobileRoot.loadSimulation(simulation)
+        }
+    }
+
+    Shortcut {
+        sequence: "Ctrl+K"
+        onActivated: {
+            searchView.visible = !searchView.visible
+        }
+    }
+
+    Shortcut {
+        sequence: Qt.Key_Escape
+        onActivated: {
+            searchView.visible = false
         }
     }
 

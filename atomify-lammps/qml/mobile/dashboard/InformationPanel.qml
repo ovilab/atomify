@@ -62,6 +62,7 @@ Item {
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     font.pixelSize: Style.font.size
                     color: Style.font.color
+                    textFormat: Text.RichText
                     text: simulation ? simulation.description : ""
                 }
             }
