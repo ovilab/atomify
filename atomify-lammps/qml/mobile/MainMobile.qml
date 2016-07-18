@@ -54,6 +54,12 @@ Item {
     ]
 
     function loadSimulation(simulation) {
+        // TODO DANGER this simulation is short-lived and should not be used further
+        // TODO copy the simulation folder name and load this onto a loader in this file so that it is not deleted from temporarity
+        // TODO create global simulation objects and reuse these in SimulationsView, SearchView, etc.
+        // TODO learn never to point to temporary objects again
+
+        console.log("Load simulation called")
         if(!simulator.scriptHandler) {
             console.warn("WARNING: Cannot laod simulation because simulator has no scriptHandler.")
             return
@@ -85,6 +91,7 @@ Item {
         }
 
         mobileRoot.state = ""
+        console.log("Load simulation done")
     }
 
     onStateChanged: {
