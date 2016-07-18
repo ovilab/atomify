@@ -101,7 +101,7 @@ private:
     bool m_paused = false;
     bool m_willReset = false;
     QList<SimulatorControl*> m_simulatorControls;
-    bool m_running;
+    bool m_running = false;
 };
 
 #endif // MYSIMULATOR_H

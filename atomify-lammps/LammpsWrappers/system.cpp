@@ -36,7 +36,7 @@ void System::synchronize(LAMMPS *lammps)
             m_origin[i] = domain->boxlo[i];
             originDidChange  = true;
         }
-        if(m_size[i] != domain->prd[i]) {
+        if(m_size[i] != domain->prd[i]) { // TODO LAMMPS may not have set these yet, causes memcheck to complain
             m_size[i] = domain->prd[i];
             sizeDidChange = true;
         }

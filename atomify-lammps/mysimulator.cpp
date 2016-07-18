@@ -47,7 +47,7 @@ void AtomifySimulator::clearSimulatorControls()
 
 void AtomifySimulator::addSimulatorControl(SimulatorControl *simulatorControl)
 {
-    qDebug() << "Add simulator control";
+    qDebug() << "Add simulator control with command" << simulatorControl->command();
     m_simulatorControls.append(simulatorControl);
 }
 
