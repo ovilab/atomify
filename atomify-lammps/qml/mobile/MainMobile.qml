@@ -19,7 +19,7 @@ import "qrc:/visualization"
 Item {
     id: mobileRoot
     property alias simulator: mySimulator
-    property Simulation simulation: null
+    property Simulation simulation: simulationLoader.item
     property string previousState: ""
     property var simulationsModel: [
         {
@@ -44,54 +44,11 @@ Item {
                 "qrc:/simulations/silica/generate_nanoporous",
                 "qrc:/simulations/silica/zeolite_zsm5"
             ]
-        },
-        {
-            name: "Other",
-            simulations: [
-                "qrc:/simulations/other/indent",
-            ]
         }
     ]
 
     function loadSimulation(simulation) {
-        // TODO DANGER this simulation is short-lived and should not be used further
-        // TODO copy the simulation folder name and load this onto a loader in this file so that it is not deleted from temporarity
-        // TODO create global simulation objects and reuse these in SimulationsView, SearchView, etc.
-        // TODO learn never to point to temporary objects again
-
-        console.log("Load simulation called")
-        if(!simulator.scriptHandler) {
-            console.warn("WARNING: Cannot laod simulation because simulator has no scriptHandler.")
-            return
-        }
-
-        simulator.willReset = true
-        simulator.scriptHandler.reset()
-        simulator.scriptHandler.runFile(simulation.scriptSource)
-        mobileRoot.simulation = simulation
-
-        console.log("Will load simulation")
-        visualizer.animateCameraTo(simulation.initialCameraPosition, simulation.initialUpVector, simulation.initialViewCenter, 1000)
-
-        periodicImages.enabled = (simulation.periodicImagesX !== 1) || (simulation.periodicImagesY !== 1) || (simulation.periodicImagesZ !== 1)
-        periodicImages.numberOfCopiesX = simulation.periodicImagesX
-        periodicImages.numberOfCopiesY = simulation.periodicImagesY
-        periodicImages.numberOfCopiesZ = simulation.periodicImagesZ
-
-        simulator.clearSimulatorControls()
-
-        for(var i in simulation.controllers) {
-            var controller = simulation.controllers[i]
-            for(var j in controller.simulatorControls) {
-                var control = controller.simulatorControls[j]
-                //                control.parent = simulator
-                simulator.addSimulatorControl(control);
-                console.log("Added", control, "to simulator", simulator)
-            }
-        }
-
-        mobileRoot.state = ""
-        console.log("Load simulation done")
+        simulationLoader.folder = simulation.folder
     }
 
     onStateChanged: {
@@ -123,10 +80,41 @@ Item {
     }
 
     SimulationLoader {
-        id: initialSimulationLoader
+        id: simulationLoader
         folder: "qrc:/simulations/water/singlewater"
         onLoaded: {
-            loadSimulation(item)
+            var simulation = item
+            console.log("SimulationLoader onLoaded called")
+            if(!simulator.scriptHandler) {
+                console.warn("WARNING: Cannot laod simulation because simulator has no scriptHandler.")
+                return
+            }
+
+            simulator.willReset = true
+            simulator.scriptHandler.reset()
+            simulator.scriptHandler.runFile(simulation.scriptSource)
+
+            visualizer.animateCameraTo(simulation.initialCameraPosition, simulation.initialUpVector, simulation.initialViewCenter, 1000)
+
+            periodicImages.enabled = (simulation.periodicImagesX !== 1) || (simulation.periodicImagesY !== 1) || (simulation.periodicImagesZ !== 1)
+            periodicImages.numberOfCopiesX = simulation.periodicImagesX
+            periodicImages.numberOfCopiesY = simulation.periodicImagesY
+            periodicImages.numberOfCopiesZ = simulation.periodicImagesZ
+
+            simulator.clearSimulatorControls()
+
+            for(var i in simulation.controllers) {
+                var controller = simulation.controllers[i]
+                for(var j in controller.simulatorControls) {
+                    var control = controller.simulatorControls[j]
+                    //                control.parent = simulator
+                    simulator.addSimulatorControl(control);
+                    console.log("Added", control, "to simulator", simulator)
+                }
+            }
+
+            mobileRoot.state = ""
+            console.log("SimulationLoader onLoaded done")
         }
     }
 

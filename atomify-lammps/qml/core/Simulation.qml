@@ -34,13 +34,4 @@ QtObject {
     // TODO add properties:
     // camera position and range
     // light settings
-
-    onDescriptionChanged: {
-        var maximumCharacters = 210
-        if(description.length > maximumCharacters) {
-            console.warn("WARNING: Number of characters in description for " +
-                         name + " is longer than the recommended maximum of " +
-                         maximumCharacters + ".")
-        }
-    }
 }
