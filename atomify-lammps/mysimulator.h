@@ -50,6 +50,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
     Q_PROPERTY(LammpsError* lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
+    Q_PROPERTY(bool hasExecutedRunCommand READ hasExecutedRunCommand WRITE setHasExecutedRunCommand NOTIFY hasExecutedRunCommandChanged)
     Q_PROPERTY(bool running READ running WRITE setRunning NOTIFY runningChanged)
 
 public:
@@ -65,6 +66,7 @@ public:
     Q_INVOKABLE void addSimulatorControl(SimulatorControl *simulatorControl);
     class System* system() const;
     LammpsError* lammpsError() const;
+    bool hasExecutedRunCommand() const;
     bool running() const;
 
 public slots:
@@ -74,6 +76,7 @@ public slots:
     void setWillReset(bool willReset);
     void setSystem(class System* system);
     void setLammpsError(LammpsError* lammpsError);
+    void setHasExecutedRunCommand(bool hasExecutedRunCommand);
     void setRunning(bool running);
 
 signals:
@@ -86,6 +89,7 @@ signals:
     void cameraToSystemCenterDistanceChanged(float cameraToSystemCenterDistance);
     void systemChanged(class System* system);
     void lammpsErrorChanged(LammpsError* lammpsError);
+    void hasExecutedRunCommandChanged(bool hasExecutedRunCommand);
     void runningChanged(bool running);
 
 protected:
@@ -102,6 +106,7 @@ private:
     bool m_willReset = false;
     QList<SimulatorControl*> m_simulatorControls;
     bool m_running = false;
+    bool m_hasExecutedRunCommand = false;
 };
 
 #endif // MYSIMULATOR_H

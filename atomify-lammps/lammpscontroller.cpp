@@ -280,7 +280,7 @@ void LAMMPSController::tick()
     if(state.runCommandActive > 0) {
         executeActiveRunCommand();
         state.canProcessSimulatorControls = true;
-        state.canProcessSimulatorControls = true;
+        state.hasExecutedRunCommand = true;
         state.dataDirty = true;
         return;
     }
@@ -315,6 +315,7 @@ void LAMMPSController::tick()
 
 //        processSimulatorControls();
         state.canProcessSimulatorControls = true;
+        state.hasExecutedRunCommand = true;
         state.numberOfTimesteps += state.simulationSpeed;
         state.timeSpentInLammps += t.elapsed();
     }

@@ -31,8 +31,8 @@ of water molecules form.
             timeRange: 0.5
         },
         Thermostat {
-            minimumValue: 280
-            maximumValue: 600
+            minimumValue: 10
+            maximumValue: 1000
         }
     ]
 }

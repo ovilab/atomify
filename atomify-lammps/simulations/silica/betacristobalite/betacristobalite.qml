@@ -31,7 +31,10 @@ that are characteristic for this structure.
             timeScale: 1000
             timeRange: 0.5
         },
-        Thermostat {}
+        Thermostat {
+            minimumValue: 10
+            maximumValue: 2500
+        }
     ]
 }
 
