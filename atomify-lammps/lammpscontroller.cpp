@@ -238,6 +238,7 @@ void LAMMPSController::executeActiveRunCommand() {
     state.timeSpentInLammps += t.elapsed();
     state.numberOfTimesteps += simulationSpeed;
     currentTimestep = m_lammps->update->ntimestep;
+    state.runCommandCurrent = currentTimestep;
     state.runCommandActive = currentTimestep < state.runCommandEnd;
 }
 

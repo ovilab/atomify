@@ -108,6 +108,11 @@ QString ScriptHandler::lastSingleCommandString()
     else return QString("");
 }
 
+QString ScriptHandler::label() const
+{
+    return m_label;
+}
+
 void ScriptHandler::setAtoms(Atoms *atoms)
 {
     m_atoms = atoms;
@@ -118,6 +123,8 @@ using namespace std;
 void ScriptHandler::runFile(QString filename)
 {
     qDebug() << "runFile(" << filename << ")";
+    m_label = "";
+    emit labelChanged(m_label);
     QString tmpFileName = filename;
     bool isQRC = tmpFileName.contains(QRegularExpression("^qrc\:\/"));
     if(isQRC) {
@@ -193,6 +200,16 @@ void ScriptHandler::parseGUICommand(QString command)
             }
         });
         return;
+    }
+
+    {
+        QRegularExpression regex(QString("^(?:label)[\\s\\t]+(.*)$"));
+        QRegularExpressionMatch match = regex.match(command);
+        qDebug() << match.hasMatch() << command;
+        if(match.hasMatch()) {
+            m_label = match.captured(1);
+            emit labelChanged(m_label);
+        }
     }
 
     if(m_lammpsState) {

@@ -97,17 +97,6 @@ void ScriptParser::atomType(QString command, std::function<void(QString atomType
     action(atomTypeName, atomType);
 }
 
-bool ScriptParser::isGUICommand(QString command) {
-    command.remove(0,2);
-    if(isAtomType(command)) return true;
-    if(isBond(command)) return true;
-    if(isAtomColorAndSize(command)) return true;
-    if(isStaticSystem(command)) return true;
-    if(isDisableBonds(command)) return true;
-
-    return false;
-}
-
 bool ScriptParser::isEditorCommand(QString command)
 {
     command = command.trimmed();

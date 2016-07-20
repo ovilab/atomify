@@ -25,7 +25,6 @@ public:
     bool isInclude(QString command);
     QString includePath(QString command);
     bool isDisableAllEnsembleFixes(QString command);
-    bool isGUICommand(QString command);
     bool isSimulationSpeed(QString command);
     int simulationSpeed(QString command);
 };

@@ -52,6 +52,8 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
     Q_PROPERTY(bool hasExecutedRunCommand READ hasExecutedRunCommand WRITE setHasExecutedRunCommand NOTIFY hasExecutedRunCommandChanged)
     Q_PROPERTY(bool running READ running WRITE setRunning NOTIFY runningChanged)
+    Q_PROPERTY(int currentRunStep READ currentRunStep WRITE setCurrentRunStep NOTIFY currentRunStepChanged)
+    Q_PROPERTY(int runStepCount READ runStepCount WRITE setRunStepCount NOTIFY runStepCountChanged)
 
 public:
     AtomifySimulator();
@@ -68,6 +70,8 @@ public:
     LammpsError* lammpsError() const;
     bool hasExecutedRunCommand() const;
     bool running() const;
+    int currentRunStep() const;
+    int runStepCount() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -91,11 +95,16 @@ signals:
     void lammpsErrorChanged(LammpsError* lammpsError);
     void hasExecutedRunCommandChanged(bool hasExecutedRunCommand);
     void runningChanged(bool running);
+    void currentRunStepChanged(int currentRunStep);
+    void runStepCountChanged(int runStepCount);
 
 protected:
     virtual MyWorker *createWorker() override;
 
 private:
+    void setCurrentRunStep(int currentRunStep);
+    void setRunStepCount(int runStepCount);
+
     friend class MyWorker;
     LammpsError* m_lammpsError = nullptr;
     class System* m_system = nullptr;
@@ -107,6 +116,8 @@ private:
     QList<SimulatorControl*> m_simulatorControls;
     bool m_running = false;
     bool m_hasExecutedRunCommand = false;
+    int m_currentRunStep;
+    int m_runStepCount;
 };
 
 #endif // MYSIMULATOR_H

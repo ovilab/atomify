@@ -273,6 +273,41 @@ Item {
         }
     }
 
+    Text {
+        id: labelText
+        anchors {
+            top: parent.top
+            right: parent.right
+            margins: Style.baseMargin
+        }
+        color: "white"
+        font.pixelSize: Style.font.size
+        text: simulator.scriptHandler.label
+    }
+
+    Rectangle {
+        anchors {
+            top: labelText.bottom
+            topMargin: Style.baseMargin * 0.5
+            right: parent.right
+            rightMargin: Style.baseMargin
+        }
+        width: Style.touchableSize * 3
+        height: Style.touchableSize * 0.2
+        visible: simulator.scriptHandler.label.length > 0
+        color: "#666"
+
+        Rectangle {
+            anchors {
+                top: parent.top
+                left: parent.left
+                bottom: parent.bottom
+                margins: 2
+            }
+            width: simulator.currentRunStep / simulator.runStepCount * (parent.width - anchors.margins * 2)
+        }
+    }
+
     Keys.onPressed: {
         if(event.key === Qt.Key_Back) {
             console.log("Back button captured")

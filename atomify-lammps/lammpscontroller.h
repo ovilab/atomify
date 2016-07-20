@@ -27,6 +27,7 @@ struct LammpsState {
     int numberOfTimesteps = 1;
     unsigned int runCommandStart = 0;
     unsigned int runCommandEnd = 0;
+    unsigned int runCommandCurrent = 0;
     ScriptCommand nextCommand;
 };
 
@@ -35,13 +36,6 @@ class MyWorker;
 class SimulatorControl;
 class LAMMPSController
 {
-private:
-    ScriptHandler *m_scriptHandler = nullptr;
-    LammpsException m_currentException;
-    LAMMPS *m_lammps = nullptr;
-    MyWorker *m_worker = nullptr;
-    class System *m_system = nullptr;
-    void executeActiveRunCommand();
 public:
     LammpsState state;
 
@@ -82,6 +76,13 @@ public:
     int findVariableIndex(QString identifier);
     template<class T>
     T *findFixByType();
+private:
+    ScriptHandler *m_scriptHandler = nullptr;
+    LammpsException m_currentException;
+    LAMMPS *m_lammps = nullptr;
+    MyWorker *m_worker = nullptr;
+    class System *m_system = nullptr;
+    void executeActiveRunCommand();
 };
 
 template<class T>

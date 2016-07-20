@@ -70,6 +70,16 @@ bool AtomifySimulator::running() const
     return m_running;
 }
 
+int AtomifySimulator::currentRunStep() const
+{
+    return m_currentRunStep;
+}
+
+int AtomifySimulator::runStepCount() const
+{
+    return m_runStepCount;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
@@ -88,6 +98,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
     m_atoms = atomifySimulator->system()->atoms();
     atomifySimulator->setHasExecutedRunCommand(m_lammpsController.state.hasExecutedRunCommand);
+    atomifySimulator->setCurrentRunStep(m_lammpsController.state.runCommandCurrent - m_lammpsController.state.runCommandStart);
+    atomifySimulator->setRunStepCount(m_lammpsController.state.runCommandEnd - m_lammpsController.state.runCommandStart);
 
     if(m_willPause) {
         m_lammpsController.setPaused(true);
@@ -137,7 +149,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         ScriptCommand nextCommandObject = scriptHandler->nextCommand();
 
         QString nextCommand = nextCommandObject.command();
-        if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {
+        if(scriptParser.isEditorCommand(nextCommand)) {
             scriptHandler->parseGUICommand(nextCommand);
             m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
         } else {
@@ -220,6 +232,24 @@ void MyWorker::setWillPause(bool willPause)
 MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
+}
+
+void AtomifySimulator::setCurrentRunStep(int currentRunStep)
+{
+    if (m_currentRunStep == currentRunStep)
+        return;
+
+    m_currentRunStep = currentRunStep;
+    emit currentRunStepChanged(currentRunStep);
+}
+
+void AtomifySimulator::setRunStepCount(int runStepCount)
+{
+    if (m_runStepCount == runStepCount)
+        return;
+
+    m_runStepCount = runStepCount;
+    emit runStepCountChanged(runStepCount);
 }
 
 bool AtomifySimulator::paused() const
