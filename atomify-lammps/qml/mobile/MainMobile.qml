@@ -31,18 +31,17 @@ Item {
             ]
         },
         {
-            name: "Diffusion",
-            simulations: [
-                "qrc:/simulations/diffusion/simple_diffusion",
-                "qrc:/simulations/diffusion/diffusion_coefficient"
-            ]
-        },
-        {
             name: "Porous media",
             simulations: [
                 "qrc:/simulations/silica/betacristobalite",
                 "qrc:/simulations/silica/generate_nanoporous",
                 "qrc:/simulations/silica/zeolite_zsm5"
+            ]
+        },
+        {
+            name: "Diffusion",
+            simulations: [
+                "qrc:/simulations/diffusion/simple_diffusion"
             ]
         }
     ]
