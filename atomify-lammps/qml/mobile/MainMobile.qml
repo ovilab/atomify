@@ -47,12 +47,14 @@ Item {
         }
     ]
 
-    function loadSimulation(simulation) {
-        simulationLoader.folder = simulation.folder
-    }
+    focus: true
 
     onStateChanged: {
         dashboard.revealed = false
+    }
+
+    function loadSimulation(simulation) {
+        simulationLoader.folder = simulation.folder
     }
 
     AtomifySimulator {
@@ -268,6 +270,13 @@ Item {
         sequence: Qt.Key_Escape
         onActivated: {
             searchView.visible = false
+        }
+    }
+
+    Keys.onPressed: {
+        if(event.key === Qt.Key_Back) {
+            console.log("Back button captured")
+            event.accepted = true
         }
     }
 
