@@ -278,7 +278,7 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            margins: Style.baseMargin
+            margins: Style.baseMargin * 0.5
         }
         color: "white"
         font.pixelSize: Style.font.size
@@ -288,14 +288,13 @@ Item {
     Rectangle {
         anchors {
             top: labelText.bottom
-            topMargin: Style.baseMargin * 0.5
             right: parent.right
-            rightMargin: Style.baseMargin
+            margins: Style.baseMargin * 0.5
         }
         width: Style.touchableSize * 3
         height: Style.touchableSize * 0.2
         visible: simulator.scriptHandler.label.length > 0
-        color: "#666"
+        color: "#aaaaaaaa"
 
         Rectangle {
             anchors {

@@ -18,7 +18,7 @@ We first heat the system to 4500 Kelvin before we expand the system to a lower d
 We can the quickly lower the temperature (quench the system) to reach a nice nanoporous glass structure.
 </p>
 "
-    initialCameraPosition: Qt.vector3d(51.0378, -39.4625, 55.4313)
+    initialCameraPosition: Qt.vector3d(30, -30, 30)
     initialUpVector: Qt.vector3d(0.286427, 0.885236, 0.366486)
     controllers: [
         // TODO Thermometer not working in this simulation. Wrong timescale?

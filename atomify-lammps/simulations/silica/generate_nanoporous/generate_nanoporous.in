@@ -24,7 +24,7 @@ timestep            0.002
 #/atom 2 oxygen
 #/bond 1 2 2.6
 #/label Equilibrating
-run 1000
+run 500
 
 unfix nvt
 fix nvt all nvt temp 4500 500 0.1
