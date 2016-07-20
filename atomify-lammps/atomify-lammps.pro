@@ -101,4 +101,13 @@ DISTFILES += \
     iOS.plist \
     simulations/diffusion/indent/indent.png \
     simulations/diffusion/indent/indent.in \
-    simulations/diffusion/indent/indent.qml
+    simulations/diffusion/indent/indent.qml \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
