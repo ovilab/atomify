@@ -1,6 +1,7 @@
 #include "system.h"
 #include <domain.h>
 #include <atom.h>
+#include "units.h"
 #include <update.h>
 #include "atoms.h"
 #include "../mysimulator.h"
@@ -11,6 +12,7 @@ using namespace LAMMPS_NS;
 System::System(AtomifySimulator *simulator)
 {
     setAtoms(new Atoms(simulator));
+    setUnits(new Units(simulator));
 }
 
 void System::synchronize(LAMMPS *lammps)
@@ -71,6 +73,8 @@ void System::synchronize(LAMMPS *lammps)
     }
     m_volume = m_size[0]*m_size[1]*m_size[2];
     emit volumeChanged(m_volume);
+
+    m_units->synchronize(lammps);
 }
 
 QVector3D System::origin() const
@@ -135,6 +139,11 @@ bool System::isValid() const
     return m_isValid;
 }
 
+Units *System::units() const
+{
+    return m_units;
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -151,5 +160,14 @@ void System::setIsValid(bool isValid)
 
     m_isValid = isValid;
     emit isValidChanged(isValid);
+}
+
+void System::setUnits(Units *units)
+{
+    if (m_units == units)
+        return;
+
+    m_units = units;
+    emit unitsChanged(units);
 }
 

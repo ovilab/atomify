@@ -65,7 +65,8 @@ SOURCES += \
     LammpsWrappers/modifiers/colormodifier.cpp \
     LammpsWrappers/modifiers/modifier.cpp \
     LammpsWrappers/modifiers/periodicimages.cpp \
-    LammpsWrappers/cpbonds.cpp
+    LammpsWrappers/cpbonds.cpp \
+    LammpsWrappers/units.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -92,7 +93,8 @@ HEADERS += \
     LammpsWrappers/modifiers/modifier.h \
     LammpsWrappers/modifiers/modifiers.h \
     LammpsWrappers/modifiers/periodicimages.h \
-    LammpsWrappers/cpbonds.h
+    LammpsWrappers/cpbonds.h \
+    LammpsWrappers/units.h
 
 # Temporary use of quickcontrols2 without install
 
