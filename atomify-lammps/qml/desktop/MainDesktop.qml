@@ -92,6 +92,22 @@ Item {
             onActivated: toggleFocusMode()
         }
         Shortcut {
+            sequence: "+"
+            onActivated: {
+                if(simulator.simulationSpeed < 100) {
+                    simulator.setSimulationSpeed(simulator.simulationSpeed+1)
+                }
+            }
+        }
+        Shortcut {
+            sequence: "-"
+            onActivated: {
+                if(simulator.simulationSpeed > 1) {
+                    simulator.setSimulationSpeed(simulator.simulationSpeed-1)
+                }
+            }
+        }
+        Shortcut {
             sequence: "1"
             onActivated: {
                 var isVisible = simulator.atomStyle.isVisible(0)
