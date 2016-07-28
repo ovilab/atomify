@@ -58,10 +58,10 @@ ApplicationWindow {
         anchors.fill: parent
     }
 
-    MainMobile {
-        visible: mode === "mobile"
-        anchors.fill: parent
-    }
+//    MainMobile {
+//        visible: mode === "mobile"
+//        anchors.fill: parent
+//    }
 
 //    Shortcut {
 //        sequence: StandardKey.AddTab
