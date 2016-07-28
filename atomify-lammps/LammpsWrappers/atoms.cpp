@@ -1,4 +1,5 @@
 #include "atoms.h"
+#include <algorithm>
 #include <atom.h>
 #include <domain.h>
 #include <neighbor.h>
@@ -77,6 +78,12 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     int *types = lammps->atom->type;
 
     int numberOfAtoms = atom->natoms;
+    if(m_atomData.sortedIndices.size() != numberOfAtoms) {
+        m_atomData.sortedIndices.resize(numberOfAtoms);
+        for(int i=0; i<m_atomData.sortedIndices.size(); i++) {
+            m_atomData.sortedIndices[i] = i;
+        }
+    }
     if(m_atomData.positions.size() != numberOfAtoms) {
         m_atomData.positions.resize(numberOfAtoms);
     }
@@ -105,22 +112,38 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         for(float &radii : m_atomData.radii) radii = 1.0;
     }
 
-    for(int i=0; i<numberOfAtoms; i++) {
-        m_atomData.types[i] = types[i];
+    for(int ii=0; ii<numberOfAtoms; ii++) {
+        int i = m_atomData.sortedIndices[ii];
+        m_atomData.types[ii] = types[i];
 
         double position[3];
         position[0] = atom->x[i][0];
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
-        m_atomData.positions[i][0] = position[0];
-        m_atomData.positions[i][1] = position[1];
-        m_atomData.positions[i][2] = position[2];
-        m_atomData.originalIndex[i] = i;
-        m_atomData.bitmask[i] = atom->mask[i];
-        m_atomData.visible[i] = true;
+        m_atomData.positions[ii][0] = position[0];
+        m_atomData.positions[ii][1] = position[1];
+        m_atomData.positions[ii][2] = position[2];
+        m_atomData.originalIndex[ii] = ii;
+        m_atomData.bitmask[ii] = atom->mask[i];
+        m_atomData.visible[ii] = true;
     }
+//    QElapsedTimer t;
+//    t.start();
+//    static QVector3D cameraPos = lammpsController->system()->origin();
 
+//    struct less_than_key
+//    {
+//        inline bool operator() (const QVector3D& v1, const QVector3D& v2)
+//        {
+//            float d1 = (v1-cameraPos).lengthSquared();
+//            float d2 = (v2-cameraPos).lengthSquared();
+//            return (d1<d2);
+//        }
+//    };
+
+    // std::sort(std::begin(m_atomData.positions), std::end(m_atomData.positions), less_than_key());
+    // qDebug() << "Sorted using " << t.elapsed() << " ms.";
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
