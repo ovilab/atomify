@@ -113,11 +113,16 @@ void ScriptHandler::setAtoms(Atoms *atoms)
     m_atoms = atoms;
 }
 
-#include <iostream>
-using namespace std;
+void ScriptHandler::setWorkingDirectory(QUrl fileName) {
+    QFileInfo fileInfo(fileName.toLocalFile());
+    if(!fileInfo.exists()) return;
+    QString currentDir = fileInfo.absoluteDir().path();
+    QByteArray currentDirBytes = currentDir.toUtf8();
+    chdir(currentDirBytes.constData());
+}
+
 void ScriptHandler::runFile(QString filename)
 {
-    qDebug() << "runFile(" << filename << ")";
     QString tmpFileName = filename;
     bool isQRC = tmpFileName.contains(QRegularExpression("^qrc\:\/"));
     if(isQRC) {
@@ -127,11 +132,8 @@ void ScriptHandler::runFile(QString filename)
     QFileInfo fileInfo(tmpFileName);
 
     QString currentDir = fileInfo.absoluteDir().path();
-    qDebug() << "Current dir: " << currentDir;
     QByteArray currentDirBytes = currentDir.toUtf8();
     chdir(currentDirBytes.constData());
-
-    qDebug() << "Filename string: " << tmpFileName;
 
     QFile f(tmpFileName);
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -182,6 +184,7 @@ void ScriptHandler::parseGUICommand(QString command)
                     m_atoms->bonds()->bondLengths()[atomType2][atomType1] = bondLength;
                     m_atoms->bonds()->setEnabled(true);
                 }
+                qDebug() << "HERE Max bond thing: " << m_atoms->bonds()->maxBondLength();
             }
         });
     }

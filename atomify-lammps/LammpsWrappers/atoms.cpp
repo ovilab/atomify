@@ -1,4 +1,5 @@
 #include "atoms.h"
+#include <algorithm>
 #include <atom.h>
 #include <domain.h>
 #include <neighbor.h>
@@ -41,27 +42,28 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_atomStyleTypes.insert("calcium", new AtomStyle(2.31, "#3DFF00"));
 
 
-    m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
-    m_atomStyles.push_back(m_atomStyleTypes["helium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["beryllium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["boron"]);
-    m_atomStyles.push_back(m_atomStyleTypes["carbon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["nitrogen"]);
-    m_atomStyles.push_back(m_atomStyleTypes["oxygen"]);
-    m_atomStyles.push_back(m_atomStyleTypes["fluorine"]);
-    m_atomStyles.push_back(m_atomStyleTypes["neon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["sodium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["magnesium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["aluminium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["silicon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["phosphorus"]);
-    m_atomStyles.push_back(m_atomStyleTypes["sulfur"]);
-    m_atomStyles.push_back(m_atomStyleTypes["chlorine"]);
-    m_atomStyles.push_back(m_atomStyleTypes["argon"]);
-    m_atomStyles.push_back(m_atomStyleTypes["potassium"]);
-    m_atomStyles.push_back(m_atomStyleTypes["calcium"]);
-
+    for(int i=0; i<50; i++) {
+        m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["helium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["beryllium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["boron"]);
+        m_atomStyles.push_back(m_atomStyleTypes["carbon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["nitrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["oxygen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["fluorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["neon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sodium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["magnesium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["aluminium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["silicon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["phosphorus"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sulfur"]);
+        m_atomStyles.push_back(m_atomStyleTypes["chlorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["argon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["potassium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["calcium"]);
+    }
 }
 
 void Atoms::synchronize(LAMMPSController *lammpsController)
@@ -76,6 +78,12 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     int *types = lammps->atom->type;
 
     int numberOfAtoms = atom->natoms;
+    if(m_atomData.sortedIndices.size() != numberOfAtoms) {
+        m_atomData.sortedIndices.resize(numberOfAtoms);
+        for(int i=0; i<m_atomData.sortedIndices.size(); i++) {
+            m_atomData.sortedIndices[i] = i;
+        }
+    }
     if(m_atomData.positions.size() != numberOfAtoms) {
         m_atomData.positions.resize(numberOfAtoms);
     }
@@ -104,22 +112,38 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         for(float &radii : m_atomData.radii) radii = 1.0;
     }
 
-    for(int i=0; i<numberOfAtoms; i++) {
-        m_atomData.types[i] = types[i];
+    for(int ii=0; ii<numberOfAtoms; ii++) {
+        int i = m_atomData.sortedIndices[ii];
+        m_atomData.types[ii] = types[i];
 
         double position[3];
         position[0] = atom->x[i][0];
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
-        m_atomData.positions[i][0] = position[0];
-        m_atomData.positions[i][1] = position[1];
-        m_atomData.positions[i][2] = position[2];
-        m_atomData.originalIndex[i] = i;
-        m_atomData.bitmask[i] = atom->mask[i];
-        m_atomData.visible[i] = true;
+        m_atomData.positions[ii][0] = position[0];
+        m_atomData.positions[ii][1] = position[1];
+        m_atomData.positions[ii][2] = position[2];
+        m_atomData.originalIndex[ii] = ii;
+        m_atomData.bitmask[ii] = atom->mask[i];
+        m_atomData.visible[ii] = true;
     }
+//    QElapsedTimer t;
+//    t.start();
+//    static QVector3D cameraPos = lammpsController->system()->origin();
 
+//    struct less_than_key
+//    {
+//        inline bool operator() (const QVector3D& v1, const QVector3D& v2)
+//        {
+//            float d1 = (v1-cameraPos).lengthSquared();
+//            float d2 = (v2-cameraPos).lengthSquared();
+//            return (d1<d2);
+//        }
+//    };
+
+    // std::sort(std::begin(m_atomData.positions), std::end(m_atomData.positions), less_than_key());
+    // qDebug() << "Sorted using " << t.elapsed() << " ms.";
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
@@ -175,72 +199,6 @@ void Atoms::generateSphereData(AtomData &atomData) {
     m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
 }
 
-void Atoms::generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS &lammps) {
-    bondsDataRaw.resize(0);
-
-    bool hasNeighborLists = lammps.neighbor->nlist > 0;
-    if(!hasNeighborLists || !m_bonds->enabled()) {
-        m_bondData->setData(bondsDataRaw);
-        return;
-    }
-
-    NeighList *list = lammps.neighbor->lists[0];
-    if(!list) {
-        qDebug() << "WTF, list is nothing?";
-        return;
-    }
-    int inum = list->inum;
-    int *ilist = list->ilist;
-    int *numneigh = list->numneigh;
-    int **firstneigh = list->firstneigh;
-    bondsDataRaw.reserve(atomData.size()*5);
-    for(int ii=0; ii<atomData.size(); ii++) {
-        int i = atomData.originalIndex[ii]; // A copy of an atom with index ii has original index i.
-
-        const QVector3D position_i = atomData.positions[ii];
-        const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
-        const int atomType_i = atomData.types[ii];
-
-        const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
-        const float sphereRadius_i = atomData.radii[ii];
-
-        // Now use the neighbor list from lammps
-        int *jlist = firstneigh[i];
-        int jnum = numneigh[i];
-        for (int jj = 0; jj < jnum; jj++) {
-            int j = jlist[jj];
-            j &= NEIGHMASK;
-            QVector3D position_j = atomData.positions[j];
-            position_j[0] += deltaPosition_i[0];
-            position_j[1] += deltaPosition_i[1];
-            position_j[2] += deltaPosition_i[2];
-
-            const int &atomType_j = atomData.types[j];
-
-            float dx = position_i[0] - position_j[0];
-            float dy = position_i[1] - position_j[1];
-            float dz = position_i[2] - position_j[2];
-            float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
-            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
-                BondVBOData bond;
-                bond.vertex1[0] = position_i[0];
-                bond.vertex1[1] = position_i[1];
-                bond.vertex1[2] = position_i[2];
-                bond.vertex2[0] = position_j[0];
-                bond.vertex2[1] = position_j[1];
-                bond.vertex2[2] = position_j[2];
-                bond.radius1 = m_bondRadius;
-                bond.radius2 = m_bondRadius;
-                bond.sphereRadius1 = sphereRadius_i;
-                bond.sphereRadius2 = atomData.radii[j];
-                bondsDataRaw.push_back(bond);
-            }
-        }
-    }
-
-    m_bondData->setData(bondsDataRaw);
-}
-
 void Atoms::generateBondData(AtomData &atomData) {
     bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
@@ -254,6 +212,8 @@ void Atoms::generateBondData(AtomData &atomData) {
     QElapsedTimer t;
     t.start();
     bondsDataRaw.reserve(atomData.positions.size());
+    int numPairs=0;
+    float minDistance = 0;
     for(int ii=0; ii<atomData.size(); ii++) {
         int i = atomData.originalIndex[ii];
 
@@ -278,6 +238,11 @@ void Atoms::generateBondData(AtomData &atomData) {
             float dy = position_i[1] - position_j[1];
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
+            //minDistance = std::min(minDistance, sqrtf(rsq));
+            numPairs++;
+//            if(bondLengths[atomType_j] > 0.0) {
+//                qDebug() << "We got one, and we have bondLengths[atomType_j]=" << bondLengths[atomType_j] << " with r = " << sqrt(rsq);
+//            }
             if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
                 BondVBOData bond;
                 bond.vertex1[0] = position_i[0];
@@ -294,8 +259,8 @@ void Atoms::generateBondData(AtomData &atomData) {
             }
         }
     }
-
-    // qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
+//    qDebug() << "Max bond thing: " << m_bonds->maxBondLength() << " and I am " << this;
+//    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms with " << numPairs << " pairs. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
 
     m_bondData->setData(bondsDataRaw);
 }
@@ -360,6 +325,30 @@ void Atoms::reset()
     m_sphereData->setData(emptySphereVBOData);
     m_bondData->setData(emptyBondVBOData);
     m_atomData.reset();
+    m_bonds->reset();
+    m_atomStyles.clear();
+    for(int i=0; i<50; i++) {
+        m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["helium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["beryllium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["boron"]);
+        m_atomStyles.push_back(m_atomStyleTypes["carbon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["nitrogen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["oxygen"]);
+        m_atomStyles.push_back(m_atomStyleTypes["fluorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["neon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sodium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["magnesium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["aluminium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["silicon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["phosphorus"]);
+        m_atomStyles.push_back(m_atomStyleTypes["sulfur"]);
+        m_atomStyles.push_back(m_atomStyleTypes["chlorine"]);
+        m_atomStyles.push_back(m_atomStyleTypes["argon"]);
+        m_atomStyles.push_back(m_atomStyleTypes["potassium"]);
+        m_atomStyles.push_back(m_atomStyleTypes["calcium"]);
+    }
 }
 
 QVariantList Atoms::modifiers() const

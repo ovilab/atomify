@@ -1,6 +1,7 @@
 #ifndef SCRIPTHANDLER_H
 #define SCRIPTHANDLER_H
 
+#include <QUrl>
 #include <QMutex>
 #include <QObject>
 #include <QDebug>
@@ -39,11 +40,12 @@ public:
     Q_INVOKABLE QString previousSingleCommandString();
     Q_INVOKABLE QString nextSingleCommandString();
     Q_INVOKABLE QString lastSingleCommandString();
+    Q_INVOKABLE void setWorkingDirectory(QUrl fileName);
+    Q_INVOKABLE void runFile(QString filename); // TODO Set cwd
 
 public slots:
     void runScript(QString script, ScriptCommand::Type type = ScriptCommand::Type::Editor, QString filename = "", QString currentDir = "");
     void runCommand(QString command, bool addToPreviousCommands = false);
-    void runFile(QString filename); // TODO Set cwd
     void addCommandToTop(ScriptCommand command);
     void addCommandsToTop(QList<QString> commands, ScriptCommand::Type commandType);
     void reset();

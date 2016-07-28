@@ -2,16 +2,7 @@
 
 Bonds::Bonds()
 {
-    int numTypes = 32;
-    m_bondLengths.resize(numTypes);
-    for(QVector<float> &vec : m_bondLengths) {
-        vec.resize(numTypes);
-        for(float &length : vec) {
-            length = 0.0;
-        }
-    }
-
-    m_enabled = true;
+    reset();
 }
 
 bool Bonds::enabled() const
@@ -33,6 +24,20 @@ float Bonds::maxBondLength()
         }
     }
     return maxBondLength;
+}
+
+void Bonds::reset()
+{
+    int numTypes = 32;
+    m_bondLengths.resize(numTypes);
+    for(QVector<float> &vec : m_bondLengths) {
+        vec.resize(numTypes);
+        for(float &length : vec) {
+            length = 0.0;
+        }
+    }
+
+    m_enabled = true;
 }
 
 void Bonds::setEnabled(bool enabled)

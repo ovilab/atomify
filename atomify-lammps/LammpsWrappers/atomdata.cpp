@@ -7,7 +7,8 @@ bool AtomData::isValid()
             radii.size() == types.size() &&
             types.size() == originalIndex.size() &&
             originalIndex.size() == bitmask.size() &&
-               bitmask.size() == visible.size();
+            bitmask.size() == visible.size() &&
+            visible.size() == sortedIndices.size();
 }
 
 void AtomData::resize(int size)
@@ -21,6 +22,7 @@ void AtomData::resize(int size)
     neighborList.reset(size);
     bitmask.resize(size);
     visible.resize(size);
+    sortedIndices.resize(size);
 }
 
 int AtomData::size()
@@ -38,6 +40,7 @@ void AtomData::reset()
     originalIndex.clear();
     bitmask.clear();
     visible.clear();
+    sortedIndices.clear();
     neighborList.reset(0);
 }
 

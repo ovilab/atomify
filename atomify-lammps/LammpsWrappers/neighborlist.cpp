@@ -43,6 +43,7 @@ void Neighborlist::synchronize(LAMMPS *lammps)
     t.start();
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
     if(hasNeighborLists && m_lastNeighborListSync != lammps->neighbor->lastcall) {
+        int numPairs = 0;
         m_lastNeighborListSync = lammps->neighbor->lastcall;
         NeighList *list = lammps->neighbor->lists[0];
         int inum = list->inum;
@@ -60,11 +61,14 @@ void Neighborlist::synchronize(LAMMPS *lammps)
             for (int jj = 0; jj < jnum; jj++) {
                 int j = jlist[jj];
                 j &= NEIGHMASK;
-                if(j < lammps->atom->natoms) {
+                if(j < lammps->atom->natoms && i < neighbors.size()) {
+                    // TODO: Figure out the maximum value i can have etc
+                    numPairs++;
                     neighbors[i].push_back(j);
                 }
             }
         }
+
+        // qDebug() << "Neighborlist copy synced in " << t.elapsed() << " with " << numPairs << " pairs.";
     }
-    // qDebug() << "Neighborlist copy synced in " << t.elapsed();
 }

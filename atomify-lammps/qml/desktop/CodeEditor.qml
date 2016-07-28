@@ -9,6 +9,7 @@ Item {
     property alias textArea: textArea
     property string title: changedSinceLastSave ? fileName+"*" : fileName
     property alias fileName: backend.fileName
+    property alias fileUrl: backend.fileUrl
     property bool changedSinceLastSave: false
     property bool isUnsavedFile: true
 
