@@ -6,6 +6,8 @@ import QtQml 2.2
 
 Entity {
     id: root
+    signal pressed
+
     property Camera camera
     property real linearSpeed: 40.0
     property real lookSpeed: 500.0
@@ -131,7 +133,6 @@ Entity {
                 }
             ] // axes
         },
-
         FrameAction {
             property real timeSinceLastAction: 0.0
             onTriggered: {
@@ -139,7 +140,7 @@ Entity {
                     return
                 }
                 if(leftMouseButtonAction.active) {
-                    root.parent.visualizerRoot.focus = true
+                    pressed()
                 }
 
                 var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
@@ -169,6 +170,14 @@ Entity {
                     fov = Math.max(10.0, Math.min(160.0, fov))
                     root.camera.fieldOfView = fov
                 }
+
+//                var tanAngle = Math.tan(root.camera.fieldOfView / 2.0)
+//                var distance = (root.camera.viewCenter.minus(root.camera.position)).length()
+//                console.log("distance", distance, "sinAngle", tanAngle)
+//                root.camera.right = distance * tanAngle
+//                root.camera.left = -root.camera.right
+//                root.camera.top = root.camera.right / root.camera.aspectRatio
+//                root.camera.bottom = -root.camera.top
             }
         }
     ] // components

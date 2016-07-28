@@ -19,15 +19,15 @@ ApplicationWindow {
     visible: true
 
     property string mode: {
-        if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
-            return "mobile"
-        }
+//        if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
+//            return "mobile"
+//        }
         return "desktop"
     }
 
     Settings {
         id: settings
-        property alias mode: applicationRoot.mode
+//        property alias mode: applicationRoot.mode
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
     }
@@ -53,15 +53,15 @@ ApplicationWindow {
         // resetStyle()
     }
 
-//    MainDesktop {
-//        visible: mode === "desktop"
-//        anchors.fill: parent
-//    }
-
-    MainMobile {
-        visible: mode === "mobile"
+    MainDesktop {
+        visible: mode === "desktop"
         anchors.fill: parent
     }
+
+//    MainMobile {
+//        visible: mode === "mobile"
+//        anchors.fill: parent
+//    }
 
 //    Shortcut {
 //        sequence: StandardKey.AddTab

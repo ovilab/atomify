@@ -35,5 +35,6 @@
         <file>images/pause2.png</file>
         <file>images/play2.png</file>
         <file>images/camera.png</file>
+        <file>images/noise.png</file>
     </qresource>
 </RCC>

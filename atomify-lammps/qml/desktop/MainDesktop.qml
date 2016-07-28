@@ -17,6 +17,10 @@ Item {
     property alias visualizer: visualizer
     property bool focusMode: false
 
+    Component.onCompleted: {
+        editorTab.lammpsEditor.runScript()
+    }
+
     Row {
         anchors.fill: parent
 
@@ -44,6 +48,7 @@ Item {
                 Layout.fillHeight: true
                 Layout.minimumWidth: 1
                 focus: true
+                ambientOcclusion.radius: radiusSlider.value
             }
 
         }
@@ -53,6 +58,14 @@ Item {
             width: 300
             height: parent.height
             system: simulator.system ? simulator.system : null
+
+
+            Slider {
+                id: radiusSlider
+                minimumValue: 0.0
+                value: 0.5
+                maximumValue: 2.0
+            }
         }
     }
 
