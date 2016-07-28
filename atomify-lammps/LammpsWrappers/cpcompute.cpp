@@ -33,7 +33,6 @@ void CPCompute::update(LAMMPSController *lammpsController)
     LAMMPS_NS::Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute != nullptr) {
        QVector<double> newValues;
-
        if(isVector()) {
            lmp_compute->compute_vector();
            double *values = lmp_compute->vector;

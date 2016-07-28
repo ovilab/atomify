@@ -8,12 +8,15 @@ class Units : public QObject
 {
     Q_OBJECT
 public:
+    enum Type { LJ, Real, Metal, SI, CGS, Electron, Micro, Nano };
     explicit Units(QObject *parent = 0);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
 signals:
 
 public slots:
+
 private:
+    Type type;
     char *unit_style = nullptr; // From lammps
 };
 

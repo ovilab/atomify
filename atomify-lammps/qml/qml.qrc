@@ -46,5 +46,6 @@
         <file>mobile/dashboard/InformationPanel.qml</file>
         <file>mobile/controls/BoundSlider.qml</file>
         <file>mobile/SearchView.qml</file>
+        <file>mobile/dashboard/controls/MeanSquareDisplacement.qml</file>
     </qresource>
 </RCC>
