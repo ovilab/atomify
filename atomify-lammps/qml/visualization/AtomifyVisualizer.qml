@@ -629,7 +629,12 @@ void main()
                         lights: [
                             Light {
                                 position: mainCamera.position
-                                strength: 0.7
+                                strength: 0.5
+                                attenuation: 0.0
+                            },
+                            Light {
+                                position: mainCamera.position.plus(mainCamera.viewVector.normalized().plus(mainCamera.upVector.normalized()).plus(mainCamera.viewVector.normalized().crossProduct(mainCamera.upVector.normalized())).times(10))
+                                strength: 0.5
                                 attenuation: 0.0
                             }
                         ]
