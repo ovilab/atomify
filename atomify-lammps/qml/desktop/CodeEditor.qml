@@ -104,7 +104,9 @@ pair_coeff * * 1.0 1.0 2.5
 neighbor 0.3 bin
 neigh_modify delay 0 every 20 check no
 
-fix 1 all nve"
+fix 1 all nve
+#/bond 1 2 2.0
+"
 
         function update() {
             var lineHeight = 16;//(contentHeight-8) / lineCount

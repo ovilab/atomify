@@ -29,4 +29,4 @@ thermo_style custom step time density temp etotal
 thermo 10
 #/atom 1 silicon
 #/atom 2 oxygen
-
+#/bond 1 2 2.6
