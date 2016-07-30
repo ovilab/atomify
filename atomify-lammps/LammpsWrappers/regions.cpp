@@ -191,7 +191,7 @@ void CPRegion::update(LAMMPS *lammps)
             r[2] = lammps->atom->x[atomIndex][2];
             lammps->domain->remap(r);
 
-            bool isInsideRegion = region->inside(r[0], r[1], r[2]);
+            bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
             m_containsAtom[atomIndex] = isInsideRegion;
         }
     }
