@@ -61,6 +61,8 @@ const ScriptCommand& ScriptHandler::nextCommand()
         m_currentCommand = ScriptCommand();
     }
 
+    if(m_currentCommand.type() == ScriptCommand::Type::Editor) setCurrentLine(m_currentCommand.line());
+
     return m_currentCommand;
 }
 
@@ -68,6 +70,8 @@ Atoms *ScriptHandler::atoms() const
 {
     return m_atoms;
 }
+
+ScriptParser &ScriptHandler::parser() { return m_parser; }
 
 
 LammpsState *ScriptHandler::lammpsState() const
@@ -145,6 +149,11 @@ void ScriptHandler::runFile(QString filename)
     runScript(script, ScriptCommand::Type::File, tmpFileName, currentDir);
 }
 
+int ScriptHandler::currentLine() const
+{
+    return m_currentLine;
+}
+
 bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammpsController) {
     if(m_parser.isEditorCommand(command)) {
         command = command.trimmed();
@@ -214,6 +223,7 @@ void ScriptHandler::parseGUICommand(QString command)
 void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
     if(!script.isEmpty())
     {
+
         // If the file is not empty, load each command and add it to the queue.
         // Now, if there is an include command, load that script too.
         int lineNumber = 1;
@@ -261,7 +271,6 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
 }
 
 void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
-    qDebug() << "Will run file: " << filename;
     QMutexLocker locker(&m_mutex);
     doRunScript(script, type, filename, currentDir);
 }
@@ -339,4 +348,13 @@ QString ScriptHandler::copyDataFileToReadablePath(QString filename)
     }
 
     return newFilename;
+}
+
+void ScriptHandler::setCurrentLine(int currentLine)
+{
+    if (m_currentLine == currentLine)
+        return;
+
+    m_currentLine = currentLine;
+    emit currentLineChanged(currentLine);
 }

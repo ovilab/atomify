@@ -7,14 +7,13 @@ import Qt.labs.settings 1.0
 Item {
     id: lammpsEditorRoot
     property AtomifySimulator simulator
+
     function runScript() {
-        console.log("Simulator: ", simulator)
         if(!simulator.scriptHandler) {
             return
         }
         simulator.willReset = true
         simulator.scriptHandler.reset()
-        console.log("Filename: ", codeEditorWindow.currentEditor.fileUrl)
         simulator.scriptHandler.setWorkingDirectory(codeEditorWindow.currentEditor.fileUrl)
         simulator.scriptHandler.runScript(codeEditorWindow.currentEditor.text)
     }
@@ -25,6 +24,7 @@ Item {
 
         CodeEditorWindow {
             id: codeEditorWindow
+            currentLine: simulator.scriptHandler.currentLine
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop

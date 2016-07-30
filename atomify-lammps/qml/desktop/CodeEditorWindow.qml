@@ -7,10 +7,10 @@ Item {
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
-
-//    Component.onCompleted: {
-//        focusCurrentEditor()
-//    }
+    property int currentLine: -1
+    onCurrentLineChanged: {
+        if(currentEditor != undefined) currentEditor.currentLine = currentLine
+    }
 
     function focusCurrentEditor() {
         if(currentEditor) currentEditor.textArea.focus = true

@@ -11,6 +11,12 @@ Item {
     property alias fileName: backend.fileName
     property alias fileUrl: backend.fileUrl
     property bool changedSinceLastSave: false
+    property int currentLine: -1
+    onCurrentLineChanged: {
+        console.log("Updated CURRENT LINE to ", currentLine)
+        lineNumbers.currentLine = currentLine
+        textArea.update()
+    }
 
     function open(fileUrl) {
         backend.fileUrl = fileUrl
@@ -101,7 +107,15 @@ pair_coeff * * 1.0 1.0 2.5
 neighbor 0.3 bin
 neigh_modify delay 0 every 20 check no
 
-fix 1 all nve"
+fix 1 all nve
+run 100
+run 50
+run 50
+run 50
+run 50
+run 50
+run 100
+"
 
         function update() {
             var lineHeight = 16;//(contentHeight-8) / lineCount
@@ -113,6 +127,7 @@ fix 1 all nve"
             lineNumbers.selectionEnd = selectionEnd
             lineNumbers.text = text
             lineNumbers.update()
+            console.log("Did the cool update")
         }
 
         Component.onCompleted: {
