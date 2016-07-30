@@ -25,6 +25,7 @@ Scene3D {
     property alias finalShaderBuilder: finalShaderBuilder
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
+    property alias periodicImages: periodicImages
     onBondRadiusChanged: {
         if(simulator != undefined) {
             simulator.system.atoms.bondRadius = bondRadius
@@ -787,8 +788,8 @@ void main()
 
         PeriodicImages {
             id: periodicImages
-            enabled: false
-            numberOfCopiesX: 1
+            enabled: true
+            numberOfCopiesX: 2
             numberOfCopiesY: 1
             numberOfCopiesZ: 1
         }

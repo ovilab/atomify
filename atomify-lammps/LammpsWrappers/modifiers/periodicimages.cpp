@@ -41,6 +41,7 @@ void PeriodicImages::apply(AtomData &atomData)
                 const QVector3D deltaPosition(imageX*m_system->size().x(), imageY*m_system->size().y(), imageZ*m_system->size().z());
 
                 for(int atomIndex = 0; atomIndex<originalCount; atomIndex++) {
+                    atomData.visible[nextIndex] = atomData.visible[atomIndex];
                     atomData.colors[nextIndex] = atomData.colors[atomIndex];
                     atomData.radii[nextIndex] = atomData.radii[atomIndex];
                     atomData.types[nextIndex] = atomData.types[atomIndex];
