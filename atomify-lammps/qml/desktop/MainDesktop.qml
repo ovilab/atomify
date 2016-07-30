@@ -231,14 +231,6 @@ Item {
             onActivated: editorTab.lammpsEditor.runScript()
         }
         Shortcut {
-            sequence: "Ctrl+1"
-            onActivated: tabView.currentIndex = 0
-        }
-        Shortcut {
-            sequence: "Ctrl+2"
-            onActivated: tabView.currentIndex = 1
-        }
-        Shortcut {
             sequence: "Ctrl+P"
             onActivated: simulator.paused = !simulator.paused
         }

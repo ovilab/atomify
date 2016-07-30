@@ -103,7 +103,7 @@ region system block 0 $L 0 $L 0 $L
 region boxinside block ${left} ${right} 0 $L 0 $L
 region boxoutside block ${left} ${right} 0 $L 0 $L side out
 region corner block 0 3 0 3 0 3
-
+include /Users/anderhaf/Desktop/testscript.in
 create_box 3 system
 create_atoms 1 region boxinside
 create_atoms 2 region boxoutside

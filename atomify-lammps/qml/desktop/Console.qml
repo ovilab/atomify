@@ -8,6 +8,7 @@ ColumnLayout {
     property AtomifySimulator simulator
     property TextArea output: consoleOutput
     property alias textField: singleCommand
+
     Layout.fillHeight: true
     Layout.fillWidth: true
     TextArea {
@@ -15,6 +16,7 @@ ColumnLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
         Layout.minimumHeight: 100
+        textFormat: TextEdit.RichText
         readOnly: true
     }
 

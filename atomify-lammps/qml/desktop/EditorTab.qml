@@ -10,6 +10,11 @@ Item {
     property alias lammpsEditor: myLammpsEditor
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
+    onConsoleOutputChanged: {
+        consoleOutput.onLinkActivated.connect(function(link){
+            myLammpsEditor.codeEditorWindow.openTab(link)
+        })
+    }
 
     function reportError() {
         if(simulator.lammpsError) {
@@ -20,7 +25,7 @@ Item {
                 myLammpsEditor.codeEditorWindow.errorLine = simulator.lammpsError.line
             } else {
                 consoleOutput.append(" Simulation crashed.")
-                consoleOutput.append(" File: " + simulator.lammpsError.scriptFile + " on line " + simulator.lammpsError.line)
+                consoleOutput.append(" File: <a href=\"file://" + simulator.lammpsError.scriptFile + "\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
             }
@@ -48,15 +53,7 @@ Item {
     Shortcut {
         sequence: "Escape"
         onActivated: {
-            console.log("Escape pressed")
             visualizer.focus = true
-//            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
-//                myLammpsEditor.textarea.focus = false
-//                myConsole.textField.focus = false
-//                visualizer.focus = true
-//            } else {
-//                editorTabRoot.paused = !editorTabRoot.paused
-//            }
         }
     }
 }
