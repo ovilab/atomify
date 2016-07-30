@@ -90,6 +90,15 @@ void LineNumbers::setCurrentLine(int currentLine)
         emit currentLineChanged(currentLine);
 }
 
+void LineNumbers::setErrorLine(int errorLine)
+{
+    if (m_errorLine == errorLine)
+            return;
+
+        m_errorLine = errorLine;
+        emit errorLineChanged(errorLine);
+}
+
 
 void LineNumbers::paint(QPainter *painter)
 {
@@ -109,6 +118,7 @@ void LineNumbers::paint(QPainter *painter)
     // The last visible line is either the last line in the textfield or if we have scrolled as far as we get with current size
     int lastLineVisible = std::min(firstLineVisible+int(height() / m_lineHeight)+1, m_lineCount);
     int numLines = lastLineVisible - firstLineVisible;
+    qDebug() << "m_errorLine: " << m_errorLine;
     for(int i=0; i<numLines; i++) {
         int lineNumber = i+firstLineVisible+1;
         QFont font("times", 24);
@@ -141,6 +151,13 @@ void LineNumbers::paint(QPainter *painter)
             painter->fillRect(selectedTextRect, QColor("lightGreen"));
         }
 
+        if(lineNumber == m_errorLine) {
+            QRectF selectedTextRect(0,y,width(),textHeight);
+            painter->setPen(QColor("red"));
+            painter->drawRect(selectedTextRect);
+            painter->fillRect(selectedTextRect, QColor("red"));
+        }
+
         painter->setPen(Qt::black);
         painter->drawText(textRect, text);
 
@@ -170,6 +187,11 @@ int LineNumbers::selectionEnd() const
 int LineNumbers::currentLine() const
 {
     return m_currentLine;
+}
+
+int LineNumbers::errorLine() const
+{
+    return m_errorLine;
 }
 
 float LineNumbers::lineHeight() const

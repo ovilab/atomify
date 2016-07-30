@@ -14,7 +14,7 @@ class LineNumbers : public QQuickPaintedItem
     Q_PROPERTY(int selectionStart READ selectionStart WRITE setSelectionStart NOTIFY selectionStartChanged)
     Q_PROPERTY(int selectionEnd READ selectionEnd WRITE setSelectionEnd NOTIFY selectionEndChanged)
     Q_PROPERTY(int currentLine READ currentLine WRITE setCurrentLine NOTIFY currentLineChanged)
-
+    Q_PROPERTY(int errorLine READ errorLine WRITE setErrorLine NOTIFY errorLineChanged)
 public:
     explicit LineNumbers(QQuickPaintedItem *parent = nullptr);
     int lineCount() const;
@@ -26,6 +26,7 @@ public:
     int selectionStart() const;
     int selectionEnd() const;
     int currentLine() const;
+    int errorLine() const;
 
 signals:
     void lineCountChanged(int lineCount);
@@ -36,6 +37,7 @@ signals:
     void selectionStartChanged(int selectionStart);
     void selectionEndChanged(int selectionEnd);
     void currentLineChanged(int currentLine);
+    void errorLineChanged(int errorLine);
 
 public slots:
     void setLineCount(int lineCount);
@@ -46,6 +48,7 @@ public slots:
     void setSelectionStart(int selectionStart);
     void setSelectionEnd(int selectionEnd);
     void setCurrentLine(int currentLine);
+    void setErrorLine(int errorLine);
 
 private:
     int m_lineCount = 0;
@@ -56,6 +59,7 @@ private:
     int m_selectionStart = 0;
     int m_selectionEnd = 0;
     int m_currentLine = -1;
+    int m_errorLine = -1;
 };
 
 #endif // LINENUMBERS_H

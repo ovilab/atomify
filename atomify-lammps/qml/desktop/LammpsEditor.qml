@@ -7,6 +7,13 @@ import Qt.labs.settings 1.0
 Item {
     id: lammpsEditorRoot
     property AtomifySimulator simulator
+    property alias codeEditorWindow: codeEditorWindow
+
+    onSimulatorChanged: {
+        simulator.willResetChanged.connect(function() {
+            codeEditorWindow.clear()
+        })
+    }
 
     function runScript() {
         if(!simulator.scriptHandler) {

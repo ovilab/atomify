@@ -8,8 +8,19 @@ Item {
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
     property int currentLine: -1
+    property int errorLine: -1
     onCurrentLineChanged: {
         if(currentEditor != undefined) currentEditor.currentLine = currentLine
+    }
+
+    onErrorLineChanged: {
+        if(currentEditor != undefined) currentEditor.errorLine = errorLine
+    }
+
+    function clear() {
+        for(var i=0; i<stackLayout.count; i++) {
+            stackLayout.itemAt(i).clear()
+        }
     }
 
     function focusCurrentEditor() {

@@ -12,9 +12,21 @@ Item {
     property alias fileUrl: backend.fileUrl
     property bool changedSinceLastSave: false
     property int currentLine: -1
+    property int errorLine: -1
+
     onCurrentLineChanged: {
-        console.log("Updated CURRENT LINE to ", currentLine)
         lineNumbers.currentLine = currentLine
+        textArea.update()
+    }
+
+    onErrorLineChanged: {
+        lineNumbers.errorLine = errorLine
+        textArea.update()
+    }
+
+    function clear() {
+        currentLine = -1
+        errorLine = -1
         textArea.update()
     }
 

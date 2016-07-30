@@ -17,6 +17,7 @@ Item {
                 consoleOutput.append(" Simulation crashed on line "+simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
+                myLammpsEditor.codeEditorWindow.errorLine = simulator.lammpsError.line
             } else {
                 consoleOutput.append(" Simulation crashed.")
                 consoleOutput.append(" File: " + simulator.lammpsError.scriptFile + " on line " + simulator.lammpsError.line)
