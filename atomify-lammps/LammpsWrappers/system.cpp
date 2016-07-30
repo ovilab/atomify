@@ -42,11 +42,11 @@ void System::synchronize(LAMMPSController *lammpsController)
     bool originDidChange = false;
     bool sizeDidChange = false;
     for(int i=0; i<3; i++) {
-        if(m_origin[i] != domain->boxlo[i]) {
+        if( fabs(m_origin[i] - domain->boxlo[i]) > 1e-4) {
             m_origin[i] = domain->boxlo[i];
             originDidChange  = true;
         }
-        if(m_size[i] != domain->prd[i]) {
+        if( fabs(m_size[i] - domain->prd[i]) > 1e-4) {
             m_size[i] = domain->prd[i];
             sizeDidChange = true;
         }
