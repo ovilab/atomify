@@ -49,6 +49,7 @@ Item {
                 Layout.minimumWidth: 1
                 focus: true
                 ambientOcclusion.radius: radiusSlider.value
+                ambientOcclusion.samples: samplesSlider.value
             }
 
         }
@@ -59,12 +60,20 @@ Item {
             height: parent.height
             system: simulator.system ? simulator.system : null
 
-
-            Slider {
-                id: radiusSlider
-                minimumValue: 0.0
-                value: 0.5
-                maximumValue: 2.0
+            Column {
+                Slider {
+                    id: radiusSlider
+                    minimumValue: 0.0
+                    value: 0.5
+                    maximumValue: 50.0
+                }
+                Slider {
+                    id: samplesSlider
+                    minimumValue: 1
+                    value: 10
+                    stepSize: 1
+                    maximumValue: 64
+                }
             }
         }
     }
