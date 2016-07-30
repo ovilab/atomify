@@ -131,7 +131,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     }
 //    QElapsedTimer t;
 //    t.start();
-//    static QVector3D cameraPos = lammpsController->system()->origin();
+//    static QVector3D cameraPos = lammpsController->system()->cameraPosition();
 
 //    struct less_than_key
 //    {
@@ -143,7 +143,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
 //        }
 //    };
 
-    // std::sort(std::begin(m_atomData.positions), std::end(m_atomData.positions), less_than_key());
+//     std::sort(std::begin(m_atomData.positions), std::end(m_atomData.positions), less_than_key());
     // qDebug() << "Sorted using " << t.elapsed() << " ms.";
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }

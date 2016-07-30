@@ -11,14 +11,11 @@ Item {
     property alias fileName: backend.fileName
     property alias fileUrl: backend.fileUrl
     property bool changedSinceLastSave: false
-    property bool isUnsavedFile: true
 
     function open(fileUrl) {
         backend.fileUrl = fileUrl
         backend.load()
         textArea.text = backend.text
-        console.log("Text: ", backend.text)
-        isUnsavedFile = false
         changedSinceLastSave = false
     }
 
@@ -33,7 +30,6 @@ Item {
         } else {
             if(backend.save()) {
                 changedSinceLastSave = false
-                isUnsavedFile = false
                 if(cb != undefined) cb()
             }
         }

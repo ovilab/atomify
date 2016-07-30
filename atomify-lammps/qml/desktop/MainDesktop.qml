@@ -54,6 +54,9 @@ Item {
                 ambientOcclusion.mode: ssaoMode.currentText
                 sphereScale: sphereScalingSlider.value
                 bondRadius: bondRadiusSlider.value
+                periodicImages.numberOfCopiesX: periodicXSlider.value
+                periodicImages.numberOfCopiesY: periodicYSlider.value
+                periodicImages.numberOfCopiesZ: periodicZSlider.value
             }
 
         }
@@ -139,6 +142,51 @@ Item {
                         maximumValue: 1.0
                         value: 0.1
                         stepSize: 0.01
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Periodic X: "
+                    }
+                    Slider {
+                        id: periodicXSlider
+                        width: 150
+                        minimumValue: 1
+                        maximumValue: 5.0
+                        value: 1
+                        stepSize: 1
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Periodic Y: "
+                    }
+                    Slider {
+                        id: periodicYSlider
+                        width: 150
+                        minimumValue: 1
+                        maximumValue: 5.0
+                        value: 1
+                        stepSize: 1
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Periodic Z: "
+                    }
+                    Slider {
+                        id: periodicZSlider
+                        width: 150
+                        minimumValue: 1
+                        maximumValue: 5.0
+                        value: 1
+                        stepSize: 1
                     }
                 }
 
