@@ -50,6 +50,7 @@ Item {
                 focus: true
                 ambientOcclusion.radius: radiusSlider.value
                 ambientOcclusion.samples: samplesSlider.value
+                ambientOcclusion.noiseScale: noiseScaleSlider.value
             }
 
         }
@@ -74,6 +75,19 @@ Item {
                         minimumValue: 0.0
                         value: 0.5
                         maximumValue: 50.0
+                    }
+                }
+                Row {
+                    Label {
+                        text: "SSAO Noise ("+noiseScaleSlider.value.toFixed(1)+"): "
+                    }
+
+                    Slider {
+                        id: noiseScaleSlider
+                        width: 150
+                        minimumValue: 0.0
+                        value: 1.0
+                        maximumValue: 10.0
                     }
                 }
                 Row {
