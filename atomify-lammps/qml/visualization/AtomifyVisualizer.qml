@@ -88,23 +88,23 @@ Scene3D {
                                                     }
                                                 }
                                             },
-                                            RenderTargetOutput {
-                                                objectName : "colorOut"
-                                                attachmentPoint : RenderTargetOutput.Color2
-                                                texture : Texture2D {
-                                                    id : colorTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
-                                                    format : Texture.RGBA32F
-                                                    generateMipMaps : false
-                                                    magnificationFilter : Texture.Linear
-                                                    minificationFilter : Texture.Linear
-                                                    wrapMode {
-                                                        x: WrapMode.ClampToEdge
-                                                        y: WrapMode.ClampToEdge
-                                                    }
-                                                }
-                                            },
+//                                            RenderTargetOutput {
+//                                                objectName : "colorOut"
+//                                                attachmentPoint : RenderTargetOutput.Color2
+//                                                texture : Texture2D {
+//                                                    id : colorTexture
+//                                                    width : root.width
+//                                                    height : root.width // TODO use height?
+//                                                    format : Texture.RGBA32F
+//                                                    generateMipMaps : false
+//                                                    magnificationFilter : Texture.Linear
+//                                                    minificationFilter : Texture.Linear
+//                                                    wrapMode {
+//                                                        x: WrapMode.ClampToEdge
+//                                                        y: WrapMode.ClampToEdge
+//                                                    }
+//                                                }
+//                                            },
                                             RenderTargetOutput {
                                                 objectName: "depth"
                                                 attachmentPoint: RenderTargetOutput.Depth
@@ -239,7 +239,7 @@ Scene3D {
                 parameters : [
                     Parameter { name: "normalTexture"; value : normalTexture },
                     Parameter { name: "positionTexture"; value : positionTexture },
-                    Parameter { name: "colorTexture"; value : colorTexture },
+//                    Parameter { name: "colorTexture"; value : colorTexture },
                     Parameter { name: "depthTexture"; value : depthTexture }
                 ]
                 effect: Effect {
@@ -307,7 +307,7 @@ void main()
 
 uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
-uniform highp sampler2D colorTexture;
+// uniform highp sampler2D colorTexture;
 uniform highp sampler2D depthTexture;
 
 uniform highp mat4 inverseProjectionMatrix;
@@ -341,15 +341,12 @@ void main()
     highp float depth = texture(depthTexture, texCoord).x;
     highp vec3 position = texture(positionTexture, texCoord).rgb * 1000.0;
 //    highp vec3 position = positionFromDepth(depth, texCoord);
-    highp vec4 color = texture(colorTexture, texCoord).rgba;
-
-//    fragColor = vec4(position + normal * 0.0001, 1.0);
-//    return;
+//    highp vec4 color = texture(colorTexture, texCoord).rgba;
+    highp vec4 color = vec4(0.7, 0.4, 0.8, 1.0);
 
     if(depth > 1.0 - 1e-7) {
         discard;
     }
-
 
 #pragma shadernodes body
 }
@@ -365,6 +362,21 @@ void main()
                                 samples: 64
                                 depthTexture: depthTexture
                                 mode: "sphere"
+                                randomVectorTexture: Texture2D {
+                                    width : 128
+                                    height : 2
+                                    minificationFilter: Texture.Linear
+                                    magnificationFilter: Texture.Linear
+                                    wrapMode {
+                                        x: WrapMode.Repeat
+                                        y: WrapMode.Repeat
+                                    }
+                                    generateMipMaps: false
+                                    TextureImage {
+                                        source: "qrc:/images/ambient.png"
+                                    }
+                                }
+
                                 noiseTexture: Texture2D {
                                     width : 256
                                     height : 256
@@ -515,7 +527,7 @@ void main()
                     Parameter { name: "ssaoTexture"; value : ssaoTexture },
                     Parameter { name: "normalTexture"; value : normalTexture },
                     Parameter { name: "positionTexture"; value : positionTexture },
-                    Parameter { name: "colorTexture"; value : colorTexture },
+                    // Parameter { name: "colorTexture"; value : colorTexture },
                     Parameter { name: "depthTexture"; value : depthTexture },
                     Parameter { name: "winSize"; value : Qt.size(root.width, root.height) }
                 ]
@@ -595,6 +607,7 @@ void main()
                         ShaderOutput {
                             name: "fragColor"
                             type: "vec4"
+                            // value: blurMultiply
                             value: blurMultiply
                         }
                     ]
@@ -638,7 +651,7 @@ void main()
                     source: "
 #version 410
 
-uniform highp sampler2D colorTexture;
+// uniform highp sampler2D colorTexture;
 uniform highp sampler2D blurTexture;
 uniform highp sampler2D ssaoTexture;
 uniform highp sampler2D normalTexture;
@@ -660,19 +673,29 @@ out highp vec4 fragColor;
 
 #pragma shadernodes header
 
+highp vec3 positionFromDepth(highp float z, highp vec2 texCoord) {
+    highp float x = texCoord.x * 2.0 - 1.0;
+    highp float y = texCoord.y * 2.0 - 1.0;
+    highp vec4 projectedPos = vec4(x, y, z, 1.0f / z);
+    highp vec4 positionVS = inverseProjectionMatrix * projectedPos;
+    positionVS /= positionVS.w;
+    highp vec4 positionModel = inverseViewMatrix * positionVS;
+    return positionModel.xyz;
+}
+
 void main()
 {
-        vec4 color = texture(colorTexture, texCoord);
-        vec3 position = texture(positionTexture, texCoord).xyz * 1000.0; // TODO fix factor
+//        vec4 color = texture(colorTexture, texCoord);
+        highp vec4 color = vec4(0.8, 0.6, 0.1, 1.0);
         highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
-    //    highp vec3 normal = normalize(texture(normalTexture, texCoord).xyz);
         highp float depth = texture(depthTexture, texCoord).x;
+        vec3 position = texture(positionTexture, texCoord).xyz * 1000.0; // TODO fix factor
 //        highp vec3 position = positionFromDepth(depth, texCoord);
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;
         highp vec3 blur = texture(blurTexture, texCoord).rgb;
 
     if(depth > 1.0 - 1e-7) {
-//        return;
+        discard;
     }
 
 #pragma shadernodes body
