@@ -228,22 +228,27 @@ Item {
         Shortcut {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
+            context: Qt.ApplicationShortcut
             onActivated: editorTab.lammpsEditor.runScript()
         }
         Shortcut {
             sequence: "Ctrl+P"
+            context: Qt.ApplicationShortcut
             onActivated: simulator.paused = !simulator.paused
         }
         Shortcut {
             sequence: "Space"
+            context: Qt.ApplicationShortcut
             onActivated: simulator.paused = !simulator.paused
         }
         Shortcut {
             sequence: "Tab"
+            context: Qt.ApplicationShortcut
             onActivated: toggleFocusMode()
         }
         Shortcut {
             sequence: "+"
+            context: Qt.ApplicationShortcut
             onActivated: {
                 if(simulator.simulationSpeed < 100) {
                     simulator.setSimulationSpeed(simulator.simulationSpeed+1)
@@ -252,33 +257,14 @@ Item {
         }
         Shortcut {
             sequence: "-"
+            context: Qt.ApplicationShortcut
             onActivated: {
                 if(simulator.simulationSpeed > 1) {
                     simulator.setSimulationSpeed(simulator.simulationSpeed-1)
                 }
             }
         }
-        Shortcut {
-            sequence: "1"
-            onActivated: {
-                var isVisible = simulator.atomStyle.isVisible(0)
-                simulator.atomStyle.setModelData(0, "visible", !isVisible)
-            }
-        }
-        Shortcut {
-            sequence: "2"
-            onActivated: {
-                var isVisible = simulator.atomStyle.isVisible(1)
-                simulator.atomStyle.setModelData(1, "visible", !isVisible)
-            }
-        }
-        Shortcut {
-            sequence: "3"
-            onActivated: {
-                var isVisible = simulator.atomStyle.isVisible(2)
-                simulator.atomStyle.setModelData(2, "visible", !isVisible)
-            }
-        }
+
     }
 
     DisableMessage {

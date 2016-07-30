@@ -353,10 +353,10 @@ Rectangle {
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Show editor tab "
+                        text: "Save script "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"1"
+                        text: ": "+shortcutRoot.controlName+"S"
                     }
                 }
 
@@ -365,10 +365,22 @@ Rectangle {
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Show analysis tab "
+                        text: "Open script"
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"2"
+                        text: ": "+shortcutRoot.controlName+"O"
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "Toggle pause"
+                    }
+                    Label {
+                        text: ": "+shortcutRoot.controlName+"P / Space"
                     }
                 }
 
