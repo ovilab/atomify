@@ -77,7 +77,8 @@ SOURCES += \
     LammpsWrappers/modifiers/groupmodifier.cpp \
     LammpsWrappers/modifiers/regionmodifier.cpp \
     codeeditorbackend.cpp \
-    linenumbers.cpp
+    linenumbers.cpp \
+    LammpsWrappers/units.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -115,7 +116,8 @@ HEADERS += \
     LammpsWrappers/modifiers/groupmodifier.h \
     LammpsWrappers/modifiers/regionmodifier.h \
     codeeditorbackend.h \
-    linenumbers.h
+    linenumbers.h \
+    LammpsWrappers/units.h
 
 # Temporary use of quickcontrols2 without install
 

@@ -93,6 +93,10 @@ Rectangle {
                 }
                 Text {
                     font.bold: true
+                    text: "Units: "+system.units.name
+                }
+                Text {
+                    font.bold: true
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Text {
@@ -345,6 +349,18 @@ Rectangle {
                     }
                     Label {
                         text: ": "+shortcutRoot.controlName+"R"
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "New script "
+                    }
+                    Label {
+                        text: ": "+shortcutRoot.controlName+"N"
                     }
                 }
 

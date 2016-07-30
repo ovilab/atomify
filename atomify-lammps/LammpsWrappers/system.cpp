@@ -8,6 +8,7 @@
 #include "computes.h"
 #include "../mysimulator.h"
 #include "modifiers/modifier.h"
+#include "units.h"
 
 using namespace LAMMPS_NS;
 
@@ -17,6 +18,7 @@ System::System(AtomifySimulator *simulator)
     setGroups(new Groups(simulator));
     setRegions(new Regions(simulator));
     setComputes(new Computes(simulator));
+    setUnits(new Units(simulator));
 }
 
 void System::synchronize(LAMMPSController *lammpsController)
@@ -88,6 +90,8 @@ void System::synchronize(LAMMPSController *lammpsController)
     }
     m_volume = m_size[0]*m_size[1]*m_size[2];
     emit volumeChanged(m_volume);
+
+    m_units->synchronize(lammps);
 }
 
 QVector3D System::origin() const
@@ -170,6 +174,11 @@ QVector3D System::cameraPosition() const
     return m_cameraPosition;
 }
 
+Units *System::units() const
+{
+    return m_units;
+}
+
 Computes *System::computes() const
 {
     return m_computes;
@@ -227,4 +236,13 @@ void System::setCameraPosition(QVector3D cameraPosition)
 
     m_cameraPosition = cameraPosition;
     emit cameraPositionChanged(cameraPosition);
+}
+
+void System::setUnits(Units *units)
+{
+    if (m_units == units)
+        return;
+
+    m_units = units;
+    emit unitsChanged(units);
 }
