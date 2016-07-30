@@ -51,6 +51,7 @@ Item {
                 ambientOcclusion.radius: radiusSlider.value
                 ambientOcclusion.samples: samplesSlider.value
                 ambientOcclusion.noiseScale: noiseScaleSlider.value
+                ambientOcclusion.mode: ssaoMode.currentText
             }
 
         }
@@ -73,7 +74,7 @@ Item {
                         id: radiusSlider
                         width: 150
                         minimumValue: 0.0
-                        value: 0.5
+                        value: 8.0
                         maximumValue: 50.0
                     }
                 }
@@ -98,11 +99,17 @@ Item {
                         id: samplesSlider
                         width: 150
                         minimumValue: 1
-                        value: 10
+                        value: 32
                         stepSize: 1
                         maximumValue: 64
                     }
                 }
+                ComboBox {
+                    id: ssaoMode
+                    model: ["hemisphere", "sphere"]
+                    currentIndex: 0
+                }
+
                 ComboBox {
                     model: ["blurMultiply", "ssaoMultiply", "blur", "ssao", "position", "color", "normal"]
                     currentIndex: 0

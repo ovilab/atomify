@@ -52,8 +52,15 @@ void System::synchronize(LAMMPSController *lammpsController)
         }
     }
 
-    if(originDidChange) emit originChanged(m_origin);
-    if(sizeDidChange) emit sizeChanged(m_size);
+    if(originDidChange) {
+        emit originChanged(m_origin);
+        emit geometryChanged();
+    }
+
+    if(sizeDidChange) {
+        emit sizeChanged(m_size);
+        emit geometryChanged();
+    }
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;

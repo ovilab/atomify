@@ -1,5 +1,6 @@
 #include "periodicimages.h"
 #include "../system.h"
+#include <QDebug>
 
 PeriodicImages::PeriodicImages()
 {

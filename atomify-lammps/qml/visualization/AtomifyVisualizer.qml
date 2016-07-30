@@ -111,7 +111,7 @@ Scene3D {
                                                     id: depthTexture
                                                     width : root.width
                                                     height : root.width // TODO use height?
-                                                    format: Texture.D32F
+                                                    format: Texture.D32
                                                     generateMipMaps: false
                                                     magnificationFilter: Texture.Linear
                                                     minificationFilter: Texture.Linear
@@ -126,7 +126,7 @@ Scene3D {
                                         ]
                                     }
                                     ClearBuffers {
-                                        clearColor: "#012"
+                                        clearColor: "#000"
                                         buffers: ClearBuffers.ColorDepthBuffer
                                         CameraSelector {
                                             camera: mainCamera
@@ -144,8 +144,8 @@ Scene3D {
                                                 attachmentPoint : RenderTargetOutput.Color0
                                                 texture : Texture2D {
                                                     id : ssaoTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
+                                                    width : 0.5*root.width
+                                                    height : 0.5*root.width // TODO use height?
                                                     format : Texture.RGBA16F
                                                     generateMipMaps : false
                                                     magnificationFilter : Texture.Linear
@@ -159,7 +159,7 @@ Scene3D {
                                         ]
                                     }
                                     ClearBuffers {
-                                        clearColor: "#fff"
+                                        clearColor: "#000"
                                         buffers: ClearBuffers.ColorDepthBuffer
                                         CameraSelector {
                                             camera: mainCamera
@@ -192,7 +192,7 @@ Scene3D {
                                         ]
                                     }
                                     ClearBuffers {
-                                        clearColor: "#f00"
+                                        clearColor: "#000"
                                         buffers: ClearBuffers.ColorDepthBuffer
                                         CameraSelector {
                                             camera: mainCamera
@@ -203,7 +203,7 @@ Scene3D {
                             RenderPassFilter {
                                 matchAny : FilterKey { name : "pass"; value : "final" }
                                 ClearBuffers {
-                                    clearColor: Qt.rgba(0.4, 0.4, 0.7, 1.0)
+                                    clearColor: "#000"
                                     buffers: ClearBuffers.ColorDepthBuffer
                                     CameraSelector {
                                         id: viewCameraSelector
@@ -239,7 +239,9 @@ Scene3D {
                     Parameter { name: "normalTexture"; value : normalTexture },
                     Parameter { name: "positionTexture"; value : positionTexture },
                     Parameter { name: "colorTexture"; value : colorTexture },
-                    Parameter { name: "depthTexture"; value : depthTexture }
+                    Parameter { name: "depthTexture"; value : depthTexture },
+                    Parameter { name: "posMin"; value: spheres.posMin },
+                    Parameter { name: "posMax"; value: spheres.posMax }
                 ]
                 effect: Effect {
                     techniques : [
@@ -308,6 +310,8 @@ uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
 uniform highp sampler2D colorTexture;
 uniform highp sampler2D depthTexture;
+uniform float posMin;
+uniform float posMax;
 
 uniform highp mat4 inverseProjectionMatrix;
 uniform highp mat4 projectionMatrix;
@@ -338,11 +342,12 @@ void main()
 {
     highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
     highp float depth = texture(depthTexture, texCoord).x;
-    vec3 position = texture(colorTexture, texCoord).xyz * 200.0; // TODO fix factor
+    float deltaMaxMin = posMax - posMin;
+    vec3 position = texture(colorTexture, texCoord).xyz * deltaMaxMin + posMin; // TODO fix factor
     vec4 color = texture(positionTexture, texCoord);
 
-    if(depth > 1.0 - 1e-7) {
-        discard;
+    if(depth > 1.0 - 1e-5) {
+        return;
     }
 
 #pragma shadernodes body
@@ -412,7 +417,7 @@ void main()
                 parameters : [
                     Parameter { name: "ssaoTexture"; value : ssaoTexture },
                     Parameter { name: "depthTexture"; value : depthTexture },
-                    Parameter { name: "blurSize"; value : 7 },
+                    Parameter { name: "blurSize"; value : 10 },
                     Parameter { name: "winSize"; value : Qt.size(root.width, root.height) }
                 ]
                 effect: Effect {
@@ -527,7 +532,9 @@ void main()
                     Parameter { name: "positionTexture"; value : positionTexture },
                     Parameter { name: "colorTexture"; value : colorTexture },
                     Parameter { name: "depthTexture"; value : depthTexture },
-                    Parameter { name: "winSize"; value : Qt.size(root.width, root.height) }
+                    Parameter { name: "winSize"; value : Qt.size(root.width, root.height) },
+                    Parameter { name: "posMin"; value: spheres.posMin },
+                    Parameter { name: "posMax"; value: spheres.posMax }
                 ]
                 effect: Effect {
                     techniques : [
@@ -564,7 +571,7 @@ void main()
 "
 
                                     fragmentShaderCode: finalShaderBuilder.finalShader
-                                    onFragmentShaderCodeChanged: console.log(fragmentShaderCode)
+                                    // onFragmentShaderCodeChanged: console.log(fragmentShaderCode)
                                 }
                             }
                         }
@@ -682,6 +689,8 @@ uniform highp sampler2D positionTexture;
 uniform highp sampler2D colorTexture;
 uniform highp sampler2D depthTexture;
 uniform highp vec2 winSize;
+uniform float posMin;
+uniform float posMax;
 
 uniform highp mat4 inverseProjectionMatrix;
 uniform highp mat4 projectionMatrix;
@@ -711,12 +720,13 @@ void main()
 {
         highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
         highp float depth = texture(depthTexture, texCoord).x;
-        vec3 position = texture(colorTexture, texCoord).xyz * 200.0; // TODO fix factor
+        float deltaMaxMin = posMax - posMin;
+        vec3 position = texture(colorTexture, texCoord).xyz * deltaMaxMin + posMin; // TODO fix factor
         vec4 color = texture(positionTexture, texCoord);
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;
         highp vec3 blur = texture(blurTexture, texCoord).rgb;
 
-    if(depth > 1.0 - 1e-7) {
+    if(depth > 1.0 - 1e-5) {
         discard;
     }
 
@@ -744,6 +754,19 @@ void main()
                 groupModifier,
                 regionModifier
             ]
+            Component.onCompleted: {
+                system.geometryChanged.connect(updateGeometry)
+            }
+            function updateGeometry(){
+                var posMin = Math.min(Math.min(system.origin.x, system.origin.y), system.origin.z)
+                var posMax = posMin + Math.max(Math.max(system.size.x, system.size.y), system.size.z)
+                posMin = -200
+                posMax = 200
+                spheres.posMax = posMax
+                spheres.posMin = posMin
+                console.log("PosMax: ", posMax)
+                console.log("PosMin: ", posMin)
+            }
         }
 
         DesktopController {
@@ -795,6 +818,8 @@ void main()
         Bonds {
             id: bonds
             bondData: simulator.system.atoms.bondData
+            posMin: spheres.posMin
+            posMax: spheres.posMax
             fragmentColor: StandardMaterial {
                 lights: [
                     Light {

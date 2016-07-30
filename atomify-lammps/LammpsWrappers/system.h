@@ -58,6 +58,7 @@ signals:
     void volumeChanged(float volume);
     void isValidChanged(bool isValid);
     void computesChanged(class Computes* computes);
+    void geometryChanged();
 
 private:
     class Atoms* m_atoms = nullptr;
