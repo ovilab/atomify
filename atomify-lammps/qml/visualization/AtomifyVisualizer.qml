@@ -23,6 +23,14 @@ Scene3D {
     property bool addPeriodicCopies: false
     property alias ambientOcclusion: ambientOcclusion
     property alias finalShaderBuilder: finalShaderBuilder
+    property alias sphereScale: colorModifier.scale
+    property real bondRadius: 0.1
+    onBondRadiusChanged: {
+        if(simulator != undefined) {
+            simulator.system.atoms.bondRadius = bondRadius
+        }
+    }
+
     aspects: ["render", "input", "logic"]
 
     Entity {
@@ -94,7 +102,7 @@ Scene3D {
                                                     id : colorTexture
                                                     width : root.width
                                                     height : root.width // TODO use height?
-                                                    format : Texture.RGBA16F
+                                                    format : Texture.RGBA32F
                                                     generateMipMaps : false
                                                     magnificationFilter : Texture.Linear
                                                     minificationFilter : Texture.Linear
@@ -146,7 +154,7 @@ Scene3D {
                                                     id : ssaoTexture
                                                     width : 0.5*root.width
                                                     height : 0.5*root.width // TODO use height?
-                                                    format : Texture.RGBA16F
+                                                    format : Texture.RGBA32F
                                                     generateMipMaps : false
                                                     magnificationFilter : Texture.Linear
                                                     minificationFilter : Texture.Linear
@@ -179,7 +187,7 @@ Scene3D {
                                                     id : blurTexture
                                                     width : root.width
                                                     height : root.width // TODO use height?
-                                                    format : Texture.RGBA16F
+                                                    format : Texture.RGBA32F
                                                     generateMipMaps : false
                                                     magnificationFilter : Texture.Linear
                                                     minificationFilter : Texture.Linear
@@ -343,7 +351,7 @@ void main()
     highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
     highp float depth = texture(depthTexture, texCoord).x;
     float deltaMaxMin = posMax - posMin;
-    vec3 position = texture(colorTexture, texCoord).xyz * deltaMaxMin + posMin; // TODO fix factor
+    vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin;
     vec4 color = texture(positionTexture, texCoord);
 
     if(depth > 1.0 - 1e-5) {
@@ -417,7 +425,7 @@ void main()
                 parameters : [
                     Parameter { name: "ssaoTexture"; value : ssaoTexture },
                     Parameter { name: "depthTexture"; value : depthTexture },
-                    Parameter { name: "blurSize"; value : 10 },
+                    Parameter { name: "blurSize"; value : 7 },
                     Parameter { name: "winSize"; value : Qt.size(root.width, root.height) }
                 ]
                 effect: Effect {
@@ -479,7 +487,7 @@ out highp vec4 fragColor;
 #pragma shadernodes header
 
 highp float blurLinearizeDepth(highp float z) {
-    highp float f=100.0;
+    highp float f=200.0;
     highp float n = 2.0;
 
     return (2.0 * n) / (f + n - z * (f - n));
@@ -721,7 +729,7 @@ void main()
         highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
         highp float depth = texture(depthTexture, texCoord).x;
         float deltaMaxMin = posMax - posMin;
-        vec3 position = texture(colorTexture, texCoord).xyz * deltaMaxMin + posMin; // TODO fix factor
+        vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin; // TODO fix factor
         vec4 color = texture(positionTexture, texCoord);
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;
         highp vec3 blur = texture(blurTexture, texCoord).rgb;
@@ -754,19 +762,6 @@ void main()
                 groupModifier,
                 regionModifier
             ]
-            Component.onCompleted: {
-                system.geometryChanged.connect(updateGeometry)
-            }
-            function updateGeometry(){
-                var posMin = Math.min(Math.min(system.origin.x, system.origin.y), system.origin.z)
-                var posMax = posMin + Math.max(Math.max(system.size.x, system.size.y), system.size.z)
-                posMin = -200
-                posMax = 200
-                spheres.posMax = posMax
-                spheres.posMin = posMin
-                console.log("PosMax: ", posMax)
-                console.log("PosMin: ", posMin)
-            }
         }
 
         DesktopController {
@@ -802,6 +797,9 @@ void main()
             id: spheres
             camera: visualizer.camera
             sphereData: simulator.system.atoms.sphereData
+            // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
+            posMin: -100
+            posMax:  100
             fragmentColor: StandardMaterial {
                 id: spheresFragColor
                 lights: [

@@ -8,9 +8,9 @@ Item {
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
 
-    Component.onCompleted: {
-        focusCurrentEditor()
-    }
+//    Component.onCompleted: {
+//        focusCurrentEditor()
+//    }
 
     function focusCurrentEditor() {
         if(currentEditor) currentEditor.textArea.focus = true

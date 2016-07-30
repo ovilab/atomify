@@ -52,6 +52,8 @@ Item {
                 ambientOcclusion.samples: samplesSlider.value
                 ambientOcclusion.noiseScale: noiseScaleSlider.value
                 ambientOcclusion.mode: ssaoMode.currentText
+                sphereScale: sphereScalingSlider.value
+                bondRadius: bondRadiusSlider.value
             }
 
         }
@@ -67,6 +69,7 @@ Item {
                 width: parent.width
                 Row {
                     Label {
+                        width: 150
                         text: "SSAO Radius ("+radiusSlider.value.toFixed(1)+"): "
                     }
 
@@ -78,8 +81,10 @@ Item {
                         maximumValue: 50.0
                     }
                 }
+
                 Row {
                     Label {
+                        width: 150
                         text: "SSAO Noise ("+noiseScaleSlider.value.toFixed(1)+"): "
                     }
 
@@ -91,8 +96,10 @@ Item {
                         maximumValue: 10.0
                     }
                 }
+
                 Row {
                     Label {
+                        width: 150
                         text: "SSAO samples ("+samplesSlider.value+"): "
                     }
                     Slider {
@@ -104,6 +111,37 @@ Item {
                         maximumValue: 64
                     }
                 }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Sphere scaling ("+sphereScalingSlider.value.toFixed(2)+"): "
+                    }
+                    Slider {
+                        id: sphereScalingSlider
+                        width: 150
+                        minimumValue: 0.1
+                        maximumValue: 1.0
+                        value: 0.23
+                        stepSize: 0.01
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Bond radius ("+bondRadiusSlider.value.toFixed(2)+"): "
+                    }
+                    Slider {
+                        id: bondRadiusSlider
+                        width: 150
+                        minimumValue: 0.1
+                        maximumValue: 1.0
+                        value: 0.3
+                        stepSize: 0.01
+                    }
+                }
+
                 ComboBox {
                     id: ssaoMode
                     model: ["hemisphere", "sphere"]

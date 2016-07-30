@@ -74,6 +74,7 @@ Item {
         anchors.left: lineNumbers.right
         wrapMode: TextEdit.NoWrap
         textFormat: TextEdit.AutoText
+        focus: false
         text: "variable L equal 12.0
 variable thickness equal 3.0
 
