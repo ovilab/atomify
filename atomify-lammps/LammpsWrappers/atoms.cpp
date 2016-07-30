@@ -259,7 +259,7 @@ void Atoms::generateBondData(AtomData &atomData, System &system) {
         }
     }
 //    qDebug() << "Max bond thing: " << m_bonds->maxBondLength() << " and I am " << this;
-    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms with " << numPairs << " pairs. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
+//    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms with " << numPairs << " pairs. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
 
     m_bondData->setData(bondsDataRaw);
 }

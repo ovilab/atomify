@@ -165,6 +165,11 @@ bool System::isValid() const
     return m_isValid;
 }
 
+QVector3D System::cameraPosition() const
+{
+    return m_cameraPosition;
+}
+
 Computes *System::computes() const
 {
     return m_computes;
@@ -213,4 +218,13 @@ void System::setComputes(Computes *computes)
 
     m_computes = computes;
     emit computesChanged(computes);
+}
+
+void System::setCameraPosition(QVector3D cameraPosition)
+{
+    if (m_cameraPosition == cameraPosition)
+        return;
+
+    m_cameraPosition = cameraPosition;
+    emit cameraPositionChanged(cameraPosition);
 }

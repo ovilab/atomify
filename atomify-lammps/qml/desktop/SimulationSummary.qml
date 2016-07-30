@@ -77,9 +77,12 @@ Rectangle {
         GroupBox {
             width: parent.width
             title: "Simulation summary"
-            onHeightChanged: console.log("GroupBox height: ", height)
 
             Column {
+                Text {
+                    font.bold: true
+                    text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
+                }
                 Text {
                     font.bold: true
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"

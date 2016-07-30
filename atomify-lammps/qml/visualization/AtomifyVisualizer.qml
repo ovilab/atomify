@@ -46,6 +46,11 @@ Scene3D {
             position: Qt.vector3d(7.0, 7.0, 50.0)
             upVector: Qt.vector3d(0.0, 1.0, 0.0)
             viewCenter: Qt.vector3d(7.0, 7.0, 7.0)
+            onPositionChanged: {
+                if(simulator != undefined) {
+                    simulator.system.cameraPosition = position
+                }
+            }
         }
         property Spheres spheres: spheres
 

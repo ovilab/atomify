@@ -11,6 +11,7 @@ class System : public QObject
     Q_OBJECT
     Q_PROPERTY(QVector3D size READ size NOTIFY sizeChanged)
     Q_PROPERTY(QVector3D origin READ origin NOTIFY originChanged)
+    Q_PROPERTY(QVector3D cameraPosition READ cameraPosition WRITE setCameraPosition NOTIFY cameraPositionChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
@@ -37,6 +38,7 @@ public:
     void reset();
     float volume() const;
     bool isValid() const;
+    QVector3D cameraPosition() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -44,6 +46,7 @@ public slots:
     void setGroups(class Groups* groups);
     void setIsValid(bool isValid);
     void setComputes(class Computes* computes);
+    void setCameraPosition(QVector3D cameraPosition);
 
 signals:
     void originChanged(QVector3D origin);
@@ -59,6 +62,7 @@ signals:
     void isValidChanged(bool isValid);
     void computesChanged(class Computes* computes);
     void geometryChanged();
+    void cameraPositionChanged(QVector3D cameraPosition);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -67,6 +71,7 @@ private:
     class Computes* m_computes = nullptr;
     QVector3D m_origin;
     QVector3D m_size;
+    QVector3D m_cameraPosition;
     int m_numberOfAtoms = 0;
     float m_simulationTime = 0;
     int m_timesteps = 0;
