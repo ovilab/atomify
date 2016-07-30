@@ -239,6 +239,14 @@ Item {
             onActivated: tabView.currentIndex = 1
         }
         Shortcut {
+            sequence: "Ctrl+P"
+            onActivated: simulator.paused = !simulator.paused
+        }
+        Shortcut {
+            sequence: "Space"
+            onActivated: simulator.paused = !simulator.paused
+        }
+        Shortcut {
             sequence: "Tab"
             onActivated: toggleFocusMode()
         }
