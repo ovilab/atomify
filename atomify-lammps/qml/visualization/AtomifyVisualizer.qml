@@ -22,8 +22,7 @@ Scene3D {
     property real scale: 0.23
     property bool addPeriodicCopies: false
     property alias ambientOcclusion: ambientOcclusion
-
-
+    property alias finalShaderBuilder: finalShaderBuilder
     aspects: ["render", "input", "logic"]
 
     Entity {
@@ -61,7 +60,7 @@ Scene3D {
                                                     id : normalTexture
                                                     width : root.width
                                                     height : root.width // TODO use height?
-                                                    format : Texture.RGBA16F
+                                                    format : Texture.RGBA32F
                                                     generateMipMaps : false
                                                     magnificationFilter : Texture.Linear
                                                     minificationFilter : Texture.Linear
@@ -78,7 +77,7 @@ Scene3D {
                                                     id : positionTexture
                                                     width : root.width
                                                     height : root.width // TODO use height?
-                                                    format : Texture.RGBA16F
+                                                    format : Texture.RGBA32F
                                                     generateMipMaps : false
                                                     magnificationFilter : Texture.Linear
                                                     minificationFilter : Texture.Linear
@@ -358,8 +357,9 @@ void main()
                             value: AmbientOcclusion {
                                 id: ambientOcclusion
                                 samples: 64
+                                radius: 10
                                 depthTexture: depthTexture
-                                mode: "sphere"
+                                mode: "hemisphere"
                                 randomVectorTexture: Texture2D {
                                     width : 128
                                     height : 2
@@ -573,6 +573,30 @@ void main()
 
                 ShaderBuilder {
                     id: finalShaderBuilder
+                    function selectOutput(outputName) {
+                        if(outputName === "blurMultiply") {
+                            output.value = blurMultiply
+                        }
+                        if(outputName === "ssaoMultiply") {
+                            output.value = ssaoMultiply
+                        }
+                        if(outputName === "blur") {
+                            output.value = blurNode
+                        }
+
+                        if(outputName === "ssao") {
+                            output.value = ssaoNode
+                        }
+                        if(outputName === "position") {
+                            output.value = position
+                        }
+                        if(outputName === "color") {
+                            output.value = color
+                        }
+                        if(outputName === "normal") {
+                            output.value = normal
+                        }
+                    }
 
                     property ShaderNode position: ShaderNode {
                         type: "vec3"
@@ -604,6 +628,7 @@ void main()
 
                     outputs: [
                         ShaderOutput {
+                            id: output
                             name: "fragColor"
                             type: "vec4"
                             value: blurMultiply

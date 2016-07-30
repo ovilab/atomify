@@ -61,18 +61,40 @@ Item {
             system: simulator.system ? simulator.system : null
 
             Column {
-                Slider {
-                    id: radiusSlider
-                    minimumValue: 0.0
-                    value: 0.5
-                    maximumValue: 50.0
+                y: parent.height - 300
+                width: parent.width
+                Row {
+                    Label {
+                        text: "SSAO Radius ("+radiusSlider.value.toFixed(1)+"): "
+                    }
+
+                    Slider {
+                        id: radiusSlider
+                        width: 150
+                        minimumValue: 0.0
+                        value: 0.5
+                        maximumValue: 50.0
+                    }
                 }
-                Slider {
-                    id: samplesSlider
-                    minimumValue: 1
-                    value: 10
-                    stepSize: 1
-                    maximumValue: 64
+                Row {
+                    Label {
+                        text: "SSAO samples ("+samplesSlider.value+"): "
+                    }
+                    Slider {
+                        id: samplesSlider
+                        width: 150
+                        minimumValue: 1
+                        value: 10
+                        stepSize: 1
+                        maximumValue: 64
+                    }
+                }
+                ComboBox {
+                    model: ["blurMultiply", "ssaoMultiply", "blur", "ssao", "position", "color", "normal"]
+                    currentIndex: 0
+                    onCurrentTextChanged: {
+                        visualizer.finalShaderBuilder.selectOutput(currentText)
+                    }
                 }
             }
         }
