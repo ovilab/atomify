@@ -154,6 +154,10 @@ Rectangle {
                                 source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
                                 MouseArea {
                                     anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
                                     onClicked: model.modelData.visible = !model.modelData.visible
                                     cursorShape: Qt.PointingHandCursor
                                 }
@@ -165,6 +169,7 @@ Rectangle {
                                 MouseArea {
                                     anchors.fill: parent
                                     hoverEnabled: true
+                                    onClicked: model.modelData.visible = !model.modelData.visible
                                     onHoveredChanged: {
                                         model.modelData.hovered = containsMouse
                                     }
@@ -214,6 +219,10 @@ Rectangle {
                                 source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
                                 MouseArea {
                                     anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
                                     onClicked: model.modelData.visible = !model.modelData.visible
                                     cursorShape: Qt.PointingHandCursor
                                 }
@@ -225,9 +234,11 @@ Rectangle {
                                 MouseArea {
                                     anchors.fill: parent
                                     hoverEnabled: true
+                                    onClicked: model.modelData.visible = !model.modelData.visible
                                     onHoveredChanged: {
                                         model.modelData.hovered = containsMouse
                                     }
+                                    cursorShape: Qt.PointingHandCursor
                                 }
                             }
 
