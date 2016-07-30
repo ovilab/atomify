@@ -112,21 +112,22 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         for(float &radii : m_atomData.radii) radii = 1.0;
     }
 
-    for(int ii=0; ii<numberOfAtoms; ii++) {
-        int i = m_atomData.sortedIndices[ii];
-        m_atomData.types[ii] = types[i];
+    for(int i=0; i<numberOfAtoms; i++) {
+        // int i = m_atomData.sortedIndices[ii];
 
+        m_atomData.types[i] = types[i];
+        m_atomData.originalIndex[i] = i;
         double position[3];
         position[0] = atom->x[i][0];
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
-        m_atomData.positions[ii][0] = position[0];
-        m_atomData.positions[ii][1] = position[1];
-        m_atomData.positions[ii][2] = position[2];
-        m_atomData.originalIndex[ii] = ii;
-        m_atomData.bitmask[ii] = atom->mask[i];
-        m_atomData.visible[ii] = true;
+        m_atomData.positions[i][0] = position[0];
+        m_atomData.positions[i][1] = position[1];
+        m_atomData.positions[i][2] = position[2];
+        m_atomData.originalIndex[i] = i;
+        m_atomData.bitmask[i] = atom->mask[i];
+        m_atomData.visible[i] = true;
     }
 //    QElapsedTimer t;
 //    t.start();
@@ -166,13 +167,14 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
          }
     }
 
-    applyDeltaPositions(atomData);
+    // applyDeltaPositions(atomData);
+    generateBondData(atomData, *system);
     generateSphereData(atomData);
-    generateBondData(atomData);
     // generateBondDataFromLammpsNeighborlist(atomData, *lammps);
 }
 
 void Atoms::applyDeltaPositions(AtomData &atomData) {
+    return;
     for(int i=0; i<atomData.positions.size(); i++) {
         QVector3D &position = atomData.positions[i];
         QVector3D &deltaPosition = atomData.deltaPositions[i];
@@ -186,7 +188,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
     for(int atomIndex = 0; atomIndex<atomData.size(); atomIndex++) {
         if(atomData.visible[atomIndex]) {
-            atomData.positions[visibleAtomCount] = atomData.positions[atomIndex];
+            atomData.positions[visibleAtomCount] = atomData.positions[atomIndex] + atomData.deltaPositions[atomIndex];
             atomData.colors[visibleAtomCount] = atomData.colors[atomIndex];
             atomData.radii[visibleAtomCount] = atomData.radii[atomIndex];
             visibleAtomCount++;
@@ -199,7 +201,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
     m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
 }
 
-void Atoms::generateBondData(AtomData &atomData) {
+void Atoms::generateBondData(AtomData &atomData, System &system) {
     bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
         m_bondData->setData(bondsDataRaw);
@@ -208,25 +210,26 @@ void Atoms::generateBondData(AtomData &atomData) {
 
     const Neighborlist &neighborList = atomData.neighborList;
     if(neighborList.neighbors.size()==0) return;
+    long numPairs = 0;
 
     QElapsedTimer t;
     t.start();
     bondsDataRaw.reserve(atomData.positions.size());
-    int numPairs=0;
-    float minDistance = 0;
     for(int ii=0; ii<atomData.size(); ii++) {
+        if(!atomData.visible[ii]) continue;
+
         int i = atomData.originalIndex[ii];
 
-        const QVector3D position_i = atomData.positions[ii];
         const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
+        const QVector3D position_i = atomData.positions[ii] + deltaPosition_i;
         const int atomType_i = atomData.types[ii];
 
-        const QVector<float> bondLengths = m_bonds->bondLengths()[atomType_i];
+        const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
         const float sphereRadius_i = atomData.radii[ii];
 
         if(neighborList.neighbors.size() <= i) continue;
-
         for(const int &j : neighborList.neighbors[i]) {
+            if(!atomData.visible[j]) continue;
             QVector3D position_j = atomData.positions[j];
             position_j[0] += deltaPosition_i[0];
             position_j[1] += deltaPosition_i[1];
@@ -238,11 +241,7 @@ void Atoms::generateBondData(AtomData &atomData) {
             float dy = position_i[1] - position_j[1];
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
-            //minDistance = std::min(minDistance, sqrtf(rsq));
             numPairs++;
-//            if(bondLengths[atomType_j] > 0.0) {
-//                qDebug() << "We got one, and we have bondLengths[atomType_j]=" << bondLengths[atomType_j] << " with r = " << sqrt(rsq);
-//            }
             if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
                 BondVBOData bond;
                 bond.vertex1[0] = position_i[0];
@@ -259,9 +258,8 @@ void Atoms::generateBondData(AtomData &atomData) {
             }
         }
     }
-    qDebug() << "Bond radius: " << m_bondRadius;
 //    qDebug() << "Max bond thing: " << m_bonds->maxBondLength() << " and I am " << this;
-//    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms with " << numPairs << " pairs. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
+    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms with " << numPairs << " pairs. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
 
     m_bondData->setData(bondsDataRaw);
 }

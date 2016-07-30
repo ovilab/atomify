@@ -137,7 +137,7 @@ Item {
                         width: 150
                         minimumValue: 0.1
                         maximumValue: 1.0
-                        value: 0.3
+                        value: 0.1
                         stepSize: 0.01
                     }
                 }

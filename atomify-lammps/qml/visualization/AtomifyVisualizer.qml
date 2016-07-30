@@ -788,8 +788,7 @@ void main()
 
         PeriodicImages {
             id: periodicImages
-            enabled: true
-            numberOfCopiesX: 2
+            numberOfCopiesX: 1
             numberOfCopiesY: 1
             numberOfCopiesZ: 1
         }
