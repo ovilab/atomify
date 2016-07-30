@@ -686,8 +686,21 @@ void main()
                         color: finalShaderBuilder.color
                         lights: [
                             Light {
-                                position: mainCamera.position
-                                strength: 0.7
+                                // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
+                                position: visualizer.camera.position.plus(
+                                              (visualizer.camera.viewVector.normalized().plus(
+                                                   visualizer.camera.upVector.normalized()).plus(
+                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+                                //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
+                                strength: 0.4
+                                attenuation: 0.0
+                            },
+                            Light {
+                                position: visualizer.camera.position.minus(
+                                              (visualizer.camera.viewVector.normalized().plus(
+                                                   visualizer.camera.upVector.normalized()).plus(
+                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+                                strength: 0.4
                                 attenuation: 0.0
                             }
                         ]
@@ -805,17 +818,6 @@ void main()
             // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
             posMin: -100
             posMax:  100
-            fragmentColor: StandardMaterial {
-                id: spheresFragColor
-                lights: [
-                    Light {
-                        position: visualizer.camera.position
-                        attenuation: 0.1
-                    }
-                ]
-                color: spheres.fragmentBuilder.color
-                ambientIntensity: 2.0
-            }
         }
 
         Bonds {
@@ -823,15 +825,6 @@ void main()
             bondData: simulator.system.atoms.bondData
             posMin: spheres.posMin
             posMax: spheres.posMax
-            fragmentColor: StandardMaterial {
-                lights: [
-                    Light {
-                        position: visualizer.camera.position
-                        attenuation: 0.1
-                    }
-                ]
-                ambientIntensity: 2.0
-            }
         }
     }
 }

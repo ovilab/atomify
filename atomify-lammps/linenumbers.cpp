@@ -118,7 +118,6 @@ void LineNumbers::paint(QPainter *painter)
     // The last visible line is either the last line in the textfield or if we have scrolled as far as we get with current size
     int lastLineVisible = std::min(firstLineVisible+int(height() / m_lineHeight)+1, m_lineCount);
     int numLines = lastLineVisible - firstLineVisible;
-    qDebug() << "m_errorLine: " << m_errorLine;
     for(int i=0; i<numLines; i++) {
         int lineNumber = i+firstLineVisible+1;
         QFont font("times", 24);

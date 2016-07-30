@@ -134,6 +134,10 @@ Rectangle {
                         Label {
                             id: groupsLabel
                             text: "Groups: "+system.groups.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.groups.active = !system.groups.active
+                            }
                         }
                     }
 
@@ -199,6 +203,10 @@ Rectangle {
                         Label {
                             id: regionsLabel
                             text: "Regions: "+system.regions.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.regions.active = !system.regions.active
+                            }
                         }
                     }
 
@@ -266,6 +274,10 @@ Rectangle {
                         Label {
                             id: computesLabel
                             text: "Computes: "+system.computes.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.computes.active = !system.computes.active
+                            }
                         }
                     }
 
