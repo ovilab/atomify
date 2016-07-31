@@ -49,6 +49,14 @@ Item {
                 Layout.minimumWidth: 1
                 focus: true
                 ambientOcclusion.radius: radiusSlider.value
+                ambientOcclusion.samples: samplesSlider.value
+                ambientOcclusion.noiseScale: noiseScaleSlider.value
+                ambientOcclusion.mode: ssaoMode.currentText
+                sphereScale: sphereScalingSlider.value
+                bondRadius: bondRadiusSlider.value
+                periodicImages.numberOfCopiesX: periodicXSlider.value
+                periodicImages.numberOfCopiesY: periodicYSlider.value
+                periodicImages.numberOfCopiesZ: periodicZSlider.value
             }
 
         }
@@ -59,12 +67,142 @@ Item {
             height: parent.height
             system: simulator.system ? simulator.system : null
 
+            Column {
+                y: parent.height - 300
+                width: parent.width
+                Row {
+                    Label {
+                        width: 150
+                        text: "SSAO Radius ("+radiusSlider.value.toFixed(1)+"): "
+                    }
 
-            Slider {
-                id: radiusSlider
-                minimumValue: 0.0
-                value: 0.5
-                maximumValue: 2.0
+                    Slider {
+                        id: radiusSlider
+                        width: 150
+                        minimumValue: 0.0
+                        value: 8.0
+                        maximumValue: 50.0
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "SSAO Noise ("+noiseScaleSlider.value.toFixed(1)+"): "
+                    }
+
+                    Slider {
+                        id: noiseScaleSlider
+                        width: 150
+                        minimumValue: 0.0
+                        value: 1.0
+                        maximumValue: 10.0
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "SSAO samples ("+samplesSlider.value+"): "
+                    }
+                    Slider {
+                        id: samplesSlider
+                        width: 150
+                        minimumValue: 1
+                        value: 32
+                        stepSize: 1
+                        maximumValue: 64
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Sphere scaling ("+sphereScalingSlider.value.toFixed(2)+"): "
+                    }
+                    Slider {
+                        id: sphereScalingSlider
+                        width: 150
+                        minimumValue: 0.1
+                        maximumValue: 1.0
+                        value: 0.23
+                        stepSize: 0.01
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Bond radius ("+bondRadiusSlider.value.toFixed(2)+"): "
+                    }
+                    Slider {
+                        id: bondRadiusSlider
+                        width: 150
+                        minimumValue: 0.1
+                        maximumValue: 1.0
+                        value: 0.1
+                        stepSize: 0.01
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Periodic X: "
+                    }
+                    Slider {
+                        id: periodicXSlider
+                        width: 150
+                        minimumValue: 1
+                        maximumValue: 5.0
+                        value: 1
+                        stepSize: 1
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Periodic Y: "
+                    }
+                    Slider {
+                        id: periodicYSlider
+                        width: 150
+                        minimumValue: 1
+                        maximumValue: 5.0
+                        value: 1
+                        stepSize: 1
+                    }
+                }
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Periodic Z: "
+                    }
+                    Slider {
+                        id: periodicZSlider
+                        width: 150
+                        minimumValue: 1
+                        maximumValue: 5.0
+                        value: 1
+                        stepSize: 1
+                    }
+                }
+
+                ComboBox {
+                    id: ssaoMode
+                    model: ["hemisphere", "sphere"]
+                    currentIndex: 0
+                }
+
+                ComboBox {
+                    model: ["blurMultiply", "ssaoMultiply", "blur", "ssao", "position", "color", "normal"]
+                    currentIndex: 0
+                    onCurrentTextChanged: {
+                        visualizer.finalShaderBuilder.selectOutput(currentText)
+                    }
+                }
             }
         }
     }
@@ -93,12 +231,12 @@ Item {
             onActivated: editorTab.lammpsEditor.runScript()
         }
         Shortcut {
-            sequence: "Ctrl+1"
-            onActivated: tabView.currentIndex = 0
+            sequence: "Ctrl+P"
+            onActivated: simulator.paused = !simulator.paused
         }
         Shortcut {
-            sequence: "Ctrl+2"
-            onActivated: tabView.currentIndex = 1
+            sequence: "Space"
+            onActivated: simulator.paused = !simulator.paused
         }
         Shortcut {
             sequence: "Tab"

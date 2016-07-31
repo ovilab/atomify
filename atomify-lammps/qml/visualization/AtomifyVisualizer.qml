@@ -22,7 +22,15 @@ Scene3D {
     property real scale: 0.23
     property bool addPeriodicCopies: false
     property alias ambientOcclusion: ambientOcclusion
-
+    property alias finalShaderBuilder: finalShaderBuilder
+    property alias sphereScale: colorModifier.scale
+    property real bondRadius: 0.1
+    property alias periodicImages: periodicImages
+    onBondRadiusChanged: {
+        if(simulator != undefined) {
+            simulator.system.atoms.bondRadius = bondRadius
+        }
+    }
 
     aspects: ["render", "input", "logic"]
 
@@ -34,10 +42,15 @@ Scene3D {
             fieldOfView: 50
             aspectRatio: root.width / root.height
             nearPlane : 2.0
-            farPlane : 100.0
+            farPlane : 500.0
             position: Qt.vector3d(7.0, 7.0, 50.0)
             upVector: Qt.vector3d(0.0, 1.0, 0.0)
             viewCenter: Qt.vector3d(7.0, 7.0, 7.0)
+            onPositionChanged: {
+                if(simulator != undefined) {
+                    simulator.system.cameraPosition = position
+                }
+            }
         }
         property Spheres spheres: spheres
 
@@ -112,7 +125,7 @@ Scene3D {
                                                     id: depthTexture
                                                     width : root.width
                                                     height : root.width // TODO use height?
-                                                    format: Texture.D32F
+                                                    format: Texture.D32
                                                     generateMipMaps: false
                                                     magnificationFilter: Texture.Linear
                                                     minificationFilter: Texture.Linear
@@ -127,7 +140,7 @@ Scene3D {
                                         ]
                                     }
                                     ClearBuffers {
-                                        clearColor: "#012"
+                                        clearColor: "#000"
                                         buffers: ClearBuffers.ColorDepthBuffer
                                         CameraSelector {
                                             camera: mainCamera
@@ -145,8 +158,8 @@ Scene3D {
                                                 attachmentPoint : RenderTargetOutput.Color0
                                                 texture : Texture2D {
                                                     id : ssaoTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
+                                                    width : 0.5*root.width
+                                                    height : 0.5*root.width // TODO use height?
                                                     format : Texture.RGBA32F
                                                     generateMipMaps : false
                                                     magnificationFilter : Texture.Linear
@@ -160,7 +173,7 @@ Scene3D {
                                         ]
                                     }
                                     ClearBuffers {
-                                        clearColor: "#fff"
+                                        clearColor: "#000"
                                         buffers: ClearBuffers.ColorDepthBuffer
                                         CameraSelector {
                                             camera: mainCamera
@@ -193,7 +206,7 @@ Scene3D {
                                         ]
                                     }
                                     ClearBuffers {
-                                        clearColor: "#f00"
+                                        clearColor: "#000"
                                         buffers: ClearBuffers.ColorDepthBuffer
                                         CameraSelector {
                                             camera: mainCamera
@@ -204,7 +217,7 @@ Scene3D {
                             RenderPassFilter {
                                 matchAny : FilterKey { name : "pass"; value : "final" }
                                 ClearBuffers {
-                                    clearColor: Qt.rgba(0.4, 0.4, 0.7, 1.0)
+                                    clearColor: "#000"
                                     buffers: ClearBuffers.ColorDepthBuffer
                                     CameraSelector {
                                         id: viewCameraSelector
@@ -240,7 +253,9 @@ Scene3D {
                     Parameter { name: "normalTexture"; value : normalTexture },
                     Parameter { name: "positionTexture"; value : positionTexture },
                     Parameter { name: "colorTexture"; value : colorTexture },
-                    Parameter { name: "depthTexture"; value : depthTexture }
+                    Parameter { name: "depthTexture"; value : depthTexture },
+                    Parameter { name: "posMin"; value: spheres.posMin },
+                    Parameter { name: "posMax"; value: spheres.posMax }
                 ]
                 effect: Effect {
                     techniques : [
@@ -309,6 +324,8 @@ uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
 uniform highp sampler2D colorTexture;
 uniform highp sampler2D depthTexture;
+uniform float posMin;
+uniform float posMax;
 
 uniform highp mat4 inverseProjectionMatrix;
 uniform highp mat4 projectionMatrix;
@@ -339,17 +356,13 @@ void main()
 {
     highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
     highp float depth = texture(depthTexture, texCoord).x;
-    highp vec3 position = texture(positionTexture, texCoord).rgb * 1000.0;
-//    highp vec3 position = positionFromDepth(depth, texCoord);
-    highp vec4 color = texture(colorTexture, texCoord).rgba;
+    float deltaMaxMin = posMax - posMin;
+    vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin;
+    vec4 color = texture(positionTexture, texCoord);
 
-//    fragColor = vec4(position + normal * 0.0001, 1.0);
-//    return;
-
-    if(depth > 1.0 - 1e-7) {
-        discard;
+    if(depth > 1.0 - 1e-5) {
+        return;
     }
-
 
 #pragma shadernodes body
 }
@@ -363,8 +376,24 @@ void main()
                             value: AmbientOcclusion {
                                 id: ambientOcclusion
                                 samples: 64
+                                radius: 10
                                 depthTexture: depthTexture
-                                mode: "sphere"
+                                mode: "hemisphere"
+                                randomVectorTexture: Texture2D {
+                                    width : 128
+                                    height : 2
+                                    minificationFilter: Texture.Linear
+                                    magnificationFilter: Texture.Linear
+                                    wrapMode {
+                                        x: WrapMode.Repeat
+                                        y: WrapMode.Repeat
+                                    }
+                                    generateMipMaps: false
+                                    TextureImage {
+                                        source: "qrc:/images/ambient.png"
+                                    }
+                                }
+
                                 noiseTexture: Texture2D {
                                     width : 256
                                     height : 256
@@ -464,7 +493,7 @@ out highp vec4 fragColor;
 #pragma shadernodes header
 
 highp float blurLinearizeDepth(highp float z) {
-    highp float f=100.0;
+    highp float f=200.0;
     highp float n = 2.0;
 
     return (2.0 * n) / (f + n - z * (f - n));
@@ -517,7 +546,9 @@ void main()
                     Parameter { name: "positionTexture"; value : positionTexture },
                     Parameter { name: "colorTexture"; value : colorTexture },
                     Parameter { name: "depthTexture"; value : depthTexture },
-                    Parameter { name: "winSize"; value : Qt.size(root.width, root.height) }
+                    Parameter { name: "winSize"; value : Qt.size(root.width, root.height) },
+                    Parameter { name: "posMin"; value: spheres.posMin },
+                    Parameter { name: "posMax"; value: spheres.posMax }
                 ]
                 effect: Effect {
                     techniques : [
@@ -554,6 +585,7 @@ void main()
 "
 
                                     fragmentShaderCode: finalShaderBuilder.finalShader
+                                    // onFragmentShaderCodeChanged: console.log(fragmentShaderCode)
                                 }
                             }
                         }
@@ -562,6 +594,30 @@ void main()
 
                 ShaderBuilder {
                     id: finalShaderBuilder
+                    function selectOutput(outputName) {
+                        if(outputName === "blurMultiply") {
+                            output.value = blurMultiply
+                        }
+                        if(outputName === "ssaoMultiply") {
+                            output.value = ssaoMultiply
+                        }
+                        if(outputName === "blur") {
+                            output.value = blurNode
+                        }
+
+                        if(outputName === "ssao") {
+                            output.value = ssaoNode
+                        }
+                        if(outputName === "position") {
+                            output.value = position
+                        }
+                        if(outputName === "color") {
+                            output.value = color
+                        }
+                        if(outputName === "normal") {
+                            output.value = normal
+                        }
+                    }
 
                     property ShaderNode position: ShaderNode {
                         type: "vec3"
@@ -593,9 +649,11 @@ void main()
 
                     outputs: [
                         ShaderOutput {
+                            id: output
                             name: "fragColor"
                             type: "vec4"
                             value: blurMultiply
+                            // value: finalShaderBuilder
                         }
                     ]
 
@@ -628,13 +686,21 @@ void main()
                         color: finalShaderBuilder.color
                         lights: [
                             Light {
-                                position: mainCamera.position
-                                strength: 0.5
+                                // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
+                                position: visualizer.camera.position.plus(
+                                              (visualizer.camera.viewVector.normalized().plus(
+                                                   visualizer.camera.upVector.normalized()).plus(
+                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+                                //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
+                                strength: 0.4
                                 attenuation: 0.0
                             },
                             Light {
-                                position: mainCamera.position.plus(mainCamera.viewVector.normalized().plus(mainCamera.upVector.normalized()).plus(mainCamera.viewVector.normalized().crossProduct(mainCamera.upVector.normalized())).times(10))
-                                strength: 0.5
+                                position: visualizer.camera.position.minus(
+                                              (visualizer.camera.viewVector.normalized().plus(
+                                                   visualizer.camera.upVector.normalized()).plus(
+                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+                                strength: 0.4
                                 attenuation: 0.0
                             }
                         ]
@@ -643,13 +709,15 @@ void main()
                     source: "
 #version 410
 
-uniform highp sampler2D colorTexture;
 uniform highp sampler2D blurTexture;
 uniform highp sampler2D ssaoTexture;
 uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
+uniform highp sampler2D colorTexture;
 uniform highp sampler2D depthTexture;
 uniform highp vec2 winSize;
+uniform float posMin;
+uniform float posMax;
 
 uniform highp mat4 inverseProjectionMatrix;
 uniform highp mat4 projectionMatrix;
@@ -665,26 +733,31 @@ out highp vec4 fragColor;
 
 #pragma shadernodes header
 
+highp vec3 positionFromDepth(highp float z, highp vec2 texCoord) {
+    highp float x = texCoord.x * 2.0 - 1.0;
+    highp float y = texCoord.y * 2.0 - 1.0;
+    highp vec4 projectedPos = vec4(x, y, z, 1.0f / z);
+    highp vec4 positionVS = inverseProjectionMatrix * projectedPos;
+    positionVS /= positionVS.w;
+    highp vec4 positionModel = inverseViewMatrix * positionVS;
+    return positionModel.xyz;
+}
+
 void main()
 {
-        vec4 color = texture(colorTexture, texCoord);
-        vec3 position = texture(positionTexture, texCoord).xyz * 1000.0; // TODO fix factor
         highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
-    //    highp vec3 normal = normalize(texture(normalTexture, texCoord).xyz);
         highp float depth = texture(depthTexture, texCoord).x;
-//        highp vec3 position = positionFromDepth(depth, texCoord);
+        float deltaMaxMin = posMax - posMin;
+        vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin; // TODO fix factor
+        vec4 color = texture(positionTexture, texCoord);
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;
         highp vec3 blur = texture(blurTexture, texCoord).rgb;
 
-    if(depth > 1.0 - 1e-7) {
-//        return;
+    if(depth > 1.0 - 1e-5) {
+        discard;
     }
 
 #pragma shadernodes body
-
-////    fragColor = vec4(normal, 1.0);
-////    fragColor = vec4(position, 1.0);
-////    fragColor = vec4(linearizeDepth(depth) * 20.0, 1.0, 1.0, 1.0);
 }
 
 "
@@ -733,7 +806,6 @@ void main()
 
         PeriodicImages {
             id: periodicImages
-            enabled: false
             numberOfCopiesX: 1
             numberOfCopiesY: 1
             numberOfCopiesZ: 1
@@ -743,31 +815,16 @@ void main()
             id: spheres
             camera: visualizer.camera
             sphereData: simulator.system.atoms.sphereData
-            fragmentColor: StandardMaterial {
-                id: spheresFragColor
-                lights: [
-                    Light {
-                        position: visualizer.camera.position
-                        attenuation: 0.1
-                    }
-                ]
-                color: spheres.fragmentBuilder.color
-                ambientIntensity: 2.0
-            }
+            // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
+            posMin: -100
+            posMax:  100
         }
 
         Bonds {
             id: bonds
             bondData: simulator.system.atoms.bondData
-            fragmentColor: StandardMaterial {
-                lights: [
-                    Light {
-                        position: visualizer.camera.position
-                        attenuation: 0.1
-                    }
-                ]
-                ambientIntensity: 2.0
-            }
+            posMin: spheres.posMin
+            posMax: spheres.posMax
         }
     }
 }

@@ -11,14 +11,29 @@ Item {
     property alias fileName: backend.fileName
     property alias fileUrl: backend.fileUrl
     property bool changedSinceLastSave: false
-    property bool isUnsavedFile: true
+    property int currentLine: -1
+    property int errorLine: -1
+
+    onCurrentLineChanged: {
+        lineNumbers.currentLine = currentLine
+        textArea.update()
+    }
+
+    onErrorLineChanged: {
+        lineNumbers.errorLine = errorLine
+        textArea.update()
+    }
+
+    function clear() {
+        currentLine = -1
+        errorLine = -1
+        textArea.update()
+    }
 
     function open(fileUrl) {
         backend.fileUrl = fileUrl
         backend.load()
         textArea.text = backend.text
-        console.log("Text: ", backend.text)
-        isUnsavedFile = false
         changedSinceLastSave = false
     }
 
@@ -33,7 +48,6 @@ Item {
         } else {
             if(backend.save()) {
                 changedSinceLastSave = false
-                isUnsavedFile = false
                 if(cb != undefined) cb()
             }
         }
@@ -74,6 +88,7 @@ Item {
         anchors.left: lineNumbers.right
         wrapMode: TextEdit.NoWrap
         textFormat: TextEdit.AutoText
+        focus: false
         text: "variable L equal 12.0
 variable thickness equal 3.0
 
@@ -105,7 +120,13 @@ neighbor 0.3 bin
 neigh_modify delay 0 every 20 check no
 
 fix 1 all nve
-#/bond 1 2 2.0
+run 100
+run 50
+run 50
+run 50
+run 50
+run 50
+run 100
 "
 
         function update() {

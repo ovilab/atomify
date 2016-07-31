@@ -7,9 +7,20 @@ Item {
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
+    property int currentLine: -1
+    property int errorLine: -1
+    onCurrentLineChanged: {
+        if(currentEditor != undefined) currentEditor.currentLine = currentLine
+    }
 
-    Component.onCompleted: {
-        focusCurrentEditor()
+    onErrorLineChanged: {
+        if(currentEditor != undefined) currentEditor.errorLine = errorLine
+    }
+
+    function clear() {
+        for(var i=0; i<stackLayout.count; i++) {
+            stackLayout.itemAt(i).clear()
+        }
     }
 
     function focusCurrentEditor() {
@@ -65,23 +76,44 @@ Item {
         }
     }
 
-    function openTab() {
-        fileDialogLoad.cb = function() {
-            if(currentEditor.title === "untitled" && currentEditor.text === "") {
-                currentEditor.open(fileDialogLoad.fileUrl)
-            } else {
-                var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
-                var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
-                newTabButton.codeEditor = newCodeEditor
-                newCodeEditor.open(fileDialogLoad.fileUrl)
-                newCodeEditor.changedSinceLastSave = false
-                tabBar.setCurrentIndex(tabBar.count-1)
-                newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
-                // focusCurrentEditor()
+    function openTab(filename) {
+        if(filename === undefined) {
+            fileDialogLoad.cb = function() {
+                if(currentEditor.title === "untitled" && currentEditor.text === "") {
+                    currentEditor.open(fileDialogLoad.fileUrl)
+                } else {
+                    var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
+                    var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
+                    newTabButton.codeEditor = newCodeEditor
+                    newCodeEditor.open(fileDialogLoad.fileUrl)
+                    newCodeEditor.changedSinceLastSave = false
+                    tabBar.setCurrentIndex(tabBar.count-1)
+                    newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
+                    focusCurrentEditor()
+                }
+
+            }
+            fileDialogLoad.visible = true
+        } else {
+            // First check if its open
+            for(var i=0; i<stackLayout.count; i++) {
+                var editor = stackLayout.itemAt(i)
+
+                if(editor.fileUrl==filename) {
+                    tabBar.currentIndex = i
+                    return;
+                }
             }
 
+            // Nope. Not open, so open in a new tab instead
+            var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
+            var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
+            newTabButton.codeEditor = newCodeEditor
+            newCodeEditor.open(filename)
+            newCodeEditor.changedSinceLastSave = false
+            tabBar.setCurrentIndex(tabBar.count-1)
+            newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
         }
-        fileDialogLoad.visible = true
     }
 
     ColumnLayout {

@@ -29,6 +29,7 @@ protected:
     QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
     QString createCommandPrefix() override;
+    long lastUpdate = -1;
 public:
     CPCompute(Qt3DCore::QNode *parent = 0);
     ~CPCompute();

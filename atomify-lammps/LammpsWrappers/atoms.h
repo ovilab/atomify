@@ -64,7 +64,7 @@ private:
     class Bonds* m_bonds = nullptr;
     QVariantList m_modifiers;
     float m_bondRadius = 0.1;
-    void generateBondData(AtomData &atomData);
+    void generateBondData(AtomData &atomData, System &system);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     void applyDeltaPositions(AtomData &atomData);

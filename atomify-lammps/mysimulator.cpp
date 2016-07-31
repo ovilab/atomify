@@ -122,6 +122,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
 
+    if(m_lammpsController.crashed()) return;
+
     if(!m_lammpsController.state.runCommandActive) {
         ScriptHandler *scriptHandler = atomifySimulator->m_scriptHandler;
         ScriptParser &scriptParser = scriptHandler->parser();

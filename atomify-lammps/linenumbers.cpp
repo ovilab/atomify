@@ -81,6 +81,24 @@ void LineNumbers::setSelectionEnd(int selectionEnd)
         emit selectionEndChanged(selectionEnd);
 }
 
+void LineNumbers::setCurrentLine(int currentLine)
+{
+    if (m_currentLine == currentLine)
+            return;
+
+        m_currentLine = currentLine;
+        emit currentLineChanged(currentLine);
+}
+
+void LineNumbers::setErrorLine(int errorLine)
+{
+    if (m_errorLine == errorLine)
+            return;
+
+        m_errorLine = errorLine;
+        emit errorLineChanged(errorLine);
+}
+
 
 void LineNumbers::paint(QPainter *painter)
 {
@@ -117,11 +135,26 @@ void LineNumbers::paint(QPainter *painter)
             painter->drawRect(selectedTextRect);
             painter->fillRect(selectedTextRect, QColor("#b2d7ff"));
         }
+
         if(lineNumber == cursorLine) {
             QRectF selectedTextRect(0,y,width(),textHeight);
             painter->setPen(Qt::lightGray);
             painter->drawRect(selectedTextRect);
             painter->fillRect(selectedTextRect, Qt::lightGray);
+        }
+
+        if(lineNumber == m_currentLine) {
+            QRectF selectedTextRect(0,y,width(),textHeight);
+            painter->setPen(QColor("lightGreen"));
+            painter->drawRect(selectedTextRect);
+            painter->fillRect(selectedTextRect, QColor("lightGreen"));
+        }
+
+        if(lineNumber == m_errorLine) {
+            QRectF selectedTextRect(0,y,width(),textHeight);
+            painter->setPen(QColor("red"));
+            painter->drawRect(selectedTextRect);
+            painter->fillRect(selectedTextRect, QColor("red"));
         }
 
         painter->setPen(Qt::black);
@@ -148,6 +181,16 @@ int LineNumbers::selectionStart() const
 int LineNumbers::selectionEnd() const
 {
     return m_selectionEnd;
+}
+
+int LineNumbers::currentLine() const
+{
+    return m_currentLine;
+}
+
+int LineNumbers::errorLine() const
+{
+    return m_errorLine;
 }
 
 float LineNumbers::lineHeight() const

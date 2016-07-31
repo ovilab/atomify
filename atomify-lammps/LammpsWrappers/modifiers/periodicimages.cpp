@@ -1,5 +1,6 @@
 #include "periodicimages.h"
 #include "../system.h"
+#include <QDebug>
 
 PeriodicImages::PeriodicImages()
 {
@@ -28,7 +29,6 @@ void PeriodicImages::apply(AtomData &atomData)
     imageHigh[1] = numImages[1]/2;
     imageHigh[2] = numImages[2]/2;
 
-
     int nextIndex = atomData.size();
     int originalCount = atomData.size();
     atomData.resize(numberOfCopies*atomData.size());
@@ -40,12 +40,15 @@ void PeriodicImages::apply(AtomData &atomData)
                 const QVector3D deltaPosition(imageX*m_system->size().x(), imageY*m_system->size().y(), imageZ*m_system->size().z());
 
                 for(int atomIndex = 0; atomIndex<originalCount; atomIndex++) {
+                    atomData.positions[nextIndex] = atomData.positions[atomIndex];
+                    atomData.deltaPositions[nextIndex] = deltaPosition;
+                    // atomData.deltaPositions[nextIndex] = QVector3D(0,0,0);
                     atomData.colors[nextIndex] = atomData.colors[atomIndex];
                     atomData.radii[nextIndex] = atomData.radii[atomIndex];
-                    atomData.types[nextIndex] = atomData.types[atomIndex];
-                    atomData.positions[nextIndex] = atomData.positions[atomIndex];
                     atomData.originalIndex[nextIndex] = atomIndex;
-                    atomData.deltaPositions[nextIndex] = deltaPosition;
+                    atomData.bitmask[nextIndex] = atomData.bitmask[atomIndex];
+                    atomData.types[nextIndex] = atomData.types[atomIndex];
+                    atomData.visible[nextIndex] = atomData.visible[atomIndex];
                     nextIndex++;
                 }
             }

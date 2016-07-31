@@ -77,9 +77,12 @@ Rectangle {
         GroupBox {
             width: parent.width
             title: "Simulation summary"
-            onHeightChanged: console.log("GroupBox height: ", height)
 
             Column {
+                Text {
+                    font.bold: true
+                    text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
+                }
                 Text {
                     font.bold: true
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
@@ -131,6 +134,10 @@ Rectangle {
                         Label {
                             id: groupsLabel
                             text: "Groups: "+system.groups.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.groups.active = !system.groups.active
+                            }
                         }
                     }
 
@@ -151,6 +158,10 @@ Rectangle {
                                 source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
                                 MouseArea {
                                     anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
                                     onClicked: model.modelData.visible = !model.modelData.visible
                                     cursorShape: Qt.PointingHandCursor
                                 }
@@ -162,6 +173,7 @@ Rectangle {
                                 MouseArea {
                                     anchors.fill: parent
                                     hoverEnabled: true
+                                    onClicked: model.modelData.visible = !model.modelData.visible
                                     onHoveredChanged: {
                                         model.modelData.hovered = containsMouse
                                     }
@@ -191,6 +203,10 @@ Rectangle {
                         Label {
                             id: regionsLabel
                             text: "Regions: "+system.regions.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.regions.active = !system.regions.active
+                            }
                         }
                     }
 
@@ -211,6 +227,10 @@ Rectangle {
                                 source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
                                 MouseArea {
                                     anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
                                     onClicked: model.modelData.visible = !model.modelData.visible
                                     cursorShape: Qt.PointingHandCursor
                                 }
@@ -222,9 +242,11 @@ Rectangle {
                                 MouseArea {
                                     anchors.fill: parent
                                     hoverEnabled: true
+                                    onClicked: model.modelData.visible = !model.modelData.visible
                                     onHoveredChanged: {
                                         model.modelData.hovered = containsMouse
                                     }
+                                    cursorShape: Qt.PointingHandCursor
                                 }
                             }
 
@@ -252,6 +274,10 @@ Rectangle {
                         Label {
                             id: computesLabel
                             text: "Computes: "+system.computes.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.computes.active = !system.computes.active
+                            }
                         }
                     }
 

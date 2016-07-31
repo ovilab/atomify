@@ -197,7 +197,9 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
 
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
-    if(lammpsController->system()->timesteps() % m_frequency != 0) return;
+    // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
+    if(lastUpdate != -1 && (lammpsController->system()->timesteps()-lastUpdate) < m_frequency) return;
+    // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
     Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute == nullptr) return;
 

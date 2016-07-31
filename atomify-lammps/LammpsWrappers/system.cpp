@@ -42,18 +42,25 @@ void System::synchronize(LAMMPSController *lammpsController)
     bool originDidChange = false;
     bool sizeDidChange = false;
     for(int i=0; i<3; i++) {
-        if(m_origin[i] != domain->boxlo[i]) {
+        if( fabs(m_origin[i] - domain->boxlo[i]) > 1e-4) {
             m_origin[i] = domain->boxlo[i];
             originDidChange  = true;
         }
-        if(m_size[i] != domain->prd[i]) {
+        if( fabs(m_size[i] - domain->prd[i]) > 1e-4) {
             m_size[i] = domain->prd[i];
             sizeDidChange = true;
         }
     }
 
-    if(originDidChange) emit originChanged(m_origin);
-    if(sizeDidChange) emit sizeChanged(m_size);
+    if(originDidChange) {
+        emit originChanged(m_origin);
+        emit geometryChanged();
+    }
+
+    if(sizeDidChange) {
+        emit sizeChanged(m_size);
+        emit geometryChanged();
+    }
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -158,6 +165,11 @@ bool System::isValid() const
     return m_isValid;
 }
 
+QVector3D System::cameraPosition() const
+{
+    return m_cameraPosition;
+}
+
 Computes *System::computes() const
 {
     return m_computes;
@@ -206,4 +218,13 @@ void System::setComputes(Computes *computes)
 
     m_computes = computes;
     emit computesChanged(computes);
+}
+
+void System::setCameraPosition(QVector3D cameraPosition)
+{
+    if (m_cameraPosition == cameraPosition)
+        return;
+
+    m_cameraPosition = cameraPosition;
+    emit cameraPositionChanged(cameraPosition);
 }
