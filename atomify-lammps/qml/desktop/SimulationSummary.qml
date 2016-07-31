@@ -93,6 +93,10 @@ Rectangle {
                 }
                 Text {
                     font.bold: true
+                    text: "Units: "+system.units.name
+                }
+                Text {
+                    font.bold: true
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Text {
@@ -353,10 +357,10 @@ Rectangle {
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Show editor tab "
+                        text: "New script "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"1"
+                        text: ": "+shortcutRoot.controlName+"N"
                     }
                 }
 
@@ -365,10 +369,34 @@ Rectangle {
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Show analysis tab "
+                        text: "Save script "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"2"
+                        text: ": "+shortcutRoot.controlName+"S"
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "Open script"
+                    }
+                    Label {
+                        text: ": "+shortcutRoot.controlName+"O"
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "Toggle pause"
+                    }
+                    Label {
+                        text: ": "+shortcutRoot.controlName+"P / Space"
                     }
                 }
 

@@ -21,6 +21,7 @@ class System : public QObject
     Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
     Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
     Q_PROPERTY(Computes* computes READ computes WRITE setComputes NOTIFY computesChanged)
+    Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
@@ -39,6 +40,7 @@ public:
     float volume() const;
     bool isValid() const;
     QVector3D cameraPosition() const;
+    class Units* units() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -47,6 +49,7 @@ public slots:
     void setIsValid(bool isValid);
     void setComputes(class Computes* computes);
     void setCameraPosition(QVector3D cameraPosition);
+    void setUnits(class Units* units);
 
 signals:
     void originChanged(QVector3D origin);
@@ -63,12 +66,14 @@ signals:
     void computesChanged(class Computes* computes);
     void geometryChanged();
     void cameraPositionChanged(QVector3D cameraPosition);
+    void unitsChanged(class Units* units);
 
 private:
     class Atoms* m_atoms = nullptr;
     class Regions* m_regions = nullptr;
     class Groups* m_groups = nullptr;
     class Computes* m_computes = nullptr;
+    class Units* m_units = nullptr;
     QVector3D m_origin;
     QVector3D m_size;
     QVector3D m_cameraPosition;
