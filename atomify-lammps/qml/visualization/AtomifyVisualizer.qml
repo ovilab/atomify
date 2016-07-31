@@ -76,8 +76,8 @@ Scene3D {
                                                     height : root.width // TODO use height?
                                                     format : Texture.RGBA32F
                                                     generateMipMaps : false
-                                                    magnificationFilter : Texture.Linear
-                                                    minificationFilter : Texture.Linear
+                                                    magnificationFilter : Texture.Nearest
+                                                    minificationFilter : Texture.Nearest
                                                     wrapMode {
                                                         x: WrapMode.ClampToEdge
                                                         y: WrapMode.ClampToEdge
@@ -93,8 +93,8 @@ Scene3D {
                                                     height : root.width // TODO use height?
                                                     format : Texture.RGBA32F
                                                     generateMipMaps : false
-                                                    magnificationFilter : Texture.Linear
-                                                    minificationFilter : Texture.Linear
+                                                    magnificationFilter : Texture.Nearest
+                                                    minificationFilter : Texture.Nearest
                                                     wrapMode {
                                                         x: WrapMode.ClampToEdge
                                                         y: WrapMode.ClampToEdge
@@ -110,8 +110,8 @@ Scene3D {
                                                     height : root.width // TODO use height?
                                                     format : Texture.RGBA32F
                                                     generateMipMaps : false
-                                                    magnificationFilter : Texture.Linear
-                                                    minificationFilter : Texture.Linear
+                                                    magnificationFilter : Texture.Nearest
+                                                    minificationFilter : Texture.Nearest
                                                     wrapMode {
                                                         x: WrapMode.ClampToEdge
                                                         y: WrapMode.ClampToEdge
@@ -127,8 +127,8 @@ Scene3D {
                                                     height : root.width // TODO use height?
                                                     format: Texture.D32
                                                     generateMipMaps: false
-                                                    magnificationFilter: Texture.Linear
-                                                    minificationFilter: Texture.Linear
+                                                    magnificationFilter: Texture.Nearest
+                                                    minificationFilter: Texture.Nearest
                                                     wrapMode {
                                                         x: WrapMode.ClampToEdge
                                                         y: WrapMode.ClampToEdge
