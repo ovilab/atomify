@@ -319,7 +319,8 @@ void main()
                     material: ssaoMaterial
                     source: "
 #version 410
-
+"
++(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
 uniform highp sampler2D colorTexture;
@@ -357,8 +358,13 @@ void main()
     highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
     highp float depth = texture(depthTexture, texCoord).x;
     float deltaMaxMin = posMax - posMin;
+#ifdef MACOSX
+    vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin;
+    vec4 color = texture(positionTexture, texCoord);
+#else
     vec3 position = eyePosition + posMin + texture(positionTexture, texCoord).xyz * deltaMaxMin;
     vec4 color = texture(colorTexture, texCoord);
+#endif
 
     if(depth > 1.0 - 1e-5) {
         return;
@@ -679,6 +685,8 @@ void main()
 
                     source: "
 #version 410
+"
++(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 
 uniform highp sampler2D blurTexture;
 uniform highp sampler2D ssaoTexture;
@@ -719,8 +727,13 @@ void main()
         highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
         highp float depth = texture(depthTexture, texCoord).x;
         float deltaMaxMin = posMax - posMin;
-        vec3 position = eyePosition + posMin + texture(positionTexture, texCoord).xyz * deltaMaxMin; // TODO fix factor
-        vec4 color = texture(colorTexture, texCoord);
+#ifdef MACOSX
+    vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin;
+    vec4 color = texture(positionTexture, texCoord);
+#else
+    vec3 position = eyePosition + posMin + texture(positionTexture, texCoord).xyz * deltaMaxMin;
+    vec4 color = texture(colorTexture, texCoord);
+#endif
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;
         highp vec3 blur = texture(blurTexture, texCoord).rgb;
 
