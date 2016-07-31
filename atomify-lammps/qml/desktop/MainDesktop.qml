@@ -264,7 +264,6 @@ Item {
                 }
             }
         }
-
     }
 
     DisableMessage {
