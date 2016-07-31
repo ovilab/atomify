@@ -357,8 +357,8 @@ void main()
     highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
     highp float depth = texture(depthTexture, texCoord).x;
     float deltaMaxMin = posMax - posMin;
-    vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin;
-    vec4 color = texture(positionTexture, texCoord);
+    vec3 position = eyePosition + posMin + texture(positionTexture, texCoord).xyz * deltaMaxMin;
+    vec4 color = texture(colorTexture, texCoord);
 
     if(depth > 1.0 - 1e-5) {
         return;
@@ -379,35 +379,6 @@ void main()
                                 radius: 10
                                 depthTexture: depthTexture
                                 mode: "hemisphere"
-                                randomVectorTexture: Texture2D {
-                                    width : 128
-                                    height : 2
-                                    minificationFilter: Texture.Linear
-                                    magnificationFilter: Texture.Linear
-                                    wrapMode {
-                                        x: WrapMode.Repeat
-                                        y: WrapMode.Repeat
-                                    }
-                                    generateMipMaps: false
-                                    TextureImage {
-                                        source: "qrc:/images/ambient.png"
-                                    }
-                                }
-
-                                noiseTexture: Texture2D {
-                                    width : 256
-                                    height : 256
-                                    minificationFilter: Texture.Linear
-                                    magnificationFilter: Texture.Linear
-                                    wrapMode {
-                                        x: WrapMode.Repeat
-                                        y: WrapMode.Repeat
-                                    }
-                                    generateMipMaps: false
-                                    TextureImage {
-                                        source: "qrc:/images/noise.png"
-                                    }
-                                }
                             }
                         }
                     ]
@@ -748,8 +719,8 @@ void main()
         highp vec3 normal = normalize(-1.0 + 2.0 * texture(normalTexture, texCoord).xyz);
         highp float depth = texture(depthTexture, texCoord).x;
         float deltaMaxMin = posMax - posMin;
-        vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin; // TODO fix factor
-        vec4 color = texture(positionTexture, texCoord);
+        vec3 position = eyePosition + posMin + texture(positionTexture, texCoord).xyz * deltaMaxMin; // TODO fix factor
+        vec4 color = texture(colorTexture, texCoord);
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;
         highp vec3 blur = texture(blurTexture, texCoord).rgb;
 
