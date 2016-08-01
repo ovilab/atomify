@@ -1,5 +1,5 @@
 #include "atomdata.h"
-
+#include <QDebug>
 bool AtomData::isValid()
 {
     return positions.size() == colors.size() &&
