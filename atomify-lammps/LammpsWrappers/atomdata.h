@@ -20,6 +20,7 @@ public:
     void resize(int size);
     int size();
     void reset();
+    void sort(QVector3D cameraPosition);
     ~AtomData();
 };
 

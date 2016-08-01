@@ -56,8 +56,10 @@ Scene3D {
 
         components: [
             RenderSettings {
+
                 activeFrameGraph: Viewport {
                     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
+
                     TechniqueFilter {
                         matchAll: FilterKey { name: "renderingStyle"; value: "deferred" }
                         RenderSurfaceSelector {
