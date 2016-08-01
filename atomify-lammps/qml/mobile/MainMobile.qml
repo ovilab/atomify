@@ -19,7 +19,7 @@ import "qrc:/visualization"
 Item {
     id: mobileRoot
 
-    property AtomifySimulator simulator: null
+    property alias simulator: visualizer.simulator
     property Simulation simulation: null
     property string previousState: ""
 
@@ -53,18 +53,17 @@ Item {
 
     SimulationLoader {
         id: initialSimulationLoader
-        // folder: "qrc:/simulations/diffusion/simple_diffusion"
-        folder: "qrc:/simulations/silica/nanoporous"
+        folder: "qrc:/simulations/diffusion/simple_diffusion"
+//        folder: "qrc:/simulations/silica/nanoporous"
         onLoaded: {
-             // loadSimulation(item)
+            loadSimulation(item)
         }
     }
 
-//    AtomifyVisualizer {
-//        id: visualizer
-////        anchors.fill: parent
-//        simulator: mobileRoot.simulator
-//    }
+    AtomifyVisualizer {
+        id: visualizer
+        anchors.fill: parent
+    }
 
     RevealDashboardButton {
         id: revealDashboardButton
@@ -103,7 +102,7 @@ Item {
         simulator: mobileRoot.simulator
         simulation: mobileRoot.simulation
         anchors {
-            // bottom: visualizer.top
+             bottom: visualizer.top
         }
         onBackClicked: {
             mobileRoot.state = mobileRoot.previousState
@@ -115,9 +114,9 @@ Item {
         id: simulationsView
         width: parent.width
         height: parent.height
-//        anchors {
-//            top: visualizer.bottom
-//        }
+        anchors {
+            top: visualizer.bottom
+        }
         onSimulationClicked: {
             singleSimulation.simulation = simulation
             mobileRoot.previousState = mobileRoot.state

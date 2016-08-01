@@ -4,5 +4,6 @@
 #include "colormodifier.h"
 #include "slice.h"
 #include "periodicimages.h"
-
+#include "groupmodifier.h"
+#include "regionmodifier.h"
 #endif // MODIFIERS_H

@@ -1,8 +1,10 @@
 #include "regions.h"
 #include "../mysimulator.h"
+#include "../lammpscontroller.h"
 #include <domain.h>
 #include <region.h>
 #include <group.h>
+#include <atom.h>
 
 Regions::Regions(AtomifySimulator *simulator)
 {
@@ -10,36 +12,28 @@ Regions::Regions(AtomifySimulator *simulator)
 
 }
 
-void Regions::update(LAMMPS *lammps) {
-    for(QObject *obj : m_data) delete obj; // Clean up the old ones
-    m_dataMap.clear();
-    m_data.clear();
-
-    if(lammps == nullptr) return;
-
-    Domain *lammpsDomain = lammps->domain;
-    Region **regions = lammpsDomain->regions;
-    int numRegions = lammpsDomain->nregion;
-
-    for(int regionIndex=0; regionIndex<numRegions; regionIndex++) {
-        Region *lammpsRegion = regions[regionIndex];
-        int count = lammps->group->count(0,regionIndex);
-        QString name = QString::fromUtf8(lammpsRegion->id);
-        CPRegion *region = new CPRegion(this);
-        region->setName(name);
-        region->setCount(count);
-        m_data.push_back(region);
-        m_dataMap.insert(name, region);
-    }
-
-    setCount(m_data.size());
-    setModel(QVariant::fromValue(m_data));
+void Regions::add(QString identifier) {
+    if(m_dataMap.contains(identifier)) return;
+    CPRegion *region = new CPRegion(this);
+    region->setIdentifier(identifier);
+    m_data.push_back(region);
+    m_dataMap.insert(identifier, region);
 }
 
-void Regions::synchronize(LAMMPS *lammps)
+void Regions::remove(QString identifier) {
+    if(!m_dataMap.contains(identifier)) return;
+
+    CPRegion *region = static_cast<CPRegion*>(m_dataMap[identifier]);
+    m_data.removeOne(region);
+    m_dataMap.remove(identifier);
+    delete region;
+}
+
+void Regions::synchronize(LAMMPSController *lammpsController)
 {
+    LAMMPS *lammps = lammpsController->lammps();
     if(!lammps) {
-        update(nullptr);
+        reset();
         return;
     }
     Domain *lammpsDomain = lammps->domain;
@@ -47,11 +41,10 @@ void Regions::synchronize(LAMMPS *lammps)
 
     int numRegions = lammpsDomain->nregion;
     setCount(numRegions);
-    if(!m_active) return;
 
     Group *lammpsGroup = lammps->group;
+    /* TODO: NOT SURE IF THIS IS IMPORTANT */
     bool firstGroupIsAll = false;
-
     if(lammpsGroup->ngroup>0) {
         QString firstGroupName = QString::fromUtf8(lammpsGroup->names[0]);
         if(firstGroupName.compare("all") == 0) {
@@ -64,26 +57,32 @@ void Regions::synchronize(LAMMPS *lammps)
         return;
     }
 
-    if(m_data.size() != numRegions) {
-        update(lammps);
-        return;
-    }
+    /* END: NOT SURE IF THIS IS IMPORTANT */
 
     for(int regionIndex=0; regionIndex<numRegions; regionIndex++) {
         Region *lammpsRegion = regions[regionIndex];
-        int count = lammpsGroup->count(0,regionIndex);
-        QString name = QString::fromUtf8(lammpsRegion->id);
-        if(!m_dataMap.contains(name)) {
-            update(lammps);
-            return;
-        }
-
-        CPRegion *region = qobject_cast<CPRegion*>(m_dataMap[name]);
-        if(region && region->count() != count) {
-            update(lammps);
-            return;
+        QString identifier = QString::fromUtf8(lammpsRegion->id);
+        if(!m_dataMap.contains(identifier)) {
+            add(identifier);
         }
     }
+
+    QList<QString> regionsToBeRemoved;
+    for(QObject *obj : m_data) {
+        CPRegion *region = static_cast<CPRegion*>(obj);
+        if(!lammpsController->regionExists(region->identifier())) regionsToBeRemoved.append(region->identifier());
+    }
+
+    for(QString identifier : regionsToBeRemoved) {
+        remove(identifier);
+    }
+
+    for(QObject *obj : m_data) {
+        CPRegion *region = static_cast<CPRegion*>(obj);
+        region->update(lammpsController->lammps());
+    }
+
+    setModel(QVariant::fromValue(m_data));
 }
 
 QVariant Regions::model() const
@@ -99,6 +98,28 @@ int Regions::count() const
 bool Regions::active() const
 {
     return m_active;
+}
+
+void Regions::reset()
+{
+    for(QObject *obj : m_data) {
+        CPRegion *region = static_cast<CPRegion*>(obj);
+        delete region;
+    }
+    m_data.clear();
+    m_dataMap.clear();
+    setModel(QVariant::fromValue(m_data));
+}
+
+QList<CPRegion *> Regions::regions()
+{
+    QList<CPRegion*> regions;
+    for(QObject *obj : m_data) {
+        CPRegion *region = qobject_cast<CPRegion*>(obj);
+        if(region) regions.append(region);
+    }
+
+    return regions;
 }
 
 void Regions::setModel(QVariant model)
@@ -133,23 +154,53 @@ CPRegion::CPRegion(QObject *parent) : QObject(parent)
 
 }
 
-QString CPRegion::name() const
-{
-    return m_name;
-}
-
 int CPRegion::count() const
 {
     return m_count;
 }
 
-void CPRegion::setName(QString name)
+QString CPRegion::identifier() const
 {
-    if (m_name == name)
-        return;
+    return m_identifier;
+}
 
-    m_name = name;
-    emit nameChanged(name);
+bool CPRegion::visible() const
+{
+    return m_visible;
+}
+
+bool CPRegion::hovered() const
+{
+    return m_hovered;
+}
+
+void CPRegion::update(LAMMPS *lammps)
+{
+    QByteArray identifierBytes = m_identifier.toUtf8();
+    int index = lammps->domain->find_region(identifierBytes.data());
+    if(index < 0) return; // Should really not happen, but crash is bad :p
+
+    Region *region = lammps->domain->regions[index];
+    setCount(lammps->group->count(0,index));
+    if(hovered() || !visible()) {
+        m_containsAtom.resize(lammps->atom->natoms);
+        for(int atomIndex=0; atomIndex<lammps->atom->natoms; atomIndex++) {
+            double r[3];
+            r[0] = lammps->atom->x[atomIndex][0];
+            r[1] = lammps->atom->x[atomIndex][1];
+            r[2] = lammps->atom->x[atomIndex][2];
+            lammps->domain->remap(r);
+
+            bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
+            m_containsAtom[atomIndex] = isInsideRegion;
+        }
+    }
+}
+
+bool CPRegion::containsAtom(int atomIndex)
+{
+    if(m_containsAtom.size() <= atomIndex) return false; // We have just hovered, but list isn't updated yet. Assume not in region so we don't visualize wrong
+    else return m_containsAtom.at(atomIndex);
 }
 
 void CPRegion::setCount(int count)
@@ -159,4 +210,31 @@ void CPRegion::setCount(int count)
 
     m_count = count;
     emit countChanged(count);
+}
+
+void CPRegion::setIdentifier(QString identifier)
+{
+    if (m_identifier == identifier)
+        return;
+
+    m_identifier = identifier;
+    emit identifierChanged(identifier);
+}
+
+void CPRegion::setVisible(bool visible)
+{
+    if (m_visible == visible)
+        return;
+
+    m_visible = visible;
+    emit visibleChanged(visible);
+}
+
+void CPRegion::setHovered(bool hovered)
+{
+    if (m_hovered == hovered)
+        return;
+
+    m_hovered = hovered;
+    emit hoveredChanged(hovered);
 }

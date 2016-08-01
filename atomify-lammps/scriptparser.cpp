@@ -47,6 +47,21 @@ bool ScriptParser::isBond(QString command)
     return regex.match(command).hasMatch();
 }
 
+bool ScriptParser::isSimulationSpeed(QString command)
+{
+    QRegularExpression regex(QString("^(?:speed)(?:%1)(%2)$").arg(regexTabOrSpace).arg(regexInt));
+    return regex.match(command).hasMatch();
+}
+
+int ScriptParser::simulationSpeed(QString command) {
+    QRegularExpression regex(QString("^(?:speed)(?:%1)(%2)$").arg(regexTabOrSpace).arg(regexInt));
+    QRegularExpressionMatch match = regex.match(command);
+    bool castOk;
+    int speed = match.captured(1).toInt(&castOk);
+    if(castOk) return speed;
+    else return -1;
+}
+
 void ScriptParser::bond(QString command, std::function<void(int atomType1, int atomType2, float bondLength)> action) {
     QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
     QRegularExpressionMatch match = regex.match(command);

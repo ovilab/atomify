@@ -1,5 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick 2.7
+import QtQuick.Controls 1.5
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -12,52 +12,48 @@ import "mobile"
 import "mobile/style"
 import "desktop"
 
-Rectangle {
+ApplicationWindow {
     id: applicationRoot
-    property alias mySimulator: mainDesktop.simulator
 
-//    width: 1000
-//    height: 1000
-    anchors.fill: parent
+//    anchors.fill: parent
     visible: true
 
     property string mode: {
-        if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
-            return "mobile"
-        }
+//        if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
+//            return "mobile"
+//        }
         return "desktop"
     }
 
     Settings {
         id: settings
-        property alias mode: applicationRoot.mode
+//        property alias mode: applicationRoot.mode
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
     }
 
-//    function resetStyle() {
-//        console.log("Resetting style")
+    function resetStyle() {
+        console.log("Resetting style")
 //        width = Math.max(width, 1650)
 //        height = Math.max(height, 1080)
-//        Style.reset(width, height, Screen)
-//    }
+        Style.reset(width, height, Screen)
+    }
 
-//    onWidthChanged: {
-//        resetStyle()
-//        console.log("Width changed")
-//    }
+    onWidthChanged: {
+        resetStyle()
+        console.log("Width changed")
+    }
 
-//    onHeightChanged: {
-//        console.log("Height changed")
-//        resetStyle()
-//    }
+    onHeightChanged: {
+        console.log("Height changed")
+        resetStyle()
+    }
 
-//    Component.onCompleted: {
-//        resetStyle()
-//    }
+    Component.onCompleted: {
+        // resetStyle()
+    }
 
     MainDesktop {
-        id: mainDesktop
         visible: mode === "desktop"
         anchors.fill: parent
     }
@@ -65,24 +61,23 @@ Rectangle {
 //    MainMobile {
 //        visible: mode === "mobile"
 //        anchors.fill: parent
-//        simulator: mySimulator
 //    }
 
-    Shortcut {
-        sequence: StandardKey.AddTab
-        context: Qt.ApplicationShortcut
-        onActivated: {
-            if(mode === "desktop") {
-                mode = "mobile"
-            } else {
-                mode = "desktop"
-                //                tempPlot.xMax = mySimulator.simulationTime
-                //                tempPlot.xMin = mySimulator.simulationTime-1
-                //                maxValue = Math.max(maxValue, value)
-                //                tempPlot.yMax = maxValue
-            }
-        }
-    }
+//    Shortcut {
+//        sequence: StandardKey.AddTab
+//        context: Qt.ApplicationShortcut
+//        onActivated: {
+//            if(mode === "desktop") {
+//                mode = "mobile"
+//            } else {
+//                mode = "desktop"
+//                //                tempPlot.xMax = mySimulator.simulationTime
+//                //                tempPlot.xMin = mySimulator.simulationTime-1
+//                //                maxValue = Math.max(maxValue, value)
+//                //                tempPlot.yMax = maxValue
+//            }
+//        }
+//    }
 
     Shortcut {
         sequence: StandardKey.FullScreen

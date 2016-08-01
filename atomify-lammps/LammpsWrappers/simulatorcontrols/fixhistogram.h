@@ -71,9 +71,6 @@ signals:
     void valuesChanged(QVariantList values);
     void dataSourceChanged(DataSource* dataSource);
     void groupChanged(QString group);
-
-private:
-    QT3D_CLONEABLE(FixHistogram)
 };
 
 #endif // FIXHISTOGRAM_H

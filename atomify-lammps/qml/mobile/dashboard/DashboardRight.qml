@@ -58,7 +58,7 @@ Item {
 
                 Repeater {
                     id: repeater
-                    model: simulation.controllers.length
+                    model: simulation ? simulation.controllers.length : undefined
                     Item {
                         width: 1
                         Layout.fillWidth: true

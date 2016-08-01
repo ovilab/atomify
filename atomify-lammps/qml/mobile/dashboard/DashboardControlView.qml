@@ -65,18 +65,18 @@ Rectangle {
             property real itemWidth: flickable.width
             property real itemHeight: flickable.height
 
-            width: simulation.controllers.length * itemWidth
+            width: simulation ? simulation.controllers.length * itemWidth : undefined
             height: itemHeight
 
             Repeater {
                 id: repeater
-                model: simulation.controllers.length
+                model: simulation ? simulation.controllers.length : undefined
                 Loader {
                     id: miniControlLoader
                     Layout.fillHeight: true
                     Layout.preferredWidth: controlContainer.itemWidth
 
-                    sourceComponent: simulation.controllers[index].fullControl
+                    sourceComponent: simulation ? simulation.controllers[index].fullControl : undefined
 
                     onLoaded: {
                         console.log("Loaded fullControl")

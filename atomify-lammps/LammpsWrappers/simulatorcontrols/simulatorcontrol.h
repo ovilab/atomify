@@ -10,11 +10,12 @@ class SimulatorControl : public Qt3DCore::QNode
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool isMirror READ isMirror WRITE setIsMirror NOTIFY isMirrorChanged)
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
     Q_PROPERTY(QString command READ command WRITE setCommand NOTIFY commandChanged)
     Q_PROPERTY(QVariantList dependencies READ dependencies WRITE setDependencies NOTIFY dependenciesChanged)
-
 protected:
+    bool m_isMirror = false;
     QString m_command;
     QString m_identifier;
     QString m_identifierPrefix = "atomify_";
@@ -39,20 +40,23 @@ public:
     bool dependenciesValid(LAMMPSController *lammpsController);
     virtual bool existsInLammps(LAMMPSController *lammpsController) = 0;
     virtual void update(LAMMPSController *lammpsController);
-    virtual void handleCommand(QString command) { /* TODO */ }
+    virtual void handleCommand(QString command);
     virtual QString fullCommand();
+    bool isMirror() const;
 
 signals:
     void enabledChanged(bool enabled);
     void identifierChanged(QString identifier);
     void commandChanged(QString command);
     void dependenciesChanged(QVariantList dependencies);
+    void isMirrorChanged(bool isMirror);
 
 public slots:
     void setEnabled(bool enabled);
     void setIdentifier(QString identifier);
     void setCommand(QString command);
     void setDependencies(QVariantList dependencies);
+    void setIsMirror(bool isMirror);
 };
 
 #endif // SIMULATORCONTROL_H

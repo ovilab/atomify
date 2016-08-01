@@ -28,10 +28,11 @@ class Atoms : public QObject
     Q_PROPERTY(BondData* bondData READ bondData NOTIFY bondDataChanged)
     Q_PROPERTY(Bonds* bonds READ bonds NOTIFY bondsChanged)
     Q_PROPERTY(QVariantList modifiers READ modifiers WRITE setModifiers NOTIFY modifiersChanged)
+    Q_PROPERTY(bool sort READ sort WRITE setSort NOTIFY sortChanged)
     Q_PROPERTY(float bondRadius READ bondRadius WRITE setBondRadius NOTIFY bondRadiusChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
-    void synchronize(LAMMPS_NS::LAMMPS *lammps);
+    void synchronize(class LAMMPSController *lammpsController);
     void updateData(class System *system, LAMMPS_NS::LAMMPS *lammps);
     SphereData* sphereData() const;
     QVariantList modifiers() const;
@@ -43,9 +44,12 @@ public:
     AtomData &atomData();
     float bondRadius() const;
     void reset();
+    bool sort() const;
+
 public slots:
     void setBondRadius(float bondRadius);
     void setModifiers(QVariantList modifiers);
+    void setSort(bool sort);
 
 signals:
     void sphereDataChanged(SphereData* sphereData);
@@ -53,6 +57,7 @@ signals:
     void bondsChanged(class Bonds* bonds);
     void bondRadiusChanged(float bondRadius);
     void modifiersChanged(QVariantList modifiers);
+    void sortChanged(bool sort);
 
 private:
     AtomData m_atomData;
@@ -64,10 +69,11 @@ private:
     class Bonds* m_bonds = nullptr;
     QVariantList m_modifiers;
     float m_bondRadius = 0.1;
-    void generateBondData(AtomData &atomData);
+    void generateBondData(AtomData &atomData, System &system);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     void applyDeltaPositions(AtomData &atomData);
+    bool m_sort = false;
 };
 
 #endif // ATOMS_H

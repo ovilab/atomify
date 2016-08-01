@@ -57,8 +57,6 @@ signals:
     // SimulatorControl interface
 protected:
     virtual QList<QString> disableCommands();
-private:
-    QT3D_CLONEABLE(RDF)
 };
 
 #endif // RDF_H

@@ -46,7 +46,6 @@ SOURCES += \
     mysimulator.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
-    atomstyle.cpp \
     scriptparser.cpp \
     scripthandler.cpp \
     scriptcommand.cpp \
@@ -68,17 +67,23 @@ SOURCES += \
     LammpsWrappers/atomdata.cpp \
     LammpsWrappers/regions.cpp \
     LammpsWrappers/groups.cpp \
-    LammpsWrappers/regions/region.cpp \
-    LammpsWrappers/regions/blockregion.cpp \
     LammpsWrappers/neighborlist.cpp \
     LammpsWrappers/bonds.cpp \
-    LammpsWrappers/lammpserror.cpp
+    LammpsWrappers/lammpserror.cpp \
+    LammpsWrappers/computes.cpp \
+    dataproviders/dataprovider.cpp \
+    dataproviders/cp1ddata.cpp \
+    LammpsWrappers/variables.cpp \
+    LammpsWrappers/modifiers/groupmodifier.cpp \
+    LammpsWrappers/modifiers/regionmodifier.cpp \
+    codeeditorbackend.cpp \
+    linenumbers.cpp \
+    LammpsWrappers/units.cpp
 
 HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
-    atomstyle.h \
     scriptparser.h \
     scripthandler.h \
     scriptcommand.h \
@@ -101,11 +106,18 @@ HEADERS += \
     LammpsWrappers/atomdata.h \
     LammpsWrappers/regions.h \
     LammpsWrappers/groups.h \
-    LammpsWrappers/regions/region.h \
-    LammpsWrappers/regions/blockregion.h \
     LammpsWrappers/neighborlist.h \
     LammpsWrappers/bonds.h \
-    LammpsWrappers/lammpserror.h
+    LammpsWrappers/lammpserror.h \
+    LammpsWrappers/computes.h \
+    dataproviders/dataprovider.h \
+    dataproviders/cp1ddata.h \
+    LammpsWrappers/variables.h \
+    LammpsWrappers/modifiers/groupmodifier.h \
+    LammpsWrappers/modifiers/regionmodifier.h \
+    codeeditorbackend.h \
+    linenumbers.h \
+    LammpsWrappers/units.h
 
 # Temporary use of quickcontrols2 without install
 

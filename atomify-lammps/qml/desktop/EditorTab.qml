@@ -1,5 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick 2.7
+import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 import SimVis 1.0
@@ -7,9 +7,14 @@ import "../visualization"
 Item {
     id: editorTabRoot
     property TextArea consoleOutput: myConsole.output
-    property LammpsEditor lammpsEditor: myLammpsEditor
+    property alias lammpsEditor: myLammpsEditor
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
+    onConsoleOutputChanged: {
+        consoleOutput.onLinkActivated.connect(function(link){
+            myLammpsEditor.codeEditorWindow.openTab(link)
+        })
+    }
 
     function reportError() {
         if(simulator.lammpsError) {
@@ -17,9 +22,10 @@ Item {
                 consoleOutput.append(" Simulation crashed on line "+simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
+                myLammpsEditor.codeEditorWindow.errorLine = simulator.lammpsError.line
             } else {
                 consoleOutput.append(" Simulation crashed.")
-                consoleOutput.append(" File: " + simulator.lammpsError.scriptFile + " on line " + simulator.lammpsError.line)
+                consoleOutput.append(" File: <a href=\"file://" + simulator.lammpsError.scriptFile + "\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
             }
@@ -32,10 +38,10 @@ Item {
 
         LammpsEditor {
             id: myLammpsEditor
+            simulator: editorTabRoot.simulator
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: 200
-            simulator: editorTabRoot.simulator
         }
 
         Console {
@@ -47,13 +53,7 @@ Item {
     Shortcut {
         sequence: "Escape"
         onActivated: {
-            if(myLammpsEditor.textarea.activeFocus || myConsole.textField.activeFocus) {
-                myLammpsEditor.textarea.focus = false
-                myConsole.textField.focus = false
-                visualizer.focus = true
-            } else {
-                editorTabRoot.paused = !editorTabRoot.paused
-            }
+            visualizer.focus = true
         }
     }
 }

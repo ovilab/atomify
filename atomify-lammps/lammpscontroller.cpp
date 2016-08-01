@@ -4,6 +4,7 @@
 #include <integrate.h>
 #include <library.h>
 #include <atom.h>
+#include <group.h>
 #include <input.h>
 #include <variable.h>
 #include <update.h>
@@ -203,6 +204,24 @@ bool LAMMPSController::variableExists(QString identifier)
     return findVariableIndex(identifier) >= 0;
 }
 
+bool LAMMPSController::groupExists(QString identifier)
+{
+    if(!m_lammps) {
+        return -1;
+    }
+    QByteArray identifierBytes = identifier.toUtf8();
+    return m_lammps->group->find(identifierBytes.constData())>=0; // -1 means not found
+}
+
+bool LAMMPSController::regionExists(QString identifier)
+{
+    if(!m_lammps) {
+        return -1;
+    }
+    QByteArray identifierBytes = identifier.toUtf8();
+    return m_lammps->domain->find_region(identifierBytes.data())>=0; // -1 means not found
+}
+
 LAMMPS_NS::Compute* LAMMPSController::findComputeByIdentifier(QString identifier) {
     int computeId = findComputeId(identifier);
     if(computeId < 0) {
@@ -222,12 +241,6 @@ int LAMMPSController::findComputeId(QString identifier) {
 
 bool LAMMPSController::computeExists(QString identifier) {
     return (findComputeId(identifier) >= 0);
-}
-
-void LAMMPSController::processSimulatorControls() {
-    for(SimulatorControl *control : simulatorControls) {
-        control->update(this);
-    }
 }
 
 System *LAMMPSController::system() const
@@ -290,17 +303,16 @@ void LAMMPSController::reset()
 
 void LAMMPSController::tick()
 {
-    if(m_lammps == nullptr) {
-        return;
-    }
-    if(state.crashed) {
+    state.canProcessSimulatorControls = false;
+    if(m_lammps == nullptr || state.crashed || state.paused) {
         return;
     }
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
         executeActiveRunCommand();
-        processSimulatorControls();
+        // processSimulatorControls();
+        state.canProcessSimulatorControls = true;
         state.dataDirty = true;
         return;
     }
@@ -310,15 +322,12 @@ void LAMMPSController::tick()
     if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return;
 
     if(nextCommand.type() != ScriptCommand::Type::NoCommand) {
-//        if(nextCommand.type() == ScriptCommand::Type::SingleCommand) {
-//        }
         state.preRunNeeded = true;
 
         bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
         if(didProcessCommand) {
             return;
         }
-
         processCommand(nextCommand.command());
     } else {
         if(state.paused) return;
@@ -333,8 +342,8 @@ void LAMMPSController::tick()
         } else {
             executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
         }
-
-        processSimulatorControls();
+        state.canProcessSimulatorControls = true;
+        // processSimulatorControls();
         state.numberOfTimesteps += state.simulationSpeed;
         state.timeSpentInLammps += t.elapsed();
     }

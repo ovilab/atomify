@@ -97,18 +97,18 @@ void FixAverageTime::setCompute(CPCompute *compute)
 void FixAverageTime::update(LAMMPSController *lammpsController)
 {
     SimulatorControl::update(lammpsController);
-    LAMMPS_NS::FixAveTime *lmp_fix = static_cast<LAMMPS_NS::FixAveTime *>(lammpsController->findFixByIdentifier(identifier()));
+//    LAMMPS_NS::FixAveTime *lmp_fix = static_cast<LAMMPS_NS::FixAveTime *>(lammpsController->findFixByIdentifier(identifier()));
 
-    if(lmp_fix != nullptr) {
-       QVector<double> newValues;
+//    if(lmp_fix != nullptr) {
+//       QVector<double> newValues;
 
-       if(isVector()) {
-           qDebug() << "FixAverageTime::update: Fix ave/time vector mode is not supported in Atomify yet";
-       } else {
-           double value = lmp_fix->compute_scalar();
-           newValues.push_back(value);
-       }
+//       if(isVector()) {
+//           qDebug() << "FixAverageTime::update: Fix ave/time vector mode is not supported in Atomify yet";
+//       } else {
+//           double value = lmp_fix->compute_scalar();
+//           newValues.push_back(value);
+//       }
 
-       setValues(lammpsController->system()->simulationTime(), newValues);
-    }
+//       setValues(lammpsController->system()->simulationTime(), newValues);
+//    }
 }

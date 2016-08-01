@@ -45,8 +45,6 @@ signals:
     void nRepeatChanged(int NRepeat);
     void nFreqChanged(int NFreq);
     void computeChanged(CPCompute* compute);
-private:
-    QT3D_CLONEABLE(FixAverageTime)
 };
 
 #endif // FIXAVERAGETIME_H

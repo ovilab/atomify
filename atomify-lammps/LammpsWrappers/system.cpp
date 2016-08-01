@@ -5,8 +5,10 @@
 #include "atoms.h"
 #include "regions.h"
 #include "groups.h"
+#include "computes.h"
 #include "../mysimulator.h"
 #include "modifiers/modifier.h"
+#include "units.h"
 
 using namespace LAMMPS_NS;
 
@@ -15,14 +17,18 @@ System::System(AtomifySimulator *simulator)
     setAtoms(new Atoms(simulator));
     setGroups(new Groups(simulator));
     setRegions(new Regions(simulator));
+    setComputes(new Computes(simulator));
+    setUnits(new Units(simulator));
 }
 
-void System::synchronize(LAMMPS *lammps)
+void System::synchronize(LAMMPSController *lammpsController)
 {
-    m_regions->synchronize(lammps);
-    m_groups->synchronize(lammps);
-    m_atoms->synchronize(lammps);
+    m_regions->synchronize(lammpsController);
+    m_groups->synchronize(lammpsController);
+    m_atoms->synchronize(lammpsController);
+    m_computes->synchronize(lammpsController);
 
+    LAMMPS *lammps = lammpsController->lammps();
     if(!lammps) {
         setIsValid(false);
         return;
@@ -38,18 +44,25 @@ void System::synchronize(LAMMPS *lammps)
     bool originDidChange = false;
     bool sizeDidChange = false;
     for(int i=0; i<3; i++) {
-        if(m_origin[i] != domain->boxlo[i]) {
+        if( fabs(m_origin[i] - domain->boxlo[i]) > 1e-4) {
             m_origin[i] = domain->boxlo[i];
             originDidChange  = true;
         }
-        if(m_size[i] != domain->prd[i]) {
+        if( fabs(m_size[i] - domain->prd[i]) > 1e-4) {
             m_size[i] = domain->prd[i];
             sizeDidChange = true;
         }
     }
 
-    if(originDidChange) emit originChanged(m_origin);
-    if(sizeDidChange) emit sizeChanged(m_size);
+    if(originDidChange) {
+        emit originChanged(m_origin);
+        emit geometryChanged();
+    }
+
+    if(sizeDidChange) {
+        emit sizeChanged(m_size);
+        emit geometryChanged();
+    }
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -77,6 +90,8 @@ void System::synchronize(LAMMPS *lammps)
     }
     m_volume = m_size[0]*m_size[1]*m_size[2];
     emit volumeChanged(m_volume);
+
+    m_units->synchronize(lammps);
 }
 
 QVector3D System::origin() const
@@ -126,6 +141,9 @@ int System::numberOfAtomTypes() const
 
 void System::reset()
 {
+    m_groups->reset();
+    m_computes->reset();
+    m_regions->reset();
     m_timesteps = 0;
     m_simulationTime = 0;
     m_size = QVector3D();
@@ -149,6 +167,21 @@ float System::volume() const
 bool System::isValid() const
 {
     return m_isValid;
+}
+
+QVector3D System::cameraPosition() const
+{
+    return m_cameraPosition;
+}
+
+Units *System::units() const
+{
+    return m_units;
+}
+
+Computes *System::computes() const
+{
+    return m_computes;
 }
 
 void System::setAtoms(Atoms *atoms)
@@ -185,4 +218,31 @@ void System::setIsValid(bool isValid)
 
     m_isValid = isValid;
     emit isValidChanged(isValid);
+}
+
+void System::setComputes(Computes *computes)
+{
+    if (m_computes == computes)
+        return;
+
+    m_computes = computes;
+    emit computesChanged(computes);
+}
+
+void System::setCameraPosition(QVector3D cameraPosition)
+{
+    if (m_cameraPosition == cameraPosition)
+        return;
+
+    m_cameraPosition = cameraPosition;
+    emit cameraPositionChanged(cameraPosition);
+}
+
+void System::setUnits(Units *units)
+{
+    if (m_units == units)
+        return;
+
+    m_units = units;
+    emit unitsChanged(units);
 }

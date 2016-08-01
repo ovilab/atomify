@@ -2,8 +2,9 @@ import QtQuick 2.5
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 1.4
 import Atomify 1.0
-
+import "../plotting"
 Rectangle {
+    id: rectangleRoot
     property System system
     radius: 4
     color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
@@ -12,7 +13,21 @@ Rectangle {
         if(system) {
             system.groups.onActiveChanged.connect(updateGroups)
             system.regions.onActiveChanged.connect(updateRegions)
+            system.computes.onActiveChanged.connect(updateComputes)
         }
+    }
+
+    function getGlobalPosition(p, item) {
+        console.log("Item: ", item)
+        console.log("Parent: ", item.parent)
+        var globalX = p.x
+        var globalY = p.y
+        while(item.parent != undefined) {
+            globalX = globalX + item.x
+            globalY = globalY + item.y
+            item = item.parent
+        }
+        return Qt.point(globalX, globalY)
     }
 
     function updateGroups() {
@@ -33,15 +48,41 @@ Rectangle {
         }
     }
 
+    function updateComputes() {
+        computesList.visible = system.computes.active
+        if(system.computes.active) {
+            collapseComputes.source = "qrc:/images/collapse.gif"
+        } else {
+            collapseComputes.source = "qrc:/images/expand.gif"
+        }
+    }
+
+    function createComputeWindow(compute, point) {
+        var component = Qt.createComponent("../plotting/ComputePlotter.qml");
+        if (component.status == Component.Ready) {
+            var computePlotter = component.createObject(rectangleRoot);
+            computePlotter.x = point.x - computePlotter.width*0.5
+            computePlotter.y = point.y - computePlotter.height*0.5
+            computePlotter.compute = compute
+            computePlotter.show()
+        }
+
+//        else
+//            component.statusChanged.connect(finishComputeWindow);
+    }
+
     Column {
         anchors.fill: parent
         spacing: 10
         GroupBox {
             width: parent.width
             title: "Simulation summary"
-            onHeightChanged: console.log("GroupBox height: ", height)
 
             Column {
+                Text {
+                    font.bold: true
+                    text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
+                }
                 Text {
                     font.bold: true
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
@@ -49,6 +90,10 @@ Rectangle {
                 Text {
                     font.bold: true
                     text: "System volume: "+system.volume
+                }
+                Text {
+                    font.bold: true
+                    text: "Units: "+system.units.name
                 }
                 Text {
                     font.bold: true
@@ -93,6 +138,10 @@ Rectangle {
                         Label {
                             id: groupsLabel
                             text: "Groups: "+system.groups.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.groups.active = !system.groups.active
+                            }
                         }
                     }
 
@@ -103,9 +152,37 @@ Rectangle {
                         model: system ? system.groups.model : null
                         height: visible ? count*26 : 0
                         visible: false
-                        delegate: Label {
-                            visible: groupsList.visible
-                            text: model.modelData.name+": "+model.modelData.count+" atoms"
+                        delegate: Row {
+                            spacing: 5
+                            Image {
+                                id: groupVisible
+                                width: 15
+                                height: 15
+                                y: 1
+                                source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
+                                    onClicked: model.modelData.visible = !model.modelData.visible
+                                    cursorShape: Qt.PointingHandCursor
+                                }
+                            }
+                            Label {
+                                id: groupLabel
+                                visible: groupsList.visible
+                                text: model.modelData.identifier+": "+model.modelData.count+" atoms"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: model.modelData.visible = !model.modelData.visible
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -130,6 +207,10 @@ Rectangle {
                         Label {
                             id: regionsLabel
                             text: "Regions: "+system.regions.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.regions.active = !system.regions.active
+                            }
                         }
                     }
 
@@ -140,9 +221,105 @@ Rectangle {
                         model: system ? system.regions.model : null
                         height: visible ? count*26 : 0
                         visible: false
-                        delegate: Label {
-                            visible: regionsList.visible
-                            text: model.modelData.name+": "+model.modelData.count+" atoms"
+                        delegate: Row {
+                            spacing: 5
+                            Image {
+                                id: regionVisible
+                                width: 15
+                                height: 15
+                                y: 1
+                                source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
+                                    onClicked: model.modelData.visible = !model.modelData.visible
+                                    cursorShape: Qt.PointingHandCursor
+                                }
+                            }
+
+                            Label {
+                                visible: regionsList.visible
+                                text: model.modelData.identifier+": "+model.modelData.count+" atoms"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: model.modelData.visible = !model.modelData.visible
+                                    onHoveredChanged: {
+                                        model.modelData.hovered = containsMouse
+                                    }
+                                    cursorShape: Qt.PointingHandCursor
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                Column {
+                    height: computesRow.height + computesList.height
+
+                    Row {
+                        id: computesRow
+                        spacing: 2
+                        height: computesLabel.height
+
+                        Image {
+                            id: collapseComputes
+                            y: 3
+                            source: "qrc:/images/expand.gif"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.computes.active = !system.computes.active
+                            }
+                        }
+                        Label {
+                            id: computesLabel
+                            text: "Computes: "+system.computes.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: system.computes.active = !system.computes.active
+                            }
+                        }
+                    }
+
+                    ListView {
+                        id: computesList
+                        anchors.top: computesRow.bottom
+                        x: computesLabel.x
+                        model: system ? system.computes.model : null
+                        height: visible ? count*26 : 0
+                        visible: false
+                        delegate: Row {
+                            visible: computesList.visible
+                            Label {
+                                id: computeTitleLabel
+                                font.underline: true
+                                color: "steelblue"
+                                text: {
+                                    model.modelData.identifier
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        var point = Qt.point(mouseX, mouseY)
+                                        point = getGlobalPosition(point, computeTitleLabel)
+                                        createComputeWindow(model.modelData, point)
+                                    }
+                                }
+                            }
+                            Label {
+                                text: {
+                                    if(model.modelData.hasScalarData) {
+                                        ": "+model.modelData.scalarValue.toFixed(3)
+                                    } else {
+                                        ""
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -180,10 +357,10 @@ Rectangle {
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Show editor tab "
+                        text: "New script "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"1"
+                        text: ": "+shortcutRoot.controlName+"N"
                     }
                 }
 
@@ -192,10 +369,34 @@ Rectangle {
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Show analysis tab "
+                        text: "Save script "
                     }
                     Label {
-                        text: ": "+shortcutRoot.controlName+"2"
+                        text: ": "+shortcutRoot.controlName+"S"
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "Open script"
+                    }
+                    Label {
+                        text: ": "+shortcutRoot.controlName+"O"
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label {
+                        Layout.minimumWidth: shortcutRoot.labelWidth
+                        Layout.maximumWidth: shortcutRoot.labelWidth
+                        text: "Toggle pause"
+                    }
+                    Label {
+                        text: ": "+shortcutRoot.controlName+"P / Space"
                     }
                 }
 

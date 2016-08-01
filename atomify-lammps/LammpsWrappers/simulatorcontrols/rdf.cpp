@@ -53,46 +53,46 @@ QList<QString> RDF::resetCommands()
 
 void RDF::update(LAMMPSController *lammpsController)
 {
-    SimulatorControl::update(lammpsController);
-    QString fixAveTimeIdentifier = QString("%1_ave").arg(identifier());
-    LAMMPS_NS::FixAveTime *lmp_fix = dynamic_cast<LAMMPS_NS::FixAveTime*>(lammpsController->findFixByIdentifier(fixAveTimeIdentifier));
-    if(lmp_fix != nullptr) {
-        if(dataSource())  dataSource()->clear();
-        if(dataSource1()) dataSource1()->clear();
-        if(dataSource2()) dataSource2()->clear();
-        if(dataSource3()) dataSource3()->clear();
-        if(dataSource4()) dataSource4()->clear();
+//    SimulatorControl::update(lammpsController);
+//    QString fixAveTimeIdentifier = QString("%1_ave").arg(identifier());
+//    LAMMPS_NS::FixAveTime *lmp_fix = dynamic_cast<LAMMPS_NS::FixAveTime*>(lammpsController->findFixByIdentifier(fixAveTimeIdentifier));
+//    if(lmp_fix != nullptr) {
+//        if(dataSource())  dataSource()->clear();
+//        if(dataSource1()) dataSource1()->clear();
+//        if(dataSource2()) dataSource2()->clear();
+//        if(dataSource3()) dataSource3()->clear();
+//        if(dataSource4()) dataSource4()->clear();
 
-        for(int i=0; i<numberOfBins(); i++) {
-            float x = lmp_fix->compute_array(i,0);
-            if(numberOfPairs() >= 1 && dataSource()) {
-                float y = lmp_fix->compute_array(i,1);
-                dataSource()->addPoint(x,y);
-            }
-            if(numberOfPairs() >= 2 && dataSource1()) {
-                float y = lmp_fix->compute_array(i,3);
-                dataSource1()->addPoint(x,y);
-            }
-            if(numberOfPairs() >= 3 && dataSource2()) {
-                float y = lmp_fix->compute_array(i,5);
-                dataSource2()->addPoint(x,y);
-            }
-            if(numberOfPairs() >= 4 && dataSource3()) {
-                float y = lmp_fix->compute_array(i,7);
-                dataSource3()->addPoint(x,y);
-            }
-            if(numberOfPairs() >= 5 && dataSource4()) {
-                float y = lmp_fix->compute_array(i,9);
-                dataSource4()->addPoint(x,y);
-            }
-        }
-        if(dataSource())  dataSource()->update();
-        if(dataSource1()) dataSource1()->update();
-        if(dataSource2()) dataSource2()->update();
-        if(dataSource3()) dataSource3()->update();
-        if(dataSource4()) dataSource4()->update();
+//        for(int i=0; i<numberOfBins(); i++) {
+//            float x = lmp_fix->compute_array(i,0);
+//            if(numberOfPairs() >= 1 && dataSource()) {
+//                float y = lmp_fix->compute_array(i,1);
+//                dataSource()->addPoint(x,y);
+//            }
+//            if(numberOfPairs() >= 2 && dataSource1()) {
+//                float y = lmp_fix->compute_array(i,3);
+//                dataSource1()->addPoint(x,y);
+//            }
+//            if(numberOfPairs() >= 3 && dataSource2()) {
+//                float y = lmp_fix->compute_array(i,5);
+//                dataSource2()->addPoint(x,y);
+//            }
+//            if(numberOfPairs() >= 4 && dataSource3()) {
+//                float y = lmp_fix->compute_array(i,7);
+//                dataSource3()->addPoint(x,y);
+//            }
+//            if(numberOfPairs() >= 5 && dataSource4()) {
+//                float y = lmp_fix->compute_array(i,9);
+//                dataSource4()->addPoint(x,y);
+//            }
+//        }
+//        if(dataSource())  dataSource()->update();
+//        if(dataSource1()) dataSource1()->update();
+//        if(dataSource2()) dataSource2()->update();
+//        if(dataSource3()) dataSource3()->update();
+//        if(dataSource4()) dataSource4()->update();
 
-    }
+//    }
 }
 
 QVariantList RDF::atomPairs() const

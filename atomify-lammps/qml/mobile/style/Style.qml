@@ -8,7 +8,7 @@ Item {
     property real windowHeight
     property real minimumTouchableSize: Math.max(windowWidth, windowHeight) / 25
     property real maximumTouchableSize: Math.max(windowWidth, windowHeight) / 10
-    property real pixelDensity: 72
+    property real pixelDensity: 6
     property real touchableSize: 6 * baseSize
     property real baseSize: pixelDensity
     property real baseMargin: 4 * baseSize

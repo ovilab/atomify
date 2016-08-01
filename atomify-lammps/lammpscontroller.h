@@ -20,6 +20,7 @@ struct LammpsState {
     bool staticSystem = false;
     bool runCommandActive = false;
     bool preRunNeeded = true;
+    bool canProcessSimulatorControls = false;
     int  simulationSpeed = 1;
     unsigned long timeSpentInLammps = 0;
     int numberOfTimesteps = 1;
@@ -45,7 +46,7 @@ public:
     ~LAMMPSController();
 
     // Getters/setters
-    QList<class SimulatorControl*> simulatorControls;
+    QMap<QString, class SimulatorControl*> simulatorControls;
     LAMMPS *lammps() const;
     void setLammps(LAMMPS *lammps);
     void setWorker(class MyWorker *worker);
@@ -73,6 +74,8 @@ public:
     bool computeExists(QString identifier);
     bool fixExists(QString identifier);
     bool variableExists(QString identifier);
+    bool groupExists(QString identifier);
+    bool regionExists(QString identifier);
     LAMMPS_NS::Compute *findComputeByIdentifier(QString identifier);
     LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
     LAMMPS_NS::Variable *findVariableByIdentifier(QString identifier);
