@@ -42,7 +42,7 @@ Scene3D {
             fieldOfView: 50
             aspectRatio: root.width / root.height
             nearPlane : 2.0
-            farPlane : 500.0
+            farPlane : 100.0
             position: Qt.vector3d(7.0, 7.0, 50.0)
             upVector: Qt.vector3d(0.0, 1.0, 0.0)
             viewCenter: Qt.vector3d(7.0, 7.0, 7.0)
@@ -56,178 +56,17 @@ Scene3D {
 
         components: [
             RenderSettings {
-                activeFrameGraph: Viewport {
-                    normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
-                    TechniqueFilter {
-                        matchAll: FilterKey { name: "renderingStyle"; value: "deferred" }
-                        RenderSurfaceSelector {
-                            RenderPassFilter {
-                                id : geometryPass
-                                matchAny : FilterKey { name : "pass"; value : "geometry" }
-                                RenderTargetSelector {
-                                    target: RenderTarget {
-                                        attachments : [
-                                            RenderTargetOutput {
-                                                objectName : "normalOut"
-                                                attachmentPoint : RenderTargetOutput.Color0
-                                                texture : Texture2D {
-                                                    id : normalTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
-                                                    format : Texture.RGBA32F
-                                                    generateMipMaps : false
-                                                    magnificationFilter : Texture.Nearest
-                                                    minificationFilter : Texture.Nearest
-                                                    wrapMode {
-                                                        x: WrapMode.ClampToEdge
-                                                        y: WrapMode.ClampToEdge
-                                                    }
-                                                }
-                                            },
-                                            RenderTargetOutput {
-                                                objectName : "positionOut"
-                                                attachmentPoint : RenderTargetOutput.Color1
-                                                texture : Texture2D {
-                                                    id : positionTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
-                                                    format : Texture.RGBA32F
-                                                    generateMipMaps : false
-                                                    magnificationFilter : Texture.Nearest
-                                                    minificationFilter : Texture.Nearest
-                                                    wrapMode {
-                                                        x: WrapMode.ClampToEdge
-                                                        y: WrapMode.ClampToEdge
-                                                    }
-                                                }
-                                            },
-                                            RenderTargetOutput {
-                                                objectName : "colorOut"
-                                                attachmentPoint : RenderTargetOutput.Color2
-                                                texture : Texture2D {
-                                                    id : colorTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
-                                                    format : Texture.RGBA32F
-                                                    generateMipMaps : false
-                                                    magnificationFilter : Texture.Nearest
-                                                    minificationFilter : Texture.Nearest
-                                                    wrapMode {
-                                                        x: WrapMode.ClampToEdge
-                                                        y: WrapMode.ClampToEdge
-                                                    }
-                                                }
-                                            },
-                                            RenderTargetOutput {
-                                                objectName: "depth"
-                                                attachmentPoint: RenderTargetOutput.Depth
-                                                texture: Texture2D {
-                                                    id: depthTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
-                                                    format: Texture.D32
-                                                    generateMipMaps: false
-                                                    magnificationFilter: Texture.Nearest
-                                                    minificationFilter: Texture.Nearest
-                                                    wrapMode {
-                                                        x: WrapMode.ClampToEdge
-                                                        y: WrapMode.ClampToEdge
-                                                    }
-                                                    comparisonFunction: Texture.CompareLessEqual
-                                                    comparisonMode: Texture.CompareNone
-                                                }
-                                            }
-                                        ]
-                                    }
-                                    ClearBuffers {
-                                        clearColor: "#000"
-                                        buffers: ClearBuffers.ColorDepthBuffer
-                                        CameraSelector {
-                                            camera: mainCamera
-                                        }
-                                    }
-                                }
-                            }
-                            RenderPassFilter {
-                                matchAny : FilterKey { name : "pass"; value : "ssao" }
-                                RenderTargetSelector {
-                                    target: RenderTarget {
-                                        attachments : [
-                                            RenderTargetOutput {
-                                                objectName : "ssao"
-                                                attachmentPoint : RenderTargetOutput.Color0
-                                                texture : Texture2D {
-                                                    id : ssaoTexture
-                                                    width : 0.5*root.width
-                                                    height : 0.5*root.width // TODO use height?
-                                                    format : Texture.RGBA32F
-                                                    generateMipMaps : false
-                                                    magnificationFilter : Texture.Linear
-                                                    minificationFilter : Texture.Linear
-                                                    wrapMode {
-                                                        x: WrapMode.ClampToEdge
-                                                        y: WrapMode.ClampToEdge
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                    ClearBuffers {
-                                        clearColor: "#000"
-                                        buffers: ClearBuffers.ColorDepthBuffer
-                                        CameraSelector {
-                                            camera: mainCamera
-                                        }
-                                    }
-                                }
-                            }
-                            RenderPassFilter {
-                                matchAny : FilterKey { name : "pass"; value : "blur" }
-                                RenderTargetSelector {
-                                    target: RenderTarget {
-                                        attachments : [
-                                            RenderTargetOutput {
-                                                objectName : "blur"
-                                                attachmentPoint : RenderTargetOutput.Color0
-                                                texture : Texture2D {
-                                                    id : blurTexture
-                                                    width : root.width
-                                                    height : root.width // TODO use height?
-                                                    format : Texture.RGBA32F
-                                                    generateMipMaps : false
-                                                    magnificationFilter : Texture.Linear
-                                                    minificationFilter : Texture.Linear
-                                                    wrapMode {
-                                                        x: WrapMode.ClampToEdge
-                                                        y: WrapMode.ClampToEdge
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                    ClearBuffers {
-                                        clearColor: "#000"
-                                        buffers: ClearBuffers.ColorDepthBuffer
-                                        CameraSelector {
-                                            camera: mainCamera
-                                        }
-                                    }
-                                }
-                            }
-                            RenderPassFilter {
-                                matchAny : FilterKey { name : "pass"; value : "final" }
-                                ClearBuffers {
-                                    clearColor: "#000"
-                                    buffers: ClearBuffers.ColorDepthBuffer
-                                    CameraSelector {
-                                        id: viewCameraSelector
-                                        camera: mainCamera
-                                    }
-                                }
-                            }
-                        }
-                    }
+                activeFrameGraph: deferredFrameGraph
+                DeferredFrameGraph {
+                    id: deferredFrameGraph
+                    width: root.width
+                    height: root.height
+                    camera: mainCamera
                 }
+//                ForwardFrameGraph {
+//                    id: forwardFrameGraph
+//                    camera: mainCamera
+//                }
             },
             InputSettings {}
         ]
@@ -250,10 +89,10 @@ Scene3D {
             Material {
                 id: ssaoMaterial
                 parameters : [
-                    Parameter { name: "normalTexture"; value : normalTexture },
-                    Parameter { name: "positionTexture"; value : positionTexture },
-                    Parameter { name: "colorTexture"; value : colorTexture },
-                    Parameter { name: "depthTexture"; value : depthTexture },
+                    Parameter { name: "normalTexture"; value : deferredFrameGraph.normalTexture },
+                    Parameter { name: "positionTexture"; value : deferredFrameGraph.positionTexture },
+                    Parameter { name: "colorTexture"; value : deferredFrameGraph.colorTexture },
+                    Parameter { name: "depthTexture"; value : deferredFrameGraph.depthTexture },
                     Parameter { name: "posMin"; value: spheres.posMin },
                     Parameter { name: "posMax"; value: spheres.posMax }
                 ]
@@ -361,7 +200,7 @@ void main()
     vec4 color = texture(colorTexture, texCoord);
 
     if(depth > 1.0 - 1e-5) {
-        return;
+        discard;
     }
 
 #pragma shadernodes body
@@ -377,7 +216,7 @@ void main()
                                 id: ambientOcclusion
                                 samples: 64
                                 radius: 10
-                                depthTexture: depthTexture
+                                depthTexture: deferredFrameGraph.depthTexture
                                 mode: "hemisphere"
                             }
                         }
@@ -400,8 +239,8 @@ void main()
             Material {
                 id: blurMaterial
                 parameters : [
-                    Parameter { name: "ssaoTexture"; value : ssaoTexture },
-                    Parameter { name: "depthTexture"; value : depthTexture },
+                    Parameter { name: "ssaoTexture"; value : deferredFrameGraph.ssaoTexture },
+                    Parameter { name: "depthTexture"; value : deferredFrameGraph.depthTexture },
                     Parameter { name: "blurSize"; value : 7 },
                     Parameter { name: "winSize"; value : Qt.size(root.width, root.height) }
                 ]
@@ -511,12 +350,12 @@ void main()
             Material {
                 id: finalMaterial
                 parameters : [
-                    Parameter { name: "blurTexture"; value : blurTexture },
-                    Parameter { name: "ssaoTexture"; value : ssaoTexture },
-                    Parameter { name: "normalTexture"; value : normalTexture },
-                    Parameter { name: "positionTexture"; value : positionTexture },
-                    Parameter { name: "colorTexture"; value : colorTexture },
-                    Parameter { name: "depthTexture"; value : depthTexture },
+                    Parameter { name: "blurTexture"; value : deferredFrameGraph.blurTexture },
+                    Parameter { name: "ssaoTexture"; value : deferredFrameGraph.ssaoTexture },
+                    Parameter { name: "normalTexture"; value : deferredFrameGraph.normalTexture },
+                    Parameter { name: "positionTexture"; value : deferredFrameGraph.positionTexture },
+                    Parameter { name: "colorTexture"; value : deferredFrameGraph.colorTexture },
+                    Parameter { name: "depthTexture"; value : deferredFrameGraph.depthTexture },
                     Parameter { name: "winSize"; value : Qt.size(root.width, root.height) },
                     Parameter { name: "posMin"; value: spheres.posMin },
                     Parameter { name: "posMax"; value: spheres.posMax }
