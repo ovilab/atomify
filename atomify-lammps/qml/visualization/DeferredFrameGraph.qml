@@ -25,12 +25,14 @@ Viewport {
     property alias depthTexture: depthTexture
     property alias ssaoTexture: ssaoTexture
     property alias positionTexture: positionTexture
+    property alias window: surfaceSelector.surface
     property Camera camera: Camera {}
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
     TechniqueFilter {
         matchAll: FilterKey { name: "renderingStyle"; value: "deferred" }
         RenderSurfaceSelector {
+            id: surfaceSelector
             RenderPassFilter {
                 id : geometryPass
                 matchAny : FilterKey { name : "pass"; value : "geometry" }
@@ -113,7 +115,7 @@ Viewport {
                         clearColor: "#000"
                         buffers: ClearBuffers.ColorDepthBuffer
                         CameraSelector {
-                            camera: root.camera
+                            camera: mainCamera
                         }
                     }
                 }
@@ -146,7 +148,7 @@ Viewport {
                         clearColor: "#000"
                         buffers: ClearBuffers.ColorDepthBuffer
                         CameraSelector {
-                            camera: root.camera
+                            camera: mainCamera
                         }
                     }
                 }
@@ -179,7 +181,7 @@ Viewport {
                         clearColor: "#000"
                         buffers: ClearBuffers.ColorDepthBuffer
                         CameraSelector {
-                            camera: root.camera
+                            camera: mainCamera
                         }
                     }
                 }
@@ -191,7 +193,7 @@ Viewport {
                     buffers: ClearBuffers.ColorDepthBuffer
                     CameraSelector {
                         id: viewCameraSelector
-                        camera: root.camera
+                        camera: mainCamera
                     }
                 }
             }

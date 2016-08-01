@@ -1,11 +1,12 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+//import QtQuick.Controls 2.0
+import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 
 Item {
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
-    property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
+//    property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
     property int currentLine: -1
     property int errorLine: -1
@@ -121,15 +122,15 @@ Item {
         spacing: 0
         Row {
             Layout.fillWidth: true
-            TabBar {
-                id: tabBar
-                width: parent.width - newTabButton.width
+//            TabBar {
+//                id: tabBar
+//                width: parent.width - newTabButton.width
 
-                CodeEditorTabButton {
-                    text: codeEditor_1.title
-                    codeEditor: codeEditor_1
-                }
-            }
+//                CodeEditorTabButton {
+//                    text: codeEditor_1.title
+//                    codeEditor: codeEditor_1
+//                }
+//            }
             Button {
                 id: newTabButton
                 text: "New"

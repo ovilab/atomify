@@ -15,19 +15,24 @@ import SimVis.ShaderNodes 1.0
 import "../desktop" // TODO should be separate controllers for desktop and mobile
 
 Viewport {
+    id: root
+
     property Camera camera: Camera {}
+    property alias window: surfaceSelector.surface
+
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
+
     TechniqueFilter {
         matchAll: FilterKey { name: "renderingStyle"; value: "forward" }
         RenderSurfaceSelector {
+            id: surfaceSelector
             RenderPassFilter {
-                matchAny : FilterKey { name : "pass"; value : "final" }
                 ClearBuffers {
-                    clearColor: "#912"
+                    clearColor: "#012"
                     buffers: ClearBuffers.ColorDepthBuffer
                     CameraSelector {
                         id: viewCameraSelector
-                        camera: camera
+                        camera: root.camera
                     }
                 }
             }

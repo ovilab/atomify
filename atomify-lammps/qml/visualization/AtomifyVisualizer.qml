@@ -26,6 +26,19 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
+    property string renderMode: "deferred"
+
+    onRenderModeChanged: {
+        //        console.log(renderMode)
+        //        console.log("deferred1", deferredFrameGraph)
+        //        console.log("forward1", forwardFrameGraph)
+        //        if(root.renderMode == "deferred") {
+        //            renderSettings.activeFrameGraph = forwardFrameGraph2
+        //        } else {
+        //            renderSettings.activeFrameGraph = forwardFrameGraph
+        //        }
+    }
+
     onBondRadiusChanged: {
         if(simulator != undefined) {
             simulator.system.atoms.bondRadius = bondRadius
@@ -54,21 +67,25 @@ Scene3D {
         }
         property Spheres spheres: spheres
 
+
+        ForwardFrameGraph {
+            id: forwardFrameGraph
+            camera: mainCamera
+            window: deferredFrameGraph.window
+        }
+        DeferredFrameGraph {
+            id: deferredFrameGraph
+            width: root.width
+            height: root.height
+            camera: mainCamera
+        }
         components: [
             RenderSettings {
-                activeFrameGraph: deferredFrameGraph
-                DeferredFrameGraph {
-                    id: deferredFrameGraph
-                    width: root.width
-                    height: root.height
-                    camera: mainCamera
-                }
-//                ForwardFrameGraph {
-//                    id: forwardFrameGraph
-//                    camera: mainCamera
-//                }
+                activeFrameGraph: root.renderMode == "deferred" ? deferredFrameGraph : forwardFrameGraph
             },
-            InputSettings {}
+            InputSettings {
+                id: inputSettings
+            }
         ]
 
         PlaneMesh {

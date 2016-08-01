@@ -57,6 +57,7 @@ Item {
                 periodicImages.numberOfCopiesX: periodicXSlider.value
                 periodicImages.numberOfCopiesY: periodicYSlider.value
                 periodicImages.numberOfCopiesZ: periodicZSlider.value
+                renderMode: deferredModeSwitch.checked ? "deferred" : "forward"
             }
 
         }
@@ -201,6 +202,18 @@ Item {
                     currentIndex: 0
                     onCurrentTextChanged: {
                         visualizer.finalShaderBuilder.selectOutput(currentText)
+                    }
+                }
+
+
+                Row {
+                    Label {
+                        width: 150
+                        text: "Deferred: "
+                    }
+                    Switch {
+                        id: deferredModeSwitch
+                        checked: true
                     }
                 }
             }
