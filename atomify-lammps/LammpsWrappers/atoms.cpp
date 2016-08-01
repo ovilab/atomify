@@ -113,8 +113,6 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     }
 
     for(int i=0; i<numberOfAtoms; i++) {
-        // int i = m_atomData.sortedIndices[ii];
-
         m_atomData.types[i] = types[i];
         m_atomData.originalIndex[i] = i;
         double position[3];
@@ -125,26 +123,10 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         m_atomData.positions[i][0] = position[0];
         m_atomData.positions[i][1] = position[1];
         m_atomData.positions[i][2] = position[2];
-        m_atomData.originalIndex[i] = i;
         m_atomData.bitmask[i] = atom->mask[i];
         m_atomData.visible[i] = true;
     }
-//    QElapsedTimer t;
-//    t.start();
-//    static QVector3D cameraPos = lammpsController->system()->cameraPosition();
 
-//    struct less_than_key
-//    {
-//        inline bool operator() (const QVector3D& v1, const QVector3D& v2)
-//        {
-//            float d1 = (v1-cameraPos).lengthSquared();
-//            float d2 = (v2-cameraPos).lengthSquared();
-//            return (d1<d2);
-//        }
-//    };
-
-//     std::sort(std::begin(m_atomData.positions), std::end(m_atomData.positions), less_than_key());
-    // qDebug() << "Sorted using " << t.elapsed() << " ms.";
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
@@ -167,6 +149,13 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
          }
     }
 
+    if(m_sort) {
+        QElapsedTimer t;
+        t.start();
+        m_atomData.sort(system->cameraPosition());
+        qDebug() << "Sorted using " << t.elapsed() << " ms.";
+    }
+
     // applyDeltaPositions(atomData);
     generateBondData(atomData, *system);
     generateSphereData(atomData);
@@ -184,9 +173,21 @@ void Atoms::applyDeltaPositions(AtomData &atomData) {
     }
 }
 
+//void Atoms::findOcclusion(AtomData &atomData) {
+//    if(neighborList.neighbors.size()==0) return;
+//    for(int i = 0; i<atomData.size(); i++) {
+//        int atomIndex = atomData.originalIndex[i];
+
+//        if(neighborList.neighbors.size() <= atomIndex) continue;
+//        int numNeighbors = neighborList.neighbors[i].size();
+
+//    }
+//}
+
 void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
-    for(int atomIndex = 0; atomIndex<atomData.size(); atomIndex++) {
+    for(int i = 0; i<atomData.size(); i++) {
+        int atomIndex = atomData.sortedIndices[i];
         if(atomData.visible[atomIndex]) {
             atomData.positions[visibleAtomCount] = atomData.positions[atomIndex] + atomData.deltaPositions[atomIndex];
             atomData.colors[visibleAtomCount] = atomData.colors[atomIndex];
@@ -215,7 +216,8 @@ void Atoms::generateBondData(AtomData &atomData, System &system) {
     QElapsedTimer t;
     t.start();
     bondsDataRaw.reserve(atomData.positions.size());
-    for(int ii=0; ii<atomData.size(); ii++) {
+    for(int iii=0; iii<atomData.size(); iii++) {
+        int ii = atomData.sortedIndices[iii];
         if(!atomData.visible[ii]) continue;
 
         int i = atomData.originalIndex[ii];
@@ -228,7 +230,8 @@ void Atoms::generateBondData(AtomData &atomData, System &system) {
         const float sphereRadius_i = atomData.radii[ii];
 
         if(neighborList.neighbors.size() <= i) continue;
-        for(const int &j : neighborList.neighbors[i]) {
+        for(const int &jj : neighborList.neighbors[i]) {
+            int j = atomData.sortedIndices[jj];
             if(!atomData.visible[j]) continue;
             QVector3D position_j = atomData.positions[j];
             position_j[0] += deltaPosition_i[0];
@@ -350,6 +353,11 @@ void Atoms::reset()
     }
 }
 
+bool Atoms::sort() const
+{
+    return m_sort;
+}
+
 QVariantList Atoms::modifiers() const
 {
     return m_modifiers;
@@ -371,4 +379,13 @@ void Atoms::setModifiers(QVariantList modifiers)
 
     m_modifiers = modifiers;
     emit modifiersChanged(modifiers);
+}
+
+void Atoms::setSort(bool sort)
+{
+    if (m_sort == sort)
+        return;
+
+    m_sort = sort;
+    emit sortChanged(sort);
 }
