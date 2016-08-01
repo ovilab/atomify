@@ -173,6 +173,17 @@ void Atoms::applyDeltaPositions(AtomData &atomData) {
     }
 }
 
+//void Atoms::findOcclusion(AtomData &atomData) {
+//    if(neighborList.neighbors.size()==0) return;
+//    for(int i = 0; i<atomData.size(); i++) {
+//        int atomIndex = atomData.originalIndex[i];
+
+//        if(neighborList.neighbors.size() <= atomIndex) continue;
+//        int numNeighbors = neighborList.neighbors[i].size();
+
+//    }
+//}
+
 void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
     for(int i = 0; i<atomData.size(); i++) {

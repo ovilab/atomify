@@ -11,6 +11,7 @@ public:
     QVector<QVector3D> deltaPositions; // For periodic copies
     QVector<QVector3D> colors;
     QVector<float> radii;
+    QVector<float> occlusion;
     QVector<int> originalIndex;
     QVector<int> bitmask; // For detecting group membership
     QVector<int> types;

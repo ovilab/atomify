@@ -19,7 +19,7 @@ void AtomData::resize(int size)
     radii.resize(size);
     types.resize(size);
     originalIndex.resize(size);
-    // neighborList.reset(size);
+    occlusion.resize(size);
     bitmask.resize(size);
     visible.resize(size);
     sortedIndices.resize(size);
@@ -37,6 +37,7 @@ void AtomData::reset()
     colors.clear();
     radii.clear();
     types.clear();
+    occlusion.clear();
     originalIndex.clear();
     bitmask.clear();
     visible.clear();
