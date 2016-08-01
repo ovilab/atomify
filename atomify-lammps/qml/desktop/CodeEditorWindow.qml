@@ -1,6 +1,6 @@
 import QtQuick 2.7
-//import QtQuick.Controls 2.0
-import QtQuick.Controls 1.5
+import QtQuick.Controls 2.0
+//import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 
@@ -122,15 +122,15 @@ Item {
         spacing: 0
         Row {
             Layout.fillWidth: true
-//            TabBar {
-//                id: tabBar
-//                width: parent.width - newTabButton.width
+            TabBar {
+                id: tabBar
+                width: parent.width - newTabButton.width
 
-//                CodeEditorTabButton {
-//                    text: codeEditor_1.title
-//                    codeEditor: codeEditor_1
-//                }
-//            }
+                CodeEditorTabButton {
+                    text: codeEditor_1.title
+                    codeEditor: codeEditor_1
+                }
+            }
             Button {
                 id: newTabButton
                 text: "New"
