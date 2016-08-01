@@ -213,7 +213,7 @@ Item {
                     }
                     Switch {
                         id: deferredModeSwitch
-                        checked: true
+                        checked: false
                     }
                 }
             }
