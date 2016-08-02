@@ -9,7 +9,7 @@ DashboardControl {
     id: root
     property real timeRange: 4
     property string xLabel: "t [ps]"
-    property string yLabel: "&lt;r<sup>2</sup>(t)&gt;"
+    property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
     property real xScale: 1.0
     property real yScale: 1.0
     property alias computeCommand: compute.command
@@ -29,7 +29,7 @@ DashboardControl {
                 left: parent.left
                 right: parent.right
             }
-            height: width * 3 / 4
+            height: width * 2.5 / 4
 
             antialiasing: true
             legend.visible: false
