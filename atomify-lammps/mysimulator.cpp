@@ -150,7 +150,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
         QString nextCommand = nextCommandObject.command();
         if(scriptParser.isEditorCommand(nextCommand)) {
-            scriptHandler->parseGUICommand(nextCommand);
+            bool handled = scriptHandler->parseGUICommand(nextCommand);
+            if(!handled) {
+                handled = scriptHandler->parseLammpsCommand(nextCommand, &m_lammpsController);
+            }
+            if(!handled) {
+                qDebug() << "Error, editor command " << nextCommand << " was not handled";
+                exit(1);
+            }
             m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
         } else {
             QString command = nextCommand;

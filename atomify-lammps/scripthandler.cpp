@@ -168,7 +168,7 @@ bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammps
     return false;
 }
 
-void ScriptHandler::parseGUICommand(QString command)
+bool ScriptHandler::parseGUICommand(QString command)
 {
     command = command.trimmed();
     command.remove(0,2);
@@ -178,7 +178,7 @@ void ScriptHandler::parseGUICommand(QString command)
             // TODO: Switch arguments so they match the m_atoms->setAtomType call
             if(m_atoms) m_atoms->setAtomType(atomType, atomTypeName);
         });
-        return;
+        return true;
     }
 
     if(m_parser.isBond(command)) {
@@ -191,6 +191,7 @@ void ScriptHandler::parseGUICommand(QString command)
                 }
             }
         });
+        return true;
     }
 
     if(m_parser.isAtomColorAndSize(command)) {
@@ -199,7 +200,7 @@ void ScriptHandler::parseGUICommand(QString command)
                 m_atoms->setAtomColorAndScale(atomType, color, radius);
             }
         });
-        return;
+        return true;
     }
 
     {
@@ -209,20 +210,22 @@ void ScriptHandler::parseGUICommand(QString command)
         if(match.hasMatch()) {
             m_label = match.captured(1);
             emit labelChanged(m_label);
+            return true;
         }
     }
 
     if(m_lammpsState) {
         if(m_parser.isStaticSystem(command)) {
             m_lammpsState->staticSystem = true;
-            return;
+            return true;
         }
     }
 
     if(m_parser.isDisableBonds(command)) {
         m_atoms->bonds()->setEnabled(false);
+        return true;
     }
-
+    return false;
 }
 
 void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
