@@ -10,8 +10,8 @@ Simulation {
     initialUpVector: Qt.vector3d(0.049758, 0.997954, 0.0401179)
     controllers: [
         Thermometer {
-            timeLabel: "t [fs]"
-            timeScale: 1000
+            xLabel: "t [fs]"
+            xScale: 1000
             timeRange: 0.5
         },
         Thermostat {

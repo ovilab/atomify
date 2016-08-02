@@ -14,9 +14,23 @@ Simulation {
 The system then goes over to the linear regime where we can read out the diffusion coefficient. </p>"
     initialCameraPosition: Qt.vector3d(0,0,20)
     controllers: [
-        MeanSquareDisplacement {},
-        Thermometer {},
-        Thermostat {}
+        MeanSquareDisplacement {
+            xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
+            yScale: 11.594025 // 3.405^2
+            xLabel: "t [fs]"
+        },
+        Thermometer {
+            xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
+            yScale: 119.6
+            xLabel: "t [fs]"
+            yLabel: "T [K]"
+        },
+        Thermostat {
+            unitScale: 119.6
+            minimumValue: 1.0
+            maximumValue: 300.0
+            temperatureDampening: 1.0
+        }
     ]
 }
 

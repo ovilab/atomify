@@ -26,8 +26,8 @@ of water molecules form.
     initialUpVector: Qt.vector3d(0.530134, 0.575353, 0.622839)
     controllers: [
         Thermometer {
-            timeLabel: "t [fs]"
-            timeScale: 1000
+            xLabel: "t [fs]"
+            xScale: 1000
             timeRange: 0.5
         },
         Thermostat {

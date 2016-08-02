@@ -8,10 +8,10 @@ import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
     property real timeRange: 1
-    property string timeLabel: "t [ps]"
-    property string temperatureLabel: "T [K]"
-    property real timeScale: 1.0
-    property real temperatureScale: 1.0
+    property string xLabel: "t [ps]"
+    property string yLabel: "T [K]"
+    property real xScale: 1.0
+    property real yScale: 1.0
     property alias computeCommand: temperatureCompute.command
 
     name: "Temperature"
@@ -39,22 +39,22 @@ DashboardControl {
                 axisX: xAxis
                 axisY: yAxis
                 lineSeries: lineSeries
-                value: temperatureCompute.value * temperatureScale
-                time: temperatureCompute.time * timeScale
-                timeRange: root.timeRange * timeScale
+                value: temperatureCompute.value * yScale
+                time: temperatureCompute.time * xScale
+                timeRange: root.timeRange * xScale
             }
 
             ValueAxis {
                 id: xAxis
                 tickCount: 4
-                titleText: root.timeLabel
+                titleText: root.xLabel
                 color: "white"
                 labelsColor: "white"
             }
             ValueAxis {
                 id: yAxis
                 tickCount: 4
-                titleText: root.temperatureLabel
+                titleText: root.yLabel
                 color: "white"
                 labelsColor: "white"
             }
