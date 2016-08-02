@@ -75,6 +75,7 @@ void System::synchronize(LAMMPS *lammps)
     emit volumeChanged(m_volume);
 
     m_units->synchronize(lammps);
+    // qDebug() << "Timesteps: " << m_timesteps << ". Simulation time: " << m_simulationTime;
 }
 
 QVector3D System::origin() const

@@ -136,7 +136,7 @@ Item {
 
     RevealSimulationsViewButton {
         id: revealSimulationsViewButton
-        revealed: mobileRoot.state == ""
+        revealed: mobileRoot.state == "" && !splashScreen.visible
         onClicked: {
             mainMenu.revealed = true
             dashboard.revealed = false
@@ -146,7 +146,7 @@ Item {
 
     RevealDashboardButton {
         id: revealDashboardButton
-        revealed: mobileRoot.state == ""
+        revealed: mobileRoot.state == "" && !splashScreen.visible
         onClicked: {
             mobileRoot.previousState = mobileRoot.state
             mobileRoot.state = "tools"
@@ -158,7 +158,7 @@ Item {
             bottom: revealDashboardButton.top
             right: parent.right
         }
-        revealed: mobileRoot.state == ""
+        revealed: mobileRoot.state == "" && !splashScreen.visible
         onClicked: {
             informationPanel.revealed = true
             mainMenu.revealed = false
@@ -305,6 +305,11 @@ Item {
             }
             width: simulator.currentRunStep / simulator.runStepCount * (parent.width - anchors.margins * 2)
         }
+    }
+
+    SplashScreen {
+        id: splashScreen
+        anchors.fill: parent
     }
 
     Keys.onPressed: {

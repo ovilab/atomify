@@ -47,5 +47,6 @@
         <file>mobile/controls/BoundSlider.qml</file>
         <file>mobile/SearchView.qml</file>
         <file>mobile/dashboard/controls/MeanSquareDisplacement.qml</file>
+        <file>mobile/hud/SplashScreen.qml</file>
     </qresource>
 </RCC>
