@@ -27,8 +27,8 @@ that are characteristic for this structure.
     initialCameraPosition: Qt.vector3d(0,0,46)
     controllers: [
         Thermometer {
-            timeLabel: "t [fs]"
-            timeScale: 1000
+            xLabel: "t [fs]"
+            xScale: 1000
             timeRange: 0.5
         },
         Thermostat {
