@@ -20,6 +20,7 @@ We can the quickly lower the temperature (quench the system) to reach a nice nan
 "
     initialCameraPosition: Qt.vector3d(30, -30, 30)
     initialUpVector: Qt.vector3d(0.286427, 0.885236, 0.366486)
+    orthographic: false
     controllers: [
         // TODO Thermometer not working in this simulation. Wrong timescale?
 //        Thermometer {

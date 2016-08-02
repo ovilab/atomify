@@ -102,6 +102,7 @@ Item {
             periodicImages.numberOfCopiesX = simulation.periodicImagesX
             periodicImages.numberOfCopiesY = simulation.periodicImagesY
             periodicImages.numberOfCopiesZ = simulation.periodicImagesZ
+            visualizer.camera.orthographic = simulation.orthographic
 
             simulator.clearSimulatorControls()
 
