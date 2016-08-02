@@ -67,6 +67,10 @@ DashboardControl {
                 miniChart.setAxisY(yAxis, lineSeries)
             }
         }
+
+//        Text {
+//            text: "Hallo hva tror du."
+//        }
     }
     simulatorControls: [
         Compute {
