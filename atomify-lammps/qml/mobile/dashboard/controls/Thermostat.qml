@@ -14,8 +14,9 @@ DashboardControl {
     property string unit: "K"
     property real unitScale: 1.0
     property int precision: 1
-    property real minimumValue: 0.0
+    property real minimumValue: 1.0
     property real maximumValue: 10.0
+    property alias temperatureDampening: nvt.temperatureDampening
 
     // TODO add properties:
     // min and max temperature
@@ -95,10 +96,10 @@ DashboardControl {
         }
         BoundSlider {
             id: nvtSlider
-            minimumValue: root.minimumValue
-            maximumValue: root.maximumValue
+            minimumValue: root.minimumValue / root.unitScale
+            maximumValue: root.maximumValue / root.unitScale
+            unitScale: 1.0 / root.unitScale
             precision: root.precision
-            unitScale: root.unitScale
             unit: root.unit
 
             target: nvt
@@ -110,8 +111,11 @@ DashboardControl {
     simulatorControls: [
         NVT {
             id: nvt
-            temperatureDampening: 0.01
+            temperatureDampening: 1.0
             enabled: false
+            onCommandChanged: {
+                console.log("Command: ", command)
+            }
         },
         Compute {
             id: temperatureCompute
