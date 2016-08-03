@@ -54,8 +54,8 @@ Scene3D {
             projectionType: CameraLens.PerspectiveProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
-            nearPlane : 2.0
-            farPlane : 100.0
+            nearPlane : 3.0
+            farPlane : 300.0
             position: Qt.vector3d(7.0, 7.0, 50.0)
             upVector: Qt.vector3d(0.0, 1.0, 0.0)
             viewCenter: Qt.vector3d(7.0, 7.0, 7.0)
@@ -176,7 +176,7 @@ void main()
                     source: "
 #version 410
 "
-+(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
+                    +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
 uniform highp sampler2D colorTexture;
@@ -542,7 +542,7 @@ void main()
                     source: "
 #version 410
 "
-+(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
+                    +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 
 uniform highp sampler2D blurTexture;
 uniform highp sampler2D ssaoTexture;
@@ -658,6 +658,30 @@ void main()
             // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
             posMin: -100
             posMax:  100
+            fragmentColor: StandardMaterial {
+                color: spheres.fragmentBuilder.color
+                lights: [
+                    Light {
+                        // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
+                        position: visualizer.camera.position.plus(
+                                      (visualizer.camera.viewVector.normalized().plus(
+                                           visualizer.camera.upVector.normalized()).plus(
+                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+                        //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
+                        strength: 0.4
+                        attenuation: 0.0
+                    },
+                    Light {
+                        position: visualizer.camera.position.minus(
+                                      (visualizer.camera.viewVector.normalized().plus(
+                                           visualizer.camera.upVector.normalized()).plus(
+                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+                        strength: 0.4
+                        attenuation: 0.0
+                    }
+                ]
+            }
+
         }
 
         Bonds {
@@ -665,6 +689,29 @@ void main()
             bondData: simulator.system.atoms.bondData
             posMin: spheres.posMin
             posMax: spheres.posMax
+            fragmentColor: StandardMaterial {
+                color: spheres.fragmentBuilder.color
+                lights: [
+                    Light {
+                        // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
+                        position: visualizer.camera.position.plus(
+                                      (visualizer.camera.viewVector.normalized().plus(
+                                           visualizer.camera.upVector.normalized()).plus(
+                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+                        //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
+                        strength: 0.4
+                        attenuation: 0.0
+                    },
+                    Light {
+                        position: visualizer.camera.position.minus(
+                                      (visualizer.camera.viewVector.normalized().plus(
+                                           visualizer.camera.upVector.normalized()).plus(
+                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+                        strength: 0.4
+                        attenuation: 0.0
+                    }
+                ]
+            }
         }
     }
 }

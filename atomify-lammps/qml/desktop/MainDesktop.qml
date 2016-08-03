@@ -96,7 +96,7 @@ Item {
                         id: noiseScaleSlider
                         width: 150
                         minimumValue: 0.0
-                        value: 1.0
+                        value: 5.0
                         maximumValue: 10.0
                     }
                 }
@@ -213,7 +213,7 @@ Item {
                     }
                     Switch {
                         id: deferredModeSwitch
-                        checked: true
+                        checked: false
                     }
                 }
             }
