@@ -1,16 +1,18 @@
 #include "cpvariable.h"
+#include "system.h"
 #include <variable.h>
 #include "lammpscontroller.h"
 #include <library.h>
+#include "data1d.h"
+#include <QDebug>
 CPVariable::CPVariable()
 {
-
+    m_data = new Data1D(this);
 }
-
-
 
 void CPVariable::updateCommand()
 {
+
 }
 
 QList<QString> CPVariable::enabledCommands()
@@ -40,19 +42,54 @@ void CPVariable::update(LAMMPSController *lammpsController)
     if(!lammpsController->lammps())  {
         return;
     }
-    QByteArray identifier_ = identifier().toLocal8Bit();
-    double *variableValue = (double*)lammps_extract_variable(lammpsController->lammps(), identifier_.data(), "all");
-    setValue(*variableValue);
-    lammps_free(variableValue);
+    if(!existsInLammps(lammpsController)) return;
+    if(m_dependencies.size()) {
+        for(const QVariant &variant : m_dependencies) {
+            SimulatorControl *dependency = qvariant_cast<SimulatorControl*>(variant);
+            if(dependency) {
+                // We might need to invoke our dependencies before the variable
+                dependency->update(lammpsController);
+            }
+        }
+    }
+
+    if( (lammpsController->system()->timesteps() - m_lastUpdated) > m_frequency) {
+        m_lastUpdated = lammpsController->system()->timesteps();
+        try {
+            QByteArray identifier_ = identifier().toLocal8Bit();
+            double *variableValue = (double*)lammps_extract_variable(lammpsController->lammps(), identifier_.data(), "all");
+            m_data->add(lammpsController->system()->simulationTime(), *variableValue);
+            lammps_free(variableValue);
+        } catch (LammpsException error) {
+            qDebug() << "Error: " << QString::fromStdString(error.error());
+        }
+    }
 }
 
-double CPVariable::value() const
+int CPVariable::frequency() const
 {
-    return m_value;
+    return m_frequency;
 }
 
-void CPVariable::setValue(double value)
+Data1D *CPVariable::data() const
 {
-    m_value = value;
-    emit valueChanged(value);
+    return m_data;
+}
+
+void CPVariable::setFrequency(int frequency)
+{
+    if (m_frequency == frequency)
+        return;
+
+    m_frequency = frequency;
+    emit frequencyChanged(frequency);
+}
+
+void CPVariable::setData(Data1D *data)
+{
+    if (m_data == data)
+        return;
+
+    m_data = data;
+    emit dataChanged(data);
 }

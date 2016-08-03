@@ -21,6 +21,7 @@
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/system.h"
+#include "LammpsWrappers/data1d.h"
 #include <vendor.h>
 
 #include <vendor.h>
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
+    qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
     qmlRegisterType<FixAverageTime>("Atomify",1,0,"FixAverageTime");
     qmlRegisterType<FixHistogram>("Atomify", 1, 0, "FixHistogram");

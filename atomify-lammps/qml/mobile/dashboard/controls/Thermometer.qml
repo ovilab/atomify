@@ -13,7 +13,6 @@ DashboardControl {
     property real xScale: 1.0
     property real yScale: 1.0
     property alias computeCommand: temperatureCompute.command
-
     name: "Temperature"
     fullControl: Column {
         ChartView {

@@ -12,6 +12,7 @@ DashboardControl {
     property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
     property real xScale: 1.0
     property real yScale: 1.0
+    property alias msdCompute: compute
     property alias computeCommand: compute.command
 
     name: "MSD"

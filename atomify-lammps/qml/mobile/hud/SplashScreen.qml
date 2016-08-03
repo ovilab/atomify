@@ -35,8 +35,8 @@ Item {
             width: parent.width - 20
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: Style.font.size
-            color: Style.font.color
+//            font.pixelSize: Style.font.size
+//            color: Style.font.color
             textFormat: Text.RichText
             text:
 "

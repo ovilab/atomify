@@ -20,14 +20,15 @@ protected:
     QString m_commandPrefix = "atomify_";
     QVariantList m_dependencies;
     bool m_enabled = true;
+    long m_lastUpdated = -1;
     bool addToLammps(LAMMPSController *lammpsController);
     virtual void updateCommand() = 0;
     virtual QList<QString> enabledCommands() = 0;
     virtual QList<QString> disableCommands() = 0;
     virtual QList<QString> resetCommands() = 0;
     void addDependency(SimulatorControl *control);
-
     void removeDependency(SimulatorControl *control);
+
 public:
     explicit SimulatorControl(QQuickItem *parent = 0);
     ~SimulatorControl();

@@ -23,7 +23,6 @@
         <file>mobile/main-menu/About.qml</file>
         <file>mobile/main-menu/SimulationLoader.qml</file>
         <file>mobile/style/Heading.qml</file>
-        <file>mobile/dashboard/Dashboard.qml</file>
         <file>mobile/controls/Plot.qml</file>
         <file>mobile/controls/PlotLabels.qml</file>
         <file>mobile/main-menu/MainMenuLeft.qml</file>
@@ -48,5 +47,8 @@
         <file>mobile/SearchView.qml</file>
         <file>mobile/dashboard/controls/MeanSquareDisplacement.qml</file>
         <file>mobile/hud/SplashScreen.qml</file>
+        <file>mobile/dashboard/controls/DiffusionCoefficient.qml</file>
+        <file>mobile/dashboard/controls/MultiChartScroller.qml</file>
+        <file>mobile/dashboard/controls/ChartScrollerNew.qml</file>
     </qresource>
 </RCC>

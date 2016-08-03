@@ -5,12 +5,13 @@
 class CPVariable : public SimulatorControl
 {
     Q_OBJECT
-    Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged)
+    Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
+    Q_PROPERTY(Data1D* data READ data WRITE setData NOTIFY dataChanged)
+
 
 public:
     CPVariable();
 
-    // SimulatorControl interface
 protected:
     virtual void updateCommand();
     virtual QList<QString> enabledCommands();
@@ -20,16 +21,21 @@ protected:
 public:
     virtual bool existsInLammps(class LAMMPSController *lammpsController) override;
     virtual void update(LAMMPSController *lammpsController) override;
-    double value() const;
+    int frequency() const;
+    class Data1D* data() const;
 
 public slots:
-    void setValue(double value);
+    void setFrequency(int frequency);
+    void setData(class Data1D* data);
 
 signals:
-    void valueChanged(double value);
+    void frequencyChanged(int frequency);
+    void dataChanged(class Data1D* data);
 
-private:
-    double m_value = 0;
+protected:
+    class Data1D* m_data = nullptr;
+    int m_frequency = 10;
+    int m_lastUpdated = -1e6;
 };
 
 #endif // CPVARIABLE_H

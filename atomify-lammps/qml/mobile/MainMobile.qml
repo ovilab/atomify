@@ -315,7 +315,10 @@ Item {
 
     Keys.onPressed: {
         if(event.key === Qt.Key_Back) {
-            console.log("Back button captured")
+            event.accepted = true
+        }
+        if(event.key === Qt.Key_Escape) {
+            splashScreen.visible = false
             event.accepted = true
         }
     }
