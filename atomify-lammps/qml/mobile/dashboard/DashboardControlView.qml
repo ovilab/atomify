@@ -118,18 +118,12 @@ Rectangle {
                 margins: Style.baseMargin
             }
 
-            Repeater {
-                id: repeater
-                model: simulation ? simulation.controllers.length : undefined
-                Loader {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    visible: currentIndex === index
-
-                    sourceComponent: simulation.controllers[index].fullControl
+            Loader {
+                anchors {
+                    left: parent.left
+                    right: parent.right
                 }
+                sourceComponent: simulation.controllers[currentIndex].fullControl
             }
         }
     }

@@ -15,18 +15,12 @@ ChartView {
     property string type: "line"
     property var dataSeries: [] // Will be updated automatically
     property list<Data1D> dataSources
-    onDataSourcesChanged: {
-        updateSeries()
-        for(var i=0; i<dataSources.length; i++) {
-            dataSources[i].updated.connect(updateData)
-        }
-    }
 
     function updateData() {
         if(autoScroll) {
             updateLimits()
         }
-        for(var i=0; i<dataSources.length; i++) {
+        for(var i=0; i < dataSources.length; i++) {
             dataSources[i].updateData(dataSeries[i])
         }
     }
@@ -53,6 +47,19 @@ ChartView {
         yAxis.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
 
         yAxis.applyNiceNumbers()
+    }
+
+    onDataSourcesChanged: {
+        updateSeries()
+        for(var i=0; i<dataSources.length; i++) {
+            dataSources[i].updated.connect(updateData)
+        }
+    }
+
+    Component.onDestruction: {
+        for(var i in dataSources) {
+            dataSources[i].updated.disconnect(updateData)
+        }
     }
 
     ValueAxis {
