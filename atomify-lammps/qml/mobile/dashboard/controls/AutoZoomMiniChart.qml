@@ -23,6 +23,7 @@ MiniChart {
         color: "steelblue"
         axisX: miniChart.axisX
         axisY: miniChart.axisY
+        useOpenGL: true
     }
     
     ChartScroller {

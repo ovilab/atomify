@@ -7,6 +7,7 @@ ChartView {
     antialiasing: true
     legend.visible: false
     theme: ChartView.ChartThemeDark
+
     property bool autoScroll: true
     property alias xLabel: xAxis.titleText
     property alias yLabel: yAxis.titleText
@@ -88,11 +89,13 @@ ChartView {
             if (type == "line") {
                 for(var i=0; i<dataSources.length; i++) {
                     var series = root.createSeries(ChartView.SeriesTypeLine, i, xAxis, yAxis);
+                    series.useOpenGL = true
                     dataSeries[i] = series
                 }
             } else {
                 for(i=0; i<dataSources.length; i++) {
                     series = root.createSeries(ChartView.SeriesTypeScatter, i, _axisX, _axisY);
+                    series.useOpenGL = true
                     dataSeries[i] = series
                 }
             }

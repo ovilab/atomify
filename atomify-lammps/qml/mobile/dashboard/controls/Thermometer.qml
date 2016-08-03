@@ -59,6 +59,7 @@ DashboardControl {
             }
             LineSeries {
                 id: lineSeries
+                useOpenGL: true
             }
             Component.onCompleted: {
                 miniChart.setAxisX(xAxis, lineSeries)
