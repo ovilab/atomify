@@ -13,6 +13,6 @@ install:
   - sudo apt-get -qq install qt57svg
 script:
   - ./configure.py
-  - source /opt/qt55/bin/qt57-env.sh
+  - source /opt/qt57/bin/qt57-env.sh
   - /opt/qt55/bin/qmake
   - make
