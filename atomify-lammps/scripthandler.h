@@ -23,7 +23,7 @@ public:
     Atoms* atoms() const;
     ScriptParser &parser() { return m_parser; }
     bool parseLammpsCommand(QString command, class LAMMPSController *lammpsController);
-    void parseGUICommand(QString command);
+    bool parseGUICommand(QString command);
     class LammpsState *lammpsState() const;
     void setLammpsState(LammpsState *lammpsState);
     Q_INVOKABLE QString previousSingleCommandString();

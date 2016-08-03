@@ -30,11 +30,15 @@ many different types of particles.</p>
     initialCameraPosition: Qt.vector3d(0,0,20)
     controllers: [
         Thermometer {
-            timeLabel: "t [fs]"
-            timeScale: 117
+            xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
+            yScale: 119.6
+            xLabel: "t [fs]"
+            yLabel: "T [K]"
             timeRange: 0.5
         },
-        Thermostat {}
+        Thermostat {
+            unitScale: 119.6
+        }
     ]
 }
 

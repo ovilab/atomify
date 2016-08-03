@@ -25,10 +25,11 @@ that are characteristic for this structure.
 "
     longDescription: "Try adjusting the temperature to above 1700 Kelvin which is the melting point. Do you see the crystal structure disappear?"
     initialCameraPosition: Qt.vector3d(0,0,46)
+    orthographic: false
     controllers: [
         Thermometer {
-            timeLabel: "t [fs]"
-            timeScale: 1000
+            xLabel: "t [fs]"
+            xScale: 1000
             timeRange: 0.5
         },
         Thermostat {

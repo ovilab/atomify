@@ -1,4 +1,5 @@
 import QtQuick 2.5
+import Atomify 1.0
 import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
@@ -17,5 +18,8 @@ OH bonds and a scissoring bend of the H-O-H angle.</p>
 "
 
     initialCameraPosition: Qt.vector3d(0,0,2.64575)
+    controllers: [
+        Thermometer {}
+    ]
 }
 

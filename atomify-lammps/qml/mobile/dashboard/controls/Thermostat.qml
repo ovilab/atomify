@@ -14,8 +14,9 @@ DashboardControl {
     property string unit: "K"
     property real unitScale: 1.0
     property int precision: 1
-    property real minimumValue: 0.0
+    property real minimumValue: 1.0
     property real maximumValue: 10.0
+    property alias temperatureDampening: nvt.temperatureDampening
 
     // TODO add properties:
     // min and max temperature
@@ -63,55 +64,64 @@ DashboardControl {
             }
         }
     }
-    fullControl: Column {
-        spacing: Style.spacing
-        Item {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            height: Style.touchableSize
-            Label {
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                text: "Enabled"
-                font.pixelSize: Style.font.size
-                color: Style.font.color
-            }
-            Switch {
-                id: nvtCheck
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                checked: nvt.enabled
-                onCheckedChanged: {
-                    nvt.enabled = checked
+    fullControl: Item {
+        height: 500
+
+        Column {
+            id: column
+            anchors.fill: parent
+            spacing: Style.spacing
+            Item {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                height: Style.touchableSize
+                Label {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "Enabled"
+                    font.pixelSize: Style.font.size
+                    color: Style.font.color
+                }
+                Switch {
+                    id: nvtCheck
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    checked: nvt.enabled
+                    onCheckedChanged: {
+                        nvt.enabled = checked
+                    }
                 }
             }
-        }
-        Text {
-            text: "Target:"
-            color: Style.font.color
-            font.pixelSize: Style.font.size
-        }
-        BoundSlider {
-            id: nvtSlider
-            minimumValue: root.minimumValue
-            maximumValue: root.maximumValue
-            precision: root.precision
-            unitScale: root.unitScale
-            unit: root.unit
+            Text {
+                text: "Target:"
+                color: Style.font.color
+                font.pixelSize: Style.font.size
+            }
+            BoundSlider {
+                id: nvtSlider
+                minimumValue: root.minimumValue / root.unitScale
+                maximumValue: root.maximumValue / root.unitScale
+                unitScale: 1.0 / root.unitScale
+                precision: root.precision
+                unit: root.unit
 
-            target: nvt
-            property: "targetTemperature"
-            text: "Target temperature"
+                target: nvt
+                property: "targetTemperature"
+                text: "Target temperature"
+            }
         }
     }
 
     simulatorControls: [
         NVT {
             id: nvt
-            temperatureDampening: 0.01
+            temperatureDampening: 1.0
             enabled: false
+            onCommandChanged: {
+                console.log("Command: ", command)
+            }
         },
         Compute {
             id: temperatureCompute

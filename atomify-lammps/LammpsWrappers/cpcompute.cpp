@@ -1,4 +1,5 @@
 #include "cpcompute.h"
+#include "system.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
 #include <QDebug>
@@ -29,11 +30,12 @@ void CPCompute::updateCommand()
 
 void CPCompute::update(LAMMPSController *lammpsController)
 {
+    if(lammpsController->system()->timesteps() == m_lastUpdated) return;
+
     SimulatorControl::update(lammpsController);
     LAMMPS_NS::Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute != nullptr) {
        QVector<double> newValues;
-
        if(isVector()) {
            lmp_compute->compute_vector();
            double *values = lmp_compute->vector;
@@ -41,10 +43,6 @@ void CPCompute::update(LAMMPSController *lammpsController)
 
            for(int i=0; i<numValues; i++) {
                newValues.push_back(values[i]);
-           }
-
-           if(m_dataSource) {
-
            }
        } else {
            double value = lmp_compute->compute_scalar();

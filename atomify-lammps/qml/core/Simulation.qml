@@ -16,6 +16,7 @@ QtObject {
     property int periodicImagesX: 1
     property int periodicImagesY: 1
     property int periodicImagesZ: 1
+    property bool orthographic: false
     property vector3d initialCameraPosition: Qt.vector3d(0,0,10);
     property vector3d initialViewCenter: Qt.vector3d(0,0,0);
     property vector3d initialUpVector: Qt.vector3d(0,1,0);

@@ -41,7 +41,8 @@ Item {
         {
             name: "Diffusion",
             simulations: [
-                "qrc:/simulations/diffusion/simple_diffusion"
+                "qrc:/simulations/diffusion/simple_diffusion",
+                "qrc:/simulations/diffusion/diffusion_coefficient"
             ]
         }
     ]
@@ -101,6 +102,7 @@ Item {
             periodicImages.numberOfCopiesX = simulation.periodicImagesX
             periodicImages.numberOfCopiesY = simulation.periodicImagesY
             periodicImages.numberOfCopiesZ = simulation.periodicImagesZ
+            visualizer.camera.orthographic = simulation.orthographic
 
             simulator.clearSimulatorControls()
 
@@ -135,7 +137,7 @@ Item {
 
     RevealSimulationsViewButton {
         id: revealSimulationsViewButton
-        revealed: mobileRoot.state == ""
+        revealed: mobileRoot.state == "" && !splashScreen.visible
         onClicked: {
             mainMenu.revealed = true
             dashboard.revealed = false
@@ -145,7 +147,7 @@ Item {
 
     RevealDashboardButton {
         id: revealDashboardButton
-        revealed: mobileRoot.state == ""
+        revealed: mobileRoot.state == "" && !splashScreen.visible
         onClicked: {
             mobileRoot.previousState = mobileRoot.state
             mobileRoot.state = "tools"
@@ -157,7 +159,7 @@ Item {
             bottom: revealDashboardButton.top
             right: parent.right
         }
-        revealed: mobileRoot.state == ""
+        revealed: mobileRoot.state == "" && !splashScreen.visible
         onClicked: {
             informationPanel.revealed = true
             mainMenu.revealed = false
@@ -306,9 +308,17 @@ Item {
         }
     }
 
+    SplashScreen {
+        id: splashScreen
+        anchors.fill: parent
+    }
+
     Keys.onPressed: {
         if(event.key === Qt.Key_Back) {
-            console.log("Back button captured")
+            event.accepted = true
+        }
+        if(event.key === Qt.Key_Escape) {
+            splashScreen.visible = false
             event.accepted = true
         }
     }

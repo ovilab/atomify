@@ -17,6 +17,7 @@ class System : public QObject
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
     Q_PROPERTY(int timesteps READ timesteps NOTIFY timestepsChanged)
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
+    Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
@@ -31,10 +32,12 @@ public:
     void reset();
     float volume() const;
     bool isValid() const;
+    class Units* units() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
     void setIsValid(bool isValid);
+    void setUnits(class Units* units);
 
 signals:
     void originChanged(QVector3D origin);
@@ -46,9 +49,11 @@ signals:
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void volumeChanged(float volume);
     void isValidChanged(bool isValid);
+    void unitsChanged(class Units* units);
 
 private:
     class Atoms* m_atoms = nullptr;
+    class Units* m_units = nullptr;
     QVector3D m_origin;
     QVector3D m_size;
     int m_numberOfAtoms = 0;

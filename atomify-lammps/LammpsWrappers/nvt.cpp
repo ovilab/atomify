@@ -52,5 +52,5 @@ QList<QString> NVT::enabledCommands()
 
 QList<QString> NVT::disableCommands()
 {
-    return { QString("unfix %1").arg(identifier()), QString("fix cp_nve all nve") };
+    return { QString("unfix %1").arg(identifier()), QString("fix atomify_nve all nve") };
 }

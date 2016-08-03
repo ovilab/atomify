@@ -24,7 +24,6 @@ Item {
         animateCameraViewCenter.from = camera.viewCenter
         animateCameraViewCenter.to = viewCenter
         animateCamera.running = true
-        console.log("Yep, starting animation")
     }
 
     Visualizer {

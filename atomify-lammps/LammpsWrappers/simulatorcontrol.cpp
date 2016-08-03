@@ -2,6 +2,7 @@
 #include "lammpscontroller.h"
 #include "scripthandler.h"
 #include "mysimulator.h"
+#include "system.h"
 
 SimulatorControl::SimulatorControl(QQuickItem *parent) : QQuickItem(parent)
 {
@@ -96,6 +97,7 @@ void SimulatorControl::update(LAMMPSController *lammpsController)
             lammpsController->scriptHandler()->addCommandsToTop(resetCommands(), ScriptCommand::Type::SingleCommand);
         }
     }
+    m_lastUpdated = lammpsController->system()->timesteps();
 }
 
 bool SimulatorControl::enabled() const

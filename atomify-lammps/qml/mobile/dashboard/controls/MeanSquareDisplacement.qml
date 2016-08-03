@@ -7,27 +7,30 @@ import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
-    property real timeRange: 1
+    property real timeRange: 4
     property string xLabel: "t [ps]"
-    property string yLabel: "T [K]"
+    property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
     property real xScale: 1.0
     property real yScale: 1.0
-    property alias computeCommand: temperatureCompute.command
-    name: "Temperature"
+    property alias msdCompute: compute
+    property alias computeCommand: compute.command
+
+    name: "MSD"
     fullControl: Column {
         ChartView {
             id: miniChart
 
-            property real value: temperatureCompute.value
+            property real value: compute.value
             property real lowPassValue: 0.0
             property real yMin: 0
             property real yMax: 0
+            title: "Mean square displacement"
 
             anchors {
                 left: parent.left
                 right: parent.right
             }
-            height: width * 3 / 4
+            height: width * 2.5 / 4
 
             antialiasing: true
             legend.visible: false
@@ -38,8 +41,8 @@ DashboardControl {
                 axisX: xAxis
                 axisY: yAxis
                 lineSeries: lineSeries
-                value: temperatureCompute.value * yScale
-                time: temperatureCompute.time * xScale
+                value: compute.value * yScale
+                time: compute.time * xScale
                 timeRange: root.timeRange * xScale
             }
 
@@ -65,12 +68,17 @@ DashboardControl {
                 miniChart.setAxisY(yAxis, lineSeries)
             }
         }
+
+//        Text {
+//            text: "Hallo hva tror du."
+//        }
     }
     simulatorControls: [
         Compute {
-            id: temperatureCompute
-            identifier: "temp"
-            command: "all temp"
+            id: compute
+            identifier: "msd"
+            command: "all msd"
+            isVector: true
         }
     ]
 }
