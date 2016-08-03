@@ -9,6 +9,7 @@ install:
   - sudo add-apt-repository -y ppa:beineri/opt-qt57-trusty
   - sudo apt-get -qq update
   - sudo apt-get -qq install qt573d
+  - sudo apt-get -qq install qt57charts-no-lgpl
   - sudo apt-get -qq install qt57declarative
   - sudo apt-get -qq install qt57svg
 script:
