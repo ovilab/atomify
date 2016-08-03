@@ -27,7 +27,7 @@ void CPFix::updateCommand()
 
 bool CPFix::existsInLammps(LAMMPSController *lammpsController)
 {
-    return lammpsController->findFixIndex(identifier())>=0;
+    return lammpsController->fixExists(identifier());
 }
 
 

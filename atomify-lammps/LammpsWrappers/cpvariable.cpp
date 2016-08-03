@@ -38,6 +38,9 @@ bool CPVariable::existsInLammps(LAMMPSController *lammpsController)
 
 void CPVariable::update(LAMMPSController *lammpsController)
 {
+    QElapsedTimer t;
+    t.start();
+
     SimulatorControl::update(lammpsController);
     if(!lammpsController->lammps())  {
         return;
@@ -64,6 +67,8 @@ void CPVariable::update(LAMMPSController *lammpsController)
             qDebug() << "Error: " << QString::fromStdString(error.error());
         }
     }
+
+    // qDebug() << "Updated variable " << identifier() << " after " << t.elapsed() << " ms";
 }
 
 int CPVariable::frequency() const

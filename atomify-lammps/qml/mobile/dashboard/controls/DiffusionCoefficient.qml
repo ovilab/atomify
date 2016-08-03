@@ -15,19 +15,22 @@ DashboardControl {
     property real yScale: 1.0
     property var msdCompute
     property var vacfCompute
+    property alias frequency: diffusion_vacf.frequency
+
     property real time: msdCompute!==undefined ? msdCompute.time : 0.0
 
     fullControl: Column {
         ChartScrollerNew {
             id: miniChart
             title: "Diffusion coefficient"
+            xRange: 1.5
 
             anchors {
                 left: parent.left
                 right: parent.right
             }
 
-            dataSources: [diffusion_msd.data]
+            dataSources: [diffusion_msd.data, diffusion_vacf.data]
 
             height: width * 2.5 / 4
         }
@@ -39,8 +42,22 @@ DashboardControl {
             enabled: (msdCompute !== undefined)
             identifier: "diffusion_msd"
             command: "equal c_"+msdCompute.identifier+"[3]/6/(step*dt+1.0e-6)"
-            // command: "equal pe"
             dependencies: [msdCompute]
+        },
+        Fix {
+            id: fix
+            identifier: "vacf_fix"
+            enabled: vacfCompute !== undefined
+            command: vacfCompute !== undefined ? " all vector 1 c_"+vacfCompute.identifier+"[4]" : ""
+            dependencies: vacfCompute !== undefined ? [vacfCompute] : []
+        },
+        Variable {
+            id: diffusion_vacf
+            frequency: 1
+            enabled: vacfCompute !== undefined
+            identifier: "diffusion_vacf"
+            command: vacfCompute !== undefined ? "equal c_"+vacfCompute.identifier+"[3]/6/(step*dt+1.0e-6)" : ""
+            dependencies: [fix]
         }
     ]
 }

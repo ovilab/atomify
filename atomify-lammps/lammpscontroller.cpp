@@ -230,7 +230,7 @@ void LAMMPSController::executeActiveRunCommand() {
     t.start();
     if(currentTimestep == state.runCommandStart || state.preRunNeeded) {
         // If this is the first timestep in this run command, execute the pre yes command to prepare the full run command.
-        executeCommandInLAMMPS(QString("run %1 pre yes post no start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
+        executeCommandInLAMMPS(QString("run %1 pre yes post yes start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
         state.preRunNeeded = false;
     } else {
         executeCommandInLAMMPS(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
@@ -291,10 +291,7 @@ void LAMMPSController::tick()
     if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return;
 
     if(nextCommand.type() != ScriptCommand::Type::NoCommand) {
-        if(nextCommand.type() == ScriptCommand::Type::SingleCommand) {
-            state.preRunNeeded = true;
-        }
-
+        state.preRunNeeded = true;
         bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
         if(didProcessCommand) {
             return;
@@ -307,11 +304,25 @@ void LAMMPSController::tick()
         QElapsedTimer t;
         t.start();
 
+        // Check if we need to start a new run
+        unsigned int currentTimestep = m_lammps->update->ntimestep;
+        if(currentTimestep >= state.runCommandEnd) {
+            // We need to start a new run session
+            state.runCommandStart = currentTimestep;
+            state.runCommandEnd = currentTimestep + 1000;
+            state.preRunNeeded = true;
+        }
+
+        int maxSimulationSpeed = state.runCommandEnd - currentTimestep; // We cannot exceed the last timestep in the active run command
+        int simulationSpeed = min(state.simulationSpeed, maxSimulationSpeed);
+
         if(state.preRunNeeded) {
-            executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(state.simulationSpeed));
+            // executeCommandInLAMMPS(QString("run %1 pre yes post yes").arg(state.simulationSpeed));
+            executeCommandInLAMMPS(QString("run %1 pre yes post yes start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
             state.preRunNeeded = false;
         } else {
-            executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
+            executeCommandInLAMMPS(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
+            // executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
         }
 
 //        processSimulatorControls();

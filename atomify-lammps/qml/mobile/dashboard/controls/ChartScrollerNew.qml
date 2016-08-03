@@ -15,9 +15,11 @@ ChartView {
     property string type: "line"
     property var dataSeries: [] // Will be updated automatically
     property list<Data1D> dataSources
+    property real xRange: 0
     onDataSourcesChanged: {
         updateSeries()
         for(var i=0; i<dataSources.length; i++) {
+            dataSources[i].xRange = root.xRange
             dataSources[i].updated.connect(updateData)
         }
     }
@@ -47,12 +49,12 @@ ChartView {
             yMin = Math.min(yMin, data.yMin)
             yMax = Math.max(yMax, data.yMax)
         }
+
         xAxis.min = xMin
         xAxis.max = xMax
         yAxis.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
         yAxis.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
-
-        yAxis.applyNiceNumbers()
+        // yAxis.applyNiceNumbers()
     }
 
     ValueAxis {
