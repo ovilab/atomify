@@ -31,7 +31,8 @@ void CPCompute::updateCommand()
 void CPCompute::update(LAMMPSController *lammpsController)
 {
     if(lammpsController->system()->timesteps() == m_lastUpdated) return;
-
+    QElapsedTimer t;
+    t.start();
     SimulatorControl::update(lammpsController);
     LAMMPS_NS::Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute != nullptr) {
@@ -51,6 +52,7 @@ void CPCompute::update(LAMMPSController *lammpsController)
 
        setValues(lammpsController->simulationTime(), newValues);
     }
+    // qDebug() << "Updated compute " << identifier() << " after " << t.elapsed() << " ms";
 }
 
 QList<QString> CPCompute::enabledCommands()

@@ -9,13 +9,13 @@ DashboardControl {
     id: root
     property real timeRange: 4
     property string xLabel: "t [ps]"
-    property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
+    property string yLabel: "&lt;v(t)v(0)&gt;"
     property real xScale: 1.0
     property real yScale: 1.0
-    property alias compute: compute
     property alias computeCommand: compute.command
+    property alias compute: compute
 
-    name: "MSD"
+    name: "VACF"
     fullControl: Column {
         ChartView {
             id: miniChart
@@ -24,7 +24,7 @@ DashboardControl {
             property real lowPassValue: 0.0
             property real yMin: 0
             property real yMax: 0
-            title: "Mean square displacement"
+            title: "Velocity autocorrelation function"
 
             anchors {
                 left: parent.left
@@ -76,8 +76,8 @@ DashboardControl {
     simulatorControls: [
         Compute {
             id: compute
-            identifier: "msd"
-            command: "all msd"
+            identifier: "vacf_compute"
+            command: "all vacf"
             isVector: true
         }
     ]

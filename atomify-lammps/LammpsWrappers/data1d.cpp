@@ -1,5 +1,8 @@
 #include "data1d.h"
 #include <QLineSeries>
+#include <QElapsedTimer>
+#include <QDebug>
+
 Data1D::Data1D(QObject *parent) : QObject(parent)
 {
 
@@ -27,6 +30,8 @@ float Data1D::yMax() const
 
 void Data1D::updateLimits()
 {
+    QElapsedTimer t;
+    t.start();
     QList<QPointF> validPoints = this->validPoints();
 
     if(validPoints.size() == 0) return;
@@ -57,14 +62,19 @@ void Data1D::updateLimits()
         setYMax(yMax);
         setYMin(yMin);
     } // if not, then we have no data to update limits with
+    // qDebug() << "Updated limits after " << t.elapsed() << " ms.";
 }
 
 void Data1D::updateData(QAbstractSeries *series)
 {
+    QElapsedTimer t;
+    t.start();
+
     if(series) {
         QXYSeries *xySeries = static_cast<QXYSeries*>(series);
         xySeries->replace(validPoints());
     }
+    // qDebug() << "Replaced data after " << t.elapsed() << " ms.";
 }
 
 bool Data1D::enabled() const
