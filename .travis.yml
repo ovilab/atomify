@@ -14,5 +14,5 @@ install:
 script:
   - ./configure.py
   - source /opt/qt57/bin/qt57-env.sh
-  - /opt/qt55/bin/qmake
+  - /opt/qt57/bin/qmake
   - make
