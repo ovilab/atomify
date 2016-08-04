@@ -94,7 +94,6 @@ Item {
         folder: "qrc:/simulations/water/singlewater"
         onLoaded: {
             var simulation = item
-            console.log("SimulationLoader onLoaded called")
             if(!simulator.scriptHandler) {
                 console.warn("WARNING: Cannot laod simulation because simulator has no scriptHandler.")
                 return
@@ -104,7 +103,6 @@ Item {
             simulator.scriptHandler.reset()
             simulator.scriptHandler.runFile(simulation.scriptSource)
 
-            navigator.firstPersonUpVector = simulation.initialUpVector
             visualizer.animateCameraTo(simulation.initialCameraPosition, simulation.initialUpVector, simulation.initialViewCenter, 1000)
 
             periodicImages.enabled = (simulation.periodicImagesX !== 1) || (simulation.periodicImagesY !== 1) || (simulation.periodicImagesZ !== 1)
@@ -119,14 +117,11 @@ Item {
                 var controller = simulation.controllers[i]
                 for(var j in controller.simulatorControls) {
                     var control = controller.simulatorControls[j]
-                    //                control.parent = simulator
                     simulator.addSimulatorControl(control);
-                    console.log("Added", control, "to simulator", simulator)
                 }
             }
 
             mobileRoot.state = ""
-            console.log("SimulationLoader onLoaded done")
         }
     }
 
