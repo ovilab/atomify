@@ -8,8 +8,8 @@ import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
     property real xRange: 0
-    property string xLabel: "t [ps]"
-    property string yLabel: "T [K]"
+    property string xLabel: "Time"
+    property string yLabel: "Temperature"
     property real xScale: 1.0
     property real yScale: 1.0
     property alias computeCommand: temperatureCompute.command
