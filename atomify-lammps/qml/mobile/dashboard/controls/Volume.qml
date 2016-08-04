@@ -12,6 +12,7 @@ DashboardControl {
     property string yLabel: "Volume [Å<sup>3</sup>]"
     property real xScale: 1.0
     property real yScale: 1.0
+    property string type: "line"
     name: "Volume"
     fullControl: Column {
         ChartScrollerNew {
@@ -23,6 +24,7 @@ DashboardControl {
             xLabel: root.xLabel
             yLabel: root.yLabel
             active: root.active
+            type: root.type
 
             anchors {
                 left: parent.left
