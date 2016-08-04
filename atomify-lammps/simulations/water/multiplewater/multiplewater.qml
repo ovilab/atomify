@@ -6,7 +6,8 @@ Simulation {
     name: "Multiple water"
 
     controllers: [
-        Thermometer {}
+        Thermometer {
+        }
     ]
 }
 

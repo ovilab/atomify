@@ -28,11 +28,14 @@ of water molecules form.
         Thermometer {
             xLabel: "t [fs]"
             xScale: 1000
-            xRange: 0.5
+            xRange: 250
         },
         Thermostat {
+            nvtEnabled: true
             minimumValue: 10
-            maximumValue: 1000
+            maximumValue: 600
+            targetTemperature: 300
+            temperatureDampening: 0.05
         }
     ]
 }

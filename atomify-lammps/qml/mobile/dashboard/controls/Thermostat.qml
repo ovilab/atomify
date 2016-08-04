@@ -15,55 +15,14 @@ DashboardControl {
     property real unitScale: 1.0
     property int precision: 1
     property real minimumValue: 1.0
-    property real maximumValue: 10.0
+    property real maximumValue: 100.0
     property alias temperatureDampening: nvt.temperatureDampening
-
+    property bool nvtEnabled: false
+    property real targetTemperature: 100.0
     // TODO add properties:
     // min and max temperature
 
     name: "Thermostat"
-//    miniControl: Component {
-//        DashboardMiniControl {
-//            id: miniControl
-//            ColumnLayout {
-//                id: textLayout
-//                anchors {
-//                    left: parent.left
-//                    top: parent.top
-//                    margins: Style.baseMargin * 0.5
-//                    right: parent.right
-//                    bottom: parent.bottom
-//                }
-//                spacing: Style.baseMargin * 0.2
-//                Text {
-//                    id: temperatureText
-//                    font.weight: Font.Light
-//                    font.pixelSize: Style.font.size
-//                    color: "#cfcfcf"
-//                    text: "thermostat"
-//                }
-//                Text {
-//                    id: temperatureValueText
-//                    font.pixelSize: Style.font.size * 3
-//                    color: "#cdcdcd"
-//                    text: miniChart.lowPassValue.toFixed(2) + " → " + nvt.targetTemperature.toFixed(2)
-//                }
-//                AutoZoomMiniChart {
-//                    id: miniChart
-
-//                    Layout.fillHeight: true
-//                    Layout.fillWidth: true
-
-//                    width: 1
-//                    height: 1
-
-//                    value: temperatureCompute.value
-//                    time: temperatureCompute.time
-//                    timeRange: root.timeRange
-//                }
-//            }
-//        }
-//    }
     fullControl: Item {
         height: 500
 
@@ -106,7 +65,6 @@ DashboardControl {
                 unitScale: 1.0 / root.unitScale
                 precision: root.precision
                 unit: root.unit
-
                 target: nvt
                 property: "targetTemperature"
                 text: "Target temperature"
@@ -118,7 +76,8 @@ DashboardControl {
         NVT {
             id: nvt
             temperatureDampening: 1.0
-            enabled: false
+            enabled: root.nvtEnabled
+            targetTemperature: root.targetTemperature
             onCommandChanged: {
                 console.log("Command: ", command)
             }

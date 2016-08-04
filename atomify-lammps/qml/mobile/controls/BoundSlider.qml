@@ -26,7 +26,6 @@ Item {
     property real minimumValue: -1.0
     property real maximumValue: 1.0
     property real stepSize: 0.0
-
     property bool anyFocus: focus || textInput.focus
 
     focus: false
