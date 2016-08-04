@@ -26,6 +26,7 @@ OH bonds and a scissoring bend of the H-O-H angle.</p>
             xRange: 100.0
             xScale: 1000
             xLabel: "t [fs]"
+            title: "The average value is about 105 degrees."
         }
     ]
 }
