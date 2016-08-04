@@ -14,7 +14,7 @@ DashboardControl {
     property real maximumValue: 1.0
     property real initialValue: 1.0
     property real unitScale: 1.0
-    name: "Thermostat"
+    name: "Force"
     fullControl: Item {
         height: 500
 
