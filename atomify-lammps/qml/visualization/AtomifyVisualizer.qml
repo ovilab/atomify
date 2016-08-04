@@ -16,7 +16,6 @@ Item {
     property alias customColor: customColor
 
     function animateCameraTo(position, upVector, viewCenter, duration) {
-        console.log("Starting animation ? ")
         animateCamera.duration = 1000
         animateCameraPosition.from = camera.position
         animateCameraPosition.to = position
@@ -35,7 +34,6 @@ Item {
         simulator: atomifyVisualizerRoot.simulator
         camera: camera
         backgroundColor: "#111"
-        navigator: navigator
         onTouched: {
             atomifyVisualizerRoot.focus = true
         }
@@ -44,17 +42,6 @@ Item {
 //            id: skybox
 //            camera: camera
 //            texture: ":/1024.png"
-//        }
-
-        TrackballNavigator {
-            id: navigator
-            anchors.fill: parent
-            camera: camera
-        }
-//        FlyModeNavigator {
-//            id: navigator
-//            anchors.fill: parent
-//            camera: camera
 //        }
 
         Spheres {
@@ -108,9 +95,9 @@ Item {
         nearPlane: 0.1
         farPlane: 100000
         position: Qt.vector3d(0,0,5)
-//        onPositionChanged: {
-//            console.log("Pos: "+ position + "    up: "+ upVector + "    viewCenter: " + viewCenter)
-//        }
+        onPositionChanged: {
+            console.log("Pos: "+ position + "    up: "+ upVector + "    viewCenter: " + viewCenter + "    fpsUpVector: "+navigator.firstPersonUpVector)
+        }
     }
 
     ParallelAnimation {

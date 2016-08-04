@@ -12,9 +12,17 @@ Simulation {
 <p>In this simulation we will see that the entropy actually decreases, where all particles end up being on the same side.</p>
 <p>This does not violate the second law of thermodynamics since we add energy to the system through the bottom plate.</p>
 "
-    initialCameraPosition: Qt.vector3d(20,0,0)
+    initialCameraPosition: Qt.vector3d(-20,0,-2)
     initialUpVector: Qt.vector3d(0,0,-1)
     initialViewCenter: Qt.vector3d(0,0,-10)
+    customColorShaderCode:
+"
+highp float yPosScaled = (position.y + 8.0) / 16.0;
+customColor.r *= yPosScaled;
+customColor.b *= (1.0 - yPosScaled);
+customColor.g *= 0.3;
+// customColor = normalize(customColor);
+"
     controllers: [
         AtomPosition {
 

@@ -13,6 +13,7 @@ Simulation {
 <p>In the beginning of the MSD measurement, on a short time scale, the atoms move more or less in a straight line giving rise to the non-linear ballistic regime.
 The system then goes over to the linear regime where we can read out the diffusion coefficient. </p>"
     initialCameraPosition: Qt.vector3d(0,0,20)
+    initialUpVector: Qt.vector3d(0,-1,0)
     controllers: [
         DiffusionCoefficient {
             xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0

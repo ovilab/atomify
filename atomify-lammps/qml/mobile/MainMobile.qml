@@ -104,6 +104,7 @@ Item {
             simulator.scriptHandler.reset()
             simulator.scriptHandler.runFile(simulation.scriptSource)
 
+            navigator.firstPersonUpVector = simulation.initialUpVector
             visualizer.animateCameraTo(simulation.initialCameraPosition, simulation.initialUpVector, simulation.initialViewCenter, 1000)
 
             periodicImages.enabled = (simulation.periodicImagesX !== 1) || (simulation.periodicImagesY !== 1) || (simulation.periodicImagesZ !== 1)
