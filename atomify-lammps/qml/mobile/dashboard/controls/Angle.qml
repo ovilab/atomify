@@ -31,7 +31,10 @@ DashboardControl {
             yScale: root.yScale
             showLegend: true
             active: root.active
-            autoScroll: true
+            yMin: 90
+            yMax: 120
+            autoScrollX: true
+            autoScrollY: false
 
             anchors {
                 left: parent.left

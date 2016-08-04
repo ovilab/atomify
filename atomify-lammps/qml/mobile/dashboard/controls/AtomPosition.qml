@@ -12,11 +12,13 @@ DashboardControl {
     property real xRange: 0
     property real xScale: 1.0
     property real yScale: 1.0
+    property var colors: []
 
     name: "Counter"
     fullControl: Column {
         ChartScrollerNew {
             id: miniChart
+            colors: root.colors
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale
@@ -24,7 +26,10 @@ DashboardControl {
             yLabel: root.yLabel
             active: root.active
             showLegend: true
-            autoScroll: true
+            autoScrollX: true
+            autoScrollY: false
+            yMin: 0
+            yMax: 100
 
             anchors {
                 left: parent.left

@@ -18,7 +18,6 @@ DashboardControl {
         ChartScrollerNew {
             id: miniChart
             title: "Temperature"
-            autoScroll: true
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale

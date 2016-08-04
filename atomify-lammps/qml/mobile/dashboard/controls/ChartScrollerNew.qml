@@ -8,28 +8,24 @@ ChartView {
     legend.visible: showLegend
     theme: ChartView.ChartThemeDark
     property bool showLegend: false
-    property bool autoScroll: true
+    property bool autoScrollX: true
+    property bool autoScrollY: true
     property bool active: true
     property alias xLabel: xAxis.titleText
     property alias yLabel: yAxis.titleText
-    property alias xAxis: xAxis
-    property alias yAxis: yAxis
+    property alias xMin: xAxis.min
+    property alias xMax: xAxis.max
+    property alias yMin: yAxis.min
+    property alias yMax: yAxis.max
     property real xRange: 0
     property real xScale: 1.0
     property real yScale: 1.0
+    property var colors: []
     property string type: "line"
     property var dataSeries: [] // Will be updated automatically
     property list<Data1D> dataSources
+
     onDataSourcesChanged: {
-        console.log("Data sources: ", dataSources)
-        if(dataSources.length > 0) {
-            console.log("Data sources 0: ", dataSources[0])
-        }
-
-        if(dataSources.length > 1) {
-            console.log("Data sources 1: ", dataSources[1])
-        }
-
         updateSeries()
         for(var i=0; i<dataSources.length; i++) {
             dataSources[i].xScale = root.xScale
@@ -63,7 +59,7 @@ ChartView {
             return
         }
 
-        if(autoScroll) {
+        if(autoScrollX || autoScrollY) {
             updateLimits()
         }
         for(var i=0; i < dataSources.length; i++) {
@@ -88,10 +84,14 @@ ChartView {
             yMax = Math.max(yMax, data.yMax)
         }
 
-        xAxis.min = xMin
-        xAxis.max = xMax
-        yAxis.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
-        yAxis.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
+        if(autoScrollX) {
+            xAxis.min = xMin
+            xAxis.max = xMax
+        }
+        if(autoScrollY) {
+            yAxis.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
+            yAxis.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
+        }
     }
 
     Component.onDestruction: {
@@ -126,12 +126,18 @@ ChartView {
                     var series = root.createSeries(ChartView.SeriesTypeLine, i, xAxis, yAxis);
                     // series.useOpenGL = true
                     dataSeries[i] = series
+                    if(root.colors.length > i) {
+                        series.color = root.colors[i]
+                    }
                 }
             } else {
                 for(i=0; i<dataSources.length; i++) {
                     series = root.createSeries(ChartView.SeriesTypeScatter, i, _axisX, _axisY);
                     // series.useOpenGL = true
                     dataSeries[i] = series
+                    if(root.colors.length > i) {
+                        series.color = root.colors[i]
+                    }
                 }
             }
         }

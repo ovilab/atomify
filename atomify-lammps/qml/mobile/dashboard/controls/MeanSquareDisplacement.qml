@@ -26,7 +26,6 @@ DashboardControl {
             xLabel: root.xLabel
             yLabel: root.yLabel
             active: root.active
-            autoScroll: true
 
             anchors {
                 left: parent.left

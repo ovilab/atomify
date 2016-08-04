@@ -14,7 +14,7 @@ Simulation {
 "
     initialCameraPosition: Qt.vector3d(-20,0,-2)
     initialUpVector: Qt.vector3d(0,0,-1)
-    initialViewCenter: Qt.vector3d(0,0,-20)
+    initialViewCenter: Qt.vector3d(0,0,-13)
     customColorShaderCode:
 "
 highp float yPosScaled = (position.y + 8.0) / 16.0;
@@ -25,6 +25,9 @@ customColor.g *= 0.3;
 "
     controllers: [
         AtomPosition {
+            yScale: 100
+            yLabel: "Fraction %"
+            colors: ["blue", "red"]
 
         }
 
