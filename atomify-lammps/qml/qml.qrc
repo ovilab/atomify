@@ -51,5 +51,6 @@
         <file>mobile/dashboard/controls/ChartScrollerNew.qml</file>
         <file>mobile/dashboard/controls/VelocityAutoCorrelationFunction.qml</file>
         <file>mobile/dashboard/controls/Angle.qml</file>
+        <file>mobile/dashboard/controls/Gravity.qml</file>
     </qresource>
 </RCC>

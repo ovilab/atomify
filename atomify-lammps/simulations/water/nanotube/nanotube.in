@@ -47,7 +47,7 @@ print "--------- beginning minimization (using fix langevin) ---------"
 #/bond 1 1 2.0
 timestep        0.1
 thermo          100
-fix gravity mobile gravity 1.0 vector 0 0 1
+# fix gravity mobile gravity 1.0 vector 0 0 1
 timestep        1.0
 fix fxMoveStuff mobile nvt temp 300.0 300.0 100.0
 compute tempMobile mobile temp

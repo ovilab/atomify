@@ -93,11 +93,19 @@ void SimulatorControl::update(LAMMPSController *lammpsController)
     if(exists) {
         QString currentCommand = command();
         updateCommand();
-        if(currentCommand!=command()) {
+        if(currentCommand!=command() || m_forceReset) {
             lammpsController->scriptHandler()->addCommandsToTop(resetCommands(), ScriptCommand::Type::SingleCommand);
+            m_forceReset = false;
         }
     }
     m_lastUpdated = lammpsController->system()->timesteps();
+}
+
+void SimulatorControl::handleCommand(QString command) { /* TODO */ }
+
+bool SimulatorControl::forceReset() const
+{
+    return m_forceReset;
 }
 
 bool SimulatorControl::enabled() const
@@ -153,4 +161,13 @@ void SimulatorControl::setDependencies(QVariantList dependencies)
 
     m_dependencies = dependencies;
     emit dependenciesChanged(dependencies);
+}
+
+void SimulatorControl::setForceReset(bool forceReset)
+{
+    if (m_forceReset == forceReset)
+        return;
+
+    m_forceReset = forceReset;
+    emit forceResetChanged(forceReset);
 }
