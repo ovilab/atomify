@@ -11,7 +11,7 @@ Simulation {
     initialCameraPosition: Qt.vector3d(0,0,50)
     customColorShaderCode:
 "
-highp float zScaled = 0.5 + 0.5* (position.z + 5.0) / 5.0;
+highp float zScaled = 0.2 + 0.8* (position.z + 7.5) / 5.0;
 zScaled = clamp(zScaled, 0.0, 1.0);
 customColor *= zScaled;
 "
