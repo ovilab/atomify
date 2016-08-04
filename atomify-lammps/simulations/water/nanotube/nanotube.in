@@ -5,6 +5,12 @@
 #     (You do not need to run LAMMPS to equilibrate the system before
 #      using this file.)
 
+#/atom 1 carbon
+#/atom 2 oxygen
+#/atom 3 hydrogen
+#/bond 2 3 2.0
+#/bond 1 1 2.0
+
 # ----------------------------- Initialization Section --------------------
 
 include system.in.init
@@ -40,11 +46,6 @@ group mobile subtract all Cgraphene
 
 print "--------- beginning minimization (using fix langevin) ---------"
 
-#/atom 1 carbon
-#/atom 2 oxygen
-#/atom 3 hydrogen
-#/bond 2 3 2.0
-#/bond 1 1 2.0
 timestep        0.1
 thermo          100
 # fix gravity mobile gravity 1.0 vector 0 0 1
