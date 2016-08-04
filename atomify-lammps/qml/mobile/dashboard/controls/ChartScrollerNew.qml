@@ -132,7 +132,7 @@ ChartView {
                 }
             } else {
                 for(i=0; i<dataSources.length; i++) {
-                    series = root.createSeries(ChartView.SeriesTypeScatter, i, _axisX, _axisY);
+                    series = root.createSeries(ChartView.SeriesTypeScatter, i, xAxis, yAxis);
                     // series.useOpenGL = true
                     dataSeries[i] = series
                     if(root.colors.length > i) {
