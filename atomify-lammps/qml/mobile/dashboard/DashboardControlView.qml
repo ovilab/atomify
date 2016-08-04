@@ -13,11 +13,14 @@ Rectangle {
     id: root
 
     signal backClicked
-
     property AtomifyVisualizer visualizer
     property AtomifySimulator simulator
     property Simulation simulation
     property int currentIndex
+    property bool active: false
+    onActiveChanged: {
+        simulation.controllers[currentIndex].active = active
+    }
 
     width: parent.width
     height: parent.height
@@ -118,18 +121,13 @@ Rectangle {
                 margins: Style.baseMargin
             }
 
-            Repeater {
-                id: repeater
-                model: simulation ? simulation.controllers.length : undefined
-                Loader {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    visible: currentIndex === index
-
-                    sourceComponent: simulation.controllers[index].fullControl
+            Loader {
+                id: controllerLoader
+                anchors {
+                    left: parent.left
+                    right: parent.right
                 }
+                sourceComponent: simulation.controllers[currentIndex].fullControl
             }
         }
     }

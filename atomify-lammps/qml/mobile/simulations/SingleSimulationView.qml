@@ -124,6 +124,7 @@ Rectangle {
                         left: parent.left
                         right: parent.right
                     }
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     font.pixelSize: Style.font.heading.size
                     color: Style.font.heading.color
                     text: simulation ? simulation.name : "N/A"

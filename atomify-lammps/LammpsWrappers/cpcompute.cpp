@@ -45,6 +45,7 @@ void CPCompute::update(LAMMPSController *lammpsController)
            emit valuesChanged(m_values);
         }
     }
+    qDebug() << "Compute " << identifier() << " spent " << t.elapsed() << " ms to update.";
 }
 
 QList<QString> CPCompute::enabledCommands()
@@ -130,6 +131,7 @@ void CPCompute::setScalarTitle(QString scalarTitle)
         return;
 
     m_scalarTitle = scalarTitle;
+    m_scalarValue->setTitle(scalarTitle);
     emit scalarTitleChanged(scalarTitle);
 }
 

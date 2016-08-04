@@ -9,7 +9,7 @@ DashboardControl {
     id: root
     property string xLabel: "t [ps]"
     property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
-    property real xRange: 4
+    property real xRange: 0
     property real xScale: 1.0
     property real yScale: 1.0
     property alias compute: compute
@@ -23,13 +23,13 @@ DashboardControl {
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale
+            active: root.active
             autoScroll: true
 
             anchors {
                 left: parent.left
                 right: parent.right
             }
-
             dataSources: [ compute.vectorValues["r2"] ]
             height: width * 2.5 / 4
         }

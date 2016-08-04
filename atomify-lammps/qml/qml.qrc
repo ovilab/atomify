@@ -48,7 +48,6 @@
         <file>mobile/dashboard/controls/MeanSquareDisplacement.qml</file>
         <file>mobile/hud/SplashScreen.qml</file>
         <file>mobile/dashboard/controls/DiffusionCoefficient.qml</file>
-        <file>mobile/dashboard/controls/MultiChartScroller.qml</file>
         <file>mobile/dashboard/controls/ChartScrollerNew.qml</file>
         <file>mobile/dashboard/controls/VelocityAutoCorrelationFunction.qml</file>
     </qresource>

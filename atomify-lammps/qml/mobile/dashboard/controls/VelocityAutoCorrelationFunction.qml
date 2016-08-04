@@ -23,6 +23,7 @@ DashboardControl {
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale
+            active: root.active
             autoScroll: true
 
             anchors {
@@ -41,6 +42,15 @@ DashboardControl {
             vectorTitles: ["x", "y", "z", "r2"]
             scalarTitle: "MSD"
             command: "all vacf"
-        }
+        }//,
+//        FixAverageTime {
+//            // fix %1 all ave/time %2 %3 %4 c_%5 file %6.txt
+//            // return {QString("fix %1 all ave/time %2 %3 %4 c_%5 file %6.txt").arg(identifier()).arg(m_nEvery).arg(m_nRepeat).arg(m_nFreq).arg(m_compute->identifier(), identifier())};
+//            id: fix
+//            identifier: "vac_time_ave"
+//            nEvery: 1
+//            nRepeat: 10
+//        }
+
     ]
 }

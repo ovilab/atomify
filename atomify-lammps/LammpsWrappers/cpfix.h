@@ -17,7 +17,6 @@ public:
     ~CPFix() { }
     void update(LAMMPSController *lammpsController) override;
     virtual bool existsInLammps(LAMMPSController *lammpsController);
-
 signals:
 
 public slots:

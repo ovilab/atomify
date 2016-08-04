@@ -9,6 +9,7 @@ ChartView {
     theme: ChartView.ChartThemeDark
 
     property bool autoScroll: true
+    property bool active: true
     property alias xLabel: xAxis.titleText
     property alias yLabel: yAxis.titleText
     property alias xAxis: xAxis
@@ -28,7 +29,7 @@ ChartView {
             dataSources[i].updated.connect(updateData)
         }
     }
-
+    
     onXScaleChanged: {
         for(var i=0; i<dataSources.length; i++) {
             dataSources[i].xScale = root.xScale
@@ -48,10 +49,14 @@ ChartView {
     }
 
     function updateData() {
+        if(!root.active) {
+            return
+        }
+
         if(autoScroll) {
             updateLimits()
         }
-        for(var i=0; i<dataSources.length; i++) {
+        for(var i=0; i < dataSources.length; i++) {
             dataSources[i].updateData(dataSeries[i])
         }
     }
@@ -81,6 +86,12 @@ ChartView {
         // yAxis.applyNiceNumbers()
     }
 
+    Component.onDestruction: {
+        for(var i in dataSources) {
+            dataSources[i].updated.disconnect(updateData)
+        }
+    }
+
     ValueAxis {
         id: xAxis
         tickCount: 4
@@ -105,11 +116,13 @@ ChartView {
             if (type == "line") {
                 for(var i=0; i<dataSources.length; i++) {
                     var series = root.createSeries(ChartView.SeriesTypeLine, i, xAxis, yAxis);
+                    // series.useOpenGL = true
                     dataSeries[i] = series
                 }
             } else {
                 for(i=0; i<dataSources.length; i++) {
                     series = root.createSeries(ChartView.SeriesTypeScatter, i, _axisX, _axisY);
+                    // series.useOpenGL = true
                     dataSeries[i] = series
                 }
             }

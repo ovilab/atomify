@@ -190,6 +190,7 @@ Item {
         visualizer: visualizer
         simulator: mobileRoot.simulator
         simulation: mobileRoot.simulation
+        active: mobileRoot.state === "tools"
         anchors {
             bottom: visualizer.top
         }

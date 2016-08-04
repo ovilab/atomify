@@ -68,7 +68,7 @@ void CPVariable::update(LAMMPSController *lammpsController)
         }
     }
 
-    // qDebug() << "Updated variable " << identifier() << " after " << t.elapsed() << " ms";
+    // qDebug() << "Variable " << identifier() << " spent " << t.elapsed() << " ms to update.";
 }
 
 int CPVariable::frequency() const

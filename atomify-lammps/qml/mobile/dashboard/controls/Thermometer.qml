@@ -7,7 +7,7 @@ import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
-    property real xRange: 1
+    property real xRange: 0
     property string xLabel: "t [ps]"
     property string yLabel: "T [K]"
     property real xScale: 1.0
@@ -22,6 +22,7 @@ DashboardControl {
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale
+            active: root.active
 
             anchors {
                 left: parent.left
@@ -29,17 +30,12 @@ DashboardControl {
             }
 
             dataSources: [temperatureCompute.scalarValue]
-
             height: width * 2.5 / 4
         }
     }
     simulatorControls: [
         Compute {
             id: temperatureCompute
-            Component.onCompleted: {
-                console.log("temperatureCompute.scalarValue: ", scalarValue)
-            }
-
             scalarTitle: "Temperature"
             identifier: "temp"
             command: "all temp"

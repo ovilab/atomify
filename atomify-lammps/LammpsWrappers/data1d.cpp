@@ -103,9 +103,11 @@ float Data1D::xRange() const
 bool Data1D::pointIsValid(const QPointF &p)
 {
     if(m_xRange > 0) {
-        qreal lowestXValue = m_points.last().x() - m_xRange;
         // X range test is false if m_xRange == 0
-        if(p.x() < lowestXValue) return false;
+        qreal lowestXValue = m_points.last().x()*m_xScale - m_xRange;
+        if(p.x()*m_xScale < lowestXValue) {
+            return false;
+        }
     }
 
     return true;
@@ -116,7 +118,7 @@ QList<QPointF> Data1D::validPoints()
     QList<QPointF> validPoints;
     for(QPointF &p : m_points) {
         if(pointIsValid(p)) {
-            validPoints.append(p);
+            validPoints.append(QPointF(m_xScale*p.x(), m_yScale*p.y()));
         }
     }
 
@@ -130,8 +132,6 @@ void Data1D::clear()
 
 void Data1D::add(float x, float y, bool silent)
 {
-    x *= m_xScale;
-    y *= m_yScale;
     m_points.append(QPointF(x,y));
     if(!silent) emit updated();
 }
@@ -188,7 +188,6 @@ void Data1D::setXRange(float xRange)
 
     m_xRange = xRange;
     emit xRangeChanged(xRange);
-    qDebug() << "Setting x range on cpp object: " << xRange;
 }
 
 void Data1D::setTitle(QString title)
@@ -207,7 +206,6 @@ void Data1D::setXScale(float xScale)
 
     m_xScale = xScale;
     emit xScaleChanged(xScale);
-    qDebug() << "Setting x scale on cpp object: " << xScale;
 }
 
 void Data1D::setYScale(float yScale)
@@ -217,5 +215,4 @@ void Data1D::setYScale(float yScale)
 
     m_yScale = yScale;
     emit yScaleChanged(yScale);
-    qDebug() << "Setting y scale on cpp object: " << yScale;
 }
