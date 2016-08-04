@@ -45,7 +45,11 @@ void System::synchronize(LAMMPS *lammps)
     }
 
     if(originDidChange) emit originChanged(m_origin);
-    if(sizeDidChange) emit sizeChanged(m_size);
+    if(sizeDidChange) {
+        emit sizeChanged(m_size);
+//        qDebug() << "Origo: " << m_origin;
+//        qDebug() << "New system size: " << m_size;
+    }
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -75,7 +79,6 @@ void System::synchronize(LAMMPS *lammps)
     emit volumeChanged(m_volume);
 
     m_units->synchronize(lammps);
-    // qDebug() << "Timesteps: " << m_timesteps << ". Simulation time: " << m_simulationTime;
 }
 
 QVector3D System::origin() const
