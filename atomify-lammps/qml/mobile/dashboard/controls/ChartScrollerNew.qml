@@ -5,9 +5,9 @@ ChartView {
     id: root
     title: ""
     antialiasing: true
-    legend.visible: false
+    legend.visible: showLegend
     theme: ChartView.ChartThemeDark
-
+    property bool showLegend: false
     property bool autoScroll: true
     property bool active: true
     property alias xLabel: xAxis.titleText
@@ -27,6 +27,7 @@ ChartView {
             dataSources[i].yScale = root.yScale
             dataSources[i].xRange = root.xRange
             dataSources[i].updated.connect(updateData)
+            dataSeries[i].name = dataSources[i].title
         }
     }
     

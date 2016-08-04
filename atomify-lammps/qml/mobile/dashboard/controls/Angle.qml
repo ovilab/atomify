@@ -29,6 +29,7 @@ DashboardControl {
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale
+            showLegend: true
             active: root.active
             autoScroll: true
 
@@ -43,13 +44,13 @@ DashboardControl {
     simulatorControls: [
         Compute {
             id: compute
-            scalarTitle: "angle"
+            scalarTitle: "Current"
             identifier: "angle"
             command: "all angle/atoms "+root.atom1+" "+root.atom2+" "+root.atom3
         },
         Compute {
             id: compute2
-            scalarTitle: "angle"
+            scalarTitle: "Average"
             identifier: "angle2"
             command: "all angle/atoms "+root.atom1+" "+root.atom2+" "+root.atom3+" average"
         }
