@@ -99,9 +99,7 @@ Item {
                 return
             }
 
-            simulator.willReset = true
-            simulator.scriptHandler.reset()
-            simulator.scriptHandler.runFile(simulation.scriptSource)
+            start()
 
             visualizer.animateCameraTo(simulation.initialCameraPosition, simulation.initialUpVector, simulation.initialViewCenter, 1000)
 
@@ -122,6 +120,12 @@ Item {
             }
 
             mobileRoot.state = ""
+        }
+
+        function start() {
+            simulator.willReset = true
+            simulator.scriptHandler.reset()
+            simulator.scriptHandler.runFile(simulation.scriptSource)
         }
     }
 
@@ -242,6 +246,10 @@ Item {
         id: mainMenu
 
         simulation: mobileRoot.simulation
+        onRestartSimulation: {
+            simulationLoader.start()
+        }
+
         onContinueClicked: {
             mobileRoot.state = ""
         }

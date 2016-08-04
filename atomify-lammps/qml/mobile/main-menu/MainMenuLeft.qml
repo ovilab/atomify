@@ -8,6 +8,7 @@ Item {
 
     signal continueClicked
     signal simulationsClicked
+    signal restartSimulation
     signal simulationClicked(var simulation)
 
     property bool revealed: false
@@ -114,6 +115,13 @@ Item {
                         onClicked: {
                             revealed = false
                             simulationsClicked()
+                        }
+                    }
+                    MainMenuLeftButton {
+                        text: qsTr("Restart simulation")
+                        onClicked: {
+                            revealed = false
+                            restartSimulation()
                         }
                     }
                 }
