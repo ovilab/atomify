@@ -22,6 +22,8 @@ DashboardControl {
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale
+            xLabel: root.xLabel
+            yLabel: root.yLabel
             active: root.active
 
             anchors {

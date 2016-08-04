@@ -13,6 +13,6 @@ Item {
     property list<Component> components
     property string name: "Untitled"
     property real itemSize: 150
-    property bool active: true
+    property bool active: false
 }
 

@@ -21,6 +21,9 @@ Rectangle {
     onActiveChanged: {
         simulation.controllers[currentIndex].active = active
     }
+    onCurrentIndexChanged: {
+        simulation.controllers[currentIndex].active = active
+    }
 
     width: parent.width
     height: parent.height

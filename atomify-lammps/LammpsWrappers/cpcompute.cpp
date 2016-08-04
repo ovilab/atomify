@@ -45,7 +45,7 @@ void CPCompute::update(LAMMPSController *lammpsController)
            emit valuesChanged(m_values);
         }
     }
-    qDebug() << "Compute " << identifier() << " spent " << t.elapsed() << " ms to update.";
+    // qDebug() << "Compute " << identifier() << " spent " << t.elapsed() << " ms to update.";
 }
 
 QList<QString> CPCompute::enabledCommands()

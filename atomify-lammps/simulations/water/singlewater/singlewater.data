@@ -8,13 +8,12 @@ LAMMPS Description
 
      2  atom types
 
-  -6 6 xlo xhi
-  -6 6 ylo yhi
-  -6 6 zlo zhi
+  -20 20 xlo xhi
+  -20 20 ylo yhi
+  -20 20 zlo zhi
 
 Atoms # atomic
 
 1 1 0.0 0.0 0.0
 2 2 0.8164904 0.577359 0.0
 3 2 -0.7 0.6 0.0
-

@@ -19,7 +19,14 @@ OH bonds and a scissoring bend of the H-O-H angle.</p>
 
     initialCameraPosition: Qt.vector3d(0,0,2.64575)
     controllers: [
-        Thermometer {}
+        Angle {
+            atom1: 1
+            atom2: 2
+            atom3: 3
+            xRange: 250.0
+            xScale: 1000
+            xLabel: "t [fs]"
+        }
     ]
 }
 

@@ -50,5 +50,6 @@
         <file>mobile/dashboard/controls/DiffusionCoefficient.qml</file>
         <file>mobile/dashboard/controls/ChartScrollerNew.qml</file>
         <file>mobile/dashboard/controls/VelocityAutoCorrelationFunction.qml</file>
+        <file>mobile/dashboard/controls/Angle.qml</file>
     </qresource>
 </RCC>
