@@ -153,6 +153,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             bool handled = scriptHandler->parseGUICommand(nextCommand);
             if(!handled) {
                 handled = scriptHandler->parseLammpsCommand(nextCommand, &m_lammpsController);
+                atomifySimulator->setSimulationSpeed(m_lammpsController.simulationSpeed()); // A command might have changed it
             }
             if(!handled) {
                 qDebug() << "Error, editor command " << nextCommand << " was not handled";

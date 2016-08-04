@@ -1,0 +1,37 @@
+# Pour granular particles into chute container, then induce flow
+atom_style	sphere
+boundary	fm fm fm
+newton		off
+comm_modify	vel yes
+variable L equal 25
+
+neighbor	0.2 bin
+neigh_modify	delay 0
+
+# pair_style      gran/hooke/history 2000.0 NULL 50.0 NULL 0.5 0
+
+read_restart patterns_final.bin
+
+# pair_coeff	* *
+
+# timestep	0.01
+
+variable gamma equal 3.0
+variable h equal 3.0
+variable fStar equal 0.3
+variable g equal 1.0
+
+variable A equal "v_gamma*v_h/(2*2*PI*PI*v_fStar*v_fStar)"
+
+variable f equal "v_fStar*sqrt(v_g/v_h)"
+variable period equal "1.0/v_f"
+
+fix nve all nve/sphere
+fix gravity all gravity v_g spherical 0.0 -180.0
+fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.0 2000.0 wiggle z ${A} ${period}
+
+fix xp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 xplane -$L $L
+fix yp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 yplane -$L $L
+
+
+#/speed 10

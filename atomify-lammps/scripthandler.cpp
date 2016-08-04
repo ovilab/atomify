@@ -162,6 +162,8 @@ bool ScriptHandler::parseLammpsCommand(QString command, LAMMPSController *lammps
 
         if(m_parser.isSimulationSpeed(command)) {
             // TODO: set simulation speed here
+            lammpsController->setSimulationSpeed(m_parser.simulationSpeed(command));
+            return true;
         }
     }
 
@@ -265,12 +267,12 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
                 m_lammpsCommandStack.enqueue(commandObject);
             }
 
-            if(m_parser.isEditorCommand(currentCommand)) {
-                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
-                m_queuedCommands.push_back(commandObject);
-                // parseEditorCommand(currentCommand);
-                currentCommand.clear(); lineNumber++; continue; // This line is complete
-            }
+//            if(m_parser.isEditorCommand(currentCommand)) {
+//                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
+//                m_queuedCommands.push_back(commandObject);
+//                // parseEditorCommand(currentCommand);
+//                currentCommand.clear(); lineNumber++; continue; // This line is complete
+//            }
 
             currentCommand.clear(); lineNumber++; continue; // This line is complete
         }
@@ -278,7 +280,6 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
 }
 
 void ScriptHandler::runScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
-    qDebug() << "Will run file: " << filename;
     QMutexLocker locker(&m_mutex);
     doRunScript(script, type, filename, currentDir);
 }

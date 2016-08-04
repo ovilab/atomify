@@ -13,6 +13,7 @@ Item {
     property Slice slice
     property Camera camera: camera
     property bool addPeriodicCopies: false
+    property alias customColor: customColor
 
     function animateCameraTo(position, upVector, viewCenter, duration) {
         console.log("Starting animation ? ")
@@ -74,6 +75,10 @@ Item {
                 shininess: 30.0
                 attenuation: 0.0
                 position: camera.position
+            }
+
+            CustomColor {
+                id: customColor
             }
         }
 

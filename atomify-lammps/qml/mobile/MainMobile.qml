@@ -31,6 +31,13 @@ Item {
             ]
         },
         {
+            name: "Granular materials",
+            simulations: [
+                "qrc:/simulations/granular/patterns",
+                "qrc:/simulations/granular/patterns_final"
+            ]
+        },
+        {
             name: "Porous media",
             simulations: [
                 "qrc:/simulations/silica/betacristobalite",
@@ -103,7 +110,7 @@ Item {
             periodicImages.numberOfCopiesY = simulation.periodicImagesY
             periodicImages.numberOfCopiesZ = simulation.periodicImagesZ
             visualizer.camera.orthographic = simulation.orthographic
-
+            visualizer.customColor.code = simulation.customColorShaderCode
             simulator.clearSimulatorControls()
 
             for(var i in simulation.controllers) {

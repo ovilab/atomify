@@ -9,8 +9,8 @@ DashboardControl {
     id: root
     name: "Diffusion coeff"
     property real xRange: 0
-    property string xLabel: "t [ps]"
-    property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
+    property string xLabel: "Time [ps]"
+    property string yLabel: "Diffusion coefficient [Å<sup>2</sup>]"
     property real xScale: 1.0
     property real yScale: 1.0
     property var msdCompute
@@ -20,7 +20,7 @@ DashboardControl {
     fullControl: Column {
         ChartScrollerNew {
             id: miniChart
-            title: "Diffusion coefficient"
+            // title: "Diffusion coefficient"
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale

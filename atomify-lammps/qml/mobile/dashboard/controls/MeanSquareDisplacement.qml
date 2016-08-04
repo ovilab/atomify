@@ -7,7 +7,7 @@ import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
-    property string xLabel: "t [ps]"
+    property string xLabel: "Time [ps]"
     property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
     property real xRange: 0
     property real xScale: 1.0
@@ -19,7 +19,7 @@ DashboardControl {
     fullControl: Column {
         ChartScrollerNew {
             id: miniChart
-            title: "Temperature"
+            title: "Mean square displacement"
             xRange: root.xRange
             xScale: root.xScale
             yScale: root.yScale

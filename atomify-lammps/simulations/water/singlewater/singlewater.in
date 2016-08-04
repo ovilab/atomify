@@ -1,5 +1,9 @@
 # test Vashishta potential for quartz
 
+#/atom 1 oxygen
+#/atom 2 hydrogen
+#/bond 1 2 2.0
+
 units		metal
 boundary	p p p
 
@@ -16,7 +20,3 @@ velocity	all create 300.0 86151 mom yes
 
 fix nve all nve
 timestep	0.0005
-
-#/atom 1 oxygen
-#/atom 2 hydrogen
-#/bond 1 2 2.0

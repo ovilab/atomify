@@ -27,7 +27,8 @@ RESOURCES += images.qrc \
     simulations/other/other.qrc \
     simulations/water/water.qrc \
     simulations/potentialparameters/potentialparameters.qrc \
-    simulations/silica/silica.qrc
+    simulations/silica/silica.qrc \
+    simulations/granular/granular.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

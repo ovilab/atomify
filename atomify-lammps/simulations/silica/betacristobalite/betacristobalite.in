@@ -1,6 +1,6 @@
-# test Vashishta potential for quartz
-# package omp 2
-# suffix omp
+#/atom 1 silicon
+#/atom 2 oxygen
+#/bond 1 2 2.6
 
 units		metal
 boundary	p p p
@@ -24,9 +24,3 @@ neigh_modify	delay 10
 fix nvt all nvt temp 300 300 1.0
 thermo		10
 timestep	0.001
-
-thermo_style custom step time density temp etotal 
-thermo 10
-#/atom 1 silicon
-#/atom 2 oxygen
-#/bond 1 2 2.6

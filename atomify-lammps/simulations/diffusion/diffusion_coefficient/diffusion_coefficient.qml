@@ -18,7 +18,7 @@ The system then goes over to the linear regime where we can read out the diffusi
             xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
             xRange: 1000
             // yScale: 11.594025 // 3.405^2
-            // xLabel: "t [fs]"
+            // xLabel: "Time [fs]"
             msdCompute: msd.compute
             // vacfCompute: vacf.compute
             // frequency: 10
@@ -28,19 +28,19 @@ The system then goes over to the linear regime where we can read out the diffusi
             xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
             yScale: 11.594025 // 3.405^2
             // xRange: 1000
-            xLabel: "t [fs]"
+            xLabel: "Time [fs]"
         },
 //        VelocityAutoCorrelationFunction {
 //            id: vacf
 //            xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
 //            xRange: 1000
-//            xLabel: "t [fs]"
+//            xLabel: "Time [fs]"
 //        },
         Thermometer {
             xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
             yScale: 119.6
             xRange: 1000
-            xLabel: "t [fs]"
+            xLabel: "Time [fs]"
             yLabel: "T [K]"
         },
         Thermostat {

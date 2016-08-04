@@ -1,4 +1,6 @@
-# test Vashishta potential for quartz
+#/atom 1 oxygen
+#/atom 2 hydrogen
+#/bond 1 2 2.0
 
 units		metal
 boundary	p p p
@@ -20,7 +22,3 @@ neigh_modify	delay 10
 
 fix nve all nve
 timestep	0.0005
-
-#/atom 1 oxygen
-#/atom 2 hydrogen
-#/bond 1 2 2.0

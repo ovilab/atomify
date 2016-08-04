@@ -1,3 +1,7 @@
+#/atom 1 silicon
+#/atom 2 oxygen
+#/bond 1 2 2.6
+
 # USC (Anders Hafreager, UiO)
 # using metal units: http://lammps.sandia.gov/doc/units.html
 units		metal
@@ -15,7 +19,4 @@ velocity all create 300 376847 loop geom
 
 timestep	0.002
 
-#/atom 1 silicon
-#/atom 2 oxygen
-#/bond 1 2 2.6
 fix nvt all nvt temp 300 300 1.0

@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/simulations/granular">
+        <file>patterns/patterns.in</file>
+        <file>patterns/patterns.qml</file>
+        <file>patterns/patterns.png</file>
+        <file>patterns_final/patterns_final.bin</file>
+        <file>patterns_final/patterns_final.in</file>
+        <file>patterns_final/patterns_final.png</file>
+        <file>patterns_final/patterns_final.qml</file>
+    </qresource>
+</RCC>
