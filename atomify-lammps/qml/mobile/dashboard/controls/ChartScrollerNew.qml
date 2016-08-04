@@ -21,6 +21,15 @@ ChartView {
     property var dataSeries: [] // Will be updated automatically
     property list<Data1D> dataSources
     onDataSourcesChanged: {
+        console.log("Data sources: ", dataSources)
+        if(dataSources.length > 0) {
+            console.log("Data sources 0: ", dataSources[0])
+        }
+
+        if(dataSources.length > 1) {
+            console.log("Data sources 1: ", dataSources[1])
+        }
+
         updateSeries()
         for(var i=0; i<dataSources.length; i++) {
             dataSources[i].xScale = root.xScale
@@ -83,8 +92,6 @@ ChartView {
         xAxis.max = xMax
         yAxis.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
         yAxis.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
-        // console.log("Limits: [", xAxis.min, ", ", xAxis.max, "] and [", yAxis.min, ", ", yAxis.max, "]")
-        // yAxis.applyNiceNumbers()
     }
 
     Component.onDestruction: {

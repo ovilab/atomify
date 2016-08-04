@@ -7,5 +7,8 @@
         <file>patterns_final/patterns_final.in</file>
         <file>patterns_final/patterns_final.png</file>
         <file>patterns_final/patterns_final.qml</file>
+        <file>maxwell/maxwell.qml</file>
+        <file>maxwell/maxwell.png</file>
+        <file>maxwell/maxwell.in</file>
     </qresource>
 </RCC>

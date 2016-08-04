@@ -1,12 +1,28 @@
 # Pour granular particles into chute container, then induce flow
-atom_style	sphere
-boundary	fm fm fm
-newton		off
-comm_modify	vel yes
-variable L equal 25
+atom_style sphere
+boundary f f fm
+newton off
+comm_modify vel yes
 
-region		reg block -$L $L -$L $L -0.5 16 units box
-create_box	1 reg
+region reg block -4 4 -8 8 0 50 units box
+# this is the experimental domain established in the example in.pour
+region myWall block -4 4 -0.01 0.01 -10 10 side out units box
+# this is my obstacle, placed within the above domain
+
+variable gamma equal 0.1
+variable h equal 10.0
+variable fStar equal 0.1
+variable g equal 1.0
+
+variable A equal "v_gamma*v_h/(2*2*PI*PI*v_fStar*v_fStar)"
+
+variable f equal "v_fStar*sqrt(v_g/v_h)"
+variable period equal "1.0/v_f"
+
+create_box 1 reg
+fix wall all wall/region myWall harmonic 10.0 0.5 1.5
+fix xp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 xplane -4.0 4.0
+fix yp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 yplane -8.0 8.0
 
 neighbor	0.2 bin
 neigh_modify	delay 0
@@ -14,37 +30,29 @@ neigh_modify	delay 0
 pair_style      gran/hooke/history 2000.0 NULL 50.0 NULL 0.5 0
 pair_coeff	* *
 
-variable gamma equal 3.0
-variable h equal 3.0
-variable fStar equal 0.3
-variable g equal 1.0
-variable A equal "v_gamma*v_h/(2*2*PI*PI*v_fStar*v_fStar)"
-variable f equal "v_fStar*sqrt(v_g/v_h)"
-variable period equal "1.0/v_f"
-
 timestep	0.01
 
 fix nve all nve/sphere
 fix gravity all gravity 1.0 spherical 0.0 -180.0
-fix zlower all wall/gran 2000.0 NULL 20.0 NULL 0.5 0 zplane 1.0 2000.0
-fix xp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 xplane -$L $L
-fix yp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 yplane -$L $L
+fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 1.0 2000.0
 
-region	slab block -$L $L -$L $L 10.0 15.0 units box
-fix ins all pour 8000 1 300719 vol 0.13 50 region slab
+region left block EDGE EDGE -8 0 EDGE EDGE
+region right block EDGE EDGE 0 8 EDGE EDGE
+group left dynamic all region left
+group right dynamic all region right
 
+region slab block -3 3 -7 7 15.0 20.0 units box
+fix ins all pour 200 1 300719 vol 0.13 50 region slab
+#/speed 5
+run 1
 #/speed 10
-
 #/label Adding particles
-run	1000
+run 2000
+#/speed 50
 unfix zlower
-fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.0 2000.0 wiggle z ${A} ${period}
-#/label Starting to vibrate
-run 1000
-#/label Waiting for pattern
-run 3000
-#/label Do you see it? Wait some more
-run 3000
-#/label Better now! But perfect result requires even more time
-run 80000
-#/label You are the most patient person in the universe :)
+fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.99 200.0 wiggle z 0.7 1
+thermo 1000
+thermo_style custom step v_atomify_left v_atomify_right
+#/label Vibrating. One side will have'm all
+run 1000000
+# run 100000000

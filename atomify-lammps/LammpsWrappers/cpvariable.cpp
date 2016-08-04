@@ -81,6 +81,11 @@ Data1D *CPVariable::data() const
     return m_data;
 }
 
+QString CPVariable::title() const
+{
+    return m_title;
+}
+
 void CPVariable::setFrequency(int frequency)
 {
     if (m_frequency == frequency)
@@ -97,4 +102,14 @@ void CPVariable::setData(Data1D *data)
 
     m_data = data;
     emit dataChanged(data);
+}
+
+void CPVariable::setTitle(QString title)
+{
+    if (m_title == title)
+        return;
+
+    m_title = title;
+    m_data->setTitle(title);
+    emit titleChanged(title);
 }

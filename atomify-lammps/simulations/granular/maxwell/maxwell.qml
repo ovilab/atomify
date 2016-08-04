@@ -6,17 +6,20 @@ import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
 Simulation {
-    name: "Patterns"
-    description: "<p>When granular materials (such as sand and marbles) are stacked on a vibrating plate, they can end up producing standing wave patterns.</p>
-<p>We only need to tune the vibrational frequency and amplitude to certain values.</p>
-<p>It takes quite some time to reach a stable pattern, so check out 'Pattern final' if you don't want to wait.</p>
+    name: "Maxwell's demon"
+    description: "<p>In this simulation we have two boxes that particles can be in. We have a vibrating plate at the bottom making the particles collide and jump.</p>
+<p>The second law of thermodynamics says that entropy tends to increase (I like to add 'except when it doesn't). This would mean that the particles are evenly distributed in the left and the right box.</p>
+<p>In this simulation we will see that the entropy actually decreases, where all particles end up being on the same side.</p>
+<p>This does not violate the second law of thermodynamics since we add energy to the system through the bottom plate.</p>
 "
-    customColorShaderCode: "
-highp float zScaled = 0.2 + 0.8* (position.z + 7.5) / 5.0;
-zScaled = clamp(zScaled, 0.0, 1.0);
-customColor *= zScaled;
-"
-    initialCameraPosition: Qt.vector3d(0,0,50)
-    controllers: [ ]
+    initialCameraPosition: Qt.vector3d(20,0,0)
+    initialUpVector: Qt.vector3d(0,0,-1)
+    initialViewCenter: Qt.vector3d(0,0,-10)
+    controllers: [
+        AtomPosition {
+
+        }
+
+    ]
 }
 

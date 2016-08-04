@@ -53,5 +53,6 @@
         <file>mobile/dashboard/controls/Angle.qml</file>
         <file>mobile/dashboard/controls/Gravity.qml</file>
         <file>mobile/dashboard/controls/RDF.qml</file>
+        <file>mobile/dashboard/controls/AtomPosition.qml</file>
     </qresource>
 </RCC>

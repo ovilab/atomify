@@ -34,7 +34,8 @@ Item {
             name: "Granular materials",
             simulations: [
                 "qrc:/simulations/granular/patterns",
-                "qrc:/simulations/granular/patterns_final"
+                "qrc:/simulations/granular/patterns_final",
+                "qrc:/simulations/granular/maxwell"
             ]
         },
         {
