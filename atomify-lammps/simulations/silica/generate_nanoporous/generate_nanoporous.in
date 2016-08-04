@@ -20,8 +20,8 @@ neighbor        0.3 bin
 velocity all create 4500 376847 loop geom
 
 fix nvt all nvt temp 4500 4500 0.1
-thermo_style custom step time density temp etotal vol cpuremain
-thermo              100
+thermo_style custom step pe press
+thermo              1
 timestep            0.002
 run 1
 #/label Creating crystal
