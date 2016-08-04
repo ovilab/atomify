@@ -17,11 +17,14 @@ Rectangle {
     property AtomifySimulator simulator
     property Simulation simulation
     property int currentIndex
+    property int numControllers: simulation.controllers.length
     property bool active: false
     onActiveChanged: {
+        if(simulation.controllers.length <= currentIndex) return;
         simulation.controllers[currentIndex].active = active
     }
     onCurrentIndexChanged: {
+        if(simulation.controllers.length <= currentIndex) return;
         simulation.controllers[currentIndex].active = active
     }
 
@@ -130,7 +133,7 @@ Rectangle {
                     left: parent.left
                     right: parent.right
                 }
-                sourceComponent: simulation.controllers[currentIndex].fullControl
+                sourceComponent: simulation.controllers.length > currentIndex ? simulation.controllers[currentIndex].fullControl : undefined
             }
         }
     }

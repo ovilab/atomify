@@ -147,7 +147,7 @@ Item {
 
     RevealDashboardButton {
         id: revealDashboardButton
-        revealed: mobileRoot.state == "" && !splashScreen.visible
+        revealed: mobileRoot.state == "" && !splashScreen.visible && controlView.numControllers>0
         onClicked: {
             mobileRoot.previousState = mobileRoot.state
             mobileRoot.state = "tools"
