@@ -14,7 +14,7 @@ Simulation {
 "
     initialCameraPosition: Qt.vector3d(-20,0,-2)
     initialUpVector: Qt.vector3d(0,0,-1)
-    initialViewCenter: Qt.vector3d(0,0,-10)
+    initialViewCenter: Qt.vector3d(0,0,-20)
     customColorShaderCode:
 "
 highp float yPosScaled = (position.y + 8.0) / 16.0;
