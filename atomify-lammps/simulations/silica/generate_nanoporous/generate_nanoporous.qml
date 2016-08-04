@@ -34,6 +34,7 @@ We can then quickly decrease the temperature (quench the system) to reach a nice
         Volume {
             xLabel: "Time [fs]"
             xScale: 1000
+            yScale: 8 // Periodic boundary conditions
         }
     ]
 }
