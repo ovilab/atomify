@@ -78,9 +78,6 @@ DashboardControl {
             temperatureDampening: 1.0
             enabled: root.nvtEnabled
             targetTemperature: root.targetTemperature
-            onCommandChanged: {
-                console.log("Command: ", command)
-            }
         },
         Compute {
             id: temperatureCompute
