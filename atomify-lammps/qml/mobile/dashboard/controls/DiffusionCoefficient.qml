@@ -8,7 +8,7 @@ import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
     name: "Diffusion coeff"
-    property real timeRange: 4
+    property real xRange: 4
     property string xLabel: "t [ps]"
     property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
     property real xScale: 1.0
@@ -17,13 +17,14 @@ DashboardControl {
     property var vacfCompute
     property alias frequency: diffusion_vacf.frequency
 
-    property real time: msdCompute!==undefined ? msdCompute.time : 0.0
-
     fullControl: Column {
         ChartScrollerNew {
             id: miniChart
             title: "Diffusion coefficient"
-            xRange: 1.5
+            xRange: root.xRange
+            xScale: root.xScale
+            yScale: root.yScale
+            autoScroll: true
 
             anchors {
                 left: parent.left
@@ -56,7 +57,7 @@ DashboardControl {
             frequency: 1
             enabled: vacfCompute !== undefined
             identifier: "diffusion_vacf"
-            command: vacfCompute !== undefined ? "equal c_"+vacfCompute.identifier+"[3]/6/(step*dt+1.0e-6)" : ""
+            command: vacfCompute !== undefined ? "equal 0.3333333*dt*trap(f_"+fix.identifier+")" : ""
             dependencies: [fix]
         }
     ]

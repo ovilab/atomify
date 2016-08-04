@@ -12,7 +12,10 @@ class Data1D : public QObject
     Q_PROPERTY(float xMax READ xMax WRITE setXMax NOTIFY xMaxChanged)
     Q_PROPERTY(float yMin READ yMin WRITE setYMin NOTIFY yMinChanged)
     Q_PROPERTY(float yMax READ yMax WRITE setYMax NOTIFY yMaxChanged)
+    Q_PROPERTY(float xScale READ xScale WRITE setXScale NOTIFY xScaleChanged)
+    Q_PROPERTY(float yScale READ yScale WRITE setYScale NOTIFY yScaleChanged)
     Q_PROPERTY(float xRange READ xRange WRITE setXRange NOTIFY xRangeChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 public:
     explicit Data1D(QObject *parent = 0);
     void clear();
@@ -27,6 +30,9 @@ public:
     QList<QPointF> validPoints();
     Q_INVOKABLE void updateLimits();
     Q_INVOKABLE void updateData(QAbstractSeries *series);
+    QString title() const;
+    float xScale() const;
+    float yScale() const;
 
 signals:
     void xMinChanged(float xMin);
@@ -36,6 +42,9 @@ signals:
     void updated();
     void enabledChanged(bool enabled);
     void xRangeChanged(float xRange);
+    void titleChanged(QString title);
+    void xScaleChanged(float xScale);
+    void yScaleChanged(float yScale);
 
 public slots:
     void setXMin(float xMin);
@@ -44,15 +53,21 @@ public slots:
     void setYMax(float yMax);
     void setEnabled(bool enabled);
     void setXRange(float xRange);
+    void setTitle(QString title);
+    void setXScale(float xScale);
+    void setYScale(float yScale);
 
 private:
+    QList<QPointF> m_points;
     float m_xMin = 0;
     float m_xMax = 0;
     float m_yMin = 0;
     float m_yMax = 0;
-    QList<QPointF> m_points;
-    bool m_enabled = false;
     float m_xRange = 0;
+    float m_xScale = 1.0;
+    float m_yScale = 1.0;
+    bool m_enabled = false;
+    QString m_title;
 };
 
 #endif // CP1DDATA_H

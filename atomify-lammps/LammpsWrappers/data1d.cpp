@@ -62,7 +62,6 @@ void Data1D::updateLimits()
         setYMax(yMax);
         setYMin(yMin);
     } // if not, then we have no data to update limits with
-    // qDebug() << "Updated limits after " << t.elapsed() << " ms.";
 }
 
 void Data1D::updateData(QAbstractSeries *series)
@@ -74,7 +73,21 @@ void Data1D::updateData(QAbstractSeries *series)
         QXYSeries *xySeries = static_cast<QXYSeries*>(series);
         xySeries->replace(validPoints());
     }
-    // qDebug() << "Replaced data after " << t.elapsed() << " ms.";
+}
+
+QString Data1D::title() const
+{
+    return m_title;
+}
+
+float Data1D::xScale() const
+{
+    return m_xScale;
+}
+
+float Data1D::yScale() const
+{
+    return m_yScale;
 }
 
 bool Data1D::enabled() const
@@ -117,6 +130,8 @@ void Data1D::clear()
 
 void Data1D::add(float x, float y, bool silent)
 {
+    x *= m_xScale;
+    y *= m_yScale;
     m_points.append(QPointF(x,y));
     if(!silent) emit updated();
 }
@@ -173,4 +188,34 @@ void Data1D::setXRange(float xRange)
 
     m_xRange = xRange;
     emit xRangeChanged(xRange);
+    qDebug() << "Setting x range on cpp object: " << xRange;
+}
+
+void Data1D::setTitle(QString title)
+{
+    if (m_title == title)
+        return;
+
+    m_title = title;
+    emit titleChanged(title);
+}
+
+void Data1D::setXScale(float xScale)
+{
+    if (m_xScale == xScale)
+        return;
+
+    m_xScale = xScale;
+    emit xScaleChanged(xScale);
+    qDebug() << "Setting x scale on cpp object: " << xScale;
+}
+
+void Data1D::setYScale(float yScale)
+{
+    if (m_yScale == yScale)
+        return;
+
+    m_yScale = yScale;
+    emit yScaleChanged(yScale);
+    qDebug() << "Setting y scale on cpp object: " << yScale;
 }

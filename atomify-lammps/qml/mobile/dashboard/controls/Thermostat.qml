@@ -22,48 +22,48 @@ DashboardControl {
     // min and max temperature
 
     name: "Thermostat"
-    miniControl: Component {
-        DashboardMiniControl {
-            id: miniControl
-            ColumnLayout {
-                id: textLayout
-                anchors {
-                    left: parent.left
-                    top: parent.top
-                    margins: Style.baseMargin * 0.5
-                    right: parent.right
-                    bottom: parent.bottom
-                }
-                spacing: Style.baseMargin * 0.2
-                Text {
-                    id: temperatureText
-                    font.weight: Font.Light
-                    font.pixelSize: Style.font.size
-                    color: "#cfcfcf"
-                    text: "thermostat"
-                }
-                Text {
-                    id: temperatureValueText
-                    font.pixelSize: Style.font.size * 3
-                    color: "#cdcdcd"
-                    text: miniChart.lowPassValue.toFixed(2) + " → " + nvt.targetTemperature.toFixed(2)
-                }
-                AutoZoomMiniChart {
-                    id: miniChart
+//    miniControl: Component {
+//        DashboardMiniControl {
+//            id: miniControl
+//            ColumnLayout {
+//                id: textLayout
+//                anchors {
+//                    left: parent.left
+//                    top: parent.top
+//                    margins: Style.baseMargin * 0.5
+//                    right: parent.right
+//                    bottom: parent.bottom
+//                }
+//                spacing: Style.baseMargin * 0.2
+//                Text {
+//                    id: temperatureText
+//                    font.weight: Font.Light
+//                    font.pixelSize: Style.font.size
+//                    color: "#cfcfcf"
+//                    text: "thermostat"
+//                }
+//                Text {
+//                    id: temperatureValueText
+//                    font.pixelSize: Style.font.size * 3
+//                    color: "#cdcdcd"
+//                    text: miniChart.lowPassValue.toFixed(2) + " → " + nvt.targetTemperature.toFixed(2)
+//                }
+//                AutoZoomMiniChart {
+//                    id: miniChart
 
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
+//                    Layout.fillHeight: true
+//                    Layout.fillWidth: true
 
-                    width: 1
-                    height: 1
+//                    width: 1
+//                    height: 1
 
-                    value: temperatureCompute.value
-                    time: temperatureCompute.time
-                    timeRange: root.timeRange
-                }
-            }
-        }
-    }
+//                    value: temperatureCompute.value
+//                    time: temperatureCompute.time
+//                    timeRange: root.timeRange
+//                }
+//            }
+//        }
+//    }
     fullControl: Item {
         height: 500
 

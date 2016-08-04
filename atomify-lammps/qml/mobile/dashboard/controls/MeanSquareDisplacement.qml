@@ -7,9 +7,9 @@ import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
-    property real timeRange: 4
     property string xLabel: "t [ps]"
     property string yLabel: "&lt;r<sup>2</sup>(t)&gt; [Å<sup>2</sup>]"
+    property real xRange: 4
     property real xScale: 1.0
     property real yScale: 1.0
     property alias compute: compute
@@ -17,68 +17,30 @@ DashboardControl {
 
     name: "MSD"
     fullControl: Column {
-        ChartView {
+        ChartScrollerNew {
             id: miniChart
-
-            property real value: compute.value
-            property real lowPassValue: 0.0
-            property real yMin: 0
-            property real yMax: 0
-            title: "Mean square displacement"
+            title: "Temperature"
+            xRange: root.xRange
+            xScale: root.xScale
+            yScale: root.yScale
+            autoScroll: true
 
             anchors {
                 left: parent.left
                 right: parent.right
             }
+
+            dataSources: [ compute.vectorValues["r2"] ]
             height: width * 2.5 / 4
-
-            antialiasing: true
-            legend.visible: false
-            theme: ChartView.ChartThemeDark
-
-            ChartScroller {
-                id: chartScroller
-                axisX: xAxis
-                axisY: yAxis
-                lineSeries: lineSeries
-                value: compute.value * yScale
-                time: compute.time * xScale
-                timeRange: root.timeRange * xScale
-            }
-
-            ValueAxis {
-                id: xAxis
-                tickCount: 4
-                titleText: root.xLabel
-                color: "white"
-                labelsColor: "white"
-            }
-            ValueAxis {
-                id: yAxis
-                tickCount: 4
-                titleText: root.yLabel
-                color: "white"
-                labelsColor: "white"
-            }
-            LineSeries {
-                id: lineSeries
-            }
-            Component.onCompleted: {
-                miniChart.setAxisX(xAxis, lineSeries)
-                miniChart.setAxisY(yAxis, lineSeries)
-            }
         }
-
-//        Text {
-//            text: "Hallo hva tror du."
-//        }
     }
     simulatorControls: [
         Compute {
             id: compute
+            vectorTitles: ["x", "y", "z", "r2"]
+            scalarTitle: "MSD"
             identifier: "msd"
             command: "all msd"
-            isVector: true
         }
     ]
 }

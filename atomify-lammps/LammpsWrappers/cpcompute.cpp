@@ -2,26 +2,14 @@
 #include "system.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
+#include "data1d.h"
 #include <QDebug>
 CPCompute::CPCompute(QQuickItem *parent) : SimulatorControl(parent)
 {
-
+    m_scalarValue = new Data1D(this);
 }
 
-void CPCompute::setValues(double time, QVector<double> values)
-{
-    m_time = time;
-    emit timeChanged(time);
-    m_values.clear();
-    m_values = QList<double>::fromVector(values);
-    if(m_values.size()>0) {
-       emit valuesChanged(m_values);
-       emit firstValueChanged(m_values.at(0));
-       if(values.size() > 1) emit secondValueChanged(m_values.at(1));
-       if(values.size() > 2) emit thirdValueChanged(m_values.at(2));
-       if(values.size() > 3) emit fourthValueChanged(m_values.at(3));
-    }
-}
+CPCompute::~CPCompute() { }
 
 void CPCompute::updateCommand()
 {
@@ -36,23 +24,27 @@ void CPCompute::update(LAMMPSController *lammpsController)
     SimulatorControl::update(lammpsController);
     LAMMPS_NS::Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute != nullptr) {
-       QVector<double> newValues;
-       if(isVector()) {
-           lmp_compute->compute_vector();
-           double *values = lmp_compute->vector;
-           int numValues = lmp_compute->size_vector;
-
+        double time = lammpsController->system()->simulationTime();
+        if(lmp_compute->scalar_flag) {
+            double val = lmp_compute->compute_scalar();
+            m_scalarValue->add(time, val);
+            setValue(val);
+        }
+        if(lmp_compute->vector_flag) {
+            lmp_compute->compute_vector();
+            double *values = lmp_compute->vector;
+            int numValues = lmp_compute->size_vector;
+            m_values.clear();
            for(int i=0; i<numValues; i++) {
-               newValues.push_back(values[i]);
+               m_values.push_back(values[i]);
+               if(i < m_vectorTitles.size()) {
+                   Data1D *data = m_vectorValuesRaw[m_vectorTitles[i]];
+                   data->add(time, values[i]);
+               }
            }
-       } else {
-           double value = lmp_compute->compute_scalar();
-           newValues.push_back(value);
-       }
-
-       setValues(lammpsController->simulationTime(), newValues);
+           emit valuesChanged(m_values);
+        }
     }
-    // qDebug() << "Updated compute " << identifier() << " after " << t.elapsed() << " ms";
 }
 
 QList<QString> CPCompute::enabledCommands()
@@ -71,68 +63,104 @@ bool CPCompute::existsInLammps(LAMMPSController *lammpsController)
     return compute!=nullptr;
 }
 
-QList<double> CPCompute::values() const
+float CPCompute::value() const
+{
+    return m_value;
+}
+
+QList<qreal> CPCompute::values() const
 {
     return m_values;
 }
 
-double CPCompute::firstValue() const
+QStringList CPCompute::vectorTitles() const
 {
-    if(m_values.size()<1) return NAN;
-    return m_values.at(0);
+    return m_vectorTitles;
 }
 
-double CPCompute::secondValue() const
+QString CPCompute::scalarTitle() const
 {
-    if(m_values.size()<2) return NAN;
-    return m_values.at(1);
+    return m_scalarTitle;
 }
 
-double CPCompute::thirdValue() const
+Data1D *CPCompute::scalarValue() const
 {
-    if(m_values.size()<3) return NAN;
-    return m_values.at(2);
+    return m_scalarValue;
 }
 
-double CPCompute::fourthValue() const
+QVariantMap CPCompute::vectorValues() const
 {
-    if(m_values.size()<4) return NAN;
-    return m_values.at(3);
+    return m_vectorValues;
 }
 
-double CPCompute::time() const
+void CPCompute::setValue(float value)
 {
-    return m_time;
-}
-
-bool CPCompute::isVector() const
-{
-    return m_isVector;
-}
-
-DataSource *CPCompute::dataSource() const
-{
-    return m_dataSource;
-}
-
-void CPCompute::setIsVector(bool isVector)
-{
-    if (m_isVector == isVector)
+    if (m_value == value)
         return;
 
-    m_isVector = isVector;
-    emit isVectorChanged(isVector);
+    m_value = value;
+    emit valueChanged(value);
 }
 
-void CPCompute::setDataSource(DataSource *dataSource)
+void CPCompute::setValues(QList<qreal> values)
 {
-    if (m_dataSource == dataSource)
+    if (m_values == values)
         return;
 
-    m_dataSource = dataSource;
-    emit dataSourceChanged(dataSource);
+    m_values = values;
+    emit valuesChanged(values);
 }
 
+void CPCompute::setVectorTitles(QStringList vectorTitles)
+{
+    if (m_vectorTitles == vectorTitles)
+        return;
+
+    m_vectorTitles = vectorTitles;
+    for(QString key : vectorTitles) {
+        ensureExists(key, true);
+    }
+
+    emit vectorTitlesChanged(vectorTitles);
+}
+
+void CPCompute::setScalarTitle(QString scalarTitle)
+{
+    if (m_scalarTitle == scalarTitle)
+        return;
+
+    m_scalarTitle = scalarTitle;
+    emit scalarTitleChanged(scalarTitle);
+}
+
+void CPCompute::setScalarValue(Data1D *scalarValue)
+{
+    if (m_scalarValue == scalarValue)
+        return;
+
+    m_scalarValue = scalarValue;
+    emit scalarValueChanged(scalarValue);
+}
+
+void CPCompute::setVectorValues(QVariantMap vectorValues)
+{
+    if (m_vectorValues == vectorValues)
+        return;
+
+    m_vectorValues = vectorValues;
+    emit vectorValuesChanged(vectorValues);
+}
+
+Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
+    if(!m_vectorValuesRaw.contains(key)) {
+        Data1D *data = new Data1D(this);
+        data->setTitle(key);
+        data->setEnabled(enabledByDefault);
+        m_vectorValuesRaw.insert(key, data);
+        m_vectorValues.insert(key, QVariant::fromValue<Data1D*>(data));
+    }
+    return m_vectorValuesRaw[key];
+}
 
 QList<QString> CPCompute::resetCommands()
 {

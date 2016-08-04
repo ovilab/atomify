@@ -1,59 +1,57 @@
 #ifndef COMPUTE_H
 #define COMPUTE_H
 #include "simulatorcontrol.h"
-#include "datasource.h"
 class CPCompute : public SimulatorControl
 {
     Q_OBJECT
-    Q_PROPERTY(QList<double> values READ values NOTIFY valuesChanged)
-    Q_PROPERTY(double value READ firstValue NOTIFY firstValueChanged)
-    Q_PROPERTY(double firstValue READ firstValue NOTIFY firstValueChanged)
-    Q_PROPERTY(double secondValue READ secondValue NOTIFY secondValueChanged)
-    Q_PROPERTY(double thirdValue READ thirdValue NOTIFY thirdValueChanged)
-    Q_PROPERTY(double fourthValue READ fourthValue NOTIFY fourthValueChanged)
-    Q_PROPERTY(double time READ time NOTIFY timeChanged)
-    Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
-    Q_PROPERTY(DataSource* dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
+    Q_PROPERTY(Data1D* scalarValue READ scalarValue WRITE setScalarValue NOTIFY scalarValueChanged)
+    Q_PROPERTY(QVariantMap vectorValues READ vectorValues WRITE setVectorValues NOTIFY vectorValuesChanged)
+    Q_PROPERTY(QStringList vectorTitles READ vectorTitles WRITE setVectorTitles NOTIFY vectorTitlesChanged)
+    Q_PROPERTY(QString scalarTitle READ scalarTitle WRITE setScalarTitle NOTIFY scalarTitleChanged)
+    Q_PROPERTY(QList<qreal> values READ values WRITE setValues NOTIFY valuesChanged)
+    Q_PROPERTY(float value READ value WRITE setValue NOTIFY valueChanged)
 
 protected:
-    bool m_isVector = false;
-    double m_time = 0;
-    QList<double> m_values;
-    void setValues(double time, QVector<double> values);
-    DataSource* m_dataSource = nullptr;
+    QString m_scalarTitle;
+    class Data1D *m_scalarValue = nullptr;
+    QVariantMap m_vectorValues;
+    float m_value = 0.0;
+    QStringList m_vectorTitles;
+    QList<qreal> m_values;
+    QMap<QString, class Data1D*> m_vectorValuesRaw;
 
     virtual void updateCommand() override;
     QList<QString> enabledCommands() override;
     QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
-
+    class Data1D *ensureExists(QString key, bool enabledByDefault);
 public:
     explicit CPCompute(QQuickItem *parent = 0);
-    ~CPCompute() { }
+    ~CPCompute();
     void update(LAMMPSController *lammpsController) override;
     bool existsInLammps(LAMMPSController *lammpsController) override;
-    QList<double> values() const;
-    double firstValue() const;
-    double secondValue() const;
-    double thirdValue() const;
-    double fourthValue() const;
-    double time() const;
-    bool isVector() const;
-    DataSource* dataSource() const;
+    float value() const;
+    QList<qreal> values() const;
+    QStringList vectorTitles() const;
+    QString scalarTitle() const;
+    class Data1D* scalarValue() const;
+    QVariantMap vectorValues() const;
 
 signals:
-    void valuesChanged(QList<double> values);
-    void firstValueChanged(double firstValue);
-    void secondValueChanged(double secondValue);
-    void thirdValueChanged(double thirdValue);
-    void fourthValueChanged(double fourthValue);
-    void timeChanged(double time);
-    void isVectorChanged(bool isVector);
-    void dataSourceChanged(DataSource* dataSource);
+    void valueChanged(float value);
+    void valuesChanged(QList<qreal> values);
+    void vectorTitlesChanged(QStringList vectorTitles);
+    void scalarTitleChanged(QString scalarTitle);
+    void scalarValueChanged(class Data1D *scalarValue);
+    void vectorValuesChanged(QVariantMap vectorValues);
 
 public slots:
-    void setIsVector(bool isVector);
-    void setDataSource(DataSource* dataSource);
+    void setValue(float value);
+    void setValues(QList<qreal> values);
+    void setVectorTitles(QStringList vectorTitles);
+    void setScalarTitle(QString scalarTitle);
+    void setScalarValue(class Data1D *scalarValue);
+    void setVectorValues(QVariantMap vectorValues);
 };
 
 #endif // COMPUTE_H

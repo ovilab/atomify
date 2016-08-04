@@ -7,7 +7,7 @@ import "qrc:/mobile/style"
 import "qrc:/mobile/dashboard"
 DashboardControl {
     id: root
-    property real timeRange: 1
+    property real xRange: 1
     property string xLabel: "t [ps]"
     property string yLabel: "T [K]"
     property real xScale: 1.0
@@ -15,60 +15,32 @@ DashboardControl {
     property alias computeCommand: temperatureCompute.command
     name: "Temperature"
     fullControl: Column {
-        ChartView {
+        ChartScrollerNew {
             id: miniChart
-
-            property real value: temperatureCompute.value
-            property real lowPassValue: 0.0
-            property real yMin: 0
-            property real yMax: 0
+            title: "Temperature"
+            autoScroll: true
+            xRange: root.xRange
+            xScale: root.xScale
+            yScale: root.yScale
 
             anchors {
                 left: parent.left
                 right: parent.right
             }
-            height: width * 3 / 4
 
-            antialiasing: true
-            legend.visible: false
-            theme: ChartView.ChartThemeDark
+            dataSources: [temperatureCompute.scalarValue]
 
-            ChartScroller {
-                id: chartScroller
-                axisX: xAxis
-                axisY: yAxis
-                lineSeries: lineSeries
-                value: temperatureCompute.value * yScale
-                time: temperatureCompute.time * xScale
-                timeRange: root.timeRange * xScale
-            }
-
-            ValueAxis {
-                id: xAxis
-                tickCount: 4
-                titleText: root.xLabel
-                color: "white"
-                labelsColor: "white"
-            }
-            ValueAxis {
-                id: yAxis
-                tickCount: 4
-                titleText: root.yLabel
-                color: "white"
-                labelsColor: "white"
-            }
-            LineSeries {
-                id: lineSeries
-            }
-            Component.onCompleted: {
-                miniChart.setAxisX(xAxis, lineSeries)
-                miniChart.setAxisY(yAxis, lineSeries)
-            }
+            height: width * 2.5 / 4
         }
     }
     simulatorControls: [
         Compute {
             id: temperatureCompute
+            Component.onCompleted: {
+                console.log("temperatureCompute.scalarValue: ", scalarValue)
+            }
+
+            scalarTitle: "Temperature"
             identifier: "temp"
             command: "all temp"
         }

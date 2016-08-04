@@ -7,20 +7,43 @@ ChartView {
     antialiasing: true
     legend.visible: false
     theme: ChartView.ChartThemeDark
+
     property bool autoScroll: true
     property alias xLabel: xAxis.titleText
     property alias yLabel: yAxis.titleText
     property alias xAxis: xAxis
     property alias yAxis: yAxis
+    property real xRange: 0
+    property real xScale: 1.0
+    property real yScale: 1.0
     property string type: "line"
     property var dataSeries: [] // Will be updated automatically
     property list<Data1D> dataSources
-    property real xRange: 0
     onDataSourcesChanged: {
         updateSeries()
         for(var i=0; i<dataSources.length; i++) {
+            dataSources[i].xScale = root.xScale
+            dataSources[i].yScale = root.yScale
             dataSources[i].xRange = root.xRange
             dataSources[i].updated.connect(updateData)
+        }
+    }
+
+    onXScaleChanged: {
+        for(var i=0; i<dataSources.length; i++) {
+            dataSources[i].xScale = root.xScale
+        }
+    }
+
+    onYScaleChanged: {
+        for(var i=0; i<dataSources.length; i++) {
+            dataSources[i].yScale = root.yScale
+        }
+    }
+
+    onXRangeChanged: {
+        for(var i=0; i<dataSources.length; i++) {
+            dataSources[i].xRange = root.xRange
         }
     }
 
@@ -54,6 +77,7 @@ ChartView {
         xAxis.max = xMax
         yAxis.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
         yAxis.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
+        // console.log("Limits: [", xAxis.min, ", ", xAxis.max, "] and [", yAxis.min, ", ", yAxis.max, "]")
         // yAxis.applyNiceNumbers()
     }
 

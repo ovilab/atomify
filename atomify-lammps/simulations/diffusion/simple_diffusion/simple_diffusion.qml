@@ -34,7 +34,7 @@ many different types of particles.</p>
             yScale: 119.6
             xLabel: "t [fs]"
             yLabel: "T [K]"
-            timeRange: 0.5
+            xRange: 0.5
         },
         Thermostat {
             unitScale: 119.6
