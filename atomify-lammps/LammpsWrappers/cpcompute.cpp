@@ -35,14 +35,14 @@ void CPCompute::update(LAMMPSController *lammpsController)
             double *values = lmp_compute->vector;
             int numValues = lmp_compute->size_vector;
             m_values.clear();
-           for(int i=0; i<numValues; i++) {
-               m_values.push_back(values[i]);
-               if(i < m_vectorTitles.size()) {
-                   Data1D *data = m_vectorValuesRaw[m_vectorTitles[i]];
-                   data->add(time, values[i]);
-               }
-           }
-           emit valuesChanged(m_values);
+            for(int i=0; i<numValues; i++) {
+                m_values.push_back(values[i]);
+                if(i < m_vectorTitles.size()) {
+                    Data1D *data = m_vectorValuesRaw[m_vectorTitles[i]];
+                    data->add(time, values[i]);
+                }
+            }
+            emit valuesChanged(m_values);
         }
     }
     // qDebug() << "Compute " << identifier() << " spent " << t.elapsed() << " ms to update.";
@@ -92,6 +92,11 @@ Data1D *CPCompute::scalarValue() const
 QVariantMap CPCompute::vectorValues() const
 {
     return m_vectorValues;
+}
+
+bool CPCompute::timeDependent() const
+{
+    return m_timeDependent;
 }
 
 void CPCompute::setValue(float value)
@@ -151,6 +156,15 @@ void CPCompute::setVectorValues(QVariantMap vectorValues)
 
     m_vectorValues = vectorValues;
     emit vectorValuesChanged(vectorValues);
+}
+
+void CPCompute::setTimeDependent(bool timeDependent)
+{
+    if (m_timeDependent == timeDependent)
+        return;
+
+    m_timeDependent = timeDependent;
+    emit timeDependentChanged(timeDependent);
 }
 
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {

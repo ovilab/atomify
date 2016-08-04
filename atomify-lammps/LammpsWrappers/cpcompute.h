@@ -10,11 +10,13 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(QString scalarTitle READ scalarTitle WRITE setScalarTitle NOTIFY scalarTitleChanged)
     Q_PROPERTY(QList<qreal> values READ values WRITE setValues NOTIFY valuesChanged)
     Q_PROPERTY(float value READ value WRITE setValue NOTIFY valueChanged)
+    Q_PROPERTY(bool timeDependent READ timeDependent WRITE setTimeDependent NOTIFY timeDependentChanged)
 
 protected:
     QString m_scalarTitle;
     class Data1D *m_scalarValue = nullptr;
     QVariantMap m_vectorValues;
+    bool m_timeDependent = true;
     float m_value = 0.0;
     QStringList m_vectorTitles;
     QList<qreal> m_values;
@@ -36,6 +38,7 @@ public:
     QString scalarTitle() const;
     class Data1D* scalarValue() const;
     QVariantMap vectorValues() const;
+    bool timeDependent() const;
 
 signals:
     void valueChanged(float value);
@@ -44,6 +47,7 @@ signals:
     void scalarTitleChanged(QString scalarTitle);
     void scalarValueChanged(class Data1D *scalarValue);
     void vectorValuesChanged(QVariantMap vectorValues);
+    void timeDependentChanged(bool timeDependent);
 
 public slots:
     void setValue(float value);
@@ -52,6 +56,7 @@ public slots:
     void setScalarTitle(QString scalarTitle);
     void setScalarValue(class Data1D *scalarValue);
     void setVectorValues(QVariantMap vectorValues);
+    void setTimeDependent(bool timeDependent);
 };
 
 #endif // COMPUTE_H

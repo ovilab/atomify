@@ -13,8 +13,8 @@ Simulation {
         Gravity {
             minimumValue: -1
             maximumValue: 1.0
-            initialValue: 1.0
-            enabled: false
+            initialValue: 0.5
+            enabled: true
         }
 
     ]

@@ -30,7 +30,7 @@ that are characteristic for this structure.
         Thermometer {
             xLabel: "t [fs]"
             xScale: 1000
-            xRange: 0.5
+            xRange: 250
         },
         Thermostat {
             minimumValue: 10
