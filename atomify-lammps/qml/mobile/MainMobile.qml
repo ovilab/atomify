@@ -285,6 +285,7 @@ Item {
 
     Text {
         id: labelText
+        visible:  !informationPanel.revealed
         anchors {
             top: parent.top
             right: parent.right
@@ -303,7 +304,7 @@ Item {
         }
         width: Style.touchableSize * 3
         height: Style.touchableSize * 0.2
-        visible: simulator.scriptHandler.label.length > 0
+        visible: simulator.scriptHandler.label.length > 0 && !informationPanel.revealed
         color: "#aaaaaaaa"
 
         Rectangle {
