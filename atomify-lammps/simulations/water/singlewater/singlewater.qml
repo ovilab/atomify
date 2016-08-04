@@ -23,10 +23,9 @@ OH bonds and a scissoring bend of the H-O-H angle.</p>
             atom1: 1
             atom2: 2
             atom3: 3
-            xRange: 250.0
+            xRange: 100.0
             xScale: 1000
             xLabel: "t [fs]"
         }
     ]
 }
-

@@ -62,6 +62,9 @@ if not os.path.isdir(lammps_source_dir):
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
 
+shutil.copy("lammps-patch/compute_angle_atoms.h", lammps_source_dir_src)
+shutil.copy("lammps-patch/compute_angle_atoms.cpp", lammps_source_dir_src)
+
 if lammps_build_type == "android":
     lammps_android_pri = open("lammps-android.pri", "w")
     lammps_android_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
