@@ -304,7 +304,7 @@ Item {
 
     Text {
         id: labelText
-        visible:  !informationPanel.revealed && mobileRoot.state != "tools"
+        visible:  !informationPanel.revealed && mobileRoot.state != "tools" && mobileRoot.state != "simulations"
         anchors {
             top: parent.top
             right: parent.right
@@ -323,7 +323,7 @@ Item {
         }
         width: Style.touchableSize * 3
         height: Style.touchableSize * 0.2
-        visible: simulator.scriptHandler.label.length > 0 && !informationPanel.revealed && mobileRoot.state != "tools"
+        visible: simulator.scriptHandler.label.length > 0 && labelText.visible
         color: "#aaaaaaaa"
 
         Rectangle {
