@@ -27,6 +27,14 @@ int AtomData::size()
     return positions.size();
 }
 
+long AtomData::memoryUsage()
+{
+    return (positions.capacity() + deltaPositions.capacity() + colors.capacity())*sizeof(QVector3D)
+            +(radii.capacity() + occlusion.capacity())*sizeof(float)
+            +(originalIndex.capacity() + types.capacity())*sizeof(int)
+            +visible.capacity()*sizeof(bool);
+}
+
 void AtomData::reset()
 {
     positions.clear();

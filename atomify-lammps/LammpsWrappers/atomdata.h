@@ -7,7 +7,6 @@
 class AtomData {
 public:
     QVector<QVector3D> positions;
-    QVector<QVector3D> ghostPositions;
     QVector<QVector3D> deltaPositions; // For periodic copies
     QVector<QVector3D> colors;
     QVector<float> radii;
@@ -19,6 +18,7 @@ public:
     bool isValid();
     void resize(int size);
     int size();
+    long memoryUsage();
     void reset();
     ~AtomData();
 };

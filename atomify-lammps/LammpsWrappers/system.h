@@ -20,6 +20,7 @@ class System : public QObject
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
     Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
+    Q_PROPERTY(long memoryUsage READ memoryUsage WRITE setMemoryUsage NOTIFY memoryUsageChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
@@ -35,6 +36,7 @@ public:
     bool isValid() const;
     class Units* units() const;
     long realTime() const;
+    long memoryUsage() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -42,6 +44,7 @@ public slots:
     void setUnits(class Units* units);
     void setRealTime(long realTime);
     void setTimesteps(int timesteps);
+    void setMemoryUsage(long memoryUsage);
 
 signals:
     void originChanged(QVector3D origin);
@@ -55,6 +58,7 @@ signals:
     void isValidChanged(bool isValid);
     void unitsChanged(class Units* units);
     void realTimeChanged(long realTime);
+    void memoryUsageChanged(long memoryUsage);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -68,6 +72,7 @@ private:
     long m_realTime = 0.0;
     float m_volume = 0;
     bool m_isValid = false;
+    long m_memoryUsage = 0;
 };
 
 #endif // SYSTEM_H

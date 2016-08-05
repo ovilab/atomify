@@ -58,7 +58,7 @@ DashboardControl {
                     Text {
                         font.bold: true
                         color: "white"
-                        text: "Memory usage: 0 MB"
+                        text: "Memory usage: "+ (system.memoryUsage / 1024 / 1024).toFixed(0) +" MB"
                     }
                 }
             }

@@ -41,8 +41,8 @@ public:
     QVector<SphereData> &spheresData();
     QVector<BondData> &bondsData();
     float sphereRadius() const;
-
     float occlusionFactor() const;
+    long memoryUsage();
 
 public slots:
     void setBondRadius(float bondRadius);

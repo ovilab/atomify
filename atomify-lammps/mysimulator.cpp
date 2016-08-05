@@ -2,6 +2,8 @@
 #include "LammpsWrappers/simulatorcontrol.h"
 #include <library.h>
 #include <atom.h>
+#include <comm.h>
+#include <force.h>
 #include <domain.h>
 #include <compute_temp.h>
 #include <update.h>
@@ -187,6 +189,19 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
     atomifySimulator->system()->setTimesteps(m_timesteps);
     atomifySimulator->system()->setRealTime(m_elapsedTime);
+
+    LAMMPS *lammps = m_lammpsController.lammps();
+    bigint bytes = 0;
+    bytes += lammps->atom->memory_usage();
+    bytes += lammps->neighbor->memory_usage();
+    bytes += lammps->comm->memory_usage();
+    bytes += lammps->update->memory_usage();
+    bytes += lammps->force->memory_usage();
+    bytes += lammps->modify->memory_usage();
+
+    double mbytes = bytes/1024.0/1024.0;
+
+    atomifySimulator->system()->setMemoryUsage(atomifySimulator->system()->atoms()->memoryUsage() + bytes);
 }
 
 void MyWorker::synchronizeBonds(Bonds *bonds) {

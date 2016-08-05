@@ -152,6 +152,11 @@ long System::realTime() const
     return m_realTime;
 }
 
+long System::memoryUsage() const
+{
+    return m_memoryUsage;
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -195,5 +200,14 @@ void System::setTimesteps(int timesteps)
 
     m_timesteps = timesteps;
     emit timestepsChanged(timesteps);
+}
+
+void System::setMemoryUsage(long memoryUsage)
+{
+    if (m_memoryUsage == memoryUsage)
+        return;
+
+    m_memoryUsage = memoryUsage;
+    emit memoryUsageChanged(memoryUsage);
 }
 

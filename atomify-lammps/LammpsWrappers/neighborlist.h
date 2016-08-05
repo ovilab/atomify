@@ -9,7 +9,7 @@ typedef QVector<QVector<int>> CellList;
 struct Neighborlist {
     class CPBonds *bonds = nullptr;
     QVector<QVector<int>> neighbors;
-    int m_lastNeighborListSync = -1;
+    long memoryUsage = 0;
 
     Neighborlist();
     Neighborlist(const Neighborlist &old);

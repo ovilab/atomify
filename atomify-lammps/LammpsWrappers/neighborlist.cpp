@@ -8,7 +8,6 @@
 #include <QDebug>
 #include <QElapsedTimer>
 using namespace LAMMPS_NS;
-
 Neighborlist::Neighborlist()
 {
 
@@ -34,6 +33,7 @@ void Neighborlist::reset(int numberOfAtoms, int maxNeighbors) {
         }
         neighbors[i].resize(0);
     }
+    memoryUsage = numberOfAtoms*maxNeighbors*sizeof(int);
 }
 
 void Neighborlist::synchronize(LAMMPS *lammps)
@@ -50,11 +50,9 @@ void Neighborlist::synchronize(LAMMPS *lammps)
         int *ilist = list->ilist;
         int *numneigh = list->numneigh;
         int **firstneigh = list->firstneigh;
-        if(inum == 0) {
-            qDebug() << "Fucking zero?";
-        }
         reset(inum);
         t.start();
+        memoryUsage = 0;
         for (int ii = 0; ii < inum; ii++) {
             int i = ilist[ii];
             int *jlist = firstneigh[i];
@@ -76,6 +74,8 @@ void Neighborlist::synchronize(LAMMPS *lammps)
                     }
                 }
             }
+
+            memoryUsage += neighbors[i].capacity()*sizeof(int);
         }
     }
 }
