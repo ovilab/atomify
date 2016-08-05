@@ -1,8 +1,8 @@
 #/atom 1 1.0 #ffffff
 #/atom 2 1.0 #ff0000
 
-variable L equal 10.0
-variable Lhalf equal 5.0
+variable L equal 20.0
+variable Lhalf equal 10.0
 variable thickness equal 2.0
 
 units lj
