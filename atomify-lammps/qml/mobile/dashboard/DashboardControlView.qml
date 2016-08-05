@@ -116,6 +116,45 @@ Rectangle {
                     }
                 }
             }
+
+            Rectangle {
+                width: Style.touchableSize * 3.5
+                height: width / visualizer.visualizer.camera.aspectRatio
+
+                ShaderEffect {
+                    anchors.fill: parent
+                    anchors.margins: 5
+                    // width: 200; height: 200
+                    property variant src: ShaderEffectSource {
+                        sourceItem: visualizer.visualizer
+                    }
+
+                    vertexShader: "
+                        uniform highp mat4 qt_Matrix;
+                        attribute highp vec4 qt_Vertex;
+                        attribute highp vec2 qt_MultiTexCoord0;
+                        varying highp vec2 coord;
+                        void main() {
+                            coord = qt_MultiTexCoord0;
+                            gl_Position = qt_Matrix * qt_Vertex;
+                        }"
+                    fragmentShader: "
+                        varying highp vec2 coord;
+                        uniform sampler2D src;
+                        uniform lowp float qt_Opacity;
+                        void main() {
+                            lowp vec4 tex = texture2D(src, coord);
+                            gl_FragColor = tex;
+                        }"
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        backClicked()
+                    }
+                }
+            }
         }
 
         Column {

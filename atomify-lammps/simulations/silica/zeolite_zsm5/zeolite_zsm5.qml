@@ -13,11 +13,17 @@ Simulation {
         Thermometer {
             xLabel: "t [fs]"
             xScale: 1000
-            xRange: 0.5
+            xRange: 1000
+        },
+        Pressure {
+            xLabel: "t [fs]"
+            xScale: 1000
+            xRange: 1000
         },
         Thermostat {
             minimumValue: 10
-            maximumValue: 2500
+            maximumValue: 2000
+            temperatureDampening: 0.2
         }
     ]
 }
