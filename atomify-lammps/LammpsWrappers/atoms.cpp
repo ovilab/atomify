@@ -362,7 +362,8 @@ float Atoms::occlusionFactor() const
 
 long Atoms::memoryUsage()
 {
-    return 2*m_atomData.memoryUsage() + m_bondsData.capacity()*sizeof(BondData) + m_spheresData.capacity()*sizeof(SphereData);
+    // return 2*m_atomData.memoryUsage() + m_bondsData.capacity()*sizeof(BondData) + m_spheresData.capacity()*sizeof(SphereData);
+    return 2*m_atomData.memoryUsage(); // TODO figure out why it crashes when we include the other two
 }
 
 QVector<SphereData> &Atoms::spheresData()

@@ -199,8 +199,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     bytes += lammps->force->memory_usage();
     bytes += lammps->modify->memory_usage();
 
-    double mbytes = bytes/1024.0/1024.0;
-
     atomifySimulator->system()->setMemoryUsage(atomifySimulator->system()->atoms()->memoryUsage() + bytes);
 }
 
