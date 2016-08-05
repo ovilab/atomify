@@ -146,6 +146,11 @@ void Data1D::add(float x, float y, bool silent)
     if(m_average) {
         m_numValues++;
         double value = m_sum / m_numValues;
+        value = 0.0;
+        if(m_points.size()) {
+            value = m_points.last().y();
+        }
+        value = 0.99*value + 0.01*y; // low pass filter
         m_points.append(QPointF(x,value));
         setLastValue(value);
     } else {
