@@ -50,7 +50,7 @@ Rectangle {
                 top: parent.top
                 left: parent.left
                 right: parent.right
-                bottom: controllerColumn.bottom
+                bottom: preview.bottom
             }
         }
 
@@ -119,6 +119,7 @@ Rectangle {
         }
 
         Rectangle {
+            id: preview
             anchors {
                 top: controlList.bottom
                 left: parent.left
