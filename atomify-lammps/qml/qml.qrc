@@ -1,15 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>desktop/MainDesktop.qml</file>
         <file>visualization/AtomifyVisualizer.qml</file>
-        <file>desktop/LammpsEditor.qml</file>
-        <file>desktop/RenderingTab.qml</file>
-        <file>desktop/SliceControl.qml</file>
-        <file>desktop/AtomStyleControl.qml</file>
-        <file>desktop/LightControl.qml</file>
-        <file>desktop/Console.qml</file>
-        <file>desktop/EditorTab.qml</file>
-        <file>desktop/SimulationSummary.qml</file>
         <file>mobile/MainMobile.qml</file>
         <file>main.qml</file>
         <file>mobile/main-menu/MainMenu.qml</file>
