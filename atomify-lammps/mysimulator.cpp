@@ -190,16 +190,18 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->setTimesteps(m_timesteps);
     atomifySimulator->system()->setRealTime(m_elapsedTime);
 
-    LAMMPS *lammps = m_lammpsController.lammps();
-    bigint bytes = 0;
-    bytes += lammps->atom->memory_usage();
-    bytes += lammps->neighbor->memory_usage();
-    bytes += lammps->comm->memory_usage();
-    bytes += lammps->update->memory_usage();
-    bytes += lammps->force->memory_usage();
-    bytes += lammps->modify->memory_usage();
+    if(m_lammpsController.state.canProcessSimulatorControls) {
+        LAMMPS *lammps = m_lammpsController.lammps();
+        bigint bytes = 0;
+        bytes += lammps->atom->memory_usage();
+        bytes += lammps->neighbor->memory_usage();
+        bytes += lammps->comm->memory_usage();
+        bytes += lammps->update->memory_usage();
+        bytes += lammps->force->memory_usage();
+        bytes += lammps->modify->memory_usage();
 
-    atomifySimulator->system()->setMemoryUsage(atomifySimulator->system()->atoms()->memoryUsage() + bytes);
+        atomifySimulator->system()->setMemoryUsage(atomifySimulator->system()->atoms()->memoryUsage() + bytes);
+    }
 }
 
 void MyWorker::synchronizeBonds(Bonds *bonds) {
