@@ -85,15 +85,15 @@ We simulate how atoms and molecules behave with a physical model called molecula
 PhD candidates, University of Oslo"
             }
 
-
-
-//        Label {
-//            anchors.bottom: parent.bottom
-//            anchors.right: parent.right
-//            anchors.margins: Style.baseMargin * 0.5
-//            color: Style.font.color
-//            text: "Tap anywhere to hide this dialog"
-//        }
+            Image {
+                id: closeImage
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
+                width: Style.baseMargin
+                height: width
+                source: "qrc:/images/ic_clear_white_48dp.png"
+            }
     }
 
     MouseArea {
