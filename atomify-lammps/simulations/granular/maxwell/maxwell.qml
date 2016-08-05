@@ -11,6 +11,7 @@ Simulation {
     description: "<p>In this simulation we have two boxes that particles can be in. We have a vibrating plate at the bottom making the particles collide and jump.</p>
 <p>The second law of thermodynamics says that entropy tends to increase (I like to add 'except when it doesn't). This would mean that the particles are evenly distributed in the left and the right box.</p>
 <p>In this simulation we will see that the entropy actually decreases, where all particles end up being on the same side.</p>
+<p>What happens is that energy is added in the bottom of the system and needs to be transported through collisions, so a lot on the energy gets dissipated away before the topmost particles get energy. The more particles the less likely it is to have huge jumps to the other side.</p>
 <p>This does not violate the second law of thermodynamics since we add energy to the system through the bottom plate.</p>
 "
     initialCameraPosition: Qt.vector3d(-20,0,-2)
