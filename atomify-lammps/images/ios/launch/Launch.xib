@@ -21,7 +21,7 @@
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                     </variation>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="atomify_logo_trans.png" translatesAutoresizingMaskIntoConstraints="NO" id="kf7-iW-hHy">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="atomify_logo_trans" translatesAutoresizingMaskIntoConstraints="NO" id="kf7-iW-hHy">
                     <rect key="frame" x="140" y="140" width="200" height="200"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="kf7-iW-hHy" secondAttribute="height" multiplier="1:1" id="0uT-ts-ZMM"/>
@@ -54,6 +54,6 @@
         </view>
     </objects>
     <resources>
-        <image name="atomify_logo_trans.png" width="200" height="200"/>
+        <image name="atomify_logo_trans" width="200" height="200"/>
     </resources>
 </document>

@@ -123,7 +123,7 @@ Rectangle {
                 top: controlList.bottom
                 left: parent.left
                 margins: Style.baseMargin
-                topMargin: 0
+                topMargin: -2
             }
             border.width: 0
 
