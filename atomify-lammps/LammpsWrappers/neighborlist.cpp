@@ -53,6 +53,7 @@ void Neighborlist::synchronize(LAMMPS *lammps)
         int **firstneigh = list->firstneigh;
         reset(inum);
         t.start();
+        // qDebug() << "Ghosts: " << lammps->atom->nghost;
         for (int ii = 0; ii < inum; ii++) {
             int i = ilist[ii];
             int *jlist = firstneigh[i];
@@ -62,8 +63,16 @@ void Neighborlist::synchronize(LAMMPS *lammps)
                 int j = jlist[jj];
                 j &= NEIGHMASK;
                 if(j < lammps->atom->natoms) {
+
                     neighbors[i].push_back(j);
                     numNeighbors++;
+                } else {
+                    int mappedIndex = lammps->atom->map(lammps->atom->tag[j]);
+                    if(mappedIndex > -1) {
+                        // We have enabled map in lammps. We now know what atom this ghost really is
+                        neighbors[i].push_back(mappedIndex);
+                        numNeighbors++;
+                    }
                 }
             }
         }

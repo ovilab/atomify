@@ -25,6 +25,7 @@ class Atoms : public QObject
     Q_PROPERTY(QVariantList modifiers READ modifiers WRITE setModifiers NOTIFY modifiersChanged)
     Q_PROPERTY(float bondRadius READ bondRadius WRITE setBondRadius NOTIFY bondRadiusChanged)
     Q_PROPERTY(float sphereRadius READ sphereRadius WRITE setSphereRadius NOTIFY bondSphereChanged)
+    Q_PROPERTY(float occlusionFactor READ occlusionFactor WRITE setOcclusionFactor NOTIFY occlusionFactorChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
@@ -41,16 +42,20 @@ public:
     QVector<BondData> &bondsData();
     float sphereRadius() const;
 
+    float occlusionFactor() const;
+
 public slots:
     void setBondRadius(float bondRadius);
     void setModifiers(QVariantList modifiers);
     void setSphereRadius(float sphereRadius);
+    void setOcclusionFactor(float occlusionFactor);
 
 signals:
     void bondsChanged(class CPBonds* bonds);
     void bondRadiusChanged(float bondRadius);
     void modifiersChanged(QVariantList modifiers);
     void bondSphereChanged(float sphereRadius);
+    void occlusionFactorChanged(float occlusionFactor);
 
 private:
     AtomData m_atomData;
@@ -62,6 +67,7 @@ private:
     QVariantList m_modifiers;
     float m_bondRadius = 0.1;
     float m_sphereRadius = 1.0;
+    float m_occlusionFactor = 1000;
     void generateBondData(AtomData &atomData);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);

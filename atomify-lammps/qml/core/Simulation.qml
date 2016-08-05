@@ -11,6 +11,7 @@ QtObject {
     property url scriptSource: (folder && identifier) ? folder + "/" + identifier + ".in" : ""
     property url screenshotSource: (folder && identifier) ? folder + "/" + identifier + ".png" : ""
     property real pan: -10
+    property real lightAttenuation: 0
     property real tilt: -20
     property real zoom: -20
     property int periodicImagesX: 1

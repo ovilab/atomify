@@ -67,7 +67,6 @@ Item {
 
     AtomifySimulator {
         id: mySimulator
-
         running: mobileRoot.state === "" || mobileRoot.state === "tools"
         simulationSpeed: 1
         system.atoms.modifiers: [
@@ -107,6 +106,7 @@ Item {
             periodicImages.numberOfCopiesX = simulation.periodicImagesX
             periodicImages.numberOfCopiesY = simulation.periodicImagesY
             periodicImages.numberOfCopiesZ = simulation.periodicImagesZ
+            visualizer.attenuation = simulation.lightAttenuation
             visualizer.camera.orthographic = simulation.orthographic
             visualizer.customColor.code = simulation.customColorShaderCode
             simulator.clearSimulatorControls()
@@ -371,5 +371,23 @@ Item {
             }
         }
     ]
+
+    Shortcut {
+        sequence: "Space"
+        onActivated: {
+            mySimulator.paused = !mySimulator.paused
+        }
+    }
+
+//    Slider {
+//        minimumValue: -5
+//        maximumValue: 0
+//        value: -5
+//        stepSize: 0.1
+//        onValueChanged: {
+//            // mySimulator.system.atoms.occlusionFactor = value
+//            visualizer.attenuation = Math.pow(10,value)
+//        }
+//    }
 }
 

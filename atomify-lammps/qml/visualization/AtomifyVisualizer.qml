@@ -4,7 +4,7 @@ import SimVis 1.0
 import Atomify 1.0
 
 Item {
-    id: atomifyVisualizerRoot
+    id: root
     property Visualizer visualizer: visualizer
     property AtomifySimulator simulator
     property real scale: 0.23
@@ -14,6 +14,7 @@ Item {
     property Camera camera: camera
     property bool addPeriodicCopies: false
     property alias customColor: customColor
+    property real attenuation: 0.0
 
     function animateCameraTo(position, upVector, viewCenter, duration) {
         animateCamera.duration = 1000
@@ -31,11 +32,11 @@ Item {
         property Spheres spheres: spheres
         width: parent.width
         height: parent.height
-        simulator: atomifyVisualizerRoot.simulator
+        simulator: root.simulator
         camera: camera
         backgroundColor: "#111"
         onTouched: {
-            atomifyVisualizerRoot.focus = true
+            root.focus = true
         }
 
 //        SkyBox {
@@ -51,7 +52,19 @@ Item {
             visible: parent.visible
 
             Light {
-                id: light1
+                ambientColor: spheres.color
+                specularColor: "white"
+                diffuseColor: spheres.color
+                ambientIntensity: 0.05
+                diffuseIntensity: 1.0
+                specularIntensity: 2.0
+                specular: true
+                shininess: 30.0
+                attenuation: root.attenuation
+                position: camera.position
+            }
+
+            Light {
                 ambientColor: spheres.color
                 specularColor: "white"
                 diffuseColor: spheres.color
@@ -61,7 +74,7 @@ Item {
                 specular: true
                 shininess: 30.0
                 attenuation: 0.0
-                position: camera.position
+                position: camera.position.plus(camera.viewVector.normalized().plus(camera.upVector.normalized()))
             }
 
             CustomColor {
@@ -75,17 +88,29 @@ Item {
             visible: parent.visible
 
             Light {
-                id: light
-                ambientColor: bonds.color
+                ambientColor: spheres.color
                 specularColor: "white"
-                diffuseColor: bonds.color
+                diffuseColor: spheres.color
+                ambientIntensity: 0.05
+                diffuseIntensity: 1.0
+                specularIntensity: 2.0
+                specular: true
+                shininess: 30.0
+                attenuation: root.attenuation
+                position: camera.position
+            }
+
+            Light {
+                ambientColor: spheres.color
+                specularColor: "white"
+                diffuseColor: spheres.color
                 ambientIntensity: 0.05
                 diffuseIntensity: 1.0
                 specularIntensity: 2.0
                 specular: true
                 shininess: 30.0
                 attenuation: 0.0
-                position: camera.position
+                position: camera.position.plus(camera.viewVector.normalized().plus(camera.upVector.normalized()))
             }
         }
     }

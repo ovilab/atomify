@@ -6,7 +6,8 @@ bool AtomData::isValid()
             colors.size() == radii.size() &&
             radii.size() == types.size() &&
             types.size() == originalIndex.size() &&
-            originalIndex.size() == visible.size();
+            originalIndex.size() == visible.size() &&
+            visible.size() == occlusion.size();
 }
 
 void AtomData::resize(int size)
@@ -18,6 +19,7 @@ void AtomData::resize(int size)
     types.resize(size);
     originalIndex.resize(size);
     visible.resize(size);
+    occlusion.resize(size);
 }
 
 int AtomData::size()
@@ -34,6 +36,7 @@ void AtomData::reset()
     types.clear();
     originalIndex.clear();
     visible.clear();
+    occlusion.clear();
     neighborList.reset(0);
 }
 

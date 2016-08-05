@@ -42,6 +42,7 @@ void PeriodicImages::apply(AtomData &atomData)
                     atomData.colors[nextIndex] = atomData.colors[atomIndex];
                     atomData.radii[nextIndex] = atomData.radii[atomIndex];
                     atomData.types[nextIndex] = atomData.types[atomIndex];
+                    atomData.occlusion[nextIndex] = atomData.occlusion[atomIndex];
                     atomData.positions[nextIndex] = atomData.positions[atomIndex];
                     atomData.originalIndex[nextIndex] = atomIndex;
                     atomData.deltaPositions[nextIndex] = deltaPosition;

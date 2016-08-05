@@ -74,8 +74,33 @@ void Atoms::synchronize(LAMMPS *lammps)
     int *types = lammps->atom->type;
 
     int numberOfAtoms = atom->natoms;
-    // if(m_atomData.size() != numberOfAtoms) m_atomData.neighborList.reset(numberOfAtoms, 10);
-    m_atomData.resize(numberOfAtoms);
+
+    if(m_atomData.colors.size() != numberOfAtoms) {
+        m_atomData.colors.resize(numberOfAtoms);
+    }
+    if(m_atomData.deltaPositions.size() != numberOfAtoms) {
+        m_atomData.deltaPositions.resize(numberOfAtoms);
+    }
+    if(m_atomData.occlusion.size() != numberOfAtoms) {
+        m_atomData.occlusion.resize(numberOfAtoms);
+    }
+    if(m_atomData.originalIndex.size() != numberOfAtoms) {
+        m_atomData.originalIndex.resize(numberOfAtoms);
+    }
+
+    if(m_atomData.positions.size() != numberOfAtoms) {
+        m_atomData.positions.resize(numberOfAtoms);
+    }
+
+    if(m_atomData.radii.size() != numberOfAtoms) {
+        m_atomData.radii.resize(numberOfAtoms);
+    }
+    if(m_atomData.types.size() != numberOfAtoms) {
+        m_atomData.types.resize(numberOfAtoms);
+    }
+    if(m_atomData.visible.size() != numberOfAtoms) {
+        m_atomData.visible.resize(numberOfAtoms);
+    }
 
     for(QVector3D &delta : m_atomData.deltaPositions) delta = QVector3D(); // Reset delta
     for(QVector3D &color : m_atomData.colors) color = QVector3D(0.9, 0.2, 0.1);
@@ -90,6 +115,7 @@ void Atoms::synchronize(LAMMPS *lammps)
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
+        m_atomData.occlusion[i] = 0.0;
         m_atomData.positions[i][0] = position[0] - (lammps->domain->boxlo[0] + lammps->domain->prd_half[0]);
         m_atomData.positions[i][1] = position[1] - (lammps->domain->boxlo[1] + lammps->domain->prd_half[1]);
         m_atomData.positions[i][2] = position[2] - (lammps->domain->boxlo[2] + lammps->domain->prd_half[2]);
@@ -119,8 +145,8 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
     }
 
     applyDeltaPositions(atomData);
-    generateSphereData(atomData);
     generateBondData(atomData);
+    generateSphereData(atomData);
 }
 
 void Atoms::applyDeltaPositions(AtomData &atomData) {
@@ -136,9 +162,11 @@ void Atoms::applyDeltaPositions(AtomData &atomData) {
 void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
     m_spheresData.resize(atomData.size());
+
     for(int atomIndex = 0; atomIndex<atomData.size(); atomIndex++) {
         if(atomData.visible[atomIndex]) {
             m_spheresData[visibleAtomCount].position = atomData.positions[atomIndex];
+            m_spheresData[visibleAtomCount].occlusion = atomData.occlusion[atomIndex] / m_occlusionFactor;
             m_spheresData[visibleAtomCount].color = atomData.colors[atomIndex];
             m_spheresData[visibleAtomCount].scale = atomData.radii[atomIndex];
             visibleAtomCount++;
@@ -167,13 +195,10 @@ void Atoms::generateBondData(AtomData &atomData) {
         const int atomType_i = atomData.types[ii];
 
         const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
-        // const float sphereRadius_i = atomData.radii[ii];
-
-        if(neighborList.neighbors.size() <= i) continue;
+        if(i >= neighborList.neighbors.size()) continue;
 
         for(const int &j : neighborList.neighbors[i]) {
             // if(j<ii) continue; // TODO: fix so we get this "newton's 3rd law" on bonds if neighbor lists are full
-
             QVector3D position_j = atomData.positions[j];
             position_j[0] += deltaPosition_i[0];
             position_j[1] += deltaPosition_i[1];
@@ -185,6 +210,9 @@ void Atoms::generateBondData(AtomData &atomData) {
             float dy = position_i[1] - position_j[1];
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
+            if(rsq < 10) {
+                atomData.occlusion[ii] += 1;
+            }
             if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
                 BondData bond;
                 bond.vertex1Position[0] = position_i[0];
@@ -308,6 +336,15 @@ void Atoms::setSphereRadius(float sphereRadius)
         emit bondSphereChanged(sphereRadius);
 }
 
+void Atoms::setOcclusionFactor(float occlusionFactor)
+{
+    if (m_occlusionFactor == occlusionFactor)
+            return;
+
+        m_occlusionFactor = occlusionFactor;
+        emit occlusionFactorChanged(occlusionFactor);
+}
+
 QVector<BondData> &Atoms::bondsData()
 {
     return m_bondsData;
@@ -316,6 +353,11 @@ QVector<BondData> &Atoms::bondsData()
 float Atoms::sphereRadius() const
 {
     return m_sphereRadius;
+}
+
+float Atoms::occlusionFactor() const
+{
+    return m_occlusionFactor;
 }
 
 QVector<SphereData> &Atoms::spheresData()

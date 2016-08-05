@@ -7,9 +7,11 @@
 class AtomData {
 public:
     QVector<QVector3D> positions;
+    QVector<QVector3D> ghostPositions;
     QVector<QVector3D> deltaPositions; // For periodic copies
     QVector<QVector3D> colors;
     QVector<float> radii;
+    QVector<float> occlusion;
     QVector<int> originalIndex;
     QVector<int> types;
     QVector<bool> visible;

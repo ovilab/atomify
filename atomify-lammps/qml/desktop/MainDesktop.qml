@@ -176,12 +176,12 @@ Item {
             sequence: "Ctrl+2"
             onActivated: tabview.currentIndex = 1
         }
-        Shortcut {
-            sequence: "Space"
-            onActivated: {
-                simulator.paused = !simulator.paused
-            }
-        }
+//        Shortcut {
+//            sequence: "Space"
+//            onActivated: {
+//                simulator.paused = !simulator.paused
+//            }
+//        }
         Shortcut {
             sequence: "1"
             onActivated: {
