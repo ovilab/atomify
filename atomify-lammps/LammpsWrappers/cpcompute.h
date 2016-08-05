@@ -11,9 +11,11 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(QList<qreal> values READ values WRITE setValues NOTIFY valuesChanged)
     Q_PROPERTY(float value READ value WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(bool timeDependent READ timeDependent WRITE setTimeDependent NOTIFY timeDependentChanged)
+    Q_PROPERTY(bool average READ average WRITE setAverage NOTIFY averageChanged)
 
 protected:
     QString m_scalarTitle;
+    bool m_average = false;
     class Data1D *m_scalarValue = nullptr;
     QVariantMap m_vectorValues;
     bool m_timeDependent = true;
@@ -32,6 +34,7 @@ public:
     ~CPCompute();
     void update(LAMMPSController *lammpsController) override;
     bool existsInLammps(LAMMPSController *lammpsController) override;
+    Q_INVOKABLE void clear() override;
     float value() const;
     QList<qreal> values() const;
     QStringList vectorTitles() const;
@@ -39,6 +42,7 @@ public:
     class Data1D* scalarValue() const;
     QVariantMap vectorValues() const;
     bool timeDependent() const;
+    bool average() const;
 
 signals:
     void valueChanged(float value);
@@ -48,6 +52,7 @@ signals:
     void scalarValueChanged(class Data1D *scalarValue);
     void vectorValuesChanged(QVariantMap vectorValues);
     void timeDependentChanged(bool timeDependent);
+    void averageChanged(bool average);
 
 public slots:
     void setValue(float value);
@@ -57,6 +62,7 @@ public slots:
     void setScalarValue(class Data1D *scalarValue);
     void setVectorValues(QVariantMap vectorValues);
     void setTimeDependent(bool timeDependent);
+    void setAverage(bool average);
 };
 
 #endif // COMPUTE_H

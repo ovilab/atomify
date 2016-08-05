@@ -12,7 +12,7 @@ DashboardControl {
     property string yLabel: "Temperature"
     property real xScale: 1.0
     property real yScale: 1.0
-    property alias computeCommand: temperatureCompute.command
+    property alias computeCommand: compute.command
     name: "Temperature"
     fullControl: Column {
         ChartScrollerNew {
@@ -24,22 +24,30 @@ DashboardControl {
             xLabel: root.xLabel
             yLabel: root.yLabel
             active: root.active
+            showLegend: true
 
             anchors {
                 left: parent.left
                 right: parent.right
             }
 
-            dataSources: [temperatureCompute.scalarValue]
+            dataSources: [compute.scalarValue, computeAverage.scalarValue]
             height: width * 2.5 / 4
         }
     }
     simulatorControls: [
         Compute {
-            id: temperatureCompute
-            scalarTitle: "Temperature"
+            id: compute
+            scalarTitle: "Instantaneous"
             identifier: "temp"
             command: "all temp"
+        },
+        Compute {
+            id: computeAverage
+            scalarTitle: "Average"
+            identifier: "temp_average"
+            command: "all temp"
+            average: true
         }
     ]
 }

@@ -44,16 +44,17 @@ void Neighborlist::synchronize(LAMMPS *lammps)
     bool hasNeighborLists = lammps->neighbor->nlist > 0;
     int numNeighbors = 0;
 
-    if(hasNeighborLists && m_lastNeighborListSync != lammps->neighbor->lastcall) {
-        m_lastNeighborListSync = lammps->neighbor->lastcall;
+    if(hasNeighborLists) {
         NeighList *list = lammps->neighbor->lists[0];
         int inum = list->inum;
         int *ilist = list->ilist;
         int *numneigh = list->numneigh;
         int **firstneigh = list->firstneigh;
+        if(inum == 0) {
+            qDebug() << "Fucking zero?";
+        }
         reset(inum);
         t.start();
-        // qDebug() << "Ghosts: " << lammps->atom->nghost;
         for (int ii = 0; ii < inum; ii++) {
             int i = ilist[ii];
             int *jlist = firstneigh[i];
@@ -77,5 +78,4 @@ void Neighborlist::synchronize(LAMMPS *lammps)
             }
         }
     }
-    // qDebug() << "Neighborlist copy with " << numNeighbors << " neighbors synced in " << t.elapsed();
 }

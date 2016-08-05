@@ -47,7 +47,7 @@ DashboardControl {
     simulatorControls: [
         Compute {
             id: compute
-            scalarTitle: "Current"
+            scalarTitle: "Instantaneous"
             identifier: "angle"
             command: "all angle/atoms "+root.atom1+" "+root.atom2+" "+root.atom3
         },

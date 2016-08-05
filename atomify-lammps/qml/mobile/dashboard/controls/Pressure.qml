@@ -23,22 +23,30 @@ DashboardControl {
             xLabel: root.xLabel
             yLabel: root.yLabel
             active: root.active
+            showLegend: true
 
             anchors {
                 left: parent.left
                 right: parent.right
             }
 
-            dataSources: [compute.scalarValue]
+            dataSources: [compute.scalarValue, computeAverage.scalarValue]
             height: width * 2.5 / 4
         }
     }
     simulatorControls: [
         Compute {
             id: compute
-            scalarTitle: "Pressure"
+            scalarTitle: "Instantaneous"
             identifier: "pressure"
             command: "all pressure thermo_temp"
+        },
+        Compute {
+            id: computeAverage
+            scalarTitle: "Average"
+            identifier: "pressure_average"
+            command: "all pressure thermo_temp"
+            average: true
         }
     ]
 }

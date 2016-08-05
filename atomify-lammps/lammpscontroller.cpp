@@ -312,7 +312,7 @@ void LAMMPSController::tick()
         if(currentTimestep >= state.runCommandEnd) {
             // We need to start a new run session
             state.runCommandStart = currentTimestep;
-            state.runCommandEnd = currentTimestep + 1000;
+            state.runCommandEnd = currentTimestep + 10;
             state.preRunNeeded = true;
         }
 

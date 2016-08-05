@@ -128,6 +128,8 @@ QVariantList SimulatorControl::dependencies() const
     return m_dependencies;
 }
 
+void SimulatorControl::clear() { }
+
 void SimulatorControl::setEnabled(bool enabled)
 {
     if (m_enabled == enabled)

@@ -109,15 +109,7 @@ Item {
             visualizer.attenuation = simulation.lightAttenuation
             visualizer.camera.orthographic = simulation.orthographic
             visualizer.customColor.code = simulation.customColorShaderCode
-            simulator.clearSimulatorControls()
-
-            for(var i in simulation.controllers) {
-                var controller = simulation.controllers[i]
-                for(var j in controller.simulatorControls) {
-                    var control = controller.simulatorControls[j]
-                    simulator.addSimulatorControl(control);
-                }
-            }
+            addSimulatorControls()
 
             mobileRoot.state = ""
         }
@@ -126,6 +118,29 @@ Item {
             simulator.willReset = true
             simulator.scriptHandler.reset()
             simulator.scriptHandler.runFile(simulation.scriptSource)
+            addSimulatorControls()
+        }
+
+        function resetSimulatorControls() {
+            for(var i in simulation.controllers) {
+                var controller = simulation.controllers[i]
+                for(var j in controller.simulatorControls) {
+                    var control = controller.simulatorControls[j]
+                    control.clear()
+                }
+            }
+        }
+
+        function addSimulatorControls() {
+            simulator.clearSimulatorControls()
+            for(var i in simulation.controllers) {
+                var controller = simulation.controllers[i]
+                for(var j in controller.simulatorControls) {
+                    var control = controller.simulatorControls[j]
+                    control.clear()
+                    simulator.addSimulatorControl(control);
+                }
+            }
         }
     }
 

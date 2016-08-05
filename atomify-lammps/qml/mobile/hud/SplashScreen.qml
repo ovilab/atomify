@@ -44,7 +44,7 @@ Item {
 
             color: Style.font.color
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-            text: "Welcome to Atomify"
+            text: "Welcome to Atomify LAMMPS"
         }
 
         Text {
@@ -61,8 +61,9 @@ Item {
             color: Style.font.color
             text: "
 We simulate how atoms and molecules behave with a physical model called molecular dynamics. It uses Newton's laws to move atoms around.
-
 You will be able to study gases, liquids and solids and see different properties and effects.
+
+Atomify uses LAMMPS as physics engine.
 "
         }
 

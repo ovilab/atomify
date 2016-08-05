@@ -64,6 +64,14 @@ bool CPCompute::existsInLammps(LAMMPSController *lammpsController)
     return compute!=nullptr;
 }
 
+void CPCompute::clear()
+{
+    m_scalarValue->clear();
+    foreach(Data1D *data, m_vectorValuesRaw) {
+        data->clear();
+    }
+}
+
 float CPCompute::value() const
 {
     return m_value;
@@ -97,6 +105,11 @@ QVariantMap CPCompute::vectorValues() const
 bool CPCompute::timeDependent() const
 {
     return m_timeDependent;
+}
+
+bool CPCompute::average() const
+{
+    return m_average;
 }
 
 void CPCompute::setValue(float value)
@@ -167,11 +180,25 @@ void CPCompute::setTimeDependent(bool timeDependent)
     emit timeDependentChanged(timeDependent);
 }
 
+void CPCompute::setAverage(bool average)
+{
+    if (m_average == average)
+        return;
+
+    m_average = average;
+    m_scalarValue->setAverage(average);
+    foreach(Data1D *data, m_vectorValuesRaw) {
+        data->setAverage(average);
+    }
+    emit averageChanged(average);
+}
+
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     if(!m_vectorValuesRaw.contains(key)) {
         Data1D *data = new Data1D(this);
         data->setTitle(key);
         data->setEnabled(enabledByDefault);
+        data->setAverage(m_average);
         m_vectorValuesRaw.insert(key, data);
         m_vectorValues.insert(key, QVariant::fromValue<Data1D*>(data));
     }

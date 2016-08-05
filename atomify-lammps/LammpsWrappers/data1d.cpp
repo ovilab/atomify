@@ -90,6 +90,16 @@ float Data1D::yScale() const
     return m_yScale;
 }
 
+bool Data1D::average() const
+{
+    return m_average;
+}
+
+float Data1D::lastValue() const
+{
+    return m_lastValue;
+}
+
 bool Data1D::enabled() const
 {
     return m_enabled;
@@ -132,7 +142,16 @@ void Data1D::clear()
 
 void Data1D::add(float x, float y, bool silent)
 {
-    m_points.append(QPointF(x,y));
+    m_sum += y;
+    if(m_average) {
+        m_numValues++;
+        double value = m_sum / m_numValues;
+        m_points.append(QPointF(x,value));
+        setLastValue(value);
+    } else {
+        m_points.append(QPointF(x,y));
+        setLastValue(y);
+    }
     if(!silent) emit updated();
 }
 
@@ -215,4 +234,22 @@ void Data1D::setYScale(float yScale)
 
     m_yScale = yScale;
     emit yScaleChanged(yScale);
+}
+
+void Data1D::setAverage(bool average)
+{
+    if (m_average == average)
+        return;
+
+    m_average = average;
+    emit averageChanged(average);
+}
+
+void Data1D::setLastValue(float lastValue)
+{
+    if (m_lastValue == lastValue)
+        return;
+
+    m_lastValue = lastValue;
+    emit lastValueChanged(lastValue);
 }

@@ -38,6 +38,7 @@ public:
     QString identifier() const;
     QString command() const;
     QVariantList dependencies() const;
+    Q_INVOKABLE virtual void clear();
     bool dependenciesValid(LAMMPSController *lammpsController);
     virtual bool existsInLammps(LAMMPSController *lammpsController) = 0;
     virtual void update(LAMMPSController *lammpsController);
