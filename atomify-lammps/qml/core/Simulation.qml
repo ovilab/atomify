@@ -10,6 +10,7 @@ QtObject {
     property string folder: ""
     property url scriptSource: (folder && identifier) ? folder + "/" + identifier + ".in" : ""
     property url screenshotSource: (folder && identifier) ? folder + "/" + identifier + ".png" : ""
+    property System system
     property real pan: -10
     property real lightAttenuation: 0
     property real tilt: -20

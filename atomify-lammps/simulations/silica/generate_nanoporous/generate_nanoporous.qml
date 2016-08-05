@@ -3,6 +3,7 @@ import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
 Simulation {
+    id: root
     name: "Nanoporous glass"
     description: "
 <p>
@@ -27,6 +28,9 @@ We can then quickly decrease the temperature (quench the system) to reach a nice
     periodicImagesZ: 2
 
     controllers: [
+        Summary {
+            system: root.system
+        },
         Thermometer {
             xLabel: "Time [fs]"
             xScale: 1000

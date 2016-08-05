@@ -101,7 +101,7 @@ Item {
             start()
 
             visualizer.animateCameraTo(simulation.initialCameraPosition, simulation.initialUpVector, simulation.initialViewCenter, 1000)
-
+            simulation.system = simulator.system
             periodicImages.enabled = (simulation.periodicImagesX !== 1) || (simulation.periodicImagesY !== 1) || (simulation.periodicImagesZ !== 1)
             periodicImages.numberOfCopiesX = simulation.periodicImagesX
             periodicImages.numberOfCopiesY = simulation.periodicImagesY

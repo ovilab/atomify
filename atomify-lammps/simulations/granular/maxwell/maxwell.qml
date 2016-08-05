@@ -6,6 +6,7 @@ import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
 Simulation {
+    id: root
     name: "Maxwell's demon"
     description: "<p>In this simulation we have two boxes that particles can be in. We have a vibrating plate at the bottom making the particles collide and jump.</p>
 <p>The second law of thermodynamics says that entropy tends to increase (I like to add 'except when it doesn't). This would mean that the particles are evenly distributed in the left and the right box.</p>
@@ -24,6 +25,9 @@ customColor.g *= 0.3;
 // customColor = normalize(customColor);
 "
     controllers: [
+        Summary {
+            system: root.system
+        },
         AtomPosition {
             yScale: 100
             yLabel: "Fraction %"

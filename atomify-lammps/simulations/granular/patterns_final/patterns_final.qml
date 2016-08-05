@@ -6,6 +6,7 @@ import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
 Simulation {
+    id: root
     name: "Patterns final"
     description: "<p>Same as the system called 'Patterns', but thermalized so you can see the final pattern without waiting.</p>"
     initialCameraPosition: Qt.vector3d(0,0,50)
@@ -15,6 +16,10 @@ highp float zScaled = 0.2 + 0.8* (position.z + 7.5) / 5.0;
 zScaled = clamp(zScaled, 0.0, 1.0);
 customColor *= zScaled;
 "
-    controllers: [ ]
+    controllers: [
+        Summary {
+            system: root.system
+        }
+    ]
 }
 

@@ -4,6 +4,7 @@ import "qrc:/mobile/dashboard/controls"
 import "qrc:/mobile/dashboard"
 
 Simulation {
+    id: root
     // TODO reduce the size of the simulation, runs too slow
     // TODO with a reduced size, it may be possible to run fast enough for clusters to form in seconds
 
@@ -25,6 +26,9 @@ of water molecules form.
     initialCameraPosition: Qt.vector3d(21.0025, -63.4384, 40.7256)
     initialUpVector: Qt.vector3d(0.530134, 0.575353, 0.622839)
     controllers: [
+        Summary {
+            system: root.system
+        },
         Thermometer {
             xLabel: "t [fs]"
             xScale: 1000

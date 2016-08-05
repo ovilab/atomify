@@ -4,6 +4,7 @@ import "qrc:/mobile/dashboard/controls"
 import "qrc:/mobile/dashboard"
 
 Simulation {
+    id: root
     name: "Silica beta cristobalite"
     description: "
 <p>
@@ -27,6 +28,9 @@ that are characteristic for this structure.
     initialCameraPosition: Qt.vector3d(0,0,46)
     orthographic: false
     controllers: [
+        Summary {
+            system: root.system
+        },
         Thermometer {
             xLabel: "t [fs]"
             xScale: 1000

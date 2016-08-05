@@ -6,6 +6,7 @@ import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
 Simulation {
+    id: root
     name: "Patterns"
     description: "<p>When granular materials (such as sand and marbles) are stacked on a vibrating plate, they can end up producing standing wave patterns.</p>
 <p>We only need to tune the vibrational frequency and amplitude to certain values.</p>
@@ -17,6 +18,10 @@ zScaled = clamp(zScaled, 0.0, 1.0);
 customColor *= zScaled;
 "
     initialCameraPosition: Qt.vector3d(0,0,50)
-    controllers: [ ]
+    controllers: [
+        Summary {
+            system: root.system
+        }
+    ]
 }
 

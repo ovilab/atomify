@@ -47,5 +47,6 @@
         <file>mobile/dashboard/controls/AtomPosition.qml</file>
         <file>mobile/dashboard/controls/Volume.qml</file>
         <file>mobile/dashboard/controls/Pressure.qml</file>
+        <file>mobile/dashboard/controls/Summary.qml</file>
     </qresource>
 </RCC>

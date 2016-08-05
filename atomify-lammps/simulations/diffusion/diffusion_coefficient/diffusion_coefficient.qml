@@ -6,6 +6,7 @@ import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
 Simulation {
+    id: root
     name: "Diffusion coefficient"
     description: "<p>The diffusion coefficient can be measured as the slope of the mean square displacement r^2(t) (MSD).</p>
 <p>The MSD is defined as the average distance atoms have to their original position a time t earlier.</p>
@@ -15,6 +16,9 @@ The system then goes over to the linear regime where we can read out the diffusi
     initialCameraPosition: Qt.vector3d(0,0,20)
     initialUpVector: Qt.vector3d(0,-1,0)
     controllers: [
+        Summary {
+            system: root.system
+        },
         DiffusionCoefficient {
             xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
             xRange: 1000

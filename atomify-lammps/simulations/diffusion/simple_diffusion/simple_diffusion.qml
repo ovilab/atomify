@@ -6,6 +6,7 @@ import "qrc:/core"
 import "qrc:/mobile/dashboard/controls"
 
 Simulation {
+    id: root
     name: "Diffusion"
 
     description: "
@@ -29,12 +30,15 @@ many different types of particles.</p>
                      "lowering the temperature and sped up when raising the temperature."
     initialCameraPosition: Qt.vector3d(0,0,20)
     controllers: [
+        Summary {
+            system: root.system
+        },
         Thermometer {
             xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
             yScale: 119.6
             xLabel: "t [fs]"
             yLabel: "T [K]"
-            xRange: 0.5
+            xRange: 250
         },
         Thermostat {
             unitScale: 119.6
