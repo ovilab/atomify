@@ -27,53 +27,73 @@ Item {
             anchors.left: parent.left
             anchors.margins: 10
             width: parent.width*0.15
-            height: width / 1.47058824
-            source: "qrc:/images/watermolecule.png"
+            height: width
+            source: "qrc:/images/icon.png"
+        }
+
+        Image {
+            id: uioLogo
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.margins: 10
+            width: parent.width*0.15
+            height: width
+            source: "qrc:/images/uio.png"
         }
 
         Text {
             id: welcomeHeading
             anchors {
-                top: image.bottom
-                left: parent.left
+                top: parent.top
+                left: image.right
                 right: parent.right
                 margins: Style.baseMargin
-                topMargin: Style.baseMargin * 0.5
+                topMargin: image.height*0.5
             }
             font.pixelSize: Style.font.heading.size
 
             color: Style.font.color
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-            text: "Welcome to Atomify LAMMPS"
+            text: "Welcome to Atomify"
         }
 
         Text {
             anchors {
-                top: welcomeHeading.bottom
+                top: image.bottom
                 left: parent.left
                 right: parent.right
                 bottom: parent.bottom
                 margins: Style.baseMargin
-                topMargin: Style.baseMargin * 0.5
+                topMargin: -8
             }
 
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: Style.font.color
             text: "
-We simulate how atoms and molecules behave with a physical model called molecular dynamics. It uses Newton's laws to move atoms around.
-You will be able to study gases, liquids and solids and see different properties and effects.
-
-Atomify uses LAMMPS as physics engine.
+We simulate how atoms and molecules behave with a physical model called molecular dynamics. It uses Newton's laws to move atoms around following the laws of physics. You can study gases, liquids and solids to see different properties and effects. Atomify uses LAMMPS as physics engine.
 "
         }
 
-        Label {
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.margins: Style.baseMargin * 0.5
-            color: Style.font.color
-            text: "Tap anywhere to hide this dialog"
-        }
+            Text {
+                id: nameText
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.margins: Style.baseMargin
+                color: Style.font.color
+                text:
+"Anders Hafreager and Svenn-Arne Dragly
+PhD candidates, University of Oslo"
+            }
+
+
+
+//        Label {
+//            anchors.bottom: parent.bottom
+//            anchors.right: parent.right
+//            anchors.margins: Style.baseMargin * 0.5
+//            color: Style.font.color
+//            text: "Tap anywhere to hide this dialog"
+//        }
     }
 
     MouseArea {
