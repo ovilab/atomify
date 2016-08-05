@@ -84,10 +84,6 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         qDebug() << command;
     }
 
-    // Always compute potential energy and virial for simpler interface with simulator controls
-//    m_lammps->update->eflag_atom = 1;
-//    m_lammps->update->vflag_global = 1;
-
     try {
         QByteArray commandBytes = command.toUtf8();
         lammps_command((void*)m_lammps, (char*)commandBytes.data());

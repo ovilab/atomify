@@ -26,6 +26,8 @@ public:
 private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
+    long m_timesteps = 0;
+    long m_elapsedTime = 0;
     LAMMPSController m_lammpsController;
     bool m_addPeriodicCopies = false;
     float m_cameraToSystemCenterDistance = 1.0;

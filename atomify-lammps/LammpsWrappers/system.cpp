@@ -66,11 +66,10 @@ void System::synchronize(LAMMPS *lammps)
         emit simulationTimeChanged(m_simulationTime);
     }
 
-    if(m_timesteps != update->atimestep) {
-        m_timesteps = update->atimestep;
-        emit timestepsChanged(m_timesteps);
-    }
-
+//    if(m_timesteps != update->atimestep) {
+//        m_timesteps = update->atimestep;
+//        emit timestepsChanged(m_timesteps);
+//    }
     for(QVariant modifier_ : m_atoms->modifiers()) {
         Modifier *modifier = modifier_.value<Modifier*>();
         modifier->setSystem(this);
@@ -148,6 +147,11 @@ Units *System::units() const
     return m_units;
 }
 
+long System::realTime() const
+{
+    return m_realTime;
+}
+
 void System::setAtoms(Atoms *atoms)
 {
     if (m_atoms == atoms)
@@ -173,5 +177,23 @@ void System::setUnits(Units *units)
 
     m_units = units;
     emit unitsChanged(units);
+}
+
+void System::setRealTime(long realTime)
+{
+    if (m_realTime == realTime)
+        return;
+
+    m_realTime = realTime;
+    emit realTimeChanged(realTime);
+}
+
+void System::setTimesteps(int timesteps)
+{
+    if (m_timesteps == timesteps)
+        return;
+
+    m_timesteps = timesteps;
+    emit timestepsChanged(timesteps);
 }
 

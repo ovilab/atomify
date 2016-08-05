@@ -108,12 +108,16 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(atomifySimulator->willReset()) {
+        m_sinceStart.restart();
         m_lammpsController.reset();
         atomifySimulator->lammpsState = m_lammpsController.state;
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
+        m_lammpsController.system()->setRealTime(0);
+        m_elapsedTime = 0;
+        m_timesteps = 0;
         m_lammpsController.setSimulationSpeed(1);
         atomifySimulator->setSimulationSpeed(1);
         atomifySimulator->setHasExecutedRunCommand(false);
@@ -133,6 +137,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         error->setScriptFile(m_lammpsController.state.nextCommand.filename());
         error->setLine(m_lammpsController.state.nextCommand.line());
         atomifySimulator->setLammpsError(error);
+        m_timesteps = 0;
         m_lammpsController.currentException().setIsReported(true);
 
         emit atomifySimulator->errorInLammpsScript();
@@ -180,6 +185,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             }
         }
     }
+    atomifySimulator->system()->setTimesteps(m_timesteps);
+    atomifySimulator->system()->setRealTime(m_elapsedTime);
 }
 
 void MyWorker::synchronizeBonds(Bonds *bonds) {
@@ -213,6 +220,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 
 void MyWorker::work()
 {
+    m_elapsed.restart();
     if(!m_running) {
         return;
     }
@@ -222,11 +230,12 @@ void MyWorker::work()
     if(delta > 0) {
         QThread::currentThread()->msleep(delta);
     }
-    m_elapsed.restart();
     if(m_lammpsController.lammps() && m_lammpsController.system()) {
         m_lammpsController.system()->synchronize(m_lammpsController.lammps());
         m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
+        m_timesteps++;
     }
+    m_elapsedTime += m_elapsed.elapsed();
 }
 bool MyWorker::willPause() const
 {

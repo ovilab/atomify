@@ -50,6 +50,16 @@ DashboardControl {
                         color: "white"
                         text: "Timesteps: "+system.timesteps
                     }
+                    Text {
+                        font.bold: true
+                        color: "white"
+                        text: "Performance: "+(system.timesteps / (system.realTime / 1000)).toFixed(2)+" timesteps/sec"
+                    }
+                    Text {
+                        font.bold: true
+                        color: "white"
+                        text: "Memory usage: 0 MB"
+                    }
                 }
             }
         }
