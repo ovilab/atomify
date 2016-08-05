@@ -54,5 +54,5 @@ fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.99 200.0 wiggle z 
 thermo 1000
 thermo_style custom step v_atomify_left v_atomify_right
 #/label Vibrating. One side will have'm all
-run 1000000
+run 100000
 # run 100000000
