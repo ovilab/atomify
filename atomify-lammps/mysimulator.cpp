@@ -114,7 +114,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
-        m_lammpsController.setSimulationSpeed(1); // Will update simulator later
+        m_lammpsController.setSimulationSpeed(1);
+        atomifySimulator->setSimulationSpeed(1);
         atomifySimulator->setHasExecutedRunCommand(false);
         emit atomifySimulator->lammpsDidReset();
     }
