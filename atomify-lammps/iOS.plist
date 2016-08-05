@@ -6,26 +6,26 @@
 	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-        <key>CFBundleIcons</key>
-        <dict>
-            <key>CFBundlePrimaryIcon</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                <string>Icon-40.png</string>
-                <string>Icon-40@2x.png</string>
-                <string>Icon-40@3x.png</string>
-                <string>Icon-60@2x.png</string>
-                <string>Icon-60@3x.png</string>
-                <string>Icon-76.png</string>
-                <string>Icon-76@2x.png</string>
-                <string>Icon-83.5@2x.png</string>
-                <string>Icon-Small.png</string>
-                <string>Icon-Small@2x.png</string>
-                <string>Icon-Small@3x.png</string>
-                </array>
-            </dict>
-        </dict>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>Icon-40.png</string>
+				<string>Icon-40@2x.png</string>
+				<string>Icon-40@3x.png</string>
+				<string>Icon-60@2x.png</string>
+				<string>Icon-60@3x.png</string>
+				<string>Icon-76.png</string>
+				<string>Icon-76@2x.png</string>
+				<string>Icon-83.5@2x.png</string>
+				<string>Icon-Small.png</string>
+				<string>Icon-Small@2x.png</string>
+				<string>Icon-Small@3x.png</string>
+			</array>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>com.compphys.atomifyv2</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -42,6 +42,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>Launch</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

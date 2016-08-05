@@ -41,6 +41,8 @@ ios {
     QMAKE_INFO_PLIST = iOS.plist
     ios_icon.files = $$files($$PWD/images/ios/icon/*.png)
     QMAKE_BUNDLE_DATA += ios_icon
+    app_launch_images.files = $$PWD/images/ios/launch/Launch.xib $$PWD/images/ios/launch/atomify_logo_trans.png
+    QMAKE_BUNDLE_DATA += app_launch_images
 }
 
 SOURCES += \
