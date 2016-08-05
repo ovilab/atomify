@@ -70,7 +70,7 @@ Item {
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: Style.font.color
             text: "
-We simulate how atoms and molecules behave with a physical model called molecular dynamics. It uses Newton's laws to move atoms around following the laws of physics. You can study gases, liquids and solids to see different properties and effects. Atomify uses LAMMPS as physics engine.
+We simulate how atoms and molecules behave with a physical model called molecular dynamics. It uses Newton's laws to move atoms around following the laws of physics. You can study gases, liquids and solids to see different properties and effects. Atomify is open source and uses LAMMPS as physics engine.
 "
         }
 
