@@ -39,6 +39,8 @@ include(../SimVis/package_vendor.pri)
 
 ios {
     QMAKE_INFO_PLIST = iOS.plist
+    ios_icon.files = $$files($$PWD/images/logo/appicon/ios/AppIcon.appiconset/*.png)
+    QMAKE_BUNDLE_DATA += ios_icon
 }
 
 SOURCES += \

@@ -44,6 +44,7 @@
         <file>images/tools/mainmenu.svg</file>
         <file>images/tools/properties.svg</file>
         <file>images/tools/tools.svg</file>
-        <file>images/watermolecule.png</file>
+        <file>images/icon.png</file>
+        <file>images/uio.png</file>
     </qresource>
 </RCC>
