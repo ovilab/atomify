@@ -67,9 +67,6 @@ DashboardControl {
         Fix {
             id: fix
             property real magnitude: root.initialValue
-            onMagnitudeChanged: {
-                console.log("New magnitude: ", magnitude)
-            }
 
             identifier: "gravity"
             enabled: root.enabled
