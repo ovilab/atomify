@@ -26,5 +26,6 @@
         <file>images/icon.png</file>
         <file>images/uio.png</file>
         <file>images/ic_clear_white_48dp.png</file>
+        <file>images/ic_reply_white_48dp.png</file>
     </qresource>
 </RCC>
