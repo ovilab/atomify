@@ -80,7 +80,7 @@ Item {
                                 for(var j in item.fixes) {
                                     var fix = item.fixes[j]
                                     fix.parent = simulator
-                                    console.log("Created " + fix + " on simulator " + simulator)
+                                    // console.log("Created " + fix + " on simulator " + simulator)
                                 }
                             }
                         }

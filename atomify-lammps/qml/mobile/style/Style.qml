@@ -59,11 +59,11 @@ Item {
     }
 
     function reset(width, height, screen) {
-        console.log("Resetting style")
+        // console.log("Resetting style")
         styleRoot.windowWidth = width
         styleRoot.windowHeight = height
         styleRoot.pixelDensity = screen.pixelDensity
-        console.log("Got width " + width + " height " + height + " pixel density " + screen.pixelDensity)
+        // console.log("Got width " + width + " height " + height + " pixel density " + screen.pixelDensity)
 
         if(Qt.platform.os === "android" || Qt.platform.os === "ios") {
             if(pixelDensity === 0) {
@@ -75,6 +75,6 @@ Item {
             console.warn("Pixel density reported as too small. Using width or height.")
             styleRoot.pixelDensity = Math.max(windowWidth, windowHeight) * 0.01
         }
-        console.log("Done resetting style")
+        // console.log("Done resetting style")
     }
 }

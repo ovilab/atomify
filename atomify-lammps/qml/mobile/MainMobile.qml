@@ -20,6 +20,7 @@ Item {
     id: mobileRoot
     property alias simulator: mySimulator
     property Simulation simulation: simulationLoader.item
+    property alias visualizer: visualizer.visualizer
     property string previousState: ""
     property var simulationsModel: [
         {
@@ -198,7 +199,7 @@ Item {
         onControlClicked: {
             mobileRoot.previousState = mobileRoot.state
             mobileRoot.state = "tools"
-            console.log("Index was " + index)
+            // console.log("Index was " + index)
             controlView.gotoIndex(index)
         }
     }

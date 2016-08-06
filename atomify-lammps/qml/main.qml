@@ -15,8 +15,8 @@ ApplicationWindow {
     id: applicationRoot
 
     title: qsTr("Atomify")
-    width: 300
-    height: 480
+    width: 960
+    height: 640
     visible: true
 
     property string mode: {
@@ -55,21 +55,49 @@ ApplicationWindow {
 //    }
 
     MainMobile {
+        id: mainMobile
         visible: mode === "mobile"
         anchors.fill: parent
     }
 
     Shortcut {
-        sequence: StandardKey.AddTab
+        property int index: 0
+        sequence: "Ctrl+S"
         context: Qt.ApplicationShortcut
         onActivated: {
-            if(mode === "desktop") {
-                mode = "mobile"
-            } else {
-                mode = "desktop"
+            mainMobile.grabToImage(function(result) {
+                var filename = "/projects/atomify/screenshots/full_"+index+".png"
+                console.log("Saving image with filename ", filename)
+                result.saveToFile(filename)
+
+                mainMobile.visualizer.grabToImage(function(result) {
+                    var filename = "/projects/atomify/screenshots/vis_"+index+".png"
+                    console.log("Saving image with filename ", filename)
+                    result.saveToFile(filename)
+                    index = index + 1
+                })
+            })
+        }
+    }
+
+    Shortcut {
+        property var widths: [960, 1136, 1334, 2208, 2048, 2732]
+        property var heights: [640, 640, 750, 1242, 1536, 2048]
+        property int index: 0
+        sequence: "Tab"
+        context: Qt.ApplicationShortcut
+        onActivated: {
+            console.log("Changing resolution to ", widths[index], " x ", heights[index])
+            applicationRoot.width = widths[index]
+            applicationRoot.height = heights[index]
+
+            index = index + 1
+            if(index > 5) {
+                index = 0;
             }
         }
     }
+
     Shortcut {
         sequence: StandardKey.FullScreen
         context: Qt.ApplicationShortcut
