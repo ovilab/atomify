@@ -69,6 +69,7 @@ Item {
 
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: Style.font.color
+            font.pixelSize: Style.font.size
             text: "
 We simulate how atoms and molecules behave with a physical model called molecular dynamics. It uses Newton's laws to move atoms around following the laws of physics. You can study gases, liquids and solids to see different properties and effects. Atomify is open source and uses LAMMPS as physics engine.
 "
@@ -80,6 +81,7 @@ We simulate how atoms and molecules behave with a physical model called molecula
                 anchors.left: parent.left
                 anchors.margins: Style.baseMargin
                 color: Style.font.color
+                font.pixelSize: Style.font.size
                 text:
 "Anders Hafreager and Svenn-Arne Dragly
 PhD candidates, University of Oslo"
