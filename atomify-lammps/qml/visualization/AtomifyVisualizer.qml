@@ -18,7 +18,8 @@ Scene3D {
     id: root
     property alias visualizer: visualizer
     property alias simulator: simulator
-    // property alias rdf: rdf
+    property alias light1: light1
+    property alias light2: light2
     property real scale: 0.23
     property alias nearPlane: mainCamera.nearPlane
     property alias farPlane: mainCamera.farPlane
@@ -521,22 +522,14 @@ void main()
                         color: finalShaderBuilder.color
                         lights: [
                             Light {
-                                // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
-                                position: visualizer.camera.position.plus(
-                                              (visualizer.camera.viewVector.normalized().plus(
-                                                   visualizer.camera.upVector.normalized()).plus(
-                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                                //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
-                                strength: 0.4
-                                attenuation: 0.0
+                                position: light1.position
+                                strength: light1.strength
+                                attenuation: light1.attenuation
                             },
                             Light {
-                                position: visualizer.camera.position.minus(
-                                              (visualizer.camera.viewVector.normalized().plus(
-                                                   visualizer.camera.upVector.normalized()).plus(
-                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                                strength: 0.4
-                                attenuation: 0.0
+                                position: light2.position
+                                strength: light2.strength
+                                attenuation: light2.attenuation
                             }
                         ]
                     }
@@ -664,16 +657,16 @@ void main()
                 color: spheres.fragmentBuilder.color
                 lights: [
                     Light {
-                        // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
+                        id: light1
                         position: visualizer.camera.position.plus(
                                       (visualizer.camera.viewVector.normalized().plus(
                                            visualizer.camera.upVector.normalized()).plus(
                                            visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                        //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
                         strength: 0.4
                         attenuation: 0.0
                     },
                     Light {
+                        id: light2
                         position: visualizer.camera.position.minus(
                                       (visualizer.camera.viewVector.normalized().plus(
                                            visualizer.camera.upVector.normalized()).plus(
@@ -683,7 +676,6 @@ void main()
                     }
                 ]
             }
-
         }
 
         Bonds {
@@ -695,22 +687,14 @@ void main()
                 color: spheres.fragmentBuilder.color
                 lights: [
                     Light {
-                        // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
-                        position: visualizer.camera.position.plus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                        //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
-                        strength: 0.4
-                        attenuation: 0.0
+                        position: light1.position
+                        strength: light1.strength
+                        attenuation: light1.attenuation
                     },
                     Light {
-                        position: visualizer.camera.position.minus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                        strength: 0.4
-                        attenuation: 0.0
+                        position: light2.position
+                        strength: light2.strength
+                        attenuation: light2.attenuation
                     }
                 ]
             }

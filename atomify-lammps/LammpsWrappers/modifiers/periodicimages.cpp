@@ -42,7 +42,6 @@ void PeriodicImages::apply(AtomData &atomData)
                 for(int atomIndex = 0; atomIndex<originalCount; atomIndex++) {
                     atomData.positions[nextIndex] = atomData.positions[atomIndex];
                     atomData.deltaPositions[nextIndex] = deltaPosition;
-                    // atomData.deltaPositions[nextIndex] = QVector3D(0,0,0);
                     atomData.colors[nextIndex] = atomData.colors[atomIndex];
                     atomData.radii[nextIndex] = atomData.radii[atomIndex];
                     atomData.originalIndex[nextIndex] = atomIndex;

@@ -7,6 +7,7 @@ Page {
     id: root
     property System system
     property AtomifyVisualizer visualizer
+    focusPolicy: Qt.NoFocus
 
     SwipeView {
         id: swipeView
@@ -23,12 +24,16 @@ Page {
         Rendering {
             width: swipeView.width
             height: swipeView.height
+            visualizer: root.visualizer
         }
     }
 
     header: TabBar {
         id: tabBar
         currentIndex: swipeView.currentIndex
+        onCurrentIndexChanged: {
+            visualizer.focus = true // TODO: must be a better way?
+        }
 
         TabButton {
             text: "Simulation"

@@ -11,7 +11,7 @@ import Qt.labs.settings 1.0
 import "../visualization"
 import "editor"
 Item {
-    id: desktopRoot
+    id: root
 
     property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
@@ -35,8 +35,8 @@ Item {
                 Layout.fillHeight: true
                 width: 500
 
-                simulator: desktopRoot.simulator
-                visualizer: desktopRoot.visualizer
+                simulator: root.simulator
+                visualizer: root.visualizer
                 Component.onCompleted: {
                     simulator.errorInLammpsScript.connect(editorTab.reportError)
                 }
@@ -68,6 +68,7 @@ Item {
             width: 300
             height: parent.height
             system: simulator.system ? simulator.system : null
+            visualizer: root.visualizer
 
             Column {
 
@@ -290,9 +291,9 @@ Item {
 
     ControlBar {
         id: controlBar1
-        simulator: desktopRoot.simulator
-        visualizer: desktopRoot.visualizer
-        visible: !desktopRoot.focusMode
+        simulator: root.simulator
+        visualizer: root.visualizer
+        visible: !root.focusMode
         x: visualizer.x + visualizer.width*0.5 - 0.5*width
 
         y: parent.height - 100

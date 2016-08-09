@@ -16,8 +16,6 @@ Pane {
     }
 
     function getGlobalPosition(p, item) {
-        console.log("Item: ", item)
-        console.log("Parent: ", item.parent)
         var globalX = p.x
         var globalY = p.y
         while(item.parent != undefined) {
@@ -85,37 +83,29 @@ Pane {
                     text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
                 }
                 Label {
-
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
                 }
                 Label {
-
                     text: "System volume: "+system.volume.toFixed(2)
                 }
                 Label {
-
                     text: "Units: "+system.units.name
                 }
                 Label {
-
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Label {
-
                     text: "Average density: "+(system.numberOfAtoms/system.volume).toFixed(4)
                 }
                 Label {
-
                     text: "Number of atom types: "+system.numberOfAtomTypes
                 }
 
                 Label {
-
                     text: "Timesteps: "+system.timesteps
                 }
 
                 Label {
-
                     text: "Time: "+system.simulationTime.toFixed(2)
                 }
 
