@@ -69,12 +69,12 @@ Scene3D {
 
         ForwardFrameGraph {
             id: forwardFrameGraph
-
+            window: deferredFrameGraph.window
             camera: mainCamera
         }
         DeferredFrameGraph {
             id: deferredFrameGraph
-            window: forwardFrameGraph.window
+//            window: forwardFrameGraph.window
             width: root.width
             height: root.height
             camera: mainCamera
