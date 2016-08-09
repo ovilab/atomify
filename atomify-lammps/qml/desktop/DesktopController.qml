@@ -130,6 +130,19 @@ Entity {
                         buttons: [Qt.Key_S]
                         scale: d.shiftPressed ? 0.0 : -1.0
                     }
+                },
+                Axis {
+                    id: rollAxis
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_E]
+                        scale: d.shiftPressed ? 0.0 : 1.0
+                    }
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_Q]
+                        scale: d.shiftPressed ? 0.0 : -1.0
+                    }
                 }
             ] // axes
         },
@@ -146,6 +159,7 @@ Entity {
                 var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
                 root.camera.translate(Qt.vector3d(keyboardXAxis.value*speed, 0.0, keyboardYAxis.value*speed))
                 root.camera.viewCenter = Qt.vector3d(0,0,0)
+                root.camera.roll(rollAxis.value*speed);
 
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt
