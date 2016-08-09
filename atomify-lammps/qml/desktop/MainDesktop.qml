@@ -296,7 +296,7 @@ Item {
         x: visualizer.x + visualizer.width*0.5 - 0.5*width
 
         y: parent.height - 100
-        width: 300
-        height: 50
+        width: 320
+        height: 64
     }
 }
