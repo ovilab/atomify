@@ -20,6 +20,8 @@ Scene3D {
     property alias simulator: simulator
     // property alias rdf: rdf
     property real scale: 0.23
+    property alias nearPlane: mainCamera.nearPlane
+    property alias farPlane: mainCamera.farPlane
     property bool addPeriodicCopies: false
     property alias ambientOcclusion: ambientOcclusion
     property alias finalShaderBuilder: finalShaderBuilder
@@ -306,7 +308,6 @@ void main()
 
 uniform highp sampler2D ssaoTexture;
 uniform highp sampler2D depthTexture;
-
 uniform highp vec2 winSize;
 uniform highp int blurSize;
 
@@ -326,8 +327,8 @@ out highp vec4 fragColor;
 #pragma shadernodes header
 
 highp float blurLinearizeDepth(highp float z) {
-    highp float f=200.0;
-    highp float n = 2.0;
+    highp float f="+root.farPlane+";
+    highp float n = "+root.nearPlane+";
 
     return (2.0 * n) / (f + n - z * (f - n));
 }
@@ -339,6 +340,7 @@ void main()
     highp float fragDepth = blurLinearizeDepth(texture(depthTexture, texCoord).x);
     highp vec3 result = texture(ssaoTexture, texCoord).rgb;
     highp int sampleCount = 1;
+
     for(int i = 0; i < blurSize; i++) {
         for(int j = 0; j < blurSize; j++) {
             highp vec2 offset = scale * (vec2(i, j) - blurSizeHalf);
