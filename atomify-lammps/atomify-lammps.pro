@@ -126,4 +126,5 @@ DISTFILES += \
     iOS.plist \
     simulations/diffusion/indent/indent.png \
     simulations/diffusion/indent/indent.in \
-    simulations/diffusion/indent/indent.qml
+    simulations/diffusion/indent/indent.qml \
+    ../.travis.yml
