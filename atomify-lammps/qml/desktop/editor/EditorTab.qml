@@ -3,7 +3,7 @@ import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 import SimVis 1.0
-import "../visualization"
+import "../../visualization"
 Item {
     id: editorTabRoot
     property TextArea consoleOutput: myConsole.output
