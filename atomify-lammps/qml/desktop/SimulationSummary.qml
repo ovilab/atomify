@@ -89,7 +89,7 @@ Rectangle {
                 }
                 Text {
                     font.bold: true
-                    text: "System volume: "+system.volume
+                    text: "System volume: "+system.volume.toFixed(2)
                 }
                 Text {
                     font.bold: true
