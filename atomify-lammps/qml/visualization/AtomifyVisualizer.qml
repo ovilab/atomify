@@ -30,17 +30,6 @@ Scene3D {
     property alias periodicImages: periodicImages
     property string renderMode: "deferred"
 
-    onRenderModeChanged: {
-        //        console.log(renderMode)
-        //        console.log("deferred1", deferredFrameGraph)
-        //        console.log("forward1", forwardFrameGraph)
-        //        if(root.renderMode == "deferred") {
-        //            renderSettings.activeFrameGraph = forwardFrameGraph2
-        //        } else {
-        //            renderSettings.activeFrameGraph = forwardFrameGraph
-        //        }
-    }
-
     onBondRadiusChanged: {
         if(simulator != undefined) {
             simulator.system.atoms.bondRadius = bondRadius
