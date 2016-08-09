@@ -2,10 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>desktop/MainDesktop.qml</file>
-        <file>desktop/AnalysisTab.qml</file>
         <file>desktop/SliceControl.qml</file>
-        <file>desktop/AtomStyleControl.qml</file>
-        <file>desktop/LightControl.qml</file>
         <file>desktop/SimulationSummary.qml</file>
         <file>desktop/MeasureTab.qml</file>
         <file>desktop/ShortcutsTab.qml</file>
