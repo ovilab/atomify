@@ -99,6 +99,51 @@ void LineNumbers::setErrorLine(int errorLine)
         emit errorLineChanged(errorLine);
 }
 
+void LineNumbers::setColor(QColor color)
+{
+    if (m_color == color)
+            return;
+
+        m_color = color;
+        emit colorChanged(color);
+}
+
+void LineNumbers::setSelectedColor(QColor selectedColor)
+{
+    if (m_selectedColor == selectedColor)
+            return;
+
+        m_selectedColor = selectedColor;
+        emit selectedColorChanged(selectedColor);
+}
+
+void LineNumbers::setErrorColor(QColor errorColor)
+{
+    if (m_errorColor == errorColor)
+            return;
+
+        m_errorColor = errorColor;
+        emit errorColorChanged(errorColor);
+}
+
+void LineNumbers::setActiveColor(QColor activeColor)
+{
+    if (m_activeColor == activeColor)
+            return;
+
+        m_activeColor = activeColor;
+        emit activeColorChanged(activeColor);
+}
+
+void LineNumbers::setFont(QFont font)
+{
+    if (m_font == font)
+            return;
+
+        m_font = font;
+        emit fontChanged(font);
+}
+
 
 void LineNumbers::paint(QPainter *painter)
 {
@@ -120,46 +165,27 @@ void LineNumbers::paint(QPainter *painter)
     int numLines = lastLineVisible - firstLineVisible;
     for(int i=0; i<numLines; i++) {
         int lineNumber = i+firstLineVisible+1;
-        QFont font("times", 24);
-        QFontMetrics fm(font);
         QString text = QString("%1").arg(lineNumber);
-        int textWidth = fm.width(text);
-        int textHeight = m_lineHeight;
-        float x = width()-textWidth*0.5 - 5;
-        float y = 5 + i*m_lineHeight - rest;
-        QRectF textRect(x,y,textWidth,textHeight);
+        float y = i*m_lineHeight - rest;
+        QRectF textRect(0,y,width(),m_lineHeight);
 
+        painter->setFont(m_font);
+        painter->setPen(m_color);
         if(lineNumber >= selectedTextStartLine && lineNumber < selectedTextStartLine+numLinesSelected) {
-            QRectF selectedTextRect(0,y,width(),textHeight);
-            painter->setPen(QColor("#b2d7ff"));
-            painter->drawRect(selectedTextRect);
-            painter->fillRect(selectedTextRect, QColor("#b2d7ff"));
+            painter->setPen(m_selectedColor);
         }
-
         if(lineNumber == cursorLine) {
-            QRectF selectedTextRect(0,y,width(),textHeight);
-            painter->setPen(Qt::lightGray);
-            painter->drawRect(selectedTextRect);
-            painter->fillRect(selectedTextRect, Qt::lightGray);
+            painter->setPen(m_selectedColor);
         }
-
         if(lineNumber == m_currentLine) {
-            QRectF selectedTextRect(0,y,width(),textHeight);
-            painter->setPen(QColor("lightGreen"));
-            painter->drawRect(selectedTextRect);
-            painter->fillRect(selectedTextRect, QColor("lightGreen"));
+            painter->setPen(m_activeColor);
         }
-
         if(lineNumber == m_errorLine) {
-            QRectF selectedTextRect(0,y,width(),textHeight);
-            painter->setPen(QColor("red"));
-            painter->drawRect(selectedTextRect);
-            painter->fillRect(selectedTextRect, QColor("red"));
+            painter->setPen(m_errorColor);
         }
-
-        painter->setPen(Qt::black);
-        painter->drawText(textRect, text);
-
+        QTextOption options;
+        options.setAlignment(Qt::AlignRight);
+        painter->drawText(textRect, text, options);
     }
 }
 
@@ -191,6 +217,31 @@ int LineNumbers::currentLine() const
 int LineNumbers::errorLine() const
 {
     return m_errorLine;
+}
+
+QColor LineNumbers::color() const
+{
+    return m_color;
+}
+
+QColor LineNumbers::selectedColor() const
+{
+    return m_selectedColor;
+}
+
+QColor LineNumbers::errorColor() const
+{
+    return m_errorColor;
+}
+
+QColor LineNumbers::activeColor() const
+{
+    return m_activeColor;
+}
+
+QFont LineNumbers::font() const
+{
+    return m_font;
 }
 
 float LineNumbers::lineHeight() const
