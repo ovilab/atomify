@@ -1,5 +1,7 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.5
+import QtQuick.Controls 1.5 as QQC1
+import QtQuick.Controls 2.0
+
 import QtQuick.Dialogs 1.2
 import Atomify 1.0
 
@@ -81,7 +83,7 @@ Item {
         fileName: "untitled"
     }
 
-    TextArea {
+    QQC1.TextArea {
         id: textArea
         height: parent.height
         width: parent.width-lineNumbers.width
