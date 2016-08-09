@@ -126,7 +126,10 @@ Item {
         spacing: 0
         TabBar {
             id: tabBar
-            width: parent.width
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
             CodeEditorTabButton {
                 text: codeEditor_1.title
