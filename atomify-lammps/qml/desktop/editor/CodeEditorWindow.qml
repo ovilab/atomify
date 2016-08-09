@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import Qt.labs.settings 1.0
 //import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
@@ -78,14 +79,14 @@ Item {
 
     function openTab(filename) {
         if(filename === undefined) {
-            fileDialogLoad.cb = function() {
+            fileDialog.cb = function() {
                 if(currentEditor.title === "untitled" && currentEditor.text === "") {
-                    currentEditor.open(fileDialogLoad.fileUrl)
+                    currentEditor.open(fileDialog.fileUrl)
                 } else {
                     var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
                     var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
                     newTabButton.codeEditor = newCodeEditor
-                    newCodeEditor.open(fileDialogLoad.fileUrl)
+                    newCodeEditor.open(fileDialog.fileUrl)
                     newCodeEditor.changedSinceLastSave = false
                     tabBar.setCurrentIndex(tabBar.count-1)
                     newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
@@ -93,7 +94,7 @@ Item {
                 }
 
             }
-            fileDialogLoad.visible = true
+            fileDialog.visible = true
         } else {
             // First check if its open
             for(var i=0; i<stackLayout.count; i++) {
@@ -114,6 +115,10 @@ Item {
             tabBar.setCurrentIndex(tabBar.count-1)
             newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
         }
+    }
+
+    Settings {
+        property alias lastOpenedFolder: fileDialog.folder
     }
 
     ColumnLayout {
@@ -145,7 +150,7 @@ Item {
     }
 
     FileDialog {
-        id: fileDialogLoad
+        id: fileDialog
         selectExisting : true
         property var cb
         title: "Please choose a file"
@@ -162,6 +167,7 @@ Item {
         title: "Save Changes"
         text: "Do you want to save the changes you made to "
         standardButtons: StandardButton.Save  | StandardButton.Discard | StandardButton.Cancel
+
         onAccepted: {
             currentEditor.save(function() {
                 console.log("Save dialog callback and cancel: ", currentEditor.cancelCloseEditor)

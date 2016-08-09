@@ -1,17 +1,22 @@
 <RCC>
     <qresource prefix="/">
-        <file>desktop/MainDesktop.qml</file>
-        <file>visualization/AtomifyVisualizer.qml</file>
-        <file>desktop/LammpsEditor.qml</file>
-        <file>desktop/AnalysisTab.qml</file>
-        <file>desktop/SliceControl.qml</file>
-        <file>desktop/AtomStyleControl.qml</file>
-        <file>desktop/LightControl.qml</file>
-        <file>desktop/Console.qml</file>
-        <file>desktop/EditorTab.qml</file>
-        <file>desktop/SimulationSummary.qml</file>
-        <file>mobile/MainMobile.qml</file>
         <file>main.qml</file>
+        <file>desktop/MainDesktop.qml</file>
+        <file>desktop/SliceControl.qml</file>
+        <file>desktop/SimulationSummary.qml</file>
+        <file>desktop/MeasureTab.qml</file>
+        <file>desktop/ShortcutsTab.qml</file>
+        <file>desktop/DesktopController.qml</file>
+        <file>desktop/ControlBar.qml</file>
+        <file>desktop/DisableMessage.qml</file>
+        <file>desktop/editor/CodeEditor.qml</file>
+        <file>desktop/editor/CodeEditorTabButton.qml</file>
+        <file>desktop/editor/CodeEditorWindow.qml</file>
+        <file>desktop/editor/LammpsEditor.qml</file>
+        <file>desktop/editor/EditorTab.qml</file>
+        <file>desktop/editor/Console.qml</file>
+        <file>visualization/AtomifyVisualizer.qml</file>
+        <file>mobile/MainMobile.qml</file>
         <file>mobile/main-menu/MainMenu.qml</file>
         <file>mobile/main-menu/MainMenuButton.qml</file>
         <file>mobile/style/CustomSliderStyle.qml</file>
@@ -42,19 +47,11 @@
         <file>mobile/dashboard/controls/MiniChart.qml</file>
         <file>mobile/dashboard/controls/ChartScroller.qml</file>
         <file>mobile/dashboard/controls/AutoZoomMiniChart.qml</file>
-        <file>desktop/MeasureTab.qml</file>
         <file>RDFItem.qml</file>
         <file>CPLineSeries.qml</file>
-        <file>desktop/ShortcutsTab.qml</file>
         <file>TemperatureItem.qml</file>
-        <file>desktop/DesktopController.qml</file>
         <file>plotting/ComputePlotter.qml</file>
         <file>plotting/LabelButton.qml</file>
-        <file>desktop/ControlBar.qml</file>
-        <file>desktop/DisableMessage.qml</file>
-        <file>desktop/CodeEditor.qml</file>
-        <file>desktop/CodeEditorTabButton.qml</file>
-        <file>desktop/CodeEditorWindow.qml</file>
         <file>visualization/DeferredFrameGraph.qml</file>
         <file>visualization/ForwardFrameGraph.qml</file>
         <file>qtquickcontrols2.conf</file>

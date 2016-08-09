@@ -4,7 +4,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 import SimVis 1.0
-import "../visualization"
+import "../../visualization"
 Pane {
     id: editorTabRoot
     property TextArea consoleOutput: consoleItem.output

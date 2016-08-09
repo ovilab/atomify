@@ -22,23 +22,35 @@ Rectangle {
     
     NumberAnimation on opacity {
         id: hide
-        to: 0; duration: 200
+        to: 0; duration: 500
     }
     
     NumberAnimation on opacity {
         id: show
         to: 0.8; duration: 200
+        onStarted: {
+            hideTimer.start()
+        }
     }
     
     Label {
         id: tabDisableLabel
         x: 8
         y: 5
-        text: "Press Tab to disable focus mode (click to hide)"
+        text: "Press Tab to disable focus mode"
     }
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            hide.start()
+        }
+    }
+
+
+    Timer {
+        id: hideTimer
+        interval: 5000
+        onTriggered: {
             hide.start()
         }
     }

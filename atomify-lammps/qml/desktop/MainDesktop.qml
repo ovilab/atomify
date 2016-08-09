@@ -9,7 +9,7 @@ import SimVis 1.0
 import Qt.labs.settings 1.0
 
 import "../visualization"
-
+import "editor"
 Item {
     id: desktopRoot
 

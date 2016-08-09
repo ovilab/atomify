@@ -93,7 +93,7 @@ Pane {
                 }
                 Label {
 
-                    text: "System volume: "+system.volume
+                    text: "System volume: "+system.volume.toFixed(2)
                 }
                 Label {
 
