@@ -57,5 +57,6 @@
         <file>desktop/CodeEditorWindow.qml</file>
         <file>visualization/DeferredFrameGraph.qml</file>
         <file>visualization/ForwardFrameGraph.qml</file>
+        <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>

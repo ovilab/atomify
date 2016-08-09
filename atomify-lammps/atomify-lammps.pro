@@ -127,4 +127,5 @@ DISTFILES += \
     simulations/diffusion/indent/indent.png \
     simulations/diffusion/indent/indent.in \
     simulations/diffusion/indent/indent.qml \
-    ../.travis.yml
+    ../.travis.yml \
+    qml/qtquickcontrols2.conf
