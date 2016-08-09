@@ -62,7 +62,7 @@ Item {
 
         }
 
-        SimulationSummary {
+        RightBar {
             id: simulationSummary
 
             width: 300

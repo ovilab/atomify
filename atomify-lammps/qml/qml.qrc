@@ -55,5 +55,7 @@
         <file>visualization/DeferredFrameGraph.qml</file>
         <file>visualization/ForwardFrameGraph.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>desktop/Rendering.qml</file>
+        <file>desktop/RightBar.qml</file>
     </qresource>
 </RCC>

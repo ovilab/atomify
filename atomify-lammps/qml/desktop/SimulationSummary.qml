@@ -7,9 +7,6 @@ Pane {
     id: rectangleRoot
     property System system
 
-//    radius: 4
-//    color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
-
     onSystemChanged: {
         if(system) {
             system.groups.onActiveChanged.connect(updateGroups)
