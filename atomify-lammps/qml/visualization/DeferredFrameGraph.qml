@@ -130,12 +130,12 @@ Viewport {
                                 attachmentPoint : RenderTargetOutput.Color0
                                 texture : Texture2D {
                                     id : ssaoTexture
-                                    width : 0.5*root.width
-                                    height : 0.5*root.width // TODO use height?
+                                    width : root.width
+                                    height : root.width // TODO use height?
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
-                                    magnificationFilter : Texture.Linear
-                                    minificationFilter : Texture.Linear
+                                    magnificationFilter : Texture.Nearest
+                                    minificationFilter : Texture.Nearest
                                     wrapMode {
                                         x: WrapMode.ClampToEdge
                                         y: WrapMode.ClampToEdge
@@ -167,8 +167,8 @@ Viewport {
                                     height : root.width // TODO use height?
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
-                                    magnificationFilter : Texture.Linear
-                                    minificationFilter : Texture.Linear
+                                    magnificationFilter : Texture.Nearest
+                                    minificationFilter : Texture.Nearest
                                     wrapMode {
                                         x: WrapMode.ClampToEdge
                                         y: WrapMode.ClampToEdge

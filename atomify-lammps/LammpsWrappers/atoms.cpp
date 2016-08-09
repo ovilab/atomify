@@ -120,9 +120,12 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
-        m_atomData.positions[i][0] = position[0];
-        m_atomData.positions[i][1] = position[1];
-        m_atomData.positions[i][2] = position[2];
+//        m_atomData.positions[i][0] = position[0];
+//        m_atomData.positions[i][1] = position[1];
+//        m_atomData.positions[i][2] = position[2];
+        m_atomData.positions[i][0] = position[0] - (lammps->domain->boxlo[0] + lammps->domain->prd_half[0]);
+        m_atomData.positions[i][1] = position[1] - (lammps->domain->boxlo[1] + lammps->domain->prd_half[1]);
+        m_atomData.positions[i][2] = position[2] - (lammps->domain->boxlo[2] + lammps->domain->prd_half[2]);
         m_atomData.bitmask[i] = atom->mask[i];
         m_atomData.visible[i] = true;
     }
