@@ -145,6 +145,7 @@ Entity {
 
                 var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
                 root.camera.translate(Qt.vector3d(keyboardXAxis.value*speed, 0.0, keyboardYAxis.value*speed))
+                root.camera.viewCenter = Qt.vector3d(0,0,0)
 
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt
