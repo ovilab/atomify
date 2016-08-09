@@ -57,5 +57,6 @@
         <file>qtquickcontrols2.conf</file>
         <file>desktop/Rendering.qml</file>
         <file>desktop/RightBar.qml</file>
+        <file>desktop/Examples.qml</file>
     </qresource>
 </RCC>

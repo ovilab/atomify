@@ -26,6 +26,10 @@ Page {
             height: swipeView.height
             visualizer: root.visualizer
         }
+
+        Examples {
+
+        }
     }
 
     header: TabBar {
@@ -37,9 +41,15 @@ Page {
 
         TabButton {
             text: "Simulation"
+            font.pixelSize: 12
         }
         TabButton {
             text: "Rendering"
+            font.pixelSize: 12
+        }
+        TabButton {
+            text: "Examples"
+            font.pixelSize: 12
         }
     }
 }

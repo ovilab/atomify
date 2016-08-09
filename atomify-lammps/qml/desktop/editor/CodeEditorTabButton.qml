@@ -4,6 +4,7 @@ import QtQuick.Controls 2.0
 TabButton {
     id: root
     property CodeEditor codeEditor
+    font.pixelSize: 12
     height: parent ? parent.height : 0
     onCodeEditorChanged: {
         if(codeEditor === undefined || codeEditor === null) return

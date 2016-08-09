@@ -115,7 +115,7 @@ Item {
             font.family: "DejaVu Sans Mono"
             font.pixelSize: 12
 
-            text: "variable L equal 12.0
+            text: "variable L equal 6.0
 variable thickness equal 3.0
 
 units lj
