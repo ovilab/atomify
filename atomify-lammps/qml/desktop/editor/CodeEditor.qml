@@ -132,7 +132,7 @@ run 100
 "
 
         function update() {
-            var lineHeight = 16;//(contentHeight-8) / lineCount
+            var lineHeight = (contentHeight-2*textMargin) / lineCount
             lineNumbers.lineCount = lineCount
             lineNumbers.scrollY = flickableItem.contentY
             lineNumbers.lineHeight = lineHeight
