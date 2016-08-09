@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.5
+import QtQuick.Controls 2.0
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -15,7 +15,6 @@ import "desktop"
 ApplicationWindow {
     id: applicationRoot
 
-//    anchors.fill: parent
     visible: true
 
     property string mode: {
