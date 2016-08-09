@@ -64,11 +64,14 @@ Item {
 
         SimulationSummary {
             id: simulationSummary
+
             width: 300
             height: parent.height
             system: simulator.system ? simulator.system : null
 
             Column {
+
+                visible: false
                 y: parent.height - 300
                 width: parent.width
                 Row {

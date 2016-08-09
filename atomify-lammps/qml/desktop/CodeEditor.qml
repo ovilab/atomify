@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.5
+import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.2
 import Atomify 1.0
 
@@ -13,6 +13,8 @@ Item {
     property bool changedSinceLastSave: false
     property int currentLine: -1
     property int errorLine: -1
+
+    clip: true
 
     onCurrentLineChanged: {
         lineNumbers.currentLine = currentLine
@@ -72,8 +74,18 @@ Item {
 
     LineNumbers {
         id: lineNumbers
-        height: parent.height
-        width: 40
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            margins: 16
+        }
+        width: 30
+
+        color: "#777"
+        selectedColor: "#ddd"
+        errorColor: "#e77"
+        activeColor: "#7e7"
+        font: textArea.font
     }
 
     CodeEditorBackend {
@@ -81,15 +93,28 @@ Item {
         fileName: "untitled"
     }
 
-    TextArea {
-        id: textArea
-        height: parent.height
-        width: parent.width-lineNumbers.width
-        anchors.left: lineNumbers.right
-        wrapMode: TextEdit.NoWrap
-        textFormat: TextEdit.AutoText
-        focus: false
-        text: "variable L equal 12.0
+    Flickable {
+        id: flickableItem
+        anchors {
+            top: lineNumbers.top
+            topMargin: -8
+            left: lineNumbers.right
+            leftMargin: 16
+            right: parent.right
+            bottom: parent.bottom
+        }
+        clip: true
+
+        TextArea.flickable: TextArea {
+            id: textArea
+            clip: true
+            wrapMode: TextArea.NoWrap
+            selectByMouse: true
+            selectByKeyboard: true
+            font.family: "DejaVu Sans Mono"
+            font.pixelSize: 12
+
+            text: "variable L equal 12.0
 variable thickness equal 3.0
 
 units lj
@@ -129,34 +154,29 @@ run 50
 run 100
 "
 
-        function update() {
-            var lineHeight = 16;//(contentHeight-8) / lineCount
-            lineNumbers.lineCount = lineCount
-            lineNumbers.scrollY = flickableItem.contentY
-            lineNumbers.lineHeight = lineHeight
-            lineNumbers.cursorPosition = cursorPosition
-            lineNumbers.selectionStart = selectionStart
-            lineNumbers.selectionEnd = selectionEnd
-            lineNumbers.text = text
-            lineNumbers.update()
-        }
+            Component.onCompleted: {
+                flickableItem.contentYChanged.connect(update)
+                update()
+            }
 
-        Component.onCompleted: {
-            flickableItem.contentYChanged.connect(update)
-            update()
-        }
+            onTextChanged: {
+                update()
+            }
 
-        onTextChanged: {
-            changedSinceLastSave = true
+            function update() {
+                var lineHeight = (contentHeight-textMargin) / lineCount
+                lineNumbers.lineCount = lineCount
+                lineNumbers.scrollY = flickableItem.contentY
+                lineNumbers.lineHeight = lineHeight
+                lineNumbers.cursorPosition = cursorPosition
+                lineNumbers.selectionStart = selectionStart
+                lineNumbers.selectionEnd = selectionEnd
+                lineNumbers.text = text
+                lineNumbers.update()
+            }
         }
+        ScrollBar.vertical: ScrollBar {}
 
-        onLinkActivated: {
-            console.log("Clicked link: ", hoveredLink)
-        }
-
-        onLineCountChanged: update()
-        onHeightChanged: update()
-        onCursorPositionChanged: update()
     }
 
     FileDialog {

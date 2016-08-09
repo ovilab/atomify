@@ -1,18 +1,19 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.5
+import QtQuick.Controls 1.5 as QQC1
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 import SimVis 1.0
 import "../visualization"
-Item {
+Pane {
     id: editorTabRoot
-    property TextArea consoleOutput: myConsole.output
-    property alias lammpsEditor: myLammpsEditor
+    property TextArea consoleOutput: consoleItem.output
+    property alias lammpsEditor: lammpsEditor
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
     onConsoleOutputChanged: {
         consoleOutput.onLinkActivated.connect(function(link){
-            myLammpsEditor.codeEditorWindow.openTab(link)
+            lammpsEditor.codeEditorWindow.openTab(link)
         })
     }
 
@@ -22,7 +23,7 @@ Item {
                 consoleOutput.append(" Simulation crashed on line "+simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
-                myLammpsEditor.codeEditorWindow.errorLine = simulator.lammpsError.line
+                lammpsEditor.codeEditorWindow.errorLine = simulator.lammpsError.line
             } else {
                 consoleOutput.append(" Simulation crashed.")
                 consoleOutput.append(" File: <a href=\"file://" + simulator.lammpsError.scriptFile + "\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
@@ -32,20 +33,46 @@ Item {
         }
     }
 
-    SplitView {
-        orientation: Qt.Vertical
+    ColumnLayout {
         anchors.fill: parent
 
         LammpsEditor {
-            id: myLammpsEditor
+            id: lammpsEditor
             simulator: editorTabRoot.simulator
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.minimumHeight: 200
+            onClearConsole: consoleItem.clear()
+        }
+
+        RowLayout {
+            anchors {
+                right: parent.right
+            }
+
+            Button {
+                id: clear
+                text: "Clear output"
+                onClicked: {
+                    consoleItem.clear()
+                }
+            }
+            Button {
+                id: runButton
+                anchors {
+                    right: parent.right
+                }
+                text: "Run script"
+                onClicked: {
+                    lammpsEditor.runScript()
+                }
+            }
         }
 
         Console {
-            id: myConsole
+            id: consoleItem
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.maximumHeight: 200
             simulator: editorTabRoot.simulator
         }
     }

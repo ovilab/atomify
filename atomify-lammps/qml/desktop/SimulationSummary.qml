@@ -1,13 +1,14 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.2
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 import Atomify 1.0
 import "../plotting"
-Rectangle {
+Pane {
     id: rectangleRoot
     property System system
-    radius: 4
-    color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
+
+//    radius: 4
+//    color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
 
     onSystemChanged: {
         if(system) {
@@ -72,49 +73,52 @@ Rectangle {
     }
 
     Column {
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            margins: 16
+        }
+
         spacing: 10
         GroupBox {
             width: parent.width
             title: "Simulation summary"
 
             Column {
-                Text {
-                    font.bold: true
+                Label {
                     text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
                 }
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
                 }
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "System volume: "+system.volume
                 }
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "Units: "+system.units.name
                 }
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "Average density: "+(system.numberOfAtoms/system.volume).toFixed(4)
                 }
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "Number of atom types: "+system.numberOfAtomTypes
                 }
 
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "Timesteps: "+system.timesteps
                 }
 
-                Text {
-                    font.bold: true
+                Label {
+
                     text: "Time: "+system.simulationTime.toFixed(2)
                 }
 

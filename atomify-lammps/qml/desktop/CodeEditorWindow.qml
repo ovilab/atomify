@@ -34,7 +34,6 @@ Item {
         newTabButton.codeEditor = newCodeEditor
         newCodeEditor.changedSinceLastSave = false
         tabBar.setCurrentIndex(tabBar.count-1) // select it
-        newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
         focusCurrentEditor()
     }
 
@@ -120,23 +119,13 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
-        Row {
-            Layout.fillWidth: true
-            TabBar {
-                id: tabBar
-                width: parent.width - newTabButton.width
+        TabBar {
+            id: tabBar
+            width: parent.width
 
-                CodeEditorTabButton {
-                    text: codeEditor_1.title
-                    codeEditor: codeEditor_1
-                }
-            }
-            Button {
-                id: newTabButton
-                text: "New"
-                onClicked: {
-                    newTab()
-                }
+            CodeEditorTabButton {
+                text: codeEditor_1.title
+                codeEditor: codeEditor_1
             }
         }
 
@@ -191,62 +180,65 @@ Item {
 
     Item {
         id: shortcuts
+
+        property string tabShortcutModifier: Qt.platform.os === "osx" ? "Ctrl" : "Alt"
+
         Shortcut {
-            sequence: "Ctrl+1"
+            sequence: shortcuts.tabShortcutModifier + "+1"
             onActivated: {
                 if(editorCount >= 1) tabBar.setCurrentIndex(0)
             }
         }
         Shortcut {
-            sequence: "Ctrl+2"
+            sequence: shortcuts.tabShortcutModifier + "+2"
             onActivated: {
                 if(editorCount >= 2) tabBar.setCurrentIndex(1)
             }
         }
         Shortcut {
-            sequence: "Ctrl+3"
+            sequence: shortcuts.tabShortcutModifier + "+3"
             onActivated: {
                 if(editorCount >= 3) tabBar.setCurrentIndex(2)
             }
         }
         Shortcut {
-            sequence: "Ctrl+4"
+            sequence: shortcuts.tabShortcutModifier + "+4"
             onActivated: {
                 if(editorCount >= 4) tabBar.setCurrentIndex(3)
             }
         }
         Shortcut {
-            sequence: "Ctrl+5"
+            sequence: shortcuts.tabShortcutModifier + "+5"
             onActivated: {
                 if(editorCount >= 5) tabBar.setCurrentIndex(4)
             }
         }
         Shortcut {
-            sequence: "Ctrl+6"
+            sequence: shortcuts.tabShortcutModifier + "+6"
             onActivated: {
                 if(editorCount >= 6) tabBar.setCurrentIndex(5)
             }
         }
         Shortcut {
-            sequence: "Ctrl+7"
+            sequence: shortcuts.tabShortcutModifier + "+7"
             onActivated: {
                 if(editorCount >= 7) tabBar.setCurrentIndex(6)
             }
         }
         Shortcut {
-            sequence: "Ctrl+8"
+            sequence: shortcuts.tabShortcutModifier + "+8"
             onActivated: {
                 if(editorCount >= 8) tabBar.setCurrentIndex(7)
             }
         }
         Shortcut {
-            sequence: "Ctrl+9"
+            sequence: shortcuts.tabShortcutModifier + "+9"
             onActivated: {
                 if(editorCount >= 9) tabBar.setCurrentIndex(8)
             }
         }
         Shortcut {
-            sequence: "Ctrl+0"
+            sequence: shortcuts.tabShortcutModifier + "+0"
             onActivated: {
                 if(editorCount >= 10) tabBar.setCurrentIndex(9)
             }

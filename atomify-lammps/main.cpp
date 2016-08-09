@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     format.setMajorVersion(4);
     format.setMinorVersion(3);
     format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setSamples(32);
+//    format.setSamples(32);
 #endif
     QSurfaceFormat::setDefaultFormat(format);
 

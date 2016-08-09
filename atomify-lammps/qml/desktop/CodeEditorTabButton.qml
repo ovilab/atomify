@@ -4,7 +4,6 @@ import QtQuick.Controls 2.0
 TabButton {
     id: root
     property CodeEditor codeEditor
-    property alias color: rect.color
     height: parent ? parent.height : 0
     onCodeEditorChanged: {
         if(codeEditor === undefined || codeEditor === null) return
@@ -15,16 +14,6 @@ TabButton {
         codeEditor.titleChanged.connect(function() {
             text = codeEditor.title
         })
-    }
-
-    background: Rectangle {
-        id: rect
-        width: parent.width
-        height: parent.height
-    }
-
-    onFocusChanged: {
-        rect.color = root.focus ? "#fff" : "#aaa"
     }
 
     implicitWidth: width

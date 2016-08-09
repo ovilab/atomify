@@ -1,11 +1,14 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import Atomify 1.0
 import Qt.labs.settings 1.0
 
 Item {
     id: lammpsEditorRoot
+
+    signal clearConsole()
+
     property AtomifySimulator simulator
     property alias codeEditorWindow: codeEditorWindow
 
@@ -25,34 +28,9 @@ Item {
         simulator.scriptHandler.runScript(codeEditorWindow.currentEditor.text)
     }
 
-    ColumnLayout {
-        spacing: 2
+    CodeEditorWindow {
+        id: codeEditorWindow
+        currentLine: simulator.scriptHandler.currentLine
         anchors.fill: parent
-
-        CodeEditorWindow {
-            id: codeEditorWindow
-            currentLine: simulator.scriptHandler.currentLine
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
-        }
-
-        RowLayout {
-            spacing: 2
-            Layout.alignment: Qt.AlignBottom
-
-            Button {
-                id: runButton
-                Layout.alignment: Qt.AlignCenter
-                text: "Run"
-                onClicked: {
-                    runScript()
-                }
-            }
-
-            Label {
-                text: "(Press escape to escape editor focus)"
-            }
-        }
     }
 }

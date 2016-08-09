@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 
@@ -8,6 +8,10 @@ ColumnLayout {
     property AtomifySimulator simulator
     property TextArea output: consoleOutput
     property alias textField: singleCommand
+
+    function clear() {
+        consoleOutput.text = ""
+    }
 
     Layout.fillHeight: true
     Layout.fillWidth: true
@@ -18,6 +22,7 @@ ColumnLayout {
         Layout.minimumHeight: 100
         textFormat: TextEdit.RichText
         readOnly: true
+        placeholderText: "No output yet..."
     }
 
     RowLayout {
@@ -34,6 +39,8 @@ ColumnLayout {
                     simulator.scriptHandler.lastSingleCommandString();
                 }
             }
+
+            placeholderText: "Run single LAMMPS command here"
 
             Shortcut {
                 sequence: "Return"
@@ -62,23 +69,6 @@ ColumnLayout {
                 onActivated: {
                     singleCommand.text = simulator.scriptHandler.nextSingleCommandString();
                 }
-            }
-        }
-
-        Button {
-            id: runSingleCommand
-            text: "Run"
-            onClicked: {
-                simulator.scriptHandler.runCommand(singleCommand.text, true)
-                consoleOutput.append(singleCommand.text)
-                singleCommand.text = ""
-            }
-        }
-        Button {
-            id: clear
-            text: "Clear"
-            onClicked: {
-                consoleOutput.text = ""
             }
         }
     }

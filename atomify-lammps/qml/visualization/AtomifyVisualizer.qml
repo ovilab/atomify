@@ -226,12 +226,23 @@ void main()
                         ShaderOutput {
                             name: "fragColor"
                             type: "vec4"
-                            value: AmbientOcclusion {
-                                id: ambientOcclusion
-                                samples: 64
-                                radius: 10
-                                depthTexture: deferredFrameGraph.depthTexture
-                                mode: "hemisphere"
+                            value: Mix {
+                                mix: 0.3
+                                value1: AmbientOcclusion {
+                                    id: ambientOcclusion
+                                    cutoff: 4.0
+                                    samples: 64
+                                    radius: 10
+                                    depthTexture: deferredFrameGraph.depthTexture
+                                    mode: "hemisphere"
+                                }
+                                value2: AmbientOcclusion {
+                                    id: ambientOcclusion2
+                                    samples: ambientOcclusion.samples
+                                    radius: ambientOcclusion.radius / 2.0
+                                    depthTexture: ambientOcclusion.depthTexture
+                                    mode: ambientOcclusion.mode
+                                }
                             }
                         }
                     ]
