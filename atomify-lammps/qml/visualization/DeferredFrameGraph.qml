@@ -33,6 +33,7 @@ Viewport {
         matchAll: FilterKey { name: "renderingStyle"; value: "deferred" }
         RenderSurfaceSelector {
             id: surfaceSelector
+
             RenderPassFilter {
                 id : geometryPass
                 matchAny : FilterKey { name : "pass"; value : "geometry" }

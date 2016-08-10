@@ -28,7 +28,7 @@ Pane {
     Column {
         anchors {
             fill: parent
-            margins: 16
+            margins: 10
         }
         spacing: 10
 
@@ -176,20 +176,18 @@ Pane {
             Row {
                 width: parent.width
                 RadioButton {
+                    focusPolicy: Qt.NoFocus
                     id: renderingQualityLow
                     text: "Low"
                     onCheckedChanged: {
                         if(checked) {
-                            console.log("Trying to change to low")
-                            console.log("Visualizer: ", root.visualizer)
-                            console.log("Visualizer quality before: ", root.visualizer.renderQuality)
                             root.visualizer.renderQuality = "low"
-                            console.log("Visualizer quality after: ", root.visualizer.renderQuality)
                         }
                     }
                 }
                 RadioButton {
                     id: renderingQualityMedium
+                    focusPolicy: Qt.NoFocus
                     text: "Medium"
                     onCheckedChanged: {
                         if(checked) {
@@ -199,6 +197,7 @@ Pane {
                 }
                 RadioButton {
                     id: renderingQualityHigh
+                    focusPolicy: Qt.NoFocus
                     text: "High"
                     onCheckedChanged: {
                         if(checked) {

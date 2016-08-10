@@ -70,7 +70,7 @@ Pane {
     Column {
         anchors {
             fill: parent
-            margins: 16
+            margins: 10
         }
 
         spacing: 10

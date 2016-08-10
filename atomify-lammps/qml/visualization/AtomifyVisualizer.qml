@@ -32,23 +32,23 @@ Scene3D {
     property alias periodicImages: periodicImages
     property string renderMode: "forward"
     property string renderQuality: "medium"
-
+    multisample: true
     onRenderQualityChanged: {
-        console.log("Changing render quality to ", renderQuality)
         if(renderQuality === "low") {
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
             root.renderMode = "forward"
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width + 1
         } else if(renderQuality === "medium") {
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
             root.renderMode = "deferred"
-            ambientOcclusion.samples = 24
-            // deferredFrameGraph.window.samples = 1
+            ambientOcclusion.samples = 12
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
         } else if(renderQuality === "high") {
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
             root.renderMode = "deferred"
-            ambientOcclusion.samples = 32
-            // deferredFrameGraph.window.samples = 32
+            ambientOcclusion.samples = 40
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
         }
-
-        forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
-        deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
     }
 
     onBondRadiusChanged: {
