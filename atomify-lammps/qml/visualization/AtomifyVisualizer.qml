@@ -16,6 +16,7 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 
 Scene3D {
     id: root
+    signal changedRenderQuality
     property alias visualizer: visualizer
     property alias simulator: simulator
     property alias light1: light1
@@ -29,7 +30,26 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
-    property string renderMode: "deferred"
+    property string renderMode: "forward"
+    property string renderQuality: "medium"
+
+    onRenderQualityChanged: {
+        console.log("Changing render quality to ", renderQuality)
+        if(renderQuality === "low") {
+            root.renderMode = "forward"
+        } else if(renderQuality === "medium") {
+            root.renderMode = "deferred"
+            ambientOcclusion.samples = 24
+            // deferredFrameGraph.window.samples = 1
+        } else if(renderQuality === "high") {
+            root.renderMode = "deferred"
+            ambientOcclusion.samples = 32
+            // deferredFrameGraph.window.samples = 32
+        }
+
+        forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
+        deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
+    }
 
     onBondRadiusChanged: {
         if(simulator != undefined) {
@@ -67,12 +87,13 @@ Scene3D {
         DeferredFrameGraph {
             id: deferredFrameGraph
 //            window: forwardFrameGraph.window
-            width: root.width
-            height: root.height
+//            width: root.width
+//            height: root.height
             camera: mainCamera
         }
         components: [
             RenderSettings {
+                id: renderSettings
                 activeFrameGraph: root.renderMode == "deferred" ? deferredFrameGraph : forwardFrameGraph
             },
             InputSettings {

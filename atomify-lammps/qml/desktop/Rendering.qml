@@ -15,6 +15,14 @@ Pane {
         periodicXSlider.value = visualizer.periodicImages.numberOfCopiesX
         periodicYSlider.value = visualizer.periodicImages.numberOfCopiesY
         periodicZSlider.value = visualizer.periodicImages.numberOfCopiesZ
+        if(visualizer.renderQuality === "low") {
+            renderingQualityLow.checked = true
+        } else if(visualizer.renderQuality === "medium") {
+            renderingQualityMedium.checked = true
+        } else if(visualizer.renderQuality === "high") {
+            renderingQualityHigh.checked = true
+        }
+
     }
 
     Column {
@@ -156,6 +164,46 @@ Pane {
                         maximumValue: 5.0
                         onValueChanged: visualizer ? visualizer.periodicImages.numberOfCopiesZ = value : ""
                         stepSize: 1
+                    }
+                }
+            }
+        }
+
+        GroupBox {
+            width: parent.width
+            title: "Rendering quality"
+
+            Row {
+                width: parent.width
+                RadioButton {
+                    id: renderingQualityLow
+                    text: "Low"
+                    onCheckedChanged: {
+                        if(checked) {
+                            console.log("Trying to change to low")
+                            console.log("Visualizer: ", root.visualizer)
+                            console.log("Visualizer quality before: ", root.visualizer.renderQuality)
+                            root.visualizer.renderQuality = "low"
+                            console.log("Visualizer quality after: ", root.visualizer.renderQuality)
+                        }
+                    }
+                }
+                RadioButton {
+                    id: renderingQualityMedium
+                    text: "Medium"
+                    onCheckedChanged: {
+                        if(checked) {
+                            root.visualizer.renderQuality = "medium"
+                        }
+                    }
+                }
+                RadioButton {
+                    id: renderingQualityHigh
+                    text: "High"
+                    onCheckedChanged: {
+                        if(checked) {
+                            root.visualizer.renderQuality = "high"
+                        }
                     }
                 }
             }
