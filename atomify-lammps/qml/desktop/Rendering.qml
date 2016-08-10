@@ -214,6 +214,7 @@ Pane {
 
             ComboBox {
                 width: parent.width
+                enabled: visualizer.renderQuality !== "low"
                 focusPolicy: Qt.NoFocus
                 model: ["Normal", "SEM", "Blurred SEM"]
                 currentIndex: 0
