@@ -72,7 +72,6 @@ private:
     void generateBondData(AtomData &atomData, System &system);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
-    void applyDeltaPositions(AtomData &atomData);
     bool m_sort = false;
 };
 

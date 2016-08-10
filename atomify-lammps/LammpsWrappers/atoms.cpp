@@ -159,20 +159,8 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
         qDebug() << "Sorted using " << t.elapsed() << " ms.";
     }
 
-    // applyDeltaPositions(atomData);
     generateBondData(atomData, *system);
     generateSphereData(atomData);
-    // generateBondDataFromLammpsNeighborlist(atomData, *lammps);
-}
-
-void Atoms::applyDeltaPositions(AtomData &atomData) {
-    for(int i=0; i<atomData.positions.size(); i++) {
-        QVector3D &position = atomData.positions[i];
-        QVector3D &deltaPosition = atomData.deltaPositions[i];
-        position[0] += deltaPosition[0];
-        position[1] += deltaPosition[1];
-        position[2] += deltaPosition[2];
-    }
 }
 
 //void Atoms::findOcclusion(AtomData &atomData) {
