@@ -28,7 +28,7 @@ Viewport {
             id: surfaceSelector
             RenderPassFilter {
                 ClearBuffers {
-                    clearColor: "#012"
+                    clearColor: "#000"
                     buffers: ClearBuffers.ColorDepthBuffer
                     CameraSelector {
                         id: viewCameraSelector
