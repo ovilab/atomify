@@ -164,6 +164,10 @@ run 100
                 update()
             }
 
+            onCursorPositionChanged: {
+                update()
+            }
+
             function update() {
                 var lineHeight = (contentHeight-2*textMargin) / lineCount
                 lineNumbers.lineCount = lineCount
