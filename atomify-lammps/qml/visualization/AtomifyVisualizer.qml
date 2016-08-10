@@ -452,17 +452,17 @@ void main()
                 ShaderBuilder {
                     id: finalShaderBuilder
                     function selectOutput(outputName) {
-                        if(outputName === "blurMultiply") {
+                        if(outputName === "blurMultiply" || outputName === "Normal") {
                             output.value = blurMultiply
                         }
                         if(outputName === "ssaoMultiply") {
                             output.value = ssaoMultiply
                         }
-                        if(outputName === "blur") {
+                        if(outputName === "blur" || outputName === "Blurred SEM") {
                             output.value = blurNode
                         }
 
-                        if(outputName === "ssao") {
+                        if(outputName === "ssao" || outputName === "SEM") {
                             output.value = ssaoNode
                         }
                         if(outputName === "position") {

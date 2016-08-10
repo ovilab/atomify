@@ -207,5 +207,20 @@ Pane {
                 }
             }
         }
+
+        GroupBox {
+            width: parent.width
+            title: "Rendering mode"
+
+            ComboBox {
+                width: parent.width
+                focusPolicy: Qt.NoFocus
+                model: ["Normal", "SEM", "Blurred SEM"]
+                currentIndex: 0
+                onCurrentTextChanged: {
+                    visualizer.finalShaderBuilder.selectOutput(currentText)
+                }
+            }
+        }
     }
 }
