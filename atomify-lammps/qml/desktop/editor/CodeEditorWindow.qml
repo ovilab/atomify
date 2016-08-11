@@ -6,12 +6,56 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 
 Item {
+    id: root
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
     property CodeEditor activeEditor
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
     property int currentLine: -1
     property int errorLine: -1
+    property string openFiles: ""
+
+    Settings {
+        property alias lastOpenedFolder: fileDialog.folder
+        property alias openFiles: root.openFiles
+    }
+
+    CodeEditor {
+        id: dummyCodeEditor
+        visible: false
+
+    }
+
+    Component.onCompleted: {
+        var openFilesCopy = openFiles
+        var files = openFilesCopy.split("###_###")
+
+        var numOpenFiles = 0
+        for(var i in files) {
+            var filename = files[i]
+            if(dummyCodeEditor.fileExists(filename)) {
+                console.log("It exists, so go for it")
+                openTab(filename)
+                numOpenFiles += 1
+            }
+        }
+
+        if(numOpenFiles === 0) {
+            newTab()
+        }
+    }
+
+    function updateOpenFiles() {
+        console.log("Updating open files.")
+        openFiles = ""
+
+        for(var i=0; i<stackLayout.count; i++) {
+            var editor = stackLayout.itemAt(i)
+            openFiles = openFiles+"###_###"+editor.fileUrl
+        }
+        console.log("Open files: ", openFiles)
+    }
+
     onCurrentLineChanged: {
         if(activeEditor != undefined) activeEditor.currentLine = currentLine
     }
@@ -37,6 +81,8 @@ Item {
         newCodeEditor.changedSinceLastSave = false
         tabBar.setCurrentIndex(tabBar.count-1) // select it
         focusCurrentEditor()
+
+        updateOpenFiles()
     }
 
     function showDoYouWantToSave(fileName) {
@@ -76,6 +122,8 @@ Item {
         if(editorCount == 0) {
             newTab()
         }
+
+        updateOpenFiles()
     }
 
     function openTab(filename, errorLine) {
@@ -84,9 +132,11 @@ Item {
         }
 
         if(filename === undefined) {
+            // If we just pressed Ctrl+O to open, show the dialog
             fileDialog.cb = function() {
-                if(currentEditor.title === "untitled" && currentEditor.text === "") {
+                if(currentEditor.fileName === "untitled" && currentEditor.text === "") {
                     currentEditor.open(fileDialog.fileUrl)
+                    updateOpenFiles()
                 } else {
                     var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { errorLine: "+errorLine+" }", stackLayout);
                     var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
@@ -95,8 +145,8 @@ Item {
                     newCodeEditor.changedSinceLastSave = false
                     tabBar.setCurrentIndex(tabBar.count-1)
                     focusCurrentEditor()
+                    updateOpenFiles()
                 }
-
             }
             fileDialog.visible = true
         } else {
@@ -118,11 +168,8 @@ Item {
             newCodeEditor.open(filename)
             newCodeEditor.changedSinceLastSave = false
             tabBar.setCurrentIndex(tabBar.count-1)
+            updateOpenFiles()
         }
-    }
-
-    Settings {
-        property alias lastOpenedFolder: fileDialog.folder
     }
 
     ColumnLayout {
@@ -135,10 +182,10 @@ Item {
                 right: parent.right
             }
 
-            CodeEditorTabButton {
-                text: codeEditor_1.title
-                codeEditor: codeEditor_1
-            }
+//            CodeEditorTabButton {
+//                text: codeEditor_1.title
+//                codeEditor: codeEditor_1
+//            }
         }
 
         StackLayout {
@@ -146,13 +193,13 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             currentIndex: tabBar.currentIndex
-
-            CodeEditor {
-                id: codeEditor_1
-                Component.onCompleted: {
-                    changedSinceLastSave = false
-                }
+            onCountChanged: {
+                updateOpenFiles()
             }
+
+//            CodeEditor {
+//                id: codeEditor_1
+//            }
         }
     }
 

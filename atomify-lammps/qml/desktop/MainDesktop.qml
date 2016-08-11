@@ -18,7 +18,7 @@ Item {
     property bool focusMode: false
 
     Component.onCompleted: {
-        editorTab.lammpsEditor.runScript()
+        // editorTab.lammpsEditor.runScript()
     }
 
     DropArea {

@@ -38,6 +38,11 @@ void CodeEditorBackend::setText(QString text)
 
 void CodeEditorBackend::setFileUrl(QUrl fileUrl)
 {
+    fileUrl = QUrl::fromLocalFile(fileUrl.toLocalFile());
+//    qDebug() << "Url: ", fileUrl;
+//    qDebug() << "Url path: ", fileUrl.path();
+    // fileUrl = QUrl(fileUrl.path());
+
     if (m_fileUrl == fileUrl)
         return;
 
@@ -67,7 +72,8 @@ QString CodeEditorBackend::folder() const
 
 bool CodeEditorBackend::fileExists(QString path)
 {
-    QFileInfo info(path);
+    QUrl url(path);
+    QFileInfo info(url.toLocalFile());
     return info.exists();
 }
 
