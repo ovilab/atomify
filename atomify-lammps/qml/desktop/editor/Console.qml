@@ -24,6 +24,7 @@ ColumnLayout {
             id: consoleOutput
             anchors.fill: parent
             textFormat: TextEdit.RichText
+            selectByMouse: true
             font.family: "DejaVu Sans Mono"
             font.pixelSize: 12
             readOnly: true
