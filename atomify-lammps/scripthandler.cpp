@@ -262,7 +262,6 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
             }
 
             if(!currentCommand.isEmpty()) {
-                qDebug() << "Creating command object with command " << currentCommand << " and root file line: " << m_currentLineInRootFile;
                 auto commandObject = ScriptCommand(currentCommand, type, lineNumber, m_currentLineInRootFile, filename, path);
                 m_lammpsCommandStack.enqueue(commandObject);
             }

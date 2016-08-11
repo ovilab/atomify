@@ -169,6 +169,7 @@ run 100
             }
 
             onTextChanged: {
+                changedSinceLastSave = true
                 update()
             }
 

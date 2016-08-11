@@ -87,7 +87,7 @@ Item {
                 if(currentEditor.title === "untitled" && currentEditor.text === "") {
                     currentEditor.open(fileDialog.fileUrl)
                 } else {
-                    var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { errorLine: "+errorOnLine+" }", stackLayout);
+                    var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { errorLine: "+errorLine+" }", stackLayout);
                     var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
                     newTabButton.codeEditor = newCodeEditor
                     newCodeEditor.open(fileDialog.fileUrl)
