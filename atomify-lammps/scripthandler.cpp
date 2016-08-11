@@ -369,7 +369,6 @@ QString ScriptHandler::copyDataFileToReadablePath(QString filename)
 
 void ScriptHandler::setCurrentLine(int currentLine)
 {
-    qDebug() << "Current line is set to " << currentLine;
     if (m_currentLine == currentLine)
         return;
 

@@ -7,16 +7,17 @@ import QtQuick.Dialogs 1.2
 
 Item {
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
+    property CodeEditor activeEditor
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
     property int currentLine: -1
     property int errorLine: -1
     onCurrentLineChanged: {
-        if(currentEditor != undefined) currentEditor.currentLine = currentLine
+        if(activeEditor != undefined) activeEditor.currentLine = currentLine
     }
 
     onErrorLineChanged: {
-        if(currentEditor != undefined) currentEditor.errorLine = errorLine
+        if(activeEditor != undefined) activeEditor.errorLine = errorLine
     }
 
     function clear() {

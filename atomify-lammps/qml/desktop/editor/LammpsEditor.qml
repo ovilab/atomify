@@ -26,6 +26,7 @@ Item {
         simulator.scriptHandler.reset()
         simulator.scriptHandler.setWorkingDirectory(codeEditorWindow.currentEditor.fileUrl)
         simulator.scriptHandler.runScript(codeEditorWindow.currentEditor.text)
+        codeEditorWindow.activeEditor = codeEditorWindow.currentEditor
     }
 
     CodeEditorWindow {
