@@ -64,6 +64,7 @@ Scene3D {
         property Camera camera: Camera {
             id: mainCamera
             projectionType: CameraLens.PerspectiveProjection
+            // projectionType: CameraLens.OrthographicProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
             nearPlane : 3.0
@@ -633,9 +634,9 @@ void main()
             simulationSpeed: 1
             system.atoms.modifiers: [
                 colorModifier,
-                periodicImages,
                 groupModifier,
-                regionModifier
+                regionModifier,
+                periodicImages
             ]
         }
 
