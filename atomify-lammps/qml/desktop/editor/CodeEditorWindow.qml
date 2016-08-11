@@ -89,7 +89,6 @@ Item {
                     newCodeEditor.open(fileDialog.fileUrl)
                     newCodeEditor.changedSinceLastSave = false
                     tabBar.setCurrentIndex(tabBar.count-1)
-                    newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
                     focusCurrentEditor()
                 }
 
@@ -113,7 +112,6 @@ Item {
             newCodeEditor.open(filename)
             newCodeEditor.changedSinceLastSave = false
             tabBar.setCurrentIndex(tabBar.count-1)
-            newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
         }
     }
 
