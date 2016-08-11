@@ -29,7 +29,7 @@ Pane {
                 lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine
             } else {
                 consoleOutput.append(" Simulation crashed.")
-                consoleOutput.append(" File: <a href=\"file://"+simulator.lammpsError.scriptPath + "?errorLine="+simulator.lammpsError.line+"\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
+                consoleOutput.append(" File: <a style=\"color: #56B6C2; font-weight: bold;\" href=\"file://"+simulator.lammpsError.scriptPath + "?errorLine="+simulator.lammpsError.line+"\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
                 lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine
