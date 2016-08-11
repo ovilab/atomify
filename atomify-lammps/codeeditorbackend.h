@@ -8,7 +8,8 @@ class CodeEditorBackend : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(QUrl fileUrl READ fileUrl WRITE setFileUrl NOTIFY fileUrlChanged)
-    Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
+    Q_PROPERTY(QString folder READ folder NOTIFY folderChanged)
+    Q_PROPERTY(QString fileName READ fileName NOTIFY fileNameChanged)
 public:
     CodeEditorBackend();
     QString text() const;
@@ -16,20 +17,21 @@ public:
     QString fileName() const;
     Q_INVOKABLE bool load();
     Q_INVOKABLE bool save();
+    QString folder() const;
+
 signals:
     void textChanged(QString text);
     void fileUrlChanged(QUrl fileUrl);
     void fileNameChanged(QString fileName);
+    void folderChanged(QString folder);
 
 public slots:
     void setText(QString text);
     void setFileUrl(QUrl fileUrl);
-    void setFileName(QString fileName);
+
 private:
     QString m_text;
     QUrl m_fileUrl;
-    QString m_fileName;
-
 };
 
 #endif // CODEEDITORBACKEND_H
