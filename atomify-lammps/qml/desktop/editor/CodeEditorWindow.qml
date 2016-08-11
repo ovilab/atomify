@@ -123,6 +123,12 @@ Item {
             newTab()
         }
 
+        if(indexOfCurrentTab >= editorCount) {
+            indexOfCurrentTab -= 1
+        }
+
+        tabBar.currentIndex = indexOfCurrentTab
+
         updateOpenFiles()
     }
 
