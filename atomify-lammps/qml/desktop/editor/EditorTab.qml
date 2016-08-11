@@ -9,6 +9,7 @@ Pane {
     id: editorTabRoot
     property TextArea consoleOutput: consoleItem.output
     property alias lammpsEditor: lammpsEditor
+    property alias codeEditorWindow: lammpsEditor.codeEditorWindow
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
     onConsoleOutputChanged: {

@@ -21,6 +21,20 @@ Item {
         editorTab.lammpsEditor.runScript()
     }
 
+    DropArea {
+        anchors.fill: parent
+        onDropped: {
+            if(drop.hasUrls) {
+                var numUrls = drop.urls.length
+                for(var i=0; i<drop.urls.length; i++) {
+                    var url = drop.urls[i]
+                    editorTab.codeEditorWindow.openTab(url)
+
+                }
+            }
+        }
+    }
+
     Row {
         anchors.fill: parent
 
