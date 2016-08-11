@@ -22,6 +22,10 @@ Item {
         return backend.fileExists(path);
     }
 
+    function cleanPath(path) {
+        return backend.cleanPath(path);
+    }
+
     function getParameters(path) {
         return backend.getParameters(path);
     }

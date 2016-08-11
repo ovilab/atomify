@@ -20,6 +20,7 @@ public:
     Q_INVOKABLE bool save();
     QString folder() const;
     Q_INVOKABLE bool fileExists(QString path);
+    Q_INVOKABLE QString cleanPath(QString path);
     Q_INVOKABLE QVariantMap getParameters(QUrl path);
 signals:
     void textChanged(QString text);

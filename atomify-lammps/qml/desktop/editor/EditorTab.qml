@@ -16,6 +16,9 @@ Pane {
         consoleOutput.onLinkActivated.connect(function(link){
             var params = codeEditorWindow.currentEditor.getParameters(link)
             var errorLine = params["errorLine"]
+            console.log("Link before: ", link)
+            link = codeEditorWindow.dummyEditor.cleanPath(link)
+            console.log("Link after: ", link)
             lammpsEditor.codeEditorWindow.openTab(link, errorLine)
         })
     }

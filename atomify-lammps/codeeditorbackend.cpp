@@ -77,6 +77,11 @@ bool CodeEditorBackend::fileExists(QString path)
     return info.exists();
 }
 
+QString CodeEditorBackend::cleanPath(QString path)
+{
+    return "file://"+QUrl(path).toLocalFile();
+}
+
 QVariantMap CodeEditorBackend::getParameters(QUrl path)
 {
     QVariantMap map;

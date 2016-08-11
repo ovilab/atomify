@@ -7,6 +7,7 @@ import QtQuick.Dialogs 1.2
 
 Item {
     id: root
+    property alias dummyEditor: dummyEditor
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
     property CodeEditor activeEditor
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
@@ -21,20 +22,19 @@ Item {
     }
 
     CodeEditor {
-        id: dummyCodeEditor
+        id: dummyEditor
         visible: false
 
     }
 
     Component.onCompleted: {
         var openFilesCopy = openFiles
-        var files = openFilesCopy.split("###_###")
+        var files = openFilesCopy.split("###_/_###")
 
         var numOpenFiles = 0
         for(var i in files) {
             var filename = files[i]
-            if(dummyCodeEditor.fileExists(filename)) {
-                console.log("It exists, so go for it")
+            if(dummyEditor.fileExists(filename)) {
                 openTab(filename)
                 numOpenFiles += 1
             }
@@ -46,14 +46,12 @@ Item {
     }
 
     function updateOpenFiles() {
-        console.log("Updating open files.")
         openFiles = ""
 
         for(var i=0; i<stackLayout.count; i++) {
             var editor = stackLayout.itemAt(i)
-            openFiles = openFiles+"###_###"+editor.fileUrl
+            openFiles = openFiles+"###_/_###"+editor.fileUrl
         }
-        console.log("Open files: ", openFiles)
     }
 
     onCurrentLineChanged: {
@@ -95,7 +93,6 @@ Item {
 
         if(currentEditor.changedSinceLastSave) {
             // Ask user to save the file before we close the tab
-
             messageDialog.cb = function() {
                 // Callback is to close the tab
                 var indexOfCurrentTab = stackLayout.currentIndex
@@ -140,18 +137,10 @@ Item {
         if(filename === undefined) {
             // If we just pressed Ctrl+O to open, show the dialog
             fileDialog.cb = function() {
-                if(currentEditor.fileName === "untitled" && currentEditor.text === "") {
-                    currentEditor.open(fileDialog.fileUrl)
-                    updateOpenFiles()
-                } else {
-                    var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { errorLine: "+errorLine+" }", stackLayout);
-                    var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
-                    newTabButton.codeEditor = newCodeEditor
-                    newCodeEditor.open(fileDialog.fileUrl)
-                    newCodeEditor.changedSinceLastSave = false
-                    tabBar.setCurrentIndex(tabBar.count-1)
-                    focusCurrentEditor()
-                    updateOpenFiles()
+                for(var i in fileDialog.fileUrls) {
+                    var fileUrl = fileDialog.fileUrls[i]
+                    console.log("File url: ", fileUrl)
+                    openTab(fileUrl)
                 }
             }
             fileDialog.visible = true
@@ -160,11 +149,17 @@ Item {
             for(var i=0; i<stackLayout.count; i++) {
                 var editor = stackLayout.itemAt(i)
 
-                if(editor.fileUrl==filename) {
+                if(editor.fileUrl==filename) { // == is correct because the string objects aren't identical, just equal strings
                     tabBar.currentIndex = i
                     currentEditor.errorLine = errorLine
-                    return;
+                    return
                 }
+            }
+
+            if(currentEditor && currentEditor.fileName === "untitled" && currentEditor.text === "") {
+                currentEditor.open(filename)
+                updateOpenFiles()
+                return
             }
 
             // Nope. Not open, so open in a new tab instead
@@ -187,11 +182,6 @@ Item {
                 left: parent.left
                 right: parent.right
             }
-
-//            CodeEditorTabButton {
-//                text: codeEditor_1.title
-//                codeEditor: codeEditor_1
-//            }
         }
 
         StackLayout {
@@ -202,16 +192,13 @@ Item {
             onCountChanged: {
                 updateOpenFiles()
             }
-
-//            CodeEditor {
-//                id: codeEditor_1
-//            }
         }
     }
 
     FileDialog {
         id: fileDialog
         selectExisting : true
+        selectMultiple: true
         property var cb
         title: "Please choose a file"
 
