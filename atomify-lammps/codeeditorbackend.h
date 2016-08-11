@@ -2,6 +2,7 @@
 #define CODEEDITORBACKEND_H
 
 #include <QQuickItem>
+#include <QVariantMap>
 
 class CodeEditorBackend : public QQuickItem
 {
@@ -19,6 +20,7 @@ public:
     Q_INVOKABLE bool save();
     QString folder() const;
     Q_INVOKABLE bool fileExists(QString path);
+    Q_INVOKABLE QVariantMap getParameters(QUrl path);
 signals:
     void textChanged(QString text);
     void fileUrlChanged(QUrl fileUrl);

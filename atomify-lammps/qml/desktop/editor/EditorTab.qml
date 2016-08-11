@@ -14,7 +14,9 @@ Pane {
     property AtomifyVisualizer visualizer
     onConsoleOutputChanged: {
         consoleOutput.onLinkActivated.connect(function(link){
-            lammpsEditor.codeEditorWindow.openTab(link)
+            var params = codeEditorWindow.currentEditor.getParameters(link)
+            var errorLine = params["errorLine"]
+            lammpsEditor.codeEditorWindow.openTab(link, errorLine)
         })
     }
 
@@ -27,7 +29,7 @@ Pane {
                 lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine
             } else {
                 consoleOutput.append(" Simulation crashed.")
-                consoleOutput.append(" File: <a href=\"file://"+simulator.lammpsError.scriptPath + "\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
+                consoleOutput.append(" File: <a href=\"file://"+simulator.lammpsError.scriptPath + "?errorLine="+simulator.lammpsError.line+"\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
                 lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine

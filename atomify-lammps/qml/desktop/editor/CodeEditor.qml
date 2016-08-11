@@ -22,6 +22,10 @@ Item {
         return backend.fileExists(path);
     }
 
+    function getParameters(path) {
+        return backend.getParameters(path);
+    }
+
     onCurrentLineChanged: {
         lineNumbers.currentLine = currentLine
         textArea.update()

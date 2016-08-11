@@ -77,9 +77,9 @@ Item {
         }
     }
 
-    function openTab(filename, errorOnLine) {
-        if(errorOnLine === undefined) {
-            errorOnLine = -1
+    function openTab(filename, errorLine) {
+        if(errorLine === undefined) {
+            errorLine = -1
         }
 
         if(filename === undefined) {
@@ -105,12 +105,13 @@ Item {
 
                 if(editor.fileUrl==filename) {
                     tabBar.currentIndex = i
+                    currentEditor.errorLine = errorLine
                     return;
                 }
             }
 
             // Nope. Not open, so open in a new tab instead
-            var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
+            var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { errorLine: "+errorLine+" }", stackLayout);
             var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
             newTabButton.codeEditor = newCodeEditor
             newCodeEditor.open(filename)

@@ -2,6 +2,7 @@
 
 #include <QFileInfo>
 #include <QDir>
+#include <QUrlQuery>
 
 CodeEditorBackend::CodeEditorBackend()
 {
@@ -68,6 +69,18 @@ bool CodeEditorBackend::fileExists(QString path)
 {
     QFileInfo info(path);
     return info.exists();
+}
+
+QVariantMap CodeEditorBackend::getParameters(QUrl path)
+{
+    QVariantMap map;
+
+    QUrlQuery query(path);
+    auto items = query.queryItems();
+    for(auto item : items) {
+        map[item.first] = item.second;
+    }
+    return map;
 }
 
 bool CodeEditorBackend::load()
