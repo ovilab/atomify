@@ -11,6 +11,7 @@ Item {
     property string title: changedSinceLastSave ? fileName+"*" : fileName
     property alias fileName: backend.fileName
     property alias fileUrl: backend.fileUrl
+    property alias folder: backend.folder
     property bool changedSinceLastSave: false
     property int currentLine: -1
     property int errorLine: -1
@@ -91,7 +92,6 @@ Item {
 
     CodeEditorBackend {
         id: backend
-        fileName: "untitled"
     }
 
     Flickable {
