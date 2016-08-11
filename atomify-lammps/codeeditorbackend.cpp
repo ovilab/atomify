@@ -1,5 +1,8 @@
 #include "codeeditorbackend.h"
 
+#include <QFileInfo>
+#include <QDir>
+
 CodeEditorBackend::CodeEditorBackend()
 {
 
@@ -57,7 +60,14 @@ bool CodeEditorBackend::save()
 
 QString CodeEditorBackend::folder() const
 {
-    return m_fileUrl.path();
+    QFileInfo info(m_fileUrl.toLocalFile());
+    return info.dir().absolutePath();
+}
+
+bool CodeEditorBackend::fileExists(QString path)
+{
+    QFileInfo info(path);
+    return info.exists();
 }
 
 bool CodeEditorBackend::load()

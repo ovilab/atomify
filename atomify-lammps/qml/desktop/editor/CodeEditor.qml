@@ -18,6 +18,10 @@ Item {
 
     clip: true
 
+    function fileExists(path) {
+        return backend.fileExists(path);
+    }
+
     onCurrentLineChanged: {
         lineNumbers.currentLine = currentLine
         textArea.update()

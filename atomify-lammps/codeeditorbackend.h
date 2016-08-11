@@ -18,7 +18,7 @@ public:
     Q_INVOKABLE bool load();
     Q_INVOKABLE bool save();
     QString folder() const;
-
+    Q_INVOKABLE bool fileExists(QString path);
 signals:
     void textChanged(QString text);
     void fileUrlChanged(QUrl fileUrl);

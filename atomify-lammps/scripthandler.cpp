@@ -61,7 +61,7 @@ const ScriptCommand& ScriptHandler::nextCommand()
         m_currentCommand = ScriptCommand();
     }
 
-    if(m_currentCommand.type() == ScriptCommand::Type::Editor) setCurrentLine(m_currentCommand.line());
+    setCurrentLine(m_currentCommand.lineInRootFile());
 
     return m_currentCommand;
 }
@@ -134,6 +134,7 @@ void ScriptHandler::runFile(QString filename)
         tmpFileName = m_tempLocation + QDir::separator() + tmpFileName;
     }
     QFileInfo fileInfo(tmpFileName);
+    tmpFileName = fileInfo.fileName();
 
     QString currentDir = fileInfo.absoluteDir().path();
     QByteArray currentDirBytes = currentDir.toUtf8();
@@ -223,9 +224,13 @@ void ScriptHandler::parseGUICommand(QString command)
 void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir) {
     if(!script.isEmpty())
     {
+        QString path = currentDir+"/"+filename; // TODO: Create this safe way
 
         // If the file is not empty, load each command and add it to the queue.
         // Now, if there is an include command, load that script too.
+        if(type == ScriptCommand::Type::Editor) {
+            m_currentLineInRootFile = 1;
+        }
         int lineNumber = 1;
         QString currentCommand;
         QStringList lines = script.split("\n");
@@ -250,22 +255,35 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
                     QByteArray currentDirBytes = currentDir.toUtf8();
                     chdir(currentDirBytes.constData());
                 }
-                currentCommand.clear(); lineNumber++; continue; // This line is complete
+
+                currentCommand.clear();
+                lineNumber++;
+                continue; // This line is complete
             }
 
             if(!currentCommand.isEmpty()) {
-                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
+                qDebug() << "Creating command object with command " << currentCommand << " and root file line: " << m_currentLineInRootFile;
+                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, m_currentLineInRootFile, filename, path);
                 m_lammpsCommandStack.enqueue(commandObject);
             }
 
             if(m_parser.isEditorCommand(currentCommand)) {
-                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, filename);
+                auto commandObject = ScriptCommand(currentCommand, type, lineNumber, m_currentLineInRootFile, filename, path);
                 m_queuedCommands.push_back(commandObject);
-                // parseEditorCommand(currentCommand);
-                currentCommand.clear(); lineNumber++; continue; // This line is complete
+                currentCommand.clear();
+                if(type == ScriptCommand::Type::Editor) {
+                    m_currentLineInRootFile++;
+                }
+                lineNumber++;
+                continue; // This line is complete
             }
 
-            currentCommand.clear(); lineNumber++; continue; // This line is complete
+            if(type == ScriptCommand::Type::Editor) {
+                m_currentLineInRootFile++;
+            }
+            currentCommand.clear();
+            lineNumber++;
+            continue; // This line is complete
         }
     }
 }
@@ -352,6 +370,7 @@ QString ScriptHandler::copyDataFileToReadablePath(QString filename)
 
 void ScriptHandler::setCurrentLine(int currentLine)
 {
+    qDebug() << "Current line is set to " << currentLine;
     if (m_currentLine == currentLine)
         return;
 

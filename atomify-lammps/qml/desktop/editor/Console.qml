@@ -24,7 +24,6 @@ ColumnLayout {
             id: consoleOutput
             anchors.fill: parent
             textFormat: TextEdit.RichText
-
             readOnly: true
             placeholderText: "No output yet..."
         }
@@ -40,7 +39,6 @@ ColumnLayout {
         TextField {
             property int previousCommandCounter: 0
             id: singleCommand
-            // width: parent.width - runSingleCommand.width
             Layout.fillWidth: true
 
             Keys.onPressed: {
