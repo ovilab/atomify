@@ -21,6 +21,7 @@ class System : public QObject
     Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
     Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
     Q_PROPERTY(Computes* computes READ computes WRITE setComputes NOTIFY computesChanged)
+    Q_PROPERTY(Fixes* fixes READ fixes WRITE setFixes NOTIFY fixesChanged)
     Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
 public:
@@ -35,12 +36,13 @@ public:
     class Regions* regions() const;
     class Groups* groups() const;
     class Computes* computes() const;
+    class Units* units() const;
+    class Fixes* fixes() const;
     int numberOfAtomTypes() const;
     void reset();
     float volume() const;
     bool isValid() const;
     QVector3D cameraPosition() const;
-    class Units* units() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -50,6 +52,7 @@ public slots:
     void setComputes(class Computes* computes);
     void setCameraPosition(QVector3D cameraPosition);
     void setUnits(class Units* units);
+    void setFixes(class Fixes* fixes);
 
 signals:
     void originChanged(QVector3D origin);
@@ -60,13 +63,14 @@ signals:
     void atomsChanged(class Atoms* atoms);
     void regionsChanged(class Regions* regions);
     void groupsChanged(class Groups* groups);
+    void unitsChanged(class Units* units);
+    void fixesChanged(class Fixes* fixes);
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void volumeChanged(float volume);
     void isValidChanged(bool isValid);
     void computesChanged(class Computes* computes);
     void geometryChanged();
     void cameraPositionChanged(QVector3D cameraPosition);
-    void unitsChanged(class Units* units);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -74,6 +78,7 @@ private:
     class Groups* m_groups = nullptr;
     class Computes* m_computes = nullptr;
     class Units* m_units = nullptr;
+    class Fixes* m_fixes = nullptr;
     QVector3D m_origin;
     QVector3D m_size;
     QVector3D m_cameraPosition;

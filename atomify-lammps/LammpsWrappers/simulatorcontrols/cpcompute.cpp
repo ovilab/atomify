@@ -195,6 +195,24 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     return true;
 }
 
+bool CPCompute::copyData(ComputeChunkAtom *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+
+    enum{BIN1D,BIN2D,BIN3D,BINSPHERE,BINCYLINDER,
+         TYPE,MOLECULE,COMPUTE,FIX,VARIABLE};
+    enum{LOWER,CENTER,UPPER,COORD};
+    enum{BOX,LATTICE,REDUCED};
+    enum{NODISCARD,MIXED,YESDISCARD};
+    enum{ONCE,NFREQ,EVERY};              // used in several files
+    enum{LIMITMAX,LIMITEXACT};
+
+    if(compute->which == BIN2D) {
+
+    }
+
+    return true;
+}
+
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
@@ -212,6 +230,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
     if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
+    if(copyData(dynamic_cast<ComputeChunkAtom*>(lmp_compute), lammpsController)) return;
 
     if(lmp_compute->scalar_flag == 1) {
         try {

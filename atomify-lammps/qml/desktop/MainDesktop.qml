@@ -10,6 +10,7 @@ import Qt.labs.settings 1.0
 
 import "../visualization"
 import "editor"
+import "../plotting"
 Item {
     id: root
 

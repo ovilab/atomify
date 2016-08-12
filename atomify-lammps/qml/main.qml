@@ -12,7 +12,7 @@ import QtCharts  2.0
 import "mobile"
 import "mobile/style"
 import "desktop"
-
+import "plotting"
 QQC1.ApplicationWindow {
     id: applicationRoot
     visible: true
@@ -61,6 +61,7 @@ QQC1.ApplicationWindow {
     }
 
     MainDesktop {
+        id: mainDesktop
         anchors.fill: parent
     }
 
@@ -75,4 +76,14 @@ QQC1.ApplicationWindow {
             }
         }
     }
+
+//    Plot2D {
+//        id: plot2d
+//    }
+//    Button {
+//        text: "Open"
+//        onClicked: {
+//            plot2d.show()
+//        }
+//    }
 }

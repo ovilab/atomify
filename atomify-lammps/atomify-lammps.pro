@@ -80,7 +80,8 @@ SOURCES += \
     linenumbers.cpp \
     LammpsWrappers/units.cpp \
     dataproviders/data2d.cpp \
-    windowgl2.cpp
+    windowgl2.cpp \
+    LammpsWrappers/fixes.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -121,7 +122,8 @@ HEADERS += \
     linenumbers.h \
     LammpsWrappers/units.h \
     dataproviders/data2d.h \
-    windowgl2.h
+    windowgl2.h \
+    LammpsWrappers/fixes.h
 
 # Temporary use of quickcontrols2 without install
 

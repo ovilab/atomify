@@ -31,7 +31,7 @@ Scene3D {
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
     property string renderMode: "forward"
-    property string renderQuality: "medium"
+    property string renderQuality: "low"
     multisample: true
     onRenderQualityChanged: {
         if(renderQuality === "low") {

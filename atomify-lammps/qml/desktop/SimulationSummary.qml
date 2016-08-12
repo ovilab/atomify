@@ -281,7 +281,7 @@ Pane {
                         anchors.top: computesRow.bottom
                         x: computesLabel.x
                         model: system ? system.computes.model : null
-                        height: visible ? count*26 : 0
+                        height: visible ? count*20 : 0
                         visible: false
                         delegate: Row {
                             visible: computesList.visible
@@ -308,6 +308,66 @@ Pane {
                                         ": "+model.modelData.scalarValue.toFixed(3)
                                     } else {
                                         ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Column {
+                    id: fixesColumn
+                    property bool expanded: false
+                    height: fixesRow.height + fixesList.height
+
+
+                    Row {
+                        id: fixesRow
+                        spacing: 2
+                        height: fixesLabel.height
+
+                        Image {
+                            id: collapseFixes
+                            y: 3
+                            source: "qrc:/images/expand.gif"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: fixesColumn.expanded = !fixesColumn.expanded
+                            }
+                        }
+                        Label {
+                            id: fixesLabel
+                            text: "Fixes: "+system.fixes.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: fixesColumn.expanded = !fixesColumn.expanded
+                            }
+                        }
+                    }
+
+                    ListView {
+                        id: fixesList
+                        anchors.top: fixesRow.bottom
+                        x: fixesLabel.x
+                        model: system ? system.fixes.model : null
+                        height: visible ? count*26 : 0
+                        visible: fixesColumn.expanded
+                        delegate: Row {
+                            visible: fixesList.visible
+                            Label {
+                                id: fixesTitleLabel
+                                font.underline: true
+                                color: "steelblue"
+                                text: {
+                                    model.modelData.identifier
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+//                                        var point = Qt.point(mouseX, mouseY)
+//                                        point = getGlobalPosition(point, computeTitleLabel)
+//                                        createComputeWindow(model.modelData, point)
                                     }
                                 }
                             }
