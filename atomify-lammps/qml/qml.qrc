@@ -58,5 +58,6 @@
         <file>desktop/Rendering.qml</file>
         <file>desktop/RightBar.qml</file>
         <file>desktop/Examples.qml</file>
+        <file>plotting/Plot2D.qml</file>
     </qresource>
 </RCC>

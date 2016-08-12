@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += c++11
 DEFINES += LAMMPS_GZIP
 
-QT += qml quick widgets opengl openglextensions svg charts
+QT += qml quick widgets opengl openglextensions svg charts datavisualization
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 QMAKE_CXXFLAGS += -g -fopenmp
 LIBS += -fopenmp
@@ -78,7 +78,9 @@ SOURCES += \
     LammpsWrappers/modifiers/regionmodifier.cpp \
     codeeditorbackend.cpp \
     linenumbers.cpp \
-    LammpsWrappers/units.cpp
+    LammpsWrappers/units.cpp \
+    dataproviders/data2d.cpp \
+    windowgl2.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -117,7 +119,9 @@ HEADERS += \
     LammpsWrappers/modifiers/regionmodifier.h \
     codeeditorbackend.h \
     linenumbers.h \
-    LammpsWrappers/units.h
+    LammpsWrappers/units.h \
+    dataproviders/data2d.h \
+    windowgl2.h
 
 # Temporary use of quickcontrols2 without install
 
