@@ -8,6 +8,7 @@ Item {
     id: lammpsEditorRoot
 
     signal clearConsole()
+    signal didRun()
 
     property AtomifySimulator simulator
     property alias codeEditorWindow: codeEditorWindow
@@ -27,6 +28,7 @@ Item {
         simulator.scriptHandler.setWorkingDirectory(codeEditorWindow.currentEditor.fileUrl)
         simulator.scriptHandler.runScript(codeEditorWindow.currentEditor.text)
         codeEditorWindow.activeEditor = codeEditorWindow.currentEditor
+        didRun()
     }
 
     CodeEditorWindow {

@@ -49,6 +49,7 @@ Pane {
             Layout.fillHeight: true
             Layout.fillWidth: true
             onClearConsole: consoleItem.clear()
+            onDidRun: visualizer.focus = true
         }
 
         RowLayout {
