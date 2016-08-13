@@ -12,6 +12,27 @@ WindowGL2 {
     width: 500
     height: 500
 
+//    property var dataSeries: []
+    property Fix fix
+
+    onFixChanged: {
+        surfaceSeries.dataProxy = fix.data[0]
+//        xAxis.min = fix.data[0].xMin
+//        xAxis.max = fix.data[0].xMax
+
+//        yAxis.min = fix.data[0].yMin
+//        yAxis.max = fix.data[0].yMax
+
+//        zAxis.min = fix.data[0].zMin
+//        zAxis.max = fix.data[0].zMax
+//        for(var key in fix.data) {
+//            console.log("Stuff: ", fix.data[key])
+
+//            // compute.data1D[key].updated.connect(updateGraphs(key))
+//        }
+        //title = "Compute '"+compute.identifier+"'"
+    }
+
     Shortcut {
         sequence: StandardKey.Close
         onActivated: {
@@ -40,6 +61,8 @@ WindowGL2 {
             segmentCount: 8
             labelFormat: "%i\u00B0"
             title: "Angle"
+            min: 0
+            max: 17
             titleVisible: true
             titleFixed: false
         }
@@ -49,6 +72,8 @@ WindowGL2 {
             segmentCount: 8
             labelFormat: "%i \%"
             title: "Value"
+            min: -2
+            max: 2
             titleVisible: true
             labelAutoRotation: 0
             titleFixed: false
@@ -59,6 +84,8 @@ WindowGL2 {
             segmentCount: 5
             labelFormat: "%i nm"
             title: "Radius"
+            min: 0
+            max: 17
             titleVisible: true
             titleFixed: false
         }
@@ -93,7 +120,7 @@ WindowGL2 {
             // Remove the perspective and view the graph from top down to achieve 2D effect
             //! [1]
             orthoProjection: true
-            scene.activeCamera.cameraPreset: Camera3D.CameraPresetDirectlyAbove
+            scene.activeCamera.cameraPreset: Camera3D.CameraPresetFront
             //! [1]
 
             //! [2]
@@ -114,10 +141,6 @@ WindowGL2 {
                 baseGradient: surfaceGradient
                 colorStyle: Theme3D.ColorStyleRangeGradient
                 itemLabelFormat: "(@xLabel, @zLabel): @yLabel"
-
-                Data2D {
-
-                }
             }
         }
     }

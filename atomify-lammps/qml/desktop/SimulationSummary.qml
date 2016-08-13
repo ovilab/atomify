@@ -62,9 +62,22 @@ Pane {
             computePlotter.compute = compute
             computePlotter.show()
         }
+    }
 
-//        else
-//            component.statusChanged.connect(finishComputeWindow);
+    function create2DPlotWindow(fix, point) {
+        console.log("Fix: ", fix)
+        var component = Qt.createComponent("../plotting/Plot2D.qml");
+        if (component.status == Component.Ready) {
+            console.log("Can create now. it is ready")
+            var plotter = component.createObject(rectangleRoot);
+            plotter.x = point.x - plotter.width*0.5
+            plotter.y = point.y - plotter.height*0.5
+            plotter.fix = fix
+            console.log("Will show")
+            plotter.show()
+        } else {
+            console.log("Error :(")
+        }
     }
 
     Column {
@@ -329,7 +342,7 @@ Pane {
                         Image {
                             id: collapseFixes
                             y: 3
-                            source: "qrc:/images/expand.gif"
+                            source: fixesColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: fixesColumn.expanded = !fixesColumn.expanded
@@ -365,9 +378,9 @@ Pane {
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-//                                        var point = Qt.point(mouseX, mouseY)
-//                                        point = getGlobalPosition(point, computeTitleLabel)
-//                                        createComputeWindow(model.modelData, point)
+                                        var point = Qt.point(mouseX, mouseY)
+                                        point = getGlobalPosition(point, fixesTitleLabel)
+                                        create2DPlotWindow(model.modelData, point)
                                     }
                                 }
                             }
