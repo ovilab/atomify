@@ -62,9 +62,11 @@ if not os.path.isdir(lammps_source_dir):
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
 
+# copy patches
 shutil.copy("lammps-patch/compute_angle_atoms.h", lammps_source_dir_src)
 shutil.copy("lammps-patch/compute_angle_atoms.cpp", lammps_source_dir_src)
 
+# write pri files
 if lammps_build_type == "android":
     lammps_android_pri = open("lammps-android.pri", "w")
     lammps_android_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
@@ -103,6 +105,12 @@ shutil.copy(join(patch_path, "lammpsexception.h"), lammps_source_dir_src)
 
 print "\nLAMMPS was (probably) successfully patched."
 
+# set up packages
+os.chdir(join(lammps_source_dir_src))
+run_command("make yes-granular")
+os.chdir(root_path)
+
+# build
 if lammps_build_type == "android":
     print "Compiling MPI stubs for Android"
     shutil.copy(join(patch_path, "Makefile.android"), join(lammps_source_dir_src, "MAKE/MACHINES"))
