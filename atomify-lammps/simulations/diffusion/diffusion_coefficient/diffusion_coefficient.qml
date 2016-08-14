@@ -46,12 +46,12 @@ The system then goes over to the linear regime where we can read out the diffusi
             yScale: 119.6
             xRange: 1000
             xLabel: "Time [fs]"
-            yLabel: "T [K]"
+            yLabel: "Temperature [K]"
         },
         Thermostat {
             unitScale: 119.6
             minimumValue: 1.0
-            maximumValue: 300.0
+            maximumValue: 500.0
             temperatureDampening: 0.1
         }
     ]
