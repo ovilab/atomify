@@ -96,6 +96,14 @@ void Computes::synchronize(LAMMPSController *lammpsController)
     setModel(QVariant::fromValue(m_data));
 }
 
+void Computes::computeAll(LAMMPSController *lammpsController)
+{
+    for(QObject *object : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(object);
+        compute->computeInLAMMPS(lammpsController);
+    }
+}
+
 int Computes::count() const
 {
     return m_count;

@@ -156,6 +156,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::work()
 {
     m_lammpsController.tick();
+    if(m_lammpsController.state.canProcessSimulatorControls) {
+        m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
+    }
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
     if(delta > 0) {

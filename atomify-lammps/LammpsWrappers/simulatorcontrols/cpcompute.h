@@ -35,6 +35,7 @@ public:
     ~CPCompute();
     void copyData(LAMMPSController *lammpsController);
     bool existsInLammps(LAMMPSController *lammpsController) override;
+    void computeInLAMMPS(LAMMPSController *lammpsController);
     bool isVector() const;
     QString group() const;
     int frequency() const;
