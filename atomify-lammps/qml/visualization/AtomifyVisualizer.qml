@@ -16,9 +16,11 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 
 Scene3D {
     id: root
+    signal changedRenderQuality
     property alias visualizer: visualizer
     property alias simulator: simulator
-    // property alias rdf: rdf
+    property alias light1: light1
+    property alias light2: light2
     property real scale: 0.23
     property alias nearPlane: mainCamera.nearPlane
     property alias farPlane: mainCamera.farPlane
@@ -28,7 +30,26 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
-    property string renderMode: "deferred"
+    property string renderMode: "forward"
+    property string renderQuality: "low"
+    multisample: true
+    onRenderQualityChanged: {
+        if(renderQuality === "low") {
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
+            root.renderMode = "forward"
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width + 1
+        } else if(renderQuality === "medium") {
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
+            root.renderMode = "deferred"
+            ambientOcclusion.samples = 12
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+        } else if(renderQuality === "high") {
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
+            root.renderMode = "deferred"
+            ambientOcclusion.samples = 40
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+        }
+    }
 
     onBondRadiusChanged: {
         if(simulator != undefined) {
@@ -43,6 +64,7 @@ Scene3D {
         property Camera camera: Camera {
             id: mainCamera
             projectionType: CameraLens.PerspectiveProjection
+            // projectionType: CameraLens.OrthographicProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
             nearPlane : 3.0
@@ -72,6 +94,7 @@ Scene3D {
         }
         components: [
             RenderSettings {
+                id: renderSettings
                 activeFrameGraph: root.renderMode == "deferred" ? deferredFrameGraph : forwardFrameGraph
             },
             InputSettings {
@@ -430,17 +453,17 @@ void main()
                 ShaderBuilder {
                     id: finalShaderBuilder
                     function selectOutput(outputName) {
-                        if(outputName === "blurMultiply") {
+                        if(outputName === "blurMultiply" || outputName === "Normal") {
                             output.value = blurMultiply
                         }
                         if(outputName === "ssaoMultiply") {
                             output.value = ssaoMultiply
                         }
-                        if(outputName === "blur") {
+                        if(outputName === "blur" || outputName === "Blurred SEM") {
                             output.value = blurNode
                         }
 
-                        if(outputName === "ssao") {
+                        if(outputName === "ssao" || outputName === "SEM") {
                             output.value = ssaoNode
                         }
                         if(outputName === "position") {
@@ -521,22 +544,14 @@ void main()
                         color: finalShaderBuilder.color
                         lights: [
                             Light {
-                                // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
-                                position: visualizer.camera.position.plus(
-                                              (visualizer.camera.viewVector.normalized().plus(
-                                                   visualizer.camera.upVector.normalized()).plus(
-                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                                //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
-                                strength: 0.4
-                                attenuation: 0.0
+                                position: light1.position
+                                strength: light1.strength
+                                attenuation: light1.attenuation
                             },
                             Light {
-                                position: visualizer.camera.position.minus(
-                                              (visualizer.camera.viewVector.normalized().plus(
-                                                   visualizer.camera.upVector.normalized()).plus(
-                                                   visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                                strength: 0.4
-                                attenuation: 0.0
+                                position: light2.position
+                                strength: light2.strength
+                                attenuation: light2.attenuation
                             }
                         ]
                     }
@@ -619,9 +634,9 @@ void main()
             simulationSpeed: 1
             system.atoms.modifiers: [
                 colorModifier,
-                periodicImages,
                 groupModifier,
-                regionModifier
+                regionModifier,
+                periodicImages
             ]
         }
 
@@ -664,16 +679,16 @@ void main()
                 color: spheres.fragmentBuilder.color
                 lights: [
                     Light {
-                        // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
+                        id: light1
                         position: visualizer.camera.position.plus(
                                       (visualizer.camera.viewVector.normalized().plus(
                                            visualizer.camera.upVector.normalized()).plus(
                                            visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                        //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
                         strength: 0.4
                         attenuation: 0.0
                     },
                     Light {
+                        id: light2
                         position: visualizer.camera.position.minus(
                                       (visualizer.camera.viewVector.normalized().plus(
                                            visualizer.camera.upVector.normalized()).plus(
@@ -683,7 +698,6 @@ void main()
                     }
                 ]
             }
-
         }
 
         Bonds {
@@ -695,22 +709,14 @@ void main()
                 color: spheres.fragmentBuilder.color
                 lights: [
                     Light {
-                        // position: visualizer.camera.position + visualizer.camera.viewVector.normalized().plus(visualizer.camera.upVector.normalized()).plus(visualizer.camera.viewVector.normalized().crossProduct(visualizer.camera.upVector)).normalized().times(10.0)
-                        position: visualizer.camera.position.plus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                        //position: visualizer.camera.position.plus(visualizer.camera.upVector.normalized())
-                        strength: 0.4
-                        attenuation: 0.0
+                        position: light1.position
+                        strength: light1.strength
+                        attenuation: light1.attenuation
                     },
                     Light {
-                        position: visualizer.camera.position.minus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                        strength: 0.4
-                        attenuation: 0.0
+                        position: light2.position
+                        strength: light2.strength
+                        attenuation: light2.attenuation
                     }
                 ]
             }

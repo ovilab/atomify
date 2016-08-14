@@ -25,6 +25,11 @@ QString LammpsError::command() const
     return m_command;
 }
 
+QString LammpsError::scriptPath() const
+{
+    return m_scriptPath;
+}
+
 void LammpsError::setScriptFile(QString scriptFile)
 {
     if (m_scriptFile == scriptFile)
@@ -59,4 +64,13 @@ void LammpsError::setCommand(QString command)
 
     m_command = command;
     emit commandChanged(command);
+}
+
+void LammpsError::setScriptPath(QString scriptPath)
+{
+    if (m_scriptPath == scriptPath)
+        return;
+
+    m_scriptPath = scriptPath;
+    emit scriptPathChanged(scriptPath);
 }

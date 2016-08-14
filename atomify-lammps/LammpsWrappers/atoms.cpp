@@ -159,21 +159,8 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
         qDebug() << "Sorted using " << t.elapsed() << " ms.";
     }
 
-    // applyDeltaPositions(atomData);
     generateBondData(atomData, *system);
     generateSphereData(atomData);
-    // generateBondDataFromLammpsNeighborlist(atomData, *lammps);
-}
-
-void Atoms::applyDeltaPositions(AtomData &atomData) {
-    return;
-    for(int i=0; i<atomData.positions.size(); i++) {
-        QVector3D &position = atomData.positions[i];
-        QVector3D &deltaPosition = atomData.deltaPositions[i];
-        position[0] += deltaPosition[0];
-        position[1] += deltaPosition[1];
-        position[2] += deltaPosition[2];
-    }
 }
 
 //void Atoms::findOcclusion(AtomData &atomData) {
@@ -190,11 +177,10 @@ void Atoms::applyDeltaPositions(AtomData &atomData) {
 void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
     for(int i = 0; i<atomData.size(); i++) {
-        int atomIndex = atomData.sortedIndices[i];
-        if(atomData.visible[atomIndex]) {
-            atomData.positions[visibleAtomCount] = atomData.positions[atomIndex] + atomData.deltaPositions[atomIndex];
-            atomData.colors[visibleAtomCount] = atomData.colors[atomIndex];
-            atomData.radii[visibleAtomCount] = atomData.radii[atomIndex];
+        if(atomData.visible[i]) {
+            atomData.positions[visibleAtomCount] = atomData.positions[i] + atomData.deltaPositions[i];
+            atomData.colors[visibleAtomCount] = atomData.colors[i];
+            atomData.radii[visibleAtomCount] = atomData.radii[i];
             visibleAtomCount++;
         }
     }
@@ -219,8 +205,7 @@ void Atoms::generateBondData(AtomData &atomData, System &system) {
     QElapsedTimer t;
     t.start();
     bondsDataRaw.reserve(atomData.positions.size());
-    for(int iii=0; iii<atomData.size(); iii++) {
-        int ii = atomData.sortedIndices[iii];
+    for(int ii=0; ii<atomData.size(); ii++) {
         if(!atomData.visible[ii]) continue;
 
         int i = atomData.originalIndex[ii];

@@ -18,6 +18,8 @@ void RegionModifier::apply(AtomData &atomData)
             if(isInsideRegion) {
                 if(region->hovered()) atomData.colors[atomIndex] = QVector3D(1.0, 0.0, 0.0);
                 if(!region->visible()) atomData.visible[atomIndex] = false;
+            } else {
+                if(region->hovered()) atomData.colors[atomIndex] = QVector3D(1.0, 1.0, 1.0);
             }
         }
     }

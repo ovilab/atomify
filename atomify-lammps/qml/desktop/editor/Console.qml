@@ -15,14 +15,25 @@ ColumnLayout {
 
     Layout.fillHeight: true
     Layout.fillWidth: true
-    TextArea {
-        id: consoleOutput
+    Flickable {
+        id: flickableItem
         Layout.fillHeight: true
         Layout.fillWidth: true
         Layout.minimumHeight: 100
-        textFormat: TextEdit.RichText
-        readOnly: true
-        placeholderText: "No output yet..."
+        TextArea.flickable: TextArea {
+            id: consoleOutput
+            anchors.fill: parent
+            textFormat: TextEdit.RichText
+            selectByMouse: true
+            font.family: "DejaVu Sans Mono"
+            font.pixelSize: 12
+            readOnly: true
+            placeholderText: "No output yet..."
+        }
+
+        ScrollBar.vertical: ScrollBar {
+            id: scrollbar
+        }
     }
 
     RowLayout {
@@ -31,7 +42,6 @@ ColumnLayout {
         TextField {
             property int previousCommandCounter: 0
             id: singleCommand
-            // width: parent.width - runSingleCommand.width
             Layout.fillWidth: true
 
             Keys.onPressed: {

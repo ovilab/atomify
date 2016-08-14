@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import QtQuick.Controls 1.4 as QQC1
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -11,37 +12,44 @@ import QtCharts  2.0
 import "mobile"
 import "mobile/style"
 import "desktop"
-
-ApplicationWindow {
+import "plotting"
+QQC1.ApplicationWindow {
     id: applicationRoot
-
     title: "Atomify"
     visible: true
+    title: "Atomify"
 
-    property string mode: {
-//        if(["android", "ios", "winphone"].indexOf(Qt.platform.os)) {
-//            return "mobile"
-//        }
-        return "desktop"
+    QQC1.MenuBar {
+        QQC1.Menu {
+            title: "File"
+            QQC1.MenuItem {
+                text: "New script"
+            }
+            QQC1.MenuItem {
+                text: "Open"
+            }
+            QQC1.MenuItem {
+                text: "Save"
+            }
+            QQC1.MenuItem {
+                text: "Save as"
+            }
+        }
     }
 
     Settings {
         id: settings
-//        property alias mode: applicationRoot.mode
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
     }
 
     function resetStyle() {
-        console.log("Resetting style")
-//        width = Math.max(width, 1650)
-//        height = Math.max(height, 1080)
         Style.reset(width, height, Screen)
     }
 
     onWidthChanged: {
-        resetStyle()
         console.log("Width changed")
+        resetStyle()
     }
 
     onHeightChanged: {
@@ -50,34 +58,13 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        // resetStyle()
+        resetStyle()
     }
 
     MainDesktop {
-        visible: mode === "desktop"
+        id: mainDesktop
         anchors.fill: parent
     }
-
-//    MainMobile {
-//        visible: mode === "mobile"
-//        anchors.fill: parent
-//    }
-
-//    Shortcut {
-//        sequence: StandardKey.AddTab
-//        context: Qt.ApplicationShortcut
-//        onActivated: {
-//            if(mode === "desktop") {
-//                mode = "mobile"
-//            } else {
-//                mode = "desktop"
-//                //                tempPlot.xMax = mySimulator.simulationTime
-//                //                tempPlot.xMin = mySimulator.simulationTime-1
-//                //                maxValue = Math.max(maxValue, value)
-//                //                tempPlot.yMax = maxValue
-//            }
-//        }
-//    }
 
     Shortcut {
         sequence: StandardKey.FullScreen
@@ -90,4 +77,14 @@ ApplicationWindow {
             }
         }
     }
+
+//    Plot2D {
+//        id: plot2d
+//    }
+//    Button {
+//        text: "Open"
+//        onClicked: {
+//            plot2d.show()
+//        }
+//    }
 }

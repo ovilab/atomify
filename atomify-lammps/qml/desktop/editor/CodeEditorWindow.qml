@@ -6,17 +6,60 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 
 Item {
+    id: root
+    property alias dummyEditor: dummyEditor
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
+    property CodeEditor activeEditor
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
     property int currentLine: -1
     property int errorLine: -1
+    property string openFiles: ""
+
+    Settings {
+        property alias lastOpenedFolder: fileDialog.folder
+        property alias openFiles: root.openFiles
+    }
+
+    CodeEditor {
+        id: dummyEditor
+        visible: false
+
+    }
+
+    Component.onCompleted: {
+        var openFilesCopy = openFiles
+        var files = openFilesCopy.split("###_/_###")
+
+        var numOpenFiles = 0
+        for(var i in files) {
+            var filename = files[i]
+            if(dummyEditor.fileExists(filename)) {
+                openTab(filename)
+                numOpenFiles += 1
+            }
+        }
+
+        if(numOpenFiles === 0) {
+            newTab()
+        }
+    }
+
+    function updateOpenFiles() {
+        openFiles = ""
+
+        for(var i=0; i<stackLayout.count; i++) {
+            var editor = stackLayout.itemAt(i)
+            openFiles = openFiles+"###_/_###"+editor.fileUrl
+        }
+    }
+
     onCurrentLineChanged: {
-        if(currentEditor != undefined) currentEditor.currentLine = currentLine
+        if(activeEditor != undefined) activeEditor.currentLine = currentLine
     }
 
     onErrorLineChanged: {
-        if(currentEditor != undefined) currentEditor.errorLine = errorLine
+        if(activeEditor != undefined) activeEditor.errorLine = errorLine
     }
 
     function clear() {
@@ -36,6 +79,8 @@ Item {
         newCodeEditor.changedSinceLastSave = false
         tabBar.setCurrentIndex(tabBar.count-1) // select it
         focusCurrentEditor()
+
+        updateOpenFiles()
     }
 
     function showDoYouWantToSave(fileName) {
@@ -48,7 +93,6 @@ Item {
 
         if(currentEditor.changedSinceLastSave) {
             // Ask user to save the file before we close the tab
-
             messageDialog.cb = function() {
                 // Callback is to close the tab
                 var indexOfCurrentTab = stackLayout.currentIndex
@@ -75,24 +119,29 @@ Item {
         if(editorCount == 0) {
             newTab()
         }
+
+        if(indexOfCurrentTab >= editorCount) {
+            indexOfCurrentTab -= 1
+        }
+
+        tabBar.currentIndex = indexOfCurrentTab
+
+        updateOpenFiles()
     }
 
-    function openTab(filename) {
-        if(filename === undefined) {
-            fileDialog.cb = function() {
-                if(currentEditor.title === "untitled" && currentEditor.text === "") {
-                    currentEditor.open(fileDialog.fileUrl)
-                } else {
-                    var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
-                    var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
-                    newTabButton.codeEditor = newCodeEditor
-                    newCodeEditor.open(fileDialog.fileUrl)
-                    newCodeEditor.changedSinceLastSave = false
-                    tabBar.setCurrentIndex(tabBar.count-1)
-                    newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
-                    focusCurrentEditor()
-                }
+    function openTab(filename, errorLine) {
+        if(errorLine === undefined) {
+            errorLine = -1
+        }
 
+        if(filename === undefined) {
+            // If we just pressed Ctrl+O to open, show the dialog
+            fileDialog.cb = function() {
+                for(var i in fileDialog.fileUrls) {
+                    var fileUrl = fileDialog.fileUrls[i]
+                    console.log("File url: ", fileUrl)
+                    openTab(fileUrl)
+                }
             }
             fileDialog.visible = true
         } else {
@@ -100,25 +149,28 @@ Item {
             for(var i=0; i<stackLayout.count; i++) {
                 var editor = stackLayout.itemAt(i)
 
-                if(editor.fileUrl==filename) {
+                if(editor.fileUrl==filename) { // == is correct because the string objects aren't identical, just equal strings
                     tabBar.currentIndex = i
-                    return;
+                    currentEditor.errorLine = errorLine
+                    return
                 }
             }
 
+            if(currentEditor && currentEditor.fileName === "untitled" && currentEditor.text === "") {
+                currentEditor.open(filename)
+                updateOpenFiles()
+                return
+            }
+
             // Nope. Not open, so open in a new tab instead
-            var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
+            var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { errorLine: "+errorLine+" }", stackLayout);
             var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
             newTabButton.codeEditor = newCodeEditor
             newCodeEditor.open(filename)
             newCodeEditor.changedSinceLastSave = false
             tabBar.setCurrentIndex(tabBar.count-1)
-            newTabButton.color = "#fff" // Hack since focus isn't set correctly when it's the first tab?
+            updateOpenFiles()
         }
-    }
-
-    Settings {
-        property alias lastOpenedFolder: fileDialog.folder
     }
 
     ColumnLayout {
@@ -130,11 +182,6 @@ Item {
                 left: parent.left
                 right: parent.right
             }
-
-            CodeEditorTabButton {
-                text: codeEditor_1.title
-                codeEditor: codeEditor_1
-            }
         }
 
         StackLayout {
@@ -142,12 +189,8 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             currentIndex: tabBar.currentIndex
-
-            CodeEditor {
-                id: codeEditor_1
-                Component.onCompleted: {
-                    changedSinceLastSave = false
-                }
+            onCountChanged: {
+                updateOpenFiles()
             }
         }
     }
@@ -155,6 +198,7 @@ Item {
     FileDialog {
         id: fileDialog
         selectExisting : true
+        selectMultiple: true
         property var cb
         title: "Please choose a file"
 

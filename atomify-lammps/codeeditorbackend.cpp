@@ -1,5 +1,9 @@
 #include "codeeditorbackend.h"
 
+#include <QFileInfo>
+#include <QDir>
+#include <QUrlQuery>
+
 CodeEditorBackend::CodeEditorBackend()
 {
 
@@ -17,7 +21,10 @@ QUrl CodeEditorBackend::fileUrl() const
 
 QString CodeEditorBackend::fileName() const
 {
-    return m_fileName;
+    if(m_fileUrl.toString().isEmpty()) {
+        return QString("untitled");
+    }
+    return m_fileUrl.fileName();
 }
 
 void CodeEditorBackend::setText(QString text)
@@ -31,21 +38,18 @@ void CodeEditorBackend::setText(QString text)
 
 void CodeEditorBackend::setFileUrl(QUrl fileUrl)
 {
+    fileUrl = QUrl::fromLocalFile(fileUrl.toLocalFile());
+//    qDebug() << "Url: ", fileUrl;
+//    qDebug() << "Url path: ", fileUrl.path();
+    // fileUrl = QUrl(fileUrl.path());
+
     if (m_fileUrl == fileUrl)
         return;
 
     m_fileUrl = fileUrl;
     emit fileUrlChanged(fileUrl);
-    setFileName(fileUrl.fileName());
-}
-
-void CodeEditorBackend::setFileName(QString fileName)
-{
-    if (m_fileName == fileName)
-        return;
-
-    m_fileName = fileName;
-    emit fileNameChanged(fileName);
+    emit folderChanged(folder());
+    emit fileNameChanged(fileName());
 }
 
 bool CodeEditorBackend::save()
@@ -60,6 +64,36 @@ bool CodeEditorBackend::save()
     return true;
 }
 
+QString CodeEditorBackend::folder() const
+{
+    QFileInfo info(m_fileUrl.toLocalFile());
+    return info.dir().absolutePath();
+}
+
+bool CodeEditorBackend::fileExists(QString path)
+{
+    QUrl url(path);
+    QFileInfo info(url.toLocalFile());
+    return info.exists();
+}
+
+QString CodeEditorBackend::cleanPath(QString path)
+{
+    return "file://"+QUrl(path).toLocalFile();
+}
+
+QVariantMap CodeEditorBackend::getParameters(QUrl path)
+{
+    QVariantMap map;
+
+    QUrlQuery query(path);
+    auto items = query.queryItems();
+    for(auto item : items) {
+        map[item.first] = item.second;
+    }
+    return map;
+}
+
 bool CodeEditorBackend::load()
 {
     QFile file(m_fileUrl.toLocalFile());
@@ -68,7 +102,7 @@ bool CodeEditorBackend::load()
         return false;
     }
     QByteArray content = file.readAll();
-    qDebug() << "Content in file " << m_fileName << ": " << content;
+    qDebug() << "Content in file " << fileName() << ": " << content;
     setText(QString::fromUtf8(content.constData(), content.length()));
 
     file.close();

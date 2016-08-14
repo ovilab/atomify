@@ -10,15 +10,30 @@ import Qt.labs.settings 1.0
 
 import "../visualization"
 import "editor"
+import "../plotting"
 Item {
-    id: desktopRoot
+    id: root
 
     property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
     property bool focusMode: false
 
     Component.onCompleted: {
-        editorTab.lammpsEditor.runScript()
+        // editorTab.lammpsEditor.runScript()
+    }
+
+    DropArea {
+        anchors.fill: parent
+        onDropped: {
+            if(drop.hasUrls) {
+                var numUrls = drop.urls.length
+                for(var i=0; i<drop.urls.length; i++) {
+                    var url = drop.urls[i]
+                    editorTab.codeEditorWindow.openTab(url)
+
+                }
+            }
+        }
     }
 
     Row {
@@ -35,8 +50,8 @@ Item {
                 Layout.fillHeight: true
                 width: 500
 
-                simulator: desktopRoot.simulator
-                visualizer: desktopRoot.visualizer
+                simulator: root.simulator
+                visualizer: root.visualizer
                 Component.onCompleted: {
                     simulator.errorInLammpsScript.connect(editorTab.reportError)
                 }
@@ -62,12 +77,13 @@ Item {
 
         }
 
-        SimulationSummary {
+        RightBar {
             id: simulationSummary
 
             width: 300
             height: parent.height
             system: simulator.system ? simulator.system : null
+            visualizer: root.visualizer
 
             Column {
 
@@ -290,9 +306,9 @@ Item {
 
     ControlBar {
         id: controlBar1
-        simulator: desktopRoot.simulator
-        visualizer: desktopRoot.visualizer
-        visible: !desktopRoot.focusMode
+        simulator: root.simulator
+        visualizer: root.visualizer
+        visible: !root.focusMode
         x: visualizer.x + visualizer.width*0.5 - 0.5*width
 
         y: parent.height - 100

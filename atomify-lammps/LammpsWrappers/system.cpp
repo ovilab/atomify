@@ -6,6 +6,7 @@
 #include "regions.h"
 #include "groups.h"
 #include "computes.h"
+#include "fixes.h"
 #include "../mysimulator.h"
 #include "modifiers/modifier.h"
 #include "units.h"
@@ -19,6 +20,7 @@ System::System(AtomifySimulator *simulator)
     setRegions(new Regions(simulator));
     setComputes(new Computes(simulator));
     setUnits(new Units(simulator));
+    setFixes(new Fixes(simulator));
 }
 
 void System::synchronize(LAMMPSController *lammpsController)
@@ -27,6 +29,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_groups->synchronize(lammpsController);
     m_atoms->synchronize(lammpsController);
     m_computes->synchronize(lammpsController);
+    m_fixes->synchronize(lammpsController);
 
     LAMMPS *lammps = lammpsController->lammps();
     if(!lammps) {
@@ -179,6 +182,11 @@ Units *System::units() const
     return m_units;
 }
 
+Fixes *System::fixes() const
+{
+    return m_fixes;
+}
+
 Computes *System::computes() const
 {
     return m_computes;
@@ -245,4 +253,13 @@ void System::setUnits(Units *units)
 
     m_units = units;
     emit unitsChanged(units);
+}
+
+void System::setFixes(Fixes *fixes)
+{
+    if (m_fixes == fixes)
+        return;
+
+    m_fixes = fixes;
+    emit fixesChanged(fixes);
 }

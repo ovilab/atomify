@@ -17,8 +17,8 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Viewport {
     id: root
 
-    property real width: 10
-    property real height: 10
+    property real width: window ? Math.max(window.width, window.height) : 10
+    property real height: width
     property alias blurTexture: blurTexture
     property alias normalTexture: normalTexture
     property alias colorTexture: colorTexture
@@ -33,6 +33,7 @@ Viewport {
         matchAll: FilterKey { name: "renderingStyle"; value: "deferred" }
         RenderSurfaceSelector {
             id: surfaceSelector
+
             RenderPassFilter {
                 id : geometryPass
                 matchAny : FilterKey { name : "pass"; value : "geometry" }

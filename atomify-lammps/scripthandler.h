@@ -30,6 +30,7 @@ private:
     QString m_tempLocation;
 
     int m_currentLine = -1;
+    int m_currentLineInRootFile = -1;
 
 public:
     ScriptHandler();

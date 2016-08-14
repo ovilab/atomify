@@ -91,6 +91,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         error->setMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
         error->setCommand(m_lammpsController.state.nextCommand.command());
         error->setScriptFile(m_lammpsController.state.nextCommand.filename());
+        error->setScriptPath(m_lammpsController.state.nextCommand.path());
         error->setLine(m_lammpsController.state.nextCommand.line());
         atomifySimulator->setLammpsError(error);
         m_lammpsController.currentException().setIsReported(true);

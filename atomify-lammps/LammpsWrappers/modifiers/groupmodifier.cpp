@@ -18,6 +18,8 @@ void GroupModifier::apply(AtomData &atomData)
             if(isMemberOfGroup) {
                 if(group->hovered()) atomData.colors[i] = QVector3D(1.0, 0.0, 0.0);
                 if(!group->visible()) atomData.visible[i] = false;
+            } else {
+                if(group->hovered()) atomData.colors[i] = QVector3D(1.0, 1.0, 1.0);
             }
         }
     }

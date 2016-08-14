@@ -7,9 +7,6 @@ Pane {
     id: rectangleRoot
     property System system
 
-//    radius: 4
-//    color: Qt.rgba(1.0, 1.0, 1.0, 0.75)
-
     onSystemChanged: {
         if(system) {
             system.groups.onActiveChanged.connect(updateGroups)
@@ -19,8 +16,6 @@ Pane {
     }
 
     function getGlobalPosition(p, item) {
-        console.log("Item: ", item)
-        console.log("Parent: ", item.parent)
         var globalX = p.x
         var globalY = p.y
         while(item.parent != undefined) {
@@ -75,7 +70,7 @@ Pane {
     Column {
         anchors {
             fill: parent
-            margins: 16
+            margins: 10
         }
 
         spacing: 10
@@ -88,37 +83,29 @@ Pane {
                     text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
                 }
                 Label {
-
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
                 }
                 Label {
-
                     text: "System volume: "+system.volume.toFixed(2)
                 }
                 Label {
-
                     text: "Units: "+system.units.name
                 }
                 Label {
-
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Label {
-
                     text: "Average density: "+(system.numberOfAtoms/system.volume).toFixed(4)
                 }
                 Label {
-
                     text: "Number of atom types: "+system.numberOfAtomTypes
                 }
 
                 Label {
-
                     text: "Timesteps: "+system.timesteps
                 }
 
                 Label {
-
                     text: "Time: "+system.simulationTime.toFixed(2)
                 }
 
@@ -294,7 +281,7 @@ Pane {
                         anchors.top: computesRow.bottom
                         x: computesLabel.x
                         model: system ? system.computes.model : null
-                        height: visible ? count*26 : 0
+                        height: visible ? count*20 : 0
                         visible: false
                         delegate: Row {
                             visible: computesList.visible
@@ -321,6 +308,66 @@ Pane {
                                         ": "+model.modelData.scalarValue.toFixed(3)
                                     } else {
                                         ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Column {
+                    id: fixesColumn
+                    property bool expanded: false
+                    height: fixesRow.height + fixesList.height
+
+
+                    Row {
+                        id: fixesRow
+                        spacing: 2
+                        height: fixesLabel.height
+
+                        Image {
+                            id: collapseFixes
+                            y: 3
+                            source: "qrc:/images/expand.gif"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: fixesColumn.expanded = !fixesColumn.expanded
+                            }
+                        }
+                        Label {
+                            id: fixesLabel
+                            text: "Fixes: "+system.fixes.count
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: fixesColumn.expanded = !fixesColumn.expanded
+                            }
+                        }
+                    }
+
+                    ListView {
+                        id: fixesList
+                        anchors.top: fixesRow.bottom
+                        x: fixesLabel.x
+                        model: system ? system.fixes.model : null
+                        height: visible ? count*26 : 0
+                        visible: fixesColumn.expanded
+                        delegate: Row {
+                            visible: fixesList.visible
+                            Label {
+                                id: fixesTitleLabel
+                                font.underline: true
+                                color: "steelblue"
+                                text: {
+                                    model.modelData.identifier
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+//                                        var point = Qt.point(mouseX, mouseY)
+//                                        point = getGlobalPosition(point, computeTitleLabel)
+//                                        createComputeWindow(model.modelData, point)
                                     }
                                 }
                             }

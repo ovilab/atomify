@@ -9,11 +9,17 @@ Pane {
     id: editorTabRoot
     property TextArea consoleOutput: consoleItem.output
     property alias lammpsEditor: lammpsEditor
+    property alias codeEditorWindow: lammpsEditor.codeEditorWindow
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
     onConsoleOutputChanged: {
         consoleOutput.onLinkActivated.connect(function(link){
-            lammpsEditor.codeEditorWindow.openTab(link)
+            var params = codeEditorWindow.currentEditor.getParameters(link)
+            var errorLine = params["errorLine"]
+            console.log("Link before: ", link)
+            link = codeEditorWindow.dummyEditor.cleanPath(link)
+            console.log("Link after: ", link)
+            lammpsEditor.codeEditorWindow.openTab(link, errorLine)
         })
     }
 
@@ -23,12 +29,13 @@ Pane {
                 consoleOutput.append(" Simulation crashed on line "+simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
-                lammpsEditor.codeEditorWindow.errorLine = simulator.lammpsError.line
+                lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine
             } else {
                 consoleOutput.append(" Simulation crashed.")
-                consoleOutput.append(" File: <a href=\"file://" + simulator.lammpsError.scriptFile + "\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
+                consoleOutput.append(" File: <a style=\"color: #56B6C2; font-weight: bold;\" href=\"file://"+simulator.lammpsError.scriptPath + "?errorLine="+simulator.lammpsError.line+"\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
+                lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine
             }
         }
     }
@@ -42,6 +49,7 @@ Pane {
             Layout.fillHeight: true
             Layout.fillWidth: true
             onClearConsole: consoleItem.clear()
+            onDidRun: visualizer.focus = true
         }
 
         RowLayout {

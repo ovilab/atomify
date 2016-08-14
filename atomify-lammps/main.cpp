@@ -13,6 +13,7 @@
 #include "mysimulator.h"
 #include "highlighter.h"
 #include "LammpsWrappers/simulatorcontrols/cpcompute.h"
+#include "LammpsWrappers/simulatorcontrols/cpfix.h"
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
 #include "LammpsWrappers/simulatorcontrols/nvt.h"
 #include "scripthandler.h"
@@ -24,13 +25,16 @@
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/system.h"
 #include "LammpsWrappers/groups.h"
+#include "LammpsWrappers/fixes.h"
 #include "LammpsWrappers/regions.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/computes.h"
 #include "LammpsWrappers/units.h"
 #include "dataproviders/cp1ddata.h"
+#include "dataproviders/data2D.h"
 #include "dataproviders/dataprovider.h"
 #include "linenumbers.h"
+#include "windowgl2.h"
 #include "codeeditorbackend.h"
 int main(int argc, char *argv[])
 {
@@ -49,9 +53,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<Units>("Atomify", 1, 0, "Units");
     qmlRegisterType<Groups>("Atomify", 1, 0, "Groups");
     qmlRegisterType<Computes>("Atomify", 1, 0, "Computes");
+    qmlRegisterType<Fixes>("Atomify", 1, 0, "Fixes");
     qmlRegisterType<Regions>("Atomify", 1, 0, "Regions");
     qmlRegisterType<DataProvider>("Atomify", 1, 0, "DataProvider");
     qmlRegisterType<CP1DData>("Atomify", 1, 0, "CP1DData");
+    qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
 
     qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");
     qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");
@@ -62,6 +68,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");
     qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
     qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
+    qmlRegisterType<WindowGL2>("Atomify", 1, 0, "WindowGL2");
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
