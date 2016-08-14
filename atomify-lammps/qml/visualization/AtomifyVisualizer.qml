@@ -31,23 +31,18 @@ Scene3D {
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
     property string renderMode: "forward"
-    property string renderQuality: "low"
+    property string renderQuality: "medium"
     multisample: true
     onRenderQualityChanged: {
         if(renderQuality === "low") {
-            // forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
             root.renderMode = "forward"
-            // forwardFrameGraph.window.width = forwardFrameGraph.window.width + 1
+            spheres.fragmentColor = spheres.fragmentBuilder.normalDotCamera
         } else if(renderQuality === "medium") {
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
-            root.renderMode = "deferred"
-            ambientOcclusion.samples = 12
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+            root.renderMode = "forward"
+            spheres.fragmentColor = mediumQuality
         } else if(renderQuality === "high") {
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
             root.renderMode = "deferred"
-            ambientOcclusion.samples = 40
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+            ambientOcclusion.samples = 32
         }
     }
 
@@ -667,6 +662,31 @@ void main()
             numberOfCopiesZ: 1
         }
 
+        StandardMaterial {
+            id: mediumQuality
+            color: spheres.fragmentBuilder.color
+            lights: [
+                Light {
+                    id: light1
+                    position: visualizer.camera.position.plus(
+                                  (visualizer.camera.viewVector.normalized().plus(
+                                       visualizer.camera.upVector.normalized()).plus(
+                                       visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+                    strength: 0.4
+                    attenuation: 0.0
+                },
+                Light {
+                    id: light2
+                    position: visualizer.camera.position.minus(
+                                  (visualizer.camera.viewVector.normalized().plus(
+                                       visualizer.camera.upVector.normalized()).plus(
+                                       visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+                    strength: 0.4
+                    attenuation: 0.0
+                }
+            ]
+        }
+
         Spheres {
             id: spheres
             camera: visualizer.camera
@@ -674,51 +694,29 @@ void main()
             // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
             posMin: -100
             posMax:  100
-            fragmentColor: StandardMaterial {
-                color: spheres.fragmentBuilder.color
-                lights: [
-                    Light {
-                        id: light1
-                        position: visualizer.camera.position.plus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                        strength: 0.4
-                        attenuation: 0.0
-                    },
-                    Light {
-                        id: light2
-                        position: visualizer.camera.position.minus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                        strength: 0.4
-                        attenuation: 0.0
-                    }
-                ]
-            }
+            fragmentColor: mediumQuality
         }
 
-        Bonds {
-            id: bonds
-            bondData: simulator.system.atoms.bondData
-            posMin: spheres.posMin
-            posMax: spheres.posMax
-            fragmentColor: StandardMaterial {
-                color: spheres.fragmentBuilder.color
-                lights: [
-                    Light {
-                        position: light1.position
-                        strength: light1.strength
-                        attenuation: light1.attenuation
-                    },
-                    Light {
-                        position: light2.position
-                        strength: light2.strength
-                        attenuation: light2.attenuation
-                    }
-                ]
-            }
-        }
+//        Bonds {
+//            id: bonds
+//            bondData: simulator.system.atoms.bondData
+//            posMin: spheres.posMin
+//            posMax: spheres.posMax
+//            fragmentColor: StandardMaterial {
+//                color: spheres.fragmentBuilder.color
+//                lights: [
+//                    Light {
+//                        position: light1.position
+//                        strength: light1.strength
+//                        attenuation: light1.attenuation
+//                    },
+//                    Light {
+//                        position: light2.position
+//                        strength: light2.strength
+//                        attenuation: light2.attenuation
+//                    }
+//                ]
+//            }
+//        }
     }
 }
