@@ -17,7 +17,6 @@ class Computes : public QObject
 public:
     explicit Computes(QObject *parent = 0);
     void synchronize(class LAMMPSController *lammpsController);
-    void synchronizeData(class LAMMPSController *lammpsController);
     void reset();
     int count() const;
     QVariant model() const;

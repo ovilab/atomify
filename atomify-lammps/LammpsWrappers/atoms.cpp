@@ -135,8 +135,6 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
 
 void Atoms::updateData(System *system, LAMMPS *lammps)
 {
-    QElapsedTimer t;
-    t.start();
     AtomData atomData = m_atomData;
     if(!atomData.isValid()) {
         qDebug() << "Atom data is not valid before modifiers.";

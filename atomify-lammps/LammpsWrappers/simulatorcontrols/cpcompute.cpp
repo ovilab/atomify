@@ -31,7 +31,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     CP1DData *data = ensureExists(QString("Temperature"), true);
     setXLabel("Time");
     setYLabel("Temperature");
-    data->add(lammpsController->system()->simulationTime(), value, true);
+    data->add(lammpsController->system()->simulationTime(), value);
     return true;
 }
 
@@ -44,7 +44,7 @@ bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController)
     CP1DData *data = ensureExists(QString("Potential energy"), true);
     setXLabel("Time");
     setYLabel("Potential Energy");
-    data->add(lammpsController->system()->simulationTime(), value, true);
+    data->add(lammpsController->system()->simulationTime(), value);
     return true;
 }
 
@@ -56,7 +56,7 @@ bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController)
     CP1DData *data = ensureExists(QString("Kinetic energy"), true);
     setXLabel("Time");
     setYLabel("Kinetic Energy");
-    data->add(lammpsController->system()->simulationTime(), value, true);
+    data->add(lammpsController->system()->simulationTime(), value);
     return true;
 }
 
@@ -72,7 +72,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     CP1DData *data = ensureExists(QString("Pressure"), true);
     setXLabel("Time");
     setYLabel("Pressure");
-    data->add(lammpsController->system()->simulationTime(), value, true);
+    data->add(lammpsController->system()->simulationTime(), value);
 
     // Then compute stress tensor
     compute->compute_vector();
@@ -84,7 +84,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value, true);
+        data->add(lammpsController->system()->simulationTime(), value);
     }
     return true;
 }
@@ -107,7 +107,11 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
             double rdf = compute->array[bin][1+2*pairId];
             data->add(r,rdf,true);
         }
+
+        emit data->updated();
     }
+
+
 
     return true;
 }
@@ -124,7 +128,7 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value, true);
+        data->add(lammpsController->system()->simulationTime(), value);
     }
 
     return true;
@@ -142,7 +146,7 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value, true);
+        data->add(lammpsController->system()->simulationTime(), value);
     }
 
     return true;
@@ -160,7 +164,7 @@ bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value, true);
+        data->add(lammpsController->system()->simulationTime(), value);
     }
 
     return true;
@@ -176,7 +180,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     CP1DData *data = ensureExists(QString("Radius of gyration"), true);
     setXLabel("Time");
     setYLabel("Pressure");
-    data->add(lammpsController->system()->simulationTime(), value, true);
+    data->add(lammpsController->system()->simulationTime(), value);
 
     compute->compute_vector();
 
@@ -188,7 +192,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value, true);
+        data->add(lammpsController->system()->simulationTime(), value);
     }
 
     return true;
