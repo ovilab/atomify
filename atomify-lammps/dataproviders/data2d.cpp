@@ -10,6 +10,7 @@ Data2D::Data2D(QObject *parent) : QSurfaceDataProxy(parent)
 void Data2D::update() {
 
     resetArray(m_dataArray);
+    emit updated();
 }
 
 float Data2D::xMin() const
@@ -69,8 +70,8 @@ void Data2D::setValue(float x, float y, float z)
     int i = (x - m_xMin) / deltaX;
     int j = (z - m_zMin) / deltaZ;
 
-//    if( i == m_size.width()) i--;
-//    if( j == m_size.height()) j--;
+    if( i == m_size.width()) i--;
+    if( j == m_size.height()) j--;
 //    qDebug() << "Setting value (" << x << ", " << y << ", " << z << ")";
 
     if(i < 0 || i >= m_size.width() || j < 0 || j >= m_size.height()) {

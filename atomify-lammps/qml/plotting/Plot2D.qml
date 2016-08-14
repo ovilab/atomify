@@ -17,20 +17,14 @@ WindowGL2 {
 
     onFixChanged: {
         surfaceSeries.dataProxy = fix.data[0]
-//        xAxis.min = fix.data[0].xMin
-//        xAxis.max = fix.data[0].xMax
-
-//        yAxis.min = fix.data[0].yMin
-//        yAxis.max = fix.data[0].yMax
-
-//        zAxis.min = fix.data[0].zMin
-//        zAxis.max = fix.data[0].zMax
-//        for(var key in fix.data) {
-//            console.log("Stuff: ", fix.data[key])
-
-//            // compute.data1D[key].updated.connect(updateGraphs(key))
-//        }
-        //title = "Compute '"+compute.identifier+"'"
+        fix.data[0].updated.connect(function() {
+            xAxis.min = fix.data[0].xMin
+            xAxis.max = fix.data[0].xMax
+            yAxis.min = fix.data[0].yMin
+            yAxis.max = fix.data[0].yMax
+            zAxis.min = fix.data[0].zMin
+            zAxis.max = fix.data[0].zMax
+        })
     }
 
     Shortcut {
@@ -141,5 +135,45 @@ WindowGL2 {
                 //  itemLabelFormat: "(@xLabel, @zLabel): @yLabel"
             }
         }
+    }
+
+    Rectangle {
+        id: legend
+        anchors.margins: 20
+        anchors.bottom: parent.bottom
+        anchors.top: parent.top
+        anchors.right: parent.right
+        border.color: "black"
+        border.width: 1
+        width: 50
+        rotation: 180
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "black" }
+            GradientStop { position: 0.2; color: "red" }
+            GradientStop { position: 0.5; color: "blue" }
+            GradientStop { position: 0.8; color: "yellow" }
+            GradientStop { position: 1.0; color: "white" }
+        }
+    }
+
+    Text {
+        anchors.verticalCenter: legend.bottom
+        anchors.right: legend.left
+        anchors.margins: 2
+        text: surfaceGraph.axisY.min
+    }
+
+    Text {
+        anchors.verticalCenter: legend.verticalCenter
+        anchors.right: legend.left
+        anchors.margins: 2
+        text: (surfaceGraph.axisY.max + surfaceGraph.axisY.min) / 2
+    }
+
+    Text {
+        anchors.verticalCenter: legend.top
+        anchors.right: legend.left
+        anchors.margins: 2
+        text: surfaceGraph.axisY.max
     }
 }

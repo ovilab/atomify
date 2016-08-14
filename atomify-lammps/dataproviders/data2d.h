@@ -56,7 +56,7 @@ signals:
     void xLabelChanged(QString xLabel);
     void yLabelChanged(QString yLabel);
     void zLabelChanged(QString zLabel);
-
+    void updated();
 private:
     QSurfaceDataArray *m_dataArray = nullptr;
     QSize m_size;
