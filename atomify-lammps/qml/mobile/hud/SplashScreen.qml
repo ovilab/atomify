@@ -43,14 +43,22 @@ Item {
 
         Text {
             id: welcomeHeading
+            x: parent.width*0.5 - width*0.5
+
             anchors {
                 top: parent.top
-                left: image.right
-                right: parent.right
                 margins: Style.baseMargin
-                topMargin: image.height*0.5
+                topMargin: image.height*0.4
             }
-            font.pixelSize: Style.font.heading.size
+
+//            anchors {
+//                top: parent.top
+//                left: image.right
+//                right: parent.right
+//                margins: Style.baseMargin
+//                topMargin: image.height*0.5
+//            }
+            font.pixelSize: root.width * 0.05
 
             color: Style.font.color
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -58,6 +66,7 @@ Item {
         }
 
         Text {
+            id: welcomeText
             anchors {
                 top: image.bottom
                 left: parent.left
@@ -69,7 +78,7 @@ Item {
 
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: Style.font.color
-            font.pixelSize: Style.font.size
+            font.pixelSize: root.width * 0.03
             text: "
 We simulate how atoms and molecules behave with a physical model called molecular dynamics. It uses Newton's laws to move atoms around following the laws of physics. You can study gases, liquids and solids to see different properties and effects. Atomify is open source and uses LAMMPS as physics engine.
 "
@@ -81,7 +90,7 @@ We simulate how atoms and molecules behave with a physical model called molecula
                 anchors.left: parent.left
                 anchors.margins: Style.baseMargin
                 color: Style.font.color
-                font.pixelSize: Style.font.size
+                font.pixelSize: welcomeText.font.pixelSize
                 text:
 "Anders Hafreager and Svenn-Arne Dragly
 PhD candidates, University of Oslo"
