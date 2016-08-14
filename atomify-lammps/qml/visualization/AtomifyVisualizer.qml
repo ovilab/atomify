@@ -35,19 +35,19 @@ Scene3D {
     multisample: true
     onRenderQualityChanged: {
         if(renderQuality === "low") {
-            forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
+            // forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
             root.renderMode = "forward"
-            forwardFrameGraph.window.width = forwardFrameGraph.window.width + 1
+            // forwardFrameGraph.window.width = forwardFrameGraph.window.width + 1
         } else if(renderQuality === "medium") {
-            deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
+            // deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
             root.renderMode = "deferred"
             ambientOcclusion.samples = 12
-            deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+            // deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
         } else if(renderQuality === "high") {
-            deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
+            // deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
             root.renderMode = "deferred"
             ambientOcclusion.samples = 40
-            deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+            // deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
         }
     }
 
