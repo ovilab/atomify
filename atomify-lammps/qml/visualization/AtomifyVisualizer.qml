@@ -66,8 +66,8 @@ Scene3D {
         DeferredFrameGraph {
             id: deferredFrameGraph
 //            window: forwardFrameGraph.window
-            width: root.width
-            height: root.height
+            width: Math.max(root.width, root.height)
+            height: width  // TODO any reason they must be the same?
             camera: mainCamera
         }
         components: [

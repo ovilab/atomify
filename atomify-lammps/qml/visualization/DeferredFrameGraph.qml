@@ -45,7 +45,7 @@ Viewport {
                                 texture : Texture2D {
                                     id : normalTexture
                                     width : root.width
-                                    height : root.width // TODO use height?
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -62,7 +62,7 @@ Viewport {
                                 texture : Texture2D {
                                     id : positionTexture
                                     width : root.width
-                                    height : root.width // TODO use height?
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -79,7 +79,7 @@ Viewport {
                                 texture : Texture2D {
                                     id : colorTexture
                                     width : root.width
-                                    height : root.width // TODO use height?
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -96,7 +96,7 @@ Viewport {
                                 texture: Texture2D {
                                     id: depthTexture
                                     width : root.width
-                                    height : root.width // TODO use height?
+                                    height : root.height
                                     format: Texture.D32
                                     generateMipMaps: false
                                     magnificationFilter: Texture.Nearest
@@ -131,7 +131,7 @@ Viewport {
                                 texture : Texture2D {
                                     id : ssaoTexture
                                     width : root.width
-                                    height : root.width // TODO use height?
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -164,7 +164,7 @@ Viewport {
                                 texture : Texture2D {
                                     id : blurTexture
                                     width : root.width
-                                    height : root.width // TODO use height?
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
