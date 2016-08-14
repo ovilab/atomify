@@ -15,18 +15,18 @@ Simulation {
             system: root.system
         },
         Thermometer {
-            xLabel: "t [fs]"
+            xLabel: "Time [fs]"
             xScale: 1000
             xRange: 1000
         },
         Pressure {
-            xLabel: "t [fs]"
+            xLabel: "Time [fs]"
             xScale: 1000
             xRange: 1000
         },
         Thermostat {
             minimumValue: 10
-            maximumValue: 2000
+            maximumValue: 2500
             temperatureDampening: 0.2
         }
     ]

@@ -32,12 +32,12 @@ that are characteristic for this structure.
             system: root.system
         },
         Thermometer {
-            xLabel: "t [fs]"
+            xLabel: "Time [fs]"
             xScale: 1000
             xRange: 1000
         },
         Pressure {
-            xLabel: "t [fs]"
+            xLabel: "Time [fs]"
             xScale: 1000
             xRange: 1000
         },

@@ -36,12 +36,15 @@ many different types of particles.</p>
         Thermometer {
             xScale: 341.53026 // 3.405e-10*sqrt(1.66e-27/1.65e-21) = 3.4153026e-13 seconds is t=1.0
             yScale: 119.6
-            xLabel: "t [fs]"
-            yLabel: "T [K]"
+            xLabel: "Time [fs]"
+            yLabel: "Temperature [K]"
             xRange: 250
         },
         Thermostat {
             unitScale: 119.6
+            minimumValue: 1.0
+            maximumValue: 500.0
+            temperatureDampening: 0.1
         }
     ]
 }

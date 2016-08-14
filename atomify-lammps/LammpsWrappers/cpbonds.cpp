@@ -7,7 +7,16 @@ CPBonds::CPBonds()
 
 bool CPBonds::enabled() const
 {
-    return m_enabled;
+    bool anyActiveBonds = false;
+    for(const QVector<float> &vec : m_bondLengths) {
+        for(const float &length : vec) {
+            if(length > 0.0) {
+                anyActiveBonds = true;
+                break;
+            }
+        }
+    }
+    return m_enabled && anyActiveBonds;
 }
 
 QVector<QVector<float> > &CPBonds::bondLengths()
