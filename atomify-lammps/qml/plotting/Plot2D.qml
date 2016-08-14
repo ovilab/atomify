@@ -8,9 +8,30 @@ import QtQuick.Controls.Styles 1.4
 import QtDataVisualization 1.2
 
 WindowGL2 {
-    id: mainview
+    id: root
     width: 500
     height: 500
+
+//    property var dataSeries: []
+    property Fix fix
+
+    onFixChanged: {
+        surfaceSeries.dataProxy = fix.data[0]
+//        xAxis.min = fix.data[0].xMin
+//        xAxis.max = fix.data[0].xMax
+
+//        yAxis.min = fix.data[0].yMin
+//        yAxis.max = fix.data[0].yMax
+
+//        zAxis.min = fix.data[0].zMin
+//        zAxis.max = fix.data[0].zMax
+//        for(var key in fix.data) {
+//            console.log("Stuff: ", fix.data[key])
+
+//            // compute.data1D[key].updated.connect(updateGraphs(key))
+//        }
+        //title = "Compute '"+compute.identifier+"'"
+    }
 
     Shortcut {
         sequence: StandardKey.Close
@@ -19,12 +40,9 @@ WindowGL2 {
         }
     }
 
-    Item {
+    Rectangle {
         id: surfaceView
-        width: mainview.width
-        height: mainview.height
-        anchors.top: mainview.top
-        anchors.left: mainview.left
+        anchors.fill: parent
 
         ColorGradient {
             id: surfaceGradient
@@ -38,8 +56,10 @@ WindowGL2 {
         ValueAxis3D {
             id: xAxis
             segmentCount: 8
-            labelFormat: "%i\u00B0"
-            title: "Angle"
+            labelFormat: "%f"
+            title: "x"
+            min: 0
+            max: 17
             titleVisible: true
             titleFixed: false
         }
@@ -47,8 +67,10 @@ WindowGL2 {
         ValueAxis3D {
             id: yAxis
             segmentCount: 8
-            labelFormat: "%i \%"
+            labelFormat: "%f"
             title: "Value"
+            min: 0
+            max: 10
             titleVisible: true
             labelAutoRotation: 0
             titleFixed: false
@@ -57,8 +79,10 @@ WindowGL2 {
         ValueAxis3D {
             id: zAxis
             segmentCount: 5
-            labelFormat: "%i nm"
-            title: "Radius"
+            labelFormat: "%f"
+            title: "z"
+            min: 0
+            max: 17
             titleVisible: true
             titleFixed: false
         }
@@ -73,36 +97,37 @@ WindowGL2 {
             gridLineColor: "#AAAAAA"
             windowColor: "#EEEEEE"
         }
+
         Surface3D {
             //! [7]
             id: surfaceGraph
-            width: surfaceView.width
-            height: surfaceView.height
+            width: Math.min(parent.width, parent.height)
+            height: Math.min(parent.width, parent.height)
+            onWidthChanged: {
+                console.log("Width: ", width)
+            }
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
 
-            shadowQuality: AbstractGraph3D.ShadowQualityHigh
+            // shadowQuality: AbstractGraph3D.ShadowQualityHigh
             // selectionMode: AbstractGraph3D.SelectionSlice | AbstractGraph3D.SelectionItemAndColumn
             axisX: xAxis
             axisY: yAxis
             axisZ: zAxis
 
             theme: customTheme
-            //! [6]
-            // inputHandler: customInputHandler
-            //! [6]
-
-            // Remove the perspective and view the graph from top down to achieve 2D effect
-            //! [1]
+            inputHandler: TouchInputHandler3D {
+                id: customInputHandler
+//                rotationEnabled: false
+//                zoomEnabled: false
+            }
             orthoProjection: true
-            scene.activeCamera.cameraPreset: Camera3D.CameraPresetDirectlyAbove
-            //! [1]
-
-            //! [2]
+            scene.activeCamera.cameraPreset:  Camera3D.CameraPresetDirectlyAbove
+            Component.onCompleted: {
+                scene.activeCamera.zoomLevel = 110
+            }
             flipHorizontalGrid: true
-            //! [2]
-
-            //! [4]
             radialLabelOffset: 0.01
-            //! [4]
 
             horizontalAspectRatio: 1
             scene.activeCamera.zoomLevel: 85
@@ -113,11 +138,7 @@ WindowGL2 {
                 drawMode: Surface3DSeries.DrawSurface
                 baseGradient: surfaceGradient
                 colorStyle: Theme3D.ColorStyleRangeGradient
-                itemLabelFormat: "(@xLabel, @zLabel): @yLabel"
-
-                Data2D {
-
-                }
+                //  itemLabelFormat: "(@xLabel, @zLabel): @yLabel"
             }
         }
     }
