@@ -1,6 +1,3 @@
 [submodule "SimVis"]
 	path = SimVis
 	url = https://github.com/ComputationalPhysics/SimVis.git
-[submodule "atomify-lammps/QMLPlot"]
-	path = atomify-lammps/QMLPlot
-	url = https://github.com/andeplane/QMLPlot.git
