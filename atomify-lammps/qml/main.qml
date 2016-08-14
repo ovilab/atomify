@@ -17,7 +17,6 @@ QQC1.ApplicationWindow {
     id: applicationRoot
     title: "Atomify"
     visible: true
-    title: "Atomify"
 
     QQC1.MenuBar {
         QQC1.Menu {
