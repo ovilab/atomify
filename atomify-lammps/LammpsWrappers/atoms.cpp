@@ -135,6 +135,8 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
 
 void Atoms::updateData(System *system, LAMMPS *lammps)
 {
+    QElapsedTimer t;
+    t.start();
     AtomData atomData = m_atomData;
     if(!atomData.isValid()) {
         qDebug() << "Atom data is not valid before modifiers.";
@@ -158,7 +160,6 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
         m_atomData.sort(system->cameraPosition());
         qDebug() << "Sorted using " << t.elapsed() << " ms.";
     }
-
     generateBondData(atomData, *system);
     generateSphereData(atomData);
 }

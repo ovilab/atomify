@@ -17,8 +17,8 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Viewport {
     id: root
 
-//    property real width: 10
-//    property real height: 10
+    property real width: window ? Math.max(window.width, window.height) : 10
+    property real height: width
     property alias blurTexture: blurTexture
     property alias normalTexture: normalTexture
     property alias colorTexture: colorTexture
@@ -45,8 +45,8 @@ Viewport {
                                 attachmentPoint : RenderTargetOutput.Color0
                                 texture : Texture2D {
                                     id : normalTexture
-                                    width : root.window ? root.window.width : 10
-                                    height : root.window ? root.window.width : 10 // TODO use height?
+                                    width : root.width
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -62,8 +62,8 @@ Viewport {
                                 attachmentPoint : RenderTargetOutput.Color1
                                 texture : Texture2D {
                                     id : positionTexture
-                                    width : root.window ? root.window.width : 10
-                                    height : root.window ? root.window.width : 10 // TODO use height?
+                                    width : root.width
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -79,8 +79,8 @@ Viewport {
                                 attachmentPoint : RenderTargetOutput.Color2
                                 texture : Texture2D {
                                     id : colorTexture
-                                    width : root.window ? root.window.width : 10
-                                    height : root.window ? root.window.width : 10 // TODO use height?
+                                    width : root.width
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -96,8 +96,8 @@ Viewport {
                                 attachmentPoint: RenderTargetOutput.Depth
                                 texture: Texture2D {
                                     id: depthTexture
-                                    width : root.window ? root.window.width : 10
-                                    height : root.window ? root.window.width : 10 // TODO use height?
+                                    width : root.width
+                                    height : root.height
                                     format: Texture.D32
                                     generateMipMaps: false
                                     magnificationFilter: Texture.Nearest
@@ -131,8 +131,8 @@ Viewport {
                                 attachmentPoint : RenderTargetOutput.Color0
                                 texture : Texture2D {
                                     id : ssaoTexture
-                                    width : root.window ? root.window.width : 10
-                                    height : root.window ? root.window.width : 10 // TODO use height?
+                                    width : root.width
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
@@ -164,8 +164,8 @@ Viewport {
                                 attachmentPoint : RenderTargetOutput.Color0
                                 texture : Texture2D {
                                     id : blurTexture
-                                    width : root.window ? root.window.width : 10
-                                    height : root.window ? root.window.width : 10 // TODO use height?
+                                    width : root.width
+                                    height : root.height
                                     format : Texture.RGBA32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest

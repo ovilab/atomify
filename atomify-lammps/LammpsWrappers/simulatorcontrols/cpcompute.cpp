@@ -31,7 +31,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     CP1DData *data = ensureExists(QString("Temperature"), true);
     setXLabel("Time");
     setYLabel("Temperature");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system()->simulationTime(), value, true);
     return true;
 }
 
@@ -44,7 +44,7 @@ bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController)
     CP1DData *data = ensureExists(QString("Potential energy"), true);
     setXLabel("Time");
     setYLabel("Potential Energy");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system()->simulationTime(), value, true);
     return true;
 }
 
@@ -56,7 +56,7 @@ bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController)
     CP1DData *data = ensureExists(QString("Kinetic energy"), true);
     setXLabel("Time");
     setYLabel("Kinetic Energy");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system()->simulationTime(), value, true);
     return true;
 }
 
@@ -72,7 +72,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     CP1DData *data = ensureExists(QString("Pressure"), true);
     setXLabel("Time");
     setYLabel("Pressure");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system()->simulationTime(), value, true);
 
     // Then compute stress tensor
     compute->compute_vector();
@@ -84,7 +84,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system()->simulationTime(), value, true);
     }
     return true;
 }
@@ -107,7 +107,6 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
             double rdf = compute->array[bin][1+2*pairId];
             data->add(r,rdf,true);
         }
-        emit data->updated();
     }
 
     return true;
@@ -125,7 +124,7 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system()->simulationTime(), value, true);
     }
 
     return true;
@@ -143,7 +142,7 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system()->simulationTime(), value, true);
     }
 
     return true;
@@ -161,7 +160,7 @@ bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system()->simulationTime(), value, true);
     }
 
     return true;
@@ -177,7 +176,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     CP1DData *data = ensureExists(QString("Radius of gyration"), true);
     setXLabel("Time");
     setYLabel("Pressure");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system()->simulationTime(), value, true);
 
     compute->compute_vector();
 
@@ -189,25 +188,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
         QString key = components[i-1];
         CP1DData *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
-    }
-
-    return true;
-}
-
-bool CPCompute::copyData(ComputeChunkAtom *compute, LAMMPSController *lammpsController) {
-    if(!compute) return false;
-
-    enum{BIN1D,BIN2D,BIN3D,BINSPHERE,BINCYLINDER,
-         TYPE,MOLECULE,COMPUTE,FIX,VARIABLE};
-    enum{LOWER,CENTER,UPPER,COORD};
-    enum{BOX,LATTICE,REDUCED};
-    enum{NODISCARD,MIXED,YESDISCARD};
-    enum{ONCE,NFREQ,EVERY};              // used in several files
-    enum{LIMITMAX,LIMITEXACT};
-
-    if(compute->which == BIN2D) {
-
+        data->add(lammpsController->system()->simulationTime(), value, true);
     }
 
     return true;
@@ -220,25 +201,29 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
     Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute == nullptr) return;
-
-    if(copyData(dynamic_cast<ComputePressure*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeTemp*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeKE*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputePE*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeMSD*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeChunkAtom*>(lmp_compute), lammpsController)) return;
-
+    try {
+        if(copyData(dynamic_cast<ComputePressure*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeTemp*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeKE*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputePE*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeMSD*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
+    } catch (LammpsException &exception) {
+        qDebug() << "ERROR: LAMMPS threw an exception!";
+        qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+        qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        return;
+    }
     if(lmp_compute->scalar_flag == 1) {
         try {
             double value = lmp_compute->compute_scalar();
             setHasScalarData(true);
             setScalarValue(value);
             CP1DData *data = ensureExists("scalar", true);
-            data->add(lammpsController->system()->simulationTime(), value);
+            data->add(lammpsController->system()->simulationTime(), value, true);
         } catch (LammpsException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
             qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
@@ -253,16 +238,13 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
                 QString key = QString("%1").arg(i);
                 CP1DData *data = ensureExists(key, true);
                 double value = lmp_compute->vector[i-1];
-                data->add(lammpsController->system()->simulationTime(), value);
+                data->add(lammpsController->system()->simulationTime(), value, true);
             }
         } catch (LammpsException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
             qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
             qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
         }
-    }
-    if(lmp_compute->array_flag == 1) {
-
     }
 }
 

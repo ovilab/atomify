@@ -22,6 +22,8 @@
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/system.h"
+#include "LammpsWrappers/computes.h"
+#include "LammpsWrappers/fixes.h"
 
 using namespace std;
 
@@ -154,6 +156,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::work()
 {
     m_lammpsController.tick();
+    m_lammpsController.system()->computes()->synchronizeData(&m_lammpsController);
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
     if(delta > 0) {

@@ -31,7 +31,7 @@
 #include "LammpsWrappers/computes.h"
 #include "LammpsWrappers/units.h"
 #include "dataproviders/cp1ddata.h"
-#include "dataproviders/data2D.h"
+#include "dataproviders/data2d.h"
 #include "dataproviders/dataprovider.h"
 #include "linenumbers.h"
 #include "windowgl2.h"
