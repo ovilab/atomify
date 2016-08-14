@@ -37,6 +37,21 @@ float Data2D::zMax() const
     return m_zMax;
 }
 
+QString Data2D::xLabel() const
+{
+    return m_xLabel;
+}
+
+QString Data2D::yLabel() const
+{
+    return m_yLabel;
+}
+
+QString Data2D::zLabel() const
+{
+    return m_zLabel;
+}
+
 float Data2D::yMax() const
 {
     return m_yMax;
@@ -49,36 +64,24 @@ QSize Data2D::size() const
 
 void Data2D::setValue(float x, float y, float z)
 {
-    int i,j;
-    if(plane==XY) {
-        float deltaX = (m_xMax - m_xMin) / m_size.width();
-        float deltaY = (m_yMax - m_yMin) / m_size.height();
-        i = (x - m_xMin) / deltaX;
-        j = (y - m_yMin) / deltaY;
-    } else if(plane==XZ) {
-        float deltaX = (m_xMax - m_xMin) / m_size.width();
-        float deltaZ = (m_zMax - m_zMin) / m_size.height();
-        i = (x - m_xMin) / deltaX;
-        j = (z - m_zMin) / deltaZ;
-    } else {
-        float deltaY = (m_yMax - m_yMin) / m_size.width();
-        float deltaZ = (m_zMax - m_zMin) / m_size.height();
-        i = (y - m_yMin) / deltaY;
-        j = (z - m_zMin) / deltaZ;
-    }
+    float deltaX = (m_xMax - m_xMin) / m_size.width();
+    float deltaZ = (m_zMax - m_zMin) / m_size.height();
+    int i = (x - m_xMin) / deltaX;
+    int j = (z - m_zMin) / deltaZ;
+
+//    if( i == m_size.width()) i--;
+//    if( j == m_size.height()) j--;
+//    qDebug() << "Setting value (" << x << ", " << y << ", " << z << ")";
 
     if(i < 0 || i >= m_size.width() || j < 0 || j >= m_size.height()) {
-        qDebug() << "Warning, tried to set value outside range.";
+        // qDebug() << "Warning, tried to set value outside range: (" << x << ", " << y << ", " << z << ") because xRange = (" << m_xMin << ", " << m_xMax << ") and yRange = (" << m_yMin << ", " << m_yMax << ")";
         return;
     }
-    try {
-        QSurfaceDataRow &newRow = *m_dataArray->at(i);
-        QSurfaceDataItem &item = newRow[j];
-        item.setPosition(QVector3D(x,z,y));
-    } catch(int ex) {
-        qDebug() << "Went to hell...";
-        exit(1);
-    }
+    if(i >= m_dataArray->size()) return;
+    QSurfaceDataRow &newRow = *m_dataArray->at(i);
+    if(j >= newRow.size()) return;
+    QSurfaceDataItem &item = newRow[j];
+    item.setPosition(QVector3D(x,y,z));
 }
 
 
@@ -146,6 +149,33 @@ void Data2D::setZMax(float zMax)
 
     m_zMax = zMax;
     emit zMaxChanged(zMax);
+}
+
+void Data2D::setXLabel(QString xLabel)
+{
+    if (m_xLabel == xLabel)
+        return;
+
+    m_xLabel = xLabel;
+    emit xLabelChanged(xLabel);
+}
+
+void Data2D::setYLabel(QString yLabel)
+{
+    if (m_yLabel == yLabel)
+        return;
+
+    m_yLabel = yLabel;
+    emit yLabelChanged(yLabel);
+}
+
+void Data2D::setZLabel(QString zLabel)
+{
+    if (m_zLabel == zLabel)
+        return;
+
+    m_zLabel = zLabel;
+    emit zLabelChanged(zLabel);
 }
 
 void Data2D::setYMax(float yMax)

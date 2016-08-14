@@ -27,45 +27,58 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
                 m_data.push_back(QVariant::fromValue(data));
             }
         }
-
         if(fix->nextvalid() == lammpsController->system()->timesteps()+1) {
-            float xMin = fix->cchunk->origin[0];
-            float zMin = fix->cchunk->origin[1];
-            float deltaX = fix->cchunk->delta[0];
-            float deltaZ = fix->cchunk->delta[1];
-            float xMax = xMin + deltaX;
-            float zMax = zMin + deltaZ;
+            QStringList labels = {"x", "y", "z"};
+
+            int x = fix->cchunk->dim[0];
+            int z = fix->cchunk->dim[1];
+            int y = 3 - x-z;
+
             QSize size(fix->cchunk->nlayers[0], fix->cchunk->nlayers[1]);
-            xMin = lammpsController->system()->origin().x();
-            xMax = lammpsController->system()->origin().x() + lammpsController->system()->size().x();
-            zMin = lammpsController->system()->origin().y();
-            zMax = lammpsController->system()->origin().y() + lammpsController->system()->size().y();
+
+            float xMin = lammpsController->system()->origin()[x];
+            float xMax = lammpsController->system()->origin()[x] + lammpsController->system()->size()[x];
+            float zMin = lammpsController->system()->origin()[z];
+            float zMax = lammpsController->system()->origin()[z] + lammpsController->system()->size()[z];
+
+            QString xLabel = labels[x];
+            QString yLabel = labels[y];
+            QString zLabel = labels[z];
+
+            float minValues[fix->nvalues];
+            float maxValues[fix->nvalues];
 
             for(int i=0; i<fix->nvalues; i++) {
                 m_dataRaw[i]->setSize(size);
                 m_dataRaw[i]->setXMin(xMin);
                 m_dataRaw[i]->setXMax(xMax);
-                m_dataRaw[i]->setYMin(zMin);
-                m_dataRaw[i]->setYMax(zMax);
                 m_dataRaw[i]->setZMin(zMin);
                 m_dataRaw[i]->setZMax(zMax);
-                m_dataRaw[i]->plane = Data2D::XY;
+                m_dataRaw[i]->setXLabel(xLabel);
+                m_dataRaw[i]->setYLabel(yLabel);
+                m_dataRaw[i]->setZLabel(zLabel);
+                minValues[i] = 1e9;
+                maxValues[i] = -1e9;
             }
 
-             for(int i=0; i<fix->nchunk; i++) {
-                 float x = fix->compute_array(i,0);
-                 float y = fix->compute_array(i,1);
+            for(int i=0; i<fix->nchunk; i++) {
+                float x = fix->compute_array(i,0);
+                float z = fix->compute_array(i,1);
 
-                 for(int j=0; j<fix->nvalues; j++) {
-                     int valueIndex = fix->colextra+1+j;
-                     float z = fix->compute_array(i,valueIndex);
-                     m_dataRaw[j]->setValue(x,y,z);
-                 }
-             }
+                for(int j=0; j<fix->nvalues; j++) {
+                    int valueIndex = fix->colextra+1+j;
+                    float y = fix->compute_array(i,valueIndex);
+                    minValues[j] = std::min(minValues[j], y);
+                    maxValues[j] = std::max(maxValues[j], y);
+                    m_dataRaw[j]->setValue(x,y,z);
+                }
+            }
 
-             for(int i=0; i<fix->nvalues; i++) {
-                 m_dataRaw[i]->update();
-             }
+            for(int i=0; i<fix->nvalues; i++) {
+                m_dataRaw[i]->setYMin(minValues[i]);
+                m_dataRaw[i]->setYMax(maxValues[i]);
+                m_dataRaw[i]->update();
+            }
         }
     }
 }
