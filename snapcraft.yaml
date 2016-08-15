@@ -48,6 +48,9 @@ parts:
       - qt57charts-no-lgpl
       - qt57datavis-no-lgpl
       - qt57declarative
+      - qt57graphicaleffects
+      - qt57quickcontrols
+      - qt57quickcontrols2
       - qt57svg
       - ubuntu-sdk-libs
       #- qtubuntu-desktop
