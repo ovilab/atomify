@@ -30,8 +30,8 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
-    property string renderMode: "forward"
-    property string renderQuality: "medium"
+    property string renderMode: "deferred"
+    property string renderQuality: "high"
     multisample: true
     onRenderQualityChanged: {
         if(renderQuality === "low") {
@@ -674,7 +674,7 @@ void main()
                                                           (visualizer.camera.viewVector.normalized().plus(
                                                                visualizer.camera.upVector.normalized()).plus(
                                                                visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                                            strength: 0.4
+                                            strength: 0.5
                                             attenuation: 0.0
                                         },
                                         Light {
@@ -683,7 +683,7 @@ void main()
                                                           (visualizer.camera.viewVector.normalized().plus(
                                                                visualizer.camera.upVector.normalized()).plus(
                                                                visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                                            strength: 0.4
+                                            strength: 0.5
                                             attenuation: 0.0
                                         }
                                     ]
@@ -691,7 +691,7 @@ void main()
 
                                 StandardMaterial {
                                     id: bondsMediumQuality
-                                    color: "gray"
+                                    color: "white"
                                     lights: [
                                         Light {
                                             position: light1.position
@@ -717,6 +717,7 @@ void main()
                                 }
 
                                 Bonds {
+                                    color: "white"
                                     id: bonds
                                     bondData: simulator.system.atoms.bondData
                                     posMin: spheres.posMin
