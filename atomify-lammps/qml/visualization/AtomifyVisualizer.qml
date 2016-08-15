@@ -82,15 +82,14 @@ Scene3D {
 
         ForwardFrameGraph {
             id: forwardFrameGraph
-            window: deferredFrameGraph.window
+            surface: deferredFrameGraph.surface
             camera: mainCamera
         }
         DeferredFrameGraph {
             id: deferredFrameGraph
-//            window: forwardFrameGraph.window
-            width: Math.max(root.width, root.height)
-            height: width  // TODO any reason they must be the same?
             camera: mainCamera
+            width: Math.max(10, root.width, root.height)
+            height: width
         }
         components: [
             RenderSettings {

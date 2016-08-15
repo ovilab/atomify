@@ -17,15 +17,15 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Viewport {
     id: root
 
-    property real width: window ? Math.max(window.width, window.height) : 10
-    property real height: width
+    property real width: 10
+    property real height: 10
     property alias blurTexture: blurTexture
     property alias normalTexture: normalTexture
     property alias colorTexture: colorTexture
     property alias depthTexture: depthTexture
     property alias ssaoTexture: ssaoTexture
     property alias positionTexture: positionTexture
-    property alias window: surfaceSelector.surface
+    property alias surface: surfaceSelector.surface
     property Camera camera: Camera {}
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
