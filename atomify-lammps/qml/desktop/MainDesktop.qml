@@ -72,9 +72,8 @@ Item {
                 periodicImages.numberOfCopiesX: periodicXSlider.value
                 periodicImages.numberOfCopiesY: periodicYSlider.value
                 periodicImages.numberOfCopiesZ: periodicZSlider.value
-                renderMode: deferredModeSwitch.checked ? "deferred" : "forward"
+                // renderMode: deferredModeSwitch.checked ? "deferred" : "forward"
             }
-
         }
 
         RightBar {
@@ -232,7 +231,7 @@ Item {
                     }
                     Switch {
                         id: deferredModeSwitch
-                        checked: true
+                        checked: false
                     }
                 }
             }

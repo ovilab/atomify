@@ -10,6 +10,7 @@ class CPFix : public SimulatorControl
     Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(QVariantList data READ data WRITE setData NOTIFY dataChanged)
+    Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
 protected:
     QList<QString> enabledCommands() override;
     QList<QString> disableCommands() override;
@@ -29,6 +30,11 @@ public:
     bool interactive() const;
     QVariantList data() const;
 
+    QVariant model() const
+    {
+        return m_model;
+    }
+
 signals:
     void groupChanged(QString group);
     void frequencyChanged(int frequency);
@@ -36,11 +42,22 @@ signals:
     void dataChanged(QVariantList data);
     void updatedContent();
 
+    void modelChanged(QVariant model);
+
 public slots:
     void setGroup(QString group);
     void setFrequency(int frequency);
     void setInteractive(bool interactive);
     void setData(QVariantList data);
+
+    void setModel(QVariant model)
+    {
+        if (m_model == model)
+            return;
+
+        m_model = model;
+        emit modelChanged(model);
+    }
 
 private:
     QString m_group = "all";
@@ -49,6 +66,7 @@ private:
     bool copyData(FixAveChunk *fix, class LAMMPSController *lammpsController);
     QVariantList m_data;
     QList<class Data2D*> m_dataRaw;
+    QVariant m_model;
 };
 
 #endif // CPFIX_H

@@ -22,6 +22,8 @@
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/system.h"
+#include "LammpsWrappers/computes.h"
+#include "LammpsWrappers/fixes.h"
 
 using namespace std;
 
@@ -118,7 +120,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     atomifySimulator->system()->synchronize(&m_lammpsController);
-    atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
+    atomifySimulator->system()->atoms()->synchronizeRenderer();
+    // atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
 
     if(m_lammpsController.crashed()) return;
 
@@ -154,6 +157,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::work()
 {
     m_lammpsController.tick();
+    if(m_lammpsController.state.canProcessSimulatorControls) {
+        m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
+        m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
+    }
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
     if(delta > 0) {

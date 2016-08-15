@@ -10,6 +10,7 @@ Data2D::Data2D(QObject *parent) : QSurfaceDataProxy(parent)
 void Data2D::update() {
 
     resetArray(m_dataArray);
+    emit updated();
 }
 
 float Data2D::xMin() const
@@ -69,8 +70,8 @@ void Data2D::setValue(float x, float y, float z)
     int i = (x - m_xMin) / deltaX;
     int j = (z - m_zMin) / deltaZ;
 
-//    if( i == m_size.width()) i--;
-//    if( j == m_size.height()) j--;
+    if( i == m_size.width()) i--;
+    if( j == m_size.height()) j--;
 //    qDebug() << "Setting value (" << x << ", " << y << ", " << z << ")";
 
     if(i < 0 || i >= m_size.width() || j < 0 || j >= m_size.height()) {
@@ -96,10 +97,20 @@ void Data2D::setSize(QSize size)
     }
     // Do not recreate array if dimensions have not changed
     m_dataArray = new QSurfaceDataArray;
-    m_dataArray->reserve(size.height());
-    for (int i = 0; i < size.height(); i++) {
-        QSurfaceDataRow *newProxyRow = new QSurfaceDataRow(size.width());
+    m_dataArray->reserve(size.width());
+
+    float deltaX = (m_xMax - m_xMin) / m_size.width();
+    float deltaZ = (m_zMax - m_zMin) / m_size.height();
+
+    for (int i = 0; i < size.width(); i++) {
+        float x = m_xMin + i*deltaX;
+        QSurfaceDataRow *newProxyRow = new QSurfaceDataRow(size.height());
         m_dataArray->append(newProxyRow);
+        for(int j=0; j<size.height(); j++) {
+            float z = m_zMin + j*deltaZ;
+            QSurfaceDataItem &item = (*newProxyRow)[j];
+            item.setPosition(QVector3D(x,0,z));
+        }
     }
     resetArray(m_dataArray);
 

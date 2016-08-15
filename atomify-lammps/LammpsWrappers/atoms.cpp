@@ -135,8 +135,9 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
 
 void Atoms::updateData(System *system, LAMMPS *lammps)
 {
-    AtomData atomData = m_atomData;
-    if(!atomData.isValid()) {
+    m_atomDataProcessed = m_atomData;
+    // AtomData atomData = m_atomData;
+    if(!m_atomDataProcessed.isValid()) {
         qDebug() << "Atom data is not valid before modifiers.";
         exit(1);
     }
@@ -144,23 +145,27 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
     for(QVariant &modifier_ : m_modifiers) {
         Modifier *modifier = modifier_.value<Modifier*>();
         modifier->setSystem(system);
-         modifier->apply(atomData);
-         if(!atomData.isValid()) {
+         modifier->apply(m_atomDataProcessed);
+         if(!m_atomDataProcessed.isValid()) {
              // TODO: insert modifier name to debug message
              qDebug() << "Atom data is not valid after modifier.";
              exit(1);
          }
     }
 
-    if(m_sort) {
-        QElapsedTimer t;
-        t.start();
-        m_atomData.sort(system->cameraPosition());
-        qDebug() << "Sorted using " << t.elapsed() << " ms.";
-    }
+//    if(m_sort) {
+//        QElapsedTimer t;
+//        t.start();
+//        m_atomData.sort(system->cameraPosition());
+//        qDebug() << "Sorted using " << t.elapsed() << " ms.";
+//    }
+//    generateBondData(m_atomDataProcessed, *system);
+//    generateSphereData(m_atomDataProcessed);
+}
 
-    generateBondData(atomData, *system);
-    generateSphereData(atomData);
+void Atoms::synchronizeRenderer() {
+    generateBondData(m_atomDataProcessed);
+    generateSphereData(m_atomDataProcessed);
 }
 
 //void Atoms::findOcclusion(AtomData &atomData) {
@@ -191,7 +196,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
     m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
 }
 
-void Atoms::generateBondData(AtomData &atomData, System &system) {
+void Atoms::generateBondData(AtomData &atomData) {
     bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
         m_bondData->setData(bondsDataRaw);

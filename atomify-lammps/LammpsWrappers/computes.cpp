@@ -78,13 +78,29 @@ void Computes::synchronize(LAMMPSController *lammpsController)
         removeCompute(compute->identifier());
     }
 
-    setCount(m_data.size());
-    setModel(QVariant::fromValue(m_data));
+    for(QObject *obj : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(obj);
+        for(QVariant &variant : compute->data1D()) {
+            CP1DData *data = variant.value<CP1DData *>();
+            emit data->updated();
+        }
+    }
 
     if(!lammpsController->state.canProcessSimulatorControls) return;
     for(QObject *object : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(object);
         compute->copyData(lammpsController);
+    }
+
+    setCount(m_data.size());
+    setModel(QVariant::fromValue(m_data));
+}
+
+void Computes::computeAll(LAMMPSController *lammpsController)
+{
+    for(QObject *object : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(object);
+        compute->computeInLAMMPS(lammpsController);
     }
 }
 

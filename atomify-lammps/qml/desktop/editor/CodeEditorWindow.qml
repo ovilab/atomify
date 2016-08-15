@@ -184,7 +184,7 @@ Item {
             }
         }
 
-        StackLayout {
+        SwipeView {
             id: stackLayout
             Layout.fillWidth: true
             Layout.fillHeight: true

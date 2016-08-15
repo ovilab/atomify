@@ -46,7 +46,7 @@ void Bonds::reset()
         }
     }
 
-    m_enabled = true;
+    m_enabled = false;
 }
 
 void Bonds::setEnabled(bool enabled)

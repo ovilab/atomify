@@ -7,14 +7,6 @@ Pane {
     id: rectangleRoot
     property System system
 
-    onSystemChanged: {
-        if(system) {
-            system.groups.onActiveChanged.connect(updateGroups)
-            system.regions.onActiveChanged.connect(updateRegions)
-            system.computes.onActiveChanged.connect(updateComputes)
-        }
-    }
-
     function getGlobalPosition(p, item) {
         var globalX = p.x
         var globalY = p.y
@@ -123,6 +115,8 @@ Pane {
                 }
 
                 Column {
+                    id: groupsColumn
+                    property bool expanded
                     height: groupsRow.height + groupsList.height
 
                     Row {
@@ -133,10 +127,10 @@ Pane {
                         Image {
                             id: collapseGroups
                             y: 3
-                            source: "qrc:/images/expand.gif"
+                            source: groupsColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: system.groups.active = !system.groups.active
+                                onClicked: groupsColumn.expanded = !groupsColumn.expanded
                             }
                         }
                         Label {
@@ -144,7 +138,7 @@ Pane {
                             text: "Groups: "+system.groups.count
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: system.groups.active = !system.groups.active
+                                onClicked: groupsColumn.expanded = !groupsColumn.expanded
                             }
                         }
                     }
@@ -155,7 +149,7 @@ Pane {
                         x: groupsLabel.x
                         model: system ? system.groups.model : null
                         height: visible ? count*26 : 0
-                        visible: false
+                        visible: groupsColumn.expanded
                         delegate: Row {
                             spacing: 5
                             Image {
@@ -192,6 +186,8 @@ Pane {
                 }
 
                 Column {
+                    id: regionsColumn
+                    property bool expanded
                     height: regionsRow.height + regionsList.height
 
                     Row {
@@ -202,10 +198,10 @@ Pane {
                         Image {
                             id: collapseRegions
                             y: 3
-                            source: "qrc:/images/expand.gif"
+                            source: regionsColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: system.regions.active = !system.regions.active
+                                onClicked: regionsColumn.expanded = !regionsColumn.expanded
                             }
                         }
                         Label {
@@ -213,7 +209,7 @@ Pane {
                             text: "Regions: "+system.regions.count
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: system.regions.active = !system.regions.active
+                                onClicked: regionsColumn.expanded = !regionsColumn.expanded
                             }
                         }
                     }
@@ -224,7 +220,7 @@ Pane {
                         x: regionsLabel.x
                         model: system ? system.regions.model : null
                         height: visible ? count*26 : 0
-                        visible: false
+                        visible: regionsColumn.expanded
                         delegate: Row {
                             spacing: 5
                             Image {
@@ -263,7 +259,9 @@ Pane {
                 }
 
                 Column {
+                    id: computesColumn
                     height: computesRow.height + computesList.height
+                    property bool expanded: false
 
                     Row {
                         id: computesRow
@@ -273,10 +271,10 @@ Pane {
                         Image {
                             id: collapseComputes
                             y: 3
-                            source: "qrc:/images/expand.gif"
+                            source: computesColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: system.computes.active = !system.computes.active
+                                onClicked: computesColumn.expanded = !computesColumn.expanded
                             }
                         }
                         Label {
@@ -284,7 +282,7 @@ Pane {
                             text: "Computes: "+system.computes.count
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: system.computes.active = !system.computes.active
+                                onClicked: computesColumn.expanded = !computesColumn.expanded
                             }
                         }
                     }
@@ -295,7 +293,7 @@ Pane {
                         x: computesLabel.x
                         model: system ? system.computes.model : null
                         height: visible ? count*20 : 0
-                        visible: false
+                        visible: computesColumn.expanded
                         delegate: Row {
                             visible: computesList.visible
                             Label {

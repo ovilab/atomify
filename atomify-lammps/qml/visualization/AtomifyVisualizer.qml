@@ -30,24 +30,24 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
-    property string renderMode: "forward"
-    property string renderQuality: "low"
+    property string renderMode: "deferred"
+    property string renderQuality: "high"
     multisample: true
     onRenderQualityChanged: {
         if(renderQuality === "low") {
-            // forwardFrameGraph.window.width = forwardFrameGraph.window.width - 1
             root.renderMode = "forward"
-            // forwardFrameGraph.window.width = forwardFrameGraph.window.width + 1
+            spheres.fragmentColor = spheres.fragmentBuilder.normalDotCamera
+            bonds.fragmentColor = bonds.fragmentBuilder.normalDotCamera
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "medium") {
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
-            root.renderMode = "deferred"
-            ambientOcclusion.samples = 12
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+            root.renderMode = "forward"
+            spheres.fragmentColor = spheresMediumQuality
+            bonds.fragmentColor = bondsMediumQuality
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "high") {
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width - 1
             root.renderMode = "deferred"
-            ambientOcclusion.samples = 40
-            // deferredFrameGraph.window.width = deferredFrameGraph.window.width + 1
+            ambientOcclusion.samples = 32
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width-1
         }
     }
 
@@ -67,8 +67,8 @@ Scene3D {
             // projectionType: CameraLens.OrthographicProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
-            nearPlane : 3.0
-            farPlane : 300.0
+            nearPlane : root.renderMode === "forward" ? 1.0 : 3.0
+            farPlane : root.renderMode === "forward" ? 10000.0 : 300.0
             position: Qt.vector3d(7.0, 7.0, 50.0)
             upVector: Qt.vector3d(0.0, 1.0, 0.0)
             viewCenter: Qt.vector3d(7.0, 7.0, 7.0)
@@ -378,52 +378,52 @@ void main()
 }
 "
                                 }
-                            }
-                        }
+                                }
+                                }
                     ]
-                }
-            }
+                                }
+                                }
 
-            components: [
-                blurMaterial,
-                quadMesh,
-                quadTransform
-            ]
-        }
+                                    components: [
+                                        blurMaterial,
+                                        quadMesh,
+                                        quadTransform
+                                    ]
+                                }
 
-        Entity {
-            id : finalQuadEntity
+                                Entity {
+                                    id : finalQuadEntity
 
-            Material {
-                id: finalMaterial
-                parameters : [
-                    Parameter { name: "blurTexture"; value : deferredFrameGraph.blurTexture },
-                    Parameter { name: "ssaoTexture"; value : deferredFrameGraph.ssaoTexture },
-                    Parameter { name: "normalTexture"; value : deferredFrameGraph.normalTexture },
-                    Parameter { name: "positionTexture"; value : deferredFrameGraph.positionTexture },
-                    Parameter { name: "colorTexture"; value : deferredFrameGraph.colorTexture },
-                    Parameter { name: "depthTexture"; value : deferredFrameGraph.depthTexture },
-                    Parameter { name: "winSize"; value : Qt.size(root.width, root.height) },
-                    Parameter { name: "posMin"; value: spheres.posMin },
-                    Parameter { name: "posMax"; value: spheres.posMax }
-                ]
-                effect: Effect {
-                    techniques : [
-                        Technique {
-                            filterKeys: FilterKey {
-                                name: "renderingStyle"
-                                value: "deferred"
-                            }
-                            graphicsApiFilter {
-                                api: GraphicsApiFilter.OpenGL
-                                profile: GraphicsApiFilter.CoreProfile
-                                majorVersion: 3
-                                minorVersion: 2
-                            }
-                            renderPasses : RenderPass {
-                                filterKeys : FilterKey { name : "pass"; value : "final" }
-                                shaderProgram : ShaderProgram {
-                                    vertexShaderCode: "
+                                    Material {
+                                        id: finalMaterial
+                                        parameters : [
+                                            Parameter { name: "blurTexture"; value : deferredFrameGraph.blurTexture },
+                                            Parameter { name: "ssaoTexture"; value : deferredFrameGraph.ssaoTexture },
+                                            Parameter { name: "normalTexture"; value : deferredFrameGraph.normalTexture },
+                                            Parameter { name: "positionTexture"; value : deferredFrameGraph.positionTexture },
+                                            Parameter { name: "colorTexture"; value : deferredFrameGraph.colorTexture },
+                                            Parameter { name: "depthTexture"; value : deferredFrameGraph.depthTexture },
+                                            Parameter { name: "winSize"; value : Qt.size(root.width, root.height) },
+                                            Parameter { name: "posMin"; value: spheres.posMin },
+                                            Parameter { name: "posMax"; value: spheres.posMax }
+                                        ]
+                                        effect: Effect {
+                                            techniques : [
+                                                Technique {
+                                                    filterKeys: FilterKey {
+                                                        name: "renderingStyle"
+                                                        value: "deferred"
+                                                    }
+                                                    graphicsApiFilter {
+                                                        api: GraphicsApiFilter.OpenGL
+                                                        profile: GraphicsApiFilter.CoreProfile
+                                                        majorVersion: 3
+                                                        minorVersion: 2
+                                                    }
+                                                    renderPasses : RenderPass {
+                                                        filterKeys : FilterKey { name : "pass"; value : "final" }
+                                                        shaderProgram : ShaderProgram {
+                                                            vertexShaderCode: "
 #version 410
 
 uniform highp mat4 modelMatrix;
@@ -441,124 +441,124 @@ void main()
 }
 "
 
-                                    fragmentShaderCode: finalShaderBuilder.finalShader
-                                    // onFragmentShaderCodeChanged: console.log(fragmentShaderCode)
-                                }
-                            }
-                        }
-                    ]
-                }
+                                                            fragmentShaderCode: finalShaderBuilder.finalShader
+                                                            // onFragmentShaderCodeChanged: console.log(fragmentShaderCode)
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
 
-                ShaderBuilder {
-                    id: finalShaderBuilder
-                    function selectOutput(outputName) {
-                        if(outputName === "blurMultiply" || outputName === "Normal") {
-                            output.value = blurMultiply
-                        }
-                        if(outputName === "ssaoMultiply") {
-                            output.value = ssaoMultiply
-                        }
-                        if(outputName === "blur" || outputName === "Blurred SEM") {
-                            output.value = blurNode
-                        }
+                                        ShaderBuilder {
+                                            id: finalShaderBuilder
+                                            function selectOutput(outputName) {
+                                                if(outputName === "blurMultiply" || outputName === "Normal") {
+                                                    output.value = blurMultiply
+                                                }
+                                                if(outputName === "ssaoMultiply") {
+                                                    output.value = ssaoMultiply
+                                                }
+                                                if(outputName === "blur" || outputName === "Blurred SEM") {
+                                                    output.value = blurNode
+                                                }
 
-                        if(outputName === "ssao" || outputName === "SEM") {
-                            output.value = ssaoNode
-                        }
-                        if(outputName === "position") {
-                            output.value = position
-                        }
-                        if(outputName === "color") {
-                            output.value = color
-                        }
-                        if(outputName === "normal") {
-                            output.value = normal
-                        }
-                    }
+                                                if(outputName === "ssao" || outputName === "SEM") {
+                                                    output.value = ssaoNode
+                                                }
+                                                if(outputName === "position") {
+                                                    output.value = position
+                                                }
+                                                if(outputName === "color") {
+                                                    output.value = color
+                                                }
+                                                if(outputName === "normal") {
+                                                    output.value = normal
+                                                }
+                                            }
 
-                    property ShaderNode position: ShaderNode {
-                        type: "vec3"
-                        name: "position"
-                        result: "position"
-                    }
-                    property ShaderNode normal: ShaderNode {
-                        type: "vec3"
-                        name: "normal"
-                        result: "normal"
-                    }
-                    property ShaderNode ssao: ShaderNode {
-                        type: "vec3"
-                        name: "ssao"
-                        result: "ssao"
-                    }
-                    property ShaderNode blur: ShaderNode {
-                        type: "vec3"
-                        name: "blur"
-                        result: "blur"
-                    }
-                    property ShaderNode color: ShaderNode {
-                        type: "vec4"
-                        name: "color"
-                        result: "color"
-                    }
+                                            property ShaderNode position: ShaderNode {
+                                                type: "vec3"
+                                                name: "position"
+                                                result: "position"
+                                            }
+                                            property ShaderNode normal: ShaderNode {
+                                                type: "vec3"
+                                                name: "normal"
+                                                result: "normal"
+                                            }
+                                            property ShaderNode ssao: ShaderNode {
+                                                type: "vec3"
+                                                name: "ssao"
+                                                result: "ssao"
+                                            }
+                                            property ShaderNode blur: ShaderNode {
+                                                type: "vec3"
+                                                name: "blur"
+                                                result: "blur"
+                                            }
+                                            property ShaderNode color: ShaderNode {
+                                                type: "vec4"
+                                                name: "color"
+                                                result: "color"
+                                            }
 
-                    material: finalMaterial
+                                            material: finalMaterial
 
-                    outputs: [
-                        ShaderOutput {
-                            id: output
-                            name: "fragColor"
-                            type: "vec4"
-                            value: blurMultiply
-                            // value: finalShaderBuilder
-                        }
-                    ]
+                                            outputs: [
+                                                ShaderOutput {
+                                                    id: output
+                                                    name: "fragColor"
+                                                    type: "vec4"
+                                                    value: blurMultiply
+                                                    // value: finalShaderBuilder
+                                                }
+                                            ]
 
-                    Multiply {
-                        id: ssaoMultiply
-                        value1: ssaoNode
-                        value2: standardMaterial
-                    }
-                    Multiply {
-                        id: blurMultiply
-                        value1: blurNode
-                        value2: standardMaterial
-                    }
-                    ShaderNode {
-                        id: blurNode
-                        property var blur: finalShaderBuilder.blur
-                        name: "ambientOcclusion"
-                        type: "vec3"
-                        result: "$(blur, vec3)"
-                    }
-                    ShaderNode {
-                        id: ssaoNode
-                        property var ssao: finalShaderBuilder.ssao
-                        name: "ambientOcclusion"
-                        type: "vec3"
-                        result: "$(ssao, vec3)"
-                    }
-                    StandardMaterial {
-                        id: standardMaterial
-                        color: finalShaderBuilder.color
-                        lights: [
-                            Light {
-                                position: light1.position
-                                strength: light1.strength
-                                attenuation: light1.attenuation
-                            },
-                            Light {
-                                position: light2.position
-                                strength: light2.strength
-                                attenuation: light2.attenuation
-                            }
-                        ]
-                    }
+                                            Multiply {
+                                                id: ssaoMultiply
+                                                value1: ssaoNode
+                                                value2: standardMaterial
+                                            }
+                                            Multiply {
+                                                id: blurMultiply
+                                                value1: blurNode
+                                                value2: standardMaterial
+                                            }
+                                            ShaderNode {
+                                                id: blurNode
+                                                property var blur: finalShaderBuilder.blur
+                                                name: "ambientOcclusion"
+                                                type: "vec3"
+                                                result: "$(blur, vec3)"
+                                            }
+                                            ShaderNode {
+                                                id: ssaoNode
+                                                property var ssao: finalShaderBuilder.ssao
+                                                name: "ambientOcclusion"
+                                                type: "vec3"
+                                                result: "$(ssao, vec3)"
+                                            }
+                                            StandardMaterial {
+                                                id: standardMaterial
+                                                color: finalShaderBuilder.color
+                                                lights: [
+                                                    Light {
+                                                        position: light1.position
+                                                        strength: light1.strength
+                                                        attenuation: light1.attenuation
+                                                    },
+                                                    Light {
+                                                        position: light2.position
+                                                        strength: light2.strength
+                                                        attenuation: light2.attenuation
+                                                    }
+                                                ]
+                                            }
 
-                    source: "
+                                            source: "
 #version 410
 "
-                    +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
+                                            +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 
 uniform highp sampler2D blurTexture;
 uniform highp sampler2D ssaoTexture;
@@ -617,108 +617,115 @@ void main()
 }
 
 "
-                }
-            }
+                                        }
+                                    }
 
-            components: [
-                //                finalLayer,
-                quadMesh,
-                quadTransform,
-                finalMaterial
-            ]
-        }
+                                    components: [
+                                        //                finalLayer,
+                                        quadMesh,
+                                        quadTransform,
+                                        finalMaterial
+                                    ]
+                                }
 
-        AtomifySimulator {
-            id: simulator
-            simulationSpeed: 1
-            system.atoms.modifiers: [
-                colorModifier,
-                groupModifier,
-                regionModifier,
-                periodicImages
-            ]
-        }
+                                AtomifySimulator {
+                                    id: simulator
+                                    simulationSpeed: 1
+                                    system.atoms.modifiers: [
+                                        colorModifier,
+                                        groupModifier,
+                                        regionModifier,
+                                        periodicImages
+                                    ]
+                                }
 
-        DesktopController {
-            id: navigationController
-            camera: visualizer.camera
-            onPressed: {
-                root.focus = true
-            }
-        }
+                                DesktopController {
+                                    id: navigationController
+                                    camera: visualizer.camera
+                                    onPressed: {
+                                        root.focus = true
+                                    }
+                                }
 
-        ColorModifier {
-            id: colorModifier
-            scale: 0.2
-        }
+                                ColorModifier {
+                                    id: colorModifier
+                                    scale: 0.2
+                                }
 
-        GroupModifier {
-            id: groupModifier
-        }
+                                GroupModifier {
+                                    id: groupModifier
+                                }
 
-        RegionModifier {
-            id: regionModifier
-        }
+                                RegionModifier {
+                                    id: regionModifier
+                                }
 
-        PeriodicImages {
-            id: periodicImages
-            numberOfCopiesX: 1
-            numberOfCopiesY: 1
-            numberOfCopiesZ: 1
-        }
+                                PeriodicImages {
+                                    id: periodicImages
+                                    numberOfCopiesX: 1
+                                    numberOfCopiesY: 1
+                                    numberOfCopiesZ: 1
+                                }
 
-        Spheres {
-            id: spheres
-            camera: visualizer.camera
-            sphereData: simulator.system.atoms.sphereData
-            // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
-            posMin: -100
-            posMax:  100
-            fragmentColor: StandardMaterial {
-                color: spheres.fragmentBuilder.color
-                lights: [
-                    Light {
-                        id: light1
-                        position: visualizer.camera.position.plus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                        strength: 0.4
-                        attenuation: 0.0
-                    },
-                    Light {
-                        id: light2
-                        position: visualizer.camera.position.minus(
-                                      (visualizer.camera.viewVector.normalized().plus(
-                                           visualizer.camera.upVector.normalized()).plus(
-                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                        strength: 0.4
-                        attenuation: 0.0
-                    }
-                ]
-            }
-        }
+                                StandardMaterial {
+                                    id: spheresMediumQuality
+                                    color: spheres.fragmentBuilder.color
+                                    lights: [
+                                        Light {
+                                            id: light1
+                                            position: visualizer.camera.position.plus(
+                                                          (visualizer.camera.viewVector.normalized().plus(
+                                                               visualizer.camera.upVector.normalized()).plus(
+                                                               visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+                                            strength: 0.5
+                                            attenuation: 0.0
+                                        },
+                                        Light {
+                                            id: light2
+                                            position: visualizer.camera.position.minus(
+                                                          (visualizer.camera.viewVector.normalized().plus(
+                                                               visualizer.camera.upVector.normalized()).plus(
+                                                               visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+                                            strength: 0.5
+                                            attenuation: 0.0
+                                        }
+                                    ]
+                                }
 
-        Bonds {
-            id: bonds
-            bondData: simulator.system.atoms.bondData
-            posMin: spheres.posMin
-            posMax: spheres.posMax
-            fragmentColor: StandardMaterial {
-                color: spheres.fragmentBuilder.color
-                lights: [
-                    Light {
-                        position: light1.position
-                        strength: light1.strength
-                        attenuation: light1.attenuation
-                    },
-                    Light {
-                        position: light2.position
-                        strength: light2.strength
-                        attenuation: light2.attenuation
-                    }
-                ]
-            }
-        }
-    }
-}
+                                StandardMaterial {
+                                    id: bondsMediumQuality
+                                    color: "white"
+                                    lights: [
+                                        Light {
+                                            position: light1.position
+                                            strength: light1.strength
+                                            attenuation: light1.attenuation
+                                        },
+                                        Light {
+                                            position: light2.position
+                                            strength: light2.strength
+                                            attenuation: light2.attenuation
+                                        }
+                                    ]
+                                }
+
+                                Spheres {
+                                    id: spheres
+                                    camera: visualizer.camera
+                                    sphereData: simulator.system.atoms.sphereData
+                                    // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
+                                    posMin: -100
+                                    posMax:  100
+                                    fragmentColor: spheresMediumQuality
+                                }
+
+                                Bonds {
+                                    id: bonds
+                                    color: "white"
+                                    bondData: simulator.system.atoms.bondData
+                                    posMin: spheres.posMin
+                                    posMax: spheres.posMax
+                                    fragmentColor: bondsMediumQuality
+                                }
+                            }
+                        }

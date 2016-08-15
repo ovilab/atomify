@@ -25,7 +25,7 @@ CP1DData *CPCompute::ensureExists(QString key, bool enabledByDefault) {
 
 bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
-    double value = compute->compute_scalar();
+    double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
     CP1DData *data = ensureExists(QString("Temperature"), true);
@@ -38,7 +38,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
 bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
     if(lammpsController->lammps()->update->ntimestep != lammpsController->lammps()->update->eflag_global) return true;
-    double value = compute->compute_scalar();
+    double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
     CP1DData *data = ensureExists(QString("Potential energy"), true);
@@ -50,7 +50,7 @@ bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController)
 
 bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
-    double value = compute->compute_scalar();
+    double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
     CP1DData *data = ensureExists(QString("Kinetic energy"), true);
@@ -66,7 +66,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     if(!virialComputed) return true;
 
     // First compute scalar pressure
-    double value = compute->compute_scalar();
+    double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
     CP1DData *data = ensureExists(QString("Pressure"), true);
@@ -75,7 +75,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     data->add(lammpsController->system()->simulationTime(), value);
 
     // Then compute stress tensor
-    compute->compute_vector();
+    // compute->compute_vector();
     // xx, yy, zz, xy, xz, yz
     QStringList components = {"xx", "yy", "zz", "xy", "xz", "yz"};
 
@@ -92,7 +92,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
 bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController) {
     Q_UNUSED(lammpsController);
     if(!compute) return false;
-    compute->compute_array();
+    // compute->compute_array();
     int numBins = compute->size_array_rows;         // rows in global array
     int numColumns = compute->size_array_cols;      // columns in global array
     int numPairs = (numColumns - 1)/2;
@@ -107,15 +107,18 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
             double rdf = compute->array[bin][1+2*pairId];
             data->add(r,rdf,true);
         }
+
         emit data->updated();
     }
+
+
 
     return true;
 }
 
 bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
-    compute->compute_vector();
+    // compute->compute_vector();
 
     // http://www.ascii.cl/htmlcodes.htm
     QStringList components = {"∆x<sup>2</sup>", "∆y<sup>2</sup>", "∆z<sup>2</sup>", "∆r<sup>2</sup>"};
@@ -133,7 +136,7 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
 
 bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
-    compute->compute_vector();
+    // compute->compute_vector();
 
     // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
     QStringList components = {"&lt;vx, vx0\&gt;", "&lt;vy, vy0&gt;", "&lt;vz, vz0&gt;", "&lt;v, v0&gt;"};
@@ -151,7 +154,7 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
 
 bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
-    compute->compute_vector();
+    // compute->compute_vector();
 
     // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
     QStringList components = {"x_cm", "y_cm", "z_cm"};
@@ -171,7 +174,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     if(!compute) return false;
 
     // First compute scalar Rg
-    double value = compute->compute_scalar();
+    double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
     CP1DData *data = ensureExists(QString("Radius of gyration"), true);
@@ -179,7 +182,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     setYLabel("Pressure");
     data->add(lammpsController->system()->simulationTime(), value);
 
-    compute->compute_vector();
+    // compute->compute_vector();
 
     // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
     QStringList components = {"xx", "yy", "zz", "xy", "xz", "yz"};
@@ -195,22 +198,41 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     return true;
 }
 
-bool CPCompute::copyData(ComputeChunkAtom *compute, LAMMPSController *lammpsController) {
-    if(!compute) return false;
+void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
+    Compute *compute = lammpsController->findComputeByIdentifier(identifier());
+    if(compute->scalar_flag == 1) {
+        try {
+            compute->compute_scalar();
+        } catch (LammpsException &exception) {
+            // TODO: handle this better than just ignoring exception.
 
-    enum{BIN1D,BIN2D,BIN3D,BINSPHERE,BINCYLINDER,
-         TYPE,MOLECULE,COMPUTE,FIX,VARIABLE};
-    enum{LOWER,CENTER,UPPER,COORD};
-    enum{BOX,LATTICE,REDUCED};
-    enum{NODISCARD,MIXED,YESDISCARD};
-    enum{ONCE,NFREQ,EVERY};              // used in several files
-    enum{LIMITMAX,LIMITEXACT};
-
-    if(compute->which == BIN2D) {
-
+//            qDebug() << "ERROR: LAMMPS threw an exception!";
+//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        }
     }
 
-    return true;
+    if(compute->vector_flag == 1) {
+        try {
+            compute->compute_scalar();
+        } catch (LammpsException &exception) {
+            // TODO: handle this better than just ignoring exception.
+//            qDebug() << "ERROR: LAMMPS threw an exception!";
+//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        }
+    }
+
+    if(compute->array_flag == 1) {
+        try {
+            compute->compute_array();
+        } catch (LammpsException &exception) {
+            // TODO: handle this better than just ignoring exception.
+//            qDebug() << "ERROR: LAMMPS threw an exception!";
+//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        }
+    }
 }
 
 void CPCompute::copyData(LAMMPSController *lammpsController)
@@ -220,25 +242,29 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
     Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     if(lmp_compute == nullptr) return;
-
-    if(copyData(dynamic_cast<ComputePressure*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeTemp*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeKE*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputePE*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeMSD*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
-    if(copyData(dynamic_cast<ComputeChunkAtom*>(lmp_compute), lammpsController)) return;
-
+    try {
+        if(copyData(dynamic_cast<ComputePressure*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeTemp*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeKE*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputePE*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeRDF*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeMSD*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
+    } catch (LammpsException &exception) {
+        qDebug() << "ERROR: LAMMPS threw an exception!";
+        qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+        qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        return;
+    }
     if(lmp_compute->scalar_flag == 1) {
         try {
             double value = lmp_compute->compute_scalar();
             setHasScalarData(true);
             setScalarValue(value);
             CP1DData *data = ensureExists("scalar", true);
-            data->add(lammpsController->system()->simulationTime(), value);
+            data->add(lammpsController->system()->simulationTime(), value, true);
         } catch (LammpsException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
             qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
@@ -253,16 +279,13 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
                 QString key = QString("%1").arg(i);
                 CP1DData *data = ensureExists(key, true);
                 double value = lmp_compute->vector[i-1];
-                data->add(lammpsController->system()->simulationTime(), value);
+                data->add(lammpsController->system()->simulationTime(), value, true);
             }
         } catch (LammpsException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
             qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
             qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
         }
-    }
-    if(lmp_compute->array_flag == 1) {
-
     }
 }
 

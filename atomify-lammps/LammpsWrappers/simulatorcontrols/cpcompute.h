@@ -35,6 +35,7 @@ public:
     ~CPCompute();
     void copyData(LAMMPSController *lammpsController);
     bool existsInLammps(LAMMPSController *lammpsController) override;
+    void computeInLAMMPS(LAMMPSController *lammpsController);
     bool isVector() const;
     QString group() const;
     int frequency() const;
@@ -80,13 +81,12 @@ private:
     bool copyData(ComputeVACF *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeCOM *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeGyration *compute, LAMMPSController *lammpsController);
-    bool copyData(ComputeChunkAtom *compute, LAMMPSController *lammpsController);
     CP1DData *ensureExists(QString key, bool enabledByDefault);
 
     bool m_isVector = false;
     double m_time = 0;
     QString m_group = "all";
-    int m_frequency = 2;
+    int m_frequency = 10;
     bool m_hasScalarData = false;
     float m_scalarValue = 0.0;
     int m_num1DData = 0;
