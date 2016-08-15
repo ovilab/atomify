@@ -133,5 +133,8 @@ DISTFILES += \
     simulations/diffusion/indent/indent.png \
     simulations/diffusion/indent/indent.in \
     simulations/diffusion/indent/indent.qml \
+    qml/qtquickcontrols2.conf \
     ../.travis.yml \
-    qml/qtquickcontrols2.conf
+    ../snappy-qt5.conf \
+    ../atomify-lammps.wrapper \
+    ../snapcraft.yaml
