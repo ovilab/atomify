@@ -49,7 +49,6 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
             float maxValues[fix->nvalues];
 
             for(int i=0; i<fix->nvalues; i++) {
-                m_dataRaw[i]->setSize(size);
                 m_dataRaw[i]->setXMin(xMin);
                 m_dataRaw[i]->setXMax(xMax);
                 m_dataRaw[i]->setZMin(zMin);
@@ -57,6 +56,7 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
                 m_dataRaw[i]->setXLabel(xLabel);
                 m_dataRaw[i]->setYLabel(yLabel);
                 m_dataRaw[i]->setZLabel(zLabel);
+                m_dataRaw[i]->setSize(size);
                 minValues[i] = 1e9;
                 maxValues[i] = -1e9;
             }
