@@ -14,17 +14,19 @@ WindowGL2 {
 
     property Fix fix
 
+    function updateLimits() {
+        xAxis.min = fix.data[0].xMin
+        xAxis.max = fix.data[0].xMax
+        yAxis.min = fix.data[0].yMin
+        yAxis.max = fix.data[0].yMax
+        zAxis.min = fix.data[0].zMin
+        zAxis.max = fix.data[0].zMax
+    }
+
     onFixChanged: {
         surfaceSeries.dataProxy = fix.data[0]
-        fix.data[0].updated.connect(function() {
-            xAxis.min = fix.data[0].xMin
-            xAxis.max = fix.data[0].xMax
-            yAxis.min = fix.data[0].yMin
-            yAxis.max = fix.data[0].yMax
-            zAxis.min = fix.data[0].zMin
-            zAxis.max = fix.data[0].zMax
-            console.log("yMin: ", yAxis.min, "yMax: ", yAxis.max)
-        })
+        fix.data[0].updated.connect(updateLimits)
+        updateLimits()
     }
 
     Shortcut {
