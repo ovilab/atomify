@@ -16,6 +16,7 @@ Item {
 
     property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
+    property alias renderQuality: visualizer.renderQuality
     property bool focusMode: false
 
     Component.onCompleted: {

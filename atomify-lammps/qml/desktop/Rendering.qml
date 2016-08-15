@@ -176,8 +176,9 @@ Pane {
             Row {
                 width: parent.width
                 RadioButton {
-                    focusPolicy: Qt.NoFocus
                     id: renderingQualityLow
+                    property bool wasClicked: false
+                    focusPolicy: Qt.NoFocus
                     text: "Low"
                     onCheckedChanged: {
                         if(checked) {
@@ -187,6 +188,7 @@ Pane {
                 }
                 RadioButton {
                     id: renderingQualityMedium
+                    property bool wasClicked: false
                     focusPolicy: Qt.NoFocus
                     text: "Medium"
                     onCheckedChanged: {
@@ -197,6 +199,8 @@ Pane {
                 }
                 RadioButton {
                     id: renderingQualityHigh
+//                    enabled: false
+                    property bool wasClicked: false
                     focusPolicy: Qt.NoFocus
                     text: "High"
                     onCheckedChanged: {

@@ -1,5 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.1
 import Atomify 1.0
 
 import Qt3D.Core 2.0
@@ -30,24 +32,31 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
-    property string renderMode: "deferred"
-    property string renderQuality: "high"
+    property string renderMode: "forward"
+    property string renderQuality: "medium"
+    property bool mainCompleted: false
+    property MessageDialog dialog: MessageDialog {
+        text: "Render quality will be changed when the application is restarted."
+    }
+
     multisample: true
     onRenderQualityChanged: {
+        if(mainCompleted) {
+            dialog.open()
+            return
+        }
+
         if(renderQuality === "low") {
-            root.renderMode = "forward"
+            renderMode = "forward"
             spheres.fragmentColor = spheres.fragmentBuilder.normalDotCamera
             bonds.fragmentColor = bonds.fragmentBuilder.normalDotCamera
-            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "medium") {
-            root.renderMode = "forward"
+            renderMode = "forward"
             spheres.fragmentColor = spheresMediumQuality
             bonds.fragmentColor = bondsMediumQuality
-            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "high") {
-            root.renderMode = "deferred"
+            renderMode = "deferred"
             ambientOcclusion.samples = 32
-            deferredFrameGraph.window.width = deferredFrameGraph.window.width-1
         }
     }
 
@@ -82,7 +91,7 @@ Scene3D {
 
         ForwardFrameGraph {
             id: forwardFrameGraph
-            surface: deferredFrameGraph.surface
+//            surface: deferredFrameGraph.surface
             camera: mainCamera
         }
         DeferredFrameGraph {
@@ -90,6 +99,7 @@ Scene3D {
             camera: mainCamera
             width: Math.max(10, root.width, root.height)
             height: width
+            surface: forwardFrameGraph.surface
         }
         components: [
             RenderSettings {

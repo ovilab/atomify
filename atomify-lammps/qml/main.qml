@@ -43,6 +43,7 @@ QQC1.ApplicationWindow {
         id: settings
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
+        property alias renderQuality: mainDesktop.renderQuality
     }
 
     function resetStyle() {
@@ -61,6 +62,7 @@ QQC1.ApplicationWindow {
 
     Component.onCompleted: {
         resetStyle()
+        mainDesktop.visualizer.mainCompleted = true
     }
 
     MainDesktop {
