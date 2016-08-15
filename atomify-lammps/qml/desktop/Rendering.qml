@@ -165,41 +165,39 @@ Pane {
             width: parent.width
             title: "Rendering quality"
 
+            Binding {
+                target: visualizer
+                property: "renderQuality"
+                value: buttonGroup.checkedButton.quality
+            }
+            ButtonGroup {
+                id: buttonGroup
+                buttons: qualityButtonRow.children
+            }
+
             Row {
+                id: qualityButtonRow
                 width: parent.width
                 RadioButton {
                     id: renderingQualityLow
+                    property string quality: "low"
+                    checked: visualizer.renderQuality === quality
                     focusPolicy: Qt.NoFocus
                     text: "Low"
-                    checked: visualizer.renderQuality === "low"
-                    onCheckedChanged: {
-                        if(checked) {
-                            root.visualizer.renderQuality = "low"
-                        }
-                    }
                 }
                 RadioButton {
                     id: renderingQualityMedium
+                    property string quality: "medium"
+                    checked: visualizer.renderQuality === quality
                     focusPolicy: Qt.NoFocus
                     text: "Medium"
-                    checked: visualizer.renderQuality === "medium"
-                    onCheckedChanged: {
-                        if(checked) {
-                            root.visualizer.renderQuality = "medium"
-                        }
-                    }
                 }
                 RadioButton {
                     id: renderingQualityHigh
-//                    enabled: false
+                    property string quality: "high"
+                    checked: visualizer.renderQuality === quality
                     focusPolicy: Qt.NoFocus
                     text: "High"
-                    checked: visualizer.renderQuality === "high"
-                    onCheckedChanged: {
-                        if(checked) {
-                            root.visualizer.renderQuality = "high"
-                        }
-                    }
                 }
             }
         }
