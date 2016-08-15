@@ -38,13 +38,16 @@ Scene3D {
             root.renderMode = "forward"
             spheres.fragmentColor = spheres.fragmentBuilder.normalDotCamera
             bonds.fragmentColor = bonds.fragmentBuilder.normalDotCamera
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "medium") {
             root.renderMode = "forward"
             spheres.fragmentColor = spheresMediumQuality
             bonds.fragmentColor = bondsMediumQuality
+            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "high") {
             root.renderMode = "deferred"
             ambientOcclusion.samples = 32
+            deferredFrameGraph.window.width = deferredFrameGraph.window.width-1
         }
     }
 
