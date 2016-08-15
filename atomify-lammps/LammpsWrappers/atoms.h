@@ -45,6 +45,7 @@ public:
     float bondRadius() const;
     void reset();
     bool sort() const;
+    void synchronizeRenderer();
 
 public slots:
     void setBondRadius(float bondRadius);
@@ -61,6 +62,7 @@ signals:
 
 private:
     AtomData m_atomData;
+    AtomData m_atomDataProcessed;
     QVector<BondVBOData> bondsDataRaw;
     QMap<QString, AtomStyle*> m_atomStyleTypes;
     QVector<AtomStyle*> m_atomStyles;
@@ -69,7 +71,7 @@ private:
     class Bonds* m_bonds = nullptr;
     QVariantList m_modifiers;
     float m_bondRadius = 0.1;
-    void generateBondData(AtomData &atomData, System &system);
+    void generateBondData(AtomData &atomData);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     bool m_sort = false;
