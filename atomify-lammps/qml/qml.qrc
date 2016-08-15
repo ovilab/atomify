@@ -59,5 +59,6 @@
         <file>desktop/RightBar.qml</file>
         <file>desktop/Examples.qml</file>
         <file>plotting/Plot2D.qml</file>
+        <file>plotting/ColorMaps.qml</file>
     </qresource>
 </RCC>
