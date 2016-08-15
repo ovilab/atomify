@@ -18,6 +18,9 @@ QQC1.ApplicationWindow {
     title: "Atomify"
     visible: true
 
+    width: 1280
+    height: 1024
+
     QQC1.MenuBar {
         QQC1.Menu {
             title: "File"
