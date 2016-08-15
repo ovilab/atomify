@@ -15,7 +15,7 @@ import "desktop"
 import "plotting"
 QQC1.ApplicationWindow {
     id: applicationRoot
-    title: "Atomify"
+    title: "Atomify LAMMPS"
     visible: true
 
     width: 1280
