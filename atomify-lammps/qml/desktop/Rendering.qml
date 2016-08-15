@@ -15,14 +15,6 @@ Pane {
         periodicXSlider.value = visualizer.periodicImages.numberOfCopiesX
         periodicYSlider.value = visualizer.periodicImages.numberOfCopiesY
         periodicZSlider.value = visualizer.periodicImages.numberOfCopiesZ
-        if(visualizer.renderQuality === "low") {
-            renderingQualityLow.checked = true
-        } else if(visualizer.renderQuality === "medium") {
-            renderingQualityMedium.checked = true
-        } else if(visualizer.renderQuality === "high") {
-            renderingQualityHigh.checked = true
-        }
-
     }
 
     Column {
@@ -177,9 +169,9 @@ Pane {
                 width: parent.width
                 RadioButton {
                     id: renderingQualityLow
-                    property bool wasClicked: false
                     focusPolicy: Qt.NoFocus
                     text: "Low"
+                    checked: visualizer.renderQuality === "low"
                     onCheckedChanged: {
                         if(checked) {
                             root.visualizer.renderQuality = "low"
@@ -188,9 +180,9 @@ Pane {
                 }
                 RadioButton {
                     id: renderingQualityMedium
-                    property bool wasClicked: false
                     focusPolicy: Qt.NoFocus
                     text: "Medium"
+                    checked: visualizer.renderQuality === "medium"
                     onCheckedChanged: {
                         if(checked) {
                             root.visualizer.renderQuality = "medium"
@@ -200,9 +192,9 @@ Pane {
                 RadioButton {
                     id: renderingQualityHigh
 //                    enabled: false
-                    property bool wasClicked: false
                     focusPolicy: Qt.NoFocus
                     text: "High"
+                    checked: visualizer.renderQuality === "high"
                     onCheckedChanged: {
                         if(checked) {
                             root.visualizer.renderQuality = "high"
