@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 
     QSurfaceFormat format;
 #ifndef Q_OS_ANDROID
-    format.setMajorVersion(4);
+    format.setMajorVersion(3);
     format.setMinorVersion(3);
     format.setProfile(QSurfaceFormat::CoreProfile);
     // format.setSamples(32);

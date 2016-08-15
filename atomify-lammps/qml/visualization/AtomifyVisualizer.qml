@@ -143,7 +143,7 @@ Scene3D {
                                 filterKeys : FilterKey { name : "pass"; value : "ssao" }
                                 shaderProgram : ShaderProgram {
                                     vertexShaderCode: "
-#version 410
+#version 330
 
 uniform highp mat4 modelMatrix;
 
@@ -187,7 +187,7 @@ void main()
 
                     material: ssaoMaterial
                     source: "
-#version 410
+#version 330
 "
                     +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 uniform highp sampler2D normalTexture;
@@ -308,7 +308,7 @@ void main()
                                 filterKeys : FilterKey { name : "pass"; value : "blur" }
                                 shaderProgram : ShaderProgram {
                                     vertexShaderCode: "
-#version 410
+#version 330
 
 uniform highp mat4 modelMatrix;
 
@@ -326,7 +326,7 @@ void main()
 }
 "
                                     fragmentShaderCode: "
-#version 410
+#version 330
 
 uniform highp sampler2D ssaoTexture;
 uniform highp sampler2D depthTexture;
@@ -424,7 +424,7 @@ void main()
                                                         filterKeys : FilterKey { name : "pass"; value : "final" }
                                                         shaderProgram : ShaderProgram {
                                                             vertexShaderCode: "
-#version 410
+#version 330
 
 uniform highp mat4 modelMatrix;
 
@@ -556,7 +556,7 @@ void main()
                                             }
 
                                             source: "
-#version 410
+#version 330
 "
                                             +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 
