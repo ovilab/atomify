@@ -41,6 +41,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
     Q_PROPERTY(LammpsError* lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
+    Q_PROPERTY(bool automaticallyRun READ automaticallyRun WRITE setAutomaticallyRun NOTIFY automaticallyRunChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
 public:
     AtomifySimulator();
@@ -54,6 +55,7 @@ public:
     Q_INVOKABLE void clearSimulatorControls();
     class System* system() const;
     LammpsError* lammpsError() const;
+    bool automaticallyRun() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -62,6 +64,7 @@ public slots:
     void setWillReset(bool willReset);
     void setSystem(class System* system);
     void setLammpsError(LammpsError* lammpsError);
+    void setAutomaticallyRun(bool automaticallyRun);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -72,6 +75,7 @@ signals:
     void willResetChanged(bool willReset);
     void systemChanged(class System* system);
     void lammpsErrorChanged(LammpsError* lammpsError);
+    void automaticallyRunChanged(bool automaticallyRun);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -85,6 +89,7 @@ private:
     int m_simulationSpeed = 1;
     bool m_paused = false;
     bool m_willReset = false;
+    bool m_automaticallyRun = false;
 };
 
 #endif // MYSIMULATOR_H

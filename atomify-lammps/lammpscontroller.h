@@ -25,6 +25,7 @@ struct LammpsState {
     unsigned long timeSpentInLammps = 0;
     int numberOfTimesteps = 1;
     bool dataDirty = false;
+    bool automaticallyRun = false;
     unsigned int runCommandStart = 0;
     unsigned int runCommandEnd = 0;
     ScriptCommand nextCommand;

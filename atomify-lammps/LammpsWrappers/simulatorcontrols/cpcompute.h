@@ -12,6 +12,7 @@ using namespace LAMMPS_NS;
 class CPCompute : public SimulatorControl
 {
     Q_OBJECT
+    Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(QString group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
     Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
@@ -46,6 +47,7 @@ public:
     QString xLabel() const;
     QString yLabel() const;
     int maxCount() const;
+    bool interactive() const;
 
 signals:
     void isVectorChanged(bool isVector);
@@ -58,6 +60,7 @@ signals:
     void xLabelChanged(QString xLabel);
     void yLabelChanged(QString yLabel);
     void maxCountChanged(int maxCount);
+    void interactiveChanged(bool interactive);
 
 public slots:
     void setIsVector(bool isVector);
@@ -70,6 +73,7 @@ public slots:
     void setXLabel(QString xLabel);
     void setYLabel(QString yLabel);
     void setMaxCount(int maxCount);
+    void setInteractive(bool interactive);
 
 private:
     bool copyData(ComputePressure *compute, LAMMPSController *lammpsController);
@@ -81,6 +85,7 @@ private:
     bool copyData(ComputeVACF *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeCOM *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeGyration *compute, LAMMPSController *lammpsController);
+    bool copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController);
     CP1DData *ensureExists(QString key, bool enabledByDefault);
 
     bool m_isVector = false;
@@ -95,6 +100,8 @@ private:
     QString m_xLabel;
     QString m_yLabel;
     int m_maxCount = 1000;
+    bool m_interactive = false;
+
 };
 
 #endif // COMPUTE_H
