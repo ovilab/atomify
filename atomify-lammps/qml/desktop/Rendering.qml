@@ -15,14 +15,6 @@ Pane {
         periodicXSlider.value = visualizer.periodicImages.numberOfCopiesX
         periodicYSlider.value = visualizer.periodicImages.numberOfCopiesY
         periodicZSlider.value = visualizer.periodicImages.numberOfCopiesZ
-        if(visualizer.renderQuality === "low") {
-            renderingQualityLow.checked = true
-        } else if(visualizer.renderQuality === "medium") {
-            renderingQualityMedium.checked = true
-        } else if(visualizer.renderQuality === "high") {
-            renderingQualityHigh.checked = true
-        }
-
     }
 
     Column {
@@ -173,37 +165,39 @@ Pane {
             width: parent.width
             title: "Rendering quality"
 
+            Binding {
+                target: visualizer
+                property: "renderQuality"
+                value: buttonGroup.checkedButton.quality
+            }
+            ButtonGroup {
+                id: buttonGroup
+                buttons: qualityButtonRow.children
+            }
+
             Row {
+                id: qualityButtonRow
                 width: parent.width
                 RadioButton {
-                    focusPolicy: Qt.NoFocus
                     id: renderingQualityLow
+                    property string quality: "low"
+                    checked: visualizer.renderQuality === quality
+                    focusPolicy: Qt.NoFocus
                     text: "Low"
-                    onCheckedChanged: {
-                        if(checked) {
-                            root.visualizer.renderQuality = "low"
-                        }
-                    }
                 }
                 RadioButton {
                     id: renderingQualityMedium
+                    property string quality: "medium"
+                    checked: visualizer.renderQuality === quality
                     focusPolicy: Qt.NoFocus
                     text: "Medium"
-                    onCheckedChanged: {
-                        if(checked) {
-                            root.visualizer.renderQuality = "medium"
-                        }
-                    }
                 }
                 RadioButton {
                     id: renderingQualityHigh
+                    property string quality: "high"
+                    checked: visualizer.renderQuality === quality
                     focusPolicy: Qt.NoFocus
                     text: "High"
-                    onCheckedChanged: {
-                        if(checked) {
-                            root.visualizer.renderQuality = "high"
-                        }
-                    }
                 }
             }
         }

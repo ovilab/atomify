@@ -15,8 +15,11 @@ import "desktop"
 import "plotting"
 QQC1.ApplicationWindow {
     id: applicationRoot
-    title: "Atomify"
+    title: "Atomify LAMMPS"
     visible: true
+
+    width: 1280
+    height: 1024
 
     QQC1.MenuBar {
         QQC1.Menu {
@@ -40,6 +43,7 @@ QQC1.ApplicationWindow {
         id: settings
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
+        property alias renderQuality: mainDesktop.renderQuality
     }
 
     function resetStyle() {
@@ -58,6 +62,7 @@ QQC1.ApplicationWindow {
 
     Component.onCompleted: {
         resetStyle()
+        mainDesktop.visualizer.mainCompleted = true
     }
 
     MainDesktop {

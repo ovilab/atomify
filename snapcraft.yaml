@@ -1,0 +1,72 @@
+name: atomify-lammps
+version: "2.0.3"
+summary: Atomify LAMMPS
+description: Editor for the molecular dynamics simulator LAMMPS
+confinement: strict
+
+apps:
+  atomify-lammps:
+    command: atomify-lammps
+    plugs: [unity7, opengl, network, network-bind, home]
+
+parts:
+  atomify-lammps:
+    source: .
+    project-files:
+      - atomify-lammps.pro
+    qt-version: qt5
+    plugin: qmake
+    build-packages:
+      - build-essential
+      - gettext
+      - intltool
+      - ubuntu-touch-sounds
+      - suru-icon-theme
+      - qt573d
+      - qt57charts-no-lgpl
+      - qt57datavis-no-lgpl
+      - qt57declarative
+      - qt57graphicaleffects
+      - qt57quickcontrols
+      - qt57quickcontrols2
+      - qt57svg
+      #- qml-module-qttest
+      #- qml-module-qtsysteminfo
+      #- qml-module-qt-labs-settings
+      #- qtdeclarative5-u1db1.0
+      #- qtdeclarative5-qtmultimedia-plugin
+      #- qtdeclarative5-qtpositioning-plugin
+      #- qtdeclarative5-ubuntu-content1
+      #- qt5-default
+      #- qtbase5-dev
+      #- qtdeclarative5-dev
+      #- qtdeclarative5-dev-tools
+      #- qtdeclarative5-folderlistmodel-plugin
+      #- qtdeclarative5-ubuntu-ui-toolkit-plugin
+    stage-packages:
+      - qt573d
+      - qt57charts-no-lgpl
+      - qt57datavis-no-lgpl
+      - qt57declarative
+      - qt57graphicaleffects
+      - qt57quickcontrols
+      - qt57quickcontrols2
+      - qt57svg
+      - ubuntu-sdk-libs
+      #- qtubuntu-desktop
+      #- qml-module-qtsysteminfo
+      #- qtmir-desktop
+      #- mir-graphics-drivers-desktop
+    snap:
+      - -usr/share/doc
+      - -usr/include
+    #after:
+      #- qt57
+  #qt57:
+    #source: qt57
+    #plugin: autotools
+  environment:
+    plugin: copy
+    files:
+      atomify-lammps.wrapper: bin/atomify-lammps
+      snappy-qt5.conf: etc/xdg/qtchooser/snappy-qt5.conf

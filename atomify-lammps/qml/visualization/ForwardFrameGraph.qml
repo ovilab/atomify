@@ -18,7 +18,7 @@ Viewport {
     id: root
 
     property Camera camera: Camera {}
-    property alias window: surfaceSelector.surface
+    property alias surface: surfaceSelector.surface
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
 

@@ -1,5 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.1
 import Atomify 1.0
 
 import Qt3D.Core 2.0
@@ -30,24 +32,31 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
-    property string renderMode: "deferred"
-    property string renderQuality: "high"
+    property string renderMode: "forward"
+    property string renderQuality: "medium"
+    property bool mainCompleted: false
+    property MessageDialog dialog: MessageDialog {
+        text: "Render quality will be changed when the application is restarted."
+    }
+
     multisample: true
     onRenderQualityChanged: {
+        if(mainCompleted) {
+            dialog.open()
+            return
+        }
+
         if(renderQuality === "low") {
-            root.renderMode = "forward"
+            renderMode = "forward"
             spheres.fragmentColor = spheres.fragmentBuilder.normalDotCamera
             bonds.fragmentColor = bonds.fragmentBuilder.normalDotCamera
-            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "medium") {
-            root.renderMode = "forward"
+            renderMode = "forward"
             spheres.fragmentColor = spheresMediumQuality
             bonds.fragmentColor = bondsMediumQuality
-            forwardFrameGraph.window.width = forwardFrameGraph.window.width-1
         } else if(renderQuality === "high") {
-            root.renderMode = "deferred"
+            renderMode = "deferred"
             ambientOcclusion.samples = 32
-            deferredFrameGraph.window.width = deferredFrameGraph.window.width-1
         }
     }
 
@@ -82,14 +91,15 @@ Scene3D {
 
         ForwardFrameGraph {
             id: forwardFrameGraph
-            window: deferredFrameGraph.window
+//            surface: deferredFrameGraph.surface
             camera: mainCamera
         }
         DeferredFrameGraph {
             id: deferredFrameGraph
-            width: Math.max(root.width, root.height)
-            height: width  // TODO any reason they must be the same?
             camera: mainCamera
+            width: Math.max(10, root.width, root.height)
+            height: width
+            surface: forwardFrameGraph.surface
         }
         components: [
             RenderSettings {
@@ -143,7 +153,7 @@ Scene3D {
                                 filterKeys : FilterKey { name : "pass"; value : "ssao" }
                                 shaderProgram : ShaderProgram {
                                     vertexShaderCode: "
-#version 410
+#version 330
 
 uniform highp mat4 modelMatrix;
 
@@ -187,7 +197,7 @@ void main()
 
                     material: ssaoMaterial
                     source: "
-#version 410
+#version 330
 "
                     +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 uniform highp sampler2D normalTexture;
@@ -308,7 +318,7 @@ void main()
                                 filterKeys : FilterKey { name : "pass"; value : "blur" }
                                 shaderProgram : ShaderProgram {
                                     vertexShaderCode: "
-#version 410
+#version 330
 
 uniform highp mat4 modelMatrix;
 
@@ -326,7 +336,7 @@ void main()
 }
 "
                                     fragmentShaderCode: "
-#version 410
+#version 330
 
 uniform highp sampler2D ssaoTexture;
 uniform highp sampler2D depthTexture;
@@ -424,7 +434,7 @@ void main()
                                                         filterKeys : FilterKey { name : "pass"; value : "final" }
                                                         shaderProgram : ShaderProgram {
                                                             vertexShaderCode: "
-#version 410
+#version 330
 
 uniform highp mat4 modelMatrix;
 
@@ -556,7 +566,7 @@ void main()
                                             }
 
                                             source: "
-#version 410
+#version 330
 "
                                             +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
 
@@ -720,8 +730,8 @@ void main()
                                 }
 
                                 Bonds {
-                                    color: "white"
                                     id: bonds
+                                    color: "white"
                                     bondData: simulator.system.atoms.bondData
                                     posMin: spheres.posMin
                                     posMax: spheres.posMax
