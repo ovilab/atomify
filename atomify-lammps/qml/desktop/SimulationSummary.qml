@@ -298,18 +298,18 @@ Pane {
                             visible: computesList.visible
                             Label {
                                 id: computeTitleLabel
-                                font.underline: true
-                                color: "steelblue"
-                                text: {
-                                    model.modelData.identifier
-                                }
+                                font.underline: model.modelData.interactive
+                                color: model.modelData.interactive ? "steelblue" : "white"
+                                text: model.modelData.identifier
                                 MouseArea {
                                     anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
+                                    cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
                                     onClicked: {
-                                        var point = Qt.point(mouseX, mouseY)
-                                        point = getGlobalPosition(point, computeTitleLabel)
-                                        createComputeWindow(model.modelData, point)
+                                        if(model.modelData.interactive) {
+                                            var point = Qt.point(mouseX, mouseY)
+                                            point = getGlobalPosition(point, computeTitleLabel)
+                                            createComputeWindow(model.modelData, point)
+                                        }
                                     }
                                 }
                             }
@@ -367,18 +367,20 @@ Pane {
                             visible: fixesList.visible
                             Label {
                                 id: fixesTitleLabel
-                                font.underline: true
-                                color: "steelblue"
+                                font.underline: model.modelData.interactive
+                                color: model.modelData.interactive ? "steelblue" : "white"
                                 text: {
                                     model.modelData.identifier
                                 }
                                 MouseArea {
                                     anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
+                                    cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
                                     onClicked: {
-                                        var point = Qt.point(mouseX, mouseY)
-                                        point = getGlobalPosition(point, fixesTitleLabel)
-                                        create2DPlotWindow(model.modelData, point)
+                                        if(model.modelData.interactive) {
+                                            var point = Qt.point(mouseX, mouseY)
+                                            point = getGlobalPosition(point, fixesTitleLabel)
+                                            create2DPlotWindow(model.modelData, point)
+                                        }
                                     }
                                 }
                             }

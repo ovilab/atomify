@@ -18,6 +18,8 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
 
     if(!fix) return false;
     if(fix->cchunk->which == BIN2D) {
+        setInteractive(true);
+
         if(m_dataRaw.size() != fix->nvalues) {
             m_dataRaw.clear();
             m_data.clear();
@@ -103,6 +105,11 @@ QVariantList CPFix::data() const
     return m_data;
 }
 
+QVariant CPFix::model() const
+{
+    return m_model;
+}
+
 void CPFix::update(LAMMPSController *lammpsController)
 {
     SimulatorControl::update(lammpsController);
@@ -172,6 +179,15 @@ void CPFix::setData(QVariantList data)
 
     m_data = data;
     emit dataChanged(data);
+}
+
+void CPFix::setModel(QVariant model)
+{
+    if (m_model == model)
+        return;
+
+    m_model = model;
+    emit modelChanged(model);
 }
 
 QList<QString> CPFix::resetCommands()

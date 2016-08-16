@@ -30,10 +30,7 @@ public:
     bool interactive() const;
     QVariantList data() const;
 
-    QVariant model() const
-    {
-        return m_model;
-    }
+    QVariant model() const;
 
 signals:
     void groupChanged(QString group);
@@ -41,7 +38,6 @@ signals:
     void interactiveChanged(bool interactive);
     void dataChanged(QVariantList data);
     void updatedContent();
-
     void modelChanged(QVariant model);
 
 public slots:
@@ -49,15 +45,7 @@ public slots:
     void setFrequency(int frequency);
     void setInteractive(bool interactive);
     void setData(QVariantList data);
-
-    void setModel(QVariant model)
-    {
-        if (m_model == model)
-            return;
-
-        m_model = model;
-        emit modelChanged(model);
-    }
+    void setModel(QVariant model);
 
 private:
     QString m_group = "all";

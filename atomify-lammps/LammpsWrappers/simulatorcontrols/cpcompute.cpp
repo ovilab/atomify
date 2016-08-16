@@ -23,6 +23,12 @@ CP1DData *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     return m_data1DRaw[key];
 }
 
+bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+    double *data = compute->vector_atom;
+    return true;
+}
+
 bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
     double value = compute->scalar;
@@ -32,6 +38,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     setXLabel("Time");
     setYLabel("Temperature");
     data->add(lammpsController->system()->simulationTime(), value);
+    setInteractive(true);
     return true;
 }
 
@@ -45,6 +52,7 @@ bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController)
     setXLabel("Time");
     setYLabel("Potential Energy");
     data->add(lammpsController->system()->simulationTime(), value);
+    setInteractive(true);
     return true;
 }
 
@@ -57,6 +65,7 @@ bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController)
     setXLabel("Time");
     setYLabel("Kinetic Energy");
     data->add(lammpsController->system()->simulationTime(), value);
+    setInteractive(true);
     return true;
 }
 
@@ -86,6 +95,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
+    setInteractive(true);
     return true;
 }
 
@@ -110,9 +120,7 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
 
         emit data->updated();
     }
-
-
-
+    setInteractive(true);
     return true;
 }
 
@@ -130,7 +138,7 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
-
+    setInteractive(true);
     return true;
 }
 
@@ -148,7 +156,7 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
-
+    setInteractive(true);
     return true;
 }
 
@@ -166,7 +174,7 @@ bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
-
+    setInteractive(true);
     return true;
 }
 
@@ -194,7 +202,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
-
+    setInteractive(true);
     return true;
 }
 
@@ -226,6 +234,17 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     if(compute->array_flag == 1) {
         try {
             compute->compute_array();
+        } catch (LammpsException &exception) {
+            // TODO: handle this better than just ignoring exception.
+//            qDebug() << "ERROR: LAMMPS threw an exception!";
+//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
+//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        }
+    }
+
+    if(compute->peratom_flag == 1) {
+        try {
+            compute->compute_peratom();
         } catch (LammpsException &exception) {
             // TODO: handle this better than just ignoring exception.
 //            qDebug() << "ERROR: LAMMPS threw an exception!";
@@ -265,6 +284,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             setScalarValue(value);
             CP1DData *data = ensureExists("scalar", true);
             data->add(lammpsController->system()->simulationTime(), value, true);
+            setInteractive(true);
         } catch (LammpsException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
             qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
@@ -360,6 +380,11 @@ int CPCompute::maxCount() const
     return m_maxCount;
 }
 
+bool CPCompute::interactive() const
+{
+    return m_interactive;
+}
+
 void CPCompute::setIsVector(bool isVector)
 {
     if (m_isVector == isVector)
@@ -451,6 +476,15 @@ void CPCompute::setMaxCount(int maxCount)
         data->setMaxCount(m_maxCount);
     }
     emit maxCountChanged(maxCount);
+}
+
+void CPCompute::setInteractive(bool interactive)
+{
+    if (m_interactive == interactive)
+        return;
+
+    m_interactive = interactive;
+    emit interactiveChanged(interactive);
 }
 
 QList<QString> CPCompute::resetCommands()
