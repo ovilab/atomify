@@ -60,6 +60,7 @@ Pane {
 
             CheckBox {
                 id: automaticallyRun
+                focusPolicy: Qt.NoFocus
                 text: "Automatically run"
             }
 
