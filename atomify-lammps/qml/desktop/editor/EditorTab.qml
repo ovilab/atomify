@@ -10,6 +10,7 @@ Pane {
     property TextArea consoleOutput: consoleItem.output
     property alias lammpsEditor: lammpsEditor
     property alias codeEditorWindow: lammpsEditor.codeEditorWindow
+    property alias automaticallyRun: automaticallyRun.checked
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
     onConsoleOutputChanged: {
@@ -55,6 +56,11 @@ Pane {
         RowLayout {
             anchors {
                 right: parent.right
+            }
+
+            CheckBox {
+                id: automaticallyRun
+                text: "Automatically run"
             }
 
             Button {

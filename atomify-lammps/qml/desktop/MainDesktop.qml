@@ -49,12 +49,12 @@ Item {
                 id: editorTab
                 Layout.fillHeight: true
                 width: 500
-
                 simulator: root.simulator
                 visualizer: root.visualizer
                 Component.onCompleted: {
                     simulator.errorInLammpsScript.connect(editorTab.reportError)
                 }
+                onAutomaticallyRunChanged: simulator.automaticallyRun = automaticallyRun
             }
 
             AtomifyVisualizer {

@@ -122,6 +122,12 @@ void LAMMPSController::processCommand(QString command) {
         // If this is the first word in a command and it is "run"
         if(wordCount == 0 && word.compare("run") == 0) {
             command_ss >> word; // Next word is the number of timesteps
+            if(QString::fromStdString(word).trimmed().compare("0") == 0) {
+                // It is a run 0 command.
+                processedCommand = "run 0";
+                continue;
+            }
+
             int numberOfTimesteps = atoi(word.c_str());
             if(numberOfTimesteps == 0) {
                 // We probably need to read it as a variable in lammps.
@@ -132,7 +138,7 @@ void LAMMPSController::processCommand(QString command) {
 
                 // int found = m_lammps->input->variable->find((char*)word_c_str);
                 if(variableExists(QString::fromStdString(wordCopy))) {
-                // if(found > -1) {
+                    // if(found > -1) {
                     char *numberOfTimestepsString = m_lammps->input->variable->retrieve((char*)word_c_str);
                     numberOfTimesteps = atoi(numberOfTimestepsString);
                 }
@@ -292,9 +298,9 @@ void LAMMPSController::reset()
     if(nargs>2) {
         sprintf(argv[2], "gpu");
     }
-//    sprintf(argv[3], "-pk");
-//    sprintf(argv[4], "gpu");
-//    sprintf(argv[5], "1");
+    //    sprintf(argv[3], "-pk");
+    //    sprintf(argv[4], "gpu");
+    //    sprintf(argv[5], "1");
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
@@ -332,6 +338,7 @@ void LAMMPSController::tick()
     } else {
         if(state.paused) return;
         if(state.staticSystem) return;
+        if(!state.automaticallyRun) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.
         QElapsedTimer t;
         t.start();

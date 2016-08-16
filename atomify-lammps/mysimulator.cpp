@@ -53,6 +53,11 @@ LammpsError *AtomifySimulator::lammpsError() const
     return m_lammpsError;
 }
 
+bool AtomifySimulator::automaticallyRun() const
+{
+    return m_automaticallyRun;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
@@ -63,6 +68,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.setPaused(atomifySimulator->paused());
     m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed());
     m_lammpsController.setSystem(atomifySimulator->system());
+    m_lammpsController.state.automaticallyRun = atomifySimulator->automaticallyRun();
     m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
 
     if(m_willPause) {
@@ -73,6 +79,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     if(atomifySimulator->willReset()) {
         m_lammpsController.reset();
+        m_lammpsController.state.automaticallyRun = atomifySimulator->automaticallyRun();
         atomifySimulator->lammpsState = m_lammpsController.state;
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
@@ -266,4 +273,13 @@ void AtomifySimulator::setLammpsError(LammpsError *lammpsError)
 
     m_lammpsError = lammpsError;
     emit lammpsErrorChanged(lammpsError);
+}
+
+void AtomifySimulator::setAutomaticallyRun(bool automaticallyRun)
+{
+    if (m_automaticallyRun == automaticallyRun)
+        return;
+
+    m_automaticallyRun = automaticallyRun;
+    emit automaticallyRunChanged(automaticallyRun);
 }
