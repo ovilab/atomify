@@ -4,8 +4,8 @@
    double compute_array(int,int);
    double memory_usage();
  
-- public:
-+ private:
+- private:
++ public:
    int me,nvalues;
    int nrepeat,nfreq,irepeat;
    int normflag,scaleflag,overwrite,biasflag,colextra;

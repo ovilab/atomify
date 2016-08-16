@@ -89,13 +89,16 @@ if not os.path.isfile(fix_ave_timeHFile):
     print "Make sure you provided the correct LAMMPS folder."
     exit()
 
-print "Attempting to patch lammps source files error.cpp and fix_ave_time.h."
+print "Attempting to patch lammps source files"
 print "If these are already patched, just press enter (which by default answers 'no' on the questions) twice for each already patched file.\n"
 
-errorCppPatchFile = join(patch_path, "error.cpp.patch")
-run_command("patch %s < %s" % (errorCppFile, errorCppPatchFile)) 
-fix_ave_timeHPatchFile = join(patch_path, "fix_ave_time.h.patch")
-run_command("patch %s < %s" % (fix_ave_timeHFile, fix_ave_timeHPatchFile)) 
+for filename in glob.glob(join(patch_path, "*.patch")):
+    basename = os.path.basename(filename)
+    print("Patching", basename)
+    patch_file = join(patch_path, basename)
+    original_file = join(lammps_source_dir_src, basename.replace(".patch", ""))
+    run_command("patch %s < %s" % (original_file, patch_file)) 
+
 shutil.copy(join(patch_path, "lammpsexception.h"), lammps_source_dir_src)
 
 print "\nLAMMPS was (probably) successfully patched."
