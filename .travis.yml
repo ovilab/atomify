@@ -12,10 +12,10 @@ notifications:
 before_install:
 - docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
 script:
-- docker run ovilab/atomify-lammps /bin/bash -c "/opt/qt57/bin/qmake && make"
+- docker run ovilab/atomify-lammps /bin/bash -c "/opt/qt57/bin/qmake atomify-lammps.pro && make"
 before_deploy:
 - mkdir output
-- docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps "snapcraft && mv atomify-lammps*.snap output/atomify-lammps.snap"
+- docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps /bin/bash -c "snapcraft && mv atomify-lammps*.snap output/atomify-lammps.snap"
 - id=$(docker create -v $(pwd)/output:/app/output ovilab/atomify-lammps ovilab/atomify-lammps)
 - docker cp $id:/app/output/atomify-lammps.snap atomify-lammps.snap
 deploy:
