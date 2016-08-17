@@ -20,6 +20,7 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
+  file_glob: true
   api_key:
     secure: zArZaaHe6ICyfZLsWG610NxLlnquL+66D+J2GaYwS+BQqgpLzfpuKxZeFMidt5IfODct+nf5qzVcWnxMFTD3Baaeqsfua7FYL+6ZPcJTX9g/qFMNhXRQyl2FCl9ykNkM0rBz2BddhezC4c4cZkzwlBkvR7NcvmbMqJxKAeGMUVg=
   file: output/atomify-lammps*.snap
