@@ -1,13 +1,13 @@
 language: cpp
 compiler:
-  - gcc
+- gcc
 sudo: required
 services: docker
 script:
-  - docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
-  - mkdir output
-  - docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps /bin/sh -c "cp /app/atomify-lammps_*snap /app/output/"
-  - ls output
+- docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
+- mkdir output
+- docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps /bin/sh -c "cp /app/atomify-lammps_*snap /app/output/"
+- ls output
 notifications:
   slack:
     secure: XWZ6IEeCqMrnEqf1jqgS6j2XFC0qsIDsNmI+aJfIBhLcG+Zo7pbEdownrnSLa4P2UxgBWN1YepQbAegOZavleF7/+eBKBAuxKx3tTyCtsaAWsvPHhuxryg8VNnRNzHzQVTqDzJfekTw/9yNDGYPtzxtD0e+8jwAHqLdFdtEFHRc=
