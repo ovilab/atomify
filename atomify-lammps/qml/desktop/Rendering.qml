@@ -210,7 +210,7 @@ Pane {
                 width: parent.width
                 enabled: visualizer.renderQuality !== "low"
                 focusPolicy: Qt.NoFocus
-                model: ["Normal", "SEM", "Blurred SEM"]
+                model: ["Normal", "SEM", "Blurred SEM", "position", "color", "normal", "depth"]
                 currentIndex: 0
                 onCurrentTextChanged: {
                     visualizer.finalShaderBuilder.selectOutput(currentText)
