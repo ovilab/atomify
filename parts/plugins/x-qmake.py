@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
- 
+
 """The qmake plugin is useful for building qmake-based parts.
 These are projects that are built using .pro files.
 This plugin uses the common plugin keywords as well as those for "sources".
@@ -30,15 +30,15 @@ Additionally, this plugin uses the following plugin-specific keywords:
       (list of strings)
       list of .pro files to pass to the qmake invocation.
 """
- 
+
 import os
- 
+
 import snapcraft
 from snapcraft import common
- 
- 
+
+
 class QmakePlugin(snapcraft.BasePlugin):
- 
+
     @classmethod
     def schema(cls):
         schema = super().schema()
@@ -63,20 +63,20 @@ class QmakePlugin(snapcraft.BasePlugin):
             },
             'default': [],
         }
- 
+
         # Qt version must be specified
         schema['required'].append('qt-version')
- 
+
         # Inform Snapcraft of the properties associated with building and
         # pulling so it can mark those steps dirty if they change in the YAML.
         schema['build-properties'].append('options')
         schema['pull-properties'].append('qt-version')
- 
+
         return schema
- 
+
     def __init__(self, name, options, project):
         super().__init__(name, options, project)
- 
+
         self.build_packages.append('make')
         if self.options.qt_version == 'qt5':
             self.build_packages.extend(['qt5-qmake', 'qtbase5-dev'])
@@ -85,12 +85,12 @@ class QmakePlugin(snapcraft.BasePlugin):
         else:
             raise RuntimeError('Unsupported Qt version: {!r}'.format(
                 self.options.qt_version))
- 
+
     def build(self):
         super().build()
- 
+
         env = self._build_environment()
- 
+
         sources = []
         if self.options.project_files:
             sourcedir = self.sourcedir
@@ -99,31 +99,31 @@ class QmakePlugin(snapcraft.BasePlugin):
                 sourcedir = os.path.join(sourcedir, source_subdir)
             sources = [os.path.join(sourcedir, project_file)
                        for project_file in self.options.project_files]
- 
+
         self.run(['/opt/qt57/bin/qmake'] + self._extra_config() + self.options.options +
                  sources, env=env)
- 
+
         self.run(['make', '-j12'], env=env)
- 
+
         self.run(['make', 'install', 'INSTALL_ROOT=' + self.installdir],
                  env=env)
- 
+
     def _extra_config(self):
         extra_config = []
- 
+
         for root in [self.installdir, self.project.stage_dir]:
             paths = common.get_library_paths(root, self.project.arch_triplet)
             for path in paths:
                 extra_config.append("LIBS+=\"-L{}\"".format(path))
- 
+
             paths = common.get_include_paths(root, self.project.arch_triplet)
             for path in paths:
                 extra_config.append("INCLUDEPATH+=\"{}\"".format(path))
- 
+
         return extra_config
- 
+
     def _build_environment(self):
         env = os.environ.copy()
         env['QT_SELECT'] = self.options.qt_version
- 
+
         return env
