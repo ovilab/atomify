@@ -1,7 +1,8 @@
 #ifndef CPFIX_H
 #define CPFIX_H
 #include "simulatorcontrol.h"
-#include <style_fix.h>
+// #include <style_fix.h>
+#include <fix_ave_chunk.h>
 using namespace LAMMPS_NS;
 class CPFix : public SimulatorControl
 {
