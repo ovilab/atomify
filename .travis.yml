@@ -5,11 +5,8 @@ sudo: required
 services: docker
 script:
 - docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
-# - mkdir output
-# - docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps /bin/sh -c "snapcraft && cp /app/atomify-lammps_*snap /app/output/atomify-lammps.snap"
-# - ls output
 - id=$(docker create ovilab/atomify-lammps)
-- docker cp "$id:/app/atomify-lammps*.snap" - > atomify-lammps.snap
+- docker cp $id:/app/atomify-lammps.snap - > atomify-lammps.snap
 
 notifications:
   slack:
