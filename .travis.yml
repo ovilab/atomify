@@ -22,3 +22,4 @@ deploy:
   on:
     repo: ComputationalPhysics/atomify-lammps
     branch: dev
+  skip_cleanup: true
