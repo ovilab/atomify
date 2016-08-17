@@ -12,6 +12,12 @@ RUN sudo apt-get -qq install qt573d qt57charts-no-lgpl qt57datavis-no-lgpl qt57d
 
 # install packages needed by configure
 RUN sudo apt-get -qq install patch git build-essential curl
+
+# needed by build
+RUN sudo apt-get -qq install mesa-common-dev
+RUN sudo apt-get -qq install libgl1-mesa-dev
+
+# needed by deploy
 RUN sudo apt-get -qq install snapcraft
 
 WORKDIR /app
