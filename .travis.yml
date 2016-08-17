@@ -3,21 +3,26 @@ compiler:
 - gcc
 sudo: required
 services: docker
-script:
-- docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
-- id=$(docker create ovilab/atomify-lammps)
-- docker cp $id:/app/atomify-lammps.snap - > atomify-lammps.snap
-
 notifications:
   slack:
     on_success: change
     on_failure: always
     secure: XWZ6IEeCqMrnEqf1jqgS6j2XFC0qsIDsNmI+aJfIBhLcG+Zo7pbEdownrnSLa4P2UxgBWN1YepQbAegOZavleF7/+eBKBAuxKx3tTyCtsaAWsvPHhuxryg8VNnRNzHzQVTqDzJfekTw/9yNDGYPtzxtD0e+8jwAHqLdFdtEFHRc=
+
+before_install:
+- docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
+script:
+- docker run ovilab/atomify-lammps /bin/bash -c "/opt/qt57/bin/qmake && make"
+before_deploy:
+- mkdir output
+- docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps "snapcraft && mv atomify-lammps*.snap output/atomify-lammps.snap"
+- id=$(docker create -v $(pwd)/output:/app/output ovilab/atomify-lammps ovilab/atomify-lammps)
+- docker cp $id:/app/output/atomify-lammps.snap atomify-lammps.snap
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: zArZaaHe6ICyfZLsWG610NxLlnquL+66D+J2GaYwS+BQqgpLzfpuKxZeFMidt5IfODct+nf5qzVcWnxMFTD3Baaeqsfua7FYL+6ZPcJTX9g/qFMNhXRQyl2FCl9ykNkM0rBz2BddhezC4c4cZkzwlBkvR7NcvmbMqJxKAeGMUVg=
   file: atomify-lammps.snap
-  # on:
-    # tags: true
-  skip_cleanup: true
+  on:
+    tags: true

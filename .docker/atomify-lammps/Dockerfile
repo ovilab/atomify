@@ -18,5 +18,3 @@ WORKDIR /app
 
 ADD . /app/
 RUN ./configure.py
-RUN snapcraft
-RUN mv atomify-lammps*.snap atomify-lammps.snap
