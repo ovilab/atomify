@@ -15,9 +15,10 @@ Item {
     property int currentLine: -1
     property int errorLine: -1
     property string openFiles: ""
+    property string lastOpenedFolder
 
     Settings {
-        property alias lastOpenedFolder: fileDialog.folder
+        property alias lastOpenedFolder: root.lastOpenedFolder
         property alias openFiles: root.openFiles
     }
 
@@ -139,11 +140,11 @@ Item {
             fileDialog.cb = function() {
                 for(var i in fileDialog.fileUrls) {
                     var fileUrl = fileDialog.fileUrls[i]
-                    console.log("File url: ", fileUrl)
                     openTab(fileUrl)
                 }
             }
-            fileDialog.visible = true
+            fileDialog.folder = "file://"+currentEditor.folder
+            fileDialog.open()
         } else {
             // First check if its open
             for(var i=0; i<stackLayout.count; i++) {
@@ -203,6 +204,7 @@ Item {
         title: "Please choose a file"
 
         onAccepted: {
+            root.lastOpenedFolder = fileDialog.folder
             cb()
             cb = undefined
         }
