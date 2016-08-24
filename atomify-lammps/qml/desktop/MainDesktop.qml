@@ -84,6 +84,12 @@ Item {
             height: parent.height
             system: simulator.system ? simulator.system : null
             visualizer: root.visualizer
+            examples.currentScript: editorTab.codeEditorWindow.currentEditor.text
+            examples.screenshotObject: visualizer
+            examples.onSimulationClicked: {
+                editorTab.codeEditorWindow.newTab()
+                editorTab.codeEditorWindow.currentEditor.text = script
+            }
 
             Column {
 

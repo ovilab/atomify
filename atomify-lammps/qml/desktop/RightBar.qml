@@ -5,6 +5,7 @@ import "../visualization"
 
 Page {
     id: root
+    property alias examples: examples
     property System system
     property AtomifyVisualizer visualizer
     focusPolicy: Qt.NoFocus
@@ -28,7 +29,7 @@ Page {
         }
 
         Examples {
-
+            id: examples
         }
     }
 

@@ -36,6 +36,7 @@
 #include "linenumbers.h"
 #include "windowgl2.h"
 #include "codeeditorbackend.h"
+#include "parsefileuploader.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -69,6 +70,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
     qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
     qmlRegisterType<WindowGL2>("Atomify", 1, 0, "WindowGL2");
+
+    qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);

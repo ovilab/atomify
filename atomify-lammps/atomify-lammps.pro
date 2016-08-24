@@ -81,7 +81,8 @@ SOURCES += \
     LammpsWrappers/units.cpp \
     dataproviders/data2d.cpp \
     windowgl2.cpp \
-    LammpsWrappers/fixes.cpp
+    LammpsWrappers/fixes.cpp \
+    parsefileuploader.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -123,7 +124,8 @@ HEADERS += \
     LammpsWrappers/units.h \
     dataproviders/data2d.h \
     windowgl2.h \
-    LammpsWrappers/fixes.h
+    LammpsWrappers/fixes.h \
+    parsefileuploader.h
 
 # Temporary use of quickcontrols2 without install
 
