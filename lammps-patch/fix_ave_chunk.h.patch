@@ -1,0 +1,11 @@
+--- fix_ave_chunk.h	2016-08-16 17:20:34.946986271 +0200
++++ fix_ave_chunk.h.orig	2016-08-16 17:18:12.223482000 +0200
+@@ -36,7 +36,7 @@
+   double compute_array(int,int);
+   double memory_usage();
+ 
+- private:
++ public:
+   int me,nvalues;
+   int nrepeat,nfreq,irepeat;
+   int normflag,scaleflag,overwrite,biasflag,colextra;

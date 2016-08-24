@@ -30,19 +30,6 @@ parts:
       - qt57quickcontrols
       - qt57quickcontrols2
       - qt57svg
-      #- qml-module-qttest
-      #- qml-module-qtsysteminfo
-      #- qml-module-qt-labs-settings
-      #- qtdeclarative5-u1db1.0
-      #- qtdeclarative5-qtmultimedia-plugin
-      #- qtdeclarative5-qtpositioning-plugin
-      #- qtdeclarative5-ubuntu-content1
-      #- qt5-default
-      #- qtbase5-dev
-      #- qtdeclarative5-dev
-      #- qtdeclarative5-dev-tools
-      #- qtdeclarative5-folderlistmodel-plugin
-      #- qtdeclarative5-ubuntu-ui-toolkit-plugin
     stage-packages:
       - qt573d
       - qt57charts-no-lgpl
@@ -53,18 +40,9 @@ parts:
       - qt57quickcontrols2
       - qt57svg
       - ubuntu-sdk-libs
-      #- qtubuntu-desktop
-      #- qml-module-qtsysteminfo
-      #- qtmir-desktop
-      #- mir-graphics-drivers-desktop
     snap:
       - -usr/share/doc
       - -usr/include
-    #after:
-      #- qt57
-  #qt57:
-    #source: qt57
-    #plugin: autotools
   environment:
     plugin: copy
     files:
