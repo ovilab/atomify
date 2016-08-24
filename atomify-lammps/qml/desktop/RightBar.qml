@@ -2,11 +2,12 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import Atomify 1.0
 import "../visualization"
-
+import "editor"
 Page {
     id: root
     property System system
     property AtomifyVisualizer visualizer
+    property CodeEditorWindow codeEditorWindow
     focusPolicy: Qt.NoFocus
 
     SwipeView {
@@ -28,7 +29,7 @@ Page {
         }
 
         Examples {
-
+            codeEditorWindow: root.codeEditorWindow
         }
     }
 

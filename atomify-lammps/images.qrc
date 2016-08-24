@@ -35,5 +35,8 @@
         <file>images/pause2.png</file>
         <file>images/play2.png</file>
         <file>images/camera.png</file>
+        <file>images/examples/lammpsLogo.gif</file>
+        <file>images/examples/example1.png</file>
+        <file>images/examples/example2.png</file>
     </qresource>
 </RCC>

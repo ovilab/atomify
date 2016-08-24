@@ -303,6 +303,7 @@ void LAMMPSController::reset()
     //    sprintf(argv[5], "1");
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
+    // lammps_open(nargs, argv, MPI_COMM_WORLD, (void**)&m_lammps);
     m_lammps->screen = NULL;
     state = LammpsState(); // Reset current state variables
 }

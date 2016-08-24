@@ -6,6 +6,7 @@
 #include <QOpenGLContext>
 #include <QQuickWindow>
 #include <QQuickView>
+#include <mpi.h>
 #ifdef Q_OS_LINUX
 #include <locale>
 #endif
@@ -38,6 +39,8 @@
 #include "codeeditorbackend.h"
 int main(int argc, char *argv[])
 {
+    MPI_Init(&argc,&argv);
+
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
     qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");

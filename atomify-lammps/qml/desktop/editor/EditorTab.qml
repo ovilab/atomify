@@ -62,6 +62,7 @@ Pane {
                 id: automaticallyRun
                 focusPolicy: Qt.NoFocus
                 text: "Automatically run"
+                checked: true
             }
 
             Button {

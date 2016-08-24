@@ -18,6 +18,7 @@ Item {
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
     property bool focusMode: false
+    property alias codeEditorWindow: editorTab.codeEditorWindow
 
     Component.onCompleted: {
         // editorTab.lammpsEditor.runScript()
@@ -84,6 +85,7 @@ Item {
             height: parent.height
             system: simulator.system ? simulator.system : null
             visualizer: root.visualizer
+            codeEditorWindow: root.codeEditorWindow
 
             Column {
 

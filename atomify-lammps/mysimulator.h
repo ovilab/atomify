@@ -89,7 +89,7 @@ private:
     int m_simulationSpeed = 1;
     bool m_paused = false;
     bool m_willReset = false;
-    bool m_automaticallyRun = false;
+    bool m_automaticallyRun = true;
 };
 
 #endif // MYSIMULATOR_H

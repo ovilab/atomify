@@ -41,22 +41,25 @@ Scene3D {
 
     multisample: true
     onRenderQualityChanged: {
-        if(mainCompleted) {
-            dialog.open()
-            return
-        }
+//        if(mainCompleted) {
+//            dialog.open()
+//            return
+//        }
 
         if(renderQuality === "low") {
             renderMode = "forward"
             spheres.fragmentColor = spheres.fragmentBuilder.normalDotCamera
             bonds.fragmentColor = bonds.fragmentBuilder.normalDotCamera
+            forwardFrameGraph.surface.width -= 1
         } else if(renderQuality === "medium") {
             renderMode = "forward"
             spheres.fragmentColor = spheresMediumQuality
             bonds.fragmentColor = bondsMediumQuality
+            deferredFrameGraph.surface.width -= 1
         } else if(renderQuality === "high") {
             renderMode = "deferred"
             ambientOcclusion.samples = 32
+            deferredFrameGraph.surface.width -= 1
         }
     }
 
