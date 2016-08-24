@@ -82,7 +82,8 @@ SOURCES += \
     states.cpp \
     dataproviders/data1d.cpp \
     commandparser.cpp \
-    performance.cpp
+    performance.cpp \
+    parsefileuploader.cpp \
 
 HEADERS += \
     mysimulator.h \
@@ -124,7 +125,8 @@ HEADERS += \
     states.h \
     dataproviders/data1d.h \
     commandparser.h \
-    performance.h
+    performance.h \
+    parsefileuploader.h \
 
 # Temporary use of quickcontrols2 without install
 

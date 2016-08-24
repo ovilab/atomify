@@ -514,7 +514,7 @@ Item {
         }
     }
 
-    Pane {
+    Examples {
         anchors {
             top: parent.top
             bottom: parent.bottom
@@ -522,11 +522,6 @@ Item {
             right: parent.right
         }
         visible: modeMenu.currentMode === "examples"
-
-        Label {
-            anchors.centerIn: parent
-            text: "Examples"
-        }
     }
 
     Item {

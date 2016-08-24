@@ -37,6 +37,7 @@
 #include "windowgl2.h"
 #include "codeeditorbackend.h"
 #include "states.h"
+#include "parsefileuploader.h"
 
 int main(int argc, char *argv[])
 {
@@ -73,6 +74,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<MouseMover>("Atomify", 1, 0, "MouseMover");
     qmlRegisterType<States>("Atomify", 1, 0, "States");
     qmlRegisterType<Performance>("Atomify", 1, 0, "Performance");
+
+    qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);

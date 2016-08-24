@@ -49,7 +49,6 @@ Item {
             var newWidth = target.width + widthFactor * deltaX;
             if(newWidth > 32) {
                 target.width = newWidth;
-                console.log("widths", target.width, newWidth)
             }
             if(forceSquare && !biggestIsX) {
                 previousPosition.y -= deltaY;
