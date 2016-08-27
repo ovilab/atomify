@@ -2,7 +2,8 @@
 #include "lammpscontroller.h"
 #include "../system.h"
 #include "../../dataproviders/data2d.h"
-#include <style_compute.h>
+// #include <style_compute.h>
+#include <compute_chunk_atom.h>
 #include <iostream>
 using namespace std;
 
