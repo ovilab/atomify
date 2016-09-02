@@ -37,9 +37,11 @@ void Groups::synchronize(LAMMPSController *lammpsController)
     int numGroups = lammpsGroup->ngroup;
     setCount(numGroups);
 
+    bool anyChanges = false;
     for(int groupIndex=0; groupIndex<numGroups; groupIndex++) {
         QString groupName = QString::fromUtf8(lammpsGroup->names[groupIndex]);
         if(!m_dataMap.contains(groupName)) {
+            anyChanges = true;
             add(groupName);
         }
     }
@@ -47,7 +49,10 @@ void Groups::synchronize(LAMMPSController *lammpsController)
     QList<QString> groupsToBeRemoved;
     for(QObject *obj : m_data) {
         CPGroup *group = static_cast<CPGroup*>(obj);
-        if(!lammpsController->groupExists(group->identifier())) groupsToBeRemoved.append(group->identifier());
+        if(!lammpsController->groupExists(group->identifier())) {
+            anyChanges = true;
+            groupsToBeRemoved.append(group->identifier());
+        }
     }
 
     for(QString identifier : groupsToBeRemoved) {
@@ -58,8 +63,9 @@ void Groups::synchronize(LAMMPSController *lammpsController)
         CPGroup *group = static_cast<CPGroup*>(obj);
         group->update(lammpsController->lammps());
     }
-
-    setModel(QVariant::fromValue(m_data));
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+    }
 }
 
 QVariant Groups::model() const
