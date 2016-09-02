@@ -54,13 +54,13 @@ void Computes::synchronize(LAMMPSController *lammpsController)
 
     Modify *modify = lammps->modify;
     int numComputes = modify->ncompute;
-    setCount(numComputes);
-
+    bool anyChanges = false;
     for(int computeIndex=0; computeIndex<numComputes; computeIndex++) {
         Compute *compute = modify->compute[computeIndex];
         QString identifier = QString::fromUtf8(compute->id);
 
         if(!m_dataMap.contains(identifier)) {
+            anyChanges = true;
             addCompute(identifier, lammpsController);
         }
     }
@@ -70,6 +70,7 @@ void Computes::synchronize(LAMMPSController *lammpsController)
         CPCompute *compute = qobject_cast<CPCompute*>(object);
         if(!lammpsController->computeExists(compute->identifier())) {
             // Not in LAMMPS anymore, we should remove it too
+            anyChanges = true;
             computesToBeRemoved.push_back(compute);
         }
     }
@@ -86,14 +87,17 @@ void Computes::synchronize(LAMMPSController *lammpsController)
         }
     }
 
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+        setCount(m_data.size());
+    }
+
     if(!lammpsController->state.canProcessSimulatorControls) return;
     for(QObject *object : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(object);
         compute->copyData(lammpsController);
     }
 
-    setCount(m_data.size());
-    setModel(QVariant::fromValue(m_data));
 }
 
 void Computes::computeAll(LAMMPSController *lammpsController)

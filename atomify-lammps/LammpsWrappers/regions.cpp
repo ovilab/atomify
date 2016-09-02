@@ -58,11 +58,12 @@ void Regions::synchronize(LAMMPSController *lammpsController)
     }
 
     /* END: NOT SURE IF THIS IS IMPORTANT */
-
+    bool anyChanges = false;
     for(int regionIndex=0; regionIndex<numRegions; regionIndex++) {
         Region *lammpsRegion = regions[regionIndex];
         QString identifier = QString::fromUtf8(lammpsRegion->id);
         if(!m_dataMap.contains(identifier)) {
+            anyChanges = true;
             add(identifier);
         }
     }
@@ -70,7 +71,10 @@ void Regions::synchronize(LAMMPSController *lammpsController)
     QList<QString> regionsToBeRemoved;
     for(QObject *obj : m_data) {
         CPRegion *region = static_cast<CPRegion*>(obj);
-        if(!lammpsController->regionExists(region->identifier())) regionsToBeRemoved.append(region->identifier());
+        if(!lammpsController->regionExists(region->identifier())) {
+            anyChanges = true;
+            regionsToBeRemoved.append(region->identifier());
+        }
     }
 
     for(QString identifier : regionsToBeRemoved) {
@@ -81,8 +85,9 @@ void Regions::synchronize(LAMMPSController *lammpsController)
         CPRegion *region = static_cast<CPRegion*>(obj);
         region->update(lammpsController->lammps());
     }
-
-    setModel(QVariant::fromValue(m_data));
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+    }
 }
 
 QVariant Regions::model() const
