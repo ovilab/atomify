@@ -69,4 +69,5 @@ thermo		1000
 #dump_modify	3 pad 5 adiam 1 0.5 adiam 2 1.5 adiam 3 1.0 adiam 4 0.75
 
 reset_timestep	0
+#/speed 50
 run		60000
