@@ -24,6 +24,19 @@ Item {
     property string previousState: ""
     property var simulationsModel: [
         {
+            name: "LAMMPS Examples",
+            simulations: [
+                "qrc:/simulations/lammps/crack",
+                "qrc:/simulations/lammps/flow_couette",
+                "qrc:/simulations/lammps/flow_pois",
+                "qrc:/simulations/lammps/friction",
+                "qrc:/simulations/lammps/indent",
+                "qrc:/simulations/lammps/micelle",
+                "qrc:/simulations/lammps/obstacle",
+                "qrc:/simulations/lammps/shear"
+            ]
+        },
+        {
             name: "Water",
             simulations: [
                 "qrc:/simulations/water/singlewater",

@@ -24,7 +24,7 @@ android {
 RESOURCES += images.qrc \
     qml/qml.qrc \
     simulations/diffusion/diffusion.qrc \
-    simulations/other/other.qrc \
+    simulations/lammps/lammps.qrc \
     simulations/water/water.qrc \
     simulations/potentialparameters/potentialparameters.qrc \
     simulations/silica/silica.qrc \

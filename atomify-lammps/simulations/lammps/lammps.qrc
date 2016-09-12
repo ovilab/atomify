@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/simulations/other">
+    <qresource prefix="/simulations/lammps">
         <file>indent/indent.in</file>
         <file>indent/indent.png</file>
         <file>indent/indent.qml</file>
@@ -15,5 +15,17 @@
         <file>micelle/micelle.in</file>
         <file>micelle/micelle.png</file>
         <file>micelle/micelle.qml</file>
+        <file>crack/crack.in</file>
+        <file>crack/crack.png</file>
+        <file>crack/crack.qml</file>
+        <file>flow_couette/flow_couette.in</file>
+        <file>flow_couette/flow_couette.png</file>
+        <file>flow_couette/flow_couette.qml</file>
+        <file>flow_pois/flow_pois.in</file>
+        <file>flow_pois/flow_pois.png</file>
+        <file>flow_pois/flow_pois.qml</file>
+        <file>friction/friction.in</file>
+        <file>friction/friction.png</file>
+        <file>friction/friction.qml</file>
     </qresource>
 </RCC>
