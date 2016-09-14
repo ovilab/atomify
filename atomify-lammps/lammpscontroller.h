@@ -10,7 +10,7 @@
 #include <compute.h>
 #include <modify.h>
 #include <variable.h>
-#include <lammpsexception.h>
+#include <error.h>
 #include "scripthandler.h"
 using namespace LAMMPS_NS;
 
@@ -38,7 +38,8 @@ private:
     LAMMPS *m_lammps = nullptr;
     class MyWorker *m_worker = nullptr;
     class System *m_system = nullptr;
-    LammpsException m_currentException;
+    bool m_exceptionHandled = false;
+    LAMMPSException m_currentException;
     void executeActiveRunCommand();
 public:
     LammpsState state;
@@ -56,7 +57,7 @@ public:
     bool paused() const;
     void setPaused(bool value);
     bool crashed() const;
-    LammpsException &currentException();
+    LAMMPSException currentException();
     void disableAllEnsembleFixes();
     ScriptHandler* scriptHandler() const;
     void setScriptHandler(ScriptHandler* scriptHandler);
@@ -83,6 +84,8 @@ public:
     template<class T>
     T *findFixByType();
     void processSimulatorControls();
+    bool exceptionHandled() const;
+    void setExceptionHandled(bool value);
 };
 
 template<class T>

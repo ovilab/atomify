@@ -7,7 +7,7 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 QMAKE_CXXFLAGS += -g -fopenmp
 LIBS += -fopenmp
 CONFIG += warn_off
-
+DEFINES += LAMMPS_EXCEPTIONS LAMMPS_GZIP LAMMPS_MEMALIGN=64
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri
 

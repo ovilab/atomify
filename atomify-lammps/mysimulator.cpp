@@ -95,15 +95,16 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
 
-    if(m_lammpsController.crashed() && !m_lammpsController.currentException().isReported()) {
+    if(m_lammpsController.crashed() && !m_lammpsController.exceptionHandled()) {
         LammpsError *error = new LammpsError(atomifySimulator);
-        error->setMessage(QString(m_lammpsController.currentException().error().c_str()).trimmed());
+
+        error->setMessage(QString::fromStdString(m_lammpsController.currentException().message).trimmed());
         error->setCommand(m_lammpsController.state.nextCommand.command());
         error->setScriptFile(m_lammpsController.state.nextCommand.filename());
         error->setScriptPath(m_lammpsController.state.nextCommand.path());
         error->setLine(m_lammpsController.state.nextCommand.line());
         atomifySimulator->setLammpsError(error);
-        m_lammpsController.currentException().setIsReported(true);
+        m_lammpsController.setExceptionHandled(true);
 
         emit atomifySimulator->errorInLammpsScript();
         return;

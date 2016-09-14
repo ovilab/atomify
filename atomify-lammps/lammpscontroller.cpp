@@ -30,7 +30,8 @@
 #include "scriptcommand.h"
 using namespace std;
 
-LAMMPSController::LAMMPSController()
+LAMMPSController::LAMMPSController() :
+    m_currentException("")
 {
 
 }
@@ -85,15 +86,12 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
         qDebug() << command;
     }
 
-    try {
-        QByteArray commandBytes = command.toUtf8();
-        lammps_command((void*)m_lammps, (char*)commandBytes.data());
-    } catch (LammpsException &exception) {
-        qDebug() << "ERROR: LAMMPS threw an exception!";
-        qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-        qDebug() << "ERROR: Command:" << command;
-        qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
-        m_currentException = exception; // Store a copy of the exception to communicate to GUI
+    QByteArray commandBytes = command.toUtf8();
+    lammps_command((void*)m_lammps, (char*)commandBytes.data());
+    char *lammpsError = m_lammps->error->get_last_error();
+    if(lammpsError != NULL) {
+        m_currentException =  LAMMPSException(lammpsError); // Store a copy of the exception to communicate to GUI
+        m_exceptionHandled = false;
         state.crashed = true;
     }
 }
@@ -259,6 +257,16 @@ void LAMMPSController::setSystem(System *system)
     m_system = system;
 }
 
+bool LAMMPSController::exceptionHandled() const
+{
+    return m_exceptionHandled;
+}
+
+void LAMMPSController::setExceptionHandled(bool value)
+{
+    m_exceptionHandled = value;
+}
+
 void LAMMPSController::executeActiveRunCommand() {
     unsigned int currentTimestep = m_lammps->update->ntimestep;
     int maxSimulationSpeed = state.runCommandEnd - currentTimestep; // We cannot exceed the last timestep in the active run command
@@ -410,7 +418,7 @@ bool LAMMPSController::crashed() const
     return state.crashed;
 }
 
-LammpsException &LAMMPSController::currentException()
+LAMMPSException LAMMPSController::currentException()
 {
     return m_currentException;
 }

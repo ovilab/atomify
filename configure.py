@@ -8,11 +8,13 @@ from os.path import join, abspath
 from sys import platform as _platform
 import glob
 
+stable_commit = "a2b4a794d9a2870b135ad596fe58ad79e2569570"
+
 def run_command(cmd):
     print cmd
     subprocess.call(cmd, shell=True, env=env)
 
-lammps_build_type = "serial"
+lammps_build_type = "atomify"
 env = os.environ.copy()
 
 # Set up SimVis
@@ -21,7 +23,7 @@ run_command("git submodule update --init --recursive")
 # Set up LAMMPS
 
 if _platform == "darwin":
-    lammps_build_type = "serial"
+    lammps_build_type = "atomify"
 elif _platform == "win32":
     print "Windows is not supported yet"
     exit()
@@ -43,24 +45,26 @@ if not os.path.exists("lammps-build"):
     os.makedirs("lammps-build")
 
 os.chdir("lammps-build")
-if not os.path.exists("lammps-stable.tar.gz"):
-    run_command("curl \"http://lammps.sandia.gov/tars/lammps-stable.tar.gz\" -o \"lammps-stable.tar.gz\"")
-if not os.path.exists("lammps-stable"):
-    os.makedirs("lammps-stable")
-    run_command("tar xzf lammps-stable.tar.gz -C lammps-stable --strip-components 1")
+if not os.path.exists("lammps"):
+    run_command("git clone https://github.com/lammps/lammps.git")
+if not os.path.exists("lammps"):
+    print("Error, could not clone LAMMPS from github. Please make sure you have git installed.")
+    exit(1)
 os.chdir(root_path)
 
 if os.path.exists("lammps-patch/water"):
     for filename in glob.glob(os.path.join("lammps-patch/water", '*.*')):
-        shutil.copy(filename, "lammps-build/lammps-stable/src/")
+        shutil.copy(filename, "lammps-build/lammps/src/")
 
-lammps_source_dir = join("lammps-build", "lammps-stable")
+lammps_source_dir = join("lammps-build", "lammps")
 if not os.path.isdir(lammps_source_dir):
     print "Error, the path '"+lammps_source_dir+"' is not a directory."
     exit()
 
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
+os.chdir(lammps_source_dir)
+run_command("git checkout "+stable_commit)
 
 if lammps_build_type == "android":
     lammps_android_pri = open("lammps-android.pri", "w")
@@ -73,16 +77,17 @@ else:
     lammps_pri = open("lammps.pri", "w")
     lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
     lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
-    lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_serial" + "\n")
+    lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_atomify" + "\n")
     lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
     lammps_pri.close()
 
-errorCppFile = join(lammps_source_dir_src, "error.cpp")
+#errorCppFile = join(lammps_source_dir_src, "error.cpp")
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
-if not os.path.isfile(errorCppFile):
-    print "Error, could not find file to patch: "+errorCppFile
-    print "Make sure you provided the correct LAMMPS folder."
-    exit()
+
+#if not os.path.isfile(errorCppFile):
+#    print "Error, could not find file to patch: "+errorCppFile
+#    print "Make sure you provided the correct LAMMPS folder."
+#    exit()
 
 if not os.path.isfile(fix_ave_timeHFile):
     print "Error, could not find file to patch: "+fix_ave_timeHFile
@@ -99,7 +104,7 @@ for filename in glob.glob(join(patch_path, "*.patch")):
     original_file = join(lammps_source_dir_src, basename.replace(".patch", ""))
     run_command("patch %s < %s" % (original_file, patch_file)) 
 
-shutil.copy(join(patch_path, "lammpsexception.h"), lammps_source_dir_src)
+shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE"))
 
 print "\nLAMMPS was (probably) successfully patched."
 
@@ -116,6 +121,6 @@ if lammps_build_type == "android":
 print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
-run_command("make yes-rigid")
+run_command("make yes-rigid yes-manybody")
 run_command("make -j4 " + lammps_build_type + " mode=lib")
 os.chdir(root_path)

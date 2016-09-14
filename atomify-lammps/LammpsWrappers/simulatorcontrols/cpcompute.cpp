@@ -3,7 +3,7 @@
 #include "mysimulator.h"
 #include "../system.h"
 #include <QDebug>
-#include <lammpsexception.h>
+#include <error.h>
 #include <update.h>
 
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
@@ -211,7 +211,7 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     if(compute->scalar_flag == 1) {
         try {
             compute->compute_scalar();
-        } catch (LammpsException &exception) {
+        } catch (LAMMPSException &exception) {
             // TODO: handle this better than just ignoring exception.
 
 //            qDebug() << "ERROR: LAMMPS threw an exception!";
@@ -223,7 +223,7 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     if(compute->vector_flag == 1) {
         try {
             compute->compute_scalar();
-        } catch (LammpsException &exception) {
+        } catch (LAMMPSException &exception) {
             // TODO: handle this better than just ignoring exception.
 //            qDebug() << "ERROR: LAMMPS threw an exception!";
 //            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
@@ -234,7 +234,7 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     if(compute->array_flag == 1) {
         try {
             compute->compute_array();
-        } catch (LammpsException &exception) {
+        } catch (LAMMPSException &exception) {
             // TODO: handle this better than just ignoring exception.
 //            qDebug() << "ERROR: LAMMPS threw an exception!";
 //            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
@@ -245,7 +245,7 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     if(compute->peratom_flag == 1) {
         try {
             compute->compute_peratom();
-        } catch (LammpsException &exception) {
+        } catch (LAMMPSException &exception) {
             // TODO: handle this better than just ignoring exception.
 //            qDebug() << "ERROR: LAMMPS threw an exception!";
 //            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
@@ -271,10 +271,9 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
         if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
         if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
         if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
-    } catch (LammpsException &exception) {
+    } catch (LAMMPSException &exception) {
         qDebug() << "ERROR: LAMMPS threw an exception!";
-        qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-        qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        qDebug() << "ERROR: Message:" << QString::fromStdString(exception.message);
         return;
     }
     if(lmp_compute->scalar_flag == 1) {
@@ -285,10 +284,9 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             CP1DData *data = ensureExists("scalar", true);
             data->add(lammpsController->system()->simulationTime(), value, true);
             setInteractive(true);
-        } catch (LammpsException &exception) {
+        } catch (LAMMPSException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
-            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.message);
         }
     }
     if(lmp_compute->vector_flag == 1) {
@@ -301,10 +299,9 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
                 double value = lmp_compute->vector[i-1];
                 data->add(lammpsController->system()->simulationTime(), value, true);
             }
-        } catch (LammpsException &exception) {
+        } catch (LAMMPSException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
-            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.message);
         }
     }
 }
