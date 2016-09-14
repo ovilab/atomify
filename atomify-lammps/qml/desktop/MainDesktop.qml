@@ -46,7 +46,7 @@ Item {
             Layout.alignment: Qt.AlignTop
             orientation: Qt.Horizontal
 
-            EditorTab {
+            EditorPane {
                 id: editorTab
                 Layout.fillHeight: true
                 width: 500

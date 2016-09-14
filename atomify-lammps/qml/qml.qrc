@@ -13,7 +13,7 @@
         <file>desktop/editor/CodeEditorTabButton.qml</file>
         <file>desktop/editor/CodeEditorWindow.qml</file>
         <file>desktop/editor/LammpsEditor.qml</file>
-        <file>desktop/editor/EditorTab.qml</file>
+        <file>desktop/editor/EditorPane.qml</file>
         <file>desktop/editor/Console.qml</file>
         <file>visualization/AtomifyVisualizer.qml</file>
         <file>mobile/MainMobile.qml</file>
