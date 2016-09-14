@@ -65,6 +65,7 @@ lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
 os.chdir(lammps_source_dir)
 run_command("git checkout "+stable_commit)
+os.chdir(root_path)
 
 if lammps_build_type == "android":
     lammps_android_pri = open("lammps-android.pri", "w")
@@ -80,7 +81,7 @@ else:
     lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_atomify" + "\n")
     lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
     lammps_pri.close()
-
+    
 #errorCppFile = join(lammps_source_dir_src, "error.cpp")
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
 
@@ -117,6 +118,10 @@ if lammps_build_type == "android":
     run_command("make clean")
     run_command("make -f Makefile.android")
     os.chdir(root_path)
+else:
+    os.chdir(join(lammps_source_dir_src, "STUBS"))
+    run_command("make")
+
         
 print "\nCompiling LAMMPS"
 
