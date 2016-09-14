@@ -46,7 +46,7 @@ if not os.path.exists("lammps-build"):
 
 os.chdir("lammps-build")
 if not os.path.exists("lammps"):
-    run_command("git clone https://github.com/lammps/lammps.git")
+    run_command("git clone https://github.com/ovilab/lammps.git")
 if not os.path.exists("lammps"):
     print("Error, could not clone LAMMPS from github. Please make sure you have git installed.")
     exit(1)
