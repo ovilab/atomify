@@ -8,19 +8,18 @@ import "../../visualization"
 Pane {
     id: editorTabRoot
     property TextArea consoleOutput: consoleItem.output
-    property alias lammpsEditor: lammpsEditor
-    property alias codeEditorWindow: lammpsEditor.codeEditorWindow
+    property alias editorWindow: editorWindow
     property alias automaticallyRun: automaticallyRun.checked
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
     onConsoleOutputChanged: {
         consoleOutput.onLinkActivated.connect(function(link){
-            var params = codeEditorWindow.currentEditor.getParameters(link)
+            var params = editorWindow.currentEditor.getParameters(link)
             var errorLine = params["errorLine"]
             console.log("Link before: ", link)
-            link = codeEditorWindow.dummyEditor.cleanPath(link)
+            link = editorWindow.dummyEditor.cleanPath(link)
             console.log("Link after: ", link)
-            lammpsEditor.codeEditorWindow.openTab(link, errorLine)
+            editorWindow.codeEditorWindow.openTab(link, errorLine)
         })
     }
 
@@ -30,13 +29,13 @@ Pane {
                 consoleOutput.append(" Simulation crashed on line "+simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
-                lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine
+                editorWindow.errorLine = simulator.scriptHandler.currentLine
             } else {
                 consoleOutput.append(" Simulation crashed.")
                 consoleOutput.append(" File: <a style=\"color: #56B6C2; font-weight: bold;\" href=\"file://"+simulator.lammpsError.scriptPath + "?errorLine="+simulator.lammpsError.line+"\">"+simulator.lammpsError.scriptFile+"</a> on line " + simulator.lammpsError.line)
                 consoleOutput.append(" Command: '"+simulator.lammpsError.command+"'")
                 consoleOutput.append(" Error: '"+simulator.lammpsError.message+"'")
-                lammpsEditor.codeEditorWindow.errorLine = simulator.scriptHandler.currentLine
+                editorWindow.errorLine = simulator.scriptHandler.currentLine
             }
         }
     }
@@ -44,8 +43,8 @@ Pane {
     ColumnLayout {
         anchors.fill: parent
 
-        LammpsEditor {
-            id: lammpsEditor
+        CodeEditorWindow {
+            id: editorWindow
             simulator: editorTabRoot.simulator
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -78,7 +77,7 @@ Pane {
                 }
                 text: "Run script"
                 onClicked: {
-                    lammpsEditor.runScript()
+                    editorWindow.runScript()
                 }
             }
         }

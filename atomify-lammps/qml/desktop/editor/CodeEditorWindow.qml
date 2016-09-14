@@ -4,10 +4,12 @@ import Qt.labs.settings 1.0
 //import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
+import Atomify 1.0
 
 Item {
     id: root
     property alias dummyEditor: dummyEditor
+    property AtomifySimulator simulator
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
     property CodeEditor activeEditor
     property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
@@ -16,6 +18,28 @@ Item {
     property int errorLine: -1
     property string openFiles: ""
     property string lastOpenedFolder
+
+    signal clearConsole()
+    signal didRun()
+
+
+    onSimulatorChanged: {
+        simulator.willResetChanged.connect(function() {
+            editorWindow.clear()
+        })
+    }
+
+    function runScript() {
+        if(!simulator.scriptHandler) {
+            return
+        }
+        simulator.willReset = true
+        simulator.scriptHandler.reset()
+        simulator.scriptHandler.setWorkingDirectory(editorWindow.currentEditor.fileUrl)
+        simulator.scriptHandler.runScript(editorWindow.currentEditor.text)
+        editorWindow.activeEditor = editorWindow.currentEditor
+        didRun()
+    }
 
     Settings {
         property alias lastOpenedFolder: root.lastOpenedFolder

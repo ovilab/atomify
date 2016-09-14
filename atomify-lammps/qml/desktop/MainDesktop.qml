@@ -30,7 +30,7 @@ Item {
                 var numUrls = drop.urls.length
                 for(var i=0; i<drop.urls.length; i++) {
                     var url = drop.urls[i]
-                    editorTab.codeEditorWindow.openTab(url)
+                    editor.editorWindow.openTab(url)
 
                 }
             }
@@ -47,13 +47,13 @@ Item {
             orientation: Qt.Horizontal
 
             EditorPane {
-                id: editorTab
+                id: editor
                 Layout.fillHeight: true
                 width: 500
                 simulator: root.simulator
                 visualizer: root.visualizer
                 Component.onCompleted: {
-                    simulator.errorInLammpsScript.connect(editorTab.reportError)
+                    simulator.errorInLammpsScript.connect(editor.reportError)
                 }
                 onAutomaticallyRunChanged: simulator.automaticallyRun = automaticallyRun
             }
@@ -243,12 +243,12 @@ Item {
         if(focusMode) {
             simulationSummary.width = 300
             simulationSummary.visible = true
-            editorTab.visible = true
+            editor.visible = true
             focusMode = false
             tabDisable.hideTabDisable.start()
         } else {
             simulationSummary.width = 0
-            editorTab.visible = false
+            editor.visible = false
             simulationSummary.visible = false
             focusMode = true
             tabDisable.showTabDisable.start()
@@ -261,7 +261,7 @@ Item {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
             context: Qt.ApplicationShortcut
-            onActivated: editorTab.lammpsEditor.runScript()
+            onActivated: editor.editorWindow.runScript()
         }
         Shortcut {
             sequence: "Ctrl+P"
