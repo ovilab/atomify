@@ -17,17 +17,26 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
          TYPE,MOLECULE,COMPUTE,FIX,VARIABLE};
 
     if(!fix) return false;
-    int dim;
-    ComputeChunkAtom *chunk = static_cast<ComputeChunkAtom*>(fix->extract("cchunk", dim));
-    int *nvalues = static_cast<int*>(fix->extract("nvalues", dim));
-    int *nchunk = static_cast<int*>(fix->extract("nchunk", dim));
-    int *colextra = static_cast<int*>(fix->extract("colextra", dim));
+    int dimension;
+    ComputeChunkAtom *chunk = static_cast<ComputeChunkAtom*>(fix->extract("cchunk", dimension));
+    int *nvalues = static_cast<int*>(fix->extract("nvalues", dimension));
+    int *nchunk = static_cast<int*>(fix->extract("nchunk", dimension));
+    int *colextra = static_cast<int*>(fix->extract("colextra", dimension));
     if(!nvalues || !nchunk || !chunk || !colextra) {
         qDebug() << "Warning, could not get values from FixAveChunk::extract.";
         return true;
     }
 
-    if(chunk->which == BIN2D) {
+    int *which = static_cast<int*>(chunk->extract("which", dimension));
+    int *dim = static_cast<int*>(chunk->extract("dim", dimension));
+    int *nlayers = static_cast<int*>(chunk->extract("nlayers", dimension));
+
+    if(!which || !dim || !nlayers) {
+        qDebug() << "Warning, could not get values from ComputeChunkAtom::extract.";
+        return true;
+    }
+
+    if(*which == BIN2D) {
         setInteractive(true);
 
         if(m_dataRaw.size() != *nvalues) {
@@ -42,11 +51,11 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
         if(fix->nextvalid() == lammpsController->system()->timesteps()+1) {
             QStringList labels = {"x", "y", "z"};
 
-            int x = chunk->dim[0];
-            int z = chunk->dim[1];
+            int x = dim[0];
+            int z = dim[1];
             int y = 3 - x-z;
 
-            QSize size(chunk->nlayers[0], chunk->nlayers[1]);
+            QSize size(nlayers[0], nlayers[1]);
 
             float xMin = lammpsController->system()->origin()[x];
             float xMax = lammpsController->system()->origin()[x] + lammpsController->system()->size()[x];
