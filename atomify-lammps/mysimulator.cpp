@@ -60,6 +60,8 @@ bool AtomifySimulator::automaticallyRun() const
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
+    QElapsedTimer t;
+    t.start();
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
 
     // Sync properties from lammps controller and back
@@ -160,10 +162,13 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             }
         }
     }
+    // qDebug() << "Full synchronization spending " << t.elapsed() << " ms.";
 }
 
 void MyWorker::work()
 {
+    // qDebug() << "Doing work " << m_workCount;
+    m_workCount += 1;
     m_lammpsController.tick();
     if(m_lammpsController.state.canProcessSimulatorControls) {
         m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
@@ -173,6 +178,9 @@ void MyWorker::work()
     double delta = 16 - dt;
     if(delta > 0) {
         QThread::currentThread()->msleep(delta);
+    }
+    if(!m_lammpsController.lammps() || m_lammpsController.state.paused || m_lammpsController.state.crashed) {
+        QThread::currentThread()->msleep(500);
     }
     m_elapsed.restart();
 }

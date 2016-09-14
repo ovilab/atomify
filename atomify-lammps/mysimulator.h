@@ -26,6 +26,7 @@ private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
     LAMMPSController m_lammpsController;
+    long m_workCount = 0;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
