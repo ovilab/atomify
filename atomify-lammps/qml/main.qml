@@ -81,14 +81,4 @@ QQC1.ApplicationWindow {
             }
         }
     }
-
-//    Plot2D {
-//        id: plot2d
-//    }
-//    Button {
-//        text: "Open"
-//        onClicked: {
-//            plot2d.show()
-//        }
-//    }
 }
