@@ -64,7 +64,8 @@ if not os.path.isdir(lammps_source_dir):
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
 os.chdir(lammps_source_dir)
-run_command("git checkout "+stable_commit)
+run_command("git checkout atomify")
+run_command("git pull")
 os.chdir(root_path)
 
 if lammps_build_type == "android":
