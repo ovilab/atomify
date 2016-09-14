@@ -401,7 +401,7 @@ Pane {
                     if(Qt.platform.os === "osx") {
                         return "⌘"
                     }
-                    return "Ctrl"
+                    return "Ctrl+"
                 }
 
                 RowLayout {
