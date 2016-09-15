@@ -116,7 +116,7 @@ Scene3D {
             }
         }
 
-        PhotonFlowController {
+        TrackballController {
             mouseSourceDevice: mouseDevice
             keyboardSourceDevice: keyboardDevice
             camera: visualizer.camera

@@ -60,6 +60,6 @@
         <file>plotting/ColorMaps.qml</file>
         <file>desktop/controllers/OrbitCameraController.qml</file>
         <file>desktop/controllers/FirstPersonCameraController.qml</file>
-        <file>desktop/controllers/PhotonFlowController.qml</file>
+        <file>desktop/controllers/TrackballController.qml</file>
     </qresource>
 </RCC>
