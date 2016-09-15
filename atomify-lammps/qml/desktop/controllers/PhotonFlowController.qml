@@ -1,4 +1,3 @@
-import QtQuick 2.5
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
@@ -7,52 +6,21 @@ import QtQml 2.2
 
 Entity {
     id: root
-    signal pressed
-
     property Camera camera
-    property real linearSpeed: 40.0
-    property real lookSpeed: 500.0
+    property real linearSpeed: 10.0
+    property real lookSpeed: 100.0
     property real zoomSpeed: 20.0
     property real zoomLimit: 2.0
-    property real moveSpeed: 1.0
-    property vector3d viewCenter: Qt.vector3d(0,0,0)
-    property string mode: "flymode"
-    onModeChanged: {
-        if(mode === "trackball") {
-            viewCenter = root.camera.viewCenter
-        }
-    }
-
-    Shortcut {
-        sequence: "Ctrl+M"
-        context: Qt.ApplicationShortcut
-        onActivated: {
-            console.log("Switching mode")
-            if(root.mode === "flymode") {
-                root.mode = "trackball"
-            } else {
-                root.mode = "flymode"
-            }
-        }
-    }
-
+    property MouseDevice mouseSourceDevice
+    property KeyboardDevice keyboardSourceDevice
     QtObject {
         id: d
-        property vector3d firstPersonUp: Qt.vector3d(0, 1, 0)
+        readonly property vector3d firstPersonUp: Qt.vector3d(0, 1, 0)
     }
 
     function zoomDistance(firstPoint, secondPoint) {
         var u = secondPoint.minus(firstPoint); u = u.times(u);
         return u.x + u.y + u.z;
-    }
-
-    KeyboardDevice {
-        id: keyboardSourceDevice
-    }
-
-    MouseDevice {
-        id: mouseSourceDevice
-        sensitivity: 0.001
     }
 
     components: [
@@ -125,65 +93,56 @@ Entity {
                         axis: MouseDevice.Y
                     }
                 },
+
                 // Keyboard
                 Axis {
                     id: keyboardXAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_A]
+                        buttons: [Qt.Key_Left]
                         scale: -1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_D]
+                        buttons: [Qt.Key_Right]
                         scale: 1.0
+                    }
+                },
+                Axis {
+                    id: keyboardZAxis
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_Up]
+                        scale: d.shiftPressed ? 1.0 : 0.0
+                    }
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_Down]
+                        scale: d.shiftPressed ? -1.0 : 0.0
                     }
                 },
                 Axis {
                     id: keyboardYAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_W]
+                        buttons: [Qt.Key_Up]
                         scale: d.shiftPressed ? 0.0 : 1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_S]
-                        scale: d.shiftPressed ? 0.0 : -1.0
-                    }
-                },
-                Axis {
-                    id: rollAxis
-                    ButtonAxisInput {
-                        sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_E]
-                        scale: d.shiftPressed ? 0.0 : 1.0
-                    }
-                    ButtonAxisInput {
-                        sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Q]
+                        buttons: [Qt.Key_Down]
                         scale: d.shiftPressed ? 0.0 : -1.0
                     }
                 }
             ] // axes
         },
+
         FrameAction {
-            property real timeSinceLastAction: 0.0
+            property real timeSinceLastAction: 0
             onTriggered: {
                 if(!root.enabled) {
                     return
                 }
-                if(leftMouseButtonAction.active) {
-                    pressed()
-                }
-
-                var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
-                root.camera.translate(Qt.vector3d(keyboardXAxis.value*speed, 0.0, keyboardYAxis.value*speed))
-                if(root.mode === "trackball") {
-                    root.camera.viewCenter = viewCenter
-                }
-                root.camera.roll(rollAxis.value*speed);
-                d.firstPersonUp = root.camera.upVector
 
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt
@@ -192,31 +151,23 @@ Entity {
 
                 // The time difference since the last frame is passed in as the
                 // argument dt. It is a floating point value in units of seconds.
+
                 if (leftMouseButtonAction.active) {
                     if(timeSinceLastAction > 0.1) {
                         timeSinceLastAction = 0
                         return
                     }
+
+                    console.log("Panning and so on, mousex: ", mouseXAxis.value, " and mousey: ", mouseYAxis.value)
                     root.camera.panAboutViewCenter(-mouseXAxis.value * lookSpeed, d.firstPersonUp);
                     root.camera.tiltAboutViewCenter(-mouseYAxis.value * lookSpeed);
                 } else if(middleMouseButtonAction.active) {
-                    if(timeSinceLastAction > 0.1) {
-                        timeSinceLastAction = 0
-                        return
-                    }
                     var fov = root.camera.fieldOfView
                     fov += mouseYAxis.value * zoomSpeed
                     fov = Math.max(10.0, Math.min(160.0, fov))
                     root.camera.fieldOfView = fov
                 }
-
-//                var tanAngle = Math.tan(root.camera.fieldOfView / 2.0)
-//                var distance = (root.camera.viewCenter.minus(root.camera.position)).length()
-//                console.log("distance", distance, "sinAngle", tanAngle)
-//                root.camera.right = distance * tanAngle
-//                root.camera.left = -root.camera.right
-//                root.camera.top = root.camera.right / root.camera.aspectRatio
-//                root.camera.bottom = -root.camera.top
+                root.camera.translate(Qt.vector3d(keyboardXAxis.value * 0.3 * linearSpeed * dt, 0.0, keyboardYAxis.value * linearSpeed * dt))
             }
         }
     ] // components

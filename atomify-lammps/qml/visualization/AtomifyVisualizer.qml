@@ -15,6 +15,7 @@ import SimVis 1.0
 import SimVis.ShaderNodes 1.0
 
 import "../desktop" // TODO should be separate controllers for desktop and mobile
+import "../desktop/controllers"
 
 Scene3D {
     id: root
@@ -70,6 +71,9 @@ Scene3D {
 
     Entity {
         id: visualizer
+        property Spheres spheres: spheres
+        property MouseDevice mouseSourceDevice
+        property KeyboardDevice keyboardSourceDevice
         property Camera camera: Camera {
             id: mainCamera
             projectionType: CameraLens.PerspectiveProjection
@@ -87,7 +91,37 @@ Scene3D {
                 }
             }
         }
-        property Spheres spheres: spheres
+
+        KeyboardDevice {
+            id: keyboardDevice
+        }
+
+        MouseDevice {
+            id: mouseDevice
+            sensitivity: 0.01
+        }
+
+        MouseHandler {
+            id: mouseHandler
+            sourceDevice: mouseDevice
+            onWheel: {
+                var scale = 1 - wheel.angleDelta.y / 1000
+                if(1.0 - scale > 0.1) {
+                    scale = 0.9
+                } else if(scale - 1.0 > 0.1) {
+                    scale = 1.1
+                }
+
+                visualizer.camera.position = visualizer.camera.viewCenter.minus(visualizer.camera.viewVector.times(scale))
+            }
+        }
+
+        PhotonFlowController {
+            mouseSourceDevice: mouseDevice
+            keyboardSourceDevice: keyboardDevice
+            camera: visualizer.camera
+        }
+
 
         ForwardFrameGraph {
             id: forwardFrameGraph
@@ -649,13 +683,32 @@ void main()
                                     ]
                                 }
 
-                                DesktopController {
-                                    id: navigationController
-                                    camera: visualizer.camera
-                                    onPressed: {
-                                        root.focus = true
-                                    }
-                                }
+//                                DesktopController {
+//                                    id: navigationController
+//                                    camera: visualizer.camera
+//                                    enabled: false
+//                                    onPressed: {
+//                                        root.focus = true
+//                                    }
+//                                }
+
+//                                OrbitCameraController {
+//                                    id: orbitController
+//                                    camera: visualizer.camera
+////                                    onPressed: {
+////                                        root.focus = true
+////                                    }
+//                                }
+
+//                                FirstPersonCameraController {
+//                                    id: fpsController
+//                                    camera: visualizer.camera
+//                                }
+
+//                                PhotonFlowController {
+//                                    id: photonFlowController
+//                                    camera: visualizer.camera
+//                                }
 
                                 ColorModifier {
                                     id: colorModifier
