@@ -21,23 +21,23 @@ QQC1.ApplicationWindow {
     width: 1280
     height: 1024
 
-    QQC1.MenuBar {
-        QQC1.Menu {
-            title: "File"
-            QQC1.MenuItem {
-                text: "New script"
-            }
-            QQC1.MenuItem {
-                text: "Open"
-            }
-            QQC1.MenuItem {
-                text: "Save"
-            }
-            QQC1.MenuItem {
-                text: "Save as"
-            }
-        }
-    }
+//    QQC1.MenuBar {
+//        QQC1.Menu {
+//            title: "File"
+//            QQC1.MenuItem {
+//                text: "New script"
+//            }
+//            QQC1.MenuItem {
+//                text: "Open"
+//            }
+//            QQC1.MenuItem {
+//                text: "Save"
+//            }
+//            QQC1.MenuItem {
+//                text: "Save as"
+//            }
+//        }
+//    }
 
     Settings {
         id: settings
