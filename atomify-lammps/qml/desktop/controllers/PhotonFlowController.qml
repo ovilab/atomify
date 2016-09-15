@@ -11,11 +11,13 @@ Entity {
     property real lookSpeed: 100.0
     property real zoomSpeed: 20.0
     property real zoomLimit: 2.0
+    property real moveSpeed: 1.0
     property MouseDevice mouseSourceDevice
     property KeyboardDevice keyboardSourceDevice
+    signal pressed
     QtObject {
         id: d
-        readonly property vector3d firstPersonUp: Qt.vector3d(0, 1, 0)
+        property vector3d firstPersonUp: Qt.vector3d(0, 1, 0)
     }
 
     function zoomDistance(firstPoint, secondPoint) {
@@ -99,38 +101,51 @@ Entity {
                     id: keyboardXAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Left]
+                        buttons: [Qt.Key_A]
                         scale: -1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Right]
+                        buttons: [Qt.Key_D]
                         scale: 1.0
                     }
                 },
-                Axis {
-                    id: keyboardZAxis
-                    ButtonAxisInput {
-                        sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Up]
-                        scale: d.shiftPressed ? 1.0 : 0.0
-                    }
-                    ButtonAxisInput {
-                        sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Down]
-                        scale: d.shiftPressed ? -1.0 : 0.0
-                    }
-                },
+//                Axis {
+//                    id: keyboardZAxis
+//                    ButtonAxisInput {
+//                        sourceDevice: keyboardSourceDevice
+//                        buttons: [Qt.Key_W]
+//                        scale: d.shiftPressed ? 1.0 : 0.0
+//                    }
+//                    ButtonAxisInput {
+//                        sourceDevice: keyboardSourceDevice
+//                        buttons: [Qt.Key_S]
+//                        scale: d.shiftPressed ? -1.0 : 0.0
+//                    }
+//                },
                 Axis {
                     id: keyboardYAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Up]
+                        buttons: [Qt.Key_W]
                         scale: d.shiftPressed ? 0.0 : 1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_Down]
+                        buttons: [Qt.Key_S]
+                        scale: d.shiftPressed ? 0.0 : -1.0
+                    }
+                },
+                Axis {
+                    id: rollAxis
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_E]
+                        scale: d.shiftPressed ? 0.0 : 1.0
+                    }
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_Q]
                         scale: d.shiftPressed ? 0.0 : -1.0
                     }
                 }
@@ -143,6 +158,14 @@ Entity {
                 if(!root.enabled) {
                     return
                 }
+                if(leftMouseButtonAction.active) {
+                    pressed()
+                }
+
+                var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
+                root.camera.translate(Qt.vector3d(keyboardXAxis.value*speed, 0.0, keyboardYAxis.value*speed))
+                root.camera.roll(rollAxis.value*speed)
+                d.firstPersonUp = root.camera.upVector
 
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt
@@ -158,7 +181,6 @@ Entity {
                         return
                     }
 
-                    console.log("Panning and so on, mousex: ", mouseXAxis.value, " and mousey: ", mouseYAxis.value)
                     root.camera.panAboutViewCenter(-mouseXAxis.value * lookSpeed, d.firstPersonUp);
                     root.camera.tiltAboutViewCenter(-mouseYAxis.value * lookSpeed);
                 } else if(middleMouseButtonAction.active) {
