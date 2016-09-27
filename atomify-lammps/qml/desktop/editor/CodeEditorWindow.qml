@@ -53,8 +53,7 @@ Item {
     }
 
     Component.onCompleted: {
-        var openFilesCopy = openFiles
-        var files = openFilesCopy.split("###_/_###")
+        var files = JSON.parse(openFiles)
 
         var numOpenFiles = 0
         for(var i in files) {
@@ -71,12 +70,13 @@ Item {
     }
 
     function updateOpenFiles() {
-        openFiles = ""
+        var openFilesList = []
 
         for(var i=0; i<stackLayout.count; i++) {
             var editor = stackLayout.itemAt(i)
-            openFiles = openFiles+"###_/_###"+editor.fileUrl
+            openFilesList.push(editor.fileUrl.toString())
         }
+        openFiles = JSON.stringify(openFilesList)
     }
 
     onCurrentLineChanged: {
