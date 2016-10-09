@@ -85,17 +85,18 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->lammpsState = m_lammpsController.state;
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
-        // atomifySimulator->clearSimulatorControls();
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
         emit atomifySimulator->lammpsDidReset();
     }
 
     if(!m_lammpsController.lammps()) {
+        atomifySimulator->setHasActiveSimulation(false);
         atomifySimulator->system()->synchronize(&m_lammpsController);
         atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
         return;
     }
+    atomifySimulator->setHasActiveSimulation(true);
 
     if(m_lammpsController.crashed() && !m_lammpsController.exceptionHandled()) {
         LammpsError *error = new LammpsError(atomifySimulator);

@@ -78,6 +78,7 @@ Item {
                 }
 
                 WelcomeOverlay {
+                    visible: !simulator.hasActiveSimulation
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     onNewScriptClicked: editor.editorWindow.newTab()

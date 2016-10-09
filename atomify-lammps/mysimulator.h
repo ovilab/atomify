@@ -44,6 +44,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(LammpsError* lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(bool automaticallyRun READ automaticallyRun WRITE setAutomaticallyRun NOTIFY automaticallyRunChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
+    Q_PROPERTY(bool hasActiveSimulation READ hasActiveSimulation WRITE setHasActiveSimulation NOTIFY hasActiveSimulationChanged)
 public:
     AtomifySimulator();
     ~AtomifySimulator();
@@ -58,6 +59,11 @@ public:
     LammpsError* lammpsError() const;
     bool automaticallyRun() const;
 
+    bool hasActiveSimulation() const
+    {
+        return m_hasActiveSimulation;
+    }
+
 public slots:
     void setSimulationSpeed(int arg);
     void setPaused(bool paused);
@@ -66,6 +72,15 @@ public slots:
     void setSystem(class System* system);
     void setLammpsError(LammpsError* lammpsError);
     void setAutomaticallyRun(bool automaticallyRun);
+
+    void setHasActiveSimulation(bool hasActiveSimulation)
+    {
+        if (m_hasActiveSimulation == hasActiveSimulation)
+            return;
+
+        m_hasActiveSimulation = hasActiveSimulation;
+        emit hasActiveSimulationChanged(hasActiveSimulation);
+    }
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -77,6 +92,8 @@ signals:
     void systemChanged(class System* system);
     void lammpsErrorChanged(LammpsError* lammpsError);
     void automaticallyRunChanged(bool automaticallyRun);
+
+    void hasActiveSimulationChanged(bool hasActiveSimulation);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -91,6 +108,7 @@ private:
     bool m_paused = false;
     bool m_willReset = false;
     bool m_automaticallyRun = false;
+    bool m_hasActiveSimulation = false;
 };
 
 #endif // MYSIMULATOR_H
