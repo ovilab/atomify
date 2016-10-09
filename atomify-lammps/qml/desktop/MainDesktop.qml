@@ -59,6 +59,7 @@ Item {
             }
 
             Item {
+                id: visualizerItem
                 Layout.alignment: Qt.AlignLeft
                 Layout.fillHeight: true
                 Layout.minimumWidth: 1
@@ -83,6 +84,17 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     onNewScriptClicked: editor.editorWindow.newTab()
                     onExamplesClicked: rightbar.showExamples()
+                }
+
+                ControlBar {
+                    id: controlBar1
+                    simulator: root.simulator
+                    visualizer: root.visualizer
+                    visible: !root.focusMode
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    y: parent.height - 100
+                    width: 320
+                    height: 64
                 }
             }
         }
@@ -312,17 +324,5 @@ Item {
         id: tabDisable
         x: parent.width*0.5 - 0.5*width
         y: 10
-    }
-
-    ControlBar {
-        id: controlBar1
-        simulator: root.simulator
-        visualizer: root.visualizer
-        visible: !root.focusMode
-        x: visualizer.x + visualizer.width*0.5 - 0.5*width
-
-        y: parent.height - 100
-        width: 320
-        height: 64
     }
 }
