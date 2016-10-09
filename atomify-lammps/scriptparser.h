@@ -13,6 +13,7 @@ private:
     QString regexWord = QString("\\w*");
 public:
     ScriptParser();
+    bool isUnsupportedCommand(QString command);
     bool isAtomColorAndSize(QString command);
     bool isStaticSystem(QString command);
     bool isDisableBonds(QString command);
