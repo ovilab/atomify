@@ -153,7 +153,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
                 int speed = scriptHandler->parser().simulationSpeed(command);
                 if(speed > 0) atomifySimulator->setSimulationSpeed(speed);
                 m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
-
             } else {
                 for(auto *simulatorControl : atomifySimulator->findChildren<SimulatorControl*>()) {
                     simulatorControl->handleCommand(nextCommandObject.command());

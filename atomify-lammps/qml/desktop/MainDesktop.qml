@@ -296,6 +296,13 @@ Item {
                 }
             }
         }
+        Shortcut {
+            sequence: "Ctrl+M"
+            context: Qt.ApplicationShortcut
+            onActivated: {
+                visualizer.cameraMode = (visualizer.cameraMode === "flymode") ? "trackball" : "flymode"
+            }
+        }
     }
 
     DisableMessage {

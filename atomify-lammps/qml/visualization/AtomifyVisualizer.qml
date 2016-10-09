@@ -33,14 +33,16 @@ Scene3D {
     property alias sphereScale: colorModifier.scale
     property real bondRadius: 0.1
     property alias periodicImages: periodicImages
+    property string cameraMode: "flymode"
     property string renderMode: "forward"
     property string renderQuality: "medium"
     property bool mainCompleted: false
     property MessageDialog dialog: MessageDialog {
         text: "Render quality will be changed when the application is restarted."
     }
-
+    hoverEnabled: mouseHandler.focused
     multisample: true
+
     onRenderQualityChanged: {
         if(mainCompleted) {
             dialog.open()
@@ -103,8 +105,14 @@ Scene3D {
 
         MouseHandler {
             id: mouseHandler
+            property bool focused: false
             sourceDevice: mouseDevice
+
             onWheel: {
+                if(cameraMode === "flymode") {
+                    return
+                }
+
                 var scale = 1 - wheel.angleDelta.y / 1000
                 if(1.0 - scale > 0.1) {
                     scale = 0.9
@@ -114,14 +122,29 @@ Scene3D {
 
                 visualizer.camera.position = visualizer.camera.viewCenter.minus(visualizer.camera.viewVector.times(scale))
             }
+
+            onPositionChanged: {
+                console.log("Pos changed: ()", mouse.x, ", ", mouse.y,")")
+
+            }
         }
 
         TrackballController {
+            enabled: cameraMode === "trackball"
             mouseSourceDevice: mouseDevice
             keyboardSourceDevice: keyboardDevice
             camera: visualizer.camera
         }
 
+        FlymodeController {
+            enabled: cameraMode === "flymode"
+            mouseSourceDevice: mouseDevice
+            keyboardSourceDevice: keyboardDevice
+            camera: visualizer.camera
+            onPressed: {
+                mouseHandler.focused = true
+            }
+        }
 
         ForwardFrameGraph {
             id: forwardFrameGraph
