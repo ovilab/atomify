@@ -22,7 +22,6 @@ Item {
     signal clearConsole()
     signal didRun()
 
-
     onSimulatorChanged: {
         simulator.willResetChanged.connect(function() {
             editorWindow.clear()

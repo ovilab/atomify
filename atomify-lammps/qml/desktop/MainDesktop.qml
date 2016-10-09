@@ -42,7 +42,7 @@ Item {
 
         SplitView {
             height: parent.height
-            width: parent.width-simulationSummary.width
+            width: parent.width-rightbar.width
             Layout.alignment: Qt.AlignTop
             orientation: Qt.Horizontal
 
@@ -58,27 +58,36 @@ Item {
                 onAutomaticallyRunChanged: simulator.automaticallyRun = automaticallyRun
             }
 
-            AtomifyVisualizer {
-                id: visualizer
+            Item {
                 Layout.alignment: Qt.AlignLeft
                 Layout.fillHeight: true
                 Layout.minimumWidth: 1
-                focus: true
-                ambientOcclusion.radius: radiusSlider.value
-                ambientOcclusion.samples: samplesSlider.value
-                ambientOcclusion.noiseScale: noiseScaleSlider.value
-                ambientOcclusion.mode: ssaoMode.currentText
-                sphereScale: sphereScalingSlider.value
-                bondRadius: bondRadiusSlider.value
-                periodicImages.numberOfCopiesX: periodicXSlider.value
-                periodicImages.numberOfCopiesY: periodicYSlider.value
-                periodicImages.numberOfCopiesZ: periodicZSlider.value
-                // renderMode: deferredModeSwitch.checked ? "deferred" : "forward"
+                AtomifyVisualizer {
+                    id: visualizer
+                    anchors.fill: parent
+                    focus: true
+                    ambientOcclusion.radius: radiusSlider.value
+                    ambientOcclusion.samples: samplesSlider.value
+                    ambientOcclusion.noiseScale: noiseScaleSlider.value
+                    ambientOcclusion.mode: ssaoMode.currentText
+                    sphereScale: sphereScalingSlider.value
+                    bondRadius: bondRadiusSlider.value
+                    periodicImages.numberOfCopiesX: periodicXSlider.value
+                    periodicImages.numberOfCopiesY: periodicYSlider.value
+                    periodicImages.numberOfCopiesZ: periodicZSlider.value
+                }
+
+                WelcomeOverlay {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    onNewScriptClicked: editor.editorWindow.newTab()
+                    onExamplesClicked: rightbar.showExamples()
+                }
             }
         }
 
         RightBar {
-            id: simulationSummary
+            id: rightbar
 
             width: 300
             height: parent.height
@@ -241,15 +250,15 @@ Item {
 
     function toggleFocusMode() {
         if(focusMode) {
-            simulationSummary.width = 300
-            simulationSummary.visible = true
+            rightbar.width = 300
+            rightbar.visible = true
             editor.visible = true
             focusMode = false
             tabDisable.hideTabDisable.start()
         } else {
-            simulationSummary.width = 0
+            rightbar.width = 0
             editor.visible = false
-            simulationSummary.visible = false
+            rightbar.visible = false
             focusMode = true
             tabDisable.showTabDisable.start()
         }

@@ -8,6 +8,9 @@ Page {
     property System system
     property AtomifyVisualizer visualizer
     focusPolicy: Qt.NoFocus
+    function showExamples() {
+        swipeView.setCurrentIndex(2) // TODO: use id of examples object below
+    }
 
     SwipeView {
         id: swipeView

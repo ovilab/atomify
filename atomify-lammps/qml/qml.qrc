@@ -61,5 +61,6 @@
         <file>desktop/controllers/OrbitCameraController.qml</file>
         <file>desktop/controllers/FirstPersonCameraController.qml</file>
         <file>desktop/controllers/TrackballController.qml</file>
+        <file>desktop/WelcomeOverlay.qml</file>
     </qresource>
 </RCC>
