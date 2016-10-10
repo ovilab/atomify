@@ -158,6 +158,13 @@ Scene3D {
         }
 
         Entity {
+            components: [
+                CuboidMesh {},
+                PhongMaterial {}
+            ]
+        }
+
+        Entity {
             id : ssaoQuadEntity
 
             Material {
