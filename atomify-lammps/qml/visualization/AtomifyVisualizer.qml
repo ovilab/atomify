@@ -147,8 +147,8 @@ Scene3D {
 
         PlaneMesh {
             id: quadMesh
-            width: 2.0
-            height: 2.0
+            width: root.renderMode==="deferred" ? 2.0 : 0.0
+            height: width
             meshResolution: Qt.size(2, 2)
         }
 

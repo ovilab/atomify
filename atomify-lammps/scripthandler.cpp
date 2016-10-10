@@ -60,7 +60,6 @@ const ScriptCommand& ScriptHandler::nextCommand()
     } else {
         m_currentCommand = ScriptCommand();
     }
-
     setCurrentLine(m_currentCommand.lineInRootFile());
 
     return m_currentCommand;
@@ -72,7 +71,6 @@ Atoms *ScriptHandler::atoms() const
 }
 
 ScriptParser &ScriptHandler::parser() { return m_parser; }
-
 
 LammpsState *ScriptHandler::lammpsState() const
 {
@@ -259,6 +257,20 @@ void ScriptHandler::doRunScript(QString script, ScriptCommand::Type type, QStrin
                 currentCommand.clear();
                 lineNumber++;
                 continue; // This line is complete
+            }
+
+            if(m_parser.isUnsupportedCommand(currentCommand)) {
+                QStringList words = currentCommand.trimmed().split(" ");
+                QString firstWord = currentCommand;
+                if(words.size() > 0) {
+                    firstWord = words.at(0);
+                }
+
+                QString message = QString("LAMMPS command '%1' is not yet supported. This will be fixed in the next version of Atomify").arg(firstWord);
+                currentCommand.clear();
+                lineNumber++;
+                emit consoleOutput(message);
+                continue;
             }
 
             if(!currentCommand.isEmpty()) {

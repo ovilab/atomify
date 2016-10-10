@@ -10,6 +10,31 @@ ScriptParser::ScriptParser()
 
 }
 
+bool ScriptParser::isUnsupportedCommand(QString command)
+{
+    command = command.trimmed();
+
+    QStringList unSupportedCommands = {
+        QString("loop"),
+        QString("jump"),
+        QString("temper"),
+        QString("tad"),
+        QString("rerun"),
+        QString("quit"),
+        QString("processors"),
+        QString("prd"),
+        QString("neb"),
+        QString("label")
+    };
+    foreach(QString str, unSupportedCommands) {
+        if(command.startsWith(str)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool ScriptParser::isDisableAllEnsembleFixes(QString command) {
     QRegularExpression regex("^disableAllEnsembleFixes$");
     return regex.match(command).hasMatch();

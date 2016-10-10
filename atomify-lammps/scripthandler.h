@@ -28,7 +28,6 @@ private:
     class LammpsState *m_lammpsState = nullptr;
     Atoms* m_atoms = nullptr;
     QString m_tempLocation;
-
     int m_currentLine = -1;
     int m_currentLineInRootFile = -1;
 
@@ -46,7 +45,6 @@ public:
     Q_INVOKABLE QString lastSingleCommandString();
     Q_INVOKABLE void setWorkingDirectory(QUrl fileName);
     Q_INVOKABLE void runFile(QString filename); // TODO Set cwd
-
     int currentLine() const;
 
 public slots:
@@ -63,6 +61,7 @@ public slots:
 
 signals:
     void currentLineChanged(int currentLine);
+    void consoleOutput(QString output);
 
 protected:
     void doRunScript(QString script, ScriptCommand::Type type, QString filename, QString currentDir);
