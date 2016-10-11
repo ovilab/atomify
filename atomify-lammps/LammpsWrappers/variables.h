@@ -12,6 +12,7 @@ class Variables : public QObject
 
 public:
     explicit Variables(QObject *parent = 0);
+    void synchronize(class LAMMPSController *lammpsController);
     int count() const;
     QVariant model() const;
 
@@ -24,6 +25,9 @@ public slots:
     void setModel(QVariant model);
 
 private:
+    void add(QString identifier, class LAMMPSController *lammpsController);
+    void remove(QString identifier);
+    void reset();
     int m_count = 0;
     QVariant m_model;
 };
