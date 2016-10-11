@@ -31,7 +31,6 @@ Item {
                 for(var i=0; i<drop.urls.length; i++) {
                     var url = drop.urls[i]
                     editor.editorWindow.openTab(url)
-
                 }
             }
         }
@@ -55,7 +54,6 @@ Item {
                 Component.onCompleted: {
                     simulator.errorInLammpsScript.connect(editor.reportError)
                 }
-                onAutomaticallyRunChanged: simulator.automaticallyRun = automaticallyRun
             }
 
             Item {
@@ -79,8 +77,8 @@ Item {
                 }
 
                 WelcomeOverlay {
+                    y: 200
                     visible: !simulator.hasActiveSimulation
-                    anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     onNewScriptClicked: editor.editorWindow.newTab()
                     onExamplesClicked: rightbar.showExamples()
