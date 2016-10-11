@@ -12,7 +12,7 @@ import Qt3D.Extras 2.0
 import QtQuick.Scene3D 2.0
 
 import SimVis 1.0
-import SimVis.ShaderNodes 1.0
+import ShaderNodes 1.0
 
 import "../desktop" // TODO should be separate controllers for desktop and mobile
 import "../desktop/controllers"
@@ -147,7 +147,7 @@ Scene3D {
 
         PlaneMesh {
             id: quadMesh
-            width: root.renderMode==="deferred" ? 2.0 : 0.0
+            width: 2.0
             height: width
             meshResolution: Qt.size(2, 2)
         }
@@ -586,17 +586,22 @@ void main()
                                                 id: standardMaterial
                                                 color: finalShaderBuilder.color
                                                 lights: [
-                                                    Light {
-                                                        position: light1.position
-                                                        strength: light1.strength
-                                                        attenuation: light1.attenuation
-                                                    },
-                                                    Light {
-                                                        position: light2.position
-                                                        strength: light2.strength
-                                                        attenuation: light2.attenuation
-                                                    }
+                                                    light1,
+                                                    light2
                                                 ]
+
+                                                Light {
+                                                    id: lighta1
+                                                    position: light1.position
+                                                    strength: light1.strength
+                                                    attenuation: light1.attenuation
+                                                }
+                                                Light {
+                                                    id: lighta2
+                                                    position: light2.position
+                                                    strength: light2.strength
+                                                    attenuation: light2.attenuation
+                                                }
                                             }
 
                                             source: "
@@ -734,42 +739,48 @@ void main()
                                     id: spheresMediumQuality
                                     color: spheres.fragmentBuilder.color
                                     lights: [
-                                        Light {
-                                            id: light1
-                                            position: visualizer.camera.position.plus(
-                                                          (visualizer.camera.viewVector.normalized().plus(
-                                                               visualizer.camera.upVector.normalized()).plus(
-                                                               visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
-                                            strength: 0.5
-                                            attenuation: 0.0
-                                        },
-                                        Light {
-                                            id: light2
-                                            position: visualizer.camera.position.minus(
-                                                          (visualizer.camera.viewVector.normalized().plus(
-                                                               visualizer.camera.upVector.normalized()).plus(
-                                                               visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
-                                            strength: 0.5
-                                            attenuation: 0.0
-                                        }
+                                        light1,
+                                        light2
                                     ]
+                                    Light {
+                                        id: light1
+                                        position: visualizer.camera.position.plus(
+                                                      (visualizer.camera.viewVector.normalized().plus(
+                                                           visualizer.camera.upVector.normalized()).plus(
+                                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+                                        strength: 0.5
+                                        attenuation: 0.0
+                                    }
+                                    Light {
+                                        id: light2
+                                        position: visualizer.camera.position.minus(
+                                                      (visualizer.camera.viewVector.normalized().plus(
+                                                           visualizer.camera.upVector.normalized()).plus(
+                                                           visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+                                        strength: 0.5
+                                        attenuation: 0.0
+                                    }
                                 }
 
                                 StandardMaterial {
                                     id: bondsMediumQuality
                                     color: "white"
                                     lights: [
-                                        Light {
-                                            position: light1.position
-                                            strength: light1.strength
-                                            attenuation: light1.attenuation
-                                        },
-                                        Light {
-                                            position: light2.position
-                                            strength: light2.strength
-                                            attenuation: light2.attenuation
-                                        }
+                                        lightc1,
+                                        lightc2
                                     ]
+                                    Light {
+                                        id: lightc1
+                                        position: light1.position
+                                        strength: light1.strength
+                                        attenuation: light1.attenuation
+                                    }
+                                    Light {
+                                        id: lightc2
+                                        position: light2.position
+                                        strength: light2.strength
+                                        attenuation: light2.attenuation
+                                    }
                                 }
 
                                 Spheres {

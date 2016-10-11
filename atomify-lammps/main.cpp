@@ -85,13 +85,6 @@ int main(int argc, char *argv[])
 #endif
     QSurfaceFormat::setDefaultFormat(format);
 
-    // View version
-//    QQuickView view;
-//    qpm::init(app, *view.engine());
-//    view.setFormat(format); // TODO see if this is necessary on all platforms still
-//    view.setSource(QUrl("qrc:/main.qml"));
-//    view.show();
-
     // Application version
     QQmlApplicationEngine engine;
     qpm::init(app, engine);
