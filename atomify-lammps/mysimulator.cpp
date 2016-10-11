@@ -58,6 +58,16 @@ bool AtomifySimulator::automaticallyRun() const
     return m_automaticallyRun;
 }
 
+bool AtomifySimulator::hasActiveSimulation() const
+{
+    return m_hasActiveSimulation;
+}
+
+bool AtomifySimulator::scriptFinished() const
+{
+    return m_scriptFinished;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     QElapsedTimer t;
@@ -81,12 +91,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     if(atomifySimulator->willReset()) {
         m_lammpsController.reset();
-        m_lammpsController.state.automaticallyRun = atomifySimulator->automaticallyRun();
+        atomifySimulator->setAutomaticallyRun(false);
+        m_lammpsController.state.automaticallyRun = false;
         atomifySimulator->lammpsState = m_lammpsController.state;
         atomifySimulator->setWillReset(false);
         atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
+        atomifySimulator->setScriptFinished(false);
         emit atomifySimulator->lammpsDidReset();
     }
 
@@ -94,6 +106,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         atomifySimulator->setHasActiveSimulation(false);
         atomifySimulator->system()->synchronize(&m_lammpsController);
         atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
+        atomifySimulator->setScriptFinished(false);
         return;
     }
     atomifySimulator->setHasActiveSimulation(true);
@@ -292,4 +305,22 @@ void AtomifySimulator::setAutomaticallyRun(bool automaticallyRun)
 
     m_automaticallyRun = automaticallyRun;
     emit automaticallyRunChanged(automaticallyRun);
+}
+
+void AtomifySimulator::setHasActiveSimulation(bool hasActiveSimulation)
+{
+    if (m_hasActiveSimulation == hasActiveSimulation)
+        return;
+
+    m_hasActiveSimulation = hasActiveSimulation;
+    emit hasActiveSimulationChanged(hasActiveSimulation);
+}
+
+void AtomifySimulator::setScriptFinished(bool scriptFinished)
+{
+    if (m_scriptFinished == scriptFinished)
+        return;
+
+    m_scriptFinished = scriptFinished;
+    emit scriptFinishedChanged(scriptFinished);
 }
