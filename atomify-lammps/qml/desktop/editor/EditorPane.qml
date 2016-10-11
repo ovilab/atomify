@@ -9,7 +9,6 @@ Pane {
     id: editorTabRoot
     property TextArea consoleOutput: consoleItem.output
     property alias editorWindow: editorWindow
-    property alias automaticallyRun: automaticallyRun.checked
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
     onConsoleOutputChanged: {
@@ -55,12 +54,6 @@ Pane {
         RowLayout {
             anchors {
                 right: parent.right
-            }
-
-            CheckBox {
-                id: automaticallyRun
-                focusPolicy: Qt.NoFocus
-                text: "Automatically run"
             }
 
             Button {
