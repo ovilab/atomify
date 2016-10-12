@@ -14,9 +14,10 @@ Entity {
     property real lookSpeed: 500.0
     property real zoomSpeed: 20.0
     property real zoomLimit: 2.0
-    property real moveSpeed: 1.0
+    property real flymodeSpeed: 1.0
+    property real trackballSpeed: 1.0
     property vector3d viewCenter: Qt.vector3d(0,0,0)
-    property string mode: "flymode"
+    property string mode: "trackball"
     onModeChanged: {
         if(mode === "trackball") {
             viewCenter = root.camera.viewCenter
@@ -130,12 +131,12 @@ Entity {
                     id: keyboardXAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_A]
+                        buttons: [Qt.Key_A, Qt.Key_Left]
                         scale: -1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_D]
+                        buttons: [Qt.Key_D, Qt.Key_Right]
                         scale: 1.0
                     }
                 },
@@ -143,12 +144,38 @@ Entity {
                     id: keyboardYAxis
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_W]
+                        buttons: [Qt.Key_W, Qt.Key_Up]
                         scale: d.shiftPressed ? 0.0 : 1.0
                     }
                     ButtonAxisInput {
                         sourceDevice: keyboardSourceDevice
-                        buttons: [Qt.Key_S]
+                        buttons: [Qt.Key_S, Qt.Key_Down]
+                        scale: d.shiftPressed ? 0.0 : -1.0
+                    }
+                },
+                Axis {
+                    id: keyboardZAxis
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_X]
+                        scale: d.shiftPressed ? 0.0 : 1.0
+                    }
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_Z]
+                        scale: d.shiftPressed ? 0.0 : -1.0
+                    }
+                },
+                Axis {
+                    id: keyboardTiltAxis
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_R]
+                        scale: d.shiftPressed ? 0.0 : 1.0
+                    }
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_F]
                         scale: d.shiftPressed ? 0.0 : -1.0
                     }
                 },
@@ -169,6 +196,15 @@ Entity {
         },
         FrameAction {
             property real timeSinceLastAction: 0.0
+
+            function tiltAboutViewCenterWithLimits(tiltChange) {
+                root.camera.tiltAboutViewCenter(tiltChange)
+                if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
+                    root.camera.tiltAboutViewCenter(-tiltChange)
+//                    d.firstPersonUp = d.firstPersonUp.times(-1.0) // TODO consider doing this instead?
+                }
+            }
+
             onTriggered: {
                 if(!root.enabled) {
                     return
@@ -177,13 +213,22 @@ Entity {
                     pressed()
                 }
 
-                var speed = moveSpeed * (shiftAction.active ? 5.0 : 1.0)
-                root.camera.translate(Qt.vector3d(keyboardXAxis.value*speed, 0.0, keyboardYAxis.value*speed))
-                if(root.mode === "trackball") {
-                    root.camera.viewCenter = viewCenter
+                var flymodeFinalSpeed = flymodeSpeed * (shiftAction.active ? 5.0 : 1.0)
+                var trackballFinalSpeed = trackballSpeed * (shiftAction.active ? 5.0 : 1.0)
+                if(root.mode === "flymode") {
+                    root.camera.translate(Qt.vector3d(keyboardXAxis.value*flymodeFinalSpeed, 0.0, keyboardYAxis.value*flymodeFinalSpeed))
+                } else {
+                    root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
+                    tiltAboutViewCenterWithLimits(keyboardTiltAxis.value * trackballFinalSpeed)
+
+                    root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * flymodeFinalSpeed), Camera.DontTranslateViewCenter);
                 }
-                root.camera.roll(rollAxis.value*speed);
-                d.firstPersonUp = root.camera.upVector
+
+                // TODO Implement roll, see below
+//                if(Math.abs(rollAxis.value) > 0.0) {
+//                    root.camera.roll(rollAxis.value*flymodeFinalSpeed)
+//                    d.firstPersonUp = root.camera.upVector
+//                }
 
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt
@@ -198,7 +243,7 @@ Entity {
                         return
                     }
                     root.camera.panAboutViewCenter(-mouseXAxis.value * lookSpeed, d.firstPersonUp);
-                    root.camera.tiltAboutViewCenter(-mouseYAxis.value * lookSpeed);
+                    tiltAboutViewCenterWithLimits(-mouseYAxis.value * lookSpeed);
                 } else if(middleMouseButtonAction.active) {
                     if(timeSinceLastAction > 0.1) {
                         timeSinceLastAction = 0

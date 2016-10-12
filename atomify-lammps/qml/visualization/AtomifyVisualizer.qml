@@ -82,23 +82,18 @@ Scene3D {
             aspectRatio: root.width / root.height
             nearPlane : root.renderMode === "forward" ? 1.0 : 3.0
             farPlane : root.renderMode === "forward" ? 10000.0 : 300.0
-            position: Qt.vector3d(7.0, 7.0, 50.0)
+            position: Qt.vector3d(0.0, 0.0, 50.0) // do not change without taking upvector into account
+            viewCenter: Qt.vector3d(0, 0, 0) // do not change without taking upvector into account
             upVector: Qt.vector3d(0.0, 1.0, 0.0)
-            viewCenter: Qt.vector3d(7.0, 7.0, 7.0)
             onPositionChanged: {
                 if(simulator != undefined) {
                     simulator.system.cameraPosition = position
                 }
             }
-        }
-
-        KeyboardDevice {
-            id: keyboardDevice
-        }
-
-        MouseDevice {
-            id: mouseDevice
-            sensitivity: 0.01
+            Component.onCompleted: {
+                mainCamera.panAboutViewCenter(40, Qt.vector3d(0, 1, 0))
+                mainCamera.tiltAboutViewCenter(30)
+            }
         }
 
         MouseHandler {
@@ -116,9 +111,7 @@ Scene3D {
             }
         }
 
-        TrackballController {
-            mouseSourceDevice: mouseDevice
-            keyboardSourceDevice: keyboardDevice
+        DesktopController {
             camera: visualizer.camera
         }
 
