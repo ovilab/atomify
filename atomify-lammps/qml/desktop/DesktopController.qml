@@ -4,12 +4,15 @@ import Qt3D.Render 2.0
 import Qt3D.Input 2.0
 import Qt3D.Logic 2.0
 import QtQml 2.2
+import Atomify 1.0
 
 Entity {
     id: root
     signal pressed
-
+    property MouseMover mouseMover
+    property var rootItem
     property Camera camera
+    property real flymodeRotationSpeed: 1
     property real linearSpeed: 40.0
     property real lookSpeed: 500.0
     property real zoomSpeed: 20.0
@@ -24,6 +27,17 @@ Entity {
         }
     }
 
+    function getGlobalPosition(p, item) {
+        var globalX = p.x
+        var globalY = p.y
+        while(item.parent != undefined) {
+            globalX = globalX + item.x
+            globalY = globalY + item.y
+            item = item.parent
+        }
+        return Qt.point(globalX, globalY)
+    }
+
     Shortcut {
         //TODO: use keyboard input instead
         sequence: "Shift+F"
@@ -31,9 +45,11 @@ Entity {
         onActivated: {
             if(root.mode === "flymode") {
                 console.log("Switching mode to trackball")
+                mouseMover.showCursor = true
                 root.mode = "trackball"
             } else {
                 console.log("Switching mode to flymode")
+                mouseMover.showCursor = false
                 root.mode = "flymode"
             }
         }
@@ -52,7 +68,16 @@ Entity {
     MouseHandler {
         id: mouseHandler
         sourceDevice: mouseSourceDevice
+        property bool resettingMousePosition: false
+        property int centerPointX: rootItem.width*0.5
+        property int centerPointY: rootItem.height*0.5
+        property var lastX: -1
+        property var lastY: -1
+
         onWheel: {
+            if(mode === "flymode") {
+                return
+            }
             var scale = 1 - wheel.angleDelta.y / 1000
             if(1.0 - scale > 0.1) {
                 scale = 0.9
@@ -69,6 +94,25 @@ Entity {
 
             camera.position = newPos //TODO: translate?
         }
+
+        onPositionChanged: {
+            if(mode==="trackball") return
+
+            var midPoint = getGlobalPosition(Qt.point(rootItem.width*0.5, rootItem.height*0.5), rootItem)
+            var deltaX = mouse.x - centerPointX
+            var deltaY = mouse.y - centerPointY
+
+            if(deltaX == 0 && deltaY == 0) {
+                flymodeRotationSpeed = 1
+            } else {
+                flymodeRotationSpeed = flymodeRotationSpeed*1.1
+                flymodeRotationSpeed = Math.min(2.0, flymodeRotationSpeed)
+            }
+
+            root.camera.pan(deltaX/20 * flymodeRotationSpeed, d.firstPersonUp)
+            root.camera.tilt(-deltaY/20 * flymodeRotationSpeed)
+            root.mouseMover.move(midPoint.x, midPoint.y)
+        }
     }
 
     KeyboardDevice {
@@ -77,6 +121,7 @@ Entity {
 
     MouseDevice {
         id: mouseSourceDevice
+
         sensitivity: 0.001
     }
 
@@ -233,6 +278,7 @@ Entity {
                 if(!root.enabled) {
                     return
                 }
+
                 if(leftMouseButtonAction.active) {
                     pressed()
                 }

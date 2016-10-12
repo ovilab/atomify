@@ -68,6 +68,10 @@ QQC1.ApplicationWindow {
     MainDesktop {
         id: mainDesktop
         anchors.fill: parent
+        mouseMover: MouseMover {
+            id: mouseMover
+            window: applicationRoot
+        }
     }
 
     Shortcut {
