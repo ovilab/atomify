@@ -95,21 +95,6 @@ Scene3D {
             }
         }
 
-        MouseHandler {
-            id: mouseHandler
-            sourceDevice: mouseDevice
-            onWheel: {
-                var scale = 1 - wheel.angleDelta.y / 1000
-                if(1.0 - scale > 0.1) {
-                    scale = 0.9
-                } else if(scale - 1.0 > 0.1) {
-                    scale = 1.1
-                }
-
-                visualizer.camera.position = visualizer.camera.viewCenter.minus(visualizer.camera.viewVector.times(scale))
-            }
-        }
-
         DesktopController {
             camera: visualizer.camera
         }

@@ -47,6 +47,21 @@ Entity {
         return u.x + u.y + u.z;
     }
 
+    MouseHandler {
+        id: mouseHandler
+        sourceDevice: mouseSourceDevice
+        onWheel: {
+            var scale = 1 - wheel.angleDelta.y / 1000
+            if(1.0 - scale > 0.1) {
+                scale = 0.9
+            } else if(scale - 1.0 > 0.1) {
+                scale = 1.1
+            }
+
+            camera.position = camera.viewCenter.minus(camera.viewVector.times(scale))
+        }
+    }
+
     KeyboardDevice {
         id: keyboardSourceDevice
     }
