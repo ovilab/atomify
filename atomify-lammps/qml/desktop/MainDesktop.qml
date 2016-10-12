@@ -17,7 +17,6 @@ Item {
     property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
-    property alias mouseMover: visualizer.mouseMover
     property bool focusMode: false
 
     Component.onCompleted: {
@@ -64,18 +63,17 @@ Item {
                 Layout.minimumWidth: 1
                 AtomifyVisualizer {
                     id: visualizer
-                    rootItem: visualizerItem
                     anchors.fill: parent
                     focus: true
-//                    ambientOcclusion.radius: radiusSlider.value
-//                    ambientOcclusion.samples: samplesSlider.value
-//                    ambientOcclusion.noiseScale: noiseScaleSlider.value
-//                    ambientOcclusion.mode: ssaoMode.currentText
+                    ambientOcclusion.radius: radiusSlider.value
+                    ambientOcclusion.samples: samplesSlider.value
+                    ambientOcclusion.noiseScale: noiseScaleSlider.value
+                    ambientOcclusion.mode: ssaoMode.currentText
                     sphereScale: sphereScalingSlider.value
                     bondRadius: bondRadiusSlider.value
-//                    periodicImages.numberOfCopiesX: periodicXSlider.value
-//                    periodicImages.numberOfCopiesY: periodicYSlider.value
-//                    periodicImages.numberOfCopiesZ: periodicZSlider.value
+                    periodicImages.numberOfCopiesX: periodicXSlider.value
+                    periodicImages.numberOfCopiesY: periodicYSlider.value
+                    periodicImages.numberOfCopiesZ: periodicZSlider.value
                 }
 
                 WelcomeOverlay {
