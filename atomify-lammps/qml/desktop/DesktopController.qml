@@ -25,13 +25,15 @@ Entity {
     }
 
     Shortcut {
-        sequence: "Ctrl+M"
+        //TODO: use keyboard input instead
+        sequence: "Shift+F"
         context: Qt.ApplicationShortcut
         onActivated: {
-            console.log("Switching mode")
             if(root.mode === "flymode") {
+                console.log("Switching mode to trackball")
                 root.mode = "trackball"
             } else {
+                console.log("Switching mode to flymode")
                 root.mode = "flymode"
             }
         }
@@ -58,7 +60,14 @@ Entity {
                 scale = 1.1
             }
 
-            camera.position = camera.viewCenter.minus(camera.viewVector.times(scale))
+            var newPos = camera.viewCenter.minus(camera.viewVector.times(scale))
+            if(newPos.minus(camera.viewCenter).length() < 1) {
+                newPos = newPos.normalized()
+            } else if(newPos.minus(camera.viewCenter).length() > 1e6) {
+                return;
+            }
+
+            camera.position = newPos //TODO: translate?
         }
     }
 
@@ -235,6 +244,18 @@ Entity {
                 } else {
                     root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
                     tiltAboutViewCenterWithLimits(keyboardTiltAxis.value * trackballFinalSpeed)
+
+//                    var translationLength = keyboardYAxis.value * flymodeFinalSpeed
+//                    var vvl = camera.position.minus(camera.viewCenter).length()
+//                    // camera.viewVector.length()
+//                    console.log("keyboardYAxis.value: ", keyboardYAxis.value)
+//                    console.log("flymodeFinalSpeed: ", flymodeFinalSpeed)
+//                    console.log("vvl: ", vvl)
+//                    console.log("vvl - translationLength: ", vvl - translationLength)
+//                    if(vvl - translationLength < 1.0) {
+//                        translationLength = camera.viewVector.length() - 1.0
+//                    }
+//                    console.log("TL: ", translationLength)
 
                     root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * flymodeFinalSpeed), Camera.DontTranslateViewCenter);
                 }
