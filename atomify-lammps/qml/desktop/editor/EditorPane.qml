@@ -15,10 +15,8 @@ Pane {
         consoleOutput.onLinkActivated.connect(function(link){
             var params = editorWindow.currentEditor.getParameters(link)
             var errorLine = params["errorLine"]
-            console.log("Link before: ", link)
             link = editorWindow.dummyEditor.cleanPath(link)
-            console.log("Link after: ", link)
-            editorWindow.codeEditorWindow.openTab(link, errorLine)
+            editorWindow.openTab(link, errorLine)
         })
     }
 
