@@ -21,7 +21,9 @@ Scene3D {
     signal changedRenderQuality
     property alias rootItem: controller.rootItem
     property alias mouseMover: controller.mouseMover
+    property bool focusMode
     property alias visualizer: visualizer
+    property alias controller: controller
     property alias simulator: simulator
     property alias light1: light1
     property alias light2: light2
@@ -41,6 +43,13 @@ Scene3D {
         text: "Render quality will be changed when the application is restarted."
     }
     hoverEnabled: controller.mode==="flymode"
+    onFocusModeChanged: {
+        if(focusMode) {
+            controller.mode = "flymode"
+        } else {
+            controller.mode = "trackball"
+        }
+    }
 
     multisample: true
     onRenderQualityChanged: {

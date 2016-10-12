@@ -67,6 +67,7 @@ Item {
                     rootItem: visualizerItem
                     anchors.fill: parent
                     focus: true
+                    focusMode: root.focusMode
                     ambientOcclusion.radius: radiusSlider.value
                     ambientOcclusion.samples: samplesSlider.value
                     ambientOcclusion.noiseScale: noiseScaleSlider.value
