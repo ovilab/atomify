@@ -15,7 +15,6 @@ import SimVis 1.0
 import ShaderNodes 1.0
 
 import "../desktop" // TODO should be separate controllers for desktop and mobile
-import "../desktop/controllers"
 
 Scene3D {
     id: root
