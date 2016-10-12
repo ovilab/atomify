@@ -58,9 +58,6 @@
         <file>desktop/Examples.qml</file>
         <file>plotting/Plot2D.qml</file>
         <file>plotting/ColorMaps.qml</file>
-        <file>desktop/controllers/OrbitCameraController.qml</file>
-        <file>desktop/controllers/FirstPersonCameraController.qml</file>
-        <file>desktop/controllers/TrackballController.qml</file>
         <file>desktop/WelcomeOverlay.qml</file>
     </qresource>
 </RCC>
