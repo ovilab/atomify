@@ -21,6 +21,13 @@ Entity {
     property real trackballSpeed: 1.0
     property vector3d viewCenter: Qt.vector3d(0,0,0)
     property string mode: "trackball"
+    onModeChanged: {
+        mouseMover.showCursor = mode==="trackball"
+        if(mode === "trackball") {
+            viewCenter = root.camera.viewCenter
+        }
+    }
+
     property bool active: shiftAction.active ||
                           leftMouseButtonAction.active ||
                           rightMouseButtonAction.active ||
@@ -29,12 +36,6 @@ Entity {
                           Math.abs(keyboardYAxis.value) > 0 ||
                           Math.abs(keyboardZAxis.value) > 0 ||
                           Math.abs(keyboardTiltAxis.value) > 0
-
-    onModeChanged: {
-        if(mode === "trackball") {
-            viewCenter = root.camera.viewCenter
-        }
-    }
 
     function getGlobalPosition(p, item) {
         var globalX = p.x
@@ -54,11 +55,9 @@ Entity {
         onActivated: {
             if(root.mode === "flymode") {
                 console.log("Switching mode to trackball")
-                mouseMover.showCursor = true
                 root.mode = "trackball"
             } else {
                 console.log("Switching mode to flymode")
-                mouseMover.showCursor = false
                 root.mode = "flymode"
             }
         }

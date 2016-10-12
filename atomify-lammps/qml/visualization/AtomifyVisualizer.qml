@@ -23,6 +23,7 @@ Scene3D {
     property alias mouseMover: controller.mouseMover
     property bool focusMode
     property alias visualizer: visualizer
+    property alias controller: controller
     property alias simulator: simulator
     property alias light1: light1
     property alias light2: light2
