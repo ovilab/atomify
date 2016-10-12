@@ -17,6 +17,7 @@ Item {
     property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
+    property alias mouseMover: visualizer.mouseMover
     property bool focusMode: false
 
     Component.onCompleted: {
@@ -63,6 +64,7 @@ Item {
                 Layout.minimumWidth: 1
                 AtomifyVisualizer {
                     id: visualizer
+                    rootItem: visualizerItem
                     anchors.fill: parent
                     focus: true
 //                    ambientOcclusion.radius: radiusSlider.value

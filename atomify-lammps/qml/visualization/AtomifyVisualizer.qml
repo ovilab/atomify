@@ -19,6 +19,8 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Scene3D {
     id: root
     signal changedRenderQuality
+    property alias rootItem: controller.rootItem
+    property alias mouseMover: controller.mouseMover
     property alias visualizer: visualizer
     property alias simulator: simulator
     property alias light1: light1
@@ -38,6 +40,7 @@ Scene3D {
     property MessageDialog dialog: MessageDialog {
         text: "Render quality will be changed when the application is restarted."
     }
+    hoverEnabled: controller.mode==="flymode"
 
     multisample: true
     onRenderQualityChanged: {
