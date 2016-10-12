@@ -81,21 +81,22 @@ Scene3D {
             aspectRatio: root.width / root.height
             nearPlane : root.renderMode === "forward" ? 1.0 : 3.0
             farPlane : root.renderMode === "forward" ? 10000.0 : 300.0
-            position: Qt.vector3d(0.0, 0.0, 50.0) // do not change without taking upvector into account
+            position: Qt.vector3d(0.0, 50.0, 0.0) // do not change without taking upvector into account
             viewCenter: Qt.vector3d(0, 0, 0) // do not change without taking upvector into account
-            upVector: Qt.vector3d(0.0, 1.0, 0.0)
+            upVector: Qt.vector3d(0.0, 0.0, 1.0)
             onPositionChanged: {
                 if(simulator != undefined) {
                     simulator.system.cameraPosition = position
                 }
             }
             Component.onCompleted: {
-                mainCamera.panAboutViewCenter(40, Qt.vector3d(0, 1, 0))
+                mainCamera.panAboutViewCenter(40, Qt.vector3d(0, 0, 1))
                 mainCamera.tiltAboutViewCenter(30)
             }
         }
 
         DesktopController {
+            id: controller
             camera: visualizer.camera
         }
 
@@ -777,6 +778,50 @@ void main()
                                     posMin: spheres.posMin
                                     posMax: spheres.posMax
                                     fragmentColor: bondsMediumQuality
+                                }
+
+                                Entity {
+                                    enabled: controller.active
+                                    components: [
+                                        CylinderMesh {},
+                                        ShaderBuilderMaterial {
+                                            fragmentColor: "red"
+                                        },
+                                        Transform {
+                                            translation: visualizer.camera.viewCenter
+                                            scale3D: Qt.vector3d(0.51, 1000, 0.51)
+                                            rotationZ: 90
+                                        }
+                                    ]
+                                }
+
+                                Entity {
+                                    enabled: controller.active
+                                    components: [
+                                        CylinderMesh {},
+                                        ShaderBuilderMaterial {
+                                            fragmentColor: "green"
+                                        },
+                                        Transform {
+                                            translation: visualizer.camera.viewCenter
+                                            scale3D: Qt.vector3d(0.52, 1000, 0.52)
+                                        }
+                                    ]
+                                }
+
+                                Entity {
+                                    enabled: controller.active
+                                    components: [
+                                        CylinderMesh {},
+                                        ShaderBuilderMaterial {
+                                            fragmentColor: "blue"
+                                        },
+                                        Transform {
+                                            translation: visualizer.camera.viewCenter
+                                            scale3D: Qt.vector3d(0.53, 1000, 0.53)
+                                            rotationX: 90
+                                        }
+                                    ]
                                 }
                             }
                         }

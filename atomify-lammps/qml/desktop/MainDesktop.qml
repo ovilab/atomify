@@ -65,15 +65,15 @@ Item {
                     id: visualizer
                     anchors.fill: parent
                     focus: true
-                    ambientOcclusion.radius: radiusSlider.value
-                    ambientOcclusion.samples: samplesSlider.value
-                    ambientOcclusion.noiseScale: noiseScaleSlider.value
-                    ambientOcclusion.mode: ssaoMode.currentText
+//                    ambientOcclusion.radius: radiusSlider.value
+//                    ambientOcclusion.samples: samplesSlider.value
+//                    ambientOcclusion.noiseScale: noiseScaleSlider.value
+//                    ambientOcclusion.mode: ssaoMode.currentText
                     sphereScale: sphereScalingSlider.value
                     bondRadius: bondRadiusSlider.value
-                    periodicImages.numberOfCopiesX: periodicXSlider.value
-                    periodicImages.numberOfCopiesY: periodicYSlider.value
-                    periodicImages.numberOfCopiesZ: periodicZSlider.value
+//                    periodicImages.numberOfCopiesX: periodicXSlider.value
+//                    periodicImages.numberOfCopiesY: periodicYSlider.value
+//                    periodicImages.numberOfCopiesZ: periodicZSlider.value
                 }
 
                 WelcomeOverlay {

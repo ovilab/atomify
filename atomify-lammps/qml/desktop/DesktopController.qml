@@ -18,6 +18,15 @@ Entity {
     property real trackballSpeed: 1.0
     property vector3d viewCenter: Qt.vector3d(0,0,0)
     property string mode: "trackball"
+    property bool active: shiftAction.active ||
+                          leftMouseButtonAction.active ||
+                          rightMouseButtonAction.active ||
+                          middleMouseButtonAction.active ||
+                          Math.abs(keyboardXAxis.value) > 0 ||
+                          Math.abs(keyboardYAxis.value) > 0 ||
+                          Math.abs(keyboardZAxis.value) > 0 ||
+                          Math.abs(keyboardTiltAxis.value) > 0
+
     onModeChanged: {
         if(mode === "trackball") {
             viewCenter = root.camera.viewCenter
@@ -39,7 +48,7 @@ Entity {
 
     QtObject {
         id: d
-        property vector3d firstPersonUp: Qt.vector3d(0, 1, 0)
+        property vector3d firstPersonUp: Qt.vector3d(0, 0, 1)
     }
 
     function zoomDistance(firstPoint, secondPoint) {
