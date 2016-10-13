@@ -60,9 +60,7 @@ public:
     class System* system() const;
     LammpsError* lammpsError() const;
     bool automaticallyRun() const;
-
     bool hasActiveSimulation() const;
-
     bool scriptFinished() const;
 
 public slots:
@@ -73,9 +71,7 @@ public slots:
     void setSystem(class System* system);
     void setLammpsError(LammpsError* lammpsError);
     void setAutomaticallyRun(bool automaticallyRun);
-
     void setHasActiveSimulation(bool hasActiveSimulation);
-
     void setScriptFinished(bool scriptFinished);
 
 signals:
@@ -106,6 +102,7 @@ private:
     bool m_automaticallyRun = false;
     bool m_hasActiveSimulation = false;
     bool m_scriptFinished = false;
+    float m_distanceToNearestAtom = 0;
 };
 
 #endif // MYSIMULATOR_H

@@ -575,6 +575,8 @@ void main()
                                             StandardMaterial {
                                                 id: standardMaterial
                                                 color: finalShaderBuilder.color
+                                                attenuationOffset: 0 //root.simulator.distanceToNearestAtom // TODO: fix flimring
+
                                                 lights: [
                                                     light1,
                                                     light2
@@ -728,6 +730,7 @@ void main()
                                 StandardMaterial {
                                     id: spheresMediumQuality
                                     color: spheres.fragmentBuilder.color
+                                    attenuationOffset: 0 //root.simulator.distanceToNearestAtom // TODO: fix flimring
                                     lights: [
                                         light1,
                                         light2
@@ -739,7 +742,7 @@ void main()
                                                            visualizer.camera.upVector.normalized()).plus(
                                                            visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
                                         strength: 0.5
-                                        attenuation: 0.0
+                                        attenuation: 0.1
                                     }
                                     Light {
                                         id: light2
@@ -748,7 +751,7 @@ void main()
                                                            visualizer.camera.upVector.normalized()).plus(
                                                            visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
                                         strength: 0.5
-                                        attenuation: 0.0
+                                        attenuation: 2.0
                                     }
                                 }
 

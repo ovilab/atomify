@@ -181,6 +181,7 @@ void Atoms::synchronizeRenderer() {
 
 void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
+
     for(int i = 0; i<atomData.size(); i++) {
         if(atomData.visible[i]) {
             atomData.positions[visibleAtomCount] = atomData.positions[i] + atomData.deltaPositions[i];

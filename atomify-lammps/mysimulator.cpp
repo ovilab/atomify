@@ -145,6 +145,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
+
     // atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
 
     if(m_lammpsController.crashed()) return;
