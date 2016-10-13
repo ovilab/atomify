@@ -22,6 +22,10 @@ Entity {
     property vector3d viewCenter: Qt.vector3d(0,0,0)
     property string mode: "trackball"
     onModeChanged: {
+        if(mode==="flymode") {
+            centerMouse()
+        }
+
         mouseMover.showCursor = mode==="trackball"
         if(mode === "trackball") {
             viewCenter = root.camera.viewCenter
@@ -73,6 +77,11 @@ Entity {
         return u.x + u.y + u.z;
     }
 
+    function centerMouse() {
+        var midPoint = getGlobalPosition(Qt.point(rootItem.width*0.5, rootItem.height*0.5), rootItem)
+        root.mouseMover.move(midPoint.x, midPoint.y)
+    }
+
     MouseHandler {
         id: mouseHandler
         sourceDevice: mouseSourceDevice
@@ -106,7 +115,6 @@ Entity {
         onPositionChanged: {
             if(mode==="trackball") return
 
-            var midPoint = getGlobalPosition(Qt.point(rootItem.width*0.5, rootItem.height*0.5), rootItem)
             var deltaX = mouse.x - centerPointX
             var deltaY = mouse.y - centerPointY
 
@@ -119,7 +127,7 @@ Entity {
 
             root.camera.pan(deltaX/20 * flymodeRotationSpeed, d.firstPersonUp)
             root.camera.tilt(-deltaY/20 * flymodeRotationSpeed)
-            root.mouseMover.move(midPoint.x, midPoint.y)
+            centerMouse()
         }
     }
 
