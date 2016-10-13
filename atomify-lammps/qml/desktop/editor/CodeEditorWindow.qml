@@ -52,6 +52,11 @@ Item {
     }
 
     Component.onCompleted: {
+        if(openFiles==="") {
+            // First time app opens, this is an empty string which doesn't parse as array
+            openFiles = "[]"
+        }
+
         var files = JSON.parse(openFiles)
 
         var numOpenFiles = 0
