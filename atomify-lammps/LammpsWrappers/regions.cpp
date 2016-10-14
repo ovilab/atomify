@@ -5,6 +5,7 @@
 #include <region.h>
 #include <group.h>
 #include <atom.h>
+#include <update.h>
 
 Regions::Regions(AtomifySimulator *simulator)
 {
@@ -189,6 +190,7 @@ void CPRegion::update(LAMMPS *lammps)
     setCount(lammps->group->count(0,index));
     if(hovered() || !visible()) {
         m_containsAtom.resize(lammps->atom->natoms);
+        lammps->update->whichflag = 1;
         for(int atomIndex=0; atomIndex<lammps->atom->natoms; atomIndex++) {
             double r[3];
             r[0] = lammps->atom->x[atomIndex][0];
@@ -199,6 +201,7 @@ void CPRegion::update(LAMMPS *lammps)
             bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
             m_containsAtom[atomIndex] = isInsideRegion;
         }
+        lammps->update->whichflag = 0;
     }
 }
 
