@@ -20,7 +20,7 @@ States::States(QObject *parent) : QObject(parent),
     m_paused->setObjectName("Paused");
     m_reset->setObjectName("Reset");
     m_unPaused->setObjectName("Unpaused");
-    m_list << QVariant::fromValue(m_idle) << QVariant::fromValue(m_crashed) << QVariant::fromValue(m_finished) << QVariant::fromValue(m_parsing) << QVariant::fromValue(m_continued) << QVariant::fromValue(m_paused);
+    m_list << QVariant::fromValue(m_idle) << QVariant::fromValue(m_crashed) << QVariant::fromValue(m_finished) << QVariant::fromValue(m_parsing) << QVariant::fromValue(m_continued) << QVariant::fromValue(m_paused) << QVariant::fromValue(m_reset);
 }
 
 void States::setupStates(AtomifySimulator &simulator)
