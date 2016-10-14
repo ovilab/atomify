@@ -19,6 +19,7 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Scene3D {
     id: root
     signal changedRenderQuality
+    property bool guidesVisible
     property alias rootItem: controller.rootItem
     property alias mouseMover: controller.mouseMover
     property bool focusMode
@@ -258,7 +259,7 @@ Scene3D {
         }
 
         Entity {
-            enabled: controller.active
+            enabled: root.guidesVisible
             components: [
                 CylinderMesh {},
                 ShaderBuilderMaterial {
@@ -273,7 +274,7 @@ Scene3D {
         }
 
         Entity {
-            enabled: controller.active
+            enabled: root.guidesVisible
             components: [
                 CylinderMesh {},
                 ShaderBuilderMaterial {
@@ -287,7 +288,7 @@ Scene3D {
         }
 
         Entity {
-            enabled: controller.active
+            enabled: root.guidesVisible
             components: [
                 CylinderMesh {},
                 ShaderBuilderMaterial {

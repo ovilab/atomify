@@ -24,6 +24,28 @@ Pane {
         }
         spacing: 10
 
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "Interface"
+
+            CheckBox {
+                id: guidesCheckBox
+                text: "Show guides"
+                checked: visualizer.guidesVisible
+                Binding {
+                    target: visualizer
+                    property: "guidesVisible"
+                    value: guidesCheckBox.checked
+                }
+            }
+
+        }
+
         GroupBox {
             width: parent.width
             title: "Light 1"
