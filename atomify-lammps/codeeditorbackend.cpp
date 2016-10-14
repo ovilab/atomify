@@ -102,7 +102,6 @@ bool CodeEditorBackend::load()
         return false;
     }
     QByteArray content = file.readAll();
-    qDebug() << "Content in file " << fileName() << ": " << content;
     setText(QString::fromUtf8(content.constData(), content.length()));
 
     file.close();
