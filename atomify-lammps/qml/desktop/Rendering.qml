@@ -33,6 +33,7 @@ Pane {
                     id: guidesCheckBox
                     text: "Show guides"
                     checked: visualizer.guidesVisible
+                    focusPolicy: Qt.NoFocus
                     Binding {
                         target: visualizer
                         property: "guidesVisible"
@@ -44,6 +45,7 @@ Pane {
                     id: outlineCheckBox
                     text: "Show outline"
                     checked: visualizer.systemBoxVisible
+                    focusPolicy: Qt.NoFocus
                     Binding {
                         target: visualizer
                         property: "systemBoxVisible"
