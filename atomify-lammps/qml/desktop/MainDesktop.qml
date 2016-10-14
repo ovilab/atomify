@@ -7,7 +7,6 @@ import QtGraphicalEffects 1.0
 import Atomify 1.0
 import SimVis 1.0
 import Qt.labs.settings 1.0
-import "overlays"
 import "../visualization"
 import "editor"
 import "../plotting"
@@ -88,7 +87,9 @@ Item {
                     focusMode: root.focusMode
                 }
 
-                Rectangle {
+
+
+                MessageOverlay {
                     id: overlays
                     anchors {
                         left: parent.left
@@ -100,29 +101,13 @@ Item {
                     visible: simulator.states.idle.active || simulator.states.finished.active
                     height: parent.height*0.2
                     y: parent.height*0.2
-                    radius: 2
-                    border.color: "white"
-                    border.width: 1
-                    color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
 
-                    WelcomeOverlay {
-                        id: welcomeOverlay
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        visible: simulator.states.idle.active
-                        onNewTabClicked: editor.editorWindow.newTab()
-                        onExamplesClicked: rightbar.showExamples()
-                    }
-
-                    MessageOverlay {
-                        id: messageOverlay
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        visible: simulator.states.finished.active
-                        onContinueClicked: simulator.continued()
-                    }
+                    welcome: simulator.states.idle.active
+                    finished: simulator.states.finished.active
+                    onContinueClicked: simulator.continued()
+                    onNewTabClicked: editor.editorWindow.newTab()
+                    onExamplesClicked: rightbar.showExamples()
                 }
-
 
                 ControlBar {
                     id: controlBar1

@@ -23,7 +23,8 @@ Entity {
     property var spheres
     property real width
     property real height
-    
+    property real farPlane
+    property real nearPlane
     Material {
         id: blurMaterial
         parameters : [

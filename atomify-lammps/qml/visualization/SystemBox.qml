@@ -28,7 +28,6 @@ Entity {
         var added = Qt.vector3d(0.3, 0.3, 0.3)
         added[direction] = 0
         var result = size.times(dir).plus(added)
-        console.log("Scale", dir, result)
         return result
     }
     
@@ -48,7 +47,6 @@ Entity {
             break
         }
         var scaled = size.times(indexVector)
-        console.log("Translation", indexVector, scaled)
         return scaled
     }
     

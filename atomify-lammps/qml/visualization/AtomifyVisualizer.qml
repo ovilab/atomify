@@ -184,6 +184,8 @@ Scene3D {
             id: blurQuadEntity
             deferredFrameGraph: deferredFrameGraph
             spheres: spheres
+            farPlane: visualizer.camera.farPlane
+            nearPlane: visualizer.camera.nearPlane
             width: root.width
             height: root.height
         }
