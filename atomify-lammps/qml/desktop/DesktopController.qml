@@ -295,7 +295,7 @@ Entity {
                     return
                 }
 
-                if(leftMouseButtonAction.active) {
+                if(leftMouseButtonAction.active || rightMouseButtonAction.active) {
                     pressed()
                 }
 

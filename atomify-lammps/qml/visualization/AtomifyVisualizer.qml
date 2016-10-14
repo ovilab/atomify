@@ -110,6 +110,7 @@ Scene3D {
         DesktopController {
             id: controller
             camera: visualizer.camera
+            onPressed: root.focus = true
         }
 
 
