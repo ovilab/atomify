@@ -32,14 +32,15 @@ Entity {
         }
     }
 
-    property bool active: shiftAction.active ||
+    property bool active: !(mode==="flymode") && (
+                          shiftAction.active ||
                           leftMouseButtonAction.active ||
                           rightMouseButtonAction.active ||
                           middleMouseButtonAction.active ||
                           Math.abs(keyboardXAxis.value) > 0 ||
                           Math.abs(keyboardYAxis.value) > 0 ||
                           Math.abs(keyboardZAxis.value) > 0 ||
-                          Math.abs(keyboardTiltAxis.value) > 0
+                          Math.abs(keyboardTiltAxis.value) > 0)
 
     function getGlobalPosition(p, item) {
         var globalX = p.x
