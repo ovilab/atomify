@@ -6,7 +6,7 @@
 #include <group.h>
 #include <atom.h>
 #include <update.h>
-
+#include <error.h>
 Regions::Regions(AtomifySimulator *simulator)
 {
     Q_UNUSED(simulator)
@@ -187,21 +187,26 @@ void CPRegion::update(LAMMPS *lammps)
     if(index < 0) return; // Should really not happen, but crash is bad :p
 
     Region *region = lammps->domain->regions[index];
-    setCount(lammps->group->count(0,index));
-    if(hovered() || !visible()) {
-        m_containsAtom.resize(lammps->atom->natoms);
-        lammps->update->whichflag = 1;
-        for(int atomIndex=0; atomIndex<lammps->atom->natoms; atomIndex++) {
-            double r[3];
-            r[0] = lammps->atom->x[atomIndex][0];
-            r[1] = lammps->atom->x[atomIndex][1];
-            r[2] = lammps->atom->x[atomIndex][2];
-            lammps->domain->remap(r);
+    lammps->update->whichflag = 1; // HACK. This tells lammps we're doing dynamics so we can compute values in there.
+    try {
+        setCount(lammps->group->count(0,index));
+        if(hovered() || !visible()) {
+            m_containsAtom.resize(lammps->atom->natoms);
+            for(int atomIndex=0; atomIndex<lammps->atom->natoms; atomIndex++) {
+                double r[3];
+                r[0] = lammps->atom->x[atomIndex][0];
+                r[1] = lammps->atom->x[atomIndex][1];
+                r[2] = lammps->atom->x[atomIndex][2];
+                lammps->domain->remap(r);
 
-            bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
-            m_containsAtom[atomIndex] = isInsideRegion;
+                bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
+                m_containsAtom[atomIndex] = isInsideRegion;
+            }
+            lammps->update->whichflag = 0;
         }
-        lammps->update->whichflag = 0;
+    } catch( LAMMPS_NS::LAMMPSException(&e) ) {
+        // TODO: use this to report to user that something was wrong
+
     }
 }
 
