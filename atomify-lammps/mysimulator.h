@@ -62,6 +62,7 @@ signals:
     // State changes
     void reset();
     void didReset();
+    void continued();
     void started();
     void crashed();
     void finished();

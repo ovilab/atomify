@@ -22,13 +22,15 @@ Rectangle {
             top: parent.top
             bottom: parent.bottom
         }
-        enabled: simulator.states.parsing.active || simulator.states.continued.active || simulator.states.paused.active
+        enabled: simulator.states.parsing.active || simulator.states.continued.active || simulator.states.paused.active || simulator.states.finished.active
         width: height
         onClicked: {
             if(simulator.states.paused.active) {
                 simulator.unPaused()
-            } else {
+            } else if(simulator.states.continued.active || simulator.states.parsing.active) {
                 simulator.paused()
+            } else if(simulator.states.finished.active) {
+                simulator.continued()
             }
         }
         iconSource: {

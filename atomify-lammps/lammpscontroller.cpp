@@ -316,9 +316,10 @@ void LAMMPSController::reset()
 bool LAMMPSController::tick()
 {
     state.canProcessSimulatorControls = false;
-    if(states->idle()->active() || states->paused()->active() || states->crashed()->active()) {
+    if(states->idle()->active() || states->crashed()->active()) {
         return false;
     }
+    if(states->paused()->active()) return true; // This affects the worker thread sleeping so it doesn't wait 500 ms if you have pressed unpause
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
@@ -332,19 +333,9 @@ bool LAMMPSController::tick()
     ScriptCommand nextCommand = state.nextCommand;
     if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return true;
 
-    if(nextCommand.type() != ScriptCommand::Type::NoCommand) {
-        state.preRunNeeded = true;
-
-        bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
-        if(didProcessCommand) {
-            return true;
-        }
-
-        processCommand(nextCommand.command());
-    } else {
-        // If no commands are queued, just perform a normal run command with the current simulation speed.
-        QElapsedTimer t;
-        t.start();
+    if(nextCommand.type() == ScriptCommand::Type::NoCommand) {
+        // If no commands are queued, but user has pressed play again, do normal run
+        if(!states->continued()->active()) return true;
 
         if(state.preRunNeeded) {
             executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(state.simulationSpeed));
@@ -353,7 +344,16 @@ bool LAMMPSController::tick()
             executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
         }
         state.canProcessSimulatorControls = true;
-        state.timeSpentInLammps += t.elapsed();
+
+    } else {
+        state.preRunNeeded = true;
+
+        bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
+        if(didProcessCommand) {
+            return true;
+        }
+
+        processCommand(nextCommand.command());
     }
 
     state.dataDirty = true;

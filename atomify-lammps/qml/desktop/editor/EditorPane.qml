@@ -67,6 +67,7 @@ Pane {
                     right: parent.right
                 }
                 text: simulator.states.idle.active ? "Run script" : "Stop script"
+                enabled: !simulator.states.reset.active // Waiting to reset...
 
                 onClicked: {
                     if(!simulator.states.idle.active) {
