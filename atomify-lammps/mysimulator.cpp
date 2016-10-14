@@ -80,6 +80,7 @@ States *AtomifySimulator::states() const
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
+
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
 
     QElapsedTimer t; t.start();
@@ -146,6 +147,8 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         QString nextCommand = nextCommandObject.command();
         if(nextCommandObject.type() == ScriptCommand::Type::NoCommand) {
             emit atomifySimulator->finished();
+        } else {
+            emit atomifySimulator->parsing();
         }
 
         if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {

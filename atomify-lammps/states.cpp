@@ -45,9 +45,11 @@ void States::setupStates(AtomifySimulator &simulator)
 
     m_finished->addTransition(&simulator, SIGNAL(continued()), m_continued);
     m_finished->addTransition(&simulator, SIGNAL(reset()), m_reset);
+    m_finished->addTransition(&simulator, SIGNAL(parsing()), m_parsing);
 
     m_continued->addTransition(&simulator, SIGNAL(reset()), m_reset);
     m_continued->addTransition(&simulator, SIGNAL(paused()), m_paused);
+    m_continued->addTransition(&simulator, SIGNAL(parsing()), m_parsing);
 
     m_paused->addTransition(&simulator, SIGNAL(unPaused()), m_unPaused);
     m_paused->addTransition(&simulator, SIGNAL(reset()), m_reset);

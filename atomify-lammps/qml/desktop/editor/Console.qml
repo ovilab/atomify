@@ -61,6 +61,10 @@ ColumnLayout {
                 sequence: "Return"
                 onActivated: {
                     if(singleCommand.text != "") {
+                        if(simulator.states.paused.active) {
+                            simulator.togglePaused()
+                        }
+
                         simulator.scriptHandler.runCommand(singleCommand.text, true)
                         consoleOutput.append(singleCommand.text)
                         singleCommand.text = ""
