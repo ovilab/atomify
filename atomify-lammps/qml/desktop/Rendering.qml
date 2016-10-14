@@ -7,16 +7,6 @@ Pane {
     id: root
     property AtomifyVisualizer visualizer
 
-    onVisualizerChanged: {
-        light1Strength.value = visualizer.light1.strength
-        light1Attenuation.value = visualizer.light1.attenuation
-        light2Strength.value = visualizer.light2.strength
-        light2Attenuation.value = visualizer.light2.attenuation
-        periodicXSlider.value = visualizer.periodicImages.numberOfCopiesX
-        periodicYSlider.value = visualizer.periodicImages.numberOfCopiesY
-        periodicZSlider.value = visualizer.periodicImages.numberOfCopiesZ
-    }
-
     Column {
         anchors {
             fill: parent
@@ -62,8 +52,12 @@ Pane {
                         width: parent.width*0.6
                         minimumValue: 0
                         maximumValue: 1
-                        onValueChanged: {
-                            visualizer.light1.strength = value
+                        value: visualizer.light1.strength
+
+                        Binding {
+                            target: visualizer.light1
+                            property: "strength"
+                            value: light1Strength.value
                         }
                     }
                 }
@@ -79,7 +73,13 @@ Pane {
                         width: parent.width*0.6
                         minimumValue: 0
                         maximumValue: 5
-                        onValueChanged: visualizer.light1.attenuation = value
+                        value: visualizer.light1.attenuation
+
+                        Binding {
+                            target: visualizer.light1
+                            property: "strength"
+                            value: light1Strength.attenuation
+                        }
                     }
                 }
             }
@@ -101,8 +101,12 @@ Pane {
                         width: parent.width*0.6
                         minimumValue: 0
                         maximumValue: 1
-                        onValueChanged: {
-                            visualizer.light2.strength = value
+                        value: visualizer.light2.strength
+
+                        Binding {
+                            target: visualizer.light2
+                            property: "strength"
+                            value: light2Strength.value
                         }
                     }
                 }
@@ -118,7 +122,13 @@ Pane {
                         width: parent.width*0.6
                         minimumValue: 0
                         maximumValue: 5
-                        onValueChanged: visualizer.light2.attenuation = value
+                        value: visualizer.light2.attenuation
+
+                        Binding {
+                            target: visualizer.light2
+                            property: "strength"
+                            value: light2Strength.attenuation
+                        }
                     }
                 }
             }
@@ -141,9 +151,13 @@ Pane {
                         width: parent.width*0.6
                         minimumValue: 1
                         maximumValue: 5.0
-                        value: 1
-                        onValueChanged: visualizer ? visualizer.periodicImages.numberOfCopiesX = value : ""
                         stepSize: 1
+                        value: visualizer.periodicImages.numberOfCopiesX
+                        Binding {
+                            target: visualizer.periodicImages
+                            property: "numberOfCopiesX"
+                            value: periodicXSlider.value
+                        }
                     }
                 }
 
@@ -159,8 +173,13 @@ Pane {
                         width: parent.width*0.6
                         minimumValue: 1
                         maximumValue: 5.0
-                        onValueChanged: visualizer ? visualizer.periodicImages.numberOfCopiesY = value : ""
                         stepSize: 1
+                        value: visualizer.periodicImages.numberOfCopiesY
+                        Binding {
+                            target: visualizer.periodicImages
+                            property: "numberOfCopiesY"
+                            value: periodicYSlider.value
+                        }
                     }
                 }
 
@@ -176,8 +195,13 @@ Pane {
                         width: parent.width*0.6
                         minimumValue: 1
                         maximumValue: 5.0
-                        onValueChanged: visualizer ? visualizer.periodicImages.numberOfCopiesZ = value : ""
                         stepSize: 1
+                        value: visualizer.periodicImages.numberOfCopiesZ
+                        Binding {
+                            target: visualizer.periodicImages
+                            property: "numberOfCopiesZ"
+                            value: periodicZSlider.value
+                        }
                     }
                 }
             }
