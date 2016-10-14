@@ -59,5 +59,8 @@
         <file>plotting/Plot2D.qml</file>
         <file>plotting/ColorMaps.qml</file>
         <file>desktop/WelcomeOverlay.qml</file>
+        <file>visualization/SsaoQuadEntity.qml</file>
+        <file>visualization/BlurQuadEntity.qml</file>
+        <file>visualization/FinalQuadEntity.qml</file>
     </qresource>
 </RCC>
