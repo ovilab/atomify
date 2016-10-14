@@ -61,7 +61,6 @@
         <file>visualization/SsaoQuadEntity.qml</file>
         <file>visualization/BlurQuadEntity.qml</file>
         <file>visualization/FinalQuadEntity.qml</file>
-        <file>desktop/overlays/WelcomeOverlay.qml</file>
-        <file>desktop/overlays/MessageOverlay.qml</file>
+        <file>desktop/MessageOverlay.qml</file>
     </qresource>
 </RCC>
