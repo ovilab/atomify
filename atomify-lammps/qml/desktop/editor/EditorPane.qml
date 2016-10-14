@@ -66,11 +66,20 @@ Pane {
                 anchors {
                     right: parent.right
                 }
-                text: simulator.states.idle.active ? "Run script" : "Stop script"
+                text: {
+                    if(simulator.states.idle.active || simulator.states.finished.active) {
+                        return "Run script"
+                    } else {
+                        return "Stop script"
+                    }
+                }
+
                 enabled: !simulator.states.reset.active // Waiting to reset...
 
                 onClicked: {
-                    if(!simulator.states.idle.active) {
+                    if(simulator.states.finished.active) {
+                        editorWindow.runScript()
+                    } else if(!simulator.states.idle.active) {
                         simulator.reset()
                     } else {
                         editorWindow.runScript()
