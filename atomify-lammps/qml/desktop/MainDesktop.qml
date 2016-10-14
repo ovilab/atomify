@@ -137,6 +137,12 @@ Item {
             onActivated: toggleFocusMode()
         }
         Shortcut {
+            sequence: "Ctrl+I"
+            context: Qt.ApplicationShortcut
+            enabled: !visualizer.focusMode
+            onActivated: editor.editorWindow.currentEditor.textArea.forceActiveFocus()
+        }
+        Shortcut {
             sequence: "+"
             context: Qt.ApplicationShortcut
             onActivated: {
