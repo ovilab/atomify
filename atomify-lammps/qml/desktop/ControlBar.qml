@@ -25,19 +25,13 @@ Rectangle {
         enabled: simulator.states.parsing.active || simulator.states.continued.active || simulator.states.paused.active || simulator.states.finished.active
         width: height
         onClicked: {
-            if(simulator.states.paused.active) {
-                simulator.unPaused()
-            } else if(simulator.states.continued.active || simulator.states.parsing.active) {
-                simulator.paused()
-            } else if(simulator.states.finished.active) {
-                simulator.continued()
-            }
+            simulator.togglePaused()
         }
         iconSource: {
             if(!simulator) {
                 return "qrc:/images/play2.png"
             }
-            if(simulator.states.paused.active || simulator.states.finished.active) {
+            if(simulator.states.paused.active || simulator.states.finished.active || simulator.states.idle.active) {
                 return "qrc:/images/play2.png"
             } else {
                 return "qrc:/images/pause2.png"

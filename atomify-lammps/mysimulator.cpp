@@ -60,6 +60,8 @@ void AtomifySimulator::togglePaused()
         emit unPaused();
     } else if(m_states->parsing()->active() || m_states->continued()->active()) {
         emit paused();
+    } else if(m_states->finished()->active()) {
+        emit continued();
     }
 }
 
