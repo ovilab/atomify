@@ -54,6 +54,15 @@ void AtomifySimulator::clearSimulatorControls()
     }
 }
 
+void AtomifySimulator::togglePaused()
+{
+    if(m_states->paused()->active()) {
+        emit unPaused();
+    } else if(m_states->parsing()->active() || m_states->continued()->active()) {
+        emit paused();
+    }
+}
+
 System *AtomifySimulator::system() const
 {
     return m_system;

@@ -125,19 +125,17 @@ Item {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
             context: Qt.ApplicationShortcut
-            onActivated: {
-                editor.editorWindow.runScript()
-            }
+            onActivated: editor.editorWindow.runScript()
         }
         Shortcut {
             sequence: "Ctrl+P"
             context: Qt.ApplicationShortcut
-            onActivated: simulator.paused = !simulator.paused
+            onActivated: simulator.togglePaused()
         }
         Shortcut {
             sequence: "Space"
             context: Qt.ApplicationShortcut
-            onActivated: simulator.paused = !simulator.paused
+            onActivated: simulator.togglePaused()
         }
         Shortcut {
             sequence: "Tab"

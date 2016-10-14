@@ -42,6 +42,7 @@ public:
     int simulationSpeed() const;
     ScriptHandler* scriptHandler() const;
     Q_INVOKABLE void clearSimulatorControls();
+    Q_INVOKABLE void togglePaused();
     class System* system() const;
     class States* states() const;
     class LammpsError* lammpsError() const;
