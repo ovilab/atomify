@@ -44,6 +44,7 @@ void States::setupStates(AtomifySimulator &simulator)
     m_crashed->addTransition(&simulator, SIGNAL(reset()), m_reset);
 
     m_finished->addTransition(&simulator, SIGNAL(continued()), m_continued);
+    m_finished->addTransition(&simulator, SIGNAL(reset()), m_reset);
 
     m_continued->addTransition(&simulator, SIGNAL(reset()), m_reset);
     m_continued->addTransition(&simulator, SIGNAL(paused()), m_paused);
@@ -52,6 +53,7 @@ void States::setupStates(AtomifySimulator &simulator)
     m_paused->addTransition(&simulator, SIGNAL(reset()), m_reset);
 
     m_reset->addTransition(&simulator, SIGNAL(didReset()), m_idle);
+    m_continued->addTransition(&simulator, SIGNAL(crashed()), m_crashed);
 
     m_machine->setInitialState(m_idle);
 
