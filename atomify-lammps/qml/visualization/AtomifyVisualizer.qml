@@ -20,6 +20,7 @@ Scene3D {
     id: root
     signal changedRenderQuality
     property bool guidesVisible
+    property bool systemBoxVisible
     property alias rootItem: controller.rootItem
     property alias mouseMover: controller.mouseMover
     property bool focusMode
@@ -300,6 +301,14 @@ Scene3D {
                     rotationX: 90
                 }
             ]
+        }
+
+        SystemBox {
+            id: systemBox
+
+            enabled: root.systemBoxVisible
+            size: root.simulator.system.size
+            lights: visualizer.lights
         }
     }
 }

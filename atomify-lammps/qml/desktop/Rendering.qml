@@ -23,15 +23,34 @@ Pane {
 
             title: "Interface"
 
-            CheckBox {
-                id: guidesCheckBox
-                text: "Show guides"
-                checked: visualizer.guidesVisible
-                Binding {
-                    target: visualizer
-                    property: "guidesVisible"
-                    value: guidesCheckBox.checked
+            Column {
+                anchors {
+                    left: parent.left
+                    right: parent.right
                 }
+
+                CheckBox {
+                    id: guidesCheckBox
+                    text: "Show guides"
+                    checked: visualizer.guidesVisible
+                    Binding {
+                        target: visualizer
+                        property: "guidesVisible"
+                        value: guidesCheckBox.checked
+                    }
+                }
+
+                CheckBox {
+                    id: outlineCheckBox
+                    text: "Show outline"
+                    checked: visualizer.systemBoxVisible
+                    Binding {
+                        target: visualizer
+                        property: "systemBoxVisible"
+                        value: outlineCheckBox.checked
+                    }
+                }
+
             }
 
         }

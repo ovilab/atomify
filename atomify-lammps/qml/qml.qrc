@@ -63,5 +63,6 @@
         <file>visualization/FinalQuadEntity.qml</file>
         <file>desktop/overlays/WelcomeOverlay.qml</file>
         <file>desktop/overlays/MessageOverlay.qml</file>
+        <file>visualization/SystemBox.qml</file>
     </qresource>
 </RCC>
