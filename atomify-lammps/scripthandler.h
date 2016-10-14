@@ -25,7 +25,6 @@ private:
     ScriptCommand m_currentCommand;
     QVector<ScriptCommand> m_previousSingleCommands;
     int m_currentPreviousSingleCommandIndex = 0;
-    class LammpsState *m_lammpsState = nullptr;
     Atoms* m_atoms = nullptr;
     QString m_tempLocation;
     int m_currentLine = -1;
@@ -38,8 +37,6 @@ public:
     ScriptParser &parser();
     bool parseLammpsCommand(QString command, class LAMMPSController *lammpsController);
     void parseGUICommand(QString command);
-    LammpsState *lammpsState() const;
-    void setLammpsState(LammpsState *lammpsState);
     Q_INVOKABLE QString previousSingleCommandString();
     Q_INVOKABLE QString nextSingleCommandString();
     Q_INVOKABLE QString lastSingleCommandString();

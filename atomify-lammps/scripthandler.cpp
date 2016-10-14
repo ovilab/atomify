@@ -72,16 +72,6 @@ Atoms *ScriptHandler::atoms() const
 
 ScriptParser &ScriptHandler::parser() { return m_parser; }
 
-LammpsState *ScriptHandler::lammpsState() const
-{
-    return m_lammpsState;
-}
-
-void ScriptHandler::setLammpsState(LammpsState *lammpsState)
-{
-    m_lammpsState = lammpsState;
-}
-
 QString ScriptHandler::previousSingleCommandString()
 {
     if(--m_currentPreviousSingleCommandIndex < 0) {
@@ -204,13 +194,6 @@ void ScriptHandler::parseGUICommand(QString command)
             }
         });
         return;
-    }
-
-    if(m_lammpsState) {
-        if(m_parser.isStaticSystem(command)) {
-            m_lammpsState->staticSystem = true;
-            return;
-        }
     }
 
     if(m_parser.isDisableBonds(command)) {

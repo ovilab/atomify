@@ -23,20 +23,17 @@ Item {
     signal didRun()
 
     onSimulatorChanged: {
-        simulator.willResetChanged.connect(function() {
+        simulator.reset.connect(function() {
             editorWindow.clear()
         })
     }
 
     function runScript() {
-        if(!simulator.scriptHandler) {
-            return
-        }
-        simulator.willReset = true
         simulator.scriptHandler.reset()
         simulator.scriptHandler.setWorkingDirectory(editorWindow.currentEditor.fileUrl)
         simulator.scriptHandler.runScript(editorWindow.currentEditor.text)
         editorWindow.activeEditor = editorWindow.currentEditor
+        simulator.started()
         didRun()
     }
 

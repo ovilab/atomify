@@ -1,4 +1,5 @@
 #include "lammpscontroller.h"
+#include "states.h"
 
 #include <fix_ave_time.h>
 #include <integrate.h>
@@ -112,11 +113,6 @@ void LAMMPSController::processCommand(QString command) {
 
     int wordCount = 0;
     while(command_ss >> word) {
-        if(word.compare("pause") == 0) {
-            m_worker->setWillPause(true);
-            return;
-        }
-
         // If this is the first word in a command and it is "run"
         if(wordCount == 0 && word.compare("run") == 0) {
             command_ss >> word; // Next word is the number of timesteps
@@ -285,13 +281,11 @@ void LAMMPSController::executeActiveRunCommand() {
         executeCommandInLAMMPS(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
     }
     state.timeSpentInLammps += t.elapsed();
-    state.numberOfTimesteps += simulationSpeed;
     currentTimestep = m_lammps->update->ntimestep;
     state.runCommandActive = currentTimestep < state.runCommandEnd;
 }
 
-void LAMMPSController::reset()
-{
+void LAMMPSController::start() {
     int nargs = 1;
     char **argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
@@ -309,44 +303,45 @@ void LAMMPSController::reset()
     //    sprintf(argv[3], "-pk");
     //    sprintf(argv[4], "gpu");
     //    sprintf(argv[5], "1");
-    setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
+}
+
+void LAMMPSController::reset()
+{
+    setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     state = LammpsState(); // Reset current state variables
 }
 
-void LAMMPSController::tick()
+bool LAMMPSController::tick()
 {
     state.canProcessSimulatorControls = false;
-    if(m_lammps == nullptr || state.crashed || state.paused) {
-        return;
+    if(states->idle()->active() || states->paused()->active() || states->crashed()->active()) {
+        return false;
     }
 
     // If we have an active run command, perform the run command with the current chosen speed.
     if(state.runCommandActive > 0) {
         executeActiveRunCommand();
-        // processSimulatorControls();
         state.canProcessSimulatorControls = true;
         state.dataDirty = true;
-        return;
+        return true;
     }
 
     // If the command stack has any commands left, process them.
     ScriptCommand nextCommand = state.nextCommand;
-    if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return;
+    if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return true;
 
     if(nextCommand.type() != ScriptCommand::Type::NoCommand) {
         state.preRunNeeded = true;
 
         bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
         if(didProcessCommand) {
-            return;
+            return true;
         }
+
         processCommand(nextCommand.command());
     } else {
-        if(state.paused) return;
-        if(state.staticSystem) return;
-        if(!state.automaticallyRun) return;
         // If no commands are queued, just perform a normal run command with the current simulation speed.
         QElapsedTimer t;
         t.start();
@@ -358,12 +353,11 @@ void LAMMPSController::tick()
             executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
         }
         state.canProcessSimulatorControls = true;
-        // processSimulatorControls();
-        state.numberOfTimesteps += state.simulationSpeed;
         state.timeSpentInLammps += t.elapsed();
     }
 
     state.dataDirty = true;
+    return true;
 }
 
 void LAMMPSController::disableAllEnsembleFixes()
@@ -401,16 +395,6 @@ ScriptHandler *LAMMPSController::scriptHandler() const
 void LAMMPSController::setScriptHandler(ScriptHandler *scriptHandler)
 {
     m_scriptHandler = scriptHandler;
-}
-
-bool LAMMPSController::paused() const
-{
-    return state.paused;
-}
-
-void LAMMPSController::setPaused(bool value)
-{
-    state.paused = value;
 }
 
 bool LAMMPSController::crashed() const

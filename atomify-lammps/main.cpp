@@ -36,6 +36,8 @@
 #include "linenumbers.h"
 #include "windowgl2.h"
 #include "codeeditorbackend.h"
+#include "states.h"
+#include "LammpsWrappers/lammpserror.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -70,6 +72,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<HighlighterWrapper>("Atomify", 1, 0, "Highlighter");
     qmlRegisterType<WindowGL2>("Atomify", 1, 0, "WindowGL2");
     qmlRegisterType<MouseMover>("Atomify", 1, 0, "MouseMover");
+    qmlRegisterType<States>("Atomify", 1, 0, "States");
+    qmlRegisterType<LammpsError>("Atomify", 1, 0, "LammpsError");
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
     app.setOrganizationName("Ovilab");

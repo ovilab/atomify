@@ -1,4 +1,6 @@
 #include "mysimulator.h"
+#include "states.h"
+#include "LammpsWrappers/lammpserror.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include <library.h>
 #include <atom.h>
@@ -33,6 +35,15 @@ MyWorker::MyWorker() {
     m_lammpsController.setWorker(this);
 }
 
+AtomifySimulator::AtomifySimulator() :
+    m_scriptHandler(new ScriptHandler()),
+    m_system(new System(this)),
+    m_states(new States(this)),
+    m_simulationSpeed(1)
+{
+    m_states->setupStates(*this);
+}
+
 void AtomifySimulator::clearSimulatorControls()
 {
     for(QObject* child : children()) {
@@ -53,76 +64,48 @@ LammpsError *AtomifySimulator::lammpsError() const
     return m_lammpsError;
 }
 
-bool AtomifySimulator::automaticallyRun() const
+States *AtomifySimulator::states() const
 {
-    return m_automaticallyRun;
-}
-
-bool AtomifySimulator::hasActiveSimulation() const
-{
-    return m_hasActiveSimulation;
-}
-
-bool AtomifySimulator::scriptFinished() const
-{
-    return m_scriptFinished;
+    return m_states;
 }
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
-    QElapsedTimer t;
-    t.start();
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
 
+    QElapsedTimer t; t.start();
     // Sync properties from lammps controller and back
-    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms());
+    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms()); //TODO: fix ownership
     m_lammpsController.setScriptHandler(atomifySimulator->scriptHandler());
-    m_lammpsController.setPaused(atomifySimulator->paused());
-    m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed());
+    m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed()); // TODO: enable speed in script
     m_lammpsController.setSystem(atomifySimulator->system());
-    m_lammpsController.state.automaticallyRun = atomifySimulator->automaticallyRun();
-    m_lammpsController.state.staticSystem = atomifySimulator->lammpsState.staticSystem;
+    m_lammpsController.states = atomifySimulator->states();
 
-    if(m_willPause) {
-        m_lammpsController.setPaused(true);
-        atomifySimulator->setPaused(true);
-        m_willPause = false;
-    }
+    States &states = *atomifySimulator->states();
 
-    if(atomifySimulator->willReset()) {
+    if(states.reset()->active()) {
         m_lammpsController.reset();
-        atomifySimulator->setAutomaticallyRun(false);
-        m_lammpsController.state.automaticallyRun = false;
-        atomifySimulator->lammpsState = m_lammpsController.state;
-        atomifySimulator->setWillReset(false);
-        atomifySimulator->scriptHandler()->setLammpsState(&atomifySimulator->lammpsState);
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
-        atomifySimulator->setScriptFinished(false);
-        emit atomifySimulator->lammpsDidReset();
+        emit atomifySimulator->didReset();
     }
 
-    if(!m_lammpsController.lammps()) {
-        atomifySimulator->setHasActiveSimulation(false);
+    if(!m_lammpsController.lammps() && states.parsing()->active()) {
+        m_lammpsController.start();
+    }
+
+    if(states.idle()->active()) {
         atomifySimulator->system()->synchronize(&m_lammpsController);
         atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
-        atomifySimulator->setScriptFinished(false);
         return;
     }
-    atomifySimulator->setHasActiveSimulation(true);
 
     if(m_lammpsController.crashed() && !m_lammpsController.exceptionHandled()) {
-        LammpsError *error = new LammpsError(atomifySimulator);
-
-        error->setMessage(QString::fromStdString(m_lammpsController.currentException().message).trimmed());
-        error->setCommand(m_lammpsController.state.nextCommand.command());
-        error->setScriptFile(m_lammpsController.state.nextCommand.filename());
-        error->setScriptPath(m_lammpsController.state.nextCommand.path());
-        error->setLine(m_lammpsController.state.nextCommand.line());
+        LammpsError *error = new LammpsError();
+        error->create(m_lammpsController);
         atomifySimulator->setLammpsError(error);
-        m_lammpsController.setExceptionHandled(true);
-
-        emit atomifySimulator->errorInLammpsScript();
+        m_lammpsController.setExceptionHandled(true); // TODO: put in states
+        emit atomifySimulator->crashed();
         return;
     }
 
@@ -146,16 +129,16 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
 
-    // atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), m_lammpsController.lammps());
-
-    if(m_lammpsController.crashed()) return;
-
     if(!m_lammpsController.state.runCommandActive) {
         ScriptHandler *scriptHandler = atomifySimulator->m_scriptHandler;
         ScriptParser &scriptParser = scriptHandler->parser();
         ScriptCommand nextCommandObject = scriptHandler->nextCommand();
 
         QString nextCommand = nextCommandObject.command();
+        if(nextCommandObject.type() == ScriptCommand::Type::NoCommand) {
+            emit atomifySimulator->finished();
+        }
+
         if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {
             scriptHandler->parseGUICommand(nextCommand);
             m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
@@ -164,17 +147,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             command = command.trimmed();
             command.remove(0,2);
 
-            if(scriptHandler->parser().isSimulationSpeed(command)) {
-                int speed = scriptHandler->parser().simulationSpeed(command);
-                if(speed > 0) atomifySimulator->setSimulationSpeed(speed);
-                m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
-
-            } else {
-                for(auto *simulatorControl : atomifySimulator->findChildren<SimulatorControl*>()) {
-                    simulatorControl->handleCommand(nextCommandObject.command());
-                }
-                m_lammpsController.state.nextCommand = nextCommandObject;
+            for(auto *simulatorControl : atomifySimulator->findChildren<SimulatorControl*>()) {
+                simulatorControl->handleCommand(nextCommandObject.command());
             }
+            m_lammpsController.state.nextCommand = nextCommandObject;
         }
     }
     // qDebug() << "Full synchronization spending " << t.elapsed() << " ms.";
@@ -182,63 +158,34 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
 void MyWorker::work()
 {
-    // qDebug() << "Doing work " << m_workCount;
     m_workCount += 1;
-    m_lammpsController.tick();
+    bool didWork = m_lammpsController.tick();
     if(m_lammpsController.state.canProcessSimulatorControls) {
         m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
         m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
     }
+
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
     if(delta > 0) {
         QThread::currentThread()->msleep(delta);
     }
-    if(!m_lammpsController.lammps() || m_lammpsController.state.paused || m_lammpsController.state.crashed) {
+
+    if(!didWork) {
         QThread::currentThread()->msleep(500);
     }
     m_elapsed.restart();
 }
-
-bool MyWorker::willPause() const
-{
-    return m_willPause;
-}
-
-void MyWorker::setWillPause(bool willPause)
-{
-    m_willPause = willPause;
-}
-
 
 MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
 }
 
-bool AtomifySimulator::paused() const
-{
-    return m_paused;
-}
-
 ScriptHandler *AtomifySimulator::scriptHandler() const
 {
     return m_scriptHandler;
 }
-
-bool AtomifySimulator::willReset() const
-{
-    return m_willReset;
-}
-
-AtomifySimulator::AtomifySimulator() :
-    m_scriptHandler(new ScriptHandler()),
-    m_system(new System(this))
-{
-
-}
-
-AtomifySimulator::~AtomifySimulator() { }
 
 int AtomifySimulator::simulationSpeed() const
 {
@@ -254,15 +201,6 @@ void AtomifySimulator::setSimulationSpeed(int arg)
     emit simulationSpeedChanged(arg);
 }
 
-void AtomifySimulator::setPaused(bool paused)
-{
-    if (m_paused == paused)
-        return;
-
-    m_paused = paused;
-    emit pausedChanged(paused);
-}
-
 void AtomifySimulator::setScriptHandler(ScriptHandler *scriptHandler)
 {
     if (m_scriptHandler == scriptHandler)
@@ -270,15 +208,6 @@ void AtomifySimulator::setScriptHandler(ScriptHandler *scriptHandler)
 
     m_scriptHandler = scriptHandler;
     emit scriptHandlerChanged(scriptHandler);
-}
-
-void AtomifySimulator::setWillReset(bool willReset)
-{
-    if (m_willReset == willReset)
-        return;
-
-    m_willReset = willReset;
-    emit willResetChanged(willReset);
 }
 
 void AtomifySimulator::setSystem(System *system)
@@ -299,29 +228,11 @@ void AtomifySimulator::setLammpsError(LammpsError *lammpsError)
     emit lammpsErrorChanged(lammpsError);
 }
 
-void AtomifySimulator::setAutomaticallyRun(bool automaticallyRun)
+void AtomifySimulator::setStates(States *states)
 {
-    if (m_automaticallyRun == automaticallyRun)
+    if (m_states == states)
         return;
 
-    m_automaticallyRun = automaticallyRun;
-    emit automaticallyRunChanged(automaticallyRun);
-}
-
-void AtomifySimulator::setHasActiveSimulation(bool hasActiveSimulation)
-{
-    if (m_hasActiveSimulation == hasActiveSimulation)
-        return;
-
-    m_hasActiveSimulation = hasActiveSimulation;
-    emit hasActiveSimulationChanged(hasActiveSimulation);
-}
-
-void AtomifySimulator::setScriptFinished(bool scriptFinished)
-{
-    if (m_scriptFinished == scriptFinished)
-        return;
-
-    m_scriptFinished = scriptFinished;
-    emit scriptFinishedChanged(scriptFinished);
+    m_states = states;
+    emit statesChanged(states);
 }

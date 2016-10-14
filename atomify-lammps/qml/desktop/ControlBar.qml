@@ -22,13 +22,25 @@ Rectangle {
             top: parent.top
             bottom: parent.bottom
         }
+        enabled: simulator.states.parsing.active || simulator.states.continued.active || simulator.states.paused.active
         width: height
         onClicked: {
-            if(simulator != undefined) {
-                simulator.paused = !simulator.paused
+            if(simulator.states.paused.active) {
+                simulator.unPaused()
+            } else {
+                simulator.paused()
             }
         }
-        iconSource: simulator ? (simulator.paused ? "qrc:/images/play2.png" : "qrc:/images/pause2.png") : "qrc:/images/play2.png"
+        iconSource: {
+            if(!simulator) {
+                return "qrc:/images/play2.png"
+            }
+            if(simulator.states.paused.active || simulator.states.finished.active) {
+                return "qrc:/images/play2.png"
+            } else {
+                return "qrc:/images/pause2.png"
+            }
+        }
     }
     Label {
         id: label

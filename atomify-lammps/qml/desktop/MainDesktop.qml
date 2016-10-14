@@ -20,6 +20,24 @@ Item {
     property alias mouseMover: visualizer.mouseMover
     property bool focusMode: false
 
+
+    function toggleFocusMode() {
+        if(focusMode) {
+            rightbar.width = 300
+            rightbar.visible = true
+            editor.visible = true
+            focusMode = false
+            tabDisable.hideTabDisable.start()
+        } else {
+            rightbar.width = 0
+            editor.visible = false
+            rightbar.visible = false
+            focusMode = true
+            tabDisable.showTabDisable.start()
+        }
+    }
+
+
     Component.onCompleted: {
         // editorTab.lammpsEditor.runScript()
     }
@@ -53,7 +71,7 @@ Item {
                 simulator: root.simulator
                 visualizer: root.visualizer
                 Component.onCompleted: {
-                    simulator.errorInLammpsScript.connect(editor.reportError)
+                    simulator.crashed.connect(editor.reportError)
                 }
             }
 
@@ -81,7 +99,7 @@ Item {
 
                 WelcomeOverlay {
                     y: 200
-                    visible: !simulator.hasActiveSimulation
+                    visible: simulator.states.idle.active
                     anchors.horizontalCenter: parent.horizontalCenter
                     onNewScriptClicked: editor.editorWindow.newTab()
                     onExamplesClicked: rightbar.showExamples()
@@ -262,29 +280,16 @@ Item {
         }
     }
 
-    function toggleFocusMode() {
-        if(focusMode) {
-            rightbar.width = 300
-            rightbar.visible = true
-            editor.visible = true
-            focusMode = false
-            tabDisable.hideTabDisable.start()
-        } else {
-            rightbar.width = 0
-            editor.visible = false
-            rightbar.visible = false
-            focusMode = true
-            tabDisable.showTabDisable.start()
-        }
-    }
-
     Item {
         id: shortcutes
         Shortcut {
             // Random placement here because it could not find the editor otherwise (Qt bug?)
             sequence: "Ctrl+R"
             context: Qt.ApplicationShortcut
-            onActivated: editor.editorWindow.runScript()
+            onActivated: {
+                console.log("Ctrl+R isn't implemented now because of reset / start states")
+                // editor.editorWindow.runScript()
+            }
         }
         Shortcut {
             sequence: "Ctrl+P"

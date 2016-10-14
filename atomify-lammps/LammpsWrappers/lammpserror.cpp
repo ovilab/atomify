@@ -1,8 +1,19 @@
 #include "lammpserror.h"
+#include "../lammpscontroller.h"
+#include "../scriptcommand.h"
 
 LammpsError::LammpsError(QObject *parent) : QObject(parent)
 {
 
+}
+
+void LammpsError::create(LAMMPSController &controller)
+{
+    setMessage(QString::fromStdString(controller.currentException().message).trimmed());
+    setCommand(controller.state.nextCommand.command());
+    setScriptFile(controller.state.nextCommand.filename());
+    setScriptPath(controller.state.nextCommand.path());
+    setLine(controller.state.nextCommand.line());
 }
 
 QString LammpsError::scriptFile() const

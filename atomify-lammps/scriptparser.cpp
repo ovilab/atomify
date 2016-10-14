@@ -101,12 +101,6 @@ void ScriptParser::bond(QString command, std::function<void(int atomType1, int a
     action(atomType1, atomType2, bondLength);
 }
 
-bool ScriptParser::isStaticSystem(QString command)
-{
-    QRegularExpression regex("^staticSystem$");
-    return regex.match(command).hasMatch();
-}
-
 bool ScriptParser::isDisableBonds(QString command)
 {
     QRegularExpression regex("^disableBonds$");
@@ -127,7 +121,6 @@ bool ScriptParser::isGUICommand(QString command) {
     if(isAtomType(command)) return true;
     if(isBond(command)) return true;
     if(isAtomColorAndSize(command)) return true;
-    if(isStaticSystem(command)) return true;
     if(isDisableBonds(command)) return true;
 
     return false;

@@ -15,17 +15,13 @@
 using namespace LAMMPS_NS;
 
 struct LammpsState {
-    bool paused = false;
     bool crashed = false;
-    bool staticSystem = false;
     bool runCommandActive = false;
     bool preRunNeeded = true;
     bool canProcessSimulatorControls = false;
     int  simulationSpeed = 1;
-    unsigned long timeSpentInLammps = 0;
-    int numberOfTimesteps = 1;
     bool dataDirty = false;
-    bool automaticallyRun = false;
+    unsigned long timeSpentInLammps = 0;
     unsigned int runCommandStart = 0;
     unsigned int runCommandEnd = 0;
     ScriptCommand nextCommand;
@@ -41,11 +37,15 @@ private:
     bool m_exceptionHandled = false;
     LAMMPSException m_currentException;
     void executeActiveRunCommand();
+
 public:
     LammpsState state;
+    class States *states = nullptr; // TODO: Naming
 
     LAMMPSController();
     ~LAMMPSController();
+
+    void start();
 
     // Getters/setters
     QMap<QString, class SimulatorControl*> simulatorControls;
@@ -68,7 +68,7 @@ public:
     void executeCommandInLAMMPS(QString command);
     void processCommand(QString command);
     void reset();
-    void tick();
+    bool tick();
 
     int findComputeId(QString identifier);
     int findVariableIndex(QString identifier);

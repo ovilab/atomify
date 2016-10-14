@@ -82,7 +82,8 @@ SOURCES += \
     dataproviders/data2d.cpp \
     windowgl2.cpp \
     LammpsWrappers/fixes.cpp \
-    mousemover.cpp
+    mousemover.cpp \
+    states.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -125,7 +126,8 @@ HEADERS += \
     dataproviders/data2d.h \
     windowgl2.h \
     LammpsWrappers/fixes.h \
-    mousemover.h
+    mousemover.h \
+    states.h
 
 # Temporary use of quickcontrols2 without install
 

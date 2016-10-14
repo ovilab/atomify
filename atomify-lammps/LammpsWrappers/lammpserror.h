@@ -12,12 +12,14 @@ class LammpsError : public QObject
     Q_PROPERTY(int line READ line WRITE setLine NOTIFY lineChanged)
 
 public:
-    LammpsError(QObject *parent = nullptr);
+    explicit LammpsError(QObject *parent = nullptr);
+
     QString scriptFile() const;
     QString message() const;
     int line() const;
     QString command() const;
     QString scriptPath() const;
+    void create(class LAMMPSController &controller);
 
 public slots:
     void setScriptFile(QString scriptFile);
