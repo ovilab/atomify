@@ -30,10 +30,12 @@ Item {
 
     function runScript() {
         if(!simulator.states.idle.active) {
-            resetScriptDialog.open()
+            simulator.reset()
+            simulator.didReset.connect(runScript)
             return;
         }
 
+        simulator.didReset.disconnect(runScript)
         simulator.scriptHandler.reset()
         simulator.scriptHandler.setWorkingDirectory(editorWindow.currentEditor.fileUrl)
         simulator.scriptHandler.runScript(editorWindow.currentEditor.text)
@@ -267,7 +269,7 @@ Item {
         id: resetScriptDialog
         title: "Cancel current simulation?"
         text: "You have a simulation running. To run a new script you have to cancel the current simulation."
-        standardButtons: StandardButton.Yes | StandardButton.No
+        standardButtons: StandardButton.No | StandardButton.Yes
         onYes: {
             simulator.reset()
             simulator.didReset.connect( function() {
