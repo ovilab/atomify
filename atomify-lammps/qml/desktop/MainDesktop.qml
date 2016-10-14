@@ -7,7 +7,7 @@ import QtGraphicalEffects 1.0
 import Atomify 1.0
 import SimVis 1.0
 import Qt.labs.settings 1.0
-
+import "overlays"
 import "../visualization"
 import "editor"
 import "../plotting"
@@ -88,13 +88,41 @@ Item {
                     focusMode: root.focusMode
                 }
 
-                WelcomeOverlay {
-                    y: 200
-                    visible: simulator.states.idle.active
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    onNewScriptClicked: editor.editorWindow.newTab()
-                    onExamplesClicked: rightbar.showExamples()
+                Rectangle {
+                    id: overlays
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: parent.width*0.1
+                        rightMargin: parent.width*0.1
+                    }
+
+                    visible: simulator.states.idle.active || simulator.states.finished.active
+                    height: parent.height*0.2
+                    y: parent.height*0.2
+                    radius: 2
+                    border.color: "white"
+                    border.width: 1
+                    color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
+
+                    WelcomeOverlay {
+                        id: welcomeOverlay
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        visible: simulator.states.idle.active
+                        onNewTabClicked: editor.editorWindow.newTab()
+                        onExamplesClicked: rightbar.showExamples()
+                    }
+
+                    MessageOverlay {
+                        id: messageOverlay
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        visible: simulator.states.finished.active
+                        onContinueClicked: simulator.continued()
+                    }
                 }
+
 
                 ControlBar {
                     id: controlBar1
