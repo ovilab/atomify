@@ -120,13 +120,7 @@ Item {
     }
 
     Item {
-        id: shortcutes
-        Shortcut {
-            // Random placement here because it could not find the editor otherwise (Qt bug?)
-            sequence: "Ctrl+R"
-            context: Qt.ApplicationShortcut
-            onActivated: editor.editorWindow.runScript()
-        }
+        id: shortcuts
         Shortcut {
             sequence: "Ctrl+P"
             context: Qt.ApplicationShortcut

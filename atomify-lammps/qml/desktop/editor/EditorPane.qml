@@ -95,4 +95,10 @@ Pane {
             visualizer.focus = true
         }
     }
+
+    Shortcut {
+        sequence: "Ctrl+R"
+        context: Qt.ApplicationShortcut
+        onActivated: editorWindow.runScript()
+    }
 }
