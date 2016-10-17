@@ -21,6 +21,7 @@ class System : public QObject
     Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
     Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
     Q_PROPERTY(Computes* computes READ computes WRITE setComputes NOTIFY computesChanged)
+    Q_PROPERTY(Variables* variables READ variables WRITE setVariables NOTIFY variablesChanged)
     Q_PROPERTY(Fixes* fixes READ fixes WRITE setFixes NOTIFY fixesChanged)
     Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
@@ -38,6 +39,7 @@ public:
     class Computes* computes() const;
     class Units* units() const;
     class Fixes* fixes() const;
+    class Variables* variables() const;
     int numberOfAtomTypes() const;
     void reset();
     float volume() const;
@@ -50,6 +52,7 @@ public slots:
     void setGroups(class Groups* groups);
     void setIsValid(bool isValid);
     void setComputes(class Computes* computes);
+    void setVariables(class Variables* variables);
     void setCameraPosition(QVector3D cameraPosition);
     void setUnits(class Units* units);
     void setFixes(class Fixes* fixes);
@@ -65,10 +68,11 @@ signals:
     void groupsChanged(class Groups* groups);
     void unitsChanged(class Units* units);
     void fixesChanged(class Fixes* fixes);
+    void computesChanged(class Computes* computes);
+    void variablesChanged(class Variables* variables);
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void volumeChanged(float volume);
     void isValidChanged(bool isValid);
-    void computesChanged(class Computes* computes);
     void geometryChanged();
     void cameraPositionChanged(QVector3D cameraPosition);
 
@@ -79,6 +83,7 @@ private:
     class Computes* m_computes = nullptr;
     class Units* m_units = nullptr;
     class Fixes* m_fixes = nullptr;
+    class Variables* m_variables = nullptr;
     QVector3D m_origin;
     QVector3D m_size;
     QVector3D m_cameraPosition;

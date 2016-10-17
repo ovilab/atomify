@@ -29,7 +29,10 @@ private:
     void remove(QString identifier);
     void reset();
     int m_count = 0;
+    QList<QObject*> m_data;
+    QMap<QString, QObject*> m_dataMap;
     QVariant m_model;
+    bool isSupported(class LAMMPSController *lammpsController, int ivar);
 };
 
 #endif // VARIABLES_H

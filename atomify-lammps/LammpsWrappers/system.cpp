@@ -7,6 +7,7 @@
 #include "groups.h"
 #include "computes.h"
 #include "fixes.h"
+#include "variables.h"
 #include "../mysimulator.h"
 #include "modifiers/modifier.h"
 #include "units.h"
@@ -21,6 +22,7 @@ System::System(AtomifySimulator *simulator)
     setComputes(new Computes(simulator));
     setUnits(new Units(simulator));
     setFixes(new Fixes(simulator));
+    setVariables(new Variables(simulator));
 }
 
 void System::synchronize(LAMMPSController *lammpsController)
@@ -29,6 +31,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_groups->synchronize(lammpsController);
     m_atoms->synchronize(lammpsController);
     m_computes->synchronize(lammpsController);
+    m_variables->synchronize(lammpsController);
     m_fixes->synchronize(lammpsController);
 
     LAMMPS *lammps = lammpsController->lammps();
@@ -177,6 +180,11 @@ QVector3D System::cameraPosition() const
     return m_cameraPosition;
 }
 
+Variables *System::variables() const
+{
+    return m_variables;
+}
+
 Units *System::units() const
 {
     return m_units;
@@ -262,4 +270,13 @@ void System::setFixes(Fixes *fixes)
 
     m_fixes = fixes;
     emit fixesChanged(fixes);
+}
+
+void System::setVariables(Variables *variables)
+{
+    if (m_variables == variables)
+        return;
+
+    m_variables = variables;
+    emit variablesChanged(variables);
 }
