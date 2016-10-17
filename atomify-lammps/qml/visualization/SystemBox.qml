@@ -16,7 +16,7 @@ import ShaderNodes 1.0
 
 Entity {
     id: root
-    
+    property bool showSurfaces: false
     property vector3d size
     property var lights: [
         dummy
@@ -112,4 +112,6 @@ Entity {
             lights: root.lights
         }
     }
+
+    Entity {  enabled: root.enabled; components: [ CuboidMesh {}, Transform { scale3D: root.size }, PhongAlphaMaterial {} ] }
 }
