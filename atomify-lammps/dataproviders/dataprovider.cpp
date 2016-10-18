@@ -33,7 +33,7 @@ void DataProvider::setHasScalarData(bool hasScalarData)
     m_hasScalarData = hasScalarData;
     emit hasScalarDataChanged(hasScalarData);
     if(m_hasScalarData) {
-        m_data1DRaw["scalar"] = new CP1DData(this);
+        m_data1DRaw["scalar"] = new Data1D(this);
     }
 }
 

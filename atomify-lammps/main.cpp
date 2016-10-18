@@ -30,7 +30,7 @@
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/computes.h"
 #include "LammpsWrappers/units.h"
-#include "dataproviders/cp1ddata.h"
+#include "dataproviders/data1d.h"
 #include "dataproviders/data2d.h"
 #include "dataproviders/dataprovider.h"
 #include "linenumbers.h"
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Fixes>("Atomify", 1, 0, "Fixes");
     qmlRegisterType<Regions>("Atomify", 1, 0, "Regions");
     qmlRegisterType<DataProvider>("Atomify", 1, 0, "DataProvider");
-    qmlRegisterType<CP1DData>("Atomify", 1, 0, "CP1DData");
+    qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
 
     qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");

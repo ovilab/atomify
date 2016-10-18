@@ -82,8 +82,8 @@ void Computes::synchronize(LAMMPSController *lammpsController)
     for(QObject *obj : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(obj);
         for(QVariant &variant : compute->data1D()) {
-            CP1DData *data = variant.value<CP1DData *>();
-            emit data->updated();
+            Data1D *data = variant.value<Data1D *>();
+            emit data->updated(data);
         }
     }
 

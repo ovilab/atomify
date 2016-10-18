@@ -72,7 +72,6 @@ SOURCES += \
     LammpsWrappers/lammpserror.cpp \
     LammpsWrappers/computes.cpp \
     dataproviders/dataprovider.cpp \
-    dataproviders/cp1ddata.cpp \
     LammpsWrappers/variables.cpp \
     LammpsWrappers/modifiers/groupmodifier.cpp \
     LammpsWrappers/modifiers/regionmodifier.cpp \
@@ -83,7 +82,8 @@ SOURCES += \
     windowgl2.cpp \
     LammpsWrappers/fixes.cpp \
     mousemover.cpp \
-    states.cpp
+    states.cpp \
+    dataproviders/data1d.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -116,7 +116,6 @@ HEADERS += \
     LammpsWrappers/lammpserror.h \
     LammpsWrappers/computes.h \
     dataproviders/dataprovider.h \
-    dataproviders/cp1ddata.h \
     LammpsWrappers/variables.h \
     LammpsWrappers/modifiers/groupmodifier.h \
     LammpsWrappers/modifiers/regionmodifier.h \
@@ -127,7 +126,8 @@ HEADERS += \
     windowgl2.h \
     LammpsWrappers/fixes.h \
     mousemover.h \
-    states.h
+    states.h \
+    dataproviders/data1d.h
 
 # Temporary use of quickcontrols2 without install
 

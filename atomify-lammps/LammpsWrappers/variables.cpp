@@ -29,11 +29,11 @@ void Variables::synchronize(LAMMPSController *lammpsController)
         return;
     }
 
+
     Variable *variable = lammps->input->variable;
-    char **names;
     int nvar;
     Info info(lammps);
-    info.get_variables(names, nvar);
+    char **names = info.get_variable_names(nvar);
     bool anyChanges = false;
     if(names == nullptr) return; // Maybe next time
     for(int i=0; i<nvar; i++) {
@@ -81,8 +81,7 @@ void Variables::synchronize(LAMMPSController *lammpsController)
 
     for(QObject *object : m_data) {
         CPVariable *variable = qobject_cast<CPVariable*>(object);
-        // compute->copyData(lammpsController);
-        // variable->copyData();
+        variable->synchronize(lammpsController);
     }
 }
 

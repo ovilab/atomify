@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.2
 import Atomify 1.0
@@ -16,6 +16,7 @@ Window {
         updateSeries("line")
         for(var key in compute.data1D) {
             compute.data1D[key].updated.connect(updateGraphs(key))
+            compute.data1D[key].xySeries = dataSeries[key]
         }
         title = "Compute '"+compute.identifier+"'"
     }
@@ -33,7 +34,7 @@ Window {
     function updateGraphs(key) {
         return function() {
             if(!root.visible) return;
-            compute.data1D[key].updateData(dataSeries[key])
+            compute.data1D[key].updateXYSeries(dataSeries[key])
         }
     }
 
@@ -69,10 +70,7 @@ Window {
         chart.removeAllSeries();
         dataSeries = []
 
-        // Create two new series of the correct type. Axis x is the same for both of the series,
-        // but the series have their own y-axes to make it possible to control the y-offset
-        // of the "signal sources".
-        if (type == "line") {
+        if (type === "line") {
             for(var key in compute.data1D) {
                 var series = chart.createSeries(ChartView.SeriesTypeLine, key, _axisX, _axisY);
                 dataSeries[key] = series
@@ -85,16 +83,20 @@ Window {
         }
     }
 
-    Column {
-        spacing: 5
+    Pane {
+        id: rootPane
+        anchors.fill: parent
         ChartView {
             id: chart
-            width: root.width
-            height: root.height * 0.8
+            anchors.fill: parent
+
+            theme: ChartView.ChartThemeDark
+            backgroundColor: Qt.rgba(0.3, 0.3, 0.3, 1.0)
+            backgroundRoundness: 2.0
             antialiasing: true
             legend.visible: true
-            title: compute ? compute.identifier : ""
             titleColor: "black"
+            title: compute ? compute.identifier : ""
 
             ValueAxis {
                 id: _axisX
@@ -103,7 +105,7 @@ Window {
                 max: 100
                 titleText: compute ? compute.xLabel : ""
                 color: "white"
-                labelsColor: "black"
+                labelsColor: "gray"
             }
 
             ValueAxis {
@@ -113,37 +115,7 @@ Window {
                 max: 1000
                 titleText: compute ? compute.yLabel : ""
                 color: "white"
-                labelsColor: "black"
-            }
-        }
-
-        Row {
-            Button {
-                text: "Max count: "
-                tooltip: "Sets a limit on how many data points that is plotted. Useful for limiting the x-axis in timeseries for i.e. only showing the last 100 timesteps."
-                style: LabelButton { }
-            }
-
-            TextField {
-                id: maxCountText
-                validator: IntValidator {bottom: 0; top: 100000;}
-                text: compute ? compute.maxCount : 0
-                style: TextFieldStyle {
-                    textColor: "black"
-                    background: Rectangle {
-                        radius: 2
-                        implicitWidth: 100
-                        implicitHeight: 24
-                        border.color: "#333"
-                        border.width: 1
-                    }
-                }
-            }
-            Button {
-                text: "Apply"
-                onClicked: {
-                    compute.maxCount = parseInt(maxCountText.text)
-                }
+                labelsColor: "gray"
             }
         }
     }

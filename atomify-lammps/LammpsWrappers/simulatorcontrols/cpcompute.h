@@ -22,7 +22,6 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(QVariantMap data1D READ data1D WRITE setData1D NOTIFY data1DChanged)
     Q_PROPERTY(QString xLabel READ xLabel WRITE setXLabel NOTIFY xLabelChanged)
     Q_PROPERTY(QString yLabel READ yLabel WRITE setYLabel NOTIFY yLabelChanged)
-    Q_PROPERTY(int maxCount READ maxCount WRITE setMaxCount NOTIFY maxCountChanged)
 
 protected:
     virtual void updateCommand() override;
@@ -46,7 +45,6 @@ public:
     QVariantMap data1D() const;
     QString xLabel() const;
     QString yLabel() const;
-    int maxCount() const;
     bool interactive() const;
 
 signals:
@@ -59,7 +57,6 @@ signals:
     void data1DChanged(QVariantMap data1D);
     void xLabelChanged(QString xLabel);
     void yLabelChanged(QString yLabel);
-    void maxCountChanged(int maxCount);
     void interactiveChanged(bool interactive);
 
 public slots:
@@ -72,7 +69,6 @@ public slots:
     void setData1D(QVariantMap data1D);
     void setXLabel(QString xLabel);
     void setYLabel(QString yLabel);
-    void setMaxCount(int maxCount);
     void setInteractive(bool interactive);
 
 private:
@@ -86,7 +82,7 @@ private:
     bool copyData(ComputeCOM *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeGyration *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController);
-    CP1DData *ensureExists(QString key, bool enabledByDefault);
+    class Data1D *ensureExists(QString key, bool enabledByDefault);
 
     bool m_isVector = false;
     double m_time = 0;
@@ -96,10 +92,9 @@ private:
     float m_scalarValue = 0.0;
     int m_num1DData = 0;
     QVariantMap m_data1D;
-    QMap<QString, CP1DData*> m_data1DRaw;
+    QMap<QString, class Data1D*> m_data1DRaw;
     QString m_xLabel;
     QString m_yLabel;
-    int m_maxCount = 1000;
     bool m_interactive = false;
 
 };

@@ -13,12 +13,12 @@ CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 
 CPCompute::~CPCompute() { }
 
-CP1DData *CPCompute::ensureExists(QString key, bool enabledByDefault) {
+Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
-        CP1DData *data = new CP1DData(this);
+        Data1D *data = new Data1D(this);
         data->setEnabled(enabledByDefault);
         m_data1DRaw.insert(key, data);
-        m_data1D.insert(key, QVariant::fromValue<CP1DData*>(data));
+        m_data1D.insert(key, QVariant::fromValue<Data1D*>(data));
     }
     return m_data1DRaw[key];
 }
@@ -34,7 +34,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    CP1DData *data = ensureExists(QString("Temperature"), true);
+    Data1D *data = ensureExists(QString("Temperature"), true);
     setXLabel("Time");
     setYLabel("Temperature");
     data->add(lammpsController->system()->simulationTime(), value);
@@ -48,7 +48,7 @@ bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController)
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    CP1DData *data = ensureExists(QString("Potential energy"), true);
+    Data1D *data = ensureExists(QString("Potential energy"), true);
     setXLabel("Time");
     setYLabel("Potential Energy");
     data->add(lammpsController->system()->simulationTime(), value);
@@ -61,7 +61,7 @@ bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController)
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    CP1DData *data = ensureExists(QString("Kinetic energy"), true);
+    Data1D *data = ensureExists(QString("Kinetic energy"), true);
     setXLabel("Time");
     setYLabel("Kinetic Energy");
     data->add(lammpsController->system()->simulationTime(), value);
@@ -78,7 +78,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    CP1DData *data = ensureExists(QString("Pressure"), true);
+    Data1D *data = ensureExists(QString("Pressure"), true);
     setXLabel("Time");
     setYLabel("Pressure");
     data->add(lammpsController->system()->simulationTime(), value);
@@ -91,7 +91,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     int numVectorValues = 6;
     for(int i=1; i<=numVectorValues; i++) {
         QString key = components[i-1];
-        CP1DData *data = ensureExists(key, false);
+        Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
@@ -109,7 +109,7 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
 
     for(int pairId=0; pairId<numPairs; pairId++) {
         QString key = QString("Pair %1").arg(pairId+1);
-        CP1DData *data = ensureExists(key, true);
+        Data1D *data = ensureExists(key, true);
         data->clear();
 
         for(int bin=0; bin<numBins; bin++) {
@@ -118,7 +118,7 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
             data->add(r,rdf,true);
         }
 
-        emit data->updated();
+        emit data->updated(data);
     }
     setInteractive(true);
     return true;
@@ -134,7 +134,7 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
     int numVectorValues = 4;
     for(int i=1; i<=numVectorValues; i++) {
         QString key = components[i-1];
-        CP1DData *data = ensureExists(key, false);
+        Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
@@ -152,7 +152,7 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
     int numVectorValues = 4;
     for(int i=1; i<=numVectorValues; i++) {
         QString key = components[i-1];
-        CP1DData *data = ensureExists(key, false);
+        Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
@@ -170,7 +170,7 @@ bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController
     int numVectorValues = 3;
     for(int i=1; i<=numVectorValues; i++) {
         QString key = components[i-1];
-        CP1DData *data = ensureExists(key, false);
+        Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
@@ -185,7 +185,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    CP1DData *data = ensureExists(QString("Radius of gyration"), true);
+    Data1D *data = ensureExists(QString("Radius of gyration"), true);
     setXLabel("Time");
     setYLabel("Pressure");
     data->add(lammpsController->system()->simulationTime(), value);
@@ -198,7 +198,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     int numVectorValues = 6;
     for(int i=1; i<=numVectorValues; i++) {
         QString key = components[i-1];
-        CP1DData *data = ensureExists(key, false);
+        Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
         data->add(lammpsController->system()->simulationTime(), value);
     }
@@ -281,7 +281,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             double value = lmp_compute->compute_scalar();
             setHasScalarData(true);
             setScalarValue(value);
-            CP1DData *data = ensureExists("scalar", true);
+            Data1D *data = ensureExists("scalar", true);
             data->add(lammpsController->system()->simulationTime(), value, true);
             setInteractive(true);
         } catch (LAMMPSException &exception) {
@@ -295,7 +295,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             int numVectorValues = lmp_compute->size_vector;
             for(int i=1; i<=numVectorValues; i++) {
                 QString key = QString("%1").arg(i);
-                CP1DData *data = ensureExists(key, true);
+                Data1D *data = ensureExists(key, true);
                 double value = lmp_compute->vector[i-1];
                 data->add(lammpsController->system()->simulationTime(), value, true);
             }
@@ -370,11 +370,6 @@ QString CPCompute::xLabel() const
 QString CPCompute::yLabel() const
 {
     return m_yLabel;
-}
-
-int CPCompute::maxCount() const
-{
-    return m_maxCount;
 }
 
 bool CPCompute::interactive() const
@@ -461,18 +456,6 @@ void CPCompute::setYLabel(QString yLabel)
 
     m_yLabel = yLabel;
     emit yLabelChanged(yLabel);
-}
-
-void CPCompute::setMaxCount(int maxCount)
-{
-    if (m_maxCount == maxCount)
-        return;
-
-    m_maxCount = maxCount;
-    foreach (CP1DData *data, m_data1DRaw) {
-        data->setMaxCount(m_maxCount);
-    }
-    emit maxCountChanged(maxCount);
 }
 
 void CPCompute::setInteractive(bool interactive)

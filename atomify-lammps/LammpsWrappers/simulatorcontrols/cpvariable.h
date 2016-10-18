@@ -6,6 +6,8 @@ class CPVariable : public SimulatorControl
     Q_OBJECT
 public:
     CPVariable(Qt3DCore::QNode *parent = 0);
+    virtual bool existsInLammps(class LAMMPSController *lammpsController);
+    void synchronize(class LAMMPSController *lammpsController);
 
     // SimulatorControl interface
 protected:
@@ -14,8 +16,6 @@ protected:
     virtual QList<QString> disableCommands();
     virtual QList<QString> resetCommands();
     QString createCommandPrefix();
-public:
-    virtual bool existsInLammps(class LAMMPSController *lammpsController);
 };
 
 #endif // CPVARIABLE_H

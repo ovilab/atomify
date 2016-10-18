@@ -2,7 +2,7 @@
 #define DATAPROVIDER_H
 
 #include <QObject>
-#include "cp1ddata.h"
+#include "data1d.h"
 
 class DataProvider : public QObject
 {
@@ -35,7 +35,7 @@ protected:
     int m_num1DData = 0;
     float m_scalarValue = 0;
     QVariantMap m_data1D;
-    QMap<QString, CP1DData*> m_data1DRaw;
+    QMap<QString, Data1D*> m_data1DRaw;
 };
 
 #endif // DATAPROVIDER_H
