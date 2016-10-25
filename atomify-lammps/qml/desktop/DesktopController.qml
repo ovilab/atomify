@@ -304,6 +304,7 @@ Entity {
                 var trackballFinalSpeed = trackballSpeed * (shiftAction.active ? 5.0 : 1.0)
                 if(root.mode === "flymode") {
                     root.camera.translate(Qt.vector3d(keyboardXAxis.value*flymodeFinalSpeed, 0.0, keyboardYAxis.value*flymodeFinalSpeed))
+                    root.camera.translate(Qt.vector3d(0, flymodeFinalSpeed*keyboardTiltAxis.value, 0))
                 } else {
                     root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
                     tiltAboutViewCenterWithLimits(keyboardTiltAxis.value * trackballFinalSpeed)
