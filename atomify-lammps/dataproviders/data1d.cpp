@@ -154,17 +154,16 @@ void Data1D::add(const QPointF &point, bool silent)
         }
     }
 
+    m_points.append(point);
+    m_minMaxValuesDirty = true;
     if(!silent && m_xySeries) {
+        updateMinMaxWithPoint(point);
         m_xySeries->append(point.x(), point.y());
     }
 
-    m_points.append(point);
-    m_minMaxValuesDirty = true;
-    updateMinMaxWithPoint(point);
-
     for(QVariant &variant : m_subsets) {
         Data1D *data = variant.value<Data1D*>();
-        data->add(point);
+        data->add(point, silent);
     }
 }
 

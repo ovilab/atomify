@@ -13,6 +13,22 @@ CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 
 CPCompute::~CPCompute() { }
 
+void CPCompute::clear()
+{
+    for(Data1D *data : m_data1DRaw) {
+        data->clear();
+        emit data->updated(data);
+    }
+}
+
+void CPCompute::save(QString filename)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return;
+    }
+}
+
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D(this);
@@ -37,7 +53,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     Data1D *data = ensureExists(QString("Temperature"), true);
     setXLabel("Time");
     setYLabel("Temperature");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system()->simulationTime(), value, false);
     setInteractive(true);
     return true;
 }

@@ -23,16 +23,11 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(QString xLabel READ xLabel WRITE setXLabel NOTIFY xLabelChanged)
     Q_PROPERTY(QString yLabel READ yLabel WRITE setYLabel NOTIFY yLabelChanged)
 
-protected:
-    virtual void updateCommand() override;
-    QList<QString> enabledCommands() override;
-    QList<QString> disableCommands() override;
-    virtual QList<QString> resetCommands() override;
-    QString createCommandPrefix() override;
-    long lastUpdate = -1;
 public:
     CPCompute(Qt3DCore::QNode *parent = 0);
     ~CPCompute();
+    Q_INVOKABLE void clear();
+    Q_INVOKABLE void save(QString filename);
     void copyData(LAMMPSController *lammpsController);
     bool existsInLammps(LAMMPSController *lammpsController) override;
     void computeInLAMMPS(LAMMPSController *lammpsController);
@@ -96,7 +91,13 @@ private:
     QString m_xLabel;
     QString m_yLabel;
     bool m_interactive = false;
-
+protected:
+    virtual void updateCommand() override;
+    QList<QString> enabledCommands() override;
+    QList<QString> disableCommands() override;
+    virtual QList<QString> resetCommands() override;
+    QString createCommandPrefix() override;
+    long lastUpdate = -1;
 };
 
 #endif // COMPUTE_H

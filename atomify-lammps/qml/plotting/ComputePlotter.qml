@@ -86,36 +86,53 @@ Window {
     Pane {
         id: rootPane
         anchors.fill: parent
-        ChartView {
-            id: chart
+        ColumnLayout {
             anchors.fill: parent
+            spacing: 5
+            ChartView {
+                id: chart
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                theme: ChartView.ChartThemeDark
+                backgroundColor: Qt.rgba(0.3, 0.3, 0.3, 1.0)
+                backgroundRoundness: 2.0
+                antialiasing: true
+                legend.visible: true
+                titleColor: "black"
+                title: compute ? compute.identifier : ""
 
-            theme: ChartView.ChartThemeDark
-            backgroundColor: Qt.rgba(0.3, 0.3, 0.3, 1.0)
-            backgroundRoundness: 2.0
-            antialiasing: true
-            legend.visible: true
-            titleColor: "black"
-            title: compute ? compute.identifier : ""
+                ValueAxis {
+                    id: _axisX
+                    tickCount: 3
+                    min: 0
+                    max: 100
+                    titleText: compute ? compute.xLabel : ""
+                    color: "white"
+                    labelsColor: "gray"
+                }
 
-            ValueAxis {
-                id: _axisX
-                tickCount: 3
-                min: 0
-                max: 100
-                titleText: compute ? compute.xLabel : ""
-                color: "white"
-                labelsColor: "gray"
+                ValueAxis {
+                    id: _axisY
+                    tickCount: 3
+                    min: 0
+                    max: 1000
+                    titleText: compute ? compute.yLabel : ""
+                    color: "white"
+                    labelsColor: "gray"
+                }
             }
-
-            ValueAxis {
-                id: _axisY
-                tickCount: 3
-                min: 0
-                max: 1000
-                titleText: compute ? compute.yLabel : ""
-                color: "white"
-                labelsColor: "gray"
+            Row {
+                Layout.fillWidth: true
+                leftPadding: 12
+                spacing: 5
+                Button {
+                    text: "Clear"
+                    onClicked: root.compute.clear()
+                }
+                Button {
+                    text: "Save data"
+                    onClicked: console.log("Clear")
+                }
             }
         }
     }
