@@ -83,7 +83,8 @@ SOURCES += \
     LammpsWrappers/fixes.cpp \
     mousemover.cpp \
     states.cpp \
-    dataproviders/data1d.cpp
+    dataproviders/data1d.cpp \
+    LammpsWrappers/modifiers/propertymodifier.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -127,7 +128,8 @@ HEADERS += \
     LammpsWrappers/fixes.h \
     mousemover.h \
     states.h \
-    dataproviders/data1d.h
+    dataproviders/data1d.h \
+    LammpsWrappers/modifiers/propertymodifier.h
 
 # Temporary use of quickcontrols2 without install
 

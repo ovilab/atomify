@@ -1,7 +1,7 @@
 #include "groupmodifier.h"
 #include "LammpsWrappers/groups.h"
 #include "../system.h"
-
+#include "../atomdata.h"
 GroupModifier::GroupModifier()
 {
 

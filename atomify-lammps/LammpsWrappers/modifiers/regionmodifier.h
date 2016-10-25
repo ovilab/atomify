@@ -10,7 +10,7 @@ public:
 
     // Modifier interface
 public:
-    virtual void apply(AtomData &atomData) override;
+    virtual void apply(class AtomData &atomData) override;
 };
 
 #endif // REGIONMODIFIER_H

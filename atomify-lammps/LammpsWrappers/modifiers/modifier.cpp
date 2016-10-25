@@ -1,4 +1,5 @@
 #include "modifier.h"
+#include "../atomdata.h"
 #include "../system.h"
 
 Modifier::Modifier()

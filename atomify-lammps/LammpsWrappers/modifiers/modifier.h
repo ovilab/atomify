@@ -1,9 +1,6 @@
 #ifndef MODIFIER_H
 #define MODIFIER_H
 #include <QObject>
-#include <SimVis/SphereData>
-#include <SimVis/CylinderData>
-#include "../atomdata.h"
 
 class Modifier : public QObject
 {
@@ -14,7 +11,7 @@ protected:
 
 public:
     Modifier();
-    virtual void apply(AtomData &atomData) = 0;
+    virtual void apply(class AtomData &atomData) = 0;
     bool enabled() const;
     void setSystem(class System *system);
 

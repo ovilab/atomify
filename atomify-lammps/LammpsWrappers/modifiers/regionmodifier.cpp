@@ -1,6 +1,7 @@
 #include "regionmodifier.h"
 #include "../regions.h"
 #include "../system.h"
+#include "../atomdata.h"
 
 RegionModifier::RegionModifier()
 {

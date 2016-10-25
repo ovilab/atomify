@@ -1,6 +1,7 @@
 #ifndef SLICE_H
 #define SLICE_H
 #include "modifier.h"
+#include <QVector3D>
 
 class Slice : public Modifier
 {
@@ -17,7 +18,7 @@ public:
 
     // Modifier interface
 public:
-    virtual void apply(AtomData &atomData) override;
+    virtual void apply(class AtomData &atomData) override;
     float distance() const;
     QVector3D normal() const;
 

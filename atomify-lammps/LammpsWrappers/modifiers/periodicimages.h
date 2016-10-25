@@ -3,8 +3,6 @@
 
 #include "modifier.h"
 
-
-
 class PeriodicImages : public Modifier
 {
     Q_OBJECT
@@ -26,26 +24,20 @@ public:
 
     // Modifier interface
 public:
-    virtual void apply(AtomData &atomData) override;
+    virtual void apply(class AtomData &atomData) override;
     int numberOfCopiesX() const;
     int numberOfCopiesY() const;
     int numberOfCopiesZ() const;
-
     bool showImagesX() const;
-
     bool showImagesY() const;
-
     bool showImagesZ() const;
 
 public slots:
     void setNumberOfCopiesX(int numberOfCopiesX);
     void setNumberOfCopiesY(int numberOfCopiesY);
     void setNumberOfCopiesZ(int numberOfCopiesZ);
-
     void setShowImagesX(bool showImagesX);
-
     void setShowImagesY(bool showImagesY);
-
     void setShowImagesZ(bool showImagesZ);
 
 signals:

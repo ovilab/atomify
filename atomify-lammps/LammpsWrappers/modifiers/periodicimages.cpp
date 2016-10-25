@@ -1,7 +1,6 @@
 #include "periodicimages.h"
 #include "../system.h"
-#include <QDebug>
-
+#include "../atomdata.h"
 PeriodicImages::PeriodicImages()
 {
 
