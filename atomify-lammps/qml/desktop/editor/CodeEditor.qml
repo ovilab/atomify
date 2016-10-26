@@ -64,7 +64,7 @@ Item {
         } else {
             if(backend.save()) {
                 changedSinceLastSave = false
-                if(cb != undefined) cb()
+                if(cb !== undefined) cb()
             }
         }
     }
@@ -75,7 +75,8 @@ Item {
             save()
             fileDialogSave.cb = undefined
         }
-        fileDialogSave.visible = true
+        fileDialogSave.folder = "file://"+root.folder
+        fileDialogSave.open()
     }
 
     Component.onCompleted: {
@@ -205,30 +206,10 @@ Item {
 
         onAccepted: {
             backend.fileUrl = fileDialogSave.fileUrl
-            if(cb != undefined) {
+            if(cb !== undefined) {
                 cb()
                 cb = null
             }
-        }
-    }
-
-    FileDialog {
-        id: fileDialogLoad
-        selectExisting : true
-        property var cb
-        title: "Please choose a file"
-
-        onAccepted: {
-            backend.fileUrl = fileDialogSave.fileUrl
-            if(cb != undefined) {
-                cb()
-                cancelCloseEditor = false
-                cb = null
-            }
-        }
-        onRejected: {
-            cancelCloseEditor = true
-            cb = null
         }
     }
 }
