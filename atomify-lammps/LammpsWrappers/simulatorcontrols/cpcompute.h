@@ -84,6 +84,9 @@ private:
     bool copyData(ComputeGyration *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController);
     bool copyData(ComputePropertyAtom *compute, LAMMPSController *lammpsController);
+    bool copyData(ComputeClusterAtom *compute, LAMMPSController *lammpsController);
+    bool copyData(ComputeCNAAtom *compute, LAMMPSController *lammpsController);
+    bool copyData(Compute *compute, LAMMPSController *lammpsController);
     class Data1D *ensureExists(QString key, bool enabledByDefault);
 
     bool m_isVector = false;
