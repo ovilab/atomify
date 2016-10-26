@@ -14,6 +14,7 @@ class CPCompute : public SimulatorControl
 {
     Q_OBJECT
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
+    Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     Q_PROPERTY(QString group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
     Q_PROPERTY(bool isPerAtom READ isPerAtom WRITE setIsPerAtom NOTIFY isPerAtomChanged)
@@ -44,6 +45,7 @@ public:
     QString yLabel() const;
     bool interactive() const;
     bool isPerAtom() const;
+    bool hovered() const;
     const std::vector<double> &atomData() const;
 
 signals:
@@ -58,6 +60,7 @@ signals:
     void yLabelChanged(QString yLabel);
     void interactiveChanged(bool interactive);
     void isPerAtomChanged(bool isPerAtom);
+    void hoveredChanged(bool hovered);
 
 public slots:
     void setIsVector(bool isVector);
@@ -71,6 +74,7 @@ public slots:
     void setYLabel(QString yLabel);
     void setInteractive(bool interactive);
     void setIsPerAtom(bool isPerAtom);
+    void setHovered(bool hovered);
 
 private:
     bool copyData(ComputePressure *compute, LAMMPSController *lammpsController);
@@ -103,6 +107,8 @@ private:
     QString m_yLabel;
     bool m_interactive = false;
     bool m_isPerAtom = false;
+    bool m_hovered = false;
+
 protected:
     virtual void updateCommand() override;
     QList<QString> enabledCommands() override;

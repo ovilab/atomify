@@ -45,6 +45,11 @@ const vector<double> &CPCompute::atomData() const
     return m_atomData;
 }
 
+bool CPCompute::hovered() const
+{
+    return m_hovered;
+}
+
 bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
     ensureExists("histogram", true);
@@ -580,6 +585,15 @@ void CPCompute::setIsPerAtom(bool isPerAtom)
 
     m_isPerAtom = isPerAtom;
     emit isPerAtomChanged(isPerAtom);
+}
+
+void CPCompute::setHovered(bool hovered)
+{
+    if (m_hovered == hovered)
+        return;
+
+    m_hovered = hovered;
+    emit hoveredChanged(hovered);
 }
 
 QList<QString> CPCompute::resetCommands()

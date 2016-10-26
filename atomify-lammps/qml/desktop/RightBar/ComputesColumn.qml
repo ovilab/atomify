@@ -62,6 +62,7 @@ Column {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    hoverEnabled: true
                     onClicked: {
                         if(model.modelData.interactive) {
                             var point = Qt.point(mouseX, mouseY)
@@ -69,6 +70,8 @@ Column {
                             createComputeWindow(model.modelData, point, model.modelData.isPerAtom)
                         }
                     }
+                    onEntered: model.modelData.hovered = true
+                    onExited: model.modelData.hovered = false
                 }
             }
             Label {
