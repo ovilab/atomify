@@ -22,6 +22,7 @@ public:
     int count() const;
     QVariant model() const;
     bool active() const;
+    QVector<class CPCompute*> computes();
 
 signals:
     void countChanged(int count);

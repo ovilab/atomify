@@ -123,6 +123,16 @@ bool Computes::active() const
     return m_active;
 }
 
+QVector<CPCompute *> Computes::computes()
+{
+    QVector<CPCompute*> computes;
+    for(QObject *object : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(object);
+        computes.append(compute);
+    }
+    return computes;
+}
+
 void Computes::setCount(int count)
 {
     if (m_count == count)

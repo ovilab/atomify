@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");
     qmlRegisterType<GroupModifier>("Atomify", 1, 0, "GroupModifier");
     qmlRegisterType<RegionModifier>("Atomify", 1, 0, "RegionModifier");
+    qmlRegisterType<PropertyModifier>("Atomify", 1, 0, "PropertyModifier");
     qmlRegisterType<Slice>("Atomify", 1, 0, "Slice");
 
     qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");

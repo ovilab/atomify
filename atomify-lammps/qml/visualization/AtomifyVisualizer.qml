@@ -203,6 +203,7 @@ Scene3D {
             simulationSpeed: 1
             system.atoms.modifiers: [
                 colorModifier,
+                propertyModifier,
                 groupModifier,
                 regionModifier,
                 periodicImages
@@ -220,6 +221,10 @@ Scene3D {
 
         RegionModifier {
             id: regionModifier
+        }
+
+        PropertyModifier {
+            id: propertyModifier
         }
 
         PeriodicImages {
