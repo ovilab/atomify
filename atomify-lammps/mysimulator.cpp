@@ -108,9 +108,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     if(states.idle()->active()) {
         atomifySimulator->system()->synchronize(&m_lammpsController);
-        atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
         return;
     }
+    atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
 
     if(m_lammpsController.crashed() && !m_lammpsController.exceptionHandled()) {
         LammpsError *error = new LammpsError();
