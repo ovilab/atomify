@@ -2,10 +2,16 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls 1.5 as QQC1
 import Atomify 1.0
+import Qt.labs.settings 1.0
 import "../visualization"
 Pane {
     id: root
     property AtomifyVisualizer visualizer
+
+    Settings {
+        property alias showGuides: guidesCheckBox.checked
+        property alias showOutline: outlineCheckBox.checked
+    }
 
     Column {
         anchors {

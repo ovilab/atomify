@@ -19,20 +19,43 @@ Viewport {
 
     property Camera camera: Camera {}
     property alias surface: surfaceSelector.surface
+    property alias atomLayer: atomLayer
+    property alias guideLayer: guideLayer
+    property alias outlineLayer: outlineLayer
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
+
+    Layer {
+        id: atomLayer
+    }
+
+    Layer {
+        id: guideLayer
+    }
+
+    Layer {
+        id: outlineLayer
+    }
 
     TechniqueFilter {
         matchAll: FilterKey { name: "renderingStyle"; value: "forward" }
         RenderSurfaceSelector {
             id: surfaceSelector
             RenderPassFilter {
-                ClearBuffers {
-                    clearColor: "#000"
-                    buffers: ClearBuffers.ColorDepthBuffer
-                    CameraSelector {
-                        id: viewCameraSelector
-                        camera: root.camera
+                CameraSelector {
+                    camera: root.camera
+                    LayerFilter {
+                        layers: atomLayer
+                        ClearBuffers {
+                            clearColor: "#000"
+                            buffers: ClearBuffers.ColorDepthBuffer
+                        }
+                    }
+                    LayerFilter {
+                        layers: guideLayer
+                    }
+                    LayerFilter {
+                        layers: outlineLayer
                     }
                 }
             }
