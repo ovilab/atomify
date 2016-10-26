@@ -8,8 +8,8 @@ Column {
     height: row.height + list.height
     property bool expanded: false
 
-    function createComputeWindow(compute, point, isPerAtom) {
-        var qmlFile = isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/ComputePlotter.qml"
+    function createComputeWindow(compute, point) {
+        var qmlFile = compute.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/ComputePlotter.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
             console.log("Rectangle root: ", rectangleRoot)
@@ -67,7 +67,7 @@ Column {
                         if(model.modelData.interactive) {
                             var point = Qt.point(mouseX, mouseY)
                             point = getGlobalPosition(point, computeTitleLabel)
-                            createComputeWindow(model.modelData, point, model.modelData.isPerAtom)
+                            createComputeWindow(model.modelData, point)
                         }
                     }
                     onEntered: model.modelData.hovered = true

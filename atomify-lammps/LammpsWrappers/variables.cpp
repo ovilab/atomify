@@ -18,8 +18,7 @@ Variables::Variables(QObject *parent) : QObject(parent)
 
 bool Variables::isSupported(LAMMPSController *lammpsController, int ivar)
 {
-    return lammpsController->lammps()->input->variable->equalstyle(ivar);
-    //return variable->equalstyle(ivar) || variable->atomstyle(ivar);
+    return lammpsController->lammps()->input->variable->equalstyle(ivar) || lammpsController->lammps()->input->variable->atomstyle(ivar);
 }
 
 void Variables::synchronize(LAMMPSController *lammpsController)

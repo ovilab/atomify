@@ -9,8 +9,9 @@ Column {
     property bool expanded: false
 
     function createPlotWindow(variable, point) {
-        var component = Qt.createComponent("../../plotting/VariablePlotter.qml");
-        if (component.status == Component.Ready) {
+        var qmlFile = variable.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/VariablePlotter.qml"
+        var component = Qt.createComponent(qmlFile);
+        if (component.status === Component.Ready) {
             var computePlotter = component.createObject(rectangleRoot);
             computePlotter.x = point.x - computePlotter.width*0.5
             computePlotter.y = point.y - computePlotter.height*0.5
@@ -69,6 +70,8 @@ Column {
             }
             Label {
                 text: {
+                    if(model.modelData.isPerAtom) return ""
+
                     if(model.modelData.valueHasDecimals) {
                         ": "+model.modelData.value.toFixed(3)
                     } else {

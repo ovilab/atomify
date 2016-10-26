@@ -9,17 +9,21 @@ import QtQuick.Controls.Styles 1.4
 Window {
     id: root
     property Compute compute
+    property Variable variable
     width: 500
     height: 500
     onComputeChanged: {
-        console.log("Compute: ", compute)
-        // compute.data1D["histogram"].updatedHistogram.connect(updateGraph)
         compute.data1D["histogram"].xySeries = series
+    }
+
+    onVariableChanged: {
+        variable.data.xySeries = series
     }
 
     onVisibleChanged: {
         if(!visible) {
-            compute.data1D["histogram"].updatedHistogram.disconnect(updateGraph)
+            if(compute) compute.data1D["histogram"].updatedHistogram.disconnect(updateGraph)
+            if(variable) variable.data.updatedHistogram.disconnect(updateGraph)
         }
     }
 
@@ -36,7 +40,10 @@ Window {
         interval: 250
         repeat: true
         running: true
-        onTriggered: updateGraph(compute.data1D["histogram"])
+        onTriggered: {
+            if(compute) updateGraph(compute.data1D["histogram"])
+            if(variable) updateGraph(variable.data)
+        }
     }
 
     Pane {
@@ -55,7 +62,11 @@ Window {
                 antialiasing: true
                 legend.visible: false
                 titleColor: "black"
-                title: compute ? compute.identifier : ""
+                title: {
+                    if(compute) return compute.identifier
+                    if(variable) return variable.identifier
+                    return ""
+                }
 
                 AreaSeries {
                     color: "#00357F"

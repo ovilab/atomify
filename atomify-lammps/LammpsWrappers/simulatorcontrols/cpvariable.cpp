@@ -6,7 +6,8 @@
 #include "../system.h"
 CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent),
     m_data(new Data1D(this)),
-    m_value(0)
+    m_value(0),
+    m_isPerAtom(false)
 {
 
 }
@@ -60,6 +61,15 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
             setValue(value);
             setValueHasDecimals(value!=int(value));
         }
+
+        if (variable->atomstyle(ivar)) {
+            int igroup = 0;
+            m_atomData.resize(lammpsController->system()->numberOfAtoms());
+            double *vector = &m_atomData.front();
+            variable->compute_atom(ivar,igroup,vector,1,0);
+            setIsPerAtom(true);
+            m_data->createHistogram(m_atomData);
+        }
     } catch(LAMMPSAbortException & ae) {
         qDebug() << "Yeah didn't go so well: " << ae.message.c_str();
         error->set_last_error(ae.message.c_str(), ERROR_NORMAL);
@@ -83,6 +93,11 @@ double CPVariable::value() const
 bool CPVariable::valueHasDecimals() const
 {
     return m_valueHasDecimals;
+}
+
+bool CPVariable::isPerAtom() const
+{
+    return m_isPerAtom;
 }
 
 void CPVariable::setData(Data1D *data)
@@ -110,4 +125,13 @@ void CPVariable::setValueHasDecimals(bool valueHasDecimals)
 
     m_valueHasDecimals = valueHasDecimals;
     emit valueHasDecimalsChanged(valueHasDecimals);
+}
+
+void CPVariable::setIsPerAtom(bool isPerAtom)
+{
+    if (m_isPerAtom == isPerAtom)
+        return;
+
+    m_isPerAtom = isPerAtom;
+    emit isPerAtomChanged(isPerAtom);
 }
