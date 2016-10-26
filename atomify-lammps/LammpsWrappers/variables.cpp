@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <mpi.h>
 #include <input.h>
+#include <update.h>
 #include <info.h>
 #include <lammps.h>
 #include <variable.h>
@@ -77,10 +78,12 @@ void Variables::synchronize(LAMMPSController *lammpsController)
 
     if(!lammpsController->state.canProcessSimulatorControls) return;
 
+    lammps->update->whichflag = 1;
     for(QObject *object : m_data) {
         CPVariable *variable = qobject_cast<CPVariable*>(object);
         variable->synchronize(lammpsController);
     }
+    lammps->update->whichflag = 0;
 }
 
 int Variables::count() const

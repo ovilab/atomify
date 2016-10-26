@@ -134,11 +134,14 @@ void Data1D::clear()
         Data1D *data = variant.value<Data1D*>();
         data->clear();
     }
+    if(m_xySeries) {
+        updateXYSeries(m_xySeries);
+    }
 }
 
 void Data1D::add(float x, float y, bool silent)
 {
-    add(QPointF(x,y));
+    add(QPointF(x,y), silent);
 }
 
 void Data1D::add(const QPointF &point, bool silent)

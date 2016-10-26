@@ -8,13 +8,13 @@ Column {
     height: row.height + list.height
     property bool expanded: false
 
-    function createPlotWindow(compute, point) {
-        var component = Qt.createComponent("../../plotting/ComputePlotter.qml");
+    function createPlotWindow(variable, point) {
+        var component = Qt.createComponent("../../plotting/VariablePlotter.qml");
         if (component.status == Component.Ready) {
             var computePlotter = component.createObject(rectangleRoot);
             computePlotter.x = point.x - computePlotter.width*0.5
             computePlotter.y = point.y - computePlotter.height*0.5
-            computePlotter.compute = compute
+            computePlotter.variable = variable
             computePlotter.show()
         }
     }
@@ -63,7 +63,7 @@ Column {
                     onClicked: {
                         var point = Qt.point(mouseX, mouseY)
                         point = getGlobalPosition(point, titleLabel)
-                        createComputeWindow(model.modelData, point)
+                        createPlotWindow(model.modelData, point)
                     }
                 }
             }

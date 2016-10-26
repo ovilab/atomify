@@ -23,8 +23,8 @@ public:
     Q_INVOKABLE void updateXYSeries(QAbstractSeries *series);
     Q_INVOKABLE void add(float x, float y, bool silent = true);
     Q_INVOKABLE void addSubset(QString key, int stride);
+    Q_INVOKABLE void clear();
     void add(const QPointF &point, bool silent = true);
-    void clear();
     float xMin();
     float xMax();
     float yMin();

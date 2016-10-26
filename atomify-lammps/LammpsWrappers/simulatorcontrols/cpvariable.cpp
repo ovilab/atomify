@@ -61,8 +61,10 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
             setValueHasDecimals(value!=int(value));
         }
     } catch(LAMMPSAbortException & ae) {
+        qDebug() << "Yeah didn't go so well: " << ae.message.c_str();
         error->set_last_error(ae.message.c_str(), ERROR_NORMAL);
     } catch(LAMMPSException & e) { \
+        qDebug() << "Yeah didn't go so well: " << e.message.c_str();
         error->set_last_error(e.message.c_str(), ERROR_NORMAL);
     }
 
