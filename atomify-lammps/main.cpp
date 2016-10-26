@@ -29,6 +29,7 @@
 #include "LammpsWrappers/regions.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/computes.h"
+#include "LammpsWrappers/variables.h"
 #include "LammpsWrappers/units.h"
 #include "dataproviders/data1d.h"
 #include "dataproviders/data2d.h"
@@ -55,6 +56,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Units>("Atomify", 1, 0, "Units");
     qmlRegisterType<Groups>("Atomify", 1, 0, "Groups");
     qmlRegisterType<Computes>("Atomify", 1, 0, "Computes");
+    qmlRegisterType<Variables>("Atomify", 1, 0, "Variables");
     qmlRegisterType<Fixes>("Atomify", 1, 0, "Fixes");
     qmlRegisterType<Regions>("Atomify", 1, 0, "Regions");
     qmlRegisterType<DataProvider>("Atomify", 1, 0, "DataProvider");

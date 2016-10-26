@@ -65,5 +65,6 @@
         <file>desktop/RightBar/SimulationSummary.qml</file>
         <file>desktop/RightBar/RegionsColumn.qml</file>
         <file>desktop/RightBar/FixesColumn.qml</file>
+        <file>desktop/RightBar/VariablesColumn.qml</file>
     </qresource>
 </RCC>

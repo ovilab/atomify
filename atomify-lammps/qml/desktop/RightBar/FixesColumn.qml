@@ -5,9 +5,9 @@ import Atomify 1.0
 import "../../plotting"
 
 Column {
-    id: fixesColumn
+    id: root
     property bool expanded: false
-    height: fixesRow.height + fixesList.height
+    height: row.height + list.height
     
     function create2DPlotWindow(fix, point) {
         console.log("Fix: ", fix)
@@ -26,38 +26,38 @@ Column {
     }
     
     Row {
-        id: fixesRow
+        id: row
         spacing: 2
-        height: fixesLabel.height
+        height: label.height
         
         Image {
-            id: collapseFixes
+            id: collapse
             y: 3
-            source: fixesColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
+            source: root.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
             MouseArea {
                 anchors.fill: parent
-                onClicked: fixesColumn.expanded = !fixesColumn.expanded
+                onClicked: root.expanded = !root.expanded
             }
         }
         Label {
-            id: fixesLabel
+            id: label
             text: "Fixes: "+system.fixes.count
             MouseArea {
                 anchors.fill: parent
-                onClicked: fixesColumn.expanded = !fixesColumn.expanded
+                onClicked: root.expanded = !root.expanded
             }
         }
     }
     
     ListView {
-        id: fixesList
-        anchors.top: fixesRow.bottom
-        x: fixesLabel.x
+        id: list
+        anchors.top: row.bottom
+        x: label.x
         model: system ? system.fixes.model : null
         height: visible ? count*26 : 0
-        visible: fixesColumn.expanded
+        visible: root.expanded
         delegate: Row {
-            visible: fixesList.visible
+            visible: list.visible
             Label {
                 id: fixesTitleLabel
                 font.underline: model.modelData.interactive

@@ -8,7 +8,7 @@ Column {
     height: row.height + list.height
     property bool expanded: false
 
-    function createComputeWindow(compute, point) {
+    function createPlotWindow(compute, point) {
         var component = Qt.createComponent("../../plotting/ComputePlotter.qml");
         if (component.status == Component.Ready) {
             var computePlotter = component.createObject(rectangleRoot);
@@ -18,14 +18,14 @@ Column {
             computePlotter.show()
         }
     }
-    
+
     Row {
         id: row
         spacing: 2
         height: label.height
-        
+
         Image {
-            id: collapseComputes
+            id: collapse
             y: 3
             source: root.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
             MouseArea {
@@ -35,46 +35,44 @@ Column {
         }
         Label {
             id: label
-            text: "Computes: "+system.computes.count
+            text: "Variables: "+system.variables.count
             MouseArea {
                 anchors.fill: parent
                 onClicked: root.expanded = !root.expanded
             }
         }
     }
-    
+
     ListView {
         id: list
         anchors.top: row.bottom
         x: label.x
-        model: system ? system.computes.model : null
+        model: system ? system.variables.model : null
         height: visible ? count*20 : 0
         visible: root.expanded
         delegate: Row {
             visible: list.visible
             Label {
-                id: computeTitleLabel
-                font.underline: model.modelData.interactive
-                color: model.modelData.interactive ? "steelblue" : "white"
+                id: titleLabel
+                font.underline: true
+                color: "steelblue"
                 text: model.modelData.identifier
                 MouseArea {
                     anchors.fill: parent
-                    cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        if(model.modelData.interactive) {
-                            var point = Qt.point(mouseX, mouseY)
-                            point = getGlobalPosition(point, computeTitleLabel)
-                            createComputeWindow(model.modelData, point)
-                        }
+                        var point = Qt.point(mouseX, mouseY)
+                        point = getGlobalPosition(point, titleLabel)
+                        createComputeWindow(model.modelData, point)
                     }
                 }
             }
             Label {
                 text: {
-                    if(model.modelData.hasScalarData) {
-                        ": "+model.modelData.scalarValue.toFixed(3)
+                    if(model.modelData.valueHasDecimals) {
+                        ": "+model.modelData.value.toFixed(3)
                     } else {
-                        ""
+                        ": "+model.modelData.value.toFixed(0)
                     }
                 }
             }

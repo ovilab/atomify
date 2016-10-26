@@ -5,7 +5,8 @@
 #include "../../dataproviders/data1d.h"
 #include "../system.h"
 CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent),
-    m_data(new Data1D(this))
+    m_data(new Data1D(this)),
+    m_value(0)
 {
 
 }
@@ -56,7 +57,8 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
             double value = variable->compute_equal(ivar);
             double time = lammpsController->system()->simulationTime();
             m_data->add(time, value, false);
-
+            setValue(value);
+            setValueHasDecimals(value!=int(value));
         }
     } catch(LAMMPSAbortException & ae) {
         error->set_last_error(ae.message.c_str(), ERROR_NORMAL);
@@ -71,6 +73,16 @@ Data1D *CPVariable::data() const
     return m_data;
 }
 
+double CPVariable::value() const
+{
+    return m_value;
+}
+
+bool CPVariable::valueHasDecimals() const
+{
+    return m_valueHasDecimals;
+}
+
 void CPVariable::setData(Data1D *data)
 {
     if (m_data == data)
@@ -78,4 +90,22 @@ void CPVariable::setData(Data1D *data)
 
     m_data = data;
     emit dataChanged(data);
+}
+
+void CPVariable::setValue(double value)
+{
+    if (m_value == value)
+        return;
+
+    m_value = value;
+    emit valueChanged(value);
+}
+
+void CPVariable::setValueHasDecimals(bool valueHasDecimals)
+{
+    if (m_valueHasDecimals == valueHasDecimals)
+        return;
+
+    m_valueHasDecimals = valueHasDecimals;
+    emit valueHasDecimalsChanged(valueHasDecimals);
 }

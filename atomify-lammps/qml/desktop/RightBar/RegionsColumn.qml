@@ -5,22 +5,22 @@ import Atomify 1.0
 import "../../plotting"
 
 Column {
-    id: regionsColumn
+    id: root
     property bool expanded
-    height: regionsRow.height + regionsList.height
+    height: row.height + list.height
     
     Row {
-        id: regionsRow
+        id: row
         spacing: 2
         height: regionsLabel.height
         
         Image {
             id: collapseRegions
             y: 3
-            source: regionsColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
+            source: root.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
             MouseArea {
                 anchors.fill: parent
-                onClicked: regionsColumn.expanded = !regionsColumn.expanded
+                onClicked: root.expanded = !root.expanded
             }
         }
         Label {
@@ -28,18 +28,18 @@ Column {
             text: "Regions: "+system.regions.count
             MouseArea {
                 anchors.fill: parent
-                onClicked: regionsColumn.expanded = !regionsColumn.expanded
+                onClicked: root.expanded = !root.expanded
             }
         }
     }
     
     ListView {
-        id: regionsList
-        anchors.top: regionsRow.bottom
+        id: list
+        anchors.top: row.bottom
         x: regionsLabel.x
         model: system ? system.regions.model : null
         height: visible ? count*26 : 0
-        visible: regionsColumn.expanded
+        visible: root.expanded
         delegate: Row {
             spacing: 5
             Image {
@@ -60,7 +60,7 @@ Column {
             }
             
             Label {
-                visible: regionsList.visible
+                visible: list.visible
                 text: model.modelData.identifier+": "+model.modelData.count+" atoms"
                 MouseArea {
                     anchors.fill: parent

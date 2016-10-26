@@ -167,6 +167,10 @@ Pane {
                     id: computesColumn
                 }
 
+                VariablesColumn {
+                    id: variablesColumn
+                }
+
                 FixesColumn {
                     id: fixesColumn
                 }
