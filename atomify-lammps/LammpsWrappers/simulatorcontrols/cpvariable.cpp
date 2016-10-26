@@ -2,7 +2,10 @@
 #include <variable.h>
 #include <input.h>
 #include "lammpscontroller.h"
-CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent)
+#include "../../dataproviders/data1d.h"
+#include "../system.h"
+CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent),
+    m_data(new Data1D(this))
 {
 
 }
@@ -51,6 +54,9 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
 
         if (variable->equalstyle(ivar)) {
             double value = variable->compute_equal(ivar);
+            double time = lammpsController->system()->simulationTime();
+            m_data->add(time, value, false);
+
         }
     } catch(LAMMPSAbortException & ae) {
         error->set_last_error(ae.message.c_str(), ERROR_NORMAL);
@@ -58,4 +64,18 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
         error->set_last_error(e.message.c_str(), ERROR_NORMAL);
     }
 
+}
+
+Data1D *CPVariable::data() const
+{
+    return m_data;
+}
+
+void CPVariable::setData(Data1D *data)
+{
+    if (m_data == data)
+        return;
+
+    m_data = data;
+    emit dataChanged(data);
 }

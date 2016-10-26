@@ -29,13 +29,14 @@ void Variables::synchronize(LAMMPSController *lammpsController)
         return;
     }
 
-
     Variable *variable = lammps->input->variable;
     int nvar;
     Info info(lammps);
     char **names = info.get_variable_names(nvar);
     bool anyChanges = false;
     if(names == nullptr) return; // Maybe next time
+
+    // First loop through all variables in LAMMPS to find new variables
     for(int i=0; i<nvar; i++) {
         char *name = names[i];
         int ivar = variable->find(name);
@@ -43,12 +44,14 @@ void Variables::synchronize(LAMMPSController *lammpsController)
         if(isSupported(lammpsController, ivar)) {
             QString identifier = QString::fromUtf8(name);
             if(!m_dataMap.contains(identifier)) {
+                // New variable in LAMMPS, add it
                 anyChanges = true;
                 add(identifier, lammpsController);
             }
         }
     }
 
+    // Search for variables in our list that are removed from LAMMPS
     QList<CPVariable*> toBeRemoved;
     for(QObject *object : m_data) {
         CPVariable *variable = qobject_cast<CPVariable*>(object);
@@ -59,17 +62,12 @@ void Variables::synchronize(LAMMPSController *lammpsController)
         }
     }
 
+    // Remove these from our list
     for(CPVariable *variable : toBeRemoved) {
         remove(variable->identifier());
     }
 
-    for(QObject *obj : m_data) {
-        CPVariable *variable = qobject_cast<CPVariable*>(obj);
-//        for(QVariant &variant : variable->data1D()) {
-//            CP1DData *data = variant.value<CP1DData *>();
-//            emit data->updated();
-//        }
-    }
+    // Our list is now up to date with only active variables
 
     if(anyChanges) {
         setModel(QVariant::fromValue(m_data));
