@@ -78,12 +78,6 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     int *types = lammps->atom->type;
 
     int numberOfAtoms = atom->natoms;
-    if(m_atomData.sortedIndices.size() != numberOfAtoms) {
-        m_atomData.sortedIndices.resize(numberOfAtoms);
-        for(int i=0; i<m_atomData.sortedIndices.size(); i++) {
-            m_atomData.sortedIndices[i] = i;
-        }
-    }
     if(m_atomData.positions.size() != numberOfAtoms) {
         m_atomData.positions.resize(numberOfAtoms);
     }
@@ -224,8 +218,7 @@ void Atoms::generateBondData(AtomData &atomData) {
         const float sphereRadius_i = atomData.radii[ii];
 
         if(neighborList.neighbors.size() <= i) continue;
-        for(const int &jj : neighborList.neighbors[i]) {
-            int j = atomData.sortedIndices[jj];
+        for(const int &j : neighborList.neighbors[i]) {
             if(!atomData.visible[j]) continue;
             QVector3D position_j = atomData.positions[j];
             position_j[0] += deltaPosition_i[0];
