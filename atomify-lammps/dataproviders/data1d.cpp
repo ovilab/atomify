@@ -172,27 +172,28 @@ void Data1D::add(const QPointF &point, bool silent)
 
 void Data1D::updateMinMaxWithPoint(const QPointF &point) {
     m_minMaxValuesDirty = false;
+    bool singlePoint = m_points.size() == 1;
 
     bool anyChanges = false;
-    if(m_xMax < point.x()) {
+    if(m_xMax < point.x() || singlePoint) {
         m_xMax = point.x();
         emit xMaxChanged(m_xMax);
         anyChanges = true;
     }
 
-    if(m_xMin > point.x()) {
+    if(m_xMin > point.x() || singlePoint) {
         m_xMin = point.x();
         emit xMinChanged(m_xMin);
         anyChanges = true;
     }
 
-    if(m_yMax < point.y()) {
+    if(m_yMax < point.y() || singlePoint) {
         m_yMax = point.y();
         emit yMaxChanged(m_yMax);
         anyChanges = true;
     }
 
-    if(m_yMin > point.y()) {
+    if(m_yMin > point.y() || singlePoint) {
         m_yMin = point.y();
         emit yMinChanged(m_yMin);
         anyChanges = true;
