@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import Atomify 1.0
-import "../visualization"
+import "../../visualization"
 
 Page {
     id: root
