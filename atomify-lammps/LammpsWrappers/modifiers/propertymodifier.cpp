@@ -20,7 +20,7 @@ void PropertyModifier::apply(AtomData &atomData)
     if(!enabled()) return;
     QVector<CPCompute*> computes = m_system->computes()->computes();
     for(CPCompute *compute : computes) {
-        if(compute->hovered()) {
+        if(compute->hovered() && compute->isPerAtom()) {
             const std::vector<double> &values = compute->atomData();
             double min = *std::min_element(std::begin(values), std::end(values));
             double max = *std::max_element(std::begin(values), std::end(values));
