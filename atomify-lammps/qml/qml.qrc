@@ -67,5 +67,6 @@
         <file>desktop/RightBar/FixesColumn.qml</file>
         <file>desktop/RightBar/VariablesColumn.qml</file>
         <file>plotting/VariablePlotter.qml</file>
+        <file>plotting/HistogramPlotter.qml</file>
     </qresource>
 </RCC>

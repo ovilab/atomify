@@ -2,6 +2,7 @@
 #include <QLineSeries>
 #include <limits>
 #include <QDebug>
+#include <cmath>
 
 Data1D::Data1D(QObject *parent) : QObject(parent)
 {
@@ -89,6 +90,48 @@ void Data1D::updateXYSeries(QAbstractSeries *series)
     }
 }
 
+void Data1D::updateHistogram(QLineSeries *series)
+{
+    double min = *std::min_element(std::begin(m_histogramPoints), std::end(m_histogramPoints));
+    double max = *std::max_element(std::begin(m_histogramPoints), std::end(m_histogramPoints));
+    int bins = 20; // TODO: be clever choosing this or allow user
+    double dx = (max-min) / 20;
+    std::vector<int> counts(bins, 0);
+    for(double p : m_histogramPoints) {
+        if(std::isnan(p) || std::isinf(p)) continue;
+        int bin = (p-min) / dx;
+        if(bin >= bins) bin = bins-1; // The very last number is exactly on the edge, put it in last bin
+        counts[bin]++;
+
+    }
+
+    QVector<QPointF> histogram;
+    histogram.reserve(3*bins+1);
+    histogram.append(QPointF(min, 0));
+    double maxCount = 0;
+    for(int bin = 0; bin<bins; bin++) {
+        double binMin = min + bin*dx;
+        double binMax = min + (bin+1)*dx;
+        double value = counts[bin];
+        maxCount = std::max(maxCount, value);
+
+        histogram.append(QPointF(binMin, value));
+        histogram.append(QPointF(binMax, value));
+        histogram.append(QPointF(binMax, 0));
+    }
+    counts.clear();
+    series->replace(histogram);
+    histogram.clear();
+    m_xMin = min;
+    m_xMax = max;
+    m_yMin = 0;
+    m_yMax = maxCount*1.1;
+    emit xMinChanged(m_xMin);
+    emit xMaxChanged(m_xMax);
+    emit yMinChanged(m_yMin);
+    emit yMaxChanged(m_yMax);
+}
+
 QVariantMap Data1D::subsets() const
 {
     return m_subsets;
@@ -125,7 +168,7 @@ bool Data1D::enabled() const
     return m_enabled;
 }
 
-void Data1D::clear()
+void Data1D::clear(bool silent)
 {
     m_minMaxValuesDirty = true;
     m_points.clear();
@@ -137,6 +180,12 @@ void Data1D::clear()
     if(m_xySeries) {
         updateXYSeries(m_xySeries);
     }
+}
+
+void Data1D::createHistogram(const std::vector<double> &points)
+{
+    m_histogramPoints = points;
+    emit updatedHistogram(this);
 }
 
 void Data1D::add(float x, float y, bool silent)

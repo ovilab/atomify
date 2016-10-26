@@ -1,5 +1,6 @@
 #ifndef COMPUTE_H
 #define COMPUTE_H
+#include <vector>
 #include "simulatorcontrol.h"
 #include "datasource.h"
 #include "../../dataproviders/dataprovider.h"
@@ -15,6 +16,7 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(QString group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
+    Q_PROPERTY(bool isPerAtom READ isPerAtom WRITE setIsPerAtom NOTIFY isPerAtomChanged)
     Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
     Q_PROPERTY(bool hasScalarData READ hasScalarData WRITE setHasScalarData NOTIFY hasScalarDataChanged)
     Q_PROPERTY(float scalarValue READ scalarValue WRITE setScalarValue NOTIFY scalarValueChanged)
@@ -41,6 +43,8 @@ public:
     QString xLabel() const;
     QString yLabel() const;
     bool interactive() const;
+    bool isPerAtom() const;
+    const std::vector<double> &atomData() const;
 
 signals:
     void isVectorChanged(bool isVector);
@@ -53,6 +57,7 @@ signals:
     void xLabelChanged(QString xLabel);
     void yLabelChanged(QString yLabel);
     void interactiveChanged(bool interactive);
+    void isPerAtomChanged(bool isPerAtom);
 
 public slots:
     void setIsVector(bool isVector);
@@ -65,6 +70,7 @@ public slots:
     void setXLabel(QString xLabel);
     void setYLabel(QString yLabel);
     void setInteractive(bool interactive);
+    void setIsPerAtom(bool isPerAtom);
 
 private:
     bool copyData(ComputePressure *compute, LAMMPSController *lammpsController);
@@ -77,6 +83,7 @@ private:
     bool copyData(ComputeCOM *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeGyration *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController);
+    bool copyData(ComputePropertyAtom *compute, LAMMPSController *lammpsController);
     class Data1D *ensureExists(QString key, bool enabledByDefault);
 
     bool m_isVector = false;
@@ -87,10 +94,12 @@ private:
     float m_scalarValue = 0.0;
     int m_num1DData = 0;
     QVariantMap m_data1D;
+    std::vector<double> m_atomData;
     QMap<QString, class Data1D*> m_data1DRaw;
     QString m_xLabel;
     QString m_yLabel;
     bool m_interactive = false;
+    bool m_isPerAtom = false;
 protected:
     virtual void updateCommand() override;
     QList<QString> enabledCommands() override;

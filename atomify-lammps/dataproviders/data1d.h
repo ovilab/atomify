@@ -3,6 +3,8 @@
 #include <limits>
 #include <QObject>
 #include <QXYSeries>
+#include <QLineSeries>
+
 using namespace QtCharts;
 class Data1D : public QObject
 {
@@ -21,9 +23,11 @@ public:
     explicit Data1D(QObject *parent = 0);
     Q_INVOKABLE void updateLimits();
     Q_INVOKABLE void updateXYSeries(QAbstractSeries *series);
+    Q_INVOKABLE void updateHistogram(QLineSeries *series);
     Q_INVOKABLE void add(float x, float y, bool silent = true);
     Q_INVOKABLE void addSubset(QString key, int stride);
-    Q_INVOKABLE void clear();
+    Q_INVOKABLE void clear(bool silent = false);
+    void createHistogram(const std::vector<double> &points);
     void add(const QPointF &point, bool silent = true);
     float xMin();
     float xMax();
@@ -47,6 +51,7 @@ signals:
     void parentDataChanged(Data1D* parentData);
     void xySeriesChanged(QXYSeries* xySeries);
     void updated(Data1D *data);
+    void updatedHistogram(Data1D *data);
 
 public slots:
     void setEnabled(bool enabled);
@@ -59,6 +64,7 @@ private:
     Data1D* m_parentData = nullptr;
     QXYSeries* m_xySeries = nullptr;
     QList<QPointF> m_points;
+    std::vector<double> m_histogramPoints;
     QVariantMap m_subsets;
     float m_xMin = 0;
     float m_xMax = 0;

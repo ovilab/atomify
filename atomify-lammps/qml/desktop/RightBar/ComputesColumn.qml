@@ -8,9 +8,11 @@ Column {
     height: row.height + list.height
     property bool expanded: false
 
-    function createComputeWindow(compute, point) {
-        var component = Qt.createComponent("../../plotting/ComputePlotter.qml");
-        if (component.status == Component.Ready) {
+    function createComputeWindow(compute, point, isPerAtom) {
+        var qmlFile = isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/ComputePlotter.qml"
+        var component = Qt.createComponent(qmlFile);
+        if (component.status === Component.Ready) {
+            console.log("Rectangle root: ", rectangleRoot)
             var computePlotter = component.createObject(rectangleRoot);
             computePlotter.x = point.x - computePlotter.width*0.5
             computePlotter.y = point.y - computePlotter.height*0.5
@@ -64,7 +66,7 @@ Column {
                         if(model.modelData.interactive) {
                             var point = Qt.point(mouseX, mouseY)
                             point = getGlobalPosition(point, computeTitleLabel)
-                            createComputeWindow(model.modelData, point)
+                            createComputeWindow(model.modelData, point, model.modelData.isPerAtom)
                         }
                     }
                 }
@@ -80,4 +82,9 @@ Column {
             }
         }
     }
+
+//    HistogramPlotter {
+//        id: hist
+//        visible: true
+//    }
 }

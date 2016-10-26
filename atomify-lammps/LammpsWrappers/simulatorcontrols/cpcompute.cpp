@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <error.h>
 #include <update.h>
+using std::vector;
 
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
@@ -39,9 +40,19 @@ Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     return m_data1DRaw[key];
 }
 
+const vector<double> &CPCompute::atomData() const
+{
+    return m_atomData;
+}
+
 bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
+    ensureExists("histogram", true);
     double *data = compute->vector_atom;
+    int numAtoms = lammpsController->system()->numberOfAtoms();
+    m_atomData = vector<double>(data, data+numAtoms);
+    setIsPerAtom(true);
+    setInteractive(true);
     return true;
 }
 
@@ -54,6 +65,22 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     setXLabel("Time");
     setYLabel("Temperature");
     data->add(lammpsController->system()->simulationTime(), value, false);
+    setInteractive(true);
+    return true;
+}
+
+bool CPCompute::copyData(ComputePropertyAtom *compute, LAMMPSController *lammpsController) {
+    if(!compute) return false;
+    if(compute->size_peratom_cols > 0) return true; // We don't support vector quantities yet
+
+    double *values = compute->vector_atom;
+    int numAtoms = lammpsController->system()->numberOfAtoms();
+    m_atomData = vector<double>(values, values+numAtoms);
+
+    Data1D *data = ensureExists("histogram", true);
+    data->createHistogram(m_atomData);
+
+    setIsPerAtom(true);
     setInteractive(true);
     return true;
 }
@@ -261,11 +288,10 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     if(compute->peratom_flag == 1) {
         try {
             compute->compute_peratom();
-        } catch (LAMMPSException &exception) {
-            // TODO: handle this better than just ignoring exception.
-//            qDebug() << "ERROR: LAMMPS threw an exception!";
-//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        }  catch(LAMMPSAbortException & ae) {
+            qDebug() << "Yeah didn't go so well: " << ae.message.c_str();
+        } catch(LAMMPSException & e) { \
+            qDebug() << "Yeah didn't go so well: " << e.message.c_str();
         }
     }
 }
@@ -287,6 +313,8 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
         if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
         if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
         if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputePropertyAtom*>(lmp_compute), lammpsController)) return;
+        if(copyData(dynamic_cast<ComputeKEAtom*>(lmp_compute), lammpsController)) return;
     } catch (LAMMPSException &exception) {
         qDebug() << "ERROR: LAMMPS threw an exception!";
         qDebug() << "ERROR: Message:" << QString::fromStdString(exception.message);
@@ -393,6 +421,11 @@ bool CPCompute::interactive() const
     return m_interactive;
 }
 
+bool CPCompute::isPerAtom() const
+{
+    return m_isPerAtom;
+}
+
 void CPCompute::setIsVector(bool isVector)
 {
     if (m_isVector == isVector)
@@ -481,6 +514,15 @@ void CPCompute::setInteractive(bool interactive)
 
     m_interactive = interactive;
     emit interactiveChanged(interactive);
+}
+
+void CPCompute::setIsPerAtom(bool isPerAtom)
+{
+    if (m_isPerAtom == isPerAtom)
+        return;
+
+    m_isPerAtom = isPerAtom;
+    emit isPerAtomChanged(isPerAtom);
 }
 
 QList<QString> CPCompute::resetCommands()
