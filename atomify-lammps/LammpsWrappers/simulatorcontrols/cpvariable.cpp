@@ -5,9 +5,7 @@
 #include "../../dataproviders/data1d.h"
 #include "../system.h"
 CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent),
-    m_data(new Data1D(this)),
-    m_value(0),
-    m_isPerAtom(false)
+    m_data(new Data1D(this)), m_value(0), m_isPerAtom(false), m_hovered(false)
 {
 
 }
@@ -36,6 +34,11 @@ QList<QString> CPVariable::resetCommands()
 QString CPVariable::createCommandPrefix()
 {
     return QString("variable %1 ").arg(identifier());
+}
+
+const std::vector<double> &CPVariable::atomData() const
+{
+    return m_atomData;
 }
 
 bool CPVariable::existsInLammps(LAMMPSController *lammpsController)
@@ -100,6 +103,11 @@ bool CPVariable::isPerAtom() const
     return m_isPerAtom;
 }
 
+bool CPVariable::hovered() const
+{
+    return m_hovered;
+}
+
 void CPVariable::setData(Data1D *data)
 {
     if (m_data == data)
@@ -134,4 +142,13 @@ void CPVariable::setIsPerAtom(bool isPerAtom)
 
     m_isPerAtom = isPerAtom;
     emit isPerAtomChanged(isPerAtom);
+}
+
+void CPVariable::setHovered(bool hovered)
+{
+    if (m_hovered == hovered)
+        return;
+
+    m_hovered = hovered;
+    emit hoveredChanged(hovered);
 }

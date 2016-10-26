@@ -95,6 +95,16 @@ QVariant Variables::model() const
     return m_model;
 }
 
+QVector<CPVariable *> Variables::variables()
+{
+    QVector<CPVariable *> variables;
+    for(QObject *object : m_data) {
+        CPVariable *variable = qobject_cast<CPVariable*>(object);
+        variables.append(variable);
+    }
+    return variables;
+}
+
 void Variables::setCount(int count)
 {
     if (m_count == count)

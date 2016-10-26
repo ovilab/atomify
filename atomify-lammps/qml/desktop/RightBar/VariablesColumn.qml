@@ -61,11 +61,14 @@ Column {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
                     onClicked: {
                         var point = Qt.point(mouseX, mouseY)
                         point = getGlobalPosition(point, titleLabel)
                         createPlotWindow(model.modelData, point)
                     }
+                    onEntered: model.modelData.hovered = true
+                    onExited: model.modelData.hovered = false
                 }
             }
             Label {

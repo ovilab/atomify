@@ -1,10 +1,12 @@
 #ifndef CPVARIABLE_H
 #define CPVARIABLE_H
+#include <vector>
 #include "simulatorcontrol.h"
 class CPVariable : public SimulatorControl
 {
     Q_OBJECT
     Q_PROPERTY(Data1D* data READ data WRITE setData NOTIFY dataChanged)
+    Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     Q_PROPERTY(bool isPerAtom READ isPerAtom WRITE setIsPerAtom NOTIFY isPerAtomChanged)
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(bool valueHasDecimals READ valueHasDecimals WRITE setValueHasDecimals NOTIFY valueHasDecimalsChanged)
@@ -16,18 +18,22 @@ public:
     double value() const;
     bool valueHasDecimals() const;
     bool isPerAtom() const;
+    bool hovered() const;
+    const std::vector<double> &atomData() const;
 
 public slots:
     void setData(class Data1D* data);
     void setValue(double value);
     void setValueHasDecimals(bool valueHasDecimals);
     void setIsPerAtom(bool isPerAtom);
+    void setHovered(bool hovered);
 
 signals:
     void dataChanged(class Data1D* data);
     void valueChanged(double value);
     void valueHasDecimalsChanged(bool valueHasDecimals);
     void isPerAtomChanged(bool isPerAtom);
+    void hoveredChanged(bool hovered);
 
 protected:
     virtual void updateCommand();
@@ -42,6 +48,7 @@ private:
     double m_value;
     bool m_valueHasDecimals;
     bool m_isPerAtom;
+    bool m_hovered;
 };
 
 #endif // CPVARIABLE_H

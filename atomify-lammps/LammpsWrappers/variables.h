@@ -15,6 +15,7 @@ public:
     void synchronize(class LAMMPSController *lammpsController);
     int count() const;
     QVariant model() const;
+    QVector<class CPVariable*> variables();
 
 signals:
     void countChanged(int count);

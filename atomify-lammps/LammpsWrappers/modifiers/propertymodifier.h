@@ -11,6 +11,8 @@ public:
     // Modifier interface
 public:
     virtual void apply(class AtomData &atomData) override;
+private:
+    void applyColors(AtomData &atomData, const std::vector<double> &values);
 };
 
 #endif // PROPERTYMODIFIER_H
