@@ -63,5 +63,7 @@
         <file>desktop/RightBar/ComputesColumn.qml</file>
         <file>desktop/RightBar/SliceControl.qml</file>
         <file>desktop/RightBar/SimulationSummary.qml</file>
+        <file>desktop/RightBar/RegionsColumn.qml</file>
+        <file>desktop/RightBar/FixesColumn.qml</file>
     </qresource>
 </RCC>

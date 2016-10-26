@@ -46,22 +46,6 @@ Pane {
         }
     }
 
-    function create2DPlotWindow(fix, point) {
-        console.log("Fix: ", fix)
-        var component = Qt.createComponent("../plotting/Plot2D.qml");
-        if (component.status == Component.Ready) {
-            console.log("Can create now. it is ready")
-            var plotter = component.createObject(rectangleRoot);
-            plotter.x = point.x - plotter.width*0.5
-            plotter.y = point.y - plotter.height*0.5
-            plotter.fix = fix
-            console.log("Will show")
-            plotter.show()
-        } else {
-            console.log("Error :(")
-        }
-    }
-
     Column {
         anchors {
             fill: parent
@@ -175,143 +159,16 @@ Pane {
                     }
                 }
 
-                Column {
+                RegionsColumn {
                     id: regionsColumn
-                    property bool expanded
-                    height: regionsRow.height + regionsList.height
-
-                    Row {
-                        id: regionsRow
-                        spacing: 2
-                        height: regionsLabel.height
-
-                        Image {
-                            id: collapseRegions
-                            y: 3
-                            source: regionsColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: regionsColumn.expanded = !regionsColumn.expanded
-                            }
-                        }
-                        Label {
-                            id: regionsLabel
-                            text: "Regions: "+system.regions.count
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: regionsColumn.expanded = !regionsColumn.expanded
-                            }
-                        }
-                    }
-
-                    ListView {
-                        id: regionsList
-                        anchors.top: regionsRow.bottom
-                        x: regionsLabel.x
-                        model: system ? system.regions.model : null
-                        height: visible ? count*26 : 0
-                        visible: regionsColumn.expanded
-                        delegate: Row {
-                            spacing: 5
-                            Image {
-                                id: regionVisible
-                                width: 15
-                                height: 15
-                                y: 1
-                                source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
-                                MouseArea {
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    onHoveredChanged: {
-                                        model.modelData.hovered = containsMouse
-                                    }
-                                    onClicked: model.modelData.visible = !model.modelData.visible
-                                    cursorShape: Qt.PointingHandCursor
-                                }
-                            }
-
-                            Label {
-                                visible: regionsList.visible
-                                text: model.modelData.identifier+": "+model.modelData.count+" atoms"
-                                MouseArea {
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    onClicked: model.modelData.visible = !model.modelData.visible
-                                    onHoveredChanged: {
-                                        model.modelData.hovered = containsMouse
-                                    }
-                                    cursorShape: Qt.PointingHandCursor
-                                }
-                            }
-
-                        }
-                    }
                 }
 
                 ComputesColumn {
                     id: computesColumn
                 }
 
-                Column {
+                FixesColumn {
                     id: fixesColumn
-                    property bool expanded: false
-                    height: fixesRow.height + fixesList.height
-
-
-                    Row {
-                        id: fixesRow
-                        spacing: 2
-                        height: fixesLabel.height
-
-                        Image {
-                            id: collapseFixes
-                            y: 3
-                            source: fixesColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: fixesColumn.expanded = !fixesColumn.expanded
-                            }
-                        }
-                        Label {
-                            id: fixesLabel
-                            text: "Fixes: "+system.fixes.count
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: fixesColumn.expanded = !fixesColumn.expanded
-                            }
-                        }
-                    }
-
-                    ListView {
-                        id: fixesList
-                        anchors.top: fixesRow.bottom
-                        x: fixesLabel.x
-                        model: system ? system.fixes.model : null
-                        height: visible ? count*26 : 0
-                        visible: fixesColumn.expanded
-                        delegate: Row {
-                            visible: fixesList.visible
-                            Label {
-                                id: fixesTitleLabel
-                                font.underline: model.modelData.interactive
-                                color: model.modelData.interactive ? "steelblue" : "white"
-                                text: {
-                                    model.modelData.identifier
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
-                                    onClicked: {
-                                        if(model.modelData.interactive) {
-                                            var point = Qt.point(mouseX, mouseY)
-                                            point = getGlobalPosition(point, fixesTitleLabel)
-                                            create2DPlotWindow(model.modelData, point)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
