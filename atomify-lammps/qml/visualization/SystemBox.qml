@@ -157,6 +157,7 @@ Entity {
                 color: Qt.rgba(1, 1, 1, sideAlpha)
                 lights: root.lights
             }
+            deferredColor: Qt.rgba(1, 1, 1, sideAlpha)
         }
     }
 
