@@ -12,7 +12,7 @@ public:
 public:
     virtual void apply(class AtomData &atomData) override;
 private:
-    void applyColors(AtomData &atomData, const std::vector<double> &values);
+    void applyColors(AtomData &atomData, const std::vector<double> &values, int groupBit);
 };
 
 #endif // PROPERTYMODIFIER_H

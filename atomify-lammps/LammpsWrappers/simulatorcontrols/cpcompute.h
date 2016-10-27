@@ -51,6 +51,7 @@ public:
     const std::vector<double> &atomData() const;
     int perAtomIndex() const;
     int numPerAtomValues() const;
+    int groupBit() const;
 
 signals:
     void isVectorChanged(bool isVector);
@@ -118,7 +119,7 @@ private:
     bool m_hovered = false;
     int m_perAtomIndex = 0;
     int m_numPerAtomValues = 0;
-
+    int m_groupBit = 0;
 protected:
     virtual void updateCommand() override;
     QList<QString> enabledCommands() override;

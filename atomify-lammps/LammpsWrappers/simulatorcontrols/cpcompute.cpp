@@ -40,6 +40,11 @@ Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     return m_data1DRaw[key];
 }
 
+int CPCompute::groupBit() const
+{
+    return m_groupBit;
+}
+
 const vector<double> &CPCompute::atomData() const
 {
     return m_atomData;
@@ -385,6 +390,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(lastUpdate != -1 && (lammpsController->system()->timesteps()-lastUpdate) < m_frequency) return;
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
     Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
+    m_groupBit = lmp_compute->groupbit;
     if(lmp_compute == nullptr) return;
     try {
         if(copyData(lmp_compute, lammpsController)) return;
