@@ -7,7 +7,8 @@ import "../../plotting"
 Flickable {
     id: rectangleRoot
     property System system
-
+    onHeightChanged: console.log("Content height: ", contentHeight)
+    contentHeight: myCol.height
     function getGlobalPosition(p, item) {
         var globalX = p.x
         var globalY = p.y
@@ -47,15 +48,18 @@ Flickable {
     }
 
     Column {
+        id: myCol
+        onHeightChanged: console.log("Column height: ", height)
         anchors {
-            fill: parent
             margins: 10
         }
+        width: parent.width
 
         spacing: 10
         GroupBox {
-            width: parent.width
+            id: simulationSummary
             title: "Simulation summary"
+            width: parent.width
 
             Column {
                 Label {
@@ -178,11 +182,13 @@ Flickable {
         }
 
         GroupBox {
+            id: keyboardShortcuts
             width: parent.width
             title: "Keyboard shortcuts"
 
-            ColumnLayout {
+            Column {
                 id: shortcutRoot
+                width: parent.width
                 property int labelWidth: 115
                 property string controlName: {
                     if(Qt.platform.os === "osx") {
@@ -192,7 +198,7 @@ Flickable {
                 }
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    width: parent.width
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
@@ -204,7 +210,7 @@ Flickable {
                 }
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    width: parent.width
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
@@ -216,7 +222,7 @@ Flickable {
                 }
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    width: parent.width
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
@@ -228,7 +234,7 @@ Flickable {
                 }
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    width: parent.width
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
@@ -240,7 +246,7 @@ Flickable {
                 }
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    width: parent.width
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth
@@ -252,7 +258,7 @@ Flickable {
                 }
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    width: parent.width
                     Label {
                         Layout.minimumWidth: shortcutRoot.labelWidth
                         Layout.maximumWidth: shortcutRoot.labelWidth

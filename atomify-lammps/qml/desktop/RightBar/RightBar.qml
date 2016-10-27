@@ -21,6 +21,7 @@ Page {
         SimulationSummary {
             width: swipeView.width
             height: swipeView.height
+            // contentHeight: 2*height
             system: root.system
         }
 
