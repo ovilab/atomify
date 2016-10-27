@@ -4,7 +4,7 @@ import QtQuick.Controls 2.0
 import Atomify 1.0
 import "../../plotting"
 
-Pane {
+Flickable {
     id: rectangleRoot
     property System system
 

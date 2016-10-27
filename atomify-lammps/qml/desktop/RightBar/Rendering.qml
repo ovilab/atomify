@@ -3,7 +3,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls 1.5 as QQC1
 import Atomify 1.0
 import "../../visualization"
-Pane {
+Flickable {
     id: root
     property AtomifyVisualizer visualizer
 
