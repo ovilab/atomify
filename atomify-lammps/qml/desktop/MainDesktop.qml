@@ -124,7 +124,7 @@ Item {
                 ColorLegend {
                     width: 50
                     height: 300
-                    visible: visualizer.propertyModifier.active
+                    hidden: !visualizer.propertyModifier.active
                     min: visualizer.propertyModifier.min
                     max: visualizer.propertyModifier.max
 

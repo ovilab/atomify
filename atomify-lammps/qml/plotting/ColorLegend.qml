@@ -5,9 +5,18 @@ Item {
     id: root
     property real min: 0
     property real max: 1
+    property bool hidden: true
+    opacity: hidden ? 0.0 : 1.0
 
     ColorMaps {
         id: colorMaps
+    }
+
+    Behavior on opacity {
+        NumberAnimation {
+            duration: 200
+            easing.type: Easing.OutBounce
+        }
     }
 
     Rectangle {
