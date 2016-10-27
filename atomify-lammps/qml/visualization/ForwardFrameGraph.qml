@@ -19,23 +19,11 @@ Viewport {
 
     property Camera camera: Camera {}
     property alias surface: surfaceSelector.surface
-    property alias atomLayer: atomLayer
-    property alias guideLayer: guideLayer
-    property alias outlineLayer: outlineLayer
+    property Layer atomLayer
+    property Layer guideLayer
+    property Layer outlineLayer
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
-
-    Layer {
-        id: atomLayer
-    }
-
-    Layer {
-        id: guideLayer
-    }
-
-    Layer {
-        id: outlineLayer
-    }
 
     TechniqueFilter {
         matchAll: FilterKey { name: "renderingStyle"; value: "forward" }

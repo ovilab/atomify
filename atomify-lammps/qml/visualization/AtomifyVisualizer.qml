@@ -138,11 +138,25 @@ Scene3D {
             onPressed: root.focus = true
         }
 
+        Layer {
+            id: atomLayer
+        }
+
+        Layer {
+            id: guideLayer
+        }
+
+        Layer {
+            id: outlineLayer
+        }
 
         ForwardFrameGraph {
             id: forwardFrameGraph
             //            surface: deferredFrameGraph.surface
             camera: mainCamera
+            atomLayer: atomLayer
+            guideLayer: guideLayer
+            outlineLayer: outlineLayer
         }
 
         DeferredFrameGraph {
@@ -151,6 +165,9 @@ Scene3D {
             width: Math.max(10, root.width, root.height)
             height: width
             surface: forwardFrameGraph.surface
+            atomLayer: atomLayer
+            guideLayer: guideLayer
+            outlineLayer: outlineLayer
         }
         components: [
             RenderSettings {

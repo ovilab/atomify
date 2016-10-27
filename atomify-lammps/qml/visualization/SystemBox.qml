@@ -18,7 +18,8 @@ Entity {
     id: root
     property var layer
     property bool showSurfaces: true
-    property real alpha: 0.7
+    property real outlineAlpha: 0.4
+    property real sideAlpha: 0.2
     property vector3d size
     property vector3d sizePlus: size.plus(Qt.vector3d(1, 1, 1))
     property var lights: [
@@ -114,7 +115,7 @@ Entity {
     ShaderBuilderMaterial {
         id: outlineMaterial
         fragmentColor: StandardMaterial {
-            color: Qt.rgba(1, 1, 1, alpha)
+            color: Qt.rgba(0.6, 0.8, 1, outlineAlpha)
             lights: root.lights
         }
     }
@@ -153,26 +154,7 @@ Entity {
         ShaderBuilderMaterial {
             id: surfaceMaterial
             fragmentColor: StandardMaterial {
-                color: CombineRgbVectorAlpha {
-                    vector: "red"
-                    alpha: Multiply {
-                        value1: Add {
-                            value1: Noise {
-                                scale: 10
-                            }
-                            value2: Add {
-                                value1: -0.4
-                                value2: Multiply {
-                                    value1: 0.2
-                                    value2: Sine {
-                                        value: timer.time / 1000
-                                    }
-                                }
-                            }
-                        }
-                        value2: 10
-                    }
-                }
+                color: Qt.rgba(1, 1, 1, sideAlpha)
                 lights: root.lights
             }
         }
