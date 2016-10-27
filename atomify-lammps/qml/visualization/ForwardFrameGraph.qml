@@ -19,6 +19,9 @@ Viewport {
 
     property Camera camera: Camera {}
     property alias surface: surfaceSelector.surface
+    property Layer atomLayer
+    property Layer guideLayer
+    property Layer outlineLayer
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
 
@@ -27,12 +30,20 @@ Viewport {
         RenderSurfaceSelector {
             id: surfaceSelector
             RenderPassFilter {
-                ClearBuffers {
-                    clearColor: "#000"
-                    buffers: ClearBuffers.ColorDepthBuffer
-                    CameraSelector {
-                        id: viewCameraSelector
-                        camera: root.camera
+                CameraSelector {
+                    camera: root.camera
+                    LayerFilter {
+                        layers: atomLayer
+                        ClearBuffers {
+                            clearColor: "#000"
+                            buffers: ClearBuffers.ColorDepthBuffer
+                        }
+                    }
+                    LayerFilter {
+                        layers: guideLayer
+                    }
+                    LayerFilter {
+                        layers: outlineLayer
                     }
                 }
             }

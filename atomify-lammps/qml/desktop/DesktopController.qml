@@ -19,7 +19,9 @@ Entity {
     property real zoomLimit: 2.0
     property real flymodeSpeed: 1.0
     property real trackballSpeed: 1.0
+    property real dragSpeed: 100.0
     property vector3d viewCenter: Qt.vector3d(0,0,0)
+    property alias dragging: rightMouseButtonAction.active
     property string mode: "trackball"
     onModeChanged: {
         if(mode==="flymode") {
@@ -322,6 +324,10 @@ Entity {
 //                    console.log("TL: ", translationLength)
 
                     root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * flymodeFinalSpeed), Camera.DontTranslateViewCenter);
+
+                    if(rightMouseButtonAction.active) {
+                       camera.translate(Qt.vector3d(-mouseXAxis.value * dragSpeed, -mouseYAxis.value * dragSpeed, 0.0))
+                    }
                 }
 
                 // TODO Implement roll, see below

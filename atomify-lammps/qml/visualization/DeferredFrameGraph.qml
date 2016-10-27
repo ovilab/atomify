@@ -27,13 +27,16 @@ Viewport {
     property alias positionTexture: positionTexture
     property alias surface: surfaceSelector.surface
     property Camera camera: Camera {}
+    property Layer atomLayer
+    property Layer guideLayer
+    property Layer outlineLayer
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
+
     TechniqueFilter {
         matchAll: FilterKey { name: "renderingStyle"; value: "deferred" }
         RenderSurfaceSelector {
             id: surfaceSelector
-
             RenderPassFilter {
                 id : geometryPass
                 matchAny : FilterKey { name : "pass"; value : "geometry" }
@@ -112,11 +115,20 @@ Viewport {
                             }
                         ]
                     }
-                    ClearBuffers {
-                        clearColor: "#000"
-                        buffers: ClearBuffers.ColorDepthBuffer
-                        CameraSelector {
-                            camera: mainCamera
+                    CameraSelector {
+                        camera: mainCamera
+                        LayerFilter {
+                            layers: atomLayer
+                            ClearBuffers {
+                                clearColor: "#000"
+                                buffers: ClearBuffers.ColorDepthBuffer
+                            }
+                        }
+                        LayerFilter {
+                            layers: guideLayer
+                        }
+                        LayerFilter {
+                            layers: outlineLayer
                         }
                     }
                 }

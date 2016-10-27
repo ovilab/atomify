@@ -139,11 +139,25 @@ Scene3D {
             onPressed: root.focus = true
         }
 
+        Layer {
+            id: atomLayer
+        }
+
+        Layer {
+            id: guideLayer
+        }
+
+        Layer {
+            id: outlineLayer
+        }
 
         ForwardFrameGraph {
             id: forwardFrameGraph
             //            surface: deferredFrameGraph.surface
             camera: mainCamera
+            atomLayer: atomLayer
+            guideLayer: guideLayer
+            outlineLayer: outlineLayer
         }
 
         DeferredFrameGraph {
@@ -152,6 +166,9 @@ Scene3D {
             width: Math.max(10, root.width, root.height)
             height: width
             surface: forwardFrameGraph.surface
+            atomLayer: atomLayer
+            guideLayer: guideLayer
+            outlineLayer: outlineLayer
         }
         components: [
             RenderSettings {
@@ -250,6 +267,7 @@ Scene3D {
 
         Spheres {
             id: spheres
+            layer: forwardFrameGraph.atomLayer
             camera: visualizer.camera
             sphereData: simulator.system.atoms.sphereData
             // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
@@ -260,6 +278,7 @@ Scene3D {
 
         Bonds {
             id: bonds
+            layer: forwardFrameGraph.atomLayer
             color: "white"
             bondData: simulator.system.atoms.bondData
             posMin: spheres.posMin
@@ -267,56 +286,58 @@ Scene3D {
             fragmentColor: bondsMediumQuality
         }
 
-        Entity {
+        Guide {
             enabled: root.guidesVisible
-            components: [
-                CylinderMesh {},
-                ShaderBuilderMaterial {
-                    fragmentColor: "red"
-                },
-                Transform {
-                    translation: visualizer.camera.viewCenter
-                    scale3D: Qt.vector3d(0.51, 1000, 0.51)
-                    rotationZ: 90
-                }
-            ]
+            color: "red"
+            scale3D: Qt.vector3d(0.51, 1000, 0.51)
+            rotationZ: 90
+            camera: visualizer.camera
+            layer: forwardFrameGraph.guideLayer
+        }
+
+        Guide {
+            enabled: root.guidesVisible
+            color: "blue"
+            scale3D: Qt.vector3d(0.53, 1000, 0.53)
+            rotationX: 90
+            camera: visualizer.camera
+            layer: forwardFrameGraph.guideLayer
+        }
+
+        Guide {
+            enabled: root.guidesVisible
+            color: "green"
+            scale3D: Qt.vector3d(0.52, 1000, 0.52)
+            camera: visualizer.camera
+            layer: forwardFrameGraph.guideLayer
         }
 
         Entity {
-            enabled: root.guidesVisible
+            enabled: controller.dragging
             components: [
-                CylinderMesh {},
-                ShaderBuilderMaterial {
-                    fragmentColor: "green"
-                },
-                Transform {
-                    translation: visualizer.camera.viewCenter
-                    scale3D: Qt.vector3d(0.52, 1000, 0.52)
-                }
+                sphereMesh,
+                whiteMaterial,
+                viewCenterTransform,
+                forwardFrameGraph.guideLayer
             ]
-        }
-
-        Entity {
-            enabled: root.guidesVisible
-            components: [
-                CylinderMesh {},
-                ShaderBuilderMaterial {
-                    fragmentColor: "blue"
-                },
-                Transform {
-                    translation: visualizer.camera.viewCenter
-                    scale3D: Qt.vector3d(0.53, 1000, 0.53)
-                    rotationX: 90
-                }
-            ]
+            SphereMesh {id: sphereMesh}
+            ShaderBuilderMaterial {
+                id: whiteMaterial
+                fragmentColor: "white"
+            }
+            Transform {
+                id: viewCenterTransform
+                translation: visualizer.camera.viewCenter
+            }
         }
 
         SystemBox {
             id: systemBox
 
-            enabled: root.systemBoxVisible
+            enabled: root.systemBoxVisible //|| controller.dragging
             size: root.simulator.system.size
             lights: visualizer.lights
+            layer: forwardFrameGraph.outlineLayer
         }
     }
 }

@@ -16,9 +16,12 @@ import ShaderNodes 1.0
 
 Entity {
     id: root
-    property bool showSurfaces: false
-    property real alpha: 0.5
+    property var layer
+    property bool showSurfaces: true
+    property real outlineAlpha: 0.4
+    property real sideAlpha: 0.2
     property vector3d size
+    property vector3d sizePlus: size.plus(Qt.vector3d(1, 1, 1))
     property var lights: [
         dummy
     ]
@@ -28,7 +31,7 @@ Entity {
         dir[direction] = 1
         var added = Qt.vector3d(0.3, 0.3, 0.3)
         added[direction] = 0
-        var result = size.times(dir).plus(added)
+        var result = sizePlus.times(dir).plus(added)
         return result
     }
     
@@ -47,7 +50,7 @@ Entity {
             indexVector = Qt.vector3d(a, b, 0)
             break
         }
-        var scaled = size.times(indexVector)
+        var scaled = sizePlus.times(indexVector)
         return scaled
     }
     
@@ -58,7 +61,8 @@ Entity {
             components: [,
                 outlineMaterial,
                 mesh,
-                transformX
+                transformX,
+                layer
             ]
             Transform {
                 id: transformX
@@ -77,7 +81,8 @@ Entity {
             components: [,
                 outlineMaterial,
                 mesh,
-                transformY
+                transformY,
+                layer
             ]
             Transform {
                 id: transformY
@@ -94,7 +99,8 @@ Entity {
             components: [,
                 outlineMaterial,
                 mesh,
-                transformZ
+                transformZ,
+                layer
             ]
             Transform {
                 id: transformZ
@@ -109,11 +115,50 @@ Entity {
     ShaderBuilderMaterial {
         id: outlineMaterial
         fragmentColor: StandardMaterial {
-            color: "white"
+            color: Qt.rgba(0.6, 0.8, 1, outlineAlpha)
             lights: root.lights
         }
     }
 
-    Entity {  enabled: root.enabled&&root.showSurfaces; components: [ CuboidMesh {}, Transform { scale3D: root.size }, PhongAlphaMaterial { alpha: root.alpha; } ] }
+    Entity {
+        enabled: root.enabled && root.showSurfaces
+        components: [
+            mesh,
+            layer,
+            surfaceMaterial,
+            surfaceTransform
+        ]
+
+        Transform {
+            id: surfaceTransform
+            scale3D: root.sizePlus
+        }
+        Timer {
+            id: timer
+            property real time
+            property real previousTime: 0
+            running: true
+            repeat: true
+            interval: 16
+            onTriggered: {
+                if(previousTime === 0) {
+                    previousTime = Date.now()
+                    return
+                }
+
+                time += Date.now() - previousTime
+                previousTime = Date.now()
+            }
+        }
+
+        ShaderBuilderMaterial {
+            id: surfaceMaterial
+            fragmentColor: StandardMaterial {
+                color: Qt.rgba(1, 1, 1, sideAlpha)
+                lights: root.lights
+            }
+            deferredColor: Qt.rgba(1, 1, 1, sideAlpha)
+        }
+    }
 
 }

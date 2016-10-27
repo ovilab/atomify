@@ -69,5 +69,6 @@
         <file>plotting/VariablePlotter.qml</file>
         <file>plotting/HistogramPlotter.qml</file>
         <file>plotting/ColorLegend.qml</file>
+        <file>visualization/Guide.qml</file>
     </qresource>
 </RCC>
