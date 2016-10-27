@@ -17,6 +17,9 @@ Window {
         for(var key in compute.data1D) {
             compute.data1D[key].updated.connect(updateGraphs(key))
             compute.data1D[key].xySeries = dataSeries[key]
+            compute.data1D[key].onDestroyed.connect(function(compute) {
+                console.log("Destroying this compute")
+            })
         }
         title = "Compute '"+compute.identifier+"'"
     }

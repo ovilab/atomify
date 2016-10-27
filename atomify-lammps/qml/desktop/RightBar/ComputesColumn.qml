@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.0
+import QtQuick.Controls 1.4 as QQC1
 import Atomify 1.0
 import "../../plotting"
 Column {
@@ -54,8 +55,10 @@ Column {
         visible: root.expanded
         delegate: Row {
             visible: list.visible
+            height: 20
             Label {
                 id: computeTitleLabel
+                property Compute compute: model.modelData
                 font.underline: model.modelData.interactive
                 color: model.modelData.interactive ? "steelblue" : "white"
                 text: model.modelData.identifier
@@ -75,19 +78,40 @@ Column {
                 }
             }
             Label {
+                visible: model.modelData.hasScalarData || computeTitleLabel.compute.numPerAtomValues > 1
+                color: (computeTitleLabel.compute.numPerAtomValues > 1) ? "steelblue" : "white"
                 text: {
                     if(model.modelData.hasScalarData) {
                         ": "+model.modelData.scalarValue.toFixed(3)
-                    } else {
-                        ""
+                    } else if(computeTitleLabel.compute.numPerAtomValues > 1) {
+                        "   ["+(computeTitleLabel.compute.perAtomIndex+1)+"]"
+                    } else ""
+
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: computeTitleLabel.compute.numPerAtomValues > 1
+                    onClicked: menu.open()
+                }
+
+                Menu {
+                    id: menu
+
+                    Column {
+                        Repeater {
+                            model: computeTitleLabel.compute.numPerAtomValues
+                            MenuItem {
+                                text: model.index+1
+                                onClicked: {
+                                    computeTitleLabel.compute.perAtomIndex = (parseInt(text)-1)
+                                    menu.close()
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
-//    HistogramPlotter {
-//        id: hist
-//        visible: true
-//    }
 }

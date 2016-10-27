@@ -18,6 +18,8 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(QString group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(bool isVector READ isVector WRITE setIsVector NOTIFY isVectorChanged)
     Q_PROPERTY(bool isPerAtom READ isPerAtom WRITE setIsPerAtom NOTIFY isPerAtomChanged)
+    Q_PROPERTY(int perAtomIndex READ perAtomIndex WRITE setPerAtomIndex NOTIFY perAtomIndexChanged)
+    Q_PROPERTY(int numPerAtomValues READ numPerAtomValues WRITE setNumPerAtomValues NOTIFY numPerAtomValuesChanged)
     Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
     Q_PROPERTY(bool hasScalarData READ hasScalarData WRITE setHasScalarData NOTIFY hasScalarDataChanged)
     Q_PROPERTY(float scalarValue READ scalarValue WRITE setScalarValue NOTIFY scalarValueChanged)
@@ -47,6 +49,8 @@ public:
     bool isPerAtom() const;
     bool hovered() const;
     const std::vector<double> &atomData() const;
+    int perAtomIndex() const;
+    int numPerAtomValues() const;
 
 signals:
     void isVectorChanged(bool isVector);
@@ -61,6 +65,8 @@ signals:
     void interactiveChanged(bool interactive);
     void isPerAtomChanged(bool isPerAtom);
     void hoveredChanged(bool hovered);
+    void perAtomIndexChanged(int perAtomIndex);
+    void numPerAtomValuesChanged(int numPerAtomValues);
 
 public slots:
     void setIsVector(bool isVector);
@@ -75,6 +81,8 @@ public slots:
     void setInteractive(bool interactive);
     void setIsPerAtom(bool isPerAtom);
     void setHovered(bool hovered);
+    void setPerAtomIndex(int perAtomIndex);
+    void setNumPerAtomValues(int numPerAtomValues);
 
 private:
     bool copyData(ComputePressure *compute, LAMMPSController *lammpsController);
@@ -108,6 +116,8 @@ private:
     bool m_interactive = false;
     bool m_isPerAtom = false;
     bool m_hovered = false;
+    int m_perAtomIndex = 0;
+    int m_numPerAtomValues = 0;
 
 protected:
     virtual void updateCommand() override;
