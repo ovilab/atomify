@@ -40,9 +40,24 @@ Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     return m_data1DRaw[key];
 }
 
+int CPCompute::groupBit() const
+{
+    return m_groupBit;
+}
+
 const vector<double> &CPCompute::atomData() const
 {
     return m_atomData;
+}
+
+int CPCompute::perAtomIndex() const
+{
+    return m_perAtomIndex;
+}
+
+int CPCompute::numPerAtomValues() const
+{
+    return m_numPerAtomValues;
 }
 
 bool CPCompute::hovered() const
@@ -50,51 +65,81 @@ bool CPCompute::hovered() const
     return m_hovered;
 }
 
-bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController) {
+bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
-    ensureExists("histogram", true);
-    double *values = compute->vector_atom;
+    if(!compute->peratom_flag) return false;
+    // if(compute->size_peratom_cols > 0) return false;
     int numAtoms = lammpsController->system()->numberOfAtoms();
-    m_atomData = vector<double>(values, values+numAtoms);
+    int numCols = compute->size_peratom_cols;
 
+    if(numCols == 0) {
+        setNumPerAtomValues(1);
+        double *values = compute->vector_atom;
+        m_atomData = vector<double>(values, values+numAtoms);
+    } else {
+        double **values = compute->array_atom;
+        setNumPerAtomValues(numCols);
+        m_atomData = vector<double>(numAtoms, 0);
+        for(int atomIndex=0; atomIndex<numAtoms; atomIndex++) {
+            m_atomData[atomIndex] = values[atomIndex][m_perAtomIndex];
+        }
+    }
     Data1D *data = ensureExists("histogram", true);
     data->createHistogram(m_atomData);
 
     setIsPerAtom(true);
     setInteractive(true);
     return true;
+}
+
+bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController) {
+    return false;
+//    if(!compute) return false;
+//    ensureExists("histogram", true);
+//    double *values = compute->vector_atom;
+//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    m_atomData = vector<double>(values, values+numAtoms);
+
+//    Data1D *data = ensureExists("histogram", true);
+//    data->createHistogram(m_atomData);
+
+//    setIsPerAtom(true);
+//    setInteractive(true);
+//    return true;
 }
 
 bool CPCompute::copyData(ComputeClusterAtom *compute, LAMMPSController *lammpsController) {
-    if(!compute) return false;
+    return false;
+//    if(!compute) return false;
 
-    ensureExists("histogram", true);
-    double *values = compute->vector_atom;
-    int numAtoms = lammpsController->system()->numberOfAtoms();
-    m_atomData = vector<double>(values, values+numAtoms);
+//    ensureExists("histogram", true);
+//    double *values = compute->vector_atom;
+//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    m_atomData = vector<double>(values, values+numAtoms);
 
-    Data1D *data = ensureExists("histogram", true);
-    data->createHistogram(m_atomData);
+//    Data1D *data = ensureExists("histogram", true);
+//    data->createHistogram(m_atomData);
 
-    setIsPerAtom(true);
-    setInteractive(true);
-    return true;
+//    setIsPerAtom(true);
+//    setInteractive(true);
+//    return true;
 }
 
 bool CPCompute::copyData(ComputeCNAAtom *compute, LAMMPSController *lammpsController) {
-    if(!compute) return false;
+    return false;
+//    if(!compute) return false;
 
-    ensureExists("histogram", true);
-    double *values = compute->vector_atom;
-    int numAtoms = lammpsController->system()->numberOfAtoms();
-    m_atomData = vector<double>(values, values+numAtoms);
+//    ensureExists("histogram", true);
+//    double *values = compute->vector_atom;
+//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    m_atomData = vector<double>(values, values+numAtoms);
 
-    Data1D *data = ensureExists("histogram", true);
-    data->createHistogram(m_atomData);
+//    Data1D *data = ensureExists("histogram", true);
+//    data->createHistogram(m_atomData);
 
-    setIsPerAtom(true);
-    setInteractive(true);
-    return true;
+//    setIsPerAtom(true);
+//    setInteractive(true);
+//    return true;
 }
 
 bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsController) {
@@ -111,36 +156,21 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
 }
 
 bool CPCompute::copyData(ComputePropertyAtom *compute, LAMMPSController *lammpsController) {
-    if(!compute) return false;
-    if(compute->size_peratom_cols > 0) return true; // We don't support vector quantities yet
+    return false;
 
-    double *values = compute->vector_atom;
-    int numAtoms = lammpsController->system()->numberOfAtoms();
-    m_atomData = vector<double>(values, values+numAtoms);
+//    if(!compute) return false;
+//    if(compute->size_peratom_cols > 0) return true; // We don't support vector quantities yet
 
-    Data1D *data = ensureExists("histogram", true);
-    data->createHistogram(m_atomData);
+//    double *values = compute->vector_atom;
+//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    m_atomData = vector<double>(values, values+numAtoms);
 
-    setIsPerAtom(true);
-    setInteractive(true);
-    return true;
-}
+//    Data1D *data = ensureExists("histogram", true);
+//    data->createHistogram(m_atomData);
 
-bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
-    if(!compute) return false;
-    if(!compute->peratom_flag) return false;
-    if(compute->size_peratom_cols > 0) return false;
-
-    double *values = compute->vector_atom;
-    int numAtoms = lammpsController->system()->numberOfAtoms();
-    m_atomData = vector<double>(values, values+numAtoms);
-
-    Data1D *data = ensureExists("histogram", true);
-    data->createHistogram(m_atomData);
-
-    setIsPerAtom(true);
-    setInteractive(true);
-    return true;
+//    setIsPerAtom(true);
+//    setInteractive(true);
+//    return true;
 }
 
 bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController) {
@@ -360,6 +390,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     if(lastUpdate != -1 && (lammpsController->system()->timesteps()-lastUpdate) < m_frequency) return;
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
     Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
+    m_groupBit = lmp_compute->groupbit;
     if(lmp_compute == nullptr) return;
     try {
         if(copyData(lmp_compute, lammpsController)) return;
@@ -594,6 +625,24 @@ void CPCompute::setHovered(bool hovered)
 
     m_hovered = hovered;
     emit hoveredChanged(hovered);
+}
+
+void CPCompute::setPerAtomIndex(int perAtomIndex)
+{
+    if (m_perAtomIndex == perAtomIndex)
+        return;
+
+    m_perAtomIndex = perAtomIndex;
+    emit perAtomIndexChanged(perAtomIndex);
+}
+
+void CPCompute::setNumPerAtomValues(int numPerAtomValues)
+{
+    if (m_numPerAtomValues == numPerAtomValues)
+        return;
+
+    m_numPerAtomValues = numPerAtomValues;
+    emit numPerAtomValuesChanged(numPerAtomValues);
 }
 
 QList<QString> CPCompute::resetCommands()

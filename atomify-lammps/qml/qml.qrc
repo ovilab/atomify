@@ -68,5 +68,6 @@
         <file>desktop/RightBar/VariablesColumn.qml</file>
         <file>plotting/VariablePlotter.qml</file>
         <file>plotting/HistogramPlotter.qml</file>
+        <file>plotting/ColorLegend.qml</file>
     </qresource>
 </RCC>

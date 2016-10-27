@@ -114,11 +114,25 @@ Item {
                     id: controlBar1
                     simulator: root.simulator
                     visualizer: root.visualizer
-                    visible: !root.focusMode
+                    hidden: root.focusMode
                     anchors.horizontalCenter: parent.horizontalCenter
                     y: parent.height - 100
                     width: 320
                     height: 64
+                }
+
+                ColorLegend {
+                    width: 50
+                    height: 300
+                    hidden: !visualizer.propertyModifier.active
+                    min: visualizer.propertyModifier.min
+                    max: visualizer.propertyModifier.max
+
+                    anchors {
+                        top: parent.top
+                        right: parent.right
+                        margins: 30
+                    }
                 }
             }
         }

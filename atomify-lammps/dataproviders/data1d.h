@@ -65,6 +65,7 @@ private:
     QXYSeries* m_xySeries = nullptr;
     QList<QPointF> m_points;
     std::vector<double> m_histogramPoints;
+    std::vector<double> m_cleanHistogramPoints;
     QVariantMap m_subsets;
     float m_xMin = 0;
     float m_xMax = 0;

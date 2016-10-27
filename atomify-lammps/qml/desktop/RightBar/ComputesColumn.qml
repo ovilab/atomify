@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.0
+import QtQuick.Controls 1.4 as QQC1
 import Atomify 1.0
 import "../../plotting"
 Column {
@@ -24,8 +25,7 @@ Column {
     Row {
         id: row
         spacing: 2
-        height: label.height
-        
+
         Image {
             id: collapseComputes
             y: 3
@@ -54,11 +54,15 @@ Column {
         visible: root.expanded
         delegate: Row {
             visible: list.visible
+            height: 20
             Label {
                 id: computeTitleLabel
+                property Compute compute: model.modelData
+                property int numPerAtomValues: compute ? compute.numPerAtomValues : 0
+                property bool hasScalarData: compute ? compute.hasScalarData : false
                 font.underline: model.modelData.interactive
                 color: model.modelData.interactive ? "steelblue" : "white"
-                text: model.modelData.identifier
+                text: model.modelData ? model.modelData.identifier : ""
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
@@ -75,19 +79,40 @@ Column {
                 }
             }
             Label {
+                visible: computeTitleLabel.hasScalarData || computeTitleLabel.numPerAtomValues > 1
+                color: (computeTitleLabel.numPerAtomValues > 1) ? "steelblue" : "white"
                 text: {
-                    if(model.modelData.hasScalarData) {
+                    if(computeTitleLabel.hasScalarData) {
                         ": "+model.modelData.scalarValue.toFixed(3)
-                    } else {
-                        ""
+                    } else if(computeTitleLabel.numPerAtomValues > 1) {
+                        "   ["+(computeTitleLabel.compute.perAtomIndex+1)+"]"
+                    } else ""
+
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: computeTitleLabel.numPerAtomValues > 1
+                    onClicked: menu.open()
+                }
+
+                Menu {
+                    id: menu
+
+                    Column {
+                        Repeater {
+                            model: computeTitleLabel.numPerAtomValues
+                            MenuItem {
+                                text: model.index+1
+                                onClicked: {
+                                    computeTitleLabel.compute.perAtomIndex = (parseInt(text)-1)
+                                    menu.close()
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
-//    HistogramPlotter {
-//        id: hist
-//        visible: true
-//    }
 }

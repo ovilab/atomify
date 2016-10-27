@@ -2,6 +2,24 @@ import QtQuick 2.7
 import QtDataVisualization 1.2
 
 Item {
+    property ColorGradient jet: ColorGradient {
+    ColorGradientStop { position: 0.0 ; color: Qt.rgba(0.0, 0.0, 0.392156863, 1.0) }
+    ColorGradientStop { position: 0.15; color: Qt.rgba(0.0, 0.196078431, 1.0, 1.0) }
+    ColorGradientStop { position: 0.35; color: Qt.rgba(0.0, 1.0, 1.0, 1.0) }
+    ColorGradientStop { position: 0.65; color: Qt.rgba(1.0, 1.0, 0.0, 1.0) }
+    ColorGradientStop { position: 0.85; color: Qt.rgba(1.0, 0.117647059, 0.0, 1.0) }
+    ColorGradientStop { position: 1.00; color: Qt.rgba(0.392156863, 0.0,  0.0, 1.0) }
+    }
+
+    property Gradient jet_: Gradient {
+    GradientStop { position: 0.0 ; color: Qt.rgba(0.0, 0.0, 0.392156863, 1.0) }
+    GradientStop { position: 0.15; color: Qt.rgba(0.0, 0.196078431, 1.0, 1.0) }
+    GradientStop { position: 0.35; color: Qt.rgba(0.0, 1.0, 1.0, 1.0) }
+    GradientStop { position: 0.65; color: Qt.rgba(1.0, 1.0, 0.0, 1.0) }
+    GradientStop { position: 0.85; color: Qt.rgba(1.0, 0.117647059, 0.0, 1.0) }
+    GradientStop { position: 1.00; color: Qt.rgba(0.392156863, 0.0, 0.0, 1.0) }
+    }
+
     property ColorGradient magma: ColorGradient {
     ColorGradientStop { position: 0.0; color: Qt.rgba(0.001462, 0.000466, 0.013866, 1.0) }
     ColorGradientStop { position: 0.1015625; color: Qt.rgba(0.083446, 0.056225, 0.220755, 1.0) }

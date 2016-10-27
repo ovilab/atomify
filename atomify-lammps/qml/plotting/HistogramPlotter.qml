@@ -13,11 +13,23 @@ Window {
     width: 500
     height: 500
     onComputeChanged: {
+        if(!compute) return
         compute.data1D["histogram"].xySeries = series
+        compute.willBeDestroyed.connect(function() {
+            compute = null
+            timer.stop()
+            root.close()
+        })
     }
 
     onVariableChanged: {
+        if(!variable) return
         variable.data.xySeries = series
+        variable.willBeDestroyed.connect(function() {
+            variable = null
+            timer.stop()
+            root.close()
+        })
     }
 
     onVisibleChanged: {
@@ -37,6 +49,7 @@ Window {
     }
 
     Timer {
+        id: timer
         interval: 250
         repeat: true
         running: true

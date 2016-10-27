@@ -13,16 +13,23 @@ Window {
     width: 500
     height: 500
     onComputeChanged: {
+        if(!compute) return
         updateSeries("line")
         for(var key in compute.data1D) {
             compute.data1D[key].updated.connect(updateGraphs(key))
             compute.data1D[key].xySeries = dataSeries[key]
         }
         title = "Compute '"+compute.identifier+"'"
+        compute.willBeDestroyed.connect(function() {
+            compute = null
+            timer.stop()
+            root.close()
+        })
     }
 
     onVisibleChanged: {
         if(!visible) {
+            if(!compute) return
             for(var key in compute.data1D) {
                 compute.data1D[key].updated.disconnect(updateGraphs(key))
             }
@@ -39,6 +46,7 @@ Window {
     }
 
     function updateLimits() {
+        if(!root.compute) return
         var xMin = 1e9
         var xMax = -1e9
         var yMin = 1e9
@@ -60,6 +68,7 @@ Window {
     }
 
     Timer {
+        id: timer
         interval: 50
         repeat: true
         running: root.visible

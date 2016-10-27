@@ -150,6 +150,7 @@ void System::reset()
     m_groups->reset();
     m_computes->reset();
     m_regions->reset();
+    m_variables->reset();
     m_timesteps = 0;
     m_simulationTime = 0;
     m_size = QVector3D();

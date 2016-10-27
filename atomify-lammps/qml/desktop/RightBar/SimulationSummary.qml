@@ -4,10 +4,10 @@ import QtQuick.Controls 2.0
 import Atomify 1.0
 import "../../plotting"
 
-Pane {
+Flickable {
     id: rectangleRoot
     property System system
-
+    contentHeight: myCol.height
     function getGlobalPosition(p, item) {
         var globalX = p.x
         var globalY = p.y
@@ -47,15 +47,19 @@ Pane {
     }
 
     Column {
+        id: myCol
         anchors {
-            fill: parent
+            left: parent.left
+            right: parent.right
+            top: parent.top
             margins: 10
         }
 
         spacing: 10
         GroupBox {
-            width: parent.width
+            id: simulationSummary
             title: "Simulation summary"
+            width: parent.width
 
             Column {
                 Label {
@@ -176,93 +180,94 @@ Pane {
                 }
             }
         }
+//        GroupBox {
+//            id: keyboardShortcuts
+//            width: parent.width
+//            title: "Keyboard shortcuts"
 
-        GroupBox {
-            width: parent.width
-            title: "Keyboard shortcuts"
+//            Column {
+//                id: shortcutRoot
+//                width: parent.width
+//                property int labelWidth: 115
+//                property string controlName: {
+//                    if(Qt.platform.os === "osx") {
+//                        return "⌘"
+//                    }
+//                    return "Ctrl+"
+//                }
 
-            ColumnLayout {
-                id: shortcutRoot
-                property int labelWidth: 115
-                property string controlName: {
-                    if(Qt.platform.os === "osx") {
-                        return "⌘"
-                    }
-                    return "Ctrl+"
-                }
+//                RowLayout {
+//                    width: parent.width
+//                    Label {
+//                        Layout.minimumWidth: shortcutRoot.labelWidth
+//                        Layout.maximumWidth: shortcutRoot.labelWidth
+//                        text: "Run script "
+//                    }
+//                    Label {
+//                        text: ": "+shortcutRoot.controlName+"R"
+//                    }
+//                }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.minimumWidth: shortcutRoot.labelWidth
-                        Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Run script "
-                    }
-                    Label {
-                        text: ": "+shortcutRoot.controlName+"R"
-                    }
-                }
+//                RowLayout {
+//                    width: parent.width
+//                    Label {
+//                        Layout.minimumWidth: shortcutRoot.labelWidth
+//                        Layout.maximumWidth: shortcutRoot.labelWidth
+//                        text: "New script "
+//                    }
+//                    Label {
+//                        text: ": "+shortcutRoot.controlName+"N"
+//                    }
+//                }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.minimumWidth: shortcutRoot.labelWidth
-                        Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "New script "
-                    }
-                    Label {
-                        text: ": "+shortcutRoot.controlName+"N"
-                    }
-                }
+//                RowLayout {
+//                    width: parent.width
+//                    Label {
+//                        Layout.minimumWidth: shortcutRoot.labelWidth
+//                        Layout.maximumWidth: shortcutRoot.labelWidth
+//                        text: "Save script "
+//                    }
+//                    Label {
+//                        text: ": "+shortcutRoot.controlName+"S"
+//                    }
+//                }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.minimumWidth: shortcutRoot.labelWidth
-                        Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Save script "
-                    }
-                    Label {
-                        text: ": "+shortcutRoot.controlName+"S"
-                    }
-                }
+//                RowLayout {
+//                    width: parent.width
+//                    Label {
+//                        Layout.minimumWidth: shortcutRoot.labelWidth
+//                        Layout.maximumWidth: shortcutRoot.labelWidth
+//                        text: "Open script"
+//                    }
+//                    Label {
+//                        text: ": "+shortcutRoot.controlName+"O"
+//                    }
+//                }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.minimumWidth: shortcutRoot.labelWidth
-                        Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Open script"
-                    }
-                    Label {
-                        text: ": "+shortcutRoot.controlName+"O"
-                    }
-                }
+//                RowLayout {
+//                    width: parent.width
+//                    Label {
+//                        Layout.minimumWidth: shortcutRoot.labelWidth
+//                        Layout.maximumWidth: shortcutRoot.labelWidth
+//                        text: "Toggle pause"
+//                    }
+//                    Label {
+//                        text: ": "+shortcutRoot.controlName+"P / Space"
+//                    }
+//                }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.minimumWidth: shortcutRoot.labelWidth
-                        Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Toggle pause"
-                    }
-                    Label {
-                        text: ": "+shortcutRoot.controlName+"P / Space"
-                    }
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.minimumWidth: shortcutRoot.labelWidth
-                        Layout.maximumWidth: shortcutRoot.labelWidth
-                        text: "Toggle focus mode "
-                    }
-                    Label {
-                        text: ": Tab"
-                    }
-                }
-            }
-        }
+//                RowLayout {
+//                    width: parent.width
+//                    Label {
+//                        Layout.minimumWidth: shortcutRoot.labelWidth
+//                        Layout.maximumWidth: shortcutRoot.labelWidth
+//                        text: "Toggle focus mode "
+//                    }
+//                    Label {
+//                        text: ": Tab"
+//                    }
+//                }
+//            }
+//        }
     }
 }

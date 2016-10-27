@@ -11,6 +11,14 @@ Rectangle {
     id: root
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
+    property bool hidden: true
+    opacity: hidden ? 0.0 : 1.0
+    Behavior on opacity {
+        NumberAnimation {
+            duration: 200
+            easing.type: Easing.OutBounce
+        }
+    }
 
     color: "#444"
     radius: 2

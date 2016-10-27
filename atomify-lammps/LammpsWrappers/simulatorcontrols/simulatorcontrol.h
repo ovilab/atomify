@@ -29,6 +29,7 @@ protected:
     virtual QString createCommandPrefix() = 0;
     void addDependency(SimulatorControl *control);
     void removeDependency(SimulatorControl *control);
+
 public:
     explicit SimulatorControl(Qt3DCore::QNode *parent = 0);
     static int getNextId();
@@ -50,6 +51,7 @@ signals:
     void commandChanged(QString command);
     void dependenciesChanged(QVariantList dependencies);
     void isMirrorChanged(bool isMirror);
+    void willBeDestroyed();
 
 public slots:
     void setEnabled(bool enabled);

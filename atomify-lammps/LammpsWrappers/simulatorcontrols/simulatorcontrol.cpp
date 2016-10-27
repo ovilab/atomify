@@ -16,6 +16,8 @@ int SimulatorControl::getNextId()
 
 SimulatorControl::~SimulatorControl()
 {
+    qDebug() << "Will destroy " << identifier();
+    emit willBeDestroyed();
     m_dependencies.clear();
 }
 

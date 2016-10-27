@@ -14,6 +14,7 @@ public:
     explicit Variables(QObject *parent = 0);
     void synchronize(class LAMMPSController *lammpsController);
     int count() const;
+    void reset();
     QVariant model() const;
     QVector<class CPVariable*> variables();
 
@@ -28,7 +29,6 @@ public slots:
 private:
     void add(QString identifier, class LAMMPSController *lammpsController);
     void remove(QString identifier);
-    void reset();
     int m_count = 0;
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
