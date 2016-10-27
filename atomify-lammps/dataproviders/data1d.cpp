@@ -92,17 +92,24 @@ void Data1D::updateXYSeries(QAbstractSeries *series)
 
 void Data1D::updateHistogram(QLineSeries *series)
 {
-    double min = *std::min_element(std::begin(m_histogramPoints), std::end(m_histogramPoints));
-    double max = *std::max_element(std::begin(m_histogramPoints), std::end(m_histogramPoints));
+    m_cleanHistogramPoints.clear();
+    m_cleanHistogramPoints.reserve(m_histogramPoints.size());
+    for(double p : m_histogramPoints) {
+        if(std::isnan(p) || std::isinf(p)) continue;
+        m_cleanHistogramPoints.push_back(p);
+    }
+
+    double min = *std::min_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
+    double max = *std::max_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
+
     int bins = 20; // TODO: be clever choosing this or allow user
     double dx = (max-min) / 20;
     std::vector<int> counts(bins, 0);
-    for(double p : m_histogramPoints) {
-        if(std::isnan(p) || std::isinf(p)) continue;
+    for(double p : m_cleanHistogramPoints) {
+
         int bin = (p-min) / dx;
         if(bin >= bins) bin = bins-1; // The very last number is exactly on the edge, put it in last bin
         counts[bin]++;
-
     }
 
     QVector<QPointF> histogram;
