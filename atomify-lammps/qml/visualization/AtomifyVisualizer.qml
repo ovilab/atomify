@@ -19,6 +19,7 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Scene3D {
     id: root
     signal changedRenderQuality
+    property alias propertyModifier: propertyModifier
     property bool guidesVisible
     property bool systemBoxVisible
     property alias rootItem: controller.rootItem

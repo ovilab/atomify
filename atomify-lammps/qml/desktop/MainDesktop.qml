@@ -120,6 +120,20 @@ Item {
                     width: 320
                     height: 64
                 }
+
+                ColorLegend {
+                    width: 50
+                    height: 300
+                    visible: visualizer.propertyModifier.active
+                    min: visualizer.propertyModifier.min
+                    max: visualizer.propertyModifier.max
+
+                    anchors {
+                        top: parent.top
+                        right: parent.right
+                        margins: 30
+                    }
+                }
             }
         }
 
