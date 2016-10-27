@@ -42,6 +42,8 @@ void Computes::reset() {
         removeCompute(compute->identifier());
     }
     data.clear();
+    setModel(QVariant::fromValue(m_data));
+    setCount(0);
 }
 
 void Computes::synchronize(LAMMPSController *lammpsController)

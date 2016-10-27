@@ -13,15 +13,22 @@ Window {
     width: 500
     height: 500
     onVariableChanged: {
+        if(!variable) return
         updateSeries("line")
         variable.data.updated.connect(updateGraph)
         variable.data.xySeries = dataSeries
         variable.data.updateXYSeries(dataSeries)
         title = "Variable '"+variable.identifier+"'"
+        variable.willBeDestroyed.connect(function() {
+            variable = null
+            timer.stop()
+            root.close()
+        })
     }
 
     onVisibleChanged: {
         if(!visible) {
+            if(!variable) return
             variable.data.updated.disconnect(updateGraph)
         } else {
             updateLimits()
@@ -55,6 +62,7 @@ Window {
     }
 
     Timer {
+        id: timer
         interval: 50
         repeat: true
         running: root.visible
