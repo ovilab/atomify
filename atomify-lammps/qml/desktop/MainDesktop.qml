@@ -114,7 +114,7 @@ Item {
                     id: controlBar1
                     simulator: root.simulator
                     visualizer: root.visualizer
-                    visible: !root.focusMode
+                    hidden: root.focusMode
                     anchors.horizontalCenter: parent.horizontalCenter
                     y: parent.height - 100
                     width: 320
