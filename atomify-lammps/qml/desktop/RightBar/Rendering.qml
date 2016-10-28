@@ -99,7 +99,7 @@ Pane {
                         Binding {
                             target: visualizer.light1
                             property: "attenuation"
-                            value: light2Attenuation.value
+                            value: light1Attenuation.value
                         }
                     }
                 }
