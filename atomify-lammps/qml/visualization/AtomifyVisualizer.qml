@@ -127,7 +127,6 @@ Scene3D {
                 var delta = position.minus(nearestPoint)
                 return delta.length()
             }
-            onDistanceToNearestPointChanged: console.log("Distance: ", distanceToNearestPoint)
             // projectionType: CameraLens.OrthographicProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
