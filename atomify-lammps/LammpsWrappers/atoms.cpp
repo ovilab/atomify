@@ -41,7 +41,6 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_atomStyleTypes.insert("potassium", new AtomStyle(2.75, "#8F40D4"));
     m_atomStyleTypes.insert("calcium", new AtomStyle(2.31, "#3DFF00"));
 
-
     for(int i=0; i<50; i++) {
         m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
         m_atomStyles.push_back(m_atomStyleTypes["helium"]);
@@ -285,6 +284,12 @@ void Atoms::setAtomColorAndScale(int atomType, QColor color, float radius)
 
     m_atomStyles[atomType]->color = color;
     m_atomStyles[atomType]->radius = radius;
+}
+
+void Atoms::setAtomColor(int atomType, QColor color) {
+    if(atomType >= m_atomStyles.size()) return;
+
+    m_atomStyles[atomType]->color = color;
 }
 
 BondData *Atoms::bondData() const

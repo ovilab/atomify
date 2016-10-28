@@ -39,6 +39,7 @@ public:
     QVector<AtomStyle*> &atomStyles();
     void setAtomType(int atomType, QString atomTypeName);
     void setAtomColorAndScale(int atomType, QColor color, float radius);
+    void setAtomColor(int atomType, QColor color);
     BondData* bondData() const;
     class Bonds* bonds() const;
     AtomData &atomData();

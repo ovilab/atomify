@@ -66,6 +66,12 @@ bool ScriptParser::isAtomType(QString command)
     return regex.match(command).hasMatch();
 }
 
+bool ScriptParser::isAtomColor(QString command)
+{
+    QRegularExpression regex("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(?:color)(?:\\s*|\\t*)(#\\w*?|\\w*)$");
+    return regex.match(command).hasMatch();
+}
+
 bool ScriptParser::isBond(QString command)
 {
     QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
@@ -107,18 +113,34 @@ bool ScriptParser::isDisableBonds(QString command)
     return regex.match(command).hasMatch();
 }
 
-void ScriptParser::atomType(QString command, std::function<void(QString atomTypeName, int atomType)> action)
+void ScriptParser::atomType(QString command, std::function<void(int atomType, QString atomTypeName)> action)
 {
-    QRegularExpression regex ("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
+    QRegularExpression regex("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
     QRegularExpressionMatch match = regex.match(command);
-    int atomType = match.captured(1).toInt();
+    bool castOk;
+    int atomType = match.captured(1).toInt(&castOk);
+    if(!castOk) return;
     QString atomTypeName = match.captured(2);
-    action(atomTypeName, atomType);
+    action(atomType, atomTypeName);
+}
+
+void ScriptParser::atomColor(QString command, std::function<void(int atomType, QColor color)> action)
+{
+    QRegularExpression regex ("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(?:color)(?:\\s*|\\t*)(#\\w*?|\\w*)$");
+    QRegularExpressionMatch match = regex.match(command);
+    bool castOk;
+    int atomType = match.captured(1).toInt(&castOk);
+    if(!castOk) return;
+    QString colorString = match.captured(2);
+    QColor color(colorString);
+
+    action(atomType, color);
 }
 
 bool ScriptParser::isGUICommand(QString command) {
     command.remove(0,2);
     if(isAtomType(command)) return true;
+    if(isAtomColor(command)) return true;
     if(isBond(command)) return true;
     if(isAtomColorAndSize(command)) return true;
     if(isDisableBonds(command)) return true;

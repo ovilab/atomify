@@ -167,13 +167,13 @@ void ScriptHandler::parseGUICommand(QString command)
     command.remove(0,2);
 
     if(m_parser.isAtomType(command)) {
-        m_parser.atomType(command, [&](QString atomTypeName, int atomType) {
+        qDebug() << "Command " << command << " is atom type.";
+        m_parser.atomType(command, [&](int atomType, QString atomTypeName) {
             // TODO: Switch arguments so they match the m_atoms->setAtomType call
             if(m_atoms) m_atoms->setAtomType(atomType, atomTypeName);
         });
         return;
     }
-
     if(m_parser.isBond(command)) {
         m_parser.bond(command, [&](int atomType1, int atomType2, float bondLength) {
             if(m_atoms) {
@@ -182,7 +182,6 @@ void ScriptHandler::parseGUICommand(QString command)
                     m_atoms->bonds()->bondLengths()[atomType2][atomType1] = bondLength;
                     m_atoms->bonds()->setEnabled(true);
                 }
-                qDebug() << "HERE Max bond thing: " << m_atoms->bonds()->maxBondLength();
             }
         });
     }
@@ -191,6 +190,15 @@ void ScriptHandler::parseGUICommand(QString command)
         m_parser.atomColorAndSize(command, [&](float radius, QString color, int atomType) {
             if(m_atoms) {
                 m_atoms->setAtomColorAndScale(atomType, color, radius);
+            }
+        });
+        return;
+    }
+
+    if(m_parser.isAtomColor(command)) {
+        m_parser.atomColor(command, [&](int atomType, QColor color) {
+            if(m_atoms) {
+                m_atoms->setAtomColor(atomType, color);
             }
         });
         return;
