@@ -88,8 +88,6 @@ Item {
                     focusMode: root.focusMode
                 }
 
-
-
                 MessageOverlay {
                     id: overlays
                     anchors {

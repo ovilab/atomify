@@ -62,12 +62,12 @@ void System::synchronize(LAMMPSController *lammpsController)
 
     if(originDidChange) {
         emit originChanged(m_origin);
-        emit geometryChanged();
+        emit centerChanged(center());
     }
 
     if(sizeDidChange) {
         emit sizeChanged(m_size);
-        emit geometryChanged();
+        emit centerChanged(center());
     }
 
     if(m_numberOfAtoms != atom->natoms) {
@@ -179,6 +179,11 @@ bool System::isValid() const
 QVector3D System::cameraPosition() const
 {
     return m_cameraPosition;
+}
+
+QVector3D System::center() const
+{
+    return m_origin+0.5*m_size;
 }
 
 Variables *System::variables() const

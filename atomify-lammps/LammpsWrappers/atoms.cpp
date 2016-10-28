@@ -41,7 +41,6 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_atomStyleTypes.insert("potassium", new AtomStyle(2.75, "#8F40D4"));
     m_atomStyleTypes.insert("calcium", new AtomStyle(2.31, "#3DFF00"));
 
-
     for(int i=0; i<50; i++) {
         m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
         m_atomStyles.push_back(m_atomStyleTypes["helium"]);
@@ -114,12 +113,12 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
-//        m_atomData.positions[i][0] = position[0];
-//        m_atomData.positions[i][1] = position[1];
-//        m_atomData.positions[i][2] = position[2];
-        m_atomData.positions[i][0] = position[0] - (lammps->domain->boxlo[0] + lammps->domain->prd_half[0]);
-        m_atomData.positions[i][1] = position[1] - (lammps->domain->boxlo[1] + lammps->domain->prd_half[1]);
-        m_atomData.positions[i][2] = position[2] - (lammps->domain->boxlo[2] + lammps->domain->prd_half[2]);
+        m_atomData.positions[i][0] = position[0];
+        m_atomData.positions[i][1] = position[1];
+        m_atomData.positions[i][2] = position[2];
+//        m_atomData.positions[i][0] = position[0] - (lammps->domain->boxlo[0] + lammps->domain->prd_half[0]);
+//        m_atomData.positions[i][1] = position[1] - (lammps->domain->boxlo[1] + lammps->domain->prd_half[1]);
+//        m_atomData.positions[i][2] = position[2] - (lammps->domain->boxlo[2] + lammps->domain->prd_half[2]);
         m_atomData.bitmask[i] = atom->mask[i];
         m_atomData.visible[i] = true;
     }
@@ -285,6 +284,12 @@ void Atoms::setAtomColorAndScale(int atomType, QColor color, float radius)
 
     m_atomStyles[atomType]->color = color;
     m_atomStyles[atomType]->radius = radius;
+}
+
+void Atoms::setAtomColor(int atomType, QColor color) {
+    if(atomType >= m_atomStyles.size()) return;
+
+    m_atomStyles[atomType]->color = color;
 }
 
 BondData *Atoms::bondData() const

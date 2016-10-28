@@ -79,8 +79,4 @@ Column {
             }
         }
     }
-
-    Plot2D {
-        visible: true
-    }
 }

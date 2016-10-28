@@ -81,6 +81,15 @@ Scene3D {
         }
     }
 
+    function resetToSystemCenter() {
+        // var right = mainCamera.viewVector.normalized().cross(mainCamera.upVector.normalized())
+        var sizeY = simulator.system.size.y
+        mainCamera.viewCenter = simulator.system.center
+        mainCamera.position = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
+        mainCamera.upVector = Qt.vector3d(0, 0, 1)
+        // mainCamera.translate(Qt.vector3d(0, 0, 10), Camera.DontTranslateViewCenter)
+    }
+
     aspects: ["render", "input", "logic"]
 
     Entity {
@@ -92,9 +101,39 @@ Scene3D {
             light1,
             light2
         ]
+        function updateNearestPoint() {
+            // Finds the projection of the camera position onto the system box
+            // If camera is inside, nearestPoint is camera pos. If outside, one of the 6 faces on system box
+            // It is used to have attenuation only work for relative coordinates inside the system so system
+            //    is bright even when camera is far away.
+            var x = mainCamera.position.x
+            var y = mainCamera.position.y
+            var z = mainCamera.position.z
+            var x0 = simulator.system.origin.x
+            var y0 = simulator.system.origin.y
+            var z0 = simulator.system.origin.z
+            var x1 = simulator.system.origin.x + simulator.system.size.x
+            var y1 = simulator.system.origin.y + simulator.system.size.y
+            var z1 = simulator.system.origin.z + simulator.system.size.z
+
+            var xp = x
+            var yp = y
+            var zp = z
+            if(x < x0) xp = x0
+            if(x > x1) xp = x1
+            if(y < y0) yp = y0
+            if(y > y1) yp = y1
+            if(z < z0) zp = z0
+            if(z > z1) zp = z1
+            mainCamera.nearestPoint = Qt.vector3d(xp, yp, zp)
+        }
+
         property Camera camera: Camera {
             id: mainCamera
             projectionType: CameraLens.PerspectiveProjection
+            property var nearestPoint
+            property real distanceToNearestPoint: position.minus(nearestPoint).length()
+
             // projectionType: CameraLens.OrthographicProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
@@ -107,6 +146,7 @@ Scene3D {
                 if(simulator != undefined) {
                     simulator.system.cameraPosition = position
                 }
+                visualizer.updateNearestPoint()
             }
             Component.onCompleted: {
                 mainCamera.panAboutViewCenter(40, Qt.vector3d(0, 0, 1))
@@ -255,7 +295,7 @@ Scene3D {
         StandardMaterial {
             id: spheresMediumQuality
             color: spheres.fragmentBuilder.color
-            attenuationOffset: 0 //root.simulator.distanceToNearestAtom // TODO: fix flimring
+            attenuationOffset: mainCamera.distanceToNearestPoint
             lights: visualizer.lights
         }
 

@@ -12,6 +12,7 @@ class System : public QObject
     Q_PROPERTY(QVector3D size READ size NOTIFY sizeChanged)
     Q_PROPERTY(QVector3D origin READ origin NOTIFY originChanged)
     Q_PROPERTY(QVector3D cameraPosition READ cameraPosition WRITE setCameraPosition NOTIFY cameraPositionChanged)
+    Q_PROPERTY(QVector3D center READ center NOTIFY centerChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
@@ -45,6 +46,7 @@ public:
     float volume() const;
     bool isValid() const;
     QVector3D cameraPosition() const;
+    QVector3D center() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -73,8 +75,8 @@ signals:
     void numberOfAtomTypesChanged(int numberOfAtomTypes);
     void volumeChanged(float volume);
     void isValidChanged(bool isValid);
-    void geometryChanged();
     void cameraPositionChanged(QVector3D cameraPosition);
+    void centerChanged(QVector3D center);
 
 private:
     class Atoms* m_atoms = nullptr;
