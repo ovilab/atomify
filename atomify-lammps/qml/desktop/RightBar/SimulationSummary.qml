@@ -66,6 +66,14 @@ Flickable {
                     text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
                 }
                 Label {
+                    text: "Reset camera"
+                    color: "steelblue"
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: visualizer.resetToSystemCenter()
+                    }
+                }
+                Label {
                     text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
                 }
                 Label {

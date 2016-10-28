@@ -81,6 +81,15 @@ Scene3D {
         }
     }
 
+    function resetToSystemCenter() {
+        // var right = mainCamera.viewVector.normalized().cross(mainCamera.upVector.normalized())
+        var sizeY = simulator.system.size.y
+        mainCamera.viewCenter = simulator.system.center
+        mainCamera.position = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
+        mainCamera.upVector = Qt.vector3d(0, 0, 1)
+        // mainCamera.translate(Qt.vector3d(0, 0, 10), Camera.DontTranslateViewCenter)
+    }
+
     aspects: ["render", "input", "logic"]
 
     Entity {
@@ -123,10 +132,8 @@ Scene3D {
             id: mainCamera
             projectionType: CameraLens.PerspectiveProjection
             property var nearestPoint
-            property real distanceToNearestPoint: {
-                var delta = position.minus(nearestPoint)
-                return delta.length()
-            }
+            property real distanceToNearestPoint: position.minus(nearestPoint).length()
+
             // projectionType: CameraLens.OrthographicProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
