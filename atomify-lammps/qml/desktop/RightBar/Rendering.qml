@@ -98,8 +98,8 @@ Pane {
 
                         Binding {
                             target: visualizer.light1
-                            property: "strength"
-                            value: light1Strength.attenuation
+                            property: "attenuation"
+                            value: light2Attenuation.value
                         }
                     }
                 }
@@ -147,8 +147,8 @@ Pane {
 
                         Binding {
                             target: visualizer.light2
-                            property: "strength"
-                            value: light2Strength.attenuation
+                            property: "attenuation"
+                            value: light2Attenuation.value
                         }
                     }
                 }
