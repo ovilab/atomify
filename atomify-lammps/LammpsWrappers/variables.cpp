@@ -159,4 +159,6 @@ void Variables::reset()
         remove(variable->identifier());
     }
     data.clear();
+    setModel(QVariant::fromValue(m_data));
+    setCount(0);
 }

@@ -40,6 +40,7 @@ void Fixes::reset() {
         remove(fix->identifier());
     }
     data.clear();
+    setModel(QVariant::fromValue(m_data));
     setCount(0);
 }
 
