@@ -17,8 +17,15 @@ void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double>
     QVector<double> green = {0, 50./255, 255./255, 255./255, 30./255, 0};
     QVector<double> blue = {100./255, 255./255, 255./255, 0, 0, 0};
 
-    setMin(*std::min_element(std::begin(values), std::end(values)));
-    setMax(*std::max_element(std::begin(values), std::end(values)));
+    m_cleanPoints.clear();
+    m_cleanPoints.reserve(values.size());
+    for(double p : values) {
+        if(std::isnan(p) || std::isinf(p)) continue;
+        m_cleanPoints.push_back(p);
+    }
+
+    setMin(*std::min_element(std::begin(m_cleanPoints), std::end(m_cleanPoints)));
+    setMax(*std::max_element(std::begin(m_cleanPoints), std::end(m_cleanPoints)));
     double range = m_max - m_min;
     double oneOverRange = 1.0 / range;
 

@@ -2,6 +2,7 @@
 #define PROPERTYMODIFIER_H
 
 #include "modifier.h"
+#include <vector>
 
 class PropertyModifier : public Modifier
 {
@@ -32,6 +33,7 @@ signals:
 private:
     void applyColors(AtomData &atomData, const std::vector<double> &values, int groupBit);
     bool m_active = false;
+    std::vector<float> m_cleanPoints;
     double m_max = 0;
     double m_min = 0;
 };
