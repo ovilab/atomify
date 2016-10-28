@@ -16,7 +16,6 @@ void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double>
     QVector<double> red = {0, 0, 0, 255./255, 255./255, 100./255};
     QVector<double> green = {0, 50./255, 255./255, 255./255, 30./255, 0};
     QVector<double> blue = {100./255, 255./255, 255./255, 0, 0, 0};
-
     m_cleanPoints.clear();
     m_cleanPoints.reserve(values.size());
     for(double p : values) {
@@ -24,8 +23,10 @@ void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double>
         m_cleanPoints.push_back(p);
     }
 
-    setMin(*std::min_element(std::begin(m_cleanPoints), std::end(m_cleanPoints)));
-    setMax(*std::max_element(std::begin(m_cleanPoints), std::end(m_cleanPoints)));
+    double min = *std::min_element(std::begin(m_cleanPoints), std::end(m_cleanPoints));
+    double max = *std::max_element(std::begin(m_cleanPoints), std::end(m_cleanPoints));
+    setMin(min);
+    setMax(max);
     double range = m_max - m_min;
     double oneOverRange = 1.0 / range;
 
@@ -68,8 +69,10 @@ void PropertyModifier::apply(AtomData &atomData)
         if(compute->hovered() && compute->isPerAtom()) {
             setActive(true);
             const std::vector<double> &values = compute->atomData();
-            applyColors(atomData, values, compute->groupBit());
-            return;
+            if(values.size() == atomData.size()) {
+                applyColors(atomData, values, compute->groupBit());
+                return;
+            }
         }
     }
 
@@ -77,9 +80,11 @@ void PropertyModifier::apply(AtomData &atomData)
     for(CPVariable *variable : variables) {
         if(variable->hovered() && variable->isPerAtom()) {
             const std::vector<double> &values = variable->atomData();
-            applyColors(atomData, values, 1); // 1 will be true for all bitwise and
-            setActive(true);
-            return;
+            if(values.size() == atomData.size()) {
+                applyColors(atomData, values, 1); // groupBit = 1 will be true for all bitwise (i.e. all groups)
+                setActive(true);
+                return;
+            }
         }
     }
     setActive(false);

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <error.h>
 #include <update.h>
+#include <atom.h>
 using std::vector;
 
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
@@ -79,9 +80,14 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     } else {
         double **values = compute->array_atom;
         setNumPerAtomValues(numCols);
-        m_atomData = vector<double>(numAtoms, 0);
+        m_atomData.resize(numAtoms);
         for(int atomIndex=0; atomIndex<numAtoms; atomIndex++) {
-            m_atomData[atomIndex] = values[atomIndex][m_perAtomIndex];
+            int atomGroupBit = lammpsController->lammps()->atom->mask[atomIndex];
+            if(atomGroupBit & m_groupBit) {
+                m_atomData[atomIndex] = values[atomIndex][m_perAtomIndex];
+            } else {
+                m_atomData[atomIndex] = std::numeric_limits<double>::quiet_NaN();
+            }
         }
     }
     Data1D *data = ensureExists("histogram", true);
