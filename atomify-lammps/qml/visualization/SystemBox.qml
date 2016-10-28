@@ -20,6 +20,7 @@ Entity {
     property bool showSurfaces: true
     property real outlineAlpha: 0.4
     property real sideAlpha: 0.2
+    property vector3d origin
     property vector3d size
     property vector3d sizePlus: size.plus(Qt.vector3d(1, 1, 1))
     property var lights: [
@@ -66,7 +67,7 @@ Entity {
             ]
             Transform {
                 id: transformX
-                translation: root.getTranslation("x", index)
+                translation: root.getTranslation("x", index).plus(root.size.times(0.5).plus(root.origin))
                 scale3D: root.getScale("x")
             }
         }
@@ -86,8 +87,12 @@ Entity {
             ]
             Transform {
                 id: transformY
-                translation: root.getTranslation("y", index)
+                translation: root.getTranslation("y", index).plus(root.size.times(0.5).plus(root.origin))
                 scale3D: root.getScale("y")
+            }
+            Transform {
+                id: transformYOrigin
+                translation: origin
             }
         }
     }
@@ -104,7 +109,7 @@ Entity {
             ]
             Transform {
                 id: transformZ
-                translation: root.getTranslation("z", index)
+                translation: root.getTranslation("z", index).plus(root.size.times(0.5).plus(root.origin))
                 scale3D: root.getScale("z")
             }
         }
@@ -131,6 +136,7 @@ Entity {
 
         Transform {
             id: surfaceTransform
+            translation: root.size.times(0.5).plus(root.origin)
             scale3D: root.sizePlus
         }
         Timer {
