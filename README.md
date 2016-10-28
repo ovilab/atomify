@@ -6,8 +6,11 @@ The typical workflow when developing scripts for LAMMPS includes working with se
 
 ## How to build ##
 **NOTE: Currently, dev requires Qt 5.8 which is only availble from git. Qt 5.8 will be released later this year.**
+
 Step 1)
-You will need Qt ~~5.7~~ 5.8 with both Qt Charts and Qt Data visualization. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download/](https://www.qt.io/download/) (you can scroll down to the Open Source download section) and install it from there. Remember to include Qt Charts and Qt Data visualization when you install. **And to get Qt 5.8, follow [this](https://wiki.qt.io/Building_Qt_5_from_Git) guide.
+You will need Qt ~~5.7~~ 5.8 with both Qt Charts and Qt Data visualization. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download/](https://www.qt.io/download/) (you can scroll down to the Open Source download section) and install it from there. Remember to include Qt Charts and Qt Data visualization when you install.
+
+**To get Qt 5.8, follow [this](https://wiki.qt.io/Building_Qt_5_from_Git) guide.**
 
 Step 2)
 Clone the repository `git clone --recursive https://github.com/ovilab/atomify-lammps.git` (recursive since we also use the SimVis repository).
