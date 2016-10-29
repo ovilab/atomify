@@ -55,8 +55,6 @@ SOURCES += \
     LammpsWrappers/simulatorcontrols/cpfix.cpp \
     LammpsWrappers/simulatorcontrols/cpcompute.cpp \
     LammpsWrappers/simulatorcontrols/cpvariable.cpp \
-    LammpsWrappers/simulatorcontrols/fixaveragetime.cpp \
-    LammpsWrappers/simulatorcontrols/fixhistogram.cpp \
     LammpsWrappers/simulatorcontrols/rdf.cpp \
     LammpsWrappers/atoms.cpp \
     LammpsWrappers/system.cpp \
@@ -99,8 +97,6 @@ HEADERS += \
     LammpsWrappers/simulatorcontrols/cpfix.h \
     LammpsWrappers/simulatorcontrols/cpcompute.h \
     LammpsWrappers/simulatorcontrols/cpvariable.h \
-    LammpsWrappers/simulatorcontrols/fixaveragetime.h \
-    LammpsWrappers/simulatorcontrols/fixhistogram.h \
     LammpsWrappers/simulatorcontrols/rdf.h \
     LammpsWrappers/atoms.h \
     LammpsWrappers/system.h \

@@ -2,11 +2,12 @@
 #include "lammpscontroller.h"
 #include "../system.h"
 #include "../../dataproviders/data2d.h"
-#include <style_compute.h>
 #include <iostream>
-using namespace std;
+#include <compute_chunk_atom.h>
+#include "../../dataproviders/data1d.h"
 
-CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent)
+CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
+    m_histogram(nullptr)
 {
 }
 
@@ -104,6 +105,28 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
     }
 }
 
+bool CPFix::copyData(FixAveHisto *fix, LAMMPSController *lammpsController) {
+    // TODO Implement this
+    return false;
+    if(!fix) return false;
+    int nbins;
+    fix->extract("nbins", nbins);
+    if(!m_histogram) {
+        m_histogram = new Data1D(this);
+        m_histogram->setEnabled(true);
+    }
+
+//    for(int i=0; i<nbins; i++) {
+//        double binCenter = fix->compute_array(i, 0);
+//        double binContent = fix->compute_array(i, 2);
+//    }
+//    std::vector<histogramValues> values;
+//    values.reserve(nbins);
+//    for(int i=0; i<nbins; i++) {
+//        values.push_back(lmp_fix->compute_array(i,2));
+//    }
+}
+
 void CPFix::copyData(LAMMPSController *lammpsController)
 {
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
@@ -127,6 +150,11 @@ QVariantList CPFix::data() const
 QVariant CPFix::model() const
 {
     return m_model;
+}
+
+Data1D *CPFix::histogram() const
+{
+    return m_histogram;
 }
 
 void CPFix::update(LAMMPSController *lammpsController)
@@ -207,6 +235,15 @@ void CPFix::setModel(QVariant model)
 
     m_model = model;
     emit modelChanged(model);
+}
+
+void CPFix::setHistogram(Data1D *histogram)
+{
+    if (m_histogram == histogram)
+        return;
+
+    m_histogram = histogram;
+    emit histogramChanged(histogram);
 }
 
 QList<QString> CPFix::resetCommands()

@@ -17,8 +17,6 @@
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
 #include "LammpsWrappers/simulatorcontrols/nvt.h"
 #include "scripthandler.h"
-#include "LammpsWrappers/simulatorcontrols/fixaveragetime.h"
-#include "LammpsWrappers/simulatorcontrols/fixhistogram.h"
 #include "LammpsWrappers/simulatorcontrols/rdf.h"
 #include "vendor.h"
 #include "datasource.h"
@@ -47,8 +45,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
-    qmlRegisterType<FixAverageTime>("Atomify",1, 0,"FixAverageTime");
-    qmlRegisterType<FixHistogram>("Atomify", 1, 0, "FixHistogram");
     qmlRegisterType<RDF>("Atomify", 1, 0, "RDF");
     qmlRegisterType<DataSource>("Atomify", 1, 0, "DataSource");
     qmlRegisterType<Atoms>("Atomify", 1, 0, "Atoms");
