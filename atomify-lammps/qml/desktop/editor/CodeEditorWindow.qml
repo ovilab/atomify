@@ -18,7 +18,7 @@ Item {
     property int errorLine: -1
     property string openFiles: ""
     property string lastOpenedFolder
-
+    clip: true
     signal clearConsole()
     signal didRun()
 
