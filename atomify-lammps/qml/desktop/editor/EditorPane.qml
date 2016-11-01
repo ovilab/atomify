@@ -57,12 +57,14 @@ Pane {
             Button {
                 id: clear
                 text: "Clear output"
+                focusPolicy: Qt.NoFocus
                 onClicked: {
                     consoleItem.clear()
                 }
             }
             Button {
                 id: runButton
+                focusPolicy: Qt.NoFocus
                 anchors {
                     right: parent.right
                 }
