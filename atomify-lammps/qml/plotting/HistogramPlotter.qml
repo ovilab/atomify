@@ -41,7 +41,7 @@ Window {
 
     function updateGraph(data) {
         if(!root.visible) return;
-        data.updateHistogram(series)
+        data.updateHistogram(series, plotSeries)
         axisX.min = data.xMin
         axisX.max = data.xMax
         axisY.min = data.yMin
@@ -98,6 +98,37 @@ Window {
 
                     upperSeries: LineSeries {
                         id: series
+                    }
+                }
+
+                Rectangle {
+                    color: "white"
+                    width: chart.width*0.15
+                    height: chart.height*0.3
+                    radius: 5
+                    ChartView {
+                        width: parent.width
+                        height: parent.height+50
+                        margins {
+                            bottom: 0
+                            top: 0
+                            left: 0
+                            right: 0
+                        }
+
+                        theme: ChartView.ChartThemeLight
+                        backgroundColor: Qt.rgba(1.0, 1.0, 1.0, 0.0)
+                        legend.visible: false
+                        antialiasing: true
+
+                        BoxPlotSeries {
+                            id: plotSeries
+                            boxWidth: 1.0
+                            axisX: BarCategoryAxis { visible: false }
+                            axisY: BarCategoryAxis { visible: false }
+
+                            BoxSet { id: boxSet }
+                        }
                     }
                 }
             }

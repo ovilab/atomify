@@ -18,6 +18,7 @@ class Data1D : public QObject
     Q_PROPERTY(Data1D* parentData READ parentData WRITE setParentData NOTIFY parentDataChanged)
     Q_PROPERTY(QVariantMap subsets READ subsets WRITE setSubsets NOTIFY subsetsChanged)
     Q_PROPERTY(QXYSeries* xySeries READ xySeries WRITE setXySeries NOTIFY xySeriesChanged)
+    Q_PROPERTY(QVector<double> histogramPoints READ histogramPoints WRITE setHistogramPoints NOTIFY histogramPointsChanged)
 
 public:
     explicit Data1D(QObject *parent = 0);
@@ -38,6 +39,7 @@ public:
     int stride() const;
     Data1D* parentData() const;
     QXYSeries* xySeries() const;
+    QVector<double> histogramPoints() const;
 
 signals:
     void xMinChanged(float xMin);
@@ -52,6 +54,7 @@ signals:
     void xySeriesChanged(QXYSeries* xySeries);
     void updated(Data1D *data);
     void updatedHistogram(Data1D *data);
+    void histogramPointsChanged(QVector<double> histogramPoints);
 
 public slots:
     void setEnabled(bool enabled);
@@ -59,13 +62,14 @@ public slots:
     void setStride(int stride);
     void setParentData(Data1D* parentData);
     void setXySeries(QXYSeries* xySeries);
+    void setHistogramPoints(QVector<double> histogramPoints);
 
 private:
     Data1D* m_parentData = nullptr;
     QXYSeries* m_xySeries = nullptr;
     QList<QPointF> m_points;
     std::vector<double> m_histogramPoints;
-    std::vector<double> m_cleanHistogramPoints;
+    QVector<double> m_cleanHistogramPoints;
     QVariantMap m_subsets;
     float m_xMin = 0;
     float m_xMax = 0;

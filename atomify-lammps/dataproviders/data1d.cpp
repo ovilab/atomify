@@ -137,6 +137,7 @@ void Data1D::updateHistogram(QLineSeries *series)
     emit xMaxChanged(m_xMax);
     emit yMinChanged(m_yMin);
     emit yMaxChanged(m_yMax);
+    emit histogramPointsChanged(m_cleanHistogramPoints);
 }
 
 QVariantMap Data1D::subsets() const
@@ -157,6 +158,11 @@ Data1D *Data1D::parentData() const
 QXYSeries *Data1D::xySeries() const
 {
     return m_xySeries;
+}
+
+QVector<double> Data1D::histogramPoints() const
+{
+    return m_cleanHistogramPoints;
 }
 
 void Data1D::addSubset(QString key, int stride)
@@ -303,4 +309,13 @@ void Data1D::setXySeries(QXYSeries *xySeries)
 
     m_xySeries = xySeries;
     emit xySeriesChanged(xySeries);
+}
+
+void Data1D::setHistogramPoints(QVector<double> histogramPoints)
+{
+    if (m_cleanHistogramPoints == histogramPoints)
+        return;
+
+    m_cleanHistogramPoints = histogramPoints;
+    emit histogramPointsChanged(histogramPoints);
 }
