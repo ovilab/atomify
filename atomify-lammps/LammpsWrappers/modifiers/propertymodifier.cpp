@@ -13,7 +13,7 @@ PropertyModifier::PropertyModifier()
 
 void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double> &values, int groupBit) {
     QVector<double> limits = {0, 0.15, 0.35, 0.65, 0.85, 1.0};
-    QVector<double> red = {0, 0, 0, 255./255, 255./255, 100./255};
+    QVector<double> red = {0, 0, 0, 255./255, 255./255, 255./255};
     QVector<double> green = {0, 50./255, 255./255, 255./255, 30./255, 0};
     QVector<double> blue = {100./255, 255./255, 255./255, 0, 0, 0};
     m_cleanPoints.clear();
@@ -49,7 +49,7 @@ void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double>
 
         double scaled = (value - m_min) * oneOverRange; // between 0 and 1
         for(int j=0; j<limits.size()-1; j++) {
-            if(limits[j] <= scaled && scaled < limits[j+1]) {
+            if(limits[j] <= scaled && scaled <= limits[j+1]) {
                 // Found the two bins including this value
                 double dx = limits[j+1] - limits[j];
                 double fraction = 1.0 - (scaled - limits[j]) / dx; // where between these two values are we

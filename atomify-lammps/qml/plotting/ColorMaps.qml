@@ -8,7 +8,7 @@ Item {
     ColorGradientStop { position: 0.35; color: Qt.rgba(0.0, 1.0, 1.0, 1.0) }
     ColorGradientStop { position: 0.65; color: Qt.rgba(1.0, 1.0, 0.0, 1.0) }
     ColorGradientStop { position: 0.85; color: Qt.rgba(1.0, 0.117647059, 0.0, 1.0) }
-    ColorGradientStop { position: 1.00; color: Qt.rgba(0.392156863, 0.0,  0.0, 1.0) }
+    ColorGradientStop { position: 1.00; color: Qt.rgba(1.0, 0.0,  0.0, 1.0) }
     }
 
     property Gradient jet_: Gradient {
@@ -17,7 +17,7 @@ Item {
     GradientStop { position: 0.35; color: Qt.rgba(0.0, 1.0, 1.0, 1.0) }
     GradientStop { position: 0.65; color: Qt.rgba(1.0, 1.0, 0.0, 1.0) }
     GradientStop { position: 0.85; color: Qt.rgba(1.0, 0.117647059, 0.0, 1.0) }
-    GradientStop { position: 1.00; color: Qt.rgba(0.392156863, 0.0, 0.0, 1.0) }
+    GradientStop { position: 1.00; color: Qt.rgba(1.0, 0.0, 0.0, 1.0) }
     }
 
     property ColorGradient magma: ColorGradient {
