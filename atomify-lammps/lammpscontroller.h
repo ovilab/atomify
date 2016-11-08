@@ -11,65 +11,32 @@
 #include <modify.h>
 #include <variable.h>
 #include <error.h>
-#include "scripthandler.h"
-using namespace LAMMPS_NS;
-
-struct LammpsState {
-    bool crashed = false;
-    bool runCommandActive = false;
-    bool preRunNeeded = true;
-    bool canProcessSimulatorControls = false;
-    int  simulationSpeed = 1;
-    bool dataDirty = false;
-    unsigned long timeSpentInLammps = 0;
-    unsigned int runCommandStart = 0;
-    unsigned int runCommandEnd = 0;
-    ScriptCommand nextCommand;
-};
 
 class LAMMPSController
 {
 private:
-    ScriptHandler *m_scriptHandler = nullptr;
-    LAMMPS *m_lammps = nullptr;
-    class MyWorker *m_worker = nullptr;
+    LAMMPS_NS::LAMMPS *m_lammps = nullptr;
+    LAMMPS_NS::LAMMPSException m_currentException;
     class System *m_system = nullptr;
     bool m_exceptionHandled = false;
-    LAMMPSException m_currentException;
-    void executeActiveRunCommand();
+    QList<class ScriptCommand> m_commands;
 
 public:
-    LammpsState state;
-    class States *states = nullptr; // TODO: Naming
-
     LAMMPSController();
     ~LAMMPSController();
 
-    void start();
-
     // Getters/setters
     QMap<QString, class SimulatorControl*> simulatorControls;
-    LAMMPS *lammps() const;
-    void setLammps(LAMMPS *lammps);
-    void setWorker(class MyWorker *worker);
-    int  simulationSpeed() const;
-    void setSimulationSpeed(int simulationSpeed);
-    bool paused() const;
-    void setPaused(bool value);
-    bool crashed() const;
-    LAMMPSException currentException();
-    void disableAllEnsembleFixes();
-    ScriptHandler* scriptHandler() const;
-    void setScriptHandler(ScriptHandler* scriptHandler);
-    class System *system() const;
-    void setSystem(class System *system);
-
-    // Actions
-    void executeCommandInLAMMPS(QString command);
-    void processCommand(QString command);
-    void reset();
+    bool exceptionHandled() const;
+    void setExceptionHandled(bool value);
+    System *system() const;
+    void setSystem(System *system);
+    LAMMPS_NS::LAMMPS *lammps() const;
     bool tick();
+    void stop();
+    void start();
 
+    // LAMMPS internal access
     int findComputeId(QString identifier);
     int findVariableIndex(QString identifier);
     int findFixIndex(QString identifier);
@@ -81,25 +48,7 @@ public:
     LAMMPS_NS::Compute *findComputeByIdentifier(QString identifier);
     LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
     LAMMPS_NS::Variable *findVariableByIdentifier(QString identifier);
-    template<class T>
-    T *findFixByType();
     void processSimulatorControls();
-    bool exceptionHandled() const;
-    void setExceptionHandled(bool value);
 };
-
-template<class T>
-T *LAMMPSController::findFixByType() {
-    for(int i=0; i<m_lammps->modify->nfix; i++) {
-        LAMMPS_NS::Fix *fix = m_lammps->modify->fix[i];
-
-        T *myFix = dynamic_cast<T*>(fix);
-        if(myFix) {
-            return myFix;
-        }
-    }
-
-    return nullptr;
-}
 
 #endif // LAMMPSCONTROLLER_H

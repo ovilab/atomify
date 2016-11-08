@@ -47,8 +47,8 @@ SOURCES += \
     lammpscontroller.cpp \
     highlighter.cpp \
     scriptparser.cpp \
-    scripthandler.cpp \
-    scriptcommand.cpp \
+    parser/scripthandler.cpp \
+    parser/scriptcommand.cpp \
     datasource.cpp \
     LammpsWrappers/simulatorcontrols/nvt.cpp \
     LammpsWrappers/simulatorcontrols/simulatorcontrol.cpp \
@@ -82,15 +82,16 @@ SOURCES += \
     mousemover.cpp \
     states.cpp \
     dataproviders/data1d.cpp \
-    LammpsWrappers/modifiers/propertymodifier.cpp
+    LammpsWrappers/modifiers/propertymodifier.cpp \
+    parser/script.cpp
 
 HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
     scriptparser.h \
-    scripthandler.h \
-    scriptcommand.h \
+    parser/scripthandler.h \
+    parser/scriptcommand.h \
     datasource.h \
     LammpsWrappers/simulatorcontrols/nvt.h \
     LammpsWrappers/simulatorcontrols/simulatorcontrol.h \
@@ -125,7 +126,8 @@ HEADERS += \
     mousemover.h \
     states.h \
     dataproviders/data1d.h \
-    LammpsWrappers/modifiers/propertymodifier.h
+    LammpsWrappers/modifiers/propertymodifier.h \
+    parser/script.h
 
 # Temporary use of quickcontrols2 without install
 

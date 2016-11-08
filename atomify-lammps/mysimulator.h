@@ -7,6 +7,13 @@
 
 using namespace LAMMPS_NS;
 
+struct LammpsState {
+    bool crashed = false;
+    bool runCommandActive = false;
+    bool canProcessSimulatorControls = false;
+    bool dataDirty = false;
+};
+
 class MyWorker : public SimulatorWorker
 {
     Q_OBJECT
@@ -40,23 +47,22 @@ public:
     ~AtomifySimulator() { }
 
     int simulationSpeed() const;
-    ScriptHandler* scriptHandler() const;
-    Q_INVOKABLE void clearSimulatorControls();
     Q_INVOKABLE void togglePaused();
+    class ScriptHandler* scriptHandler() const;
     class System* system() const;
     class States* states() const;
     class LammpsError* lammpsError() const;
 
 public slots:
     void setSimulationSpeed(int arg);
-    void setScriptHandler(ScriptHandler* scriptHandler);
+    void setScriptHandler(class ScriptHandler* scriptHandler);
     void setSystem(class System* system);
     void setLammpsError(class LammpsError* lammpsError);
     void setStates(class States* states);
 
 signals:
     void simulationSpeedChanged(int arg);
-    void scriptHandlerChanged(ScriptHandler* scriptHandler);
+    void scriptHandlerChanged(class ScriptHandler* scriptHandler);
     void systemChanged(class System* system);
     void statesChanged(class States* states);
     void lammpsErrorChanged(class LammpsError* error);
@@ -76,7 +82,7 @@ protected:
 
 private:
     friend class MyWorker;
-    ScriptHandler* m_scriptHandler;
+    class ScriptHandler* m_scriptHandler;
     class System* m_system;
     class States* m_states;
     class LammpsError* m_lammpsError;

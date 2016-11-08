@@ -16,7 +16,7 @@
 #include "LammpsWrappers/simulatorcontrols/cpfix.h"
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
 #include "LammpsWrappers/simulatorcontrols/nvt.h"
-#include "scripthandler.h"
+#include "parser/scripthandler.h"
 #include "LammpsWrappers/simulatorcontrols/rdf.h"
 #include "vendor.h"
 #include "datasource.h"

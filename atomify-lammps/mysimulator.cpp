@@ -20,7 +20,7 @@
 #include <fstream>
 #include <memory>
 #include <QStandardPaths>
-#include "scripthandler.h"
+#include "parser/scripthandler.h"
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/system.h"
@@ -32,7 +32,6 @@ using namespace std;
 MyWorker::MyWorker() {
     m_sinceStart.start();
     m_elapsed.start();
-    m_lammpsController.setWorker(this);
 }
 
 AtomifySimulator::AtomifySimulator() :
@@ -42,16 +41,6 @@ AtomifySimulator::AtomifySimulator() :
     m_simulationSpeed(1)
 {
     m_states->setupStates(*this);
-}
-
-void AtomifySimulator::clearSimulatorControls()
-{
-    for(QObject* child : children()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            control->setParent((QNode*) 0);
-        }
-    }
 }
 
 void AtomifySimulator::togglePaused()
@@ -82,102 +71,62 @@ States *AtomifySimulator::states() const
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
+    QElapsedTimer t; t.start();
 
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
-
-    QElapsedTimer t; t.start();
-    // Sync properties from lammps controller and back
-    atomifySimulator->scriptHandler()->setAtoms(atomifySimulator->system()->atoms()); //TODO: fix ownership
-    m_lammpsController.setScriptHandler(atomifySimulator->scriptHandler());
-    m_lammpsController.setSimulationSpeed(atomifySimulator->simulationSpeed()); // TODO: enable speed in script
-    m_lammpsController.setSystem(atomifySimulator->system());
-    m_lammpsController.states = atomifySimulator->states();
-
     States &states = *atomifySimulator->states();
 
+    // Sync properties from lammps controller and back
+    m_lammpsController.setSystem(atomifySimulator->system());
+    // m_lammpsController.states = atomifySimulator->states();
+
+    // If user pressed stop / restart, we should reset
     if(states.reset()->active()) {
-        m_lammpsController.reset();
+        m_lammpsController.stop();
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
         emit atomifySimulator->didReset();
     }
 
+    // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
         m_lammpsController.start();
     }
 
+    // If we're idling, we should synchronize visuals anyway
     if(states.idle()->active()) {
         atomifySimulator->system()->synchronize(&m_lammpsController);
         return;
     }
+
+    // Process pipeline and synch with GPU
     atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
 
-    if(m_lammpsController.crashed() && !m_lammpsController.exceptionHandled()) {
-        LammpsError *error = new LammpsError();
-        error->create(m_lammpsController);
-        atomifySimulator->setLammpsError(error);
-        m_lammpsController.setExceptionHandled(true); // TODO: put in states
-        emit atomifySimulator->crashed();
-        return;
-    }
+    // If we crashed and haven't handled it yet, do it here
 
-    QMap<QString, SimulatorControl*> controls;
-    for(QObject* child : atomifySimulator->children()) {
-        SimulatorControl* control = qobject_cast<SimulatorControl*>(child);
-        if(control) {
-            if(!controls.contains(control->identifier())) {
-                controls.insert(control->identifier(), control);
-            }
-        }
-    }
-    m_lammpsController.simulatorControls = controls; // This object is visible from the Computes class
+//    if(m_lammpsController.crashed() && !m_lammpsController.exceptionHandled()) {
+//        LammpsError *error = new LammpsError();
+//        error->create(m_lammpsController);
+//        atomifySimulator->setLammpsError(error);
+//        m_lammpsController.setExceptionHandled(true); // TODO: put in states
+//        emit atomifySimulator->crashed();
+//        return;
+//    }
 
-    if(m_lammpsController.state.canProcessSimulatorControls) {
-        foreach(SimulatorControl *control, controls) {
-            control->update(&m_lammpsController);
-        }
-    }
-
+    // Synchronize visuals
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
 
-    if(!m_lammpsController.state.runCommandActive) {
-        ScriptHandler *scriptHandler = atomifySimulator->m_scriptHandler;
-        ScriptParser &scriptParser = scriptHandler->parser();
-        ScriptCommand nextCommandObject = scriptHandler->nextCommand();
-
-        QString nextCommand = nextCommandObject.command();
-        if(nextCommandObject.type() == ScriptCommand::Type::NoCommand) {
-            emit atomifySimulator->finished();
-        } else {
-            emit atomifySimulator->parsing();
-        }
-
-        if(scriptParser.isEditorCommand(nextCommand) && scriptParser.isGUICommand(nextCommand)) {
-            scriptHandler->parseGUICommand(nextCommand);
-            m_lammpsController.state.nextCommand = ScriptCommand("", ScriptCommand::Type::SkipLammpsTick);
-        } else {
-            QString command = nextCommand;
-            command = command.trimmed();
-            command.remove(0,2);
-
-            for(auto *simulatorControl : atomifySimulator->findChildren<SimulatorControl*>()) {
-                simulatorControl->handleCommand(nextCommandObject.command());
-            }
-            m_lammpsController.state.nextCommand = nextCommandObject;
-        }
-    }
-    // qDebug() << "Full synchronization spending " << t.elapsed() << " ms.";
 }
 
 void MyWorker::work()
 {
     m_workCount += 1;
     bool didWork = m_lammpsController.tick();
-    if(m_lammpsController.state.canProcessSimulatorControls) {
-        m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
-        m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
-    }
+//    if(m_lammpsController.state.canProcessSimulatorControls) {
+//        m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
+//        m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
+//    }
 
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;

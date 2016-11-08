@@ -1,6 +1,6 @@
 #include "simulatorcontrol.h"
 #include "lammpscontroller.h"
-#include "scripthandler.h"
+#include "parser/scripthandler.h"
 #include "mysimulator.h"
 
 SimulatorControl::SimulatorControl(Qt3DCore::QNode *parent) : Qt3DCore::QNode(parent)
@@ -22,16 +22,16 @@ SimulatorControl::~SimulatorControl()
 }
 
 bool SimulatorControl::addToLammps(LAMMPSController *lammpsController) {
-    for(const QVariant &variant : m_dependencies) {
-        SimulatorControl *dependency = qvariant_cast<SimulatorControl*>(variant);
-        if(dependency && !dependency->existsInLammps(lammpsController)) {
-            // We found one dependency that is not added to LAMMPS, abort this mission
-            return false;
-        }
-    }
+//    for(const QVariant &variant : m_dependencies) {
+//        SimulatorControl *dependency = qvariant_cast<SimulatorControl*>(variant);
+//        if(dependency && !dependency->existsInLammps(lammpsController)) {
+//            // We found one dependency that is not added to LAMMPS, abort this mission
+//            return false;
+//        }
+//    }
 
-    ScriptHandler *scriptHandler = lammpsController->scriptHandler();
-    scriptHandler->addCommandsToTop(enabledCommands(), ScriptCommand::Type::SingleCommand);
+//    ScriptHandler *scriptHandler = lammpsController->scriptHandler();
+//    scriptHandler->addCommandsToTop(enabledCommands(), ScriptCommand::Type::SingleCommand);
     return true;
 }
 
@@ -82,30 +82,30 @@ void SimulatorControl::update(LAMMPSController *lammpsController)
 {
     if(m_isMirror) return; // If this object is only a mirror object, we shouldn't mess with adding or removing things from LAMMPS.
 
-    if(!lammpsController->scriptHandler()) {
-        return;
-    }
+//    if(!lammpsController->scriptHandler()) {
+//        return;
+//    }
 
-    bool exists = existsInLammps(lammpsController);
-    if(!exists && m_enabled) {
-        // We should exist, so let's try to add.
-        // Whatever happens, just return. We aren't ready to compute any values yet anyway.
-        addToLammps(lammpsController);
-        return;
-    }
+//    bool exists = existsInLammps(lammpsController);
+//    if(!exists && m_enabled) {
+//        // We should exist, so let's try to add.
+//        // Whatever happens, just return. We aren't ready to compute any values yet anyway.
+//        addToLammps(lammpsController);
+//        return;
+//    }
 
-    if(exists && !m_enabled || !dependenciesValid(lammpsController)) {
-        // We should not exist, but we do. Now remove from lammps
-        lammpsController->scriptHandler()->addCommandsToTop(disableCommands(), ScriptCommand::Type::SingleCommand);
-    }
+//    if(exists && !m_enabled || !dependenciesValid(lammpsController)) {
+//        // We should not exist, but we do. Now remove from lammps
+//        lammpsController->scriptHandler()->addCommandsToTop(disableCommands(), ScriptCommand::Type::SingleCommand);
+//    }
 
-    if(exists) {
-        QString currentCommand = command();
-        updateCommand();
-        if(currentCommand!=command()) {
-            lammpsController->scriptHandler()->addCommandsToTop(resetCommands(), ScriptCommand::Type::SingleCommand);
-        }
-    }
+//    if(exists) {
+//        QString currentCommand = command();
+//        updateCommand();
+//        if(currentCommand!=command()) {
+//            lammpsController->scriptHandler()->addCommandsToTop(resetCommands(), ScriptCommand::Type::SingleCommand);
+//        }
+//    }
 }
 
 void SimulatorControl::handleCommand(QString command) { /* TODO */ }

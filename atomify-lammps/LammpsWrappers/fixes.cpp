@@ -85,11 +85,11 @@ void Fixes::synchronize(LAMMPSController *lammpsController)
         setCount(m_data.count());
     }
 
-    if(!lammpsController->state.canProcessSimulatorControls) return;
-    for(QObject *object : m_data) {
-        CPFix *fix = qobject_cast<CPFix*>(object);
-        fix->copyData(lammpsController);
-    }
+//    if(!lammpsController->state.canProcessSimulatorControls) return;
+//    for(QObject *object : m_data) {
+//        CPFix *fix = qobject_cast<CPFix*>(object);
+//        fix->copyData(lammpsController);
+//    }
 
 }
 
