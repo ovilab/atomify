@@ -121,8 +121,9 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
             QStringList words = command.command().trimmed().split(QRegExp("\\s+"), QString::SkipEmptyParts);
             if(words.size()>1) {
                 // First try to parse second argument as a number
+                QString runArgument = words.at(1);
                 bool ok;
-                ulong timesteps = words.at(1).toULong(&ok);
+                ulong timesteps = runArgument.toULong(&ok);
                 if(ok) {
                     // We managed to parse this to an uint
 
@@ -136,12 +137,18 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
                     // Create RunCommand object to split the run command into smaller parts
                     ulong start = controller.system()->currentTimestep();
                     ulong stop = start + timesteps;
-                    qDebug() << "Will split " << command.command() << " into " << stop - start << " run commands";
                     m_activeRunCommand = new RunCommand(start, stop);
                 } else {
                     // TODO: handle variable run commands
-                    qDebug() << "Error, could not parse run command";
-                    exit(1);
+                    if(controller.variableExists(runArgument)) {
+                        ulong timesteps = controller.variableValue(runArgument);
+                        ulong start = controller.system()->currentTimestep();
+                        ulong stop = start + timesteps;
+                        m_activeRunCommand = new RunCommand(start, stop);
+                    } else {
+                        qDebug() << "Error, could not parse run command";
+                        exit(1);
+                    }
                 }
 
                 // Now fetch the newest one, with preRun = true

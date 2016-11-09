@@ -194,6 +194,14 @@ bool LAMMPSController::variableExists(QString identifier)
     return findVariableIndex(identifier) >= 0;
 }
 
+double LAMMPSController::variableValue(QString identifier) {
+    if(!variableExists(identifier)) {
+        return 0; // should never happen anyway
+    }
+    QByteArray bytes = identifier.toUtf8();
+    return *(static_cast<double*>(lammps_extract_variable((void*)m_lammps, bytes.data(), nullptr)));
+}
+
 bool LAMMPSController::groupExists(QString identifier)
 {
     if(!m_lammps) {
