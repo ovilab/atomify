@@ -116,6 +116,43 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
             }
         }
 
+        if(command.command().startsWith("run")) {
+            // We should create a RunCommand object here.
+            QStringList words = command.command().trimmed().split(QRegExp("\\s+"), QString::SkipEmptyParts);
+            if(words.size()>1) {
+                // First try to parse second argument as a number
+                bool ok;
+                ulong timesteps = words.at(1).toULong(&ok);
+                if(ok) {
+                    // We managed to parse this to an uint
+
+                    // If user asked for run 0, just do it
+                    if(timesteps == 0) {
+                        // just run the 'run 0' command
+                        commands.append(command);
+                        return commands;
+                    }
+
+                    // Create RunCommand object to split the run command into smaller parts
+                    ulong start = controller.system()->currentTimestep();
+                    ulong stop = start + timesteps;
+                    qDebug() << "Will split " << command.command() << " into " << stop - start << " run commands";
+                    m_activeRunCommand = new RunCommand(start, stop);
+                } else {
+                    // TODO: handle variable run commands
+                    qDebug() << "Error, could not parse run command";
+                    exit(1);
+                }
+
+                // Now fetch the newest one, with preRun = true
+                QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, true);
+                ScriptCommand command(nextRunCommand, ScriptCommand::Type::File, command.line());
+                commands.append(command);
+
+                return commands;
+            }
+        }
+
         commands.append(command);
         if(commandRequiresSynchronization(command)) {
             break;
@@ -143,13 +180,9 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
 
     // Step 2) Continue active run/rerun command
     if(m_activeRunCommand) {
-        bool preRunNeeded = true;
-        QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->timesteps(), 1, preRunNeeded);
+        bool preRunNeeded = true; // TODO: figure out whether or not this is true
+        QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, preRunNeeded);
 
-        if(m_activeRunCommand->finished) {
-            delete m_activeRunCommand;
-            m_activeRunCommand = nullptr;
-        }
         QList<ScriptCommand> list;
         ScriptCommand command(nextRunCommand, ScriptCommand::Type::File, 0); // TODO: line numbers
         list.append(command);
@@ -175,6 +208,11 @@ void ScriptHandler::didFinishPreviousCommands()
     if(m_scriptStack.size()>0 && !m_scriptStack.top()->hasNextLine()) {
         Script *script = m_scriptStack.pop();
         delete script;
+    }
+
+    if(m_activeRunCommand && m_activeRunCommand->finished) {
+        delete m_activeRunCommand;
+        m_activeRunCommand = nullptr;
     }
 }
 

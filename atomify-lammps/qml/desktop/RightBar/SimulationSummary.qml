@@ -91,15 +91,12 @@ Flickable {
                 Label {
                     text: "Number of atom types: "+system.numberOfAtomTypes
                 }
-
                 Label {
-                    text: "Timesteps: "+system.timesteps
+                    text: "Current timestep: "+system.currentTimestep
                 }
-
                 Label {
                     text: "Time: "+system.simulationTime.toFixed(2)
                 }
-
                 Column {
                     id: groupsColumn
                     property bool expanded

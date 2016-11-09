@@ -85,9 +85,9 @@ void System::synchronize(LAMMPSController *lammpsController)
         emit simulationTimeChanged(m_simulationTime);
     }
 
-    if(m_timesteps != update->atimestep) {
-        m_timesteps = update->atimestep;
-        emit timestepsChanged(m_timesteps);
+    if(m_currentTimestep != update->atimestep) {
+        m_currentTimestep = update->atimestep;
+        emit currentTimestepChanged(m_currentTimestep);
     }
 
     for(QVariant modifier_ : m_atoms->modifiers()) {
@@ -120,9 +120,9 @@ float System::simulationTime() const
     return m_simulationTime;
 }
 
-int System::timesteps() const
+int System::currentTimestep() const
 {
-    return m_timesteps;
+    return m_currentTimestep;
 }
 
 Atoms *System::atoms() const
@@ -151,13 +151,13 @@ void System::reset()
     m_computes->reset();
     m_regions->reset();
     m_variables->reset();
-    m_timesteps = 0;
+    m_currentTimestep = 0;
     m_simulationTime = 0;
     m_size = QVector3D();
     m_origin = QVector3D();
     m_numberOfAtoms = 0;
     m_numberOfAtomTypes = 0;
-    emit timestepsChanged(m_timesteps);
+    emit currentTimestepChanged(m_currentTimestep);
     emit simulationTimeChanged(m_simulationTime);
     emit sizeChanged(m_size);
     emit originChanged(m_origin);

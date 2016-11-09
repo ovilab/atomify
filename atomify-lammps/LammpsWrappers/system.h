@@ -17,7 +17,7 @@ class System : public QObject
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
-    Q_PROPERTY(int timesteps READ timesteps NOTIFY timestepsChanged)
+    Q_PROPERTY(int currentTimestep READ currentTimestep NOTIFY currentTimestepChanged)
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
     Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
     Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
@@ -33,7 +33,7 @@ public:
     QVector3D size() const;
     int numberOfAtoms() const;
     float simulationTime() const;
-    int timesteps() const;
+    int currentTimestep() const;
     class Atoms* atoms() const;
     class Regions* regions() const;
     class Groups* groups() const;
@@ -64,7 +64,7 @@ signals:
     void sizeChanged(QVector3D size);
     void numberOfAtomsChanged(int numberOfAtoms);
     void simulationTimeChanged(float simulationTime);
-    void timestepsChanged(int timesteps);
+    void currentTimestepChanged(int currentTimestep);
     void atomsChanged(class Atoms* atoms);
     void regionsChanged(class Regions* regions);
     void groupsChanged(class Groups* groups);
@@ -91,7 +91,7 @@ private:
     QVector3D m_cameraPosition;
     int m_numberOfAtoms = 0;
     float m_simulationTime = 0;
-    int m_timesteps = 0;
+    int m_currentTimestep = 0;
     int m_numberOfAtomTypes = 0;
     float m_volume = 0;
     bool m_isValid = false;

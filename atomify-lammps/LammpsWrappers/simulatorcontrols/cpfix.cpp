@@ -49,7 +49,7 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
                 m_data.push_back(QVariant::fromValue(data));
             }
         }
-        if(fix->nextvalid() == lammpsController->system()->timesteps()+1) {
+        if(fix->nextvalid() == lammpsController->system()->currentTimestep()+1) {
             QStringList labels = {"x", "y", "z"};
 
             int x = dim[0];
@@ -130,7 +130,7 @@ bool CPFix::copyData(FixAveHisto *fix, LAMMPSController *lammpsController) {
 void CPFix::copyData(LAMMPSController *lammpsController)
 {
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
-    if(lastUpdate != -1 && (lammpsController->system()->timesteps()-lastUpdate) < m_frequency) return;
+    if(lastUpdate != -1 && (lammpsController->system()->currentTimestep()-lastUpdate) < m_frequency) return;
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
     Fix *lmp_fix = lammpsController->findFixByIdentifier(identifier());
     if(lmp_fix == nullptr) return;

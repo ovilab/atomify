@@ -393,7 +393,7 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
-    if(lastUpdate != -1 && (lammpsController->system()->timesteps()-lastUpdate) < m_frequency) return;
+    if(lastUpdate != -1 && (lammpsController->system()->currentTimestep()-lastUpdate) < m_frequency) return;
     // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
     Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
     m_groupBit = lmp_compute->groupbit;
