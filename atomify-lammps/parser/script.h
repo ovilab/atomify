@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVector>
 #include <QMap>
+#include <QUrl>
 
 class Script : public QObject
 {
@@ -18,6 +19,7 @@ public:
     int currentLine() const;
     bool hasNextLine() const;
     QString getNextLine();
+    void readFile();
 
 signals:
     void fileNameChanged(QString fileName);

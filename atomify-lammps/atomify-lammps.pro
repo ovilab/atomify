@@ -83,7 +83,8 @@ SOURCES += \
     states.cpp \
     dataproviders/data1d.cpp \
     LammpsWrappers/modifiers/propertymodifier.cpp \
-    parser/script.cpp
+    parser/script.cpp \
+    parser/runcommand.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -127,7 +128,8 @@ HEADERS += \
     states.h \
     dataproviders/data1d.h \
     LammpsWrappers/modifiers/propertymodifier.h \
-    parser/script.h
+    parser/script.h \
+    parser/runcommand.h
 
 # Temporary use of quickcontrols2 without install
 

@@ -15,11 +15,11 @@
 class LAMMPSController
 {
 private:
+    bool executeCommandInLAMMPS(QString command);
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
     LAMMPS_NS::LAMMPSException m_currentException;
     class System *m_system = nullptr;
     bool m_exceptionHandled = false;
-    QList<class ScriptCommand> m_commands;
 
 public:
     LAMMPSController();
@@ -27,6 +27,7 @@ public:
 
     // Getters/setters
     QMap<QString, class SimulatorControl*> simulatorControls;
+    QList<class ScriptCommand> commands;
     bool exceptionHandled() const;
     void setExceptionHandled(bool value);
     System *system() const;

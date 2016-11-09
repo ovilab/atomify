@@ -1,5 +1,8 @@
 #include "script.h"
 
+#include <QFile>
+#include <QDebug>
+
 Script::Script(QObject *parent) : QObject(parent),
   m_currentLine(-1)
 {
@@ -18,7 +21,7 @@ int Script::currentLine() const
 
 bool Script::hasNextLine() const
 {
-    return m_currentLine+1 < m_lines.size();
+    return m_currentLine < m_lines.size();
 }
 
 QString Script::getNextLine()
@@ -27,6 +30,18 @@ QString Script::getNextLine()
     QString nextLine = m_lines.at(m_currentLine);
     setCurrentLine(currentLine()+1);
     return nextLine;
+}
+
+void Script::readFile()
+{
+    QFile file(m_fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Error, could not open file " << m_fileName;
+        return;
+    }
+
+    QString script = file.readAll();
+    setScript(script);
 }
 
 QString Script::script() const

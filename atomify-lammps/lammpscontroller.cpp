@@ -65,36 +65,36 @@ void LAMMPSController::stop()
     }
 }
 
-// void LAMMPSController::executeCommandInLAMMPS(QString command) {
-//    if(m_lammps == nullptr) {
-//        qDebug() << "Warning, trying to run a LAMMPS command with no LAMMPS object.";
-//        qDebug() << "Command: " << command;
-//        return;
-//    }
+bool LAMMPSController::executeCommandInLAMMPS(QString command) {
+    if(m_lammps == nullptr) {
+        qDebug() << "Warning, trying to run a LAMMPS command with no LAMMPS object.";
+        qDebug() << "Command: " << command;
+        return true;
+    }
 
-//    if(!command.startsWith("run")) {
-//        qDebug() << command;
-//    }
+    if(true || !command.startsWith("run")) {
+        qDebug() << "EXECUTING LAMMPS COMMAND: " << command;
+    }
 
-//    QByteArray commandBytes = command.toUtf8();
-//    lammps_command((void*)m_lammps, (char*)commandBytes.data());
-//    char *lammpsError = m_lammps->error->get_last_error();
-//    if(lammpsError != NULL) {
-//        m_currentException =  LAMMPSException(lammpsError); // Store a copy of the exception to communicate to GUI
-//        m_exceptionHandled = false;
-//        state.crashed = true;
-//    }
-// }
+    QByteArray commandBytes = command.toUtf8();
+    lammps_command((void*)m_lammps, (char*)commandBytes.data());
+    char *lammpsError = m_lammps->error->get_last_error();
+    if(lammpsError != NULL) {
+        m_currentException =  LAMMPSException(lammpsError); // Store a copy of the exception to communicate to GUI
+        return false;
+    }
+    return true;
+}
 
 // void LAMMPSController::processCommand(QString command) {
-    // Parse one single LAMMPS command. Three notes:
-    //   Files are read with full filenames in LAMMPS. Files added as Qt Resrouces have path :/file, which will not work.
-    //   We have introduced the notation ext://file which will copy the file to a temp location and is readable with its full filename.
-    //
-    //   Also, run commands are modified so that run N will be split into smaller run commands to allow smooth visualizations.
-    //   This means that if the number of timesteps are given as a LAMMPS variable, we need to extract that.
-    //
-    //   We also added a fastrun command that act as a normal run command with no visualization.
+// Parse one single LAMMPS command. Three notes:
+//   Files are read with full filenames in LAMMPS. Files added as Qt Resrouces have path :/file, which will not work.
+//   We have introduced the notation ext://file which will copy the file to a temp location and is readable with its full filename.
+//
+//   Also, run commands are modified so that run N will be split into smaller run commands to allow smooth visualizations.
+//   This means that if the number of timesteps are given as a LAMMPS variable, we need to extract that.
+//
+//   We also added a fastrun command that act as a normal run command with no visualization.
 
 //    string commandString = command.toStdString();
 //    stringstream command_ss(commandString);
@@ -293,34 +293,42 @@ void LAMMPSController::start() {
 
 bool LAMMPSController::tick()
 {
-//    for(ScriptCommand &command : m_commands) {
+    for(ScriptCommand &commandObject : commands) {
+        const QString &command = commandObject.command();
+        bool ok = executeCommandInLAMMPS(command);
+        if(!ok) {
+            // Handle error
+            qDebug() << "Error in LAMMPS. We need to handle this.";
+            exit(1);
+        }
+    }
 
-//    }
-//    if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return true;
+    commands.clear();
+    //    if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return true;
 
-//    if(nextCommand.type() == ScriptCommand::Type::NoCommand) {
-//        // If no commands are queued, but user has pressed play again, do normal run
-//        if(!states->continued()->active()) return true;
+    //    if(nextCommand.type() == ScriptCommand::Type::NoCommand) {
+    //        // If no commands are queued, but user has pressed play again, do normal run
+    //        if(!states->continued()->active()) return true;
 
-//        if(state.preRunNeeded) {
-//            executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(state.simulationSpeed));
-//            state.preRunNeeded = false;
-//        } else {
-//            executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
-//        }
-//        state.canProcessSimulatorControls = true;
+    //        if(state.preRunNeeded) {
+    //            executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(state.simulationSpeed));
+    //            state.preRunNeeded = false;
+    //        } else {
+    //            executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
+    //        }
+    //        state.canProcessSimulatorControls = true;
 
-//    } else {
-//        state.preRunNeeded = true;
+    //    } else {
+    //        state.preRunNeeded = true;
 
-//        bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
-//        if(didProcessCommand) {
-//            return true;
-//        }
+    //        bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
+    //        if(didProcessCommand) {
+    //            return true;
+    //        }
 
-//        processCommand(nextCommand.command());
-//    }
+    //        processCommand(nextCommand.command());
+    //    }
 
-//    state.dataDirty = true;
+    //    state.dataDirty = true;
     return true;
 }

@@ -21,6 +21,7 @@
 #include <memory>
 #include <QStandardPaths>
 #include "parser/scripthandler.h"
+#include "parser/scriptcommand.h"
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/system.h"
@@ -78,11 +79,11 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // Sync properties from lammps controller and back
     m_lammpsController.setSystem(atomifySimulator->system());
-    // m_lammpsController.states = atomifySimulator->states();
 
     // If user pressed stop / restart, we should reset
     if(states.reset()->active()) {
         m_lammpsController.stop();
+        m_lammpsController.commands.clear();
         atomifySimulator->system()->reset();
         atomifySimulator->setLammpsError(nullptr);
         emit atomifySimulator->didReset();
@@ -95,11 +96,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If we're idling, we should synchronize visuals anyway
     if(states.idle()->active()) {
-        atomifySimulator->system()->synchronize(&m_lammpsController);
+        // atomifySimulator->system()->synchronize(&m_lammpsController);
         return;
     }
 
-    // Process pipeline and synch with GPU
     atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
 
     // If we crashed and haven't handled it yet, do it here
@@ -117,6 +117,18 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
 
+    ScriptHandler &handler = *atomifySimulator->scriptHandler();
+    handler.didFinishPreviousCommands();
+
+    m_lammpsController.commands = handler.nextCommands(m_lammpsController);
+
+    qDebug() << "Added new commands: ";
+    for(ScriptCommand &cmd : m_lammpsController.commands) {
+        qDebug() << "    " << cmd.command();
+    }
+    if(m_lammpsController.commands.size()==0) {
+        emit atomifySimulator->finished();
+    }
 }
 
 void MyWorker::work()
