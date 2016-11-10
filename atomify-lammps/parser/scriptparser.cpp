@@ -35,17 +35,6 @@ bool ScriptParser::isUnsupportedCommand(QString command)
     return false;
 }
 
-bool ScriptParser::isDisableAllEnsembleFixes(QString command) {
-    QRegularExpression regex("^disableAllEnsembleFixes$");
-    return regex.match(command).hasMatch();
-}
-
-bool ScriptParser::isAtomColorAndSize(QString command)
-{
-    QRegularExpression regex(QString("^(?:atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)$").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
-    return regex.match(command).hasMatch();
-}
-
 void ScriptParser::atomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action) {
     QRegularExpression regex(QString("^(?:atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)$").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
     QRegularExpressionMatch match = regex.match(command);
@@ -58,30 +47,6 @@ void ScriptParser::atomColorAndSize(QString command, std::function<void(float sc
     QString color = match.captured(3);
 
     action(scale, color, atomType);
-}
-
-bool ScriptParser::isAtomType(QString command)
-{
-    QRegularExpression regex("^(atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
-    return regex.match(command).hasMatch();
-}
-
-bool ScriptParser::isAtomColor(QString command)
-{
-    QRegularExpression regex("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(?:color)(?:\\s*|\\t*)(#\\w*?|\\w*)$");
-    return regex.match(command).hasMatch();
-}
-
-bool ScriptParser::isBond(QString command)
-{
-    QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
-    return regex.match(command).hasMatch();
-}
-
-bool ScriptParser::isSimulationSpeed(QString command)
-{
-    QRegularExpression regex(QString("^(?:speed)(?:%1)(%2)$").arg(regexTabOrSpace).arg(regexInt));
-    return regex.match(command).hasMatch();
 }
 
 int ScriptParser::simulationSpeed(QString command) {
@@ -105,12 +70,6 @@ void ScriptParser::bond(QString command, std::function<void(int atomType1, int a
     if(!castOk) return;
 
     action(atomType1, atomType2, bondLength);
-}
-
-bool ScriptParser::isDisableBonds(QString command)
-{
-    QRegularExpression regex("^disableBonds$");
-    return regex.match(command).hasMatch();
 }
 
 void ScriptParser::atomType(QString command, std::function<void(int atomType, QString atomTypeName)> action)
@@ -137,34 +96,10 @@ void ScriptParser::atomColor(QString command, std::function<void(int atomType, Q
     action(atomType, color);
 }
 
-bool ScriptParser::isGUICommand(QString command) {
-    command.remove(0,2);
-    if(isAtomType(command)) return true;
-    if(isAtomColor(command)) return true;
-    if(isBond(command)) return true;
-    if(isAtomColorAndSize(command)) return true;
-    if(isDisableBonds(command)) return true;
-
-    return false;
-}
-
 bool ScriptParser::isEditorCommand(QString command)
 {
     command = command.trimmed();
     return command.startsWith("#/");
-}
-
-bool ScriptParser::isInclude(QString command)
-{
-    std::string commandString = command.toStdString();
-    std::stringstream command_ss(commandString);
-    std::string word;
-    if(command_ss >> word) {
-        if(word.compare("include") == 0) {
-            return true;
-        }
-    }
-    return false;
 }
 
 QString ScriptParser::includePath(QString command)

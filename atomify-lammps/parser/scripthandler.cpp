@@ -48,18 +48,6 @@ void ScriptHandler::runScript(QString fileName, QString script)
     emit newScript();
 }
 
-QString ScriptHandler::includePath(const ScriptCommand &command) {
-    if(command.command().trimmed().startsWith("include")) {
-        QStringList list = command.command().trimmed().split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        if(list.size()>1) {
-            QString argument = list.at(1);
-            // TODO: see if this is a variable
-            return argument;
-        }
-    }
-    return QString(""); // Not an include command
-}
-
 bool ScriptHandler::commandRequiresSynchronization(const ScriptCommand &command) {
     // All of these commands might change visuals so we should synchronize
     if(command.command().trimmed().startsWith("create_box")) return true;
@@ -100,8 +88,9 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
     while(true) {
         ScriptCommand command = nextCommand();
 
-        if(!includePath(command).isEmpty()) {
-            QString path = includePath(command);
+        if(!m_parser.includePath(command.command()).isEmpty()) {
+            QString path = m_parser.includePath(command.command());
+            qDebug() << "Awesome, got an include path: " << path;
 
             QFileInfo info(path);
             if(info.exists()) {
@@ -171,6 +160,12 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
     return commands;
 }
 
+void ScriptHandler::handleEditorCommands(QList<ScriptCommand> &commands) {
+    for(ScriptCommand &command : commands) {
+
+    }
+}
+
 QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
 {
     if(m_runningScript) {
@@ -190,11 +185,11 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
         bool preRunNeeded = true; // TODO: figure out whether or not this is true
         QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, preRunNeeded);
 
-        QList<ScriptCommand> list;
+        QList<ScriptCommand> commands;
         ScriptCommand command(nextRunCommand, ScriptCommand::Type::File, 0); // TODO: line numbers
-        list.append(command);
+        commands.append(command);
 
-        return list;
+        return commands;
     }
 
     // Step 3) Create command queue based on script stack
@@ -224,8 +219,14 @@ void ScriptHandler::didFinishPreviousCommands()
 }
 
 void ScriptHandler::setWorkingDirectory(QString fileName) {
+    if(fileName.startsWith("file://")) {
+        fileName.remove("file://");
+    }
+
     QFileInfo fileInfo(fileName);
-    if(!fileInfo.exists()) return;
+    if(!fileInfo.exists()) {
+        return;
+    }
 
     QString currentDir = fileInfo.absoluteDir().path();
     QByteArray currentDirBytes = currentDir.toUtf8();

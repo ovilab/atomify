@@ -5,6 +5,7 @@
 #include <QStack>
 #include <QList>
 #include <QUrl>
+#include "scriptparser.h"
 
 class ScriptHandler : public QObject
 {
@@ -27,20 +28,22 @@ signals:
 public slots:
 
 private:
-    class ScriptCommand nextCommand();
-    QList<class ScriptCommand> singleCommand(class LAMMPSController &controller);
-    QList<class ScriptCommand> scriptCommands(class LAMMPSController &controller);
-    class RunCommand *m_activeRunCommand = nullptr;
-    QStack<class Script*> m_scriptStack;
-    QList<QString> m_commands;
-    QString includePath(const ScriptCommand &command);
-    bool commandRequiresSynchronization(const ScriptCommand &command);
+    ScriptParser m_parser;
     int m_simulationSpeed = 1;
     bool m_runningScript = false;
     bool m_preRunNeeded = true;
     unsigned int m_runCommandStart = 0;
     unsigned int m_runCommandEnd = 0;
+    class RunCommand *m_activeRunCommand = nullptr;
+    QStack<class Script*> m_scriptStack;
+    QList<QString> m_commands;
+
+    class ScriptCommand nextCommand();
+    QList<class ScriptCommand> singleCommand(class LAMMPSController &controller);
+    QList<class ScriptCommand> scriptCommands(class LAMMPSController &controller);
     void setWorkingDirectory(QString fileName);
+    void handleEditorCommands(QList<class ScriptCommand> &commands);
+    bool commandRequiresSynchronization(const ScriptCommand &command);
 };
 
 #endif // SCRIPTHANDLER_H

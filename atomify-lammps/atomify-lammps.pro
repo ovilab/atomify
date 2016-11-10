@@ -46,7 +46,7 @@ SOURCES += \
     mysimulator.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
-    scriptparser.cpp \
+    parser/scriptparser.cpp \
     parser/scripthandler.cpp \
     parser/scriptcommand.cpp \
     datasource.cpp \
@@ -90,7 +90,7 @@ HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
-    scriptparser.h \
+    parser/scriptparser.h \
     parser/scripthandler.h \
     parser/scriptcommand.h \
     datasource.h \
