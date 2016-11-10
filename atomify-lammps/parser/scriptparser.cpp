@@ -35,71 +35,75 @@ bool ScriptParser::isUnsupportedCommand(QString command)
     return false;
 }
 
-void ScriptParser::atomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action) {
+bool ScriptParser::atomColorAndSize(QString command, std::function<void(int atomType, QString color, float scale)> action) {
     QRegularExpression regex(QString("^(?:atom)(?:%1)(%2)(?:%1)(%3)(?:%1)(%4)$").arg(regexTabOrSpace).arg(regexInt).arg(regexFloat).arg(regexColor));
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return false;
+
     bool castOk;
     int atomType = match.captured(1).toInt(&castOk);
-    if(!castOk) return;
+    if(!castOk) return false;
     float scale = match.captured(2).toFloat(&castOk);
-    if(!castOk) return;
+    if(!castOk) return false;
 
     QString color = match.captured(3);
 
-    action(scale, color, atomType);
+    if(action) action(atomType, color, scale);
+    return true;
 }
 
 int ScriptParser::simulationSpeed(QString command) {
     QRegularExpression regex(QString("^(?:speed)(?:%1)(%2)$").arg(regexTabOrSpace).arg(regexInt));
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return false;
     bool castOk;
     int speed = match.captured(1).toInt(&castOk);
     if(castOk) return speed;
-    else return -1;
+    else return 0;
 }
 
-void ScriptParser::bond(QString command, std::function<void(int atomType1, int atomType2, float bondLength)> action) {
+bool ScriptParser::bond(QString command, std::function<void(int atomType1, int atomType2, float bondLength)> action) {
     QRegularExpression regex(QString("^(?:bond)(?:%1)(%2)(?:%3)(%4)(?:%5)(%6)$").arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexInt).arg(regexTabOrSpace).arg(regexFloat));
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return false;
     bool castOk;
     int atomType1 = match.captured(1).toInt(&castOk);
-    if(!castOk) return;
+    if(!castOk) return false;
     int atomType2 = match.captured(2).toInt(&castOk);
-    if(!castOk) return;
+    if(!castOk) return false;
     int bondLength = match.captured(3).toFloat(&castOk);
-    if(!castOk) return;
+    if(!castOk) return false;
 
-    action(atomType1, atomType2, bondLength);
+    if(action) action(atomType1, atomType2, bondLength);
+    return true;
 }
 
-void ScriptParser::atomType(QString command, std::function<void(int atomType, QString atomTypeName)> action)
+bool ScriptParser::atomType(QString command, std::function<void(int atomType, QString atomTypeName)> action)
 {
     QRegularExpression regex("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return false;
     bool castOk;
     int atomType = match.captured(1).toInt(&castOk);
-    if(!castOk) return;
+    if(!castOk) return false;
     QString atomTypeName = match.captured(2);
-    action(atomType, atomTypeName);
+    if(action) action(atomType, atomTypeName);
+    return true;
 }
 
-void ScriptParser::atomColor(QString command, std::function<void(int atomType, QColor color)> action)
+bool ScriptParser::atomColor(QString command, std::function<void(int atomType, QColor color)> action)
 {
     QRegularExpression regex ("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(?:color)(?:\\s*|\\t*)(#\\w*?|\\w*)$");
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return false;
     bool castOk;
     int atomType = match.captured(1).toInt(&castOk);
-    if(!castOk) return;
+    if(!castOk) return false;
     QString colorString = match.captured(2);
     QColor color(colorString);
 
-    action(atomType, color);
-}
-
-bool ScriptParser::isEditorCommand(QString command)
-{
-    command = command.trimmed();
-    return command.startsWith("#/");
+    if(action) action(atomType, color);
+    return true;
 }
 
 QString ScriptParser::includePath(QString command)
@@ -124,3 +128,8 @@ QString ScriptParser::includePath(QString command)
     return QString("");
 }
 
+bool ScriptParser::isEditorCommand(QString command)
+{
+    command = command.trimmed();
+    return command.startsWith("#/");
+}

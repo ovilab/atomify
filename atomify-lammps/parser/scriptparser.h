@@ -15,13 +15,13 @@ private:
 public:
     ScriptParser();
     bool isUnsupportedCommand(QString command);
-    void atomColorAndSize(QString command, std::function<void(float scale, QString color, int atomType)> action);
-    void atomType(QString command, std::function<void(int atomType, QString atomTypeName)> action);
-    void atomColor(QString command, std::function<void (int, QColor)> action);
-    void bond(QString command, std::function<void (int atomType1, int atomType2, float bondLength)> action);
-    bool isEditorCommand(QString command);
+    bool atomColorAndSize(QString command, std::function<void(int atomType, QString color, float scale)> action = {});
+    bool atomType(QString command, std::function<void(int atomType, QString atomTypeName)> action = {});
+    bool atomColor(QString command, std::function<void (int, QColor)> action = {});
+    bool bond(QString command, std::function<void (int atomType1, int atomType2, float bondLength)> action = {});
     QString includePath(QString command);
     int simulationSpeed(QString command);
+    bool isEditorCommand(QString command);
 };
 
 #endif // SCRIPTPARSER_H

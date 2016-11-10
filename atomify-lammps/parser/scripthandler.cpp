@@ -161,9 +161,28 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
 }
 
 void ScriptHandler::handleEditorCommands(QList<ScriptCommand> &commands) {
-    for(ScriptCommand &command : commands) {
+    QList<ScriptCommand> remainingCommands;
 
+    for(ScriptCommand &command : commands) {
+        if(m_parser.isEditorCommand(command.command())) {
+            QString commandString = command.command();
+            commandString.remove(0,2);
+
+            bool isHandled = false;
+            isHandled |= m_parser.atomColor(commandString);
+            isHandled |= m_parser.atomColorAndSize(commandString);
+            isHandled |= m_parser.atomType(commandString);
+            isHandled |= m_parser.bond(commandString);
+            if(isHandled) {
+                m_editorCommands.append(command);
+                continue;
+            }
+        }
+        // If not handled editor command, it is normal command
+        remainingCommands.append(command);
     }
+
+    commands = remainingCommands;
 }
 
 QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
@@ -194,7 +213,9 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
 
     // Step 3) Create command queue based on script stack
     if(m_scriptStack.size()>0) {
-        return scriptCommands(controller);
+        QList<ScriptCommand> commands = scriptCommands(controller);
+        handleEditorCommands(commands);
+        return commands;
     }
 
     return QList<ScriptCommand>();

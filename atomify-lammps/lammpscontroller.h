@@ -11,6 +11,7 @@
 #include <modify.h>
 #include <variable.h>
 #include <error.h>
+#include "parser/scriptcommand.h"
 
 class LAMMPSController
 {
@@ -27,7 +28,7 @@ public:
 
     // Getters/setters
     QMap<QString, class SimulatorControl*> simulatorControls;
-    QList<class ScriptCommand> commands;
+    QList<ScriptCommand> commands;
     bool exceptionHandled() const;
     void setExceptionHandled(bool value);
     System *system() const;

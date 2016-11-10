@@ -27,6 +27,7 @@
 #include "LammpsWrappers/system.h"
 #include "LammpsWrappers/computes.h"
 #include "LammpsWrappers/fixes.h"
+#include "LammpsWrappers/bonds.h"
 
 using namespace std;
 
@@ -121,6 +122,32 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     handler.didFinishPreviousCommands();
 
     m_lammpsController.commands = handler.nextCommands(m_lammpsController);
+    for(ScriptCommand &command : handler.editorCommands()) {
+        QString commandString = command.command();
+        commandString.remove(0,2);
+
+        handler.parser().atomColor(commandString, [&](int atomType, QColor color) {
+            atomifySimulator->system()->atoms()->setAtomColor(atomType, color);
+        });
+
+        handler.parser().atomColorAndSize(commandString, [&](int atomType, QColor color, float size) {
+            atomifySimulator->system()->atoms()->setAtomColorAndScale(atomType, color, size);
+        });
+
+        handler.parser().atomType(commandString, [&](int atomType, QString atomTypeName) {
+            atomifySimulator->system()->atoms()->setAtomType(atomType, atomTypeName);
+        });
+
+        handler.parser().bond(commandString, [&](int atomType1, int atomType2, float bondLength) {
+            Bonds *bonds = atomifySimulator->system()->atoms()->bonds();
+            if(bonds->bondLengths().size() > std::max(atomType1, atomType2)) {
+                bonds->bondLengths()[atomType1][atomType2] = bondLength;
+                bonds->bondLengths()[atomType2][atomType1] = bondLength;
+                bonds->setEnabled(true);
+            }
+        });
+    }
+    handler.editorCommands().clear();
 
     qDebug() << "Added new commands: ";
     for(ScriptCommand &cmd : m_lammpsController.commands) {

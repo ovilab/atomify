@@ -5,6 +5,7 @@
 #include <QStack>
 #include <QList>
 #include <QUrl>
+#include "scriptcommand.h"
 #include "scriptparser.h"
 
 class ScriptHandler : public QObject
@@ -21,6 +22,9 @@ public:
     void setSimulationSpeed(int simulationSpeed);
     void didFinishPreviousCommands();
     bool hasNextCommand();
+    QVector<ScriptCommand> &editorCommands() { return m_editorCommands; }
+    ScriptParser &parser() { return m_parser; }
+
 signals:
     void newScript();
     void newCommand();
@@ -35,6 +39,7 @@ private:
     unsigned int m_runCommandStart = 0;
     unsigned int m_runCommandEnd = 0;
     class RunCommand *m_activeRunCommand = nullptr;
+    QVector<ScriptCommand> m_editorCommands;
     QStack<class Script*> m_scriptStack;
     QList<QString> m_commands;
 

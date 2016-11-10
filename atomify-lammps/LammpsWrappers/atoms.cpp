@@ -278,12 +278,12 @@ void Atoms::setAtomType(int atomType, QString elementName)
     m_atomStyles[atomType] = m_atomStyleTypes[elementName];
 }
 
-void Atoms::setAtomColorAndScale(int atomType, QColor color, float radius)
+void Atoms::setAtomColorAndScale(int atomType, QColor color, float size)
 {
     if(atomType >= m_atomStyles.size()) return;
 
     m_atomStyles[atomType]->color = color;
-    m_atomStyles[atomType]->radius = radius;
+    m_atomStyles[atomType]->radius = size;
 }
 
 void Atoms::setAtomColor(int atomType, QColor color) {
