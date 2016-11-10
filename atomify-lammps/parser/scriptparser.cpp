@@ -105,9 +105,15 @@ bool ScriptParser::isEditorCommand(QString command)
 QString ScriptParser::includePath(QString command)
 {
     QRegularExpression regexInsideQuotes("include\\s*\"([^\"]*)");
+    QRegularExpression regexInsideSingleQuotes("include\\s*'([^']*)");
     QRegularExpression regexNoQuotes("include\\s*([^\\s]*)");
     if(command.contains(regexInsideQuotes)) {
         QRegularExpressionMatch match = regexInsideQuotes.match(command);
+        return match.captured(1);
+    }
+
+    if(command.contains(regexInsideSingleQuotes)) {
+        QRegularExpressionMatch match = regexInsideSingleQuotes.match(command);
         return match.captured(1);
     }
 
