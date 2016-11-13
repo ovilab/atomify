@@ -149,10 +149,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
     handler.editorCommands().clear();
 
-    qDebug() << "Added new commands: ";
-    for(ScriptCommand &cmd : m_lammpsController.commands) {
-        qDebug() << "    " << cmd.command();
-    }
     if(m_lammpsController.commands.size()==0) {
         emit atomifySimulator->finished();
     }

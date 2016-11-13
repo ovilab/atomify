@@ -55,6 +55,7 @@ private:
     void handleEditorCommands(QList<class ScriptCommand> &commands);
     bool commandRequiresSynchronization(const ScriptCommand &command);
     void handleRunCommand(class LAMMPSController &controller, class ScriptCommand &command, QList<class ScriptCommand> &commands);
+    bool handleCommand(class LAMMPSController &controller, class ScriptCommand &command, QList<class ScriptCommand> &commands);
 };
 
 #endif // SCRIPTHANDLER_H

@@ -139,38 +139,45 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
     QList<ScriptCommand> commands;
     while(true) {
         ScriptCommand command = nextCommand();
+        bool canAppendMoreCommands = handleCommand(controller, command, commands);
+        if(!canAppendMoreCommands) break;
+    }
 
-        if(!m_parser.includePath(command.command()).isEmpty()) {
-            QString path = m_parser.includePath(command.command());
-            qDebug() << "Awesome, got an include path: " << path;
+    return commands;
+}
 
-            QFileInfo info(path);
-            if(info.exists()) {
-                Script *script = new Script(this);
-                script->setFileName(path);
-                script->readFile();
-                m_scriptStack.push(script);
-                return commands;
-            } else {
-                qDebug() << "Error, could not find file " << path;
-                continue;
-            }
-        }
+bool ScriptHandler::handleCommand(LAMMPSController &controller, ScriptCommand &command, QList<ScriptCommand> &commands) {
+    // Returns true if we can continue after this command
+    if(!m_parser.includePath(command.command()).isEmpty()) {
+        QString path = m_parser.includePath(command.command());
 
-        if(command.command().startsWith("run")) {
-            handleRunCommand(controller, command, commands);
-            break;
-        }
-
-        commands.append(command);
-        if(commandRequiresSynchronization(command)) {
-            break;
-        }
-        if(!m_scriptStack.top()->hasNextLine()) {
-            break;
+        QFileInfo info(path);
+        if(info.exists()) {
+            Script *script = new Script(this);
+            script->setFileName(path);
+            script->readFile();
+            m_scriptStack.push(script);
+            return false;
+        } else {
+            qDebug() << "Error, could not find file " << path;
+            return false;
         }
     }
-    return commands;
+
+    if(command.command().startsWith("run")) {
+        handleRunCommand(controller, command, commands);
+        return false;
+    }
+
+    commands.append(command);
+    if(commandRequiresSynchronization(command)) {
+        return false;
+    }
+    if(!m_scriptStack.top()->hasNextLine()) {
+        return false;
+    }
+
+    return true;
 }
 
 void ScriptHandler::handleEditorCommands(QList<ScriptCommand> &commands) {
@@ -210,10 +217,17 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
     // Step 1) Check for single commands. Parse them as normal commands (i.e. include should work)
     if(m_commands.size() > 0) {
         // TODO: Handle these
-//        QList<ScriptCommand> commands;
-//        handleEditorCommands(commands);
-//        m_commands.clear();
-//        return commands;
+        QList<ScriptCommand> commands;
+        handleEditorCommands(m_commands);
+
+        auto it = m_commands.begin();
+        while(it != m_commands.end()) {
+            ScriptCommand &command = *it;
+            bool canAppendMoreCommands = handleCommand(controller, command, commands);
+            m_commands.erase(it++);
+            if(!canAppendMoreCommands) break;
+        }
+        return commands;
     }
 
     // Step 2) Continue active run/rerun command
