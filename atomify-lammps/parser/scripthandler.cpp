@@ -29,8 +29,9 @@ bool ScriptHandler::runCommand(QString command)
     if(command.trimmed().startsWith("run") && m_activeRunCommand) {
         return false;
     }
-
-    m_commands.append(command);
+    ScriptCommand commandObject(command, ScriptCommand::Type::SingleCommand);
+    m_commands.append(commandObject);
+    m_previousSingleCommands.push_back(commandObject);
     return true;
 }
 
@@ -79,8 +80,59 @@ bool ScriptHandler::commandRequiresSynchronization(const ScriptCommand &command)
     return false;
 }
 
-QList<ScriptCommand> ScriptHandler::singleCommand(LAMMPSController &controller) {
+void ScriptHandler::handleRunCommand(LAMMPSController &controller, ScriptCommand &command, QList<ScriptCommand> &commands) {
+    QStringList words = command.command().trimmed().split(QRegExp("\\s+"), QString::SkipEmptyParts);
+    if(words.size()>1) {
+        // First try to parse second argument as a number
+        QString runArgument = words.at(1);
+        bool ok;
+        ulong timesteps = runArgument.toULong(&ok);
+        if(ok) {
+            // We managed to parse this to an uint
 
+            // If user asked for run 0, just do it
+            if(timesteps == 0) {
+                // just run the 'run 0' command
+                commands.append(command);
+                return;
+            }
+
+            // Create RunCommand object to split the run command into smaller parts
+            ulong start = controller.system()->currentTimestep();
+            ulong stop = start + timesteps;
+            m_activeRunCommand = new RunCommand(start, stop);
+        } else {
+            // This is a variable
+            QString strippedArgument = runArgument;
+            if(strippedArgument.startsWith("$")) {
+                // Variable is probably on the form $X, $(var) or ${var}.
+                if(strippedArgument.length() == 2) {
+                    strippedArgument.remove(0,1); // Remove the $
+                } else if( (strippedArgument.startsWith("$(") && strippedArgument.endsWith(")")) ||
+                           (strippedArgument.startsWith("${") && strippedArgument.endsWith("}"))) {
+                    strippedArgument.remove(0,2); // Remove the $( or ${
+                    strippedArgument.remove(strippedArgument.length()-1,1); // Remove the ) or }
+                }
+            } else if(strippedArgument.startsWith("v_")) {
+                strippedArgument.remove(0,2); // Remove the v_
+            }
+
+            if(controller.variableExists(strippedArgument)) {
+                ulong timesteps = controller.variableValue(strippedArgument);
+                ulong start = controller.system()->currentTimestep();
+                ulong stop = start + timesteps;
+                m_activeRunCommand = new RunCommand(start, stop);
+            } else {
+                qDebug() << "Error, could not parse run command";
+                exit(1);
+            }
+        }
+    }
+
+    // Now fetch the newest one, with preRun = true
+    QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, true);
+    ScriptCommand commandObject(nextRunCommand, ScriptCommand::Type::File, command.line());
+    commands.append(commandObject);
 }
 
 QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller) {
@@ -106,47 +158,8 @@ QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller)
         }
 
         if(command.command().startsWith("run")) {
-            // We should create a RunCommand object here.
-            QStringList words = command.command().trimmed().split(QRegExp("\\s+"), QString::SkipEmptyParts);
-            if(words.size()>1) {
-                // First try to parse second argument as a number
-                QString runArgument = words.at(1);
-                bool ok;
-                ulong timesteps = runArgument.toULong(&ok);
-                if(ok) {
-                    // We managed to parse this to an uint
-
-                    // If user asked for run 0, just do it
-                    if(timesteps == 0) {
-                        // just run the 'run 0' command
-                        commands.append(command);
-                        return commands;
-                    }
-
-                    // Create RunCommand object to split the run command into smaller parts
-                    ulong start = controller.system()->currentTimestep();
-                    ulong stop = start + timesteps;
-                    m_activeRunCommand = new RunCommand(start, stop);
-                } else {
-                    // TODO: handle variable run commands
-                    if(controller.variableExists(runArgument)) {
-                        ulong timesteps = controller.variableValue(runArgument);
-                        ulong start = controller.system()->currentTimestep();
-                        ulong stop = start + timesteps;
-                        m_activeRunCommand = new RunCommand(start, stop);
-                    } else {
-                        qDebug() << "Error, could not parse run command";
-                        exit(1);
-                    }
-                }
-
-                // Now fetch the newest one, with preRun = true
-                QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, true);
-                ScriptCommand command(nextRunCommand, ScriptCommand::Type::File, command.line());
-                commands.append(command);
-
-                return commands;
-            }
+            handleRunCommand(controller, command, commands);
+            break;
         }
 
         commands.append(command);
@@ -196,7 +209,11 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
 
     // Step 1) Check for single commands. Parse them as normal commands (i.e. include should work)
     if(m_commands.size() > 0) {
-        return singleCommand(controller);
+        // TODO: Handle these
+//        QList<ScriptCommand> commands;
+//        handleEditorCommands(commands);
+//        m_commands.clear();
+//        return commands;
     }
 
     // Step 2) Continue active run/rerun command
@@ -294,4 +311,32 @@ int ScriptHandler::simulationSpeed() const
 void ScriptHandler::setSimulationSpeed(int simulationSpeed)
 {
     m_simulationSpeed = simulationSpeed;
+}
+
+QString ScriptHandler::previousSingleCommandString()
+{
+    if(--m_currentPreviousSingleCommandIndex < 0) {
+        m_currentPreviousSingleCommandIndex = 0;
+    }
+
+    return m_previousSingleCommands.at(m_currentPreviousSingleCommandIndex).command();
+}
+
+QString ScriptHandler::nextSingleCommandString()
+{
+    if(++m_currentPreviousSingleCommandIndex < m_previousSingleCommands.count()) {
+        return m_previousSingleCommands.at(m_currentPreviousSingleCommandIndex).command();
+    } else{
+        m_currentPreviousSingleCommandIndex = m_previousSingleCommands.count();
+        return QString("");
+    }
+}
+
+QString ScriptHandler::lastSingleCommandString()
+{
+    m_currentPreviousSingleCommandIndex = m_previousSingleCommands.count()-1;
+    if(m_previousSingleCommands.count() > 0) {
+        return m_previousSingleCommands.last().command();
+    }
+    else return QString("");
 }

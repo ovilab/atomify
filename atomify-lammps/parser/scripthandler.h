@@ -17,6 +17,9 @@ public:
     Q_INVOKABLE void reset();
     Q_INVOKABLE bool runCommand(QString command);
     Q_INVOKABLE void runScript(QString fileName, QString script = "");
+    Q_INVOKABLE QString previousSingleCommandString();
+    Q_INVOKABLE QString nextSingleCommandString();
+    Q_INVOKABLE QString lastSingleCommandString();
     QList<class ScriptCommand> nextCommands(class LAMMPSController &controller);
     int simulationSpeed() const;
     void setSimulationSpeed(int simulationSpeed);
@@ -38,10 +41,12 @@ private:
     bool m_preRunNeeded = true;
     unsigned int m_runCommandStart = 0;
     unsigned int m_runCommandEnd = 0;
+    QVector<ScriptCommand> m_previousSingleCommands;
+    int m_currentPreviousSingleCommandIndex = 0;
     class RunCommand *m_activeRunCommand = nullptr;
     QVector<ScriptCommand> m_editorCommands;
     QStack<class Script*> m_scriptStack;
-    QList<QString> m_commands;
+    QList<ScriptCommand> m_commands;
 
     class ScriptCommand nextCommand();
     QList<class ScriptCommand> singleCommand(class LAMMPSController &controller);
@@ -49,6 +54,7 @@ private:
     void setWorkingDirectory(QString fileName);
     void handleEditorCommands(QList<class ScriptCommand> &commands);
     bool commandRequiresSynchronization(const ScriptCommand &command);
+    void handleRunCommand(class LAMMPSController &controller, class ScriptCommand &command, QList<class ScriptCommand> &commands);
 };
 
 #endif // SCRIPTHANDLER_H
