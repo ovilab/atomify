@@ -61,11 +61,6 @@ System *AtomifySimulator::system() const
     return m_system;
 }
 
-LammpsError *AtomifySimulator::lammpsError() const
-{
-    return m_lammpsError;
-}
-
 States *AtomifySimulator::states() const
 {
     return m_states;
@@ -86,7 +81,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         m_lammpsController.stop();
         m_lammpsController.commands.clear();
         atomifySimulator->system()->reset();
-        atomifySimulator->setLammpsError(nullptr);
+        atomifySimulator->scriptHandler()->reset();
         emit atomifySimulator->didReset();
     }
 
@@ -97,7 +92,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If we're idling, we should synchronize visuals anyway
     if(states.idle()->active()) {
-        // atomifySimulator->system()->synchronize(&m_lammpsController);
+        atomifySimulator->system()->synchronize(&m_lammpsController);
         return;
     }
 
@@ -105,23 +100,24 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If we crashed and haven't handled it yet, do it here
 
-//    if(m_lammpsController.crashed() && !m_lammpsController.exceptionHandled()) {
+//    if(m_lammpsController.crashed() && !atomifySimulator->scriptHandler()->error()) {
 //        LammpsError *error = new LammpsError();
 //        error->create(m_lammpsController);
-//        atomifySimulator->setLammpsError(error);
-//        m_lammpsController.setExceptionHandled(true); // TODO: put in states
+//        atomifySimulator->scriptHandler()->setLammpsError(error);
 //        emit atomifySimulator->crashed();
-//        return;
 //    }
 
     // Synchronize visuals
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
 
+    if(states.paused()->active() || states.crashed()->active()) return;
+
     ScriptHandler &handler = *atomifySimulator->scriptHandler();
     handler.didFinishPreviousCommands();
 
-    m_lammpsController.commands = handler.nextCommands(m_lammpsController);
+    bool continueIfNoCommands = states.continued()->active();
+    m_lammpsController.commands = handler.nextCommands(m_lammpsController, continueIfNoCommands);
     for(ScriptCommand &command : handler.editorCommands()) {
         QString commandString = command.command();
         commandString.remove(0,2);
@@ -215,15 +211,6 @@ void AtomifySimulator::setSystem(System *system)
 
     m_system = system;
     emit systemChanged(system);
-}
-
-void AtomifySimulator::setLammpsError(LammpsError *lammpsError)
-{
-    if (m_lammpsError == lammpsError)
-        return;
-
-    m_lammpsError = lammpsError;
-    emit lammpsErrorChanged(lammpsError);
 }
 
 void AtomifySimulator::setStates(States *states)

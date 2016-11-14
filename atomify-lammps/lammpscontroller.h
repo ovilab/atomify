@@ -20,7 +20,6 @@ private:
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
     LAMMPS_NS::LAMMPSException m_currentException;
     class System *m_system = nullptr;
-    bool m_exceptionHandled = false;
 
 public:
     LAMMPSController();

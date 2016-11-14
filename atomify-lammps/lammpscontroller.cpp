@@ -86,71 +86,6 @@ bool LAMMPSController::executeCommandInLAMMPS(QString command) {
     return true;
 }
 
-// void LAMMPSController::processCommand(QString command) {
-// Parse one single LAMMPS command. Three notes:
-//   Files are read with full filenames in LAMMPS. Files added as Qt Resrouces have path :/file, which will not work.
-//   We have introduced the notation ext://file which will copy the file to a temp location and is readable with its full filename.
-//
-//   Also, run commands are modified so that run N will be split into smaller run commands to allow smooth visualizations.
-//   This means that if the number of timesteps are given as a LAMMPS variable, we need to extract that.
-//
-//   We also added a fastrun command that act as a normal run command with no visualization.
-
-//    string commandString = command.toStdString();
-//    stringstream command_ss(commandString);
-//    string word;
-//    QString processedCommand;
-
-//    int wordCount = 0;
-//    while(command_ss >> word) {
-//        // If this is the first word in a command and it is "run"
-//        if(wordCount == 0 && word.compare("run") == 0) {
-//            command_ss >> word; // Next word is the number of timesteps
-//            if(QString::fromStdString(word).trimmed().compare("0") == 0) {
-//                // It is a run 0 command.
-//                processedCommand = "run 0";
-//                continue;
-//            }
-
-//            int numberOfTimesteps = atoi(word.c_str());
-//            if(numberOfTimesteps == 0) {
-//                // We probably need to read it as a variable in lammps.
-//                string wordCopy = word;
-//                wordCopy.erase(0,2);
-//                wordCopy.erase(word.length()-3,1);
-//                const char *word_c_str = wordCopy.c_str();
-
-//                // int found = m_lammps->input->variable->find((char*)word_c_str);
-//                if(variableExists(QString::fromStdString(wordCopy))) {
-//                    // if(found > -1) {
-//                    char *numberOfTimestepsString = m_lammps->input->variable->retrieve((char*)word_c_str);
-//                    numberOfTimesteps = atoi(numberOfTimestepsString);
-//                }
-//            }
-
-//            if(command_ss >> word) {
-//                qDebug() << "Warning, LAMMPS visualizer doesn't support run commands with arguments. These will be ignored.";
-//            }
-
-//            state.runCommandActive = true;
-//            state.runCommandStart = m_lammps->update->ntimestep;
-//            state.runCommandEnd = state.runCommandStart + numberOfTimesteps;
-//            return;
-//        }
-
-//        if(wordCount == 0 && word.compare("fastrun") == 0) {
-//            processedCommand = "run ";
-//            wordCount++;
-//            continue;
-//        }
-
-//        processedCommand.append(QString::fromStdString(word)).append(" ");
-//        wordCount++;
-//    }
-
-//    executeCommandInLAMMPS(processedCommand);
-// }
-
 int LAMMPSController::findVariableIndex(QString identifier) {
     if(!m_lammps) {
         return -1;
@@ -241,38 +176,6 @@ bool LAMMPSController::computeExists(QString identifier) {
     return (findComputeId(identifier) >= 0);
 }
 
-bool LAMMPSController::exceptionHandled() const
-{
-    return m_exceptionHandled;
-}
-
-void LAMMPSController::setExceptionHandled(bool value)
-{
-    m_exceptionHandled = value;
-}
-
-//void LAMMPSController::executeActiveRunCommand() {
-//    unsigned int currentTimestep = m_lammps->update->ntimestep;
-//    int maxSimulationSpeed = state.runCommandEnd - currentTimestep; // We cannot exceed the last timestep in the active run command
-
-//    int simulationSpeed = min(state.simulationSpeed, maxSimulationSpeed);
-
-
-//    QElapsedTimer t;
-
-//    t.start();
-//    if(currentTimestep == state.runCommandStart || state.preRunNeeded) {
-//        // If this is the first timestep in this run command, execute the pre yes command to prepare the full run command.
-//        executeCommandInLAMMPS(QString("run %1 pre yes post no start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
-//        state.preRunNeeded = false;
-//    } else {
-//        executeCommandInLAMMPS(QString("run %1 pre no post no start %2 stop %3").arg(simulationSpeed).arg(state.runCommandStart).arg(state.runCommandEnd));
-//    }
-//    state.timeSpentInLammps += t.elapsed();
-//    currentTimestep = m_lammps->update->ntimestep;
-//    state.runCommandActive = currentTimestep < state.runCommandEnd;
-//}
-
 void LAMMPSController::start() {
     if(m_lammps) {
         stop();
@@ -306,6 +209,7 @@ bool LAMMPSController::tick()
         bool ok = executeCommandInLAMMPS(command);
         if(!ok) {
             // Handle error
+
             qDebug() << "Error in LAMMPS. We need to handle this.";
             exit(1);
         }

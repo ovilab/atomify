@@ -38,7 +38,6 @@ class AtomifySimulator : public Simulator
     Q_OBJECT
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
     Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
-    Q_PROPERTY(LammpsError* lammpsError READ lammpsError WRITE setLammpsError NOTIFY lammpsErrorChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
     Q_PROPERTY(States* states READ states WRITE setStates NOTIFY statesChanged)
 
@@ -51,13 +50,11 @@ public:
     class ScriptHandler* scriptHandler() const;
     class System* system() const;
     class States* states() const;
-    class LammpsError* lammpsError() const;
 
 public slots:
     void setSimulationSpeed(int arg);
     void setScriptHandler(class ScriptHandler* scriptHandler);
     void setSystem(class System* system);
-    void setLammpsError(class LammpsError* lammpsError);
     void setStates(class States* states);
 
 signals:
@@ -65,7 +62,7 @@ signals:
     void scriptHandlerChanged(class ScriptHandler* scriptHandler);
     void systemChanged(class System* system);
     void statesChanged(class States* states);
-    void lammpsErrorChanged(class LammpsError* error);
+
     // State changes
     void reset();
     void didReset();
@@ -85,7 +82,6 @@ private:
     class ScriptHandler* m_scriptHandler;
     class System* m_system;
     class States* m_states;
-    class LammpsError* m_lammpsError;
     int m_simulationSpeed;
 };
 

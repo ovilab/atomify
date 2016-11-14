@@ -21,7 +21,8 @@ void ScriptHandler::reset() {
         delete script;
     }
     m_scriptStack.clear();
-    m_commands.clear();
+    m_singleCommands.clear();
+    setError(nullptr);
 }
 
 bool ScriptHandler::runCommand(QString command)
@@ -30,7 +31,7 @@ bool ScriptHandler::runCommand(QString command)
         return false;
     }
     ScriptCommand commandObject(command, ScriptCommand::Type::SingleCommand);
-    m_commands.append(commandObject);
+    m_singleCommands.append(commandObject);
     m_previousSingleCommands.push_back(commandObject);
     return true;
 }
@@ -205,7 +206,7 @@ void ScriptHandler::handleEditorCommands(QList<ScriptCommand> &commands) {
     commands = remainingCommands;
 }
 
-QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
+QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller, bool continueIfNoCommands)
 {
     if(m_runningScript) {
         qDebug() << "Error, can't ask for more commands while we're still working on the previous commands";
@@ -215,16 +216,17 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
     m_runningScript = true;
 
     // Step 1) Check for single commands. Parse them as normal commands (i.e. include should work)
-    if(m_commands.size() > 0) {
-        // TODO: Handle these
-        QList<ScriptCommand> commands;
-        handleEditorCommands(m_commands);
+    if(m_singleCommands.size() > 0) {
+        // First check all single commands for editor commands and append to editor command list
+        handleEditorCommands(m_singleCommands);
 
-        auto it = m_commands.begin();
-        while(it != m_commands.end()) {
+        QList<ScriptCommand> commands;
+        auto it = m_singleCommands.begin();
+        while(it != m_singleCommands.end()) {
+            // Add single commands until we need to synchronize
             ScriptCommand &command = *it;
             bool canAppendMoreCommands = handleCommand(controller, command, commands);
-            m_commands.erase(it++);
+            m_singleCommands.erase(it++);
             if(!canAppendMoreCommands) break;
         }
         return commands;
@@ -249,11 +251,36 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller)
         return commands;
     }
 
+    if(continueIfNoCommands) {
+        QList<ScriptCommand> commands;
+        ScriptCommand command("run 1000", ScriptCommand::Type::SingleCommand);
+        handleCommand(controller, command, commands);
+        return commands;
+    }
+
     return QList<ScriptCommand>();
 }
 
 bool ScriptHandler::hasNextCommand() {
-    return m_scriptStack.size()>0 || m_commands.size()>0;
+    return m_scriptStack.size()>0 || m_singleCommands.size()>0;
+}
+
+QVector<ScriptCommand> &ScriptHandler::editorCommands() { return m_editorCommands; }
+
+ScriptParser &ScriptHandler::parser() { return m_parser; }
+
+LammpsError *ScriptHandler::error() const
+{
+    return m_error;
+}
+
+void ScriptHandler::setError(LammpsError *error)
+{
+    if (m_error == error)
+        return;
+
+    m_error = error;
+    emit errorChanged(error);
 }
 
 void ScriptHandler::didFinishPreviousCommands()

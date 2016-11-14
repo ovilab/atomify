@@ -7,10 +7,12 @@
 #include <QUrl>
 #include "scriptcommand.h"
 #include "scriptparser.h"
+#include "LammpsWrappers/lammpserror.h"
 
 class ScriptHandler : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(LammpsError* error READ error WRITE setError NOTIFY errorChanged)
 
 public:
     explicit ScriptHandler(QObject *parent = 0);
@@ -20,19 +22,22 @@ public:
     Q_INVOKABLE QString previousSingleCommandString();
     Q_INVOKABLE QString nextSingleCommandString();
     Q_INVOKABLE QString lastSingleCommandString();
-    QList<class ScriptCommand> nextCommands(class LAMMPSController &controller);
+    QList<class ScriptCommand> nextCommands(class LAMMPSController &controller, bool continueIfNoCommands);
     int simulationSpeed() const;
     void setSimulationSpeed(int simulationSpeed);
     void didFinishPreviousCommands();
     bool hasNextCommand();
-    QVector<ScriptCommand> &editorCommands() { return m_editorCommands; }
-    ScriptParser &parser() { return m_parser; }
+    QVector<ScriptCommand> &editorCommands();
+    ScriptParser &parser();
+    LammpsError* error() const;
 
 signals:
     void newScript();
     void newCommand();
+    void errorChanged(LammpsError* error);
 
 public slots:
+    void setError(LammpsError* error);
 
 private:
     ScriptParser m_parser;
@@ -46,16 +51,17 @@ private:
     class RunCommand *m_activeRunCommand = nullptr;
     QVector<ScriptCommand> m_editorCommands;
     QStack<class Script*> m_scriptStack;
-    QList<ScriptCommand> m_commands;
+    QList<ScriptCommand> m_singleCommands;
 
     class ScriptCommand nextCommand();
     QList<class ScriptCommand> singleCommand(class LAMMPSController &controller);
     QList<class ScriptCommand> scriptCommands(class LAMMPSController &controller);
     void setWorkingDirectory(QString fileName);
     void handleEditorCommands(QList<class ScriptCommand> &commands);
-    bool commandRequiresSynchronization(const ScriptCommand &command);
     void handleRunCommand(class LAMMPSController &controller, class ScriptCommand &command, QList<class ScriptCommand> &commands);
     bool handleCommand(class LAMMPSController &controller, class ScriptCommand &command, QList<class ScriptCommand> &commands);
+    bool commandRequiresSynchronization(const ScriptCommand &command);
+    LammpsError* m_error = nullptr;
 };
 
 #endif // SCRIPTHANDLER_H
