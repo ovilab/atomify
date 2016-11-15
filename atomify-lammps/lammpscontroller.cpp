@@ -96,13 +96,6 @@ int LAMMPSController::findVariableIndex(QString identifier) {
     return m_lammps->input->variable->find(identifier_cstr);
 }
 
-LAMMPS_NS::Variable* LAMMPSController::findVariableByIdentifier(QString identifier) {
-    int fixId = findFixIndex(identifier);
-    if(fixId < 0) return nullptr;
-    qFatal("LAMMPSController::findVariableByIdentifier(QString identifier) is not implemented yet");
-    return nullptr;
-}
-
 LAMMPS_NS::Fix* LAMMPSController::findFixByIdentifier(QString identifier) {
     int fixId = findFixIndex(identifier);
     if(fixId < 0) {

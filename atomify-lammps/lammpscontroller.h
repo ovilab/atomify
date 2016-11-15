@@ -49,8 +49,6 @@ public:
     double variableValue(QString identifier);
     LAMMPS_NS::Compute *findComputeByIdentifier(QString identifier);
     LAMMPS_NS::Fix *findFixByIdentifier(QString identifier);
-    LAMMPS_NS::Variable *findVariableByIdentifier(QString identifier);
-    void processSimulatorControls();
 };
 
 #endif // LAMMPSCONTROLLER_H
