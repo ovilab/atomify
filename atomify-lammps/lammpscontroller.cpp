@@ -27,6 +27,8 @@
 #include "parser/scriptcommand.h"
 #include "mysimulator.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
+#include "LammpsWrappers/system.h"
+
 using namespace std;
 using namespace LAMMPS_NS;
 

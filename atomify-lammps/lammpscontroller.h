@@ -28,10 +28,8 @@ public:
     // Getters/setters
     QMap<QString, class SimulatorControl*> simulatorControls;
     QList<ScriptCommand> commands;
-    bool exceptionHandled() const;
-    void setExceptionHandled(bool value);
-    System *system() const;
-    void setSystem(System *system);
+    class System *system() const;
+    void setSystem(class System *system);
     LAMMPS_NS::LAMMPS *lammps() const;
     bool tick();
     void stop();
