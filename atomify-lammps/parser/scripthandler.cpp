@@ -319,7 +319,7 @@ ScriptCommand ScriptHandler::nextCommand()
 
     Script *script = m_scriptStack.top();
     setWorkingDirectory(script->fileName());
-    int line = script->currentLine();
+    int line = script->currentLine()+1;
 
     QString command;
     bool shouldReadNextLine = true;

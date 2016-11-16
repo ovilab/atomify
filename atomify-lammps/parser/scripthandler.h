@@ -35,6 +35,7 @@ signals:
     void newScript();
     void newCommand();
     void errorChanged(LammpsError* error);
+    void consoleOutput(QString message);
 
 public slots:
     void setError(LammpsError* error);
