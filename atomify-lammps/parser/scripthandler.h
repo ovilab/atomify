@@ -41,6 +41,7 @@ public slots:
 
 private:
     ScriptParser m_parser;
+    QString currentDirectory;
     int m_simulationSpeed = 1;
     bool m_runningScript = false;
     bool m_preRunNeeded = true;

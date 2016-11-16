@@ -75,13 +75,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // Sync properties from lammps controller and back
     m_lammpsController.setSystem(atomifySimulator->system());
+    m_lammpsController.paused = states.paused()->active();
 
     // If user pressed stop / restart, we should reset
     if(states.reset()->active()) {
         m_lammpsController.stop();
+        atomifySimulator->scriptHandler()->reset();
         m_lammpsController.commands.clear();
         atomifySimulator->system()->reset();
-        atomifySimulator->scriptHandler()->reset();
         emit atomifySimulator->didReset();
     }
 
@@ -100,12 +101,11 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If we crashed and haven't handled it yet, do it here
 
-//    if(m_lammpsController.crashed() && !atomifySimulator->scriptHandler()->error()) {
-//        LammpsError *error = new LammpsError();
-//        error->create(m_lammpsController);
-//        atomifySimulator->scriptHandler()->setLammpsError(error);
-//        emit atomifySimulator->crashed();
-//    }
+    if(m_lammpsController.error && !atomifySimulator->scriptHandler()->error()) {
+        atomifySimulator->scriptHandler()->setError(m_lammpsController.error); // Note that this object will be deleted in LAMMPSController on stop()
+        qDebug() << "LAMMPS crashed...";
+        emit atomifySimulator->crashed();
+    }
 
     // Synchronize visuals
     atomifySimulator->system()->synchronize(&m_lammpsController);

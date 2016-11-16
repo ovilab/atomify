@@ -1,7 +1,9 @@
 #include "scriptcommand.h"
 
-ScriptCommand::ScriptCommand(QString command, ScriptCommand::Type type, int line)
+ScriptCommand::ScriptCommand(QString command, ScriptCommand::Type type, int line, QString fileName, QString path)
     : m_command(command)
+    , m_fileName(fileName)
+    , m_path(path)
     , m_type(type)
     , m_line(line)
 {
@@ -20,4 +22,14 @@ ScriptCommand::Type ScriptCommand::type() const {
 int ScriptCommand::line() const
 {
     return m_line;
+}
+
+QString ScriptCommand::fileName() const
+{
+    return m_fileName;
+}
+
+QString ScriptCommand::path() const
+{
+    return m_path;
 }

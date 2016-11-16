@@ -7,14 +7,13 @@ LammpsError::LammpsError(QObject *parent) : QObject(parent)
 
 }
 
-void LammpsError::create(LAMMPSController &controller)
+void LammpsError::create(QString message, ScriptCommand &commandObject)
 {
-    qDebug() << "Error, LammpsError not implemented yet";
-//    setMessage(QString::fromStdString(controller.currentException().message).trimmed());
-//    setCommand(controller.state.nextCommand.command());
-//    setScriptFile(controller.state.nextCommand.filename());
-//    setScriptPath(controller.state.nextCommand.path());
-//    setLine(controller.state.nextCommand.line());
+    setMessage(message);
+    setCommand(commandObject.command());
+    setScriptFile(commandObject.fileName());
+    setScriptPath(commandObject.path());
+    setLine(commandObject.line());
 }
 
 QString LammpsError::scriptFile() const

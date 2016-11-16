@@ -1,6 +1,6 @@
 #include "lammpscontroller.h"
 #include "states.h"
-
+#include "LammpsWrappers/lammpserror.h"
 #include <fix_ave_time.h>
 #include <integrate.h>
 #include <library.h>
@@ -42,8 +42,7 @@ void LAMMPSController::setSystem(System *system)
     m_system = system;
 }
 
-LAMMPSController::LAMMPSController() :
-    m_currentException("")
+LAMMPSController::LAMMPSController()
 {
 
 }
@@ -65,13 +64,20 @@ void LAMMPSController::stop()
         lammps_close((void*)m_lammps);
         m_lammps = nullptr;
     }
+
+    if(error) {
+        delete error;
+        error = nullptr;
+    }
+
+    paused = false;
 }
 
-bool LAMMPSController::executeCommandInLAMMPS(QString command) {
+void LAMMPSController::executeCommandInLAMMPS(QString command) {
     if(m_lammps == nullptr) {
         qDebug() << "Warning, trying to run a LAMMPS command with no LAMMPS object.";
         qDebug() << "Command: " << command;
-        return true;
+        return;
     }
 
     if(true || !command.startsWith("run")) {
@@ -80,12 +86,6 @@ bool LAMMPSController::executeCommandInLAMMPS(QString command) {
 
     QByteArray commandBytes = command.toUtf8();
     lammps_command((void*)m_lammps, (char*)commandBytes.data());
-    char *lammpsError = m_lammps->error->get_last_error();
-    if(lammpsError != NULL) {
-        m_currentException =  LAMMPSException(lammpsError); // Store a copy of the exception to communicate to GUI
-        return false;
-    }
-    return true;
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {
@@ -195,47 +195,27 @@ void LAMMPSController::start() {
     //    sprintf(argv[5], "1");
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
+    error = nullptr;
 }
 
 bool LAMMPSController::tick()
 {
+    if(!m_lammps || error || paused) return false;
+
     for(ScriptCommand &commandObject : commands) {
         const QString &command = commandObject.command();
-        bool ok = executeCommandInLAMMPS(command);
-        if(!ok) {
-            // Handle error
+        executeCommandInLAMMPS(command);
 
-            qDebug() << "Error in LAMMPS. We need to handle this.";
-            exit(1);
+        bool hasError = m_lammps->error->get_last_error() != NULL;
+        if(hasError) {
+            // Handle error
+            QString message = QString::fromUtf8(m_lammps->error->get_last_error());
+            error = new LammpsError();
+            error->create(message, commandObject);
+            return true;
         }
     }
 
     commands.clear();
-    //    if(nextCommand.type() == ScriptCommand::Type::SkipLammpsTick) return true;
-
-    //    if(nextCommand.type() == ScriptCommand::Type::NoCommand) {
-    //        // If no commands are queued, but user has pressed play again, do normal run
-    //        if(!states->continued()->active()) return true;
-
-    //        if(state.preRunNeeded) {
-    //            executeCommandInLAMMPS(QString("run %1 pre yes post no").arg(state.simulationSpeed));
-    //            state.preRunNeeded = false;
-    //        } else {
-    //            executeCommandInLAMMPS(QString("run %1 pre no post no").arg(state.simulationSpeed));
-    //        }
-    //        state.canProcessSimulatorControls = true;
-
-    //    } else {
-    //        state.preRunNeeded = true;
-
-    //        bool didProcessCommand = m_scriptHandler->parseLammpsCommand(nextCommand.command(), this);
-    //        if(didProcessCommand) {
-    //            return true;
-    //        }
-
-    //        processCommand(nextCommand.command());
-    //    }
-
-    //    state.dataDirty = true;
     return true;
 }

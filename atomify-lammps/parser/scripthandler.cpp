@@ -22,7 +22,7 @@ void ScriptHandler::reset() {
     }
     m_scriptStack.clear();
     m_singleCommands.clear();
-    setError(nullptr);
+    setError(nullptr); // Deleted in LAMMPSController
 }
 
 bool ScriptHandler::runCommand(QString command)
@@ -132,7 +132,7 @@ void ScriptHandler::handleRunCommand(LAMMPSController &controller, ScriptCommand
 
     // Now fetch the newest one, with preRun = true
     QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, true);
-    ScriptCommand commandObject(nextRunCommand, ScriptCommand::Type::File, command.line());
+    ScriptCommand commandObject(nextRunCommand, ScriptCommand::Type::File, command.line(), command.fileName(), command.path());
     commands.append(commandObject);
 }
 
@@ -307,8 +307,8 @@ void ScriptHandler::setWorkingDirectory(QString fileName) {
         return;
     }
 
-    QString currentDir = fileInfo.absoluteDir().path();
-    QByteArray currentDirBytes = currentDir.toUtf8();
+    currentDirectory = fileInfo.absoluteDir().path();
+    QByteArray currentDirBytes = currentDirectory.toUtf8();
 
     chdir(currentDirBytes.constData());
 }
@@ -341,7 +341,14 @@ ScriptCommand ScriptHandler::nextCommand()
     }
 
     bool scriptIsFile = !script->fileName().isEmpty();
-    return ScriptCommand(command,  (scriptIsFile ? ScriptCommand::Type::File : ScriptCommand::Type::Editor), line);
+    if(scriptIsFile) {
+        QString fileName = script->fileName();
+        QFileInfo fileInfo(fileName);
+
+        return ScriptCommand(command, ScriptCommand::Type::File, line, fileInfo.fileName(), fileInfo.path());
+    } else {
+        return ScriptCommand(command, ScriptCommand::Type::Editor, line);
+    }
 }
 
 int ScriptHandler::simulationSpeed() const

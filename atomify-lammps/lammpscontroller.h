@@ -16,9 +16,8 @@
 class LAMMPSController
 {
 private:
-    bool executeCommandInLAMMPS(QString command);
+    void executeCommandInLAMMPS(QString command);
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
-    LAMMPS_NS::LAMMPSException m_currentException;
     class System *m_system = nullptr;
 
 public:
@@ -27,6 +26,8 @@ public:
 
     // Getters/setters
     QMap<QString, class SimulatorControl*> simulatorControls;
+    class LammpsError *error = nullptr;
+    bool paused = false;
     QList<ScriptCommand> commands;
     class System *system() const;
     void setSystem(class System *system);

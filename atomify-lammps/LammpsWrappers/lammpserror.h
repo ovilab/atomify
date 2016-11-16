@@ -1,7 +1,6 @@
 #ifndef LAMMPSERROR_H
 #define LAMMPSERROR_H
 #include <QObject>
-
 class LammpsError : public QObject
 {
     Q_OBJECT
@@ -16,10 +15,10 @@ public:
 
     QString scriptFile() const;
     QString message() const;
-    int line() const;
     QString command() const;
     QString scriptPath() const;
-    void create(class LAMMPSController &controller);
+    int line() const;
+    void create(QString message, class ScriptCommand &commandObject);
 
 public slots:
     void setScriptFile(QString scriptFile);
@@ -36,10 +35,10 @@ signals:
     void scriptPathChanged(QString scriptPath);
 
 private:
+    int m_line = 0;
     QString m_scriptFile;
     QString m_message;
     QString m_command;
-    int m_line = 0;
     QString m_scriptPath;
 };
 
