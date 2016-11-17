@@ -169,6 +169,19 @@ bool ScriptHandler::handleCommand(LAMMPSController &controller, ScriptCommand &c
         }
     }
 
+    if(m_parser.isUnsupportedCommand(command.command())) {
+        qDebug() << "Yeah, going in!";
+        QStringList words = command.command().trimmed().split(" ");
+        QString firstWord;
+        if(words.size() > 0) {
+            firstWord = words.at(0);
+        } else return true;
+
+        QString message = QString("LAMMPS command '%1' is not yet supported. This will be fixed in the next version of Atomify").arg(firstWord);
+        emit consoleOutput(message);
+        return true;
+    }
+
     if(command.command().startsWith("run")) {
         handleRunCommand(controller, command, commands);
         return false;
