@@ -28,6 +28,7 @@ ColumnLayout {
         TextArea.flickable: TextArea {
             id: consoleOutput
             anchors.fill: parent
+            wrapMode: TextEdit.WordWrap
             textFormat: TextEdit.RichText
             selectByMouse: true
             font.family: "DejaVu Sans Mono"
