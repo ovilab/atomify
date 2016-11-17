@@ -111,10 +111,11 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
 
-    if(states.paused()->active() || states.crashed()->active()) return;
 
     ScriptHandler &handler = *atomifySimulator->scriptHandler();
     handler.didFinishPreviousCommands();
+
+    if( !(states.continued()->active() || states.parsing()->active()) ) return;
 
     bool continueIfNoCommands = states.continued()->active();
     m_lammpsController.commands = handler.nextCommands(m_lammpsController, continueIfNoCommands);
