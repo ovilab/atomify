@@ -69,7 +69,7 @@ void LAMMPSController::stop()
         delete error;
         error = nullptr;
     }
-
+    commands.clear();
     paused = false;
 }
 
@@ -196,11 +196,16 @@ void LAMMPSController::start() {
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
     error = nullptr;
+    commands.clear();
 }
 
 bool LAMMPSController::tick()
 {
     if(!m_lammps || error || paused) return false;
+
+    for(ScriptCommand &commandObject : commands) {
+        qDebug() << "cmd: " << commandObject.command();
+    }
 
     for(ScriptCommand &commandObject : commands) {
         const QString &command = commandObject.command();

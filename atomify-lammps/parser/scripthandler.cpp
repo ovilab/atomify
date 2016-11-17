@@ -20,6 +20,10 @@ void ScriptHandler::reset() {
     for(Script *script : m_scriptStack) {
         delete script;
     }
+    if(m_activeRunCommand) {
+        delete m_activeRunCommand;
+        m_activeRunCommand = nullptr;
+    }
     m_scriptStack.clear();
     m_singleCommands.clear();
     setError(nullptr); // Deleted in LAMMPSController
