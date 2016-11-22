@@ -88,6 +88,11 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     lammps_command((void*)m_lammps, (char*)commandBytes.data());
 }
 
+bool LAMMPSController::canProcessSimulatorControls() const
+{
+    return m_canProcessSimulatorControls;
+}
+
 int LAMMPSController::findVariableIndex(QString identifier) {
     if(!m_lammps) {
         return -1;
@@ -204,10 +209,6 @@ bool LAMMPSController::tick()
     if(!m_lammps || error || paused) return false;
 
     for(ScriptCommand &commandObject : commands) {
-        qDebug() << "cmd: " << commandObject.command();
-    }
-
-    for(ScriptCommand &commandObject : commands) {
         const QString &command = commandObject.command();
         executeCommandInLAMMPS(command);
 
@@ -219,6 +220,7 @@ bool LAMMPSController::tick()
             error->create(message, commandObject);
             return true;
         }
+        m_canProcessSimulatorControls = commandObject.canProcessSimulatorControls();
     }
 
     commands.clear();

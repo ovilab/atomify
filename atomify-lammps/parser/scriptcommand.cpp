@@ -33,3 +33,13 @@ QString ScriptCommand::path() const
 {
     return m_path;
 }
+
+bool ScriptCommand::canProcessSimulatorControls() const
+{
+    return m_canProcessSimulatorControls;
+}
+
+void ScriptCommand::setCanProcessSimulatorControls(bool canProcessSimulatorControls)
+{
+    m_canProcessSimulatorControls = canProcessSimulatorControls;
+}

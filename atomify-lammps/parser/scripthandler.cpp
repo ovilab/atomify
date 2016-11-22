@@ -137,6 +137,7 @@ void ScriptHandler::handleRunCommand(LAMMPSController &controller, ScriptCommand
     // Now fetch the newest one, with preRun = true
     QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, true);
     ScriptCommand commandObject(nextRunCommand, ScriptCommand::Type::File, command.line(), command.fileName(), command.path());
+    commandObject.setCanProcessSimulatorControls(true);
     commands.append(commandObject);
 }
 
@@ -170,7 +171,6 @@ bool ScriptHandler::handleCommand(LAMMPSController &controller, ScriptCommand &c
     }
 
     if(m_parser.isUnsupportedCommand(command.command())) {
-        qDebug() << "Yeah, going in!";
         QStringList words = command.command().trimmed().split(" ");
         QString firstWord;
         if(words.size() > 0) {
@@ -256,6 +256,7 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller, b
 
         QList<ScriptCommand> commands;
         ScriptCommand command(nextRunCommand, ScriptCommand::Type::File, 0); // TODO: line numbers
+        command.setCanProcessSimulatorControls(true);
         commands.append(command);
 
         return commands;

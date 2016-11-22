@@ -19,7 +19,7 @@ private:
     void executeCommandInLAMMPS(QString command);
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
     class System *m_system = nullptr;
-
+    bool m_canProcessSimulatorControls = false;
 public:
     LAMMPSController();
     ~LAMMPSController();
@@ -28,6 +28,7 @@ public:
     QMap<QString, class SimulatorControl*> simulatorControls;
     class LammpsError *error = nullptr;
     bool paused = false;
+    bool canProcessSimulatorControls() const;
     QList<ScriptCommand> commands;
     class System *system() const;
     void setSystem(class System *system);

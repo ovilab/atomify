@@ -76,6 +76,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     // Sync properties from lammps controller and back
     m_lammpsController.setSystem(atomifySimulator->system());
     m_lammpsController.paused = states.paused()->active();
+    atomifySimulator->scriptHandler()->setSimulationSpeed(atomifySimulator->simulationSpeed()); // TODO: sync both ways
 
     // If user pressed stop / restart, we should reset
     if(states.reset()->active()) {
@@ -155,10 +156,10 @@ void MyWorker::work()
 {
     m_workCount += 1;
     bool didWork = m_lammpsController.tick();
-//    if(m_lammpsController.state.canProcessSimulatorControls) {
-//        m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
-//        m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
-//    }
+    if(m_lammpsController.canProcessSimulatorControls()) {
+        m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
+        m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
+    }
 
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;

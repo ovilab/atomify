@@ -14,12 +14,15 @@ public:
     int line() const;
     QString fileName() const;
     QString path() const;
+    bool canProcessSimulatorControls() const;
+    void setCanProcessSimulatorControls(bool canProcessSimulatorControls);
 
 private:
     QString m_command;
     QString m_fileName;
     QString m_path;
     Type m_type = Type::NoCommand;
+    bool m_canProcessSimulatorControls = false;
     int m_line = -1;
 };
 
