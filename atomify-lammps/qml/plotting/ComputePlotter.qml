@@ -138,10 +138,6 @@ Window {
                     text: "Clear"
                     onClicked: root.compute.clear()
                 }
-                Button {
-                    text: "Save data"
-                    onClicked: console.log("Clear")
-                }
             }
         }
     }

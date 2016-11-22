@@ -125,10 +125,6 @@ Window {
                     text: "Clear"
                     onClicked: root.variable.data.clear()
                 }
-                Button {
-                    text: "Save data"
-                    onClicked: console.log("Clear")
-                }
             }
         }
     }

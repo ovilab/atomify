@@ -101,15 +101,6 @@ Window {
                     }
                 }
             }
-            Row {
-                Layout.fillWidth: true
-                leftPadding: 12
-                spacing: 5
-                Button {
-                    text: "Save data"
-                    onClicked: console.log("Clear")
-                }
-            }
         }
     }
 
