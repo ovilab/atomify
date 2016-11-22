@@ -10,9 +10,8 @@ Column {
     height: row.height + list.height
     
     function create2DPlotWindow(fix, point) {
-        console.log("Fix: ", fix)
-        var component = Qt.createComponent("../plotting/Plot2D.qml");
-        if (component.status == Component.Ready) {
+        var component = Qt.createComponent("../../plotting/Plot2D.qml");
+        if (component.status === Component.Ready) {
             console.log("Can create now. it is ready")
             var plotter = component.createObject(rectangleRoot);
             plotter.x = point.x - plotter.width*0.5
