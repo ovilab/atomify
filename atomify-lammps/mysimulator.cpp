@@ -101,7 +101,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     // If we crashed and haven't handled it yet, do it here
     if(m_lammpsController.error && !atomifySimulator->scriptHandler()->error()) {
         atomifySimulator->scriptHandler()->setError(m_lammpsController.error); // Note that this object will be deleted in LAMMPSController on stop()
-        qDebug() << "LAMMPS crashed...";
         emit atomifySimulator->crashed();
     }
 

@@ -27,6 +27,7 @@ void ScriptHandler::reset() {
     m_scriptStack.clear();
     m_singleCommands.clear();
     setError(nullptr); // Deleted in LAMMPSController
+    m_preRunNeeded = true;
 }
 
 bool ScriptHandler::runCommand(QString command)
@@ -135,10 +136,11 @@ void ScriptHandler::handleRunCommand(LAMMPSController &controller, ScriptCommand
     }
 
     // Now fetch the newest one, with preRun = true
-    QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, true);
+    QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, m_preRunNeeded);
     ScriptCommand commandObject(nextRunCommand, ScriptCommand::Type::File, command.line(), command.fileName(), command.path());
-    commandObject.setCanProcessSimulatorControls(true);
     commands.append(commandObject);
+    commandObject.setCanProcessSimulatorControls(true);
+    m_preRunNeeded = false;
 }
 
 QList<ScriptCommand> ScriptHandler::scriptCommands(LAMMPSController &controller) {
@@ -187,11 +189,12 @@ bool ScriptHandler::handleCommand(LAMMPSController &controller, ScriptCommand &c
         return false;
     }
 
+    m_preRunNeeded = true; // If it wasn't a run command, we need prerun next time
     commands.append(command);
     if(commandRequiresSynchronization(command)) {
         return false;
     }
-    if(!m_scriptStack.top()->hasNextLine()) {
+    if(!m_scriptStack.top()->hasNextLine()) { // If this file is finished, we should not append more commands
         return false;
     }
 
@@ -251,14 +254,13 @@ QList<ScriptCommand> ScriptHandler::nextCommands(LAMMPSController &controller, b
 
     // Step 2) Continue active run/rerun command
     if(m_activeRunCommand) {
-        bool preRunNeeded = true; // TODO: figure out whether or not this is true
-        QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, preRunNeeded);
+        QString nextRunCommand = m_activeRunCommand->nextCommand(controller.system()->currentTimestep(), m_simulationSpeed, m_preRunNeeded);
 
         QList<ScriptCommand> commands;
         ScriptCommand command(nextRunCommand, ScriptCommand::Type::File, 0); // TODO: line numbers
         command.setCanProcessSimulatorControls(true);
+        m_preRunNeeded = false;
         commands.append(command);
-
         return commands;
     }
 
