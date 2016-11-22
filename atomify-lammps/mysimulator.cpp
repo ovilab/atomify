@@ -108,7 +108,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronize(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
 
-
     ScriptHandler &handler = *atomifySimulator->scriptHandler();
     handler.didFinishPreviousCommands();
 
@@ -152,6 +151,10 @@ void MyWorker::work()
 {
     m_workCount += 1;
     bool didWork = m_lammpsController.tick();
+    if(didWork) {
+        m_lammpsController.system()->atoms()->createRenderererData();
+    }
+
     if(m_lammpsController.canProcessSimulatorControls()) {
         m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
         m_lammpsController.system()->atoms()->updateData(m_lammpsController.system());

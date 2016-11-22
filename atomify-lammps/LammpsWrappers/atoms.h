@@ -48,6 +48,7 @@ public:
     bool sort() const;
     void synchronizeRenderer();
 
+    void createRenderererData();
 public slots:
     void setBondRadius(float bondRadius);
     void setModifiers(QVariantList modifiers);

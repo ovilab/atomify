@@ -146,21 +146,15 @@ void Atoms::updateData(System *system)
     }
 }
 
-void Atoms::synchronizeRenderer() {
-    generateBondData(m_atomDataProcessed);
+void Atoms::createRenderererData() {
     generateSphereData(m_atomDataProcessed);
+    generateBondData(m_atomDataProcessed);
 }
 
-//void Atoms::findOcclusion(AtomData &atomData) {
-//    if(neighborList.neighbors.size()==0) return;
-//    for(int i = 0; i<atomData.size(); i++) {
-//        int atomIndex = atomData.originalIndex[i];
-
-//        if(neighborList.neighbors.size() <= atomIndex) continue;
-//        int numNeighbors = neighborList.neighbors[i].size();
-
-//    }
-//}
+void Atoms::synchronizeRenderer() {
+    m_sphereData->setData(m_atomDataProcessed.positions, m_atomDataProcessed.colors, m_atomDataProcessed.radii);
+    m_bondData->setData(bondsDataRaw);
+}
 
 void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
@@ -176,14 +170,11 @@ void Atoms::generateSphereData(AtomData &atomData) {
     atomData.positions.resize(visibleAtomCount);
     atomData.colors.resize(visibleAtomCount);
     atomData.radii.resize(visibleAtomCount);
-
-    m_sphereData->setData(atomData.positions, atomData.colors, atomData.radii);
 }
 
 void Atoms::generateBondData(AtomData &atomData) {
     bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
-        m_bondData->setData(bondsDataRaw);
         return;
     }
 
@@ -237,10 +228,6 @@ void Atoms::generateBondData(AtomData &atomData) {
             }
         }
     }
-//    qDebug() << "Max bond thing: " << m_bonds->maxBondLength() << " and I am " << this;
-//    qDebug() << bondsDataRaw.size() << " bonds created in " << t.elapsed()  << " ms with " << numPairs << " pairs. Memory usage: " << bondsDataRaw.size()*sizeof(BondVBOData);
-
-    m_bondData->setData(bondsDataRaw);
 }
 
 SphereData *Atoms::sphereData() const
