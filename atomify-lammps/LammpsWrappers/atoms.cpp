@@ -126,10 +126,9 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
 }
 
-void Atoms::updateData(System *system, LAMMPS *lammps)
+void Atoms::updateData(System *system)
 {
     m_atomDataProcessed = m_atomData;
-    // AtomData atomData = m_atomData;
     if(!m_atomDataProcessed.isValid()) {
         qDebug() << "Atom data is not valid before modifiers.";
         exit(1);
@@ -145,15 +144,6 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
              exit(1);
          }
     }
-
-//    if(m_sort) {
-//        QElapsedTimer t;
-//        t.start();
-//        m_atomData.sort(system->cameraPosition());
-//        qDebug() << "Sorted using " << t.elapsed() << " ms.";
-//    }
-//    generateBondData(m_atomDataProcessed, *system);
-//    generateSphereData(m_atomDataProcessed);
 }
 
 void Atoms::synchronizeRenderer() {

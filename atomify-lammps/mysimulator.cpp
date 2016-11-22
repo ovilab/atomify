@@ -98,10 +98,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
 
-    atomifySimulator->system()->atoms()->updateData(atomifySimulator->system(), nullptr);
-
     // If we crashed and haven't handled it yet, do it here
-
     if(m_lammpsController.error && !atomifySimulator->scriptHandler()->error()) {
         atomifySimulator->scriptHandler()->setError(m_lammpsController.error); // Note that this object will be deleted in LAMMPSController on stop()
         qDebug() << "LAMMPS crashed...";
@@ -158,7 +155,7 @@ void MyWorker::work()
     bool didWork = m_lammpsController.tick();
     if(m_lammpsController.canProcessSimulatorControls()) {
         m_lammpsController.system()->computes()->computeAll(&m_lammpsController);
-        m_lammpsController.system()->atoms()->updateData(m_lammpsController.system(), m_lammpsController.lammps());
+        m_lammpsController.system()->atoms()->updateData(m_lammpsController.system());
     }
 
     auto dt = m_elapsed.elapsed();

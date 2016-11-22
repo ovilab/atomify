@@ -33,7 +33,7 @@ class Atoms : public QObject
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPSController *lammpsController);
-    void updateData(class System *system, LAMMPS_NS::LAMMPS *lammps);
+    void updateData(class System *system);
     SphereData* sphereData() const;
     QVariantList modifiers() const;
     QVector<AtomStyle*> &atomStyles();
