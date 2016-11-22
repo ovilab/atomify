@@ -85,8 +85,8 @@ void System::synchronize(LAMMPSController *lammpsController)
         emit simulationTimeChanged(m_simulationTime);
     }
 
-    if(m_currentTimestep != update->atimestep) {
-        m_currentTimestep = update->atimestep;
+    if(m_currentTimestep != update->ntimestep) {
+        m_currentTimestep = update->ntimestep;
         emit currentTimestepChanged(m_currentTimestep);
     }
 
