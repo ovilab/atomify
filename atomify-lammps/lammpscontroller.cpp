@@ -24,6 +24,7 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
+#include <functional>
 #include "parser/scriptcommand.h"
 #include "mysimulator.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
@@ -52,6 +53,12 @@ LAMMPSController::~LAMMPSController()
     stop();
 }
 
+void LAMMPSController::synchronizeLAMMPS(LAMMPS *lammps)
+{
+    qDebug() << "Yeah buddy, atoms: " << lammps->atom->natoms;
+    throw std::out_of_range("hello bitch");
+}
+
 LAMMPS *LAMMPSController::lammps() const
 {
     return m_lammps;
@@ -65,32 +72,7 @@ void LAMMPSController::stop()
         m_lammps = nullptr;
     }
 
-    if(error) {
-        delete error;
-        error = nullptr;
-    }
-    commands.clear();
     paused = false;
-}
-
-void LAMMPSController::executeCommandInLAMMPS(QString command) {
-    if(m_lammps == nullptr) {
-        qDebug() << "Warning, trying to run a LAMMPS command with no LAMMPS object.";
-        qDebug() << "Command: " << command;
-        return;
-    }
-
-    if(true || !command.startsWith("run")) {
-        qDebug() << "EXECUTING LAMMPS COMMAND: " << command;
-    }
-
-    QByteArray commandBytes = command.toUtf8();
-    lammps_command((void*)m_lammps, (char*)commandBytes.data());
-}
-
-bool LAMMPSController::canProcessSimulatorControls() const
-{
-    return m_canProcessSimulatorControls;
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {
@@ -200,29 +182,44 @@ void LAMMPSController::start() {
     //    sprintf(argv[5], "1");
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
-    error = nullptr;
-    commands.clear();
+    std::function<void(LAMMPS *lammps)> func = [&](LAMMPS *lammps) {
+        synchronizeLAMMPS(lammps);
+    };
+
+    lammps_register_callback(m_lammps, &func);
 }
 
 bool LAMMPSController::tick()
 {
-    if(!m_lammps || error || paused) return false;
+    qDebug() << "TIck";
+    if(!m_lammps) return false;
+    m_scriptFileName = "/Users/anderhaf/Desktop/zsm-5.in";
+    QByteArray ba = m_scriptFileName.toLatin1();
 
-    for(ScriptCommand &commandObject : commands) {
-        const QString &command = commandObject.command();
-        executeCommandInLAMMPS(command);
-
-        bool hasError = m_lammps->error->get_last_error() != NULL;
-        if(hasError) {
-            // Handle error
-            QString message = QString::fromUtf8(m_lammps->error->get_last_error());
-            error = new LammpsError();
-            error->create(message, commandObject);
-            return true;
-        }
-        m_canProcessSimulatorControls = commandObject.canProcessSimulatorControls();
+    try {
+        lammps_file(m_lammps, ba.data());
+    } catch(std::out_of_range error) {
+        qDebug() << "Got the error: " << error.what();
+        stop();
     }
 
-    commands.clear();
-    return true;
+//    if(!m_lammps || error || paused) return false;
+
+//    for(ScriptCommand &commandObject : commands) {
+//        const QString &command = commandObject.command();
+//        executeCommandInLAMMPS(command);
+
+//        bool hasError = m_lammps->error->get_last_error() != NULL;
+//        if(hasError) {
+//            // Handle error
+//            QString message = QString::fromUtf8(m_lammps->error->get_last_error());
+//            error = new LammpsError();
+//            error->create(message, commandObject);
+//            return true;
+//        }
+//        m_canProcessSimulatorControls = commandObject.canProcessSimulatorControls();
+//    }
+
+//    commands.clear();
+//    return true;
 }

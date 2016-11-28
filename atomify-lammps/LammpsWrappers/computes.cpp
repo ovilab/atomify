@@ -94,11 +94,11 @@ void Computes::synchronize(LAMMPSController *lammpsController)
         setCount(m_data.size());
     }
 
-    if(!lammpsController->canProcessSimulatorControls()) return;
-    for(QObject *object : m_data) {
-        CPCompute *compute = qobject_cast<CPCompute*>(object);
-        compute->copyData(lammpsController);
-    }
+//    if(!lammpsController->canProcessSimulatorControls()) return;
+//    for(QObject *object : m_data) {
+//        CPCompute *compute = qobject_cast<CPCompute*>(object);
+//        compute->copyData(lammpsController);
+//    }
 
 }
 

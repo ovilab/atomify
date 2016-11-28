@@ -37,7 +37,6 @@ class AtomifySimulator : public Simulator
 {
     Q_OBJECT
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
-    Q_PROPERTY(ScriptHandler* scriptHandler READ scriptHandler WRITE setScriptHandler NOTIFY scriptHandlerChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
     Q_PROPERTY(States* states READ states WRITE setStates NOTIFY statesChanged)
 
@@ -47,19 +46,16 @@ public:
 
     int simulationSpeed() const;
     Q_INVOKABLE void togglePaused();
-    class ScriptHandler* scriptHandler() const;
     class System* system() const;
     class States* states() const;
 
 public slots:
     void setSimulationSpeed(int arg);
-    void setScriptHandler(class ScriptHandler* scriptHandler);
     void setSystem(class System* system);
     void setStates(class States* states);
 
 signals:
     void simulationSpeedChanged(int arg);
-    void scriptHandlerChanged(class ScriptHandler* scriptHandler);
     void systemChanged(class System* system);
     void statesChanged(class States* states);
 
@@ -79,7 +75,6 @@ protected:
 
 private:
     friend class MyWorker;
-    class ScriptHandler* m_scriptHandler;
     class System* m_system;
     class States* m_states;
     int m_simulationSpeed;

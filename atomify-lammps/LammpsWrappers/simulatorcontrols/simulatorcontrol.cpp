@@ -1,6 +1,5 @@
 #include "simulatorcontrol.h"
 #include "lammpscontroller.h"
-#include "parser/scripthandler.h"
 #include "mysimulator.h"
 
 SimulatorControl::SimulatorControl(Qt3DCore::QNode *parent) : Qt3DCore::QNode(parent)
@@ -29,8 +28,6 @@ bool SimulatorControl::addToLammps(LAMMPSController *lammpsController) {
 //        }
 //    }
 
-//    ScriptHandler *scriptHandler = lammpsController->scriptHandler();
-//    scriptHandler->addCommandsToTop(enabledCommands(), ScriptCommand::Type::SingleCommand);
     return true;
 }
 
@@ -80,10 +77,6 @@ bool SimulatorControl::dependenciesValid(LAMMPSController *lammpsController)
 void SimulatorControl::update(LAMMPSController *lammpsController)
 {
     if(m_isMirror) return; // If this object is only a mirror object, we shouldn't mess with adding or removing things from LAMMPS.
-
-//    if(!lammpsController->scriptHandler()) {
-//        return;
-//    }
 
 //    bool exists = existsInLammps(lammpsController);
 //    if(!exists && m_enabled) {

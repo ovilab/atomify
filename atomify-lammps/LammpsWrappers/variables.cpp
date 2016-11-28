@@ -75,14 +75,14 @@ void Variables::synchronize(LAMMPSController *lammpsController)
     }
     // qDebug() << "We got " << m_data.size() << " variables of equal style";
 
-    if(!lammpsController->canProcessSimulatorControls()) return;
+//    if(!lammpsController->canProcessSimulatorControls()) return;
 
-    lammps->update->whichflag = 1;
-    for(QObject *object : m_data) {
-        CPVariable *variable = qobject_cast<CPVariable*>(object);
-        variable->synchronize(lammpsController);
-    }
-    lammps->update->whichflag = 0;
+//    lammps->update->whichflag = 1;
+//    for(QObject *object : m_data) {
+//        CPVariable *variable = qobject_cast<CPVariable*>(object);
+//        variable->synchronize(lammpsController);
+//    }
+//    lammps->update->whichflag = 0;
 }
 
 int Variables::count() const
