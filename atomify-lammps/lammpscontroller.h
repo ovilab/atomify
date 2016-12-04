@@ -17,18 +17,19 @@ class LAMMPSController
 {
 private:
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
-    class System *m_system = nullptr;
 public:
+    class System *system = nullptr;
+
     LAMMPSController();
     ~LAMMPSController();
 
     // Getters/setters
+    bool didSynchronizeSimulator = false;
+    QMutex *locker = nullptr;
     QString m_scriptFileName;
     void synchronizeLAMMPS(LAMMPS_NS::LAMMPS *lammps);
     QMap<QString, class SimulatorControl*> simulatorControls;
     bool paused = false;
-    class System *system() const;
-    void setSystem(class System *system);
     LAMMPS_NS::LAMMPS *lammps() const;
     bool tick();
     void stop();

@@ -7,18 +7,12 @@
 
 using namespace LAMMPS_NS;
 
-struct LammpsState {
-    bool crashed = false;
-    bool runCommandActive = false;
-    bool canProcessSimulatorControls = false;
-    bool dataDirty = false;
-};
-
 class MyWorker : public SimulatorWorker
 {
     Q_OBJECT
 public:
     MyWorker();
+    QMutex *locker = nullptr;
     bool willPause() const;
     void setWillPause(bool willPause);
 

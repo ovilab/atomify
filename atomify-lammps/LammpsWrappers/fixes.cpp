@@ -80,10 +80,10 @@ void Fixes::synchronize(LAMMPSController *lammpsController)
         remove(fix->identifier());
     }
 
-    if(anyChanges) {
-        setModel(QVariant::fromValue(m_data));
-        setCount(m_data.count());
-    }
+//    if(anyChanges) {
+//        setModel(QVariant::fromValue(m_data));
+//        setCount(m_data.count());
+//    }
 
 //    if(!lammpsController->canProcessSimulatorControls()) return;
 //    for(QObject *object : m_data) {

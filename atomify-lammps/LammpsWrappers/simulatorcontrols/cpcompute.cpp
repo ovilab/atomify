@@ -70,7 +70,7 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
     if(!compute->peratom_flag) return false;
     // if(compute->size_peratom_cols > 0) return false;
-    int numAtoms = lammpsController->system()->numberOfAtoms();
+    int numAtoms = lammpsController->system->numberOfAtoms();
     int numCols = compute->size_peratom_cols;
 
     if(numCols == 0) {
@@ -103,7 +103,7 @@ bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsControl
 //    if(!compute) return false;
 //    ensureExists("histogram", true);
 //    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    int numAtoms = lammpsController->system->numberOfAtoms();
 //    m_atomData = vector<double>(values, values+numAtoms);
 
 //    Data1D *data = ensureExists("histogram", true);
@@ -120,7 +120,7 @@ bool CPCompute::copyData(ComputeClusterAtom *compute, LAMMPSController *lammpsCo
 
 //    ensureExists("histogram", true);
 //    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    int numAtoms = lammpsController->system->numberOfAtoms();
 //    m_atomData = vector<double>(values, values+numAtoms);
 
 //    Data1D *data = ensureExists("histogram", true);
@@ -137,7 +137,7 @@ bool CPCompute::copyData(ComputeCNAAtom *compute, LAMMPSController *lammpsContro
 
 //    ensureExists("histogram", true);
 //    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    int numAtoms = lammpsController->system->numberOfAtoms();
 //    m_atomData = vector<double>(values, values+numAtoms);
 
 //    Data1D *data = ensureExists("histogram", true);
@@ -156,7 +156,7 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     Data1D *data = ensureExists(QString("Temperature"), true);
     setXLabel("Time");
     setYLabel("Temperature");
-    data->add(lammpsController->system()->simulationTime(), value, false);
+    data->add(lammpsController->system->simulationTime(), value, false);
     setInteractive(true);
     return true;
 }
@@ -168,7 +168,7 @@ bool CPCompute::copyData(ComputePropertyAtom *compute, LAMMPSController *lammpsC
 //    if(compute->size_peratom_cols > 0) return true; // We don't support vector quantities yet
 
 //    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system()->numberOfAtoms();
+//    int numAtoms = lammpsController->system->numberOfAtoms();
 //    m_atomData = vector<double>(values, values+numAtoms);
 
 //    Data1D *data = ensureExists("histogram", true);
@@ -188,7 +188,7 @@ bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController)
     Data1D *data = ensureExists(QString("Potential energy"), true);
     setXLabel("Time");
     setYLabel("Potential Energy");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system->simulationTime(), value);
     setInteractive(true);
     return true;
 }
@@ -201,7 +201,7 @@ bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController)
     Data1D *data = ensureExists(QString("Kinetic energy"), true);
     setXLabel("Time");
     setYLabel("Kinetic Energy");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system->simulationTime(), value);
     setInteractive(true);
     return true;
 }
@@ -218,7 +218,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     Data1D *data = ensureExists(QString("Pressure"), true);
     setXLabel("Time");
     setYLabel("Pressure");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system->simulationTime(), value);
 
     // Then compute stress tensor
     // compute->compute_vector();
@@ -230,7 +230,7 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
         QString key = components[i-1];
         Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system->simulationTime(), value);
     }
     setInteractive(true);
     return true;
@@ -273,7 +273,7 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
         QString key = components[i-1];
         Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system->simulationTime(), value);
     }
     setInteractive(true);
     return true;
@@ -291,7 +291,7 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
         QString key = components[i-1];
         Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system->simulationTime(), value);
     }
     setInteractive(true);
     return true;
@@ -309,7 +309,7 @@ bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController
         QString key = components[i-1];
         Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system->simulationTime(), value);
     }
     setInteractive(true);
     return true;
@@ -325,7 +325,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     Data1D *data = ensureExists(QString("Radius of gyration"), true);
     setXLabel("Time");
     setYLabel("Pressure");
-    data->add(lammpsController->system()->simulationTime(), value);
+    data->add(lammpsController->system->simulationTime(), value);
 
     // compute->compute_vector();
 
@@ -337,7 +337,7 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
         QString key = components[i-1];
         Data1D *data = ensureExists(key, false);
         double value = compute->vector[i-1];
-        data->add(lammpsController->system()->simulationTime(), value);
+        data->add(lammpsController->system->simulationTime(), value);
     }
     setInteractive(true);
     return true;
@@ -392,12 +392,12 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
 
 void CPCompute::copyData(LAMMPSController *lammpsController)
 {
-    // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
-    if(lastUpdate != -1 && (lammpsController->system()->currentTimestep()-lastUpdate) < m_frequency) return;
-    // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
+    if(m_lastUpdate != -1 && (lammpsController->system->currentTimestep()-m_lastUpdate) < m_frequency) return;
+
     Compute *lmp_compute = lammpsController->findComputeByIdentifier(identifier());
+    if(lmp_compute == nullptr) return; // Didn't find it...
+
     m_groupBit = lmp_compute->groupbit;
-    if(lmp_compute == nullptr) return;
     try {
         if(copyData(lmp_compute, lammpsController)) return;
         if(copyData(dynamic_cast<ComputePressure*>(lmp_compute), lammpsController)) return;
@@ -425,7 +425,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             setHasScalarData(true);
             setScalarValue(value);
             Data1D *data = ensureExists("scalar", true);
-            data->add(lammpsController->system()->simulationTime(), value, true);
+            data->add(lammpsController->system->simulationTime(), value, true);
             setInteractive(true);
         } catch (LAMMPSException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
@@ -440,7 +440,7 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
                 QString key = QString("%1").arg(i);
                 Data1D *data = ensureExists(key, true);
                 double value = lmp_compute->vector[i-1];
-                data->add(lammpsController->system()->simulationTime(), value, true);
+                data->add(lammpsController->system->simulationTime(), value, true);
             }
         } catch (LAMMPSException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";

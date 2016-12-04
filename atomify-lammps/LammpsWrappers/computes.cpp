@@ -55,9 +55,8 @@ void Computes::synchronize(LAMMPSController *lammpsController)
     }
 
     Modify *modify = lammps->modify;
-    int numComputes = modify->ncompute;
     bool anyChanges = false;
-    for(int computeIndex=0; computeIndex<numComputes; computeIndex++) {
+    for(int computeIndex=0; computeIndex<modify->ncompute; computeIndex++) {
         Compute *compute = modify->compute[computeIndex];
         QString identifier = QString::fromUtf8(compute->id);
 
@@ -81,24 +80,24 @@ void Computes::synchronize(LAMMPSController *lammpsController)
         removeCompute(compute->identifier());
     }
 
-    for(QObject *obj : m_data) {
-        CPCompute *compute = qobject_cast<CPCompute*>(obj);
-        for(QVariant &variant : compute->data1D()) {
-            Data1D *data = variant.value<Data1D *>();
-            emit data->updated(data);
-        }
-    }
+//    for(QObject *obj : m_data) {
+//        CPCompute *compute = qobject_cast<CPCompute*>(obj);
+//        for(QVariant &variant : compute->data1D()) {
+//            Data1D *data = variant.value<Data1D *>();
+//            emit data->updated(data);
+//        }
+//    }
 
-    if(anyChanges) {
-        setModel(QVariant::fromValue(m_data));
-        setCount(m_data.size());
-    }
+//    if(anyChanges) {
+//        setModel(QVariant::fromValue(m_data));
+//        setCount(m_data.size());
+//    }
 
 //    if(!lammpsController->canProcessSimulatorControls()) return;
-//    for(QObject *object : m_data) {
-//        CPCompute *compute = qobject_cast<CPCompute*>(object);
-//        compute->copyData(lammpsController);
-//    }
+    for(QObject *object : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(object);
+        compute->copyData(lammpsController);
+    }
 
 }
 
@@ -118,11 +117,6 @@ int Computes::count() const
 QVariant Computes::model() const
 {
     return m_model;
-}
-
-bool Computes::active() const
-{
-    return m_active;
 }
 
 QVector<CPCompute *> Computes::computes()
@@ -151,13 +145,4 @@ void Computes::setModel(QVariant model)
 
     m_model = model;
     emit modelChanged(model);
-}
-
-void Computes::setActive(bool active)
-{
-    if (m_active == active)
-        return;
-
-    m_active = active;
-    emit activeChanged(active);
 }

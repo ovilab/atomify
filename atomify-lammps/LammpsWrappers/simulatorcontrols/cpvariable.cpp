@@ -61,7 +61,7 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
 
         if (variable->equalstyle(ivar)) {
             double value = variable->compute_equal(ivar);
-            double time = lammpsController->system()->simulationTime();
+            double time = lammpsController->system->simulationTime();
             m_data->add(time, value, false);
             setValue(value);
             setValueHasDecimals(value!=int(value));
@@ -69,7 +69,7 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
 
         if (variable->atomstyle(ivar)) {
             int igroup = 0;
-            m_atomData.resize(lammpsController->system()->numberOfAtoms());
+            m_atomData.resize(lammpsController->system->numberOfAtoms());
             double *vector = &m_atomData.front();
             variable->compute_atom(ivar,igroup,vector,1,0);
             setIsPerAtom(true);

@@ -29,21 +29,13 @@
 #include "mysimulator.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include "LammpsWrappers/system.h"
+#include "LammpsWrappers/atoms.h"
 
 using namespace std;
 using namespace LAMMPS_NS;
 
-System *LAMMPSController::system() const
-{
-    return m_system;
-}
-
-void LAMMPSController::setSystem(System *system)
-{
-    m_system = system;
-}
-
-LAMMPSController::LAMMPSController()
+LAMMPSController::LAMMPSController() :
+    system(nullptr)
 {
 
 }
@@ -55,8 +47,21 @@ LAMMPSController::~LAMMPSController()
 
 void LAMMPSController::synchronizeLAMMPS(LAMMPS *lammps)
 {
-    qDebug() << "Yeah buddy, atoms: " << lammps->atom->natoms;
-    throw std::out_of_range("hello bitch");
+    if(!system) {
+        qDebug() << "Error, we dont have system object. Anders or Svenn-Arne did a horrible job here...";
+        exit(1);
+    }
+    system->synchronize(this);
+    system->atoms()->updateData(system);
+    system->atoms()->createRenderererData();
+
+    qDebug() << "Yeah buddy, did sync, atoms: " << system->numberOfAtoms();
+    didSynchronizeSimulator = false;
+    locker->unlock();
+    while(!didSynchronizeSimulator) {
+        QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
+    }
+    // throw std::out_of_range("hello bitch");
 }
 
 LAMMPS *LAMMPSController::lammps() const
@@ -191,12 +196,14 @@ void LAMMPSController::start() {
 
 bool LAMMPSController::tick()
 {
-    qDebug() << "TIck";
+    qDebug() << "Tick with LAMMPS: " << m_lammps;
     if(!m_lammps) return false;
-    m_scriptFileName = "/Users/anderhaf/Desktop/zsm-5.in";
+
+    m_scriptFileName = "/Users/anderhaf/Desktop/lj.in";
     QByteArray ba = m_scriptFileName.toLatin1();
 
     try {
+        qDebug() << "Trying to do cool stuff";
         lammps_file(m_lammps, ba.data());
     } catch(std::out_of_range error) {
         qDebug() << "Got the error: " << error.what();

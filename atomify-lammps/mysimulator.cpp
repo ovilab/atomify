@@ -71,7 +71,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     States &states = *atomifySimulator->states();
 
     // Sync properties from lammps controller and back
-    m_lammpsController.setSystem(atomifySimulator->system());
+    m_lammpsController.system = atomifySimulator->system();
     m_lammpsController.paused = states.paused()->active();
 
     // If user pressed stop / restart, we should reset
@@ -90,6 +90,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::work()
 {
     m_workCount += 1;
+    m_lammpsController.locker = locker;
     m_lammpsController.tick();
 
     auto dt = m_elapsed.elapsed();
@@ -102,6 +103,8 @@ void MyWorker::work()
 
 MyWorker *AtomifySimulator::createWorker()
 {
+    MyWorker *worker = new MyWorker();
+    worker->locker = &m_workerMutex;
     return new MyWorker();
 }
 

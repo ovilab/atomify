@@ -69,10 +69,10 @@ void Variables::synchronize(LAMMPSController *lammpsController)
 
     // Our list is now up to date with only active variables
 
-    if(anyChanges) {
-        setModel(QVariant::fromValue(m_data));
-        setCount(m_data.size());
-    }
+//    if(anyChanges) {
+//        setModel(QVariant::fromValue(m_data));
+//        setCount(m_data.size());
+//    }
     // qDebug() << "We got " << m_data.size() << " variables of equal style";
 
 //    if(!lammpsController->canProcessSimulatorControls()) return;

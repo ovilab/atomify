@@ -28,12 +28,8 @@ class System : public QObject
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
-    void synchronize(class LAMMPSController *lammpsController);
-    QVector3D origin() const;
-    QVector3D size() const;
-    int numberOfAtoms() const;
-    float simulationTime() const;
-    int currentTimestep() const;
+
+    // Properties
     class Atoms* atoms() const;
     class Regions* regions() const;
     class Groups* groups() const;
@@ -41,12 +37,20 @@ public:
     class Units* units() const;
     class Fixes* fixes() const;
     class Variables* variables() const;
+    QVector3D origin() const;
+    QVector3D size() const;
+    int numberOfAtoms() const;
+    float simulationTime() const;
+    int currentTimestep() const;
     int numberOfAtomTypes() const;
-    void reset();
     float volume() const;
-    bool isValid() const;
     QVector3D cameraPosition() const;
     QVector3D center() const;
+
+    // Actions
+    void synchronize(class LAMMPSController *lammpsController);
+    void reset();
+    bool isValid() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);

@@ -10,10 +10,10 @@ Groups::Groups(AtomifySimulator *simulator)
 
 void Groups::add(QString identifier) {
     if(m_dataMap.contains(identifier)) return;
-    CPGroup *newGroup = new CPGroup(this);
-    newGroup->setIdentifier(identifier);
-    m_data.push_back(newGroup);
-    m_dataMap.insert(identifier, newGroup);
+    CPGroup *group = new CPGroup();
+    group->setIdentifier(identifier);
+    m_data.push_back(group);
+    m_dataMap.insert(identifier, group);
 }
 
 void Groups::remove(QString identifier) {
@@ -63,9 +63,9 @@ void Groups::synchronize(LAMMPSController *lammpsController)
         CPGroup *group = static_cast<CPGroup*>(obj);
         group->update(lammpsController->lammps());
     }
-    if(anyChanges) {
-        setModel(QVariant::fromValue(m_data));
-    }
+//    if(anyChanges) {
+//        setModel(QVariant::fromValue(m_data));
+//    }
 }
 
 QVariant Groups::model() const

@@ -126,7 +126,7 @@ protected:
     QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
     QString createCommandPrefix() override;
-    long lastUpdate = -1;
+    long m_lastUpdate = -1;
 };
 
 #endif // COMPUTE_H
