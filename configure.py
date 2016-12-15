@@ -8,7 +8,7 @@ from os.path import join, abspath
 from sys import platform as _platform
 import glob
 
-stable_commit = "a2b4a794d9a2870b135ad596fe58ad79e2569570"
+stable_commit = "50d3e73b8cfc5904e259c232a87b7d7c84a3190b"
 
 def run_command(cmd):
     print cmd
