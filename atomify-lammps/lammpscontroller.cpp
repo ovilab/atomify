@@ -17,6 +17,7 @@
 #include <fix_nve.h>
 #include <fix_nvt.h>
 #include <fix_npt.h>
+#include <fix_external.h>
 #include <stdio.h>
 #include <QDebug>
 #include <string>
@@ -45,7 +46,13 @@ LAMMPSController::~LAMMPSController()
     stop();
 }
 
-void LAMMPSController::synchronizeLAMMPS(LAMMPS *lammps)
+void synchronizeLAMMPS_callback(void *caller, int mode, LAMMPS_NS::bigint ntimestep, int numberOfAtoms, LAMMPS_NS::tagint *tag, double **atom, double **force)
+{
+    LAMMPSController *controller = static_cast<LAMMPSController*>(caller);
+    controller->synchronizeLAMMPS();
+}
+
+void LAMMPSController::synchronizeLAMMPS()
 {
     if(!system) {
         qDebug() << "Error, we dont have system object. Anders or Svenn-Arne did a horrible job here...";
@@ -61,8 +68,8 @@ void LAMMPSController::synchronizeLAMMPS(LAMMPS *lammps)
     while(!didSynchronizeSimulator) {
         QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
     }
-    // throw std::out_of_range("hello bitch");
-}
+     throw std::out_of_range("hello bitch");
+ }
 
 LAMMPS *LAMMPSController::lammps() const
 {
@@ -187,11 +194,20 @@ void LAMMPSController::start() {
     //    sprintf(argv[5], "1");
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
-    std::function<void(LAMMPS *lammps)> func = [&](LAMMPS *lammps) {
-        synchronizeLAMMPS(lammps);
-    };
+    lammps_command(m_lammps, "fix atomify_ext all external pf/callback 1 1");
+    if(!fixExists("atomify_ext")) {
+        qDebug() << "Damn, could not create the fix... :/";
+        exit(1);
+    }
 
-    lammps_register_callback(m_lammps, &func);
+    FixExternal *fix = dynamic_cast<FixExternal*>(findFixByIdentifier(QString("atomify_ext")));
+    fix->set_callback(&synchronizeLAMMPS_callback, this);
+
+//    std::function<void(LAMMPS *lammps)> func = [&](LAMMPS *lammps) {
+//        synchronizeLAMMPS(lammps);
+//    };
+
+    // lammps_register_callback(m_lammps, &func);
 }
 
 bool LAMMPSController::tick()

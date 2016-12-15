@@ -12,6 +12,9 @@
 #include <variable.h>
 #include <error.h>
 #include "parser/scriptcommand.h"
+#include <lmptype.h>
+
+void synchronizeLAMMPS_callback(void *caller, int mode, LAMMPS_NS::bigint ntimestep, int numberOfAtoms, LAMMPS_NS::tagint *tag, double **atom, double **force);
 
 class LAMMPSController
 {
@@ -27,7 +30,6 @@ public:
     bool didSynchronizeSimulator = false;
     QMutex *locker = nullptr;
     QString m_scriptFileName;
-    void synchronizeLAMMPS(LAMMPS_NS::LAMMPS *lammps);
     QMap<QString, class SimulatorControl*> simulatorControls;
     bool paused = false;
     LAMMPS_NS::LAMMPS *lammps() const;
@@ -35,6 +37,7 @@ public:
     void stop();
     void start();
 
+    void synchronizeLAMMPS();
     // LAMMPS internal access
     int findComputeId(QString identifier);
     int findVariableIndex(QString identifier);
