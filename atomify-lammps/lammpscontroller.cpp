@@ -64,10 +64,10 @@ void LAMMPSController::synchronizeLAMMPS()
 
     qDebug() << "Yeah buddy, did sync, atoms: " << system->numberOfAtoms();
     didSynchronizeSimulator = false;
-    locker->unlock();
-    while(!didSynchronizeSimulator) {
-        QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
-    }
+    // locker->unlock();
+//    while(!didSynchronizeSimulator) {
+//        QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
+//    }
      throw std::out_of_range("hello bitch");
  }
 
