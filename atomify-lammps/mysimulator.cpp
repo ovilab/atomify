@@ -104,7 +104,7 @@ void MyWorker::work()
 MyWorker *AtomifySimulator::createWorker()
 {
     MyWorker *worker = new MyWorker();
-    worker->locker = &m_workerMutex;
+    // worker->locker = &m_workerMutex;
     return new MyWorker();
 }
 

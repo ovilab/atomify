@@ -12,7 +12,7 @@ class MyWorker : public SimulatorWorker
     Q_OBJECT
 public:
     MyWorker();
-    QMutex *locker = nullptr;
+    // QMutex *locker = nullptr;
     bool willPause() const;
     void setWillPause(bool willPause);
 
