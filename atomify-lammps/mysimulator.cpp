@@ -32,6 +32,7 @@ using namespace std;
 MyWorker::MyWorker() {
     m_sinceStart.start();
     m_elapsed.start();
+    m_lammpsController.worker = this;
 }
 
 AtomifySimulator::AtomifySimulator() :
@@ -90,7 +91,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::work()
 {
     m_workCount += 1;
-    m_lammpsController.locker = locker;
     m_lammpsController.tick();
 
     auto dt = m_elapsed.elapsed();
@@ -103,8 +103,6 @@ void MyWorker::work()
 
 MyWorker *AtomifySimulator::createWorker()
 {
-    MyWorker *worker = new MyWorker();
-    // worker->locker = &m_workerMutex;
     return new MyWorker();
 }
 

@@ -25,10 +25,9 @@ public:
 
     LAMMPSController();
     ~LAMMPSController();
-
+    class MyWorker *worker = nullptr;
     // Getters/setters
     bool didSynchronizeSimulator = false;
-    QMutex *locker = nullptr;
     QString m_scriptFileName;
     QMap<QString, class SimulatorControl*> simulatorControls;
     bool paused = false;
