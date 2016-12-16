@@ -56,7 +56,7 @@ void synchronizeLAMMPS_callback(void *caller, int mode)
 
 void LAMMPSController::synchronizeLAMMPS(int mode)
 {
-    if(mode != LAMMPS_NS::FixConst::END_OF_STEP) return;
+    if(mode != LAMMPS_NS::FixConst::END_OF_STEP && mode != LAMMPS_NS::FixConst::MIN_POST_FORCE) return;
 
     if(!system) {
         qDebug() << "Error, we dont have system object. Anders or Svenn-Arne did a horrible job here...";
