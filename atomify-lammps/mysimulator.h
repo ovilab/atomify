@@ -34,21 +34,25 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
     Q_PROPERTY(States* states READ states WRITE setStates NOTIFY statesChanged)
-
+    Q_PROPERTY(QString scriptFilePath READ scriptFilePath WRITE setScriptFilePath NOTIFY scriptFilePathChanged)
 public:
     int syncCount = 0;
     AtomifySimulator();
-    ~AtomifySimulator() { }
+    ~AtomifySimulator();
 
     int simulationSpeed() const;
     Q_INVOKABLE void togglePaused();
     class System* system() const;
     class States* states() const;
 
+    QString scriptFilePath() const;
+
 public slots:
     void setSimulationSpeed(int arg);
     void setSystem(class System* system);
     void setStates(class States* states);
+
+    void setScriptFilePath(QString scriptFilePath);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -66,6 +70,8 @@ signals:
     void paused();
     void unPaused();
 
+    void scriptFilePathChanged(QString scriptFilePath);
+
 protected:
     virtual MyWorker *createWorker() override;
 
@@ -74,6 +80,7 @@ private:
     class System* m_system;
     class States* m_states;
     int m_simulationSpeed;
+    QString m_scriptFilePath;
 };
 
 #endif // MYSIMULATOR_H

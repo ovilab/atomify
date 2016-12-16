@@ -14,12 +14,13 @@
 #include "parser/scriptcommand.h"
 #include <lmptype.h>
 
-void synchronizeLAMMPS_callback(void *caller, int mode, LAMMPS_NS::bigint ntimestep, int numberOfAtoms, LAMMPS_NS::tagint *tag, double **atom, double **force);
+void synchronizeLAMMPS_callback(void *caller, int mode);
 
 class LAMMPSController
 {
 private:
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
+    void changeWorkingDirectoryToScriptLocation();
 public:
     class System *system = nullptr;
 
@@ -27,7 +28,7 @@ public:
     ~LAMMPSController();
     class MyWorker *worker = nullptr;
     // Getters/setters
-    QString m_scriptFileName;
+    QString scriptFilePath;
     QMap<QString, class SimulatorControl*> simulatorControls;
     bool paused = false;
     LAMMPS_NS::LAMMPS *lammps() const;

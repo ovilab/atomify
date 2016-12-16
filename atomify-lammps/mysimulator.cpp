@@ -53,6 +53,8 @@ AtomifySimulator::AtomifySimulator() :
     m_states->setupStates(*this);
 }
 
+AtomifySimulator::~AtomifySimulator() { }
+
 void AtomifySimulator::togglePaused()
 {
     if(m_states->paused()->active()) {
@@ -74,6 +76,11 @@ States *AtomifySimulator::states() const
     return m_states;
 }
 
+QString AtomifySimulator::scriptFilePath() const
+{
+    return m_scriptFilePath;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
 
@@ -92,6 +99,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
+        m_lammpsController.scriptFilePath = atomifySimulator->scriptFilePath();
         m_lammpsController.start();
     }
 
@@ -147,4 +155,14 @@ void AtomifySimulator::setStates(States *states)
 
     m_states = states;
     emit statesChanged(states);
+}
+
+void AtomifySimulator::setScriptFilePath(QString scriptFilePath)
+{
+    scriptFilePath.replace("file://", "");
+    if (m_scriptFilePath == scriptFilePath)
+        return;
+
+    m_scriptFilePath = scriptFilePath;
+    emit scriptFilePathChanged(scriptFilePath);
 }

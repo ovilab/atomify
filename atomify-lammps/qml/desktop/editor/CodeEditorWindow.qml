@@ -37,6 +37,7 @@ Item {
 
         simulator.didReset.disconnect(runScript)
         editorWindow.activeEditor = editorWindow.currentEditor
+        simulator.scriptFilePath = editorWindow.activeEditor.fileUrl
         simulator.started()
         didRun()
     }

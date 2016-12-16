@@ -2,6 +2,7 @@
 #include "states.h"
 #include "LammpsWrappers/lammpserror.h"
 #include <fix_ave_time.h>
+#include <unistd.h>
 #include <integrate.h>
 #include <library.h>
 #include <atom.h>
@@ -17,7 +18,7 @@
 #include <fix_nve.h>
 #include <fix_nvt.h>
 #include <fix_npt.h>
-#include <fix_external.h>
+#include <fix_atomify.h>
 #include <stdio.h>
 #include <QDebug>
 #include <string>
@@ -47,7 +48,7 @@ LAMMPSController::~LAMMPSController()
     stop();
 }
 
-void synchronizeLAMMPS_callback(void *caller, int mode, LAMMPS_NS::bigint ntimestep, int numberOfAtoms, LAMMPS_NS::tagint *tag, double **atom, double **force)
+void synchronizeLAMMPS_callback(void *caller, int mode)
 {
     LAMMPSController *controller = static_cast<LAMMPSController*>(caller);
     controller->synchronizeLAMMPS(mode);
@@ -65,7 +66,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     qDebug() << "Sync LAMMPS";
     system->synchronize(this);
     qDebug() << "Done with that";
-    // system->computes()->computeAll(this);
+    system->computes()->computeAll(this);
     system->atoms()->updateData(system);
     system->atoms()->createRenderererData();
 
@@ -176,6 +177,18 @@ bool LAMMPSController::computeExists(QString identifier) {
     return (findComputeId(identifier) >= 0);
 }
 
+void LAMMPSController::changeWorkingDirectoryToScriptLocation() {
+    QFileInfo fileInfo(scriptFilePath);
+    if(!fileInfo.exists()) {
+        qDebug() << "File " << scriptFilePath << " does not exist";
+        return;
+    }
+
+    QString currentDirectory = fileInfo.absoluteDir().path();
+    QByteArray currentDirBytes = currentDirectory.toUtf8();
+    chdir(currentDirBytes.constData());
+}
+
 void LAMMPSController::start() {
     if(m_lammps) {
         stop();
@@ -200,20 +213,15 @@ void LAMMPSController::start() {
     //    sprintf(argv[5], "1");
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
-    lammps_command(m_lammps, "fix atomify_ext all external pf/callback 1 1");
-    if(!fixExists("atomify_ext")) {
+    lammps_command(m_lammps, "fix atomify all atomify");
+    if(!fixExists("atomify")) {
         qDebug() << "Damn, could not create the fix... :/";
         exit(1);
     }
 
-    FixExternal *fix = dynamic_cast<FixExternal*>(findFixByIdentifier(QString("atomify_ext")));
+    FixAtomify *fix = dynamic_cast<FixAtomify*>(findFixByIdentifier(QString("atomify")));
     fix->set_callback(&synchronizeLAMMPS_callback, this);
-
-//    std::function<void(LAMMPS *lammps)> func = [&](LAMMPS *lammps) {
-//        synchronizeLAMMPS(lammps);
-//    };
-
-    // lammps_register_callback(m_lammps, &func);
+    changeWorkingDirectoryToScriptLocation();
 }
 
 bool LAMMPSController::tick()
@@ -221,12 +229,26 @@ bool LAMMPSController::tick()
     qDebug() << "Tick with LAMMPS: " << m_lammps;
     if(!m_lammps) return false;
 
-    m_scriptFileName = "/Users/anderhaf/Desktop/lj.in";
-    QByteArray ba = m_scriptFileName.toLatin1();
+    qDebug() << "Will run script " << scriptFilePath;
+    QByteArray ba = scriptFilePath.toLatin1();
 
     try {
         qDebug() << "Trying to do cool stuff";
         lammps_file(m_lammps, ba.data());
+
+        bool hasError = m_lammps->error->get_last_error() != NULL;
+        if(hasError) {
+            // Handle error
+            QString message = QString::fromUtf8(m_lammps->error->get_last_error());
+            // error = new LammpsError();
+            // error->create(message, commandObject);
+            qDebug() << "ERROR: " << message;
+            exit(1);
+
+            return true;
+        } else {
+            qDebug() << "Finished the script";
+        }
     } catch(std::out_of_range error) {
         qDebug() << "Got the error: " << error.what();
         stop();
@@ -237,15 +259,6 @@ bool LAMMPSController::tick()
 //    for(ScriptCommand &commandObject : commands) {
 //        const QString &command = commandObject.command();
 //        executeCommandInLAMMPS(command);
-
-//        bool hasError = m_lammps->error->get_last_error() != NULL;
-//        if(hasError) {
-//            // Handle error
-//            QString message = QString::fromUtf8(m_lammps->error->get_last_error());
-//            error = new LammpsError();
-//            error->create(message, commandObject);
-//            return true;
-//        }
 //        m_canProcessSimulatorControls = commandObject.canProcessSimulatorControls();
 //    }
 
