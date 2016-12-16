@@ -35,6 +35,16 @@ MyWorker::MyWorker() {
     m_lammpsController.worker = this;
 }
 
+void MyWorker::setNeedsSynchronization(bool value)
+{
+    m_needsSynchronization = value;
+}
+
+bool MyWorker::needsSynchronization()
+{
+    return m_needsSynchronization;
+}
+
 AtomifySimulator::AtomifySimulator() :
     m_system(new System(this)),
     m_states(new States(this)),
@@ -86,6 +96,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
         m_lammpsController.start();
     }
+
+    atomifySimulator->system()->atoms()->synchronizeRenderer();
+    m_needsSynchronization = false;
 }
 
 void MyWorker::work()

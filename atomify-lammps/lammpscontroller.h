@@ -27,7 +27,6 @@ public:
     ~LAMMPSController();
     class MyWorker *worker = nullptr;
     // Getters/setters
-    bool didSynchronizeSimulator = false;
     QString m_scriptFileName;
     QMap<QString, class SimulatorControl*> simulatorControls;
     bool paused = false;
@@ -36,7 +35,7 @@ public:
     void stop();
     void start();
 
-    void synchronizeLAMMPS();
+    void synchronizeLAMMPS(int mode);
     // LAMMPS internal access
     int findComputeId(QString identifier);
     int findVariableIndex(QString identifier);

@@ -15,7 +15,8 @@ public:
     // QMutex *locker = nullptr;
     bool willPause() const;
     void setWillPause(bool willPause);
-
+    void setNeedsSynchronization(bool value);
+    bool needsSynchronization();
 private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;

@@ -49,11 +49,13 @@ LAMMPSController::~LAMMPSController()
 void synchronizeLAMMPS_callback(void *caller, int mode, LAMMPS_NS::bigint ntimestep, int numberOfAtoms, LAMMPS_NS::tagint *tag, double **atom, double **force)
 {
     LAMMPSController *controller = static_cast<LAMMPSController*>(caller);
-    controller->synchronizeLAMMPS();
+    controller->synchronizeLAMMPS(mode);
 }
 
-void LAMMPSController::synchronizeLAMMPS()
+void LAMMPSController::synchronizeLAMMPS(int mode)
 {
+    if(mode != LAMMPS_NS::FixConst::END_OF_STEP) return;
+
     if(!system) {
         qDebug() << "Error, we dont have system object. Anders or Svenn-Arne did a horrible job here...";
         exit(1);
@@ -62,13 +64,12 @@ void LAMMPSController::synchronizeLAMMPS()
     system->atoms()->updateData(system);
     system->atoms()->createRenderererData();
 
-    qDebug() << "Yeah buddy, did sync, atoms: " << system->numberOfAtoms();
-    didSynchronizeSimulator = false;
-    // locker->unlock();
-//    while(!didSynchronizeSimulator) {
-//        QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
-//    }
-     throw std::out_of_range("hello bitch");
+    worker->setNeedsSynchronization(true);
+    while(!worker->needsSynchronization()) {
+        QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
+    }
+
+    // throw std::out_of_range("hello bitch");
  }
 
 LAMMPS *LAMMPSController::lammps() const
