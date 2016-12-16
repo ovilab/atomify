@@ -38,6 +38,7 @@ void Neighborlist::reset(int numberOfAtoms, int maxNeighbors) {
 
 void Neighborlist::synchronize(LAMMPS *lammps)
 {
+    qDebug() << "Synchronizing neighbor list";
     if(!lammps) return;
     QElapsedTimer t;
     t.start();

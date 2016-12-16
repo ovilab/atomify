@@ -17,11 +17,11 @@ public:
     void setWillPause(bool willPause);
     void setNeedsSynchronization(bool value);
     bool needsSynchronization();
+    long m_workCount = 0;
 private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
     LAMMPSController m_lammpsController;
-    long m_workCount = 0;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator) override;
@@ -36,6 +36,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(States* states READ states WRITE setStates NOTIFY statesChanged)
 
 public:
+    int syncCount = 0;
     AtomifySimulator();
     ~AtomifySimulator() { }
 

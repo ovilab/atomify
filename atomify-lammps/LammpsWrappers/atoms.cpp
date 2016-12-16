@@ -113,7 +113,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         position[0] = atom->x[i][0];
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
-        domain->remap(position); // remap into system boundaries with PBC
+        // domain->remap(position); // remap into system boundaries with PBC
 
         m_atomData.positions[i][0] = position[0];
         m_atomData.positions[i][1] = position[1];
@@ -151,6 +151,7 @@ void Atoms::createRenderererData() {
 }
 
 void Atoms::synchronizeRenderer() {
+    qDebug() << "Synchronizing renderer with " << m_atomDataProcessed.positions.size() << " positions";
     m_sphereData->setData(m_atomDataProcessed.positions, m_atomDataProcessed.colors, m_atomDataProcessed.radii);
     m_bondData->setData(bondsDataRaw);
 }

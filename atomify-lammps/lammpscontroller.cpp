@@ -26,6 +26,7 @@
 #include <iostream>
 #include <sstream>
 #include <functional>
+#include "LammpsWrappers/computes.h"
 #include "parser/scriptcommand.h"
 #include "mysimulator.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
@@ -60,12 +61,16 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         qDebug() << "Error, we dont have system object. Anders or Svenn-Arne did a horrible job here...";
         exit(1);
     }
+
+    qDebug() << "Sync LAMMPS";
     system->synchronize(this);
+    qDebug() << "Done with that";
+    // system->computes()->computeAll(this);
     system->atoms()->updateData(system);
     system->atoms()->createRenderererData();
 
     worker->setNeedsSynchronization(true);
-    while(!worker->needsSynchronization()) {
+    while(worker->needsSynchronization()) {
         QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
     }
 

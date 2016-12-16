@@ -76,15 +76,13 @@ States *AtomifySimulator::states() const
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
-    QElapsedTimer t; t.start();
 
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
+    atomifySimulator->syncCount += 1;
     States &states = *atomifySimulator->states();
-
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
     m_lammpsController.paused = states.paused()->active();
-
     // If user pressed stop / restart, we should reset
     if(states.reset()->active()) {
         m_lammpsController.stop();
@@ -98,7 +96,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     atomifySimulator->system()->atoms()->synchronizeRenderer();
-    m_needsSynchronization = false;
+    // m_needsSynchronization = false;
 }
 
 void MyWorker::work()
