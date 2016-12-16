@@ -101,6 +101,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
 
     if(m_cancelPending && m_lammpsController.didCancel) {
+        m_cancelPending = false;
+        atomifySimulator->system()->synchronize(&m_lammpsController);
+        atomifySimulator->system()->atoms()->reset();
         emit atomifySimulator->didReset();
     }
 

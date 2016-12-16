@@ -151,7 +151,6 @@ void Atoms::createRenderererData() {
 }
 
 void Atoms::synchronizeRenderer() {
-    qDebug() << "Synchronizing renderer with " << m_atomDataProcessed.positions.size() << " positions";
     m_sphereData->setData(m_atomDataProcessed.positions, m_atomDataProcessed.colors, m_atomDataProcessed.radii);
     m_bondData->setData(bondsDataRaw);
 }
@@ -296,6 +295,7 @@ void Atoms::reset()
     m_sphereData->setData(emptySphereVBOData);
     m_bondData->setData(emptyBondVBOData);
     m_atomData.reset();
+    m_atomDataProcessed.reset();
     m_bonds->reset();
     m_atomStyles.clear();
     for(int i=0; i<50; i++) {

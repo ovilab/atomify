@@ -92,7 +92,6 @@ void LAMMPSController::stop()
         lammps_close((void*)m_lammps);
         m_lammps = nullptr;
     }
-
     paused = false;
 }
 
@@ -234,6 +233,7 @@ bool LAMMPSController::tick()
     if(finished || didCancel) return false;
 
     QByteArray ba = scriptFilePath.toLatin1();
+    scriptFilePath = "";
 
     try {
         lammps_file(m_lammps, ba.data());
