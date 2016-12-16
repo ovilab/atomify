@@ -18,6 +18,7 @@ public:
     void setNeedsSynchronization(bool value);
     bool needsSynchronization();
     long m_workCount = 0;
+    bool m_cancelPending = false;
 private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;

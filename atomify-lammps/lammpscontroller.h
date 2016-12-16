@@ -16,6 +16,11 @@
 
 void synchronizeLAMMPS_callback(void *caller, int mode);
 
+class Cancelled : public std::exception
+{
+
+};
+
 class LAMMPSController
 {
 private:
@@ -31,10 +36,13 @@ public:
     QString scriptFilePath;
     QMap<QString, class SimulatorControl*> simulatorControls;
     bool paused = false;
+    bool finished = false;
+    bool didCancel = false;
     LAMMPS_NS::LAMMPS *lammps() const;
     bool tick();
     void stop();
     void start();
+
 
     void synchronizeLAMMPS(int mode);
     // LAMMPS internal access

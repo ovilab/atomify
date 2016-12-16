@@ -75,7 +75,9 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
     }
 
-    // throw std::out_of_range("hello bitch");
+    if(worker->m_cancelPending) {
+        throw Cancelled();
+    }
  }
 
 LAMMPS *LAMMPSController::lammps() const
@@ -213,6 +215,8 @@ void LAMMPSController::start() {
     //    sprintf(argv[5], "1");
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
+    finished = false;
+    didCancel = false;
     lammps_command(m_lammps, "fix atomify all atomify");
     if(!fixExists("atomify")) {
         qDebug() << "Damn, could not create the fix... :/";
@@ -226,32 +230,33 @@ void LAMMPSController::start() {
 
 bool LAMMPSController::tick()
 {
-    qDebug() << "Tick with LAMMPS: " << m_lammps;
     if(!m_lammps) return false;
+    if(finished || didCancel) return false;
 
-    qDebug() << "Will run script " << scriptFilePath;
     QByteArray ba = scriptFilePath.toLatin1();
 
     try {
-        qDebug() << "Trying to do cool stuff";
         lammps_file(m_lammps, ba.data());
-
+        finished = true;
         bool hasError = m_lammps->error->get_last_error() != NULL;
         if(hasError) {
             // Handle error
             QString message = QString::fromUtf8(m_lammps->error->get_last_error());
+            finished = true;
             // error = new LammpsError();
             // error->create(message, commandObject);
-            qDebug() << "ERROR: " << message;
+            qDebug() << "LAMMPS error: " << message;
             exit(1);
 
             return true;
         } else {
             qDebug() << "Finished the script";
         }
-    } catch(std::out_of_range error) {
-        qDebug() << "Got the error: " << error.what();
+    } catch(Cancelled cancelled) {
+        qDebug() << "Did cancel";
+        didCancel = true;
         stop();
+        system->reset();
     }
 
 //    if(!m_lammps || error || paused) return false;
