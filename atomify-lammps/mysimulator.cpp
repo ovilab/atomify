@@ -96,25 +96,38 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
 
+    if(states.reset()->active() && m_lammpsController.finished) {
+        m_lammpsController.stop();
+        atomifySimulator->system()->synchronize(&m_lammpsController);
+        atomifySimulator->system()->atoms()->reset();
+        emit atomifySimulator->didReset();
+        return;
+    }
+
     if(m_lammpsController.finished && states.parsing()->active()) {
         emit atomifySimulator->finished();
+        return;
     }
 
     if(m_cancelPending && m_lammpsController.didCancel) {
         m_cancelPending = false;
+        m_lammpsController.stop();
+        atomifySimulator->system()->reset();
         atomifySimulator->system()->synchronize(&m_lammpsController);
         atomifySimulator->system()->atoms()->reset();
         emit atomifySimulator->didReset();
+        return;
     }
 
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
         m_lammpsController.scriptFilePath = atomifySimulator->scriptFilePath();
         m_lammpsController.start();
+        return;
     }
 
     atomifySimulator->system()->atoms()->synchronizeRenderer();
-    // m_needsSynchronization = false;
+    m_needsSynchronization = false;
 }
 
 void MyWorker::work()
