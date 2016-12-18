@@ -27,19 +27,19 @@ System::System(AtomifySimulator *simulator)
 
 void System::synchronize(LAMMPSController *lammpsController)
 {
+    LAMMPS *lammps = lammpsController->lammps();
+    if(!lammps) {
+        reset();
+        return;
+    }
+    setIsValid(true);
+
     m_regions->synchronize(lammpsController);
     m_groups->synchronize(lammpsController);
     m_atoms->synchronize(lammpsController);
     m_computes->synchronize(lammpsController);
     m_variables->synchronize(lammpsController);
     m_fixes->synchronize(lammpsController);
-
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        setIsValid(false);
-        return;
-    }
-    setIsValid(true);
 
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
@@ -147,6 +147,9 @@ int System::numberOfAtomTypes() const
 
 void System::reset()
 {
+    setIsValid(false);
+    m_fixes->reset();
+    m_atoms->reset();
     m_groups->reset();
     m_computes->reset();
     m_regions->reset();
@@ -163,7 +166,6 @@ void System::reset()
     emit originChanged(m_origin);
     emit numberOfAtomsChanged(m_numberOfAtoms);
     emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
-    m_atoms->reset();
 }
 
 float System::volume() const

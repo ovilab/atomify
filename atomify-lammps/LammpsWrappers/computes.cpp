@@ -49,10 +49,7 @@ void Computes::reset() {
 void Computes::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps || !lammps->modify) {
-        reset();
-        return;
-    }
+    if(!lammps) { return; }
 
     Modify *modify = lammps->modify;
     bool anyChanges = false;

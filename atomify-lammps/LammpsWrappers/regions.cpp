@@ -33,10 +33,7 @@ void Regions::remove(QString identifier) {
 void Regions::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        reset();
-        return;
-    }
+    if(!lammps) { return; }
     Domain *lammpsDomain = lammps->domain;
     Region **regions = lammpsDomain->regions;
 

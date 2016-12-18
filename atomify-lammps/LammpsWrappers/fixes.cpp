@@ -47,10 +47,7 @@ void Fixes::reset() {
 void Fixes::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps || !lammps->modify) {
-        reset();
-        return;
-    }
+    if(!lammps) { return; }
 
     Modify *modify = lammps->modify;
     int numComputes = modify->nfix;

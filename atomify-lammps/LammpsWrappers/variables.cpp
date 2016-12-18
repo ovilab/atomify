@@ -24,10 +24,7 @@ bool Variables::isSupported(LAMMPSController *lammpsController, int ivar)
 void Variables::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        reset();
-        return;
-    }
+    if(!lammps) { return; }
 
     Variable *variable = lammps->input->variable;
     int nvar;

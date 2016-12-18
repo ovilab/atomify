@@ -28,10 +28,7 @@ void Groups::remove(QString identifier) {
 void Groups::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps || !lammps->group) {
-        reset();
-        return;
-    }
+    if(!lammps) { return; }
 
     Group *lammpsGroup = lammps->group;
     int numGroups = lammpsGroup->ngroup;

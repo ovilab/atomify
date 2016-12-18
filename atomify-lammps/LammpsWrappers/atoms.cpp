@@ -68,10 +68,8 @@ Atoms::Atoms(AtomifySimulator *simulator)
 void Atoms::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        m_atomData.reset();
-        return;
-    }
+    if(!lammps) { return; }
+
     Atom *atom = lammps->atom;
     Domain *domain = lammps->domain;
     int *types = lammps->atom->type;
