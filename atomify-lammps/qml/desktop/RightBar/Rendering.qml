@@ -99,7 +99,7 @@ Pane {
                         id: light1Attenuation
                         width: parent.width*0.6
                         minimumValue: 0
-                        maximumValue: 5
+                        maximumValue: 50
                         value: visualizer.light1.attenuation
 
                         Binding {
@@ -148,7 +148,7 @@ Pane {
                         id: light2Attenuation
                         width: parent.width*0.6
                         minimumValue: 0
-                        maximumValue: 5
+                        maximumValue: 50
                         value: visualizer.light2.attenuation
 
                         Binding {
