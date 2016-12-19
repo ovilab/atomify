@@ -48,6 +48,7 @@ public:
     bool interactive() const;
     bool isPerAtom() const;
     bool hovered() const;
+    void updateData1D();
     const std::vector<double> &atomData() const;
     int perAtomIndex() const;
     int numPerAtomValues() const;

@@ -68,6 +68,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     // system->computes()->computeAll(this);
     system->atoms()->updateData(system);
     system->atoms()->createRenderererData();
+    system->updateThreadOnDataObjects(qmlThread);
 
     worker->setNeedsSynchronization(true);
     while(worker->needsSynchronization()) {

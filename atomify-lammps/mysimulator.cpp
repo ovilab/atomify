@@ -84,6 +84,8 @@ QString AtomifySimulator::scriptFilePath() const
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
+    m_lammpsController.qmlThread = QThread::currentThread();
+
     atomifySimulator->syncCount += 1;
     States &states = *atomifySimulator->states();
     // Sync properties from lammps controller and back

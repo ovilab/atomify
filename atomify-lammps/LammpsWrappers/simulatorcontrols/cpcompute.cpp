@@ -66,6 +66,14 @@ bool CPCompute::hovered() const
     return m_hovered;
 }
 
+void CPCompute::updateData1D()
+{
+    for(QVariant &variant : data1D()) {
+        Data1D *data = variant.value<Data1D *>();
+        emit data->updated();
+    }
+}
+
 bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
     if(!compute->peratom_flag) return false;
@@ -156,7 +164,6 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     Data1D *data = ensureExists(QString("Temperature"), true);
     setXLabel("Time");
     setYLabel("Temperature");
-    qDebug() << " Copying temp data with value: " << value << " and time: " << lammpsController->system->simulationTime();
     data->add(lammpsController->system->simulationTime(), value, true);
     setInteractive(true);
     return true;
@@ -248,15 +255,13 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
     for(int pairId=0; pairId<numPairs; pairId++) {
         QString key = QString("Pair %1").arg(pairId+1);
         Data1D *data = ensureExists(key, true);
-        data->clear();
+        data->clear(true);
 
         for(int bin=0; bin<numBins; bin++) {
             double r = compute->array[bin][0];
             double rdf = compute->array[bin][1+2*pairId];
             data->add(r,rdf,true);
         }
-
-        emit data->updated();
     }
     setInteractive(true);
     return true;

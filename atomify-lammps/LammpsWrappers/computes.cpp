@@ -78,6 +78,18 @@ bool Computes::addOrRemove(LAMMPSController *lammpsController) {
     return anyChanges;
 }
 
+void Computes::updateThreadOnDataObjects(QThread *thread) {
+    for(QObject *obj : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(obj);
+        for(QVariant &variant : compute->data1D()) {
+            Data1D *data = variant.value<Data1D *>();
+            if(data->thread() != thread) {
+                data->moveToThread(thread);
+            }
+        }
+    }
+}
+
 void Computes::synchronizeQML(LAMMPSController *lammpsController)
 {
     if(!lammpsController->lammps()) return;
@@ -91,12 +103,7 @@ void Computes::synchronizeQML(LAMMPSController *lammpsController)
 
     for(QObject *obj : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(obj);
-        for(QVariant &variant : compute->data1D()) {
-            Data1D *data = variant.value<Data1D *>();
-            qDebug() << "Emitting " << data << " with xMax " << data->xMax();
-            emit data->updated();
-            emit data->faen();
-        }
+        compute->updateData1D();
     }
 }
 
@@ -106,7 +113,6 @@ void Computes::synchronize(LAMMPSController *lammpsController)
 
     computeAll(lammpsController);
     copyAll(lammpsController);
-
 }
 
 void Computes::computeAll(LAMMPSController *lammpsController)

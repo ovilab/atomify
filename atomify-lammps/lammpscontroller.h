@@ -12,14 +12,12 @@
 #include <variable.h>
 #include <error.h>
 #include "parser/scriptcommand.h"
+#include <QThread>
 #include <lmptype.h>
 
 void synchronizeLAMMPS_callback(void *caller, int mode);
 
-class Cancelled : public std::exception
-{
-
-};
+class Cancelled : public std::exception { };
 
 class LAMMPSController
 {
@@ -42,7 +40,7 @@ public:
     bool tick();
     void stop();
     void start();
-
+    QThread *qmlThread = nullptr;
 
     void synchronizeLAMMPS(int mode);
     // LAMMPS internal access

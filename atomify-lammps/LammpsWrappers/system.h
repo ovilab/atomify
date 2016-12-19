@@ -50,6 +50,7 @@ public:
     // Actions
     void synchronize(class LAMMPSController *lammpsController);
     void synchronizeQML(class LAMMPSController *lammpsController);
+    void updateThreadOnDataObjects(QThread *thread);
     void reset();
     bool isValid() const;
 

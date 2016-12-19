@@ -19,6 +19,7 @@ public:
     void synchronizeQML(class LAMMPSController *lammpsController);
     void copyAll(class LAMMPSController *lammpsController);
     void computeAll(class LAMMPSController *lammpsController);
+    void updateThreadOnDataObjects(QThread *thread);
     void reset();
     int count() const;
     QVariant model() const;

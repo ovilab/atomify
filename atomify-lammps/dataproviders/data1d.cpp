@@ -153,7 +153,7 @@ void Data1D::clear(bool silent)
 {
     m_minMaxValuesDirty = true;
     m_points.clear();
-    if(m_xySeries) {
+    if(!silent && m_xySeries) {
         updateXYSeries(m_xySeries);
     }
 }
@@ -171,8 +171,6 @@ void Data1D::add(float x, float y, bool silent)
 
 void Data1D::add(const QPointF &point, bool silent)
 {
-    qDebug() << "Adding point: " << point;
-
     m_points.append(point);
     m_minMaxValuesDirty = true;
     if(!silent && m_xySeries) {

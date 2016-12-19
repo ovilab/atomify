@@ -41,7 +41,6 @@ signals:
     void enabledChanged(bool enabled);
     void xySeriesChanged(QXYSeries* xySeries);
     void updated();
-    void faen();
     void updatedHistogram(Data1D *data);
 
 public slots:
