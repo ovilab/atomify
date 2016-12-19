@@ -23,16 +23,16 @@ Entity {
     property vector3d viewCenter: Qt.vector3d(0,0,0)
     property alias dragging: rightMouseButtonAction.active
     property string mode: "trackball"
-    onModeChanged: {
-        if(mode==="flymode") {
-            centerMouse()
-        }
+//    onModeChanged: {
+//        if(mode==="flymode") {
+//            centerMouse()
+//        }
 
-        mouseMover.showCursor = mode==="trackball"
-        if(mode === "trackball") {
-            viewCenter = root.camera.viewCenter
-        }
-    }
+//        mouseMover.showCursor = mode==="trackball"
+//        if(mode === "trackball") {
+//            viewCenter = root.camera.viewCenter
+//        }
+//    }
 
     property bool active: !(mode==="flymode") && (
                           shiftAction.active ||
@@ -53,21 +53,6 @@ Entity {
             item = item.parent
         }
         return Qt.point(globalX, globalY)
-    }
-
-    Shortcut {
-        //TODO: use keyboard input instead
-        sequence: "Shift+F"
-        context: Qt.ApplicationShortcut
-        onActivated: {
-            if(root.mode === "flymode") {
-                console.log("Switching mode to trackball")
-                root.mode = "trackball"
-            } else {
-                console.log("Switching mode to flymode")
-                root.mode = "flymode"
-            }
-        }
     }
 
     QtObject {

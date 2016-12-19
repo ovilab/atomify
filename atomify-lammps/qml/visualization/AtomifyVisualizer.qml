@@ -23,7 +23,7 @@ Scene3D {
     property bool guidesVisible
     property bool systemBoxVisible
     property alias rootItem: controller.rootItem
-    property alias mouseMover: controller.mouseMover
+    property MouseMover mouseMover
     property bool focusMode
     property alias visualizer: visualizer
     property alias controller: controller
@@ -31,8 +31,6 @@ Scene3D {
     property alias light1: light1
     property alias light2: light2
     property real scale: 0.23
-    property alias nearPlane: mainCamera.nearPlane
-    property alias farPlane: mainCamera.farPlane
     property bool addPeriodicCopies: false
     property alias ambientOcclusion: ssaoQuadEntity.ambientOcclusion
     property alias finalShaderBuilder: finalQuadEntity.shaderBuilder
@@ -45,16 +43,20 @@ Scene3D {
     property MessageDialog dialog: MessageDialog {
         text: "Render quality will be changed when the application is restarted."
     }
-    hoverEnabled: controller.mode==="flymode"
+    property string mode: "trackball"
+
+    hoverEnabled: root.mode === "flymode"
+    multisample: true
+    aspects: ["render", "input", "logic"]
+
     onFocusModeChanged: {
         if(focusMode) {
-            controller.mode = "flymode"
+            root.mode = "flymode"
         } else {
-            controller.mode = "trackball"
+            root.mode = "trackball"
         }
     }
 
-    multisample: true
     onRenderQualityChanged: {
         if(mainCompleted) {
             dialog.open()
@@ -81,16 +83,22 @@ Scene3D {
         }
     }
 
-    function resetToSystemCenter() {
-        // var right = mainCamera.viewVector.normalized().cross(mainCamera.upVector.normalized())
-        var sizeY = simulator.system.size.y
-        mainCamera.viewCenter = simulator.system.center
-        mainCamera.position = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
-        mainCamera.upVector = Qt.vector3d(0, 0, 1)
-        // mainCamera.translate(Qt.vector3d(0, 0, 10), Camera.DontTranslateViewCenter)
+    function changeMode() {
+        if(mode === "flymode") {
+            mode = "trackball"
+        } else {
+            mode = "flymode"
+        }
     }
 
-    aspects: ["render", "input", "logic"]
+    function resetToSystemCenter() {
+        // var right = camera.viewVector.normalized().cross(camera.upVector.normalized())
+        var sizeY = simulator.system.size.y
+        visualizer.camera.viewCenter = simulator.system.center
+        visualizer.camera.position = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
+        visualizer.camera.upVector = Qt.vector3d(0, 0, 1)
+        // camera.translate(Qt.vector3d(0, 0, 10), Camera.DontTranslateViewCenter)
+    }
 
     Entity {
         id: visualizer
@@ -106,9 +114,9 @@ Scene3D {
             // If camera is inside, nearestPoint is camera pos. If outside, one of the 6 faces on system box
             // It is used to have attenuation only work for relative coordinates inside the system so system
             //    is bright even when camera is far away.
-            var x = mainCamera.position.x
-            var y = mainCamera.position.y
-            var z = mainCamera.position.z
+            var x = camera.position.x
+            var y = camera.position.y
+            var z = camera.position.z
             var x0 = simulator.system.origin.x
             var y0 = simulator.system.origin.y
             var z0 = simulator.system.origin.z
@@ -125,16 +133,29 @@ Scene3D {
             if(y > y1) yp = y1
             if(z < z0) zp = z0
             if(z > z1) zp = z1
-            mainCamera.nearestPoint = Qt.vector3d(xp, yp, zp)
+            nearestPoint = Qt.vector3d(xp, yp, zp)
         }
 
-        property Camera camera: Camera {
-            id: mainCamera
-            projectionType: CameraLens.PerspectiveProjection
-            property var nearestPoint
-            property real distanceToNearestPoint: position.minus(nearestPoint).length()
+        property var nearestPoint
+        property real distanceToNearestPoint: cameraPosition.minus(nearestPoint).length()
+        property var cameraPosition: camera.position
+        property Camera camera: root.mode === "flymode" ? flymodeCamera : trackballCamera
 
-            // projectionType: CameraLens.OrthographicProjection
+        onCameraPositionChanged: {
+            if(simulator != undefined) {
+                simulator.system.cameraPosition = cameraPosition
+            }
+            visualizer.updateNearestPoint()
+        }
+
+
+        Camera {
+            id: trackballCamera
+            Component.onCompleted: {
+                panAboutViewCenter(40, Qt.vector3d(0, 0, 1))
+                tiltAboutViewCenter(30)
+            }
+            projectionType: CameraLens.PerspectiveProjection
             fieldOfView: 50
             aspectRatio: root.width / root.height
             nearPlane : root.renderMode === "forward" ? 1.0 : 3.0
@@ -142,16 +163,26 @@ Scene3D {
             position: Qt.vector3d(0.0, 50.0, 0.0) // do not change without taking upvector into account
             viewCenter: Qt.vector3d(0, 0, 0) // do not change without taking upvector into account
             upVector: Qt.vector3d(0.0, 0.0, 1.0)
-            onPositionChanged: {
-                if(simulator != undefined) {
-                    simulator.system.cameraPosition = position
-                }
-                visualizer.updateNearestPoint()
+        }
+
+        Camera {
+            id: flymodeCamera
+
+            function resetToTrackball() {
+                position = trackballCamera.position
+                viewCenter = trackballCamera.viewCenter
+                upVector = trackballCamera.upVector
+                fieldOfView = trackballCamera.fieldOfView
             }
+
             Component.onCompleted: {
-                mainCamera.panAboutViewCenter(40, Qt.vector3d(0, 0, 1))
-                mainCamera.tiltAboutViewCenter(30)
+                resetToTrackball()
             }
+
+            projectionType: CameraLens.PerspectiveProjection
+            nearPlane : root.renderMode === "forward" ? 1.0 : 3.0
+            farPlane : root.renderMode === "forward" ? 10000.0 : 300.0
+            aspectRatio: root.width / root.height
         }
 
         Light {
@@ -175,8 +206,22 @@ Scene3D {
 
         DesktopController {
             id: controller
-            camera: visualizer.camera
+            camera: trackballCamera
             onPressed: root.focus = true
+            mode: "trackball"
+            rootItem: root
+            mouseMover: root.mouseMover
+            enabled: root.mode == "trackball"
+        }
+
+        DesktopController {
+            id: controller2
+            camera: flymodeCamera
+            onPressed: root.focus = true
+            mode: "flymode"
+            rootItem: root
+            mouseMover: root.mouseMover
+            enabled: root.mode == "flymode"
         }
 
         Layer {
@@ -194,7 +239,7 @@ Scene3D {
         ForwardFrameGraph {
             id: forwardFrameGraph
             //            surface: deferredFrameGraph.surface
-            camera: mainCamera
+            camera: visualizer.camera
             atomLayer: atomLayer
             guideLayer: guideLayer
             outlineLayer: outlineLayer
@@ -202,7 +247,7 @@ Scene3D {
 
         DeferredFrameGraph {
             id: deferredFrameGraph
-            camera: mainCamera
+            camera: visualizer.camera
             width: Math.max(10, root.width, root.height)
             height: width
             surface: forwardFrameGraph.surface
@@ -295,7 +340,7 @@ Scene3D {
         StandardMaterial {
             id: spheresMediumQuality
             color: spheres.fragmentBuilder.color
-            attenuationOffset: mainCamera.distanceToNearestPoint
+            attenuationOffset: visualizer.distanceToNearestPoint
             lights: visualizer.lights
         }
 

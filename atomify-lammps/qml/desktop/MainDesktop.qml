@@ -186,6 +186,20 @@ Item {
                 }
             }
         }
+
+        Shortcut {
+            sequence: "Alt+C"
+            onActivated: {
+                visualizer.changeMode()
+            }
+        }
+
+        Shortcut {
+            sequence: "Alt+R"
+            onActivated: {
+                visualizer.resetToSystemCenter()
+            }
+        }
     }
 
     DisableMessage {

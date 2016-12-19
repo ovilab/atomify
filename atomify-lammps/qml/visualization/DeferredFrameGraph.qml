@@ -116,7 +116,7 @@ Viewport {
                         ]
                     }
                     CameraSelector {
-                        camera: mainCamera
+                        camera: root.camera
                         LayerFilter {
                             layers: atomLayer
                             ClearBuffers {
@@ -161,7 +161,7 @@ Viewport {
                         clearColor: "#000"
                         buffers: ClearBuffers.ColorDepthBuffer
                         CameraSelector {
-                            camera: mainCamera
+                            camera: root.camera
                         }
                     }
                 }
@@ -194,7 +194,7 @@ Viewport {
                         clearColor: "#000"
                         buffers: ClearBuffers.ColorDepthBuffer
                         CameraSelector {
-                            camera: mainCamera
+                            camera: root.camera
                         }
                     }
                 }
@@ -206,7 +206,7 @@ Viewport {
                     buffers: ClearBuffers.ColorDepthBuffer
                     CameraSelector {
                         id: viewCameraSelector
-                        camera: mainCamera
+                        camera: root.camera
                     }
                 }
             }
