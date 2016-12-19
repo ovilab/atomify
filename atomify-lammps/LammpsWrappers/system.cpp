@@ -178,6 +178,11 @@ bool System::isValid() const
     return m_isValid;
 }
 
+void System::synchronizeQML(LAMMPSController *lammpsController)
+{
+    m_computes->synchronizeQML(lammpsController);
+}
+
 QVector3D System::cameraPosition() const
 {
     return m_cameraPosition;

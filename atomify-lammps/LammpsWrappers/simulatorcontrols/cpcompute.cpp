@@ -359,7 +359,7 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
 
     if(compute->vector_flag == 1) {
         try {
-            compute->compute_scalar();
+            compute->compute_vector();
         } catch (LAMMPSException &exception) {
             // TODO: handle this better than just ignoring exception.
 //            qDebug() << "ERROR: LAMMPS threw an exception!";

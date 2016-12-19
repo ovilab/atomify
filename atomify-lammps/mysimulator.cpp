@@ -125,7 +125,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         m_lammpsController.start();
         return;
     }
-
+    atomifySimulator->system()->synchronizeQML(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
     m_needsSynchronization = false;
 }

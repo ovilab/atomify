@@ -49,6 +49,7 @@ public:
 
     // Actions
     void synchronize(class LAMMPSController *lammpsController);
+    void synchronizeQML(class LAMMPSController *lammpsController);
     void reset();
     bool isValid() const;
 

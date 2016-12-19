@@ -46,13 +46,12 @@ void Computes::reset() {
     setCount(0);
 }
 
-void Computes::synchronize(LAMMPSController *lammpsController)
+void Computes::synchronizeQML(LAMMPSController *lammpsController)
 {
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) { return; }
+    if(!lammpsController->lammps()) return;
 
-    Modify *modify = lammps->modify;
     bool anyChanges = false;
+    Modify *modify = lammpsController->lammps()->modify;
     for(int computeIndex=0; computeIndex<modify->ncompute; computeIndex++) {
         Compute *compute = modify->compute[computeIndex];
         QString identifier = QString::fromUtf8(compute->id);
@@ -77,24 +76,26 @@ void Computes::synchronize(LAMMPSController *lammpsController)
         removeCompute(compute->identifier());
     }
 
-//    for(QObject *obj : m_data) {
-//        CPCompute *compute = qobject_cast<CPCompute*>(obj);
-//        for(QVariant &variant : compute->data1D()) {
-//            Data1D *data = variant.value<Data1D *>();
-//            emit data->updated(data);
-//        }
-//    }
-
-//    if(anyChanges) {
-//        setModel(QVariant::fromValue(m_data));
-//        setCount(m_data.size());
-//    }
-
-//    if(!lammpsController->canProcessSimulatorControls()) return;
-    for(QObject *object : m_data) {
-        CPCompute *compute = qobject_cast<CPCompute*>(object);
-        compute->copyData(lammpsController);
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+        setCount(m_data.size());
     }
+
+    for(QObject *obj : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(obj);
+        for(QVariant &variant : compute->data1D()) {
+            Data1D *data = variant.value<Data1D *>();
+            emit data->updated(data);
+        }
+    }
+}
+
+void Computes::synchronize(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+
+    computeAll(lammpsController);
+    copyAll(lammpsController);
 
 }
 
@@ -103,6 +104,13 @@ void Computes::computeAll(LAMMPSController *lammpsController)
     for(QObject *object : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(object);
         compute->computeInLAMMPS(lammpsController);
+    }
+}
+
+void Computes::copyAll(LAMMPSController *lammpsController) {
+    for(QObject *object : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(object);
+        compute->copyData(lammpsController);
     }
 }
 

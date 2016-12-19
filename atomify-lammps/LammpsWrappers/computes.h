@@ -16,6 +16,8 @@ class Computes : public QObject
 public:
     explicit Computes(QObject *parent = 0);
     void synchronize(class LAMMPSController *lammpsController);
+    void synchronizeQML(class LAMMPSController *lammpsController);
+    void copyAll(class LAMMPSController *lammpsController);
     void computeAll(class LAMMPSController *lammpsController);
     void reset();
     int count() const;
