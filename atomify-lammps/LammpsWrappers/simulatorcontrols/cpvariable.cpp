@@ -48,6 +48,11 @@ bool CPVariable::existsInLammps(LAMMPSController *lammpsController)
     return lammpsController->findVariableIndex(identifier())>=0;
 }
 
+void CPVariable::updateData1D()
+{
+    emit m_data->updated();
+}
+
 void CPVariable::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
@@ -62,7 +67,7 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
         if (variable->equalstyle(ivar)) {
             double value = variable->compute_equal(ivar);
             double time = lammpsController->system->simulationTime();
-            m_data->add(time, value, false);
+            m_data->add(time, value, true);
             setValue(value);
             setValueHasDecimals(value!=int(value));
         }

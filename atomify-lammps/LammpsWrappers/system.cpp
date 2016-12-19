@@ -182,6 +182,7 @@ bool System::isValid() const
 void System::synchronizeQML(LAMMPSController *lammpsController)
 {
     m_computes->synchronizeQML(lammpsController);
+    m_variables->synchronizeQML(lammpsController);
 }
 
 void System::updateThreadOnDataObjects(QThread *thread)

@@ -20,6 +20,7 @@ public:
     bool isPerAtom() const;
     bool hovered() const;
     const std::vector<double> &atomData() const;
+    void updateData1D();
 
 public slots:
     void setData(class Data1D* data);
