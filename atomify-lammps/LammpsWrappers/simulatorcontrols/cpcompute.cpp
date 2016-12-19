@@ -19,7 +19,7 @@ void CPCompute::clear()
 {
     for(Data1D *data : m_data1DRaw) {
         data->clear();
-        emit data->updated(data);
+        emit data->updated();
     }
 }
 
@@ -33,7 +33,7 @@ void CPCompute::save(QString filename)
 
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
-        Data1D *data = new Data1D(this);
+        Data1D *data = new Data1D();
         data->setEnabled(enabledByDefault);
         m_data1DRaw.insert(key, data);
         m_data1D.insert(key, QVariant::fromValue<Data1D*>(data));
@@ -156,7 +156,8 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     Data1D *data = ensureExists(QString("Temperature"), true);
     setXLabel("Time");
     setYLabel("Temperature");
-    data->add(lammpsController->system->simulationTime(), value, false);
+    qDebug() << " Copying temp data with value: " << value << " and time: " << lammpsController->system->simulationTime();
+    data->add(lammpsController->system->simulationTime(), value, true);
     setInteractive(true);
     return true;
 }
@@ -255,7 +256,7 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
             data->add(r,rdf,true);
         }
 
-        emit data->updated(data);
+        emit data->updated();
     }
     setInteractive(true);
     return true;

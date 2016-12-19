@@ -46,17 +46,16 @@ void Computes::reset() {
     setCount(0);
 }
 
-void Computes::synchronizeQML(LAMMPSController *lammpsController)
-{
-    if(!lammpsController->lammps()) return;
-
+bool Computes::addOrRemove(LAMMPSController *lammpsController) {
     bool anyChanges = false;
     Modify *modify = lammpsController->lammps()->modify;
+
     for(int computeIndex=0; computeIndex<modify->ncompute; computeIndex++) {
         Compute *compute = modify->compute[computeIndex];
         QString identifier = QString::fromUtf8(compute->id);
 
         if(!m_dataMap.contains(identifier)) {
+            // New compute we don't have in our list
             anyChanges = true;
             addCompute(identifier, lammpsController);
         }
@@ -76,6 +75,15 @@ void Computes::synchronizeQML(LAMMPSController *lammpsController)
         removeCompute(compute->identifier());
     }
 
+    return anyChanges;
+}
+
+void Computes::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) return;
+
+    bool anyChanges = addOrRemove(lammpsController);
+
     if(anyChanges) {
         setModel(QVariant::fromValue(m_data));
         setCount(m_data.size());
@@ -85,7 +93,9 @@ void Computes::synchronizeQML(LAMMPSController *lammpsController)
         CPCompute *compute = qobject_cast<CPCompute*>(obj);
         for(QVariant &variant : compute->data1D()) {
             Data1D *data = variant.value<Data1D *>();
-            emit data->updated(data);
+            qDebug() << "Emitting " << data << " with xMax " << data->xMax();
+            emit data->updated();
+            emit data->faen();
         }
     }
 }

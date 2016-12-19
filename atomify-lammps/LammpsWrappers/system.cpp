@@ -80,8 +80,9 @@ void System::synchronize(LAMMPSController *lammpsController)
         emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
     }
 
-    if(m_simulationTime != update->atime) {
-        m_simulationTime = update->atime;
+    float currentTime = update->atime + update->dt*(update->ntimestep - update->atimestep);
+    if(m_simulationTime != currentTime) {
+        m_simulationTime = currentTime;
         emit simulationTimeChanged(m_simulationTime);
     }
 

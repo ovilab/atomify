@@ -35,6 +35,7 @@ public slots:
 private:
     void addCompute(QString identifier, LAMMPSController *lammpsController);
     void removeCompute(QString identifier);
+    bool addOrRemove(LAMMPSController *lammpsController);
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;

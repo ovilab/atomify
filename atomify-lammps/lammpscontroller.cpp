@@ -62,9 +62,9 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         exit(1);
     }
 
-    qDebug() << "Sync LAMMPS";
+    // qDebug() << "Sync LAMMPS";
     system->synchronize(this);
-    qDebug() << "Done with that";
+    // qDebug() << "Done with that";
     // system->computes()->computeAll(this);
     system->atoms()->updateData(system);
     system->atoms()->createRenderererData();

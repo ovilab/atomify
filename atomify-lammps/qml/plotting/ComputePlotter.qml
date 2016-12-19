@@ -16,8 +16,15 @@ Window {
         if(!compute) return
         updateSeries("line")
         for(var key in compute.data1D) {
-            compute.data1D[key].updated.connect(updateGraphs(key))
-            compute.data1D[key].xySeries = dataSeries[key]
+            var data = compute.data1D[key]
+            console.log("Will connect to update on ", data)
+            data.updated.connect(updateGraphs(key))
+            data.faen.connect(function() {
+                console.log("Yo bitch!")
+            })
+
+            data.updateXYSeries(dataSeries[key])
+            data.xySeries = dataSeries[key]
         }
         title = "Compute '"+compute.identifier+"'"
         compute.willBeDestroyed.connect(function() {
@@ -39,7 +46,9 @@ Window {
     }
 
     function updateGraphs(key) {
+        console.log("Finding function", key)
         return function() {
+            console.log("We will update ", key)
             if(!root.visible) return;
             compute.data1D[key].updateXYSeries(dataSeries[key])
         }
