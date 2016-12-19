@@ -161,7 +161,7 @@ void Data1D::clear(bool silent)
 void Data1D::createHistogram(const std::vector<double> &points)
 {
     m_histogramPoints = points;
-    emit updatedHistogram(this);
+    setIsHistogram(true);
 }
 
 void Data1D::add(float x, float y, bool silent)
@@ -229,4 +229,14 @@ void Data1D::setXySeries(QXYSeries *xySeries)
 
     m_xySeries = xySeries;
     emit xySeriesChanged(xySeries);
+}
+
+bool Data1D::isHistogram() const
+{
+    return m_isHistogram;
+}
+
+void Data1D::setIsHistogram(bool isHistogram)
+{
+    m_isHistogram = isHistogram;
 }

@@ -70,7 +70,11 @@ void CPCompute::updateData1D()
 {
     for(QVariant &variant : data1D()) {
         Data1D *data = variant.value<Data1D *>();
-        emit data->updated();
+        if(data->isHistogram()) {
+            emit data->updatedHistogram(data);
+        } else {
+            emit data->updated();
+        }
     }
 }
 

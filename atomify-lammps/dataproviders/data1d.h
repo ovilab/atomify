@@ -32,6 +32,9 @@ public:
     bool enabled() const;
     QXYSeries* xySeries() const;
 
+    bool isHistogram() const;
+    void setIsHistogram(bool isHistogram);
+
 signals:
     void xMinChanged(float xMin);
     void xMaxChanged(float xMax);
@@ -58,6 +61,7 @@ private:
     float m_yMax = 0;
     bool m_minMaxValuesDirty = false;
     bool m_enabled = false;
+    bool m_isHistogram = false;
     void updateMinMaxWithPoint(const QPointF &point);
 };
 
