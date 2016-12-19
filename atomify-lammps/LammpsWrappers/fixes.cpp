@@ -44,15 +44,11 @@ void Fixes::reset() {
     setCount(0);
 }
 
-void Fixes::synchronize(LAMMPSController *lammpsController)
+bool Fixes::addOrRemove(LAMMPSController *lammpsController)
 {
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) { return; }
-
-    Modify *modify = lammps->modify;
-    int numComputes = modify->nfix;
+    Modify *modify = lammpsController->lammps()->modify;
     bool anyChanges = false;
-    for(int fixIndex=0; fixIndex<numComputes; fixIndex++) {
+    for(int fixIndex=0; fixIndex<modify->nfix; fixIndex++) {
 
         Fix *fix = modify->fix[fixIndex];
         QString identifier = QString::fromUtf8(fix->id);
@@ -76,17 +72,29 @@ void Fixes::synchronize(LAMMPSController *lammpsController)
     for(CPFix *fix : fixesToBeRemoved) {
         remove(fix->identifier());
     }
+    return anyChanges;
+}
 
-//    if(anyChanges) {
-//        setModel(QVariant::fromValue(m_data));
-//        setCount(m_data.count());
-//    }
+void Fixes::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) return;
+    bool anyChanges = addOrRemove(lammpsController);
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+        setCount(m_data.count());
+    }
 
-//    if(!lammpsController->canProcessSimulatorControls()) return;
-//    for(QObject *object : m_data) {
-//        CPFix *fix = qobject_cast<CPFix*>(object);
-//        fix->copyData(lammpsController);
-//    }
+}
+
+void Fixes::synchronize(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) return;
+
+
+    for(QObject *object : m_data) {
+        CPFix *fix = qobject_cast<CPFix*>(object);
+        fix->copyData(lammpsController);
+    }
 }
 
 int Fixes::count() const

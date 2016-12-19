@@ -7,7 +7,7 @@
 #include "../../dataproviders/data1d.h"
 
 CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
-    m_histogram(nullptr)
+    m_histogram(new Data1D(this))
 {
 }
 
@@ -111,10 +111,7 @@ bool CPFix::copyData(FixAveHisto *fix, LAMMPSController *lammpsController) {
     if(!fix) return false;
     int nbins;
     fix->extract("nbins", nbins);
-    if(!m_histogram) {
-        m_histogram = new Data1D(this);
-        m_histogram->setEnabled(true);
-    }
+    m_histogram->setEnabled(true);
 
 //    for(int i=0; i<nbins; i++) {
 //        double binCenter = fix->compute_array(i, 0);

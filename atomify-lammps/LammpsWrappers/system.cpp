@@ -183,6 +183,7 @@ void System::synchronizeQML(LAMMPSController *lammpsController)
 {
     m_computes->synchronizeQML(lammpsController);
     m_variables->synchronizeQML(lammpsController);
+    m_fixes->synchronizeQML(lammpsController);
 }
 
 void System::updateThreadOnDataObjects(QThread *thread)
