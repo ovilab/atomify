@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>desktop/MainDesktop.qml</file>
-        <file>desktop/DesktopController.qml</file>
         <file>desktop/ControlBar.qml</file>
         <file>desktop/DisableMessage.qml</file>
         <file>desktop/editor/CodeEditor.qml</file>
@@ -70,5 +69,7 @@
         <file>plotting/HistogramPlotter.qml</file>
         <file>plotting/ColorLegend.qml</file>
         <file>visualization/Guide.qml</file>
+        <file>desktop/TrackballController.qml</file>
+        <file>desktop/FlymodeController.qml</file>
     </qresource>
 </RCC>

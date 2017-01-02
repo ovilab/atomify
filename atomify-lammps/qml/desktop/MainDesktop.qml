@@ -80,12 +80,78 @@ Item {
                 Layout.alignment: Qt.AlignLeft
                 Layout.fillHeight: true
                 Layout.minimumWidth: 1
+
                 AtomifyVisualizer {
                     id: visualizer
                     rootItem: visualizerItem
                     anchors.fill: parent
                     focus: true
                     focusMode: root.focusMode
+                }
+
+                MouseArea {
+                    id: flymodeOverlay
+                    anchors.fill: visualizer
+                    hoverEnabled: true
+
+                    property real centerPointX: visualizerItem.width / 2
+                    property real centerPointY: visualizerItem.height / 2
+                    property real previousX: 0
+                    property real previousY: 0
+                    property bool ignoreNext: true
+
+                    function reset() {
+                        ignoreNext = true
+                        centerMouse()
+                    }
+
+                    function centerMouse() {
+                        if(!root.mouseMover) {
+                            return
+                        }
+
+                        var midPoint = getGlobalPosition(Qt.point(centerPointX, centerPointY), visualizerItem)
+
+                        previousX = centerPointX
+                        previousY = centerPointY
+                        ignoreNext = true
+                        mouseMover.move(midPoint.x, midPoint.y)
+                    }
+
+                    function getGlobalPosition(p, item) {
+                        var globalX = p.x
+                        var globalY = p.y
+                        while(item.parent !== undefined && item.parent !== null) {
+                            globalX = globalX + item.x
+                            globalY = globalY + item.y
+                            item = item.parent
+                        }
+                        return Qt.point(globalX, globalY)
+                    }
+
+                    onPositionChanged: {
+                        if(ignoreNext) {
+                            previousX = mouse.x
+                            previousY = mouse.y
+                            ignoreNext = false
+                            return
+                        }
+
+                        var deltaX = mouse.x - previousX
+                        var deltaY = mouse.y - previousY
+
+                        visualizer.flymodePanTilt(deltaX, -deltaY)
+
+                        previousX = mouse.x
+                        previousY = mouse.y
+
+                        if(mouse.x > visualizerItem.width * 0.8 ||
+                           mouse.x < visualizerItem.width * 0.2 ||
+                           mouse.y > visualizerItem.height * 0.8 ||
+                           mouse.y < visualizerItem.height * 0.2) {
+                            centerMouse()
+                        }
+                    }
                 }
 
                 MessageOverlay {
@@ -190,6 +256,7 @@ Item {
         Shortcut {
             sequence: "Alt+C"
             onActivated: {
+                flymodeOverlay.reset()
                 visualizer.changeMode()
             }
         }

@@ -9,40 +9,24 @@ import Atomify 1.0
 Entity {
     id: root
     signal pressed
-    property MouseMover mouseMover
-    property var rootItem
     property Camera camera
-    property real flymodeRotationSpeed: 1
     property real linearSpeed: 40.0
     property real lookSpeed: 500.0
     property real zoomSpeed: 20.0
     property real zoomLimit: 2.0
-    property real flymodeSpeed: 1.0
     property real trackballSpeed: 1.0
     property real dragSpeed: 100.0
-    property vector3d viewCenter: Qt.vector3d(0,0,0)
+    property vector3d viewCenter: root.camera.viewCenter
     property alias dragging: rightMouseButtonAction.active
-    property string mode: "trackball"
-//    onModeChanged: {
-//        if(mode==="flymode") {
-//            centerMouse()
-//        }
 
-//        mouseMover.showCursor = mode==="trackball"
-//        if(mode === "trackball") {
-//            viewCenter = root.camera.viewCenter
-//        }
-//    }
-
-    property bool active: !(mode==="flymode") && (
-                          shiftAction.active ||
-                          leftMouseButtonAction.active ||
-                          rightMouseButtonAction.active ||
-                          middleMouseButtonAction.active ||
-                          Math.abs(keyboardXAxis.value) > 0 ||
-                          Math.abs(keyboardYAxis.value) > 0 ||
-                          Math.abs(keyboardZAxis.value) > 0 ||
-                          Math.abs(keyboardTiltAxis.value) > 0)
+    property bool active: (shiftAction.active ||
+                           leftMouseButtonAction.active ||
+                           rightMouseButtonAction.active ||
+                           middleMouseButtonAction.active ||
+                           Math.abs(keyboardXAxis.value) > 0 ||
+                           Math.abs(keyboardYAxis.value) > 0 ||
+                           Math.abs(keyboardZAxis.value) > 0 ||
+                           Math.abs(keyboardTiltAxis.value) > 0)
 
     function getGlobalPosition(p, item) {
         var globalX = p.x
@@ -66,6 +50,10 @@ Entity {
     }
 
     function centerMouse() {
+        if(!root.mouseMover) {
+            return
+        }
+
         var midPoint = getGlobalPosition(Qt.point(rootItem.width*0.5, rootItem.height*0.5), rootItem)
         root.mouseMover.move(midPoint.x, midPoint.y)
     }
@@ -80,7 +68,7 @@ Entity {
         property var lastY: -1
 
         onWheel: {
-            if(mode === "flymode") {
+            if(!root.enabled) {
                 return
             }
             var scale = 1 - wheel.angleDelta.y / 1000
@@ -97,25 +85,7 @@ Entity {
                 return;
             }
 
-            camera.position = newPos //TODO: translate?
-        }
-
-        onPositionChanged: {
-            if(mode==="trackball") return
-
-            var deltaX = mouse.x - centerPointX
-            var deltaY = mouse.y - centerPointY
-
-            if(deltaX == 0 && deltaY == 0) {
-                flymodeRotationSpeed = 1
-            } else {
-                flymodeRotationSpeed = flymodeRotationSpeed*1.1
-                flymodeRotationSpeed = Math.min(2.0, flymodeRotationSpeed)
-            }
-
-            root.camera.pan(deltaX/20 * flymodeRotationSpeed, d.firstPersonUp)
-            root.camera.tilt(-deltaY/20 * flymodeRotationSpeed)
-            centerMouse()
+            camera.position = newPos
         }
     }
 
@@ -274,7 +244,7 @@ Entity {
                 root.camera.tiltAboutViewCenter(tiltChange)
                 if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
                     root.camera.tiltAboutViewCenter(-tiltChange)
-//                    d.firstPersonUp = d.firstPersonUp.times(-1.0) // TODO consider doing this instead?
+                    //                    d.firstPersonUp = d.firstPersonUp.times(-1.0) // TODO consider doing this instead?
                 }
             }
 
@@ -287,40 +257,15 @@ Entity {
                     pressed()
                 }
 
-                var flymodeFinalSpeed = flymodeSpeed * (shiftAction.active ? 5.0 : 1.0)
                 var trackballFinalSpeed = trackballSpeed * (shiftAction.active ? 5.0 : 1.0)
-                if(root.mode === "flymode") {
-                    root.camera.translate(Qt.vector3d(keyboardXAxis.value*flymodeFinalSpeed, 0.0, keyboardYAxis.value*flymodeFinalSpeed))
-                    root.camera.translate(Qt.vector3d(0, flymodeFinalSpeed*keyboardTiltAxis.value, 0))
-                } else {
-                    root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
-                    tiltAboutViewCenterWithLimits(keyboardTiltAxis.value * trackballFinalSpeed)
+                root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
+                tiltAboutViewCenterWithLimits(keyboardTiltAxis.value * trackballFinalSpeed)
 
-//                    var translationLength = keyboardYAxis.value * flymodeFinalSpeed
-//                    var vvl = camera.position.minus(camera.viewCenter).length()
-//                    // camera.viewVector.length()
-//                    console.log("keyboardYAxis.value: ", keyboardYAxis.value)
-//                    console.log("flymodeFinalSpeed: ", flymodeFinalSpeed)
-//                    console.log("vvl: ", vvl)
-//                    console.log("vvl - translationLength: ", vvl - translationLength)
-//                    if(vvl - translationLength < 1.0) {
-//                        translationLength = camera.viewVector.length() - 1.0
-//                    }
-//                    console.log("TL: ", translationLength)
+                root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * trackballFinalSpeed), Camera.DontTranslateViewCenter);
 
-                    root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * flymodeFinalSpeed), Camera.DontTranslateViewCenter);
-
-                    if(rightMouseButtonAction.active) {
-                       camera.translate(Qt.vector3d(-mouseXAxis.value * dragSpeed, -mouseYAxis.value * dragSpeed, 0.0))
-                    }
+                if(rightMouseButtonAction.active) {
+                    camera.translate(Qt.vector3d(-mouseXAxis.value * dragSpeed, -mouseYAxis.value * dragSpeed, 0.0))
                 }
-
-                // TODO Implement roll, see below
-//                if(Math.abs(rollAxis.value) > 0.0) {
-//                    root.camera.roll(rollAxis.value*flymodeFinalSpeed)
-//                    d.firstPersonUp = root.camera.upVector
-//                }
-
                 if(!leftMouseButtonAction.active && !middleMouseButtonAction.active) {
                     timeSinceLastAction += dt
                     return
@@ -345,14 +290,6 @@ Entity {
                     fov = Math.max(10.0, Math.min(160.0, fov))
                     root.camera.fieldOfView = fov
                 }
-
-//                var tanAngle = Math.tan(root.camera.fieldOfView / 2.0)
-//                var distance = (root.camera.viewCenter.minus(root.camera.position)).length()
-//                console.log("distance", distance, "sinAngle", tanAngle)
-//                root.camera.right = distance * tanAngle
-//                root.camera.left = -root.camera.right
-//                root.camera.top = root.camera.right / root.camera.aspectRatio
-//                root.camera.bottom = -root.camera.top
             }
         }
     ] // components

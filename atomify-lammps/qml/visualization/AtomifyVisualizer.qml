@@ -22,11 +22,11 @@ Scene3D {
     property alias propertyModifier: propertyModifier
     property bool guidesVisible
     property bool systemBoxVisible
-    property alias rootItem: controller.rootItem
+    property var rootItem
     property MouseMover mouseMover
     property bool focusMode
     property alias visualizer: visualizer
-    property alias controller: controller
+    property alias controller: trackballController
     property alias simulator: simulator
     property alias light1: light1
     property alias light2: light2
@@ -98,6 +98,10 @@ Scene3D {
         visualizer.camera.position = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
         visualizer.camera.upVector = Qt.vector3d(0, 0, 1)
         // camera.translate(Qt.vector3d(0, 0, 10), Camera.DontTranslateViewCenter)
+    }
+
+    function flymodePanTilt(pan, tilt) {
+        flymodeController.panTilt(pan, tilt)
     }
 
     Entity {
@@ -204,22 +208,18 @@ Scene3D {
             attenuation: 2.0
         }
 
-        DesktopController {
-            id: controller
+        TrackballController {
+            id: trackballController
             camera: trackballCamera
             onPressed: root.focus = true
-            mode: "trackball"
-            rootItem: root
-            mouseMover: root.mouseMover
             enabled: root.mode == "trackball"
         }
 
-        DesktopController {
-            id: controller2
+        FlymodeController {
+            id: flymodeController
             camera: flymodeCamera
             onPressed: root.focus = true
-            mode: "flymode"
-            rootItem: root
+            rootItem: root.rootItem
             mouseMover: root.mouseMover
             enabled: root.mode == "flymode"
         }
@@ -398,7 +398,7 @@ Scene3D {
         }
 
         Entity {
-            enabled: controller.dragging
+            enabled: trackballController.dragging
             components: [
                 sphereMesh,
                 whiteMaterial,
