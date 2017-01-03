@@ -18,6 +18,7 @@ public:
     void synchronize(class LAMMPSController *lammpsController);
     int count() const;
 
+    void synchronizeQML(LAMMPSController *lammpsController);
 signals:
     void modelChanged(QVariant model);
     void countChanged(int count);
@@ -34,6 +35,7 @@ private:
     void add(QString identifier, class LAMMPSController *lammpsController);
     void remove(QString identifier);
     int m_count = 0;
+    bool addOrRemove(LAMMPSController *lammpsController);
 };
 
 #endif // FIXES_H

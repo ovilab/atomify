@@ -46,9 +46,6 @@ SOURCES += \
     mysimulator.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
-    parser/scriptparser.cpp \
-    parser/scripthandler.cpp \
-    parser/scriptcommand.cpp \
     datasource.cpp \
     LammpsWrappers/simulatorcontrols/nvt.cpp \
     LammpsWrappers/simulatorcontrols/simulatorcontrol.cpp \
@@ -69,30 +66,25 @@ SOURCES += \
     LammpsWrappers/bonds.cpp \
     LammpsWrappers/lammpserror.cpp \
     LammpsWrappers/computes.cpp \
-    dataproviders/dataprovider.cpp \
     LammpsWrappers/variables.cpp \
     LammpsWrappers/modifiers/groupmodifier.cpp \
     LammpsWrappers/modifiers/regionmodifier.cpp \
+    LammpsWrappers/units.cpp \
+    LammpsWrappers/fixes.cpp \
+    LammpsWrappers/modifiers/propertymodifier.cpp \
+    dataproviders/dataprovider.cpp \
     codeeditorbackend.cpp \
     linenumbers.cpp \
-    LammpsWrappers/units.cpp \
     dataproviders/data2d.cpp \
     windowgl2.cpp \
-    LammpsWrappers/fixes.cpp \
     mousemover.cpp \
     states.cpp \
-    dataproviders/data1d.cpp \
-    LammpsWrappers/modifiers/propertymodifier.cpp \
-    parser/script.cpp \
-    parser/runcommand.cpp
+    dataproviders/data1d.cpp
 
 HEADERS += \
     mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
-    parser/scriptparser.h \
-    parser/scripthandler.h \
-    parser/scriptcommand.h \
     datasource.h \
     LammpsWrappers/simulatorcontrols/nvt.h \
     LammpsWrappers/simulatorcontrols/simulatorcontrol.h \
@@ -114,31 +106,25 @@ HEADERS += \
     LammpsWrappers/bonds.h \
     LammpsWrappers/lammpserror.h \
     LammpsWrappers/computes.h \
-    dataproviders/dataprovider.h \
     LammpsWrappers/variables.h \
     LammpsWrappers/modifiers/groupmodifier.h \
     LammpsWrappers/modifiers/regionmodifier.h \
+    LammpsWrappers/units.h \
+    LammpsWrappers/fixes.h \
+    LammpsWrappers/modifiers/propertymodifier.h \
+    dataproviders/dataprovider.h \
     codeeditorbackend.h \
     linenumbers.h \
-    LammpsWrappers/units.h \
     dataproviders/data2d.h \
     windowgl2.h \
-    LammpsWrappers/fixes.h \
     mousemover.h \
     states.h \
-    dataproviders/data1d.h \
-    LammpsWrappers/modifiers/propertymodifier.h \
-    parser/script.h \
-    parser/runcommand.h
+    dataproviders/data1d.h
 
 # Temporary use of quickcontrols2 without install
 
-
 DISTFILES += \
     iOS.plist \
-    simulations/diffusion/indent/indent.png \
-    simulations/diffusion/indent/indent.in \
-    simulations/diffusion/indent/indent.qml \
     qml/qtquickcontrols2.conf \
     ../.travis.yml \
     ../snappy-qt5.conf \

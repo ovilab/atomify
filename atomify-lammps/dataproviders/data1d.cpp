@@ -139,35 +139,9 @@ void Data1D::updateHistogram(QLineSeries *series)
     emit yMaxChanged(m_yMax);
 }
 
-QVariantMap Data1D::subsets() const
-{
-    return m_subsets;
-}
-
-int Data1D::stride() const
-{
-    return m_stride;
-}
-
-Data1D *Data1D::parentData() const
-{
-    return m_parentData;
-}
-
 QXYSeries *Data1D::xySeries() const
 {
     return m_xySeries;
-}
-
-void Data1D::addSubset(QString key, int stride)
-{
-    Data1D *data = new Data1D(this);
-    data->setStride(stride);
-    m_subsets.insert(key, QVariant::fromValue(data));
-    data->setParentData(this);
-    for(const QPointF &p : m_points) {
-        data->add(p);
-    }
 }
 
 bool Data1D::enabled() const
@@ -179,12 +153,7 @@ void Data1D::clear(bool silent)
 {
     m_minMaxValuesDirty = true;
     m_points.clear();
-    m_strideCount = 0;
-    for(QVariant &variant : m_subsets) {
-        Data1D *data = variant.value<Data1D*>();
-        data->clear();
-    }
-    if(m_xySeries) {
+    if(!silent && m_xySeries) {
         updateXYSeries(m_xySeries);
     }
 }
@@ -192,7 +161,7 @@ void Data1D::clear(bool silent)
 void Data1D::createHistogram(const std::vector<double> &points)
 {
     m_histogramPoints = points;
-    emit updatedHistogram(this);
+    setIsHistogram(true);
 }
 
 void Data1D::add(float x, float y, bool silent)
@@ -202,27 +171,11 @@ void Data1D::add(float x, float y, bool silent)
 
 void Data1D::add(const QPointF &point, bool silent)
 {
-    if(m_parentData) {
-        m_strideCount++;
-
-        if(m_points.size()==0 || m_strideCount >= m_stride) {
-            // We should add this point and reset stride count if first point
-            m_strideCount = 0;
-        } else {
-            return;
-        }
-    }
-
     m_points.append(point);
     m_minMaxValuesDirty = true;
     if(!silent && m_xySeries) {
         updateMinMaxWithPoint(point);
         m_xySeries->append(point.x(), point.y());
-    }
-
-    for(QVariant &variant : m_subsets) {
-        Data1D *data = variant.value<Data1D*>();
-        data->add(point, silent);
     }
 }
 
@@ -269,33 +222,6 @@ void Data1D::setEnabled(bool enabled)
     emit enabledChanged(enabled);
 }
 
-void Data1D::setSubsets(QVariantMap subsets)
-{
-    if (m_subsets == subsets)
-        return;
-
-    m_subsets = subsets;
-    emit subsetsChanged(subsets);
-}
-
-void Data1D::setStride(int stride)
-{
-    if (m_stride == stride)
-        return;
-
-    m_stride = stride;
-    emit strideChanged(stride);
-}
-
-void Data1D::setParentData(Data1D *parentData)
-{
-    if (m_parentData == parentData)
-        return;
-
-    m_parentData = parentData;
-    emit parentDataChanged(parentData);
-}
-
 void Data1D::setXySeries(QXYSeries *xySeries)
 {
     if (m_xySeries == xySeries)
@@ -303,4 +229,14 @@ void Data1D::setXySeries(QXYSeries *xySeries)
 
     m_xySeries = xySeries;
     emit xySeriesChanged(xySeries);
+}
+
+bool Data1D::isHistogram() const
+{
+    return m_isHistogram;
+}
+
+void Data1D::setIsHistogram(bool isHistogram)
+{
+    m_isHistogram = isHistogram;
 }

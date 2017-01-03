@@ -68,15 +68,13 @@ Atoms::Atoms(AtomifySimulator *simulator)
 void Atoms::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        m_atomData.reset();
-        return;
-    }
+    if(!lammps) { return; }
+
     Atom *atom = lammps->atom;
     Domain *domain = lammps->domain;
     int *types = lammps->atom->type;
-
     int numberOfAtoms = atom->natoms;
+
     if(m_atomData.positions.size() != numberOfAtoms) {
         m_atomData.positions.resize(numberOfAtoms);
     }
@@ -108,22 +106,21 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     for(int i=0; i<numberOfAtoms; i++) {
         m_atomData.types[i] = types[i];
         m_atomData.originalIndex[i] = i;
+
         double position[3];
         position[0] = atom->x[i][0];
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
         domain->remap(position); // remap into system boundaries with PBC
+
         m_atomData.positions[i][0] = position[0];
         m_atomData.positions[i][1] = position[1];
         m_atomData.positions[i][2] = position[2];
-//        m_atomData.positions[i][0] = position[0] - (lammps->domain->boxlo[0] + lammps->domain->prd_half[0]);
-//        m_atomData.positions[i][1] = position[1] - (lammps->domain->boxlo[1] + lammps->domain->prd_half[1]);
-//        m_atomData.positions[i][2] = position[2] - (lammps->domain->boxlo[2] + lammps->domain->prd_half[2]);
         m_atomData.bitmask[i] = atom->mask[i];
         m_atomData.visible[i] = true;
     }
 
-    if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps); // Disabled because we don't use it. We now use lammps neighbor list instead
+    if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
 }
 
 void Atoms::updateData(System *system)
@@ -296,6 +293,7 @@ void Atoms::reset()
     m_sphereData->setData(emptySphereVBOData);
     m_bondData->setData(emptyBondVBOData);
     m_atomData.reset();
+    m_atomDataProcessed.reset();
     m_bonds->reset();
     m_atomStyles.clear();
     for(int i=0; i<50; i++) {

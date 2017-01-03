@@ -61,6 +61,7 @@ public:
     QList<CPGroup*> groups();
     void reset();
 
+    void synchronizeQML(LAMMPSController *lammpsController);
 public slots:
     void setModel(QVariant model);
     void setCount(int count);
@@ -79,6 +80,7 @@ private:
     bool m_active = false;
     void remove(QString identifier);
     void add(QString identifier);
+    bool addOrRemove(LAMMPSController *lammpsController);
 };
 
 #endif // GROUPS_H

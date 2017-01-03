@@ -15,7 +15,7 @@ Regions::Regions(AtomifySimulator *simulator)
 
 void Regions::add(QString identifier) {
     if(m_dataMap.contains(identifier)) return;
-    CPRegion *region = new CPRegion(this);
+    CPRegion *region = new CPRegion();
     region->setIdentifier(identifier);
     m_data.push_back(region);
     m_dataMap.insert(identifier, region);
@@ -30,13 +30,9 @@ void Regions::remove(QString identifier) {
     delete region;
 }
 
-void Regions::synchronize(LAMMPSController *lammpsController)
+bool Regions::addOrRemove(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        reset();
-        return;
-    }
     Domain *lammpsDomain = lammps->domain;
     Region **regions = lammpsDomain->regions;
 
@@ -44,6 +40,7 @@ void Regions::synchronize(LAMMPSController *lammpsController)
     setCount(numRegions);
 
     Group *lammpsGroup = lammps->group;
+
     /* TODO: NOT SURE IF THIS IS IMPORTANT */
     bool firstGroupIsAll = false;
     if(lammpsGroup->ngroup>0) {
@@ -55,7 +52,7 @@ void Regions::synchronize(LAMMPSController *lammpsController)
 
     if(!firstGroupIsAll) {
         qDebug() << "Error, group all doesn't exist?";
-        return;
+        return false;
     }
 
     /* END: NOT SURE IF THIS IS IMPORTANT */
@@ -82,12 +79,25 @@ void Regions::synchronize(LAMMPSController *lammpsController)
         remove(identifier);
     }
 
+    return anyChanges;
+}
+
+void Regions::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+    bool anyChanges = addOrRemove(lammpsController);
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+    }
+}
+
+void Regions::synchronize(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+
     for(QObject *obj : m_data) {
         CPRegion *region = static_cast<CPRegion*>(obj);
         region->update(lammpsController->lammps());
-    }
-    if(anyChanges) {
-        setModel(QVariant::fromValue(m_data));
     }
 }
 
@@ -187,7 +197,7 @@ void CPRegion::update(LAMMPS *lammps)
     if(index < 0) return; // Should really not happen, but crash is bad :p
 
     Region *region = lammps->domain->regions[index];
-    lammps->update->whichflag = 1; // HACK. This tells lammps we're doing dynamics so we can compute values in there.
+    // lammps->update->whichflag = 1; // HACK. This tells lammps we're doing dynamics so we can compute values in there.
     try {
         setCount(lammps->group->count(0,index));
         if(hovered() || !visible()) {
@@ -202,7 +212,7 @@ void CPRegion::update(LAMMPS *lammps)
                 bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
                 m_containsAtom[atomIndex] = isInsideRegion;
             }
-            lammps->update->whichflag = 0;
+            // lammps->update->whichflag = 0;
         }
     } catch( LAMMPS_NS::LAMMPSException(&e) ) {
         // TODO: use this to report to user that something was wrong
