@@ -79,7 +79,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     if(worker->m_cancelPending) {
         throw Cancelled();
     }
- }
+}
 
 LAMMPS *LAMMPSController::lammps() const
 {
