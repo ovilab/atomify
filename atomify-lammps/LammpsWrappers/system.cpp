@@ -23,6 +23,8 @@ System::System(AtomifySimulator *simulator)
     setUnits(new Units(simulator));
     setFixes(new Fixes(simulator));
     setVariables(new Variables(simulator));
+
+    m_transformationMatrix.setToIdentity();
 }
 
 void System::updateCorners(Domain *domain)
@@ -65,11 +67,13 @@ void System::updateCorners(Domain *domain)
 
     double *h = domain->h;
     float transformationMatrixValues[] = {
-        h[0], h[5], h[4],
-        0,    h[1], h[3],
-        0,    0,    h[2]
+        h[0], h[5], h[4], 0,
+        0,    h[1], h[3], 0,
+        0,    0,    h[2], 0,
+        0,    0,    0,    0
     };
-    m_transformationMatrix = QMatrix3x3(transformationMatrixValues);
+
+    m_transformationMatrix = QMatrix4x4(transformationMatrixValues);
     emit transformationMatrixChanged(m_transformationMatrix);
 
 //    domain->box_corners();

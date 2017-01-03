@@ -237,20 +237,20 @@ Entity {
             }
         }
 
-        //        ShaderBuilderMaterial {
-        //            id: surfaceMaterial
-        //            fragmentColor: StandardMaterial {
-        //                color: Qt.rgba(1, 1, 1, sideAlpha)
-        //                lights: root.lights
-        //            }
-        //            deferredColor: Qt.rgba(1, 1, 1, sideAlpha)
-        //        }
+//        ShaderBuilderMaterial {
+//            id: surfaceMaterial
+//            fragmentColor: StandardMaterial {
+//                color: Qt.rgba(1, 1, 1, sideAlpha)
+//                lights: root.lights
+//            }
+//            deferredColor: Qt.rgba(1, 1, 1, sideAlpha)
+//        }
 
         Material {
             id: surfaceMaterial
             parameters: [
                 Parameter { name: "origin"; value: simulator.system.origin },
-                Parameter { name: "transformationMatrix"; value: simulator.system.transformationMatrix }
+                Parameter { name: "transformationMatrix"; value: simulator.system.transformationMatrix; }
             ]
             effect: Effect {
                 techniques: Technique {
@@ -272,7 +272,7 @@ Entity {
 in vec4 vertexPosition;
 in vec3 vertexNormal;
 uniform vec3 origin;
-uniform mat3 transformationMatrix;
+uniform mat4 transformationMatrix;
 out vec3 normal;
 out vec3 position;
 uniform mat4 mvp;
@@ -285,7 +285,7 @@ void main()
 {
     position = vertexPosition.xyz;
     position += vec3(0.5);
-    mat3 m = transformationMatrix;
+    mat3 m = mat3(transformationMatrix);
     m[0][0] += 1.0;
     m[1][1] += 1.0;
     m[2][2] += 1.0;
