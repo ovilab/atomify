@@ -257,7 +257,8 @@ bool LAMMPSController::run()
 
     try {
         if(doContinue) {
-            QString command = "run 100000000";
+            QString command = "run 1000000000";
+
             qDebug() << "Will do continue in LAMMPS";
             lammps_command(m_lammps, command.toLatin1().data());
         } else {
