@@ -244,7 +244,6 @@ Entity {
                 root.camera.tiltAboutViewCenter(tiltChange)
                 if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
                     root.camera.tiltAboutViewCenter(-tiltChange)
-                    //                    d.firstPersonUp = d.firstPersonUp.times(-1.0) // TODO consider doing this instead?
                 }
             }
 

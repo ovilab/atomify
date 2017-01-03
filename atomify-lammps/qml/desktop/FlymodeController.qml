@@ -209,6 +209,13 @@ Entity {
         FrameAction {
             property real timeSinceLastAction: 0.0
 
+            function tiltWithLimits(tiltChange) {
+                root.camera.tilt(tiltChange)
+                if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
+                    root.camera.tilt(-tiltChange)
+                }
+            }
+
             onTriggered: {
                 if(!root.enabled) {
                     return
@@ -222,16 +229,8 @@ Entity {
                 root.camera.translate(Qt.vector3d(keyboardXAxis.value*flymodeFinalSpeed, 0.0, keyboardYAxis.value*flymodeFinalSpeed))
                 root.camera.translate(Qt.vector3d(0, flymodeFinalSpeed*keyboardTiltAxis.value, 0))
 
-                // TODO use these when support is added for axis without mouse button click
-//                if(!mouseHandler.centering) {
-//                    root.camera.pan(mouseXAxis.value * dt * lookSpeed, d.firstPersonUp)
-//                    root.camera.tilt(mouseYAxis.value * dt * lookSpeed)
-//                }
-
-//                root.camera.pan(mouseHandler.nextPan * dt * lookSpeed, d.firstPersonUp)
-//                root.camera.tilt(mouseHandler.nextTilt * dt * lookSpeed)
-                root.camera.pan(root.pan * dt * lookSpeed, d.firstPersonUp)
-                root.camera.tilt(root.tilt * dt * lookSpeed)
+                root.camera.pan(root.pan * dt * lookSpeed, d.upVector)
+                tiltWithLimits(root.tilt * dt * lookSpeed);
 
                 root.pan = 0
                 root.tilt = 0
