@@ -10,6 +10,7 @@ Rectangle {
 
     property bool welcome: true
     property bool finished: false
+    property bool crashed: false
     property string finishedText:
         "
 <style>
@@ -19,6 +20,16 @@ a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 <h2>Script finished</h2>
 You can continue simulating by pressing the play button (press space), or click <a href=\"continue\">here</a>.
 "
+    property string errorMessage: ""
+    property string crashedText:
+        "
+<style>
+h2 { text-align: center; }
+a { font-weight: bold; color: #56b1b4; text-decoration: none; }
+</style>
+<h2>Simulation crashed</h2>
+Error message: "+errorMessage
+
     property string welcomeText:
         "
 <style>
@@ -53,6 +64,8 @@ Atomify is a live LAMMPS editor.
                 return welcomeText
             } else if(finished) {
                 return finishedText
+            } else if(crashed) {
+                return crashedText
             }
             return ""
         }

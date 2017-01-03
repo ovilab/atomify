@@ -176,12 +176,13 @@ Item {
                         rightMargin: parent.width*0.1
                     }
 
-                    visible: simulator.states.idle.active || simulator.states.finished.active
+                    visible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active
                     height: parent.height*0.2
                     y: parent.height*0.2
 
                     welcome: simulator.states.idle.active
                     finished: simulator.states.finished.active
+                    crashed: simulator.states.crashed.active
                     onContinueClicked: simulator.continued()
                     onNewTabClicked: editor.editorWindow.newTab()
                     onExamplesClicked: rightbar.showExamples()
