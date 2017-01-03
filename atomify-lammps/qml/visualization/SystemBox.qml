@@ -273,8 +273,8 @@ in vec4 vertexPosition;
 in vec3 vertexNormal;
 uniform vec3 origin;
 uniform mat3 transformationMatrix;
-out vec3 normal0;
-out vec3 position0;
+out vec3 normal;
+out vec3 position;
 uniform mat4 mvp;
 uniform mat4 modelMatrix;
 uniform mat4 modelView;
@@ -283,15 +283,16 @@ uniform mat3 modelViewNormal;
 uniform vec4 meshColor;
 void main()
 {
-    vec3 position = vertexPosition.xyz;
+    position = vertexPosition.xyz;
     position += vec3(0.5);
     mat3 m = transformationMatrix;
     m[0][0] += 1.0;
     m[1][1] += 1.0;
     m[2][2] += 1.0;
     position = m * position + origin - vec3(0.5);
-    normal0 = modelNormalMatrix * vertexNormal;
+    normal = modelNormalMatrix * vertexNormal;
     gl_Position = mvp * vec4(position, 1.0);
+    position = (modelMatrix*vec4(position, 1.0)).xyz;
 }"
                             fragmentShaderCode: fragmentShaderBuilder.finalShader
                             FragmentShaderBuilder {
