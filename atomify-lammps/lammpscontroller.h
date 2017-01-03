@@ -36,6 +36,7 @@ public:
     bool finished = false;
     bool didCancel = false;
     bool crashed = false;
+    bool doContinue = false;
     QString errorMessage;
     LAMMPS_NS::LAMMPS *lammps() const;
     bool run();

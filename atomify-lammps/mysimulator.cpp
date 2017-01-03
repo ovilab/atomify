@@ -88,6 +88,8 @@ QString AtomifySimulator::error() const
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
+    QElapsedTimer t;
+    t.start();
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
     m_lammpsController.qmlThread = QThread::currentThread();
 
@@ -103,6 +105,13 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
             m_workerRenderingMutex.unlock();
             m_reprocessRenderingData = true;
         }
+        return;
+    }
+
+    if(states.continued()->active()) {
+        m_lammpsController.doContinue = true;
+        m_lammpsController.finished = false;
+        emit atomifySimulator->parsing();
         return;
     }
 
@@ -152,6 +161,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronizeQML(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
     m_needsSynchronization = false;
+    // qDebug() << "Synchronized after " << t.elapsed() << " ms";
 }
 
 void MyWorker::work()

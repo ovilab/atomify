@@ -107,6 +107,7 @@ void LAMMPSController::stop()
         lammps_close((void*)m_lammps);
         m_lammps = nullptr;
     }
+    doContinue = false;
     finished = false;
     didCancel = false;
     crashed = false;
@@ -248,13 +249,21 @@ void LAMMPSController::start() {
 bool LAMMPSController::run()
 {
     if(!m_lammps) return false;
+
     if(finished || didCancel || crashed) return false;
 
     QByteArray ba = scriptFilePath.toLatin1();
     scriptFilePath = "";
 
     try {
-        lammps_file(m_lammps, ba.data());
+        if(doContinue) {
+            QString command = "run 100000000";
+            qDebug() << "Will do continue in LAMMPS";
+            lammps_command(m_lammps, command.toLatin1().data());
+        } else {
+            lammps_file(m_lammps, ba.data());
+        }
+
         bool hasError = m_lammps->error->get_last_error() != NULL;
         if(hasError) {
             // Handle error
