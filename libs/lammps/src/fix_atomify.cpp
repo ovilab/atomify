@@ -14,10 +14,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include "fix_atomify.h"
 #include "memory.h"
+#include "compute.h"
+#include "modify.h"
 #include "error.h"
-
+#include "update.h"
+#include "compute_pe_atom.h"
+#include <iostream>
+using namespace std;
 using namespace LAMMPS_NS;
 using namespace FixConst;
 
@@ -55,9 +61,35 @@ void FixAtomify::init()
 
 /* ---------------------------------------------------------------------- */
 
+void FixAtomify::update_compute(const char computeId[])
+{
+    int icompute = modify->find_compute(computeId);
+    if (icompute < 0) return;
+
+    Compute *compute = modify->compute[icompute];
+    compute->addstep(update->ntimestep+1);
+}
+
+void FixAtomify::update_computes()
+{
+  for(int i=0; i<modify->ncompute; i++) {
+    ComputePEAtom *peAtom = dynamic_cast<ComputePEAtom *>(modify->compute[i]);
+    if(peAtom) {
+        update_compute(peAtom->id);
+    }
+  }
+
+  update_compute("thermo_press");
+  update_compute("thermo_pe");
+}
+
 void FixAtomify::end_of_step()
 {
-  (this->callback)(ptr_caller,END_OF_STEP);
+    (this->callback)(ptr_caller,END_OF_STEP);
+
+    update_computes();
+
+    // cout << "Found compute: " << compute << endl;
 }
 
 /* ---------------------------------------------------------------------- */

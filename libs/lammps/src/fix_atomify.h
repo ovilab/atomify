@@ -34,6 +34,8 @@ class FixAtomify : public Fix {
   void post_parse_command();
   void post_execute_command();
   void min_post_force(int);
+  void update_compute(const char computeId[]);
+  void update_computes();
   
   typedef void (*FnPtr)(void *, int);
   void set_callback(FnPtr, void *);
