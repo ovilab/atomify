@@ -16,7 +16,7 @@ lammps_build_type = "atomify"
 env = os.environ.copy()
 
 # Set up SimVis
-run_command("git submodule update --init --recursive")
+#run_command("git submodule update --init --recursive")
 
 # Set up LAMMPS
 
@@ -42,29 +42,24 @@ patch_path = join(root_path, "lammps-patch")
 if not os.path.exists("lammps-build"):
     os.makedirs("lammps-build")
 
-os.chdir("lammps-build")
-if not os.path.exists("lammps"):
-    run_command("git clone https://github.com/ovilab/lammps.git")
-if not os.path.exists("lammps"):
-    print("Error, could not clone LAMMPS from github. Please make sure you have git installed.")
-    exit(1)
+lammps_source_dir = join("libs", "lammps")
+#if not os.path.exists("lammps"):
+#    run_command("git clone https://github.com/ovilab/lammps.git")
+#if not os.path.exists("lammps"):
+#    print("Error, could not clone LAMMPS from github. Please make sure you have git installed.")
+#    exit(1)
 os.chdir(root_path)
 
 if os.path.exists("lammps-patch/water"):
     for filename in glob.glob(os.path.join("lammps-patch/water", '*.*')):
         shutil.copy(filename, "lammps-build/lammps/src/")
 
-lammps_source_dir = join("lammps-build", "lammps")
 if not os.path.isdir(lammps_source_dir):
     print "Error, the path '"+lammps_source_dir+"' is not a directory."
     exit()
 
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
-os.chdir(lammps_source_dir)
-run_command("git checkout atomify_new")
-run_command("git pull")
-os.chdir(root_path)
 
 if lammps_build_type == "android":
     lammps_android_pri = open("lammps-android.pri", "w")
