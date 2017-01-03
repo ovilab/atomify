@@ -70,9 +70,9 @@ Item {
                 width: 500
                 simulator: root.simulator
                 visualizer: root.visualizer
-                Component.onCompleted: {
-                    simulator.crashed.connect(editor.reportError)
-                }
+//                Component.onCompleted: {
+//                    simulator.crashed.connect(editor.reportError)
+//                }
             }
 
             Item {
