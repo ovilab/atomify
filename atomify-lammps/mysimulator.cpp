@@ -51,6 +51,7 @@ AtomifySimulator::AtomifySimulator() :
     m_simulationSpeed(1)
 {
     m_states->setupStates(*this);
+    m_parser.setSystem(m_system);
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -154,6 +155,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
         m_lammpsController.scriptFilePath = atomifySimulator->scriptFilePath();
+        atomifySimulator->parser().parseFile(atomifySimulator->scriptFilePath());
         m_lammpsController.start();
         return;
     }
@@ -179,6 +181,11 @@ void MyWorker::work()
 MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
+}
+
+CommandParser &AtomifySimulator::parser()
+{
+    return m_parser;
 }
 
 int AtomifySimulator::simulationSpeed() const

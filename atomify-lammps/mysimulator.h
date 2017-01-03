@@ -3,6 +3,7 @@
 #include <SimVis/Simulator>
 #include <QElapsedTimer>
 #include <QStateMachine>
+#include "commandparser.h"
 #include "lammpscontroller.h"
 
 using namespace LAMMPS_NS;
@@ -46,18 +47,15 @@ public:
     Q_INVOKABLE void togglePaused();
     class System* system() const;
     class States* states() const;
-
     QString scriptFilePath() const;
-
     QString error() const;
+    CommandParser &parser();
 
 public slots:
     void setSimulationSpeed(int arg);
     void setSystem(class System* system);
     void setStates(class States* states);
-
     void setScriptFilePath(QString scriptFilePath);
-
     void setError(QString error);
 
 signals:
@@ -75,9 +73,7 @@ signals:
     void parsing();
     void paused();
     void unPaused();
-
     void scriptFilePathChanged(QString scriptFilePath);
-
     void errorChanged(QString error);
 
 protected:
@@ -90,6 +86,7 @@ private:
     int m_simulationSpeed;
     QString m_scriptFilePath;
     QString m_error;
+    CommandParser m_parser;
 };
 
 #endif // MYSIMULATOR_H
