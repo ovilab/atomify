@@ -15,6 +15,13 @@ Qt3DRender::QBuffer *BondData::buffer()
     return m_buffer.data();
 }
 
+void BondData::setData(QByteArray ba, int count)
+{
+    m_buffer->setData(ba);
+    m_count = count;
+    emit countChanged(m_count);
+}
+
 void BondData::setData(QVector<BondVBOData> data)
 {
     QByteArray ba;

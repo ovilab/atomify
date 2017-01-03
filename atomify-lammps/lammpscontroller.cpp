@@ -63,14 +63,28 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     }
 
     system->synchronize(this);
-    system->atoms()->updateData(system);
+    system->atoms()->processModifiers(system);
     system->atoms()->createRenderererData();
+    worker->m_reprocessRenderingData = false;
+
     system->updateThreadOnDataObjects(qmlThread);
 
     worker->setNeedsSynchronization(true);
     while(worker->needsSynchronization()) {
         if(QThread::currentThread()->isInterruptionRequested()) {
+            // Happens if main thread wants to exit application
             throw Cancelled();
+        }
+
+        if(worker->m_reprocessRenderingData) {
+            system->atoms()->processModifiers(system);
+            if(worker->m_workerRenderingMutex.tryLock()) {
+                // qDebug() << "Will create renderer data";
+                system->atoms()->createRenderererData();
+                worker->m_reprocessRenderingData = false;
+                // qDebug() << "Did  create renderer data";
+                worker->m_workerRenderingMutex.unlock();
+            }
         }
 
         QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
@@ -93,7 +107,7 @@ void LAMMPSController::stop()
         lammps_close((void*)m_lammps);
         m_lammps = nullptr;
     }
-    paused = false;
+    doContinue = false;
     finished = false;
     didCancel = false;
     crashed = false;
@@ -235,13 +249,22 @@ void LAMMPSController::start() {
 bool LAMMPSController::run()
 {
     if(!m_lammps) return false;
+
     if(finished || didCancel || crashed) return false;
 
     QByteArray ba = scriptFilePath.toLatin1();
     scriptFilePath = "";
 
     try {
-        lammps_file(m_lammps, ba.data());
+        if(doContinue) {
+            QString command = "run 1000000000";
+
+            qDebug() << "Will do continue in LAMMPS";
+            lammps_command(m_lammps, command.toLatin1().data());
+        } else {
+            lammps_file(m_lammps, ba.data());
+        }
+
         bool hasError = m_lammps->error->get_last_error() != NULL;
         if(hasError) {
             // Handle error

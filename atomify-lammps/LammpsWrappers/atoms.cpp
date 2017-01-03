@@ -123,7 +123,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
 }
 
-void Atoms::updateData(System *system)
+void Atoms::processModifiers(System *system)
 {
     m_atomDataProcessed = m_atomData;
     if(!m_atomDataProcessed.isValid()) {
@@ -134,12 +134,12 @@ void Atoms::updateData(System *system)
     for(QVariant &modifier_ : m_modifiers) {
         Modifier *modifier = modifier_.value<Modifier*>();
         modifier->setSystem(system);
-         modifier->apply(m_atomDataProcessed);
-         if(!m_atomDataProcessed.isValid()) {
-             // TODO: insert modifier name to debug message
-             qDebug() << "Atom data is not valid after modifier.";
-             exit(1);
-         }
+        modifier->apply(m_atomDataProcessed);
+        if(!m_atomDataProcessed.isValid()) {
+            // TODO: insert modifier name to debug message
+            qDebug() << "Atom data is not valid after modifier.";
+            exit(1);
+        }
     }
 }
 
@@ -149,7 +149,8 @@ void Atoms::createRenderererData() {
 }
 
 void Atoms::synchronizeRenderer() {
-    m_sphereData->setData(m_atomDataProcessed.positions, m_atomDataProcessed.colors, m_atomDataProcessed.radii);
+    int numSpheres = m_sphereDataRaw.size() / sizeof(SphereVBOData);
+    m_sphereData->setData(m_sphereDataRaw, numSpheres);
     m_bondData->setData(bondsDataRaw);
 }
 
@@ -167,6 +168,15 @@ void Atoms::generateSphereData(AtomData &atomData) {
     atomData.positions.resize(visibleAtomCount);
     atomData.colors.resize(visibleAtomCount);
     atomData.radii.resize(visibleAtomCount);
+
+    m_sphereDataRaw.resize(visibleAtomCount * sizeof(SphereVBOData));
+    SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(m_sphereDataRaw.data());
+    for(int i=0; i<visibleAtomCount; i++) {
+        SphereVBOData &vbo = vboData[i];
+        vbo.position = atomData.positions[i];
+        vbo.color = atomData.colors[i];
+        vbo.radius = atomData.radii[i];
+    }
 }
 
 void Atoms::generateBondData(AtomData &atomData) {
@@ -224,6 +234,13 @@ void Atoms::generateBondData(AtomData &atomData) {
                 bondsDataRaw.push_back(bond);
             }
         }
+    }
+
+    m_bondsDataRaw.resize(bondsDataRaw.size() * sizeof(BondVBOData));
+    BondVBOData *posData = reinterpret_cast<BondVBOData*>(m_bondsDataRaw.data());
+    // TODO can we just set the address here? Instead of copying.
+    for(const BondVBOData &pos : bondsDataRaw) {
+        *posData++ = pos;
     }
 }
 

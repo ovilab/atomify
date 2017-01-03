@@ -88,6 +88,8 @@ QString AtomifySimulator::error() const
 
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
+    QElapsedTimer t;
+    t.start();
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
     m_lammpsController.qmlThread = QThread::currentThread();
 
@@ -95,9 +97,25 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     States &states = *atomifySimulator->states();
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
-    m_lammpsController.paused = states.paused()->active();
-    // If user pressed stop / restart, we should reset
+    if(states.paused()->active()) {
+        if(m_workerRenderingMutex.tryLock()) {
+            // qDebug() << "Will synchronize renderer";
+            atomifySimulator->system()->atoms()->synchronizeRenderer();
+            // qDebug() << "Did synchronize renderer";
+            m_workerRenderingMutex.unlock();
+            m_reprocessRenderingData = true;
+        }
+        return;
+    }
 
+    if(states.continued()->active()) {
+        m_lammpsController.doContinue = true;
+        m_lammpsController.finished = false;
+        emit atomifySimulator->parsing();
+        return;
+    }
+
+    // If user pressed stop / restart, we should reset
     if(m_lammpsController.crashed) {
         m_lammpsController.crashed = false;
         m_lammpsController.finished = true;
@@ -143,6 +161,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronizeQML(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
     m_needsSynchronization = false;
+    // qDebug() << "Synchronized after " << t.elapsed() << " ms";
 }
 
 void MyWorker::work()

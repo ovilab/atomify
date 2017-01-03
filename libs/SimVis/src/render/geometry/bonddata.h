@@ -27,8 +27,8 @@ public:
 
     Qt3DRender::QBuffer* buffer();
     void setData(QVector<BondVBOData> data);
+    void setData(QByteArray ba, int count);
     int count() const;
-
 signals:
 
     void countChanged(int count);

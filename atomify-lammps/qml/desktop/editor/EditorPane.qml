@@ -7,23 +7,23 @@ import SimVis 1.0
 import "../../visualization"
 Pane {
     id: editorTabRoot
-    property TextArea consoleOutput: consoleItem.output
+    // property TextArea consoleOutput: consoleItem.output
     property alias editorWindow: editorWindow
     property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
-    onConsoleOutputChanged: {
-        consoleOutput.onLinkActivated.connect(function(link){
-            var params = editorWindow.currentEditor.getParameters(link)
-            var errorLine = params["errorLine"]
-            link = editorWindow.dummyEditor.cleanPath(link)
-            editorWindow.openTab(link, errorLine)
-        })
-    }
+//    onConsoleOutputChanged: {
+//        consoleOutput.onLinkActivated.connect(function(link){
+//            var params = editorWindow.currentEditor.getParameters(link)
+//            var errorLine = params["errorLine"]
+//            link = editorWindow.dummyEditor.cleanPath(link)
+//            editorWindow.openTab(link, errorLine)
+//        })
+//    }
 
-    function reportError() {
-        if(simulator.crashed) {
-            var error = simulator.error
-            consoleOutput.append(" Simulation crashed with message "+error)
+//    function reportError() {
+//        if(simulator.crashed) {
+//            var error = simulator.error
+//            consoleOutput.append(" Simulation crashed with message "+error)
 //            if(error.scriptFile === "") {
 //                consoleOutput.append(" Simulation crashed on line "+error.line)
 //                consoleOutput.append(" Command: '"+error.command+"'")
@@ -36,8 +36,8 @@ Pane {
 //                consoleOutput.append(" Error: '"+error.message+"'")
 //                editorWindow.errorLine = error.line
 //            }
-        }
-    }
+//        }
+//    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -56,14 +56,15 @@ Pane {
                 right: parent.right
             }
 
-            Button {
-                id: clear
-                text: "Clear output"
-                focusPolicy: Qt.NoFocus
-                onClicked: {
-                    consoleItem.clear()
-                }
-            }
+//            Button {
+//                id: clear
+//                text: "Clear output"
+//                focusPolicy: Qt.NoFocus
+//                onClicked: {
+//                    consoleItem.clear()
+//                }
+//            }
+
             Button {
                 id: runButton
                 focusPolicy: Qt.NoFocus
@@ -92,13 +93,13 @@ Pane {
             }
         }
 
-        Console {
-            id: consoleItem
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.maximumHeight: 200
-            simulator: editorTabRoot.simulator
-        }
+//        Console {
+//            id: consoleItem
+//            Layout.fillHeight: true
+//            Layout.fillWidth: true
+//            Layout.maximumHeight: 200
+//            simulator: editorTabRoot.simulator
+//        }
     }
 
     Shortcut {

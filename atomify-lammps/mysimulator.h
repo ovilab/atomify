@@ -13,12 +13,12 @@ class MyWorker : public SimulatorWorker
 public:
     MyWorker();
 
-    bool willPause() const;
-    void setWillPause(bool willPause);
     void setNeedsSynchronization(bool value);
     bool needsSynchronization();
     long m_workCount = 0;
     bool m_cancelPending = false;
+    bool m_reprocessRenderingData = false;
+    QMutex m_workerRenderingMutex; // horrible name
 private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
