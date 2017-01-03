@@ -7,6 +7,7 @@ Rectangle {
     signal ljClicked()
     signal examplesClicked()
     signal newTabClicked()
+    signal hideClicked()
 
     property bool welcome: true
     property bool finished: false
@@ -18,7 +19,7 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Script finished</h2>
-You can continue simulating by pressing the play button (press space), or click <a href=\"continue\">here</a>.
+<p>You can continue simulating by pressing the <a href=\"continue\">play button</a> (Space).</p>
 "
     property string errorMessage: ""
     property string crashedText:
@@ -28,7 +29,7 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Simulation crashed</h2>
-"+errorMessage
+" + errorMessage
 
     property string welcomeText:
         "
@@ -38,26 +39,21 @@ a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Welcome to Atomify</h2>
 Atomify is a live LAMMPS editor.
-<ul>
-<li>Open the <a href=\"LJ\">Lennard Jones</a> example to quickly get started with LAMMPS.</li>
-<li>Check out the <a href=\"examples\">other examples</a></li>
-<li>Start a <a href=\"newTab\">new script</a> (Ctrl+N)</li>
-</ul>
+<div style=\"margin-top: 5px\">&bull; Open the <a href=\"LJ\">Lennard Jones</a> example to quickly get started with LAMMPS.</div>
+<div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a></div>
+<div style=\"margin-top: 5px\">&bull; Start a <a href=\"newTab\">new script</a> (Ctrl+N)</div>
 "
-    radius: 2
-    border.color: "white"
-    border.width: 1
-    color: Qt.rgba(0.5, 0.5, 0.5, 0.5)
 
-    TextArea {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.fill: parent
-        anchors.margins: 10
-        color: "white"
+    color: Qt.rgba(0.1, 0.1, 0.1, 0.7)
+
+    Label {
+        id: text
+        anchors {
+            centerIn: parent
+            verticalCenterOffset: -parent.height * 0.2
+        }
         textFormat: TextEdit.RichText
-        font.family: "DejaVu Sans Mono"
-        font.pixelSize: 16
-        readOnly: true
+        font.pointSize: 12
         wrapMode: TextArea.WordWrap
         text: {
             if(welcome) {
@@ -79,7 +75,29 @@ Atomify is a live LAMMPS editor.
                 root.examplesClicked()
             } else if(link==="newTab") {
                 root.newTabClicked()
+            } else if(link==="hide") {
+                root.hideClicked()
             }
         }
+
+        onHoveredLinkChanged: console.log(hoveredLink)
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            propagateComposedEvents: true
+            cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : undefined
+        }
+    }
+
+    Button {
+        anchors {
+            horizontalCenter: text.horizontalCenter
+            top: text.bottom
+            margins: 24
+        }
+
+        text: "Ok, got it"
+        onClicked: root.hideClicked()
     }
 }

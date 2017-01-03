@@ -7,7 +7,9 @@ import "../../plotting"
 Flickable {
     id: rectangleRoot
     property System system
-    contentHeight: myCol.height
+    flickableDirection: Flickable.VerticalFlick
+    contentHeight: column.height
+    ScrollBar.vertical: ScrollBar {}
     function getGlobalPosition(p, item) {
         var globalX = p.x
         var globalY = p.y
@@ -47,7 +49,7 @@ Flickable {
     }
 
     Column {
-        id: myCol
+        id: column
         anchors {
             left: parent.left
             right: parent.right

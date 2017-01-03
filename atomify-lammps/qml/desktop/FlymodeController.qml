@@ -30,14 +30,6 @@ Entity {
         }
     }
 
-    onEnabledChanged: {
-        if(enabled) {
-            mouseMover.showCursor = false
-        } else {
-            mouseMover.showCursor = true
-        }
-    }
-
     function getGlobalPosition(p, item) {
         var globalX = p.x
         var globalY = p.y

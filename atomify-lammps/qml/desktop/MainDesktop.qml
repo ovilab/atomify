@@ -94,6 +94,7 @@ Item {
                     anchors.fill: visualizer
                     hoverEnabled: true
                     propagateComposedEvents: true
+                    cursorShape: visualizer.mode == "flymode" ? Qt.BlankCursor : undefined
 
                     property real centerPointX: visualizerItem.width / 2
                     property real centerPointY: visualizerItem.height / 2
@@ -172,24 +173,26 @@ Item {
 
                 MessageOverlay {
                     id: overlays
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        leftMargin: parent.width*0.1
-                        rightMargin: parent.width*0.1
-                    }
+                    property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active
 
-                    visible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active
-                    height: parent.height*0.2
-                    y: parent.height*0.2
+                    anchors.fill: parent
+                    visible: false
+
                     errorMessage: simulator.error
-
                     welcome: simulator.states.idle.active
                     finished: simulator.states.finished.active
                     crashed: simulator.states.crashed.active
                     onContinueClicked: simulator.continued()
                     onNewTabClicked: editor.editorWindow.newTab()
                     onExamplesClicked: rightbar.showExamples()
+                    onHideClicked: visible = false
+                    onShouldBeVisibleChanged: {
+                        if(shouldBeVisible) {
+                            visible = true
+                        } else {
+                            visible = false
+                        }
+                    }
                 }
 
                 ControlBar {

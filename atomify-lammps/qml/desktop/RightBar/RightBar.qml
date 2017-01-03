@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import QtQuick.Layouts 1.3
 import Atomify 1.0
 import "../../visualization"
 
@@ -8,11 +9,12 @@ Page {
     property System system
     property AtomifyVisualizer visualizer
     focusPolicy: Qt.NoFocus
+
     function showExamples() {
-        swipeView.setCurrentIndex(2) // TODO: use id of examples object below
+        tabBar.currentIndex = 2
     }
 
-    SwipeView {
+    StackLayout {
         id: swipeView
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
