@@ -1,0 +1,9 @@
+module SimVis
+Bonds 1.0 Bonds.qml
+Cylinders 1.0 Cylinders.qml
+FirstPersonCameraController 1.0 FirstPersonCameraController.qml
+FunctionSurface 1.0 FunctionSurface.qml
+NonCullingForwardRenderer 1.0 NonCullingForwardRenderer.qml
+OrbitController 1.0 OrbitController.qml
+Spheres 1.0 Spheres.qml
+Visualizer 1.0 Visualizer.qml

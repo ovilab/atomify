@@ -1,0 +1,33 @@
+module ShaderNodes
+
+singleton ShaderNodes 1.0 ShaderNodes.qml
+
+Add 1.0 Add.qml
+AmbientOcclusion 1.0 AmbientOcclusion.qml
+Bump 1.0 Bump.qml
+Clamp 1.0 Clamp.qml
+CombineRgb 1.0 CombineRgb.qml
+CombineRgba 1.0 CombineRgba.qml
+CombineRgbVectorAlpha 1.0 CombineRgbVectorAlpha.qml
+Decolorize 1.0 Decolorize.qml
+Displacement 1.0 Displacement.qml
+Function 1.0 Function.qml
+ImageTexture 1.0 ImageTexture.qml
+Lerp 1.0 Lerp.qml
+Light 1.0 Light.qml
+Mix 1.0 Mix.qml
+Multiply 1.0 Multiply.qml
+NormalMap 1.0 NormalMap.qml
+OutputValue 1.0 OutputValue.qml
+ShaderDefinition 1.0 ShaderDefinition.qml
+Simplex 1.0 Simplex.qml
+Sine 1.0 Sine.qml
+Split 1.0 Split.qml
+ShaderBuilderMaterial 1.0 ShaderBuilderMaterial.qml
+ShaderBuilderEffect 1.0 ShaderBuilderEffect.qml
+StandardMaterial 1.0 StandardMaterial.qml
+Subtract 1.0 Subtract.qml
+Sum 1.0 Sum.qml
+UniformValue 1.0 UniformValue.qml
+Value 1.0 Value.qml
+Noise 1.0 Noise.qml

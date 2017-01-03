@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main_cylinders.qml</file>
+        <file>CylinderScene.qml</file>
+        <file>diffuse.webp</file>
+        <file>normal.webp</file>
+    </qresource>
+</RCC>

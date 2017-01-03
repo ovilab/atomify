@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>SimVis/qmldir</file>
+        <file>SimVis/Spheres.qml</file>
+        <file>SimVis/Cylinders.qml</file>
+        <file>SimVis/FunctionSurface.qml</file>
+        <file>SimVis/NonCullingForwardRenderer.qml</file>
+        <file>SimVis/Visualizer.qml</file>
+        <file>SimVis/SpheresTechnique.qml</file>
+        <file>SimVis/FirstPersonCameraController.qml</file>
+        <file>SimVis/OrbitController.qml</file>
+        <file>SimVis/Bonds.qml</file>
+    </qresource>
+</RCC>

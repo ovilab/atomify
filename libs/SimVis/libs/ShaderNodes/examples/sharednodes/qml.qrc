@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main_sharednodes.qml</file>
+    </qresource>
+</RCC>

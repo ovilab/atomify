@@ -1,0 +1,44 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ShaderNodes/Add.qml</file>
+        <file>ShaderNodes/Geometry.qml</file>
+        <file>ShaderNodes/Mix.qml</file>
+        <file>ShaderNodes/OutputValue.qml</file>
+        <file>ShaderNodes/Sine.qml</file>
+        <file>ShaderNodes/qmldir</file>
+        <file>ShaderNodes/Split.qml</file>
+        <file>ShaderNodes/Sum.qml</file>
+        <file>ShaderNodes/Light.qml</file>
+        <file>ShaderNodes/Clamp.qml</file>
+        <file>ShaderNodes/StandardMaterial.qml</file>
+        <file>ShaderNodes/Function.qml</file>
+        <file>ShaderNodes/Multiply.qml</file>
+        <file>ShaderNodes/ImageTexture.qml</file>
+        <file>ShaderNodes/Subtract.qml</file>
+        <file>ShaderNodes/NormalMap.qml</file>
+        <file>ShaderNodes/Displacement.qml</file>
+        <file>ShaderNodes/Noise.qml</file>
+        <file>ShaderNodes/Simplex.qml</file>
+        <file>ShaderNodes/Decolorize.qml</file>
+        <file>ShaderNodes/Bump.qml</file>
+        <file>ShaderNodes/shaders/standard_material.glsl</file>
+        <file>ShaderNodes/ShaderBuilderMaterial.qml</file>
+        <file>ShaderNodes/shaders/light.glsl</file>
+        <file>ShaderNodes/shaders/es2/shader_builder_material.frag</file>
+        <file>ShaderNodes/shaders/es2/shader_builder_material.vert</file>
+        <file>ShaderNodes/shaders/gl3/shader_builder_material.frag</file>
+        <file>ShaderNodes/shaders/gl3/shader_builder_material.vert</file>
+        <file>ShaderNodes/VertexShaderBuilder.qml</file>
+        <file>ShaderNodes/FragmentShaderBuilder.qml</file>
+        <file>ShaderNodes/shaders/ambient-occlusion.glsl</file>
+        <file>ShaderNodes/AmbientOcclusion.qml</file>
+        <file>ShaderNodes/images/ambient.png</file>
+        <file>ShaderNodes/images/noise.png</file>
+        <file>ShaderNodes/ShaderNodes.qml</file>
+        <file>ShaderNodes/CombineRgb.qml</file>
+        <file>ShaderNodes/images/empty.png</file>
+        <file>ShaderNodes/ShaderBuilderEffect.qml</file>
+        <file>ShaderNodes/CombineRgba.qml</file>
+        <file>ShaderNodes/CombineRgbVectorAlpha.qml</file>
+    </qresource>
+</RCC>
