@@ -97,6 +97,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     atomifySimulator->syncCount += 1;
     States &states = *atomifySimulator->states();
+//    if(states.continued()->active()) qDebug() << "Continued";
+//    if(states.crashed()->active()) qDebug() << "Crashed";
+//    if(states.finished()->active()) qDebug() << "Finished";
+//    if(states.idle()->active()) qDebug() << "Idle";
+//    if(states.parsing()->active()) qDebug() << "Parsing";
+//    if(states.paused()->active()) qDebug() << "Paused";
+//    if(states.reset()->active()) qDebug() << "Reset";
+
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
     if(states.paused()->active()) {
