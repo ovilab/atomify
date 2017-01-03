@@ -35,5 +35,7 @@
         <file>images/pause2.png</file>
         <file>images/play2.png</file>
         <file>images/camera.png</file>
+        <file>images/reset_camera.png</file>
+        <file>images/switch_camera.png</file>
     </qresource>
 </RCC>
