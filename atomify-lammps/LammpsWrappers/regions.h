@@ -51,6 +51,7 @@ class Regions : public QObject
 public:
     Regions(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPSController *lammpsController);
+    void synchronizeQML(class LAMMPSController *lammpsController);
     QVariant model() const;
     int count() const;
     bool active() const;
@@ -68,8 +69,9 @@ signals:
     void activeChanged(bool active);
 
 private:
-    void remove(QString identifier);
+    bool addOrRemove(class LAMMPSController *lammpsController);
     void add(QString identifier);
+    void remove(QString identifier);
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;

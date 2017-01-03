@@ -30,10 +30,9 @@ void Regions::remove(QString identifier) {
     delete region;
 }
 
-void Regions::synchronize(LAMMPSController *lammpsController)
+bool Regions::addOrRemove(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) { return; }
     Domain *lammpsDomain = lammps->domain;
     Region **regions = lammpsDomain->regions;
 
@@ -41,6 +40,7 @@ void Regions::synchronize(LAMMPSController *lammpsController)
     setCount(numRegions);
 
     Group *lammpsGroup = lammps->group;
+
     /* TODO: NOT SURE IF THIS IS IMPORTANT */
     bool firstGroupIsAll = false;
     if(lammpsGroup->ngroup>0) {
@@ -52,7 +52,7 @@ void Regions::synchronize(LAMMPSController *lammpsController)
 
     if(!firstGroupIsAll) {
         qDebug() << "Error, group all doesn't exist?";
-        return;
+        return false;
     }
 
     /* END: NOT SURE IF THIS IS IMPORTANT */
@@ -79,13 +79,26 @@ void Regions::synchronize(LAMMPSController *lammpsController)
         remove(identifier);
     }
 
+    return anyChanges;
+}
+
+void Regions::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+    bool anyChanges = addOrRemove(lammpsController);
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+    }
+}
+
+void Regions::synchronize(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+
     for(QObject *obj : m_data) {
         CPRegion *region = static_cast<CPRegion*>(obj);
         region->update(lammpsController->lammps());
     }
-//    if(anyChanges) {
-//        setModel(QVariant::fromValue(m_data));
-//    }
 }
 
 QVariant Regions::model() const
