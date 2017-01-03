@@ -69,14 +69,17 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
 
     worker->setNeedsSynchronization(true);
     while(worker->needsSynchronization()) {
+        if(QThread::currentThread()->isInterruptionRequested()) {
+            throw Cancelled();
+        }
+
         QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
     }
 
     if(worker->m_cancelPending) {
-        qDebug() << "Throwing cancelled";
         throw Cancelled();
     }
- }
+}
 
 LAMMPS *LAMMPSController::lammps() const
 {
