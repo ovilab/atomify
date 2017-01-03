@@ -25,12 +25,9 @@ void Groups::remove(QString identifier) {
     delete group;
 }
 
-void Groups::synchronize(LAMMPSController *lammpsController)
+bool Groups::addOrRemove(LAMMPSController *lammpsController)
 {
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) { return; }
-
-    Group *lammpsGroup = lammps->group;
+    Group *lammpsGroup = lammpsController->lammps()->group;
     int numGroups = lammpsGroup->ngroup;
     setCount(numGroups);
 
@@ -56,13 +53,24 @@ void Groups::synchronize(LAMMPSController *lammpsController)
         remove(identifier);
     }
 
+    return anyChanges;
+}
+
+void Groups::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+    bool anyChanges = addOrRemove(lammpsController);
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+    }
+}
+
+void Groups::synchronize(LAMMPSController *lammpsController)
+{
     for(QObject *obj : m_data) {
         CPGroup *group = static_cast<CPGroup*>(obj);
         group->update(lammpsController->lammps());
     }
-//    if(anyChanges) {
-//        setModel(QVariant::fromValue(m_data));
-//    }
 }
 
 QVariant Groups::model() const
