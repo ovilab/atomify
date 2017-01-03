@@ -238,13 +238,11 @@ bool LAMMPSController::run()
     if(finished || didCancel || crashed) return false;
 
     QByteArray ba = scriptFilePath.toLatin1();
-    qDebug() << "Will run script " << scriptFilePath;
     scriptFilePath = "";
 
     try {
         lammps_file(m_lammps, ba.data());
         bool hasError = m_lammps->error->get_last_error() != NULL;
-        qDebug() << "Finished with that and error: " << hasError;
         if(hasError) {
             // Handle error
             errorMessage = QString::fromUtf8(m_lammps->error->get_last_error());
@@ -252,14 +250,12 @@ bool LAMMPSController::run()
             crashed = true;
             // error = new LammpsError();
             // error->create(message, commandObject);
-            qDebug() << "LAMMPS error: " << errorMessage;
             return true;
         } else {
-            qDebug() << "Finished the script";
             finished = true;
         }
     } catch(Cancelled cancelled) {
-        qDebug() << "Did cancel";
+        Q_UNUSED(cancelled)
         didCancel = true;
     }
     return true;
