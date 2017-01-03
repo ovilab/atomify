@@ -8,55 +8,64 @@ import QtQuick 2.0 as QQ2
 import QtQuick.Scene3D 2.0
 
 ShaderBuilder {
-    id: shaderBuilder
+    id: fragmentShaderBuilder
+    
+    // inputs
+    property alias position: position
+    property alias normal: normal
+    property alias tangent: tangent
+    property alias binormal: binormal
+    property alias textureCoordinate: textureCoordinate
 
-    property string version: "es2"
+    property alias fragmentColor: _fragmentColor.value
     
     shaderType: ShaderBuilder.Fragment
     
-    // inputs
-    property ShaderNode position: ShaderNode {
-        type: "vec3"
-        name: "position"
-        result: "position"
-    }
-    property ShaderNode normal: ShaderNode {
-        type: "vec3"
-        name: "normal"
-        result: "normal"
-    }
-    property ShaderNode tangent: ShaderNode {
-        type: "vec3"
-        name: "tangent"
-        result: "tangent"
-    }
-    property ShaderNode binormal: ShaderNode {
-        type: "vec3"
-        name: "binormal"
-        result: "binormal"
-    }
-    property ShaderNode textureCoordinate: ShaderNode {
-        type: "vec2"
-        name: "texCoord"
-        result: "texCoord"
-    }
+    sourceFile: "qrc:/ShaderNodes/shaders/gl3/shader_builder_material.frag"
+    renderPass: builderRenderPass
     
-    sourceFile: "qrc:/ShaderNodes/shaders/" + version + "/shader_builder_material.frag"
+    //        onFinalShaderChanged: console.log(finalShader)
+    //        QQ2.Component.onCompleted: console.log(finalShader)
     
+    inputs: [
+        ShaderNode {
+            // TODO make a BuilderInputNode type
+            id: position
+            type: "vec3"
+            name: "position"
+            result: "position"
+        },
+        ShaderNode {
+            id: normal
+            type: "vec3"
+            name: "normal"
+            result: "normal"
+        },
+        ShaderNode {
+            id: tangent
+            type: "vec3"
+            name: "tangent"
+            result: "tangent"
+        },
+        ShaderNode {
+            id: binormal
+            type: "vec3"
+            name: "binormal"
+            result: "binormal"
+        },
+        ShaderNode {
+            id: textureCoordinate
+            type: "vec2"
+            name: "texCoord"
+            result: "texCoord"
+        }
+    ]
     outputs: [
         ShaderOutput {
             id: _fragmentColor
             type: "vec4"
             name: "fragColor"
-            value: StandardMaterial {
-                position: shaderBuilder.position
-                normal: shaderBuilder.normal
-                lights: [
-                    Nodes.Light {
-                        position: Qt.vector3d(5.0, 5.0, -5.0)
-                    }
-                ]
-            }
+            value: "purple"
         }
     ]
 }

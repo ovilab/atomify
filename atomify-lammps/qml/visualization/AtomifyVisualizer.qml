@@ -422,6 +422,7 @@ Scene3D {
             enabled: root.systemBoxVisible //|| controller.dragging
             origin: root.simulator.system.origin
             size: root.simulator.system.size
+            corners: root.simulator.system.corners
             lights: visualizer.lights
             layer: forwardFrameGraph.outlineLayer
         }

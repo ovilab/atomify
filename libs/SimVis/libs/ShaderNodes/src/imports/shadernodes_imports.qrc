@@ -28,8 +28,6 @@
         <file>ShaderNodes/shaders/es2/shader_builder_material.vert</file>
         <file>ShaderNodes/shaders/gl3/shader_builder_material.frag</file>
         <file>ShaderNodes/shaders/gl3/shader_builder_material.vert</file>
-        <file>ShaderNodes/VertexShaderBuilder.qml</file>
-        <file>ShaderNodes/FragmentShaderBuilder.qml</file>
         <file>ShaderNodes/shaders/ambient-occlusion.glsl</file>
         <file>ShaderNodes/AmbientOcclusion.qml</file>
         <file>ShaderNodes/images/ambient.png</file>
@@ -40,5 +38,9 @@
         <file>ShaderNodes/ShaderBuilderEffect.qml</file>
         <file>ShaderNodes/CombineRgba.qml</file>
         <file>ShaderNodes/CombineRgbVectorAlpha.qml</file>
+        <file>ShaderNodes/FragmentShaderBuilder.qml</file>
+        <file>ShaderNodes/VertexShaderBuilder.qml</file>
+        <file>ShaderNodes/DeferredFragmentShaderBuilder.qml</file>
+        <file>ShaderNodes/DeferredVertexShaderProgram.qml</file>
     </qresource>
 </RCC>
