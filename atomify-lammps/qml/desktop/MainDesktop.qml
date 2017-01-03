@@ -136,11 +136,6 @@ Item {
 
                         // TODO fix sudden jitter on fast movement
 
-                        console.log("Previous", previousX, previousY)
-                        console.log("Current", mouse.x, mouse.y)
-                        console.log("Center", centerPointX, centerPointY)
-                        console.log("Ignore", ignoreNext)
-
                         if(ignoreNext) {
                             previousX = mouse.x
                             previousY = mouse.y
