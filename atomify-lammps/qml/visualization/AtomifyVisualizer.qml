@@ -93,7 +93,7 @@ Scene3D {
 
     function resetToSystemCenter() {
         // var right = camera.viewVector.normalized().cross(camera.upVector.normalized())
-        var sizeY = simulator.system.size.y
+        var sizeY = Math.max(5.0, simulator.system.size.y)
         visualizer.camera.viewCenter = simulator.system.center
         visualizer.camera.position = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
         visualizer.camera.upVector = Qt.vector3d(0, 0, 1)

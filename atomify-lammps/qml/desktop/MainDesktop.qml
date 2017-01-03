@@ -114,7 +114,6 @@ Item {
                         }
 
                         var midPoint = getGlobalPosition(Qt.point(centerPointX, centerPointY), visualizerItem)
-
                         mouseMover.move(midPoint.x, midPoint.y)
                     }
 
@@ -164,7 +163,11 @@ Item {
                         }
                     }
 
-                    onPressed: mouse.accepted = false
+                    onPressed: {
+                        previousX = mouse.x
+                        previousY = mouse.y
+                        mouse.accepted = false
+                    }
                 }
 
                 MessageOverlay {
@@ -196,6 +199,45 @@ Item {
                     y: parent.height - 100
                     width: 320
                     height: 64
+                }
+
+                Row {
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                        margins: 24
+                    }
+                    spacing: anchors.margins / 2
+
+                    Image {
+                        source: "qrc:/images/reset_camera.png"
+                        width: 48
+                        height: width
+                        fillMode: Image.PreserveAspectFit
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                flymodeOverlay.reset()
+                                visualizer.resetToSystemCenter()
+                            }
+                        }
+                    }
+
+                    Image {
+                        source: "qrc:/images/switch_camera.png"
+                        width: 48
+                        height: width
+                        fillMode: Image.PreserveAspectFit
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                flymodeOverlay.reset()
+                                visualizer.changeMode()
+                            }
+                        }
+                    }
                 }
 
                 ColorLegend {
