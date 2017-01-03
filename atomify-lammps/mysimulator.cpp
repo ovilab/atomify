@@ -91,6 +91,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     QElapsedTimer t;
     t.start();
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
+    m_lammpsController.simulationSpeed = atomifySimulator->simulationSpeed();
     m_lammpsController.qmlThread = QThread::currentThread();
 
     atomifySimulator->syncCount += 1;
@@ -99,9 +100,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.system = atomifySimulator->system();
     if(states.paused()->active()) {
         if(m_workerRenderingMutex.tryLock()) {
-            // qDebug() << "Will synchronize renderer";
             atomifySimulator->system()->atoms()->synchronizeRenderer();
-            // qDebug() << "Did synchronize renderer";
             m_workerRenderingMutex.unlock();
             m_reprocessRenderingData = true;
         }

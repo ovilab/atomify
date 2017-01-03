@@ -23,9 +23,11 @@ class LAMMPSController
 {
 private:
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
+    unsigned long m_lastSynchronization = 0;
     void changeWorkingDirectoryToScriptLocation();
 public:
     class System *system = nullptr;
+    unsigned long simulationSpeed = 1;
 
     LAMMPSController();
     ~LAMMPSController();
