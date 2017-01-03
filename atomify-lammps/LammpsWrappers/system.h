@@ -7,6 +7,7 @@
 #include <lammps.h>
 #include <qvector.h>
 #include <domain.h>
+#include <QMatrix3x3>
 
 class System : public QObject
 {
@@ -15,6 +16,7 @@ class System : public QObject
     Q_PROPERTY(QVector3D origin READ origin NOTIFY originChanged)
     Q_PROPERTY(QVector3D cameraPosition READ cameraPosition WRITE setCameraPosition NOTIFY cameraPositionChanged)
     Q_PROPERTY(QVector3D center READ center NOTIFY centerChanged)
+    Q_PROPERTY(QMatrix3x3 transformationMatrix READ transformationMatrix WRITE setTransformationMatrix NOTIFY transformationMatrixChanged)
     Q_PROPERTY(QVector<QVector3D> corners READ corners NOTIFY cornersChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
@@ -62,6 +64,11 @@ public:
         return m_corners;
     }
 
+    QMatrix3x3 transformationMatrix() const
+    {
+        return m_transformationMatrix;
+    }
+
 public slots:
     void setAtoms(class Atoms* atoms);
     void setRegions(class Regions* regions);
@@ -72,6 +79,15 @@ public slots:
     void setCameraPosition(QVector3D cameraPosition);
     void setUnits(class Units* units);
     void setFixes(class Fixes* fixes);
+
+    void setTransformationMatrix(QMatrix3x3 transformationMatrix)
+    {
+        if (m_transformationMatrix == transformationMatrix)
+            return;
+
+        m_transformationMatrix = transformationMatrix;
+        emit transformationMatrixChanged(transformationMatrix);
+    }
 
 signals:
     void originChanged(QVector3D origin);
@@ -93,6 +109,8 @@ signals:
     void centerChanged(QVector3D center);
     void cornersChanged(QVector<QVector3D> corners);
 
+    void transformationMatrixChanged(QMatrix3x3 transformationMatrix);
+
 private:
     class Atoms* m_atoms = nullptr;
     class Regions* m_regions = nullptr;
@@ -113,6 +131,7 @@ private:
     QVector<QVector3D> m_corners;
     void updateCorners(LAMMPS_NS::Domain *domain);
     void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
+    QMatrix3x3 m_transformationMatrix;
 };
 
 #endif // SYSTEM_H
