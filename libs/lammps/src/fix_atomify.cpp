@@ -41,6 +41,7 @@ int FixAtomify::setmask()
   mask |= POST_PARSE_COMMAND;
   mask |= POST_EXECUTE_COMMAND;
   mask |= END_OF_STEP;
+  mask |= MIN_POST_FORCE;
   return mask;
 }
 
@@ -64,6 +65,13 @@ void FixAtomify::end_of_step()
 void FixAtomify::post_parse_command()
 {
   (this->callback)(ptr_caller,POST_PARSE_COMMAND);
+}
+
+/* ---------------------------------------------------------------------- */
+
+void FixAtomify::min_post_force(int vflag)
+{
+  (this->callback)(ptr_caller,MIN_POST_FORCE);
 }
 
 /* ---------------------------------------------------------------------- */

@@ -6,6 +6,6 @@
 [subrepo]
 	remote = git@github.com:Ovilab/SimVis.git
 	branch = dev
-	commit = d04907d7c75e09757640edb423a3d0e2f78e1c91
-	parent = 8544845557a53ad39dfa1dbfdf9a7d83794e3124
+	commit = db5e7f1d79fe2ad5ce520cd6c6449ea4da557ae3
+	parent = 9f5eeef980f5e1b253a9e3f056bcc941eb903636
 	cmdver = 0.3.0

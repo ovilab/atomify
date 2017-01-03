@@ -27,16 +27,61 @@ System::System(AtomifySimulator *simulator)
 
 void System::updateCorners(Domain *domain)
 {
-    domain->box_corners();
-    m_corners.resize(8);
-    bool cornersDidChanged = false;
-    for(int i=0; i<8; i++) {
-        for(int a=0; a<3; a++) {
-            cornersDidChanged = cornersDidChanged || (fabs(m_corners[i][a]-domain->corners[i][a]) > 1e-5);
-            m_corners[i][a] = domain->corners[i][a];
-        }
-    }
-    if(cornersDidChanged) emit cornersChanged();
+//    corners[0][0] = lo[0]; corners[0][1] = lo[1]; corners[0][2] = lo[2];
+//    lamda2x(corners[0],corners[0]);
+//    corners[1][0] = hi[0]; corners[1][1] = lo[1]; corners[1][2] = lo[2];
+//    lamda2x(corners[1],corners[1]);
+//    corners[2][0] = lo[0]; corners[2][1] = hi[1]; corners[2][2] = lo[2];
+//    lamda2x(corners[2],corners[2]);
+//    corners[3][0] = hi[0]; corners[3][1] = hi[1]; corners[3][2] = lo[2];
+//    lamda2x(corners[3],corners[3]);
+//    corners[4][0] = lo[0]; corners[4][1] = lo[1]; corners[4][2] = hi[2];
+//    lamda2x(corners[4],corners[4]);
+//    corners[5][0] = hi[0]; corners[5][1] = lo[1]; corners[5][2] = hi[2];
+//    lamda2x(corners[5],corners[5]);
+//    corners[6][0] = lo[0]; corners[6][1] = hi[1]; corners[6][2] = hi[2];
+//    lamda2x(corners[6],corners[6]);
+//    corners[7][0] = hi[0]; corners[7][1] = hi[1]; corners[7][2] = subhi_lamda[2];
+//    lamda2x(corners[7],corners[7]);
+
+
+//    qDebug() << "lo = " << domain->boxlo_lamda[0] << ", " << domain->boxlo_lamda[1] << ", " << domain->boxlo_lamda[2];
+//    qDebug() << "hi = " << domain->boxhi_lamda[0] << ", " << domain->boxhi_lamda[1] << ", " << domain->boxhi_lamda[2];
+//    double lo[3];
+//    lo[0] = domain->boxlo_lamda[0];
+//    lo[1] = domain->boxlo_lamda[1];
+//    lo[2] = domain->boxlo_lamda[2];
+
+//    double hi[3];
+//    hi[0] = domain->boxhi_lamda[0];
+//    hi[1] = domain->boxhi_lamda[1];
+//    hi[2] = domain->boxhi_lamda[2];
+
+//    domain->lamda2x(lo, lo);
+//    domain->lamda2x(hi, hi);
+
+//    qDebug() << "lo1 = " << lo[0] << ", " << lo[1] << ", " << lo[2];
+//    qDebug() << "hi1 = " << hi[0] << ", " << hi[1] << ", " << hi[2];
+
+    double *h = domain->h;
+    float transformationMatrixValues[] = {
+        h[0], h[5], h[4],
+        0,    h[1], h[3],
+        0,    0,    h[2]
+    };
+    m_transformationMatrix = QMatrix3x3(transformationMatrixValues);
+    emit transformationMatrixChanged(m_transformationMatrix);
+
+//    domain->box_corners();
+//    m_corners.resize(8);
+//    bool cornersDidChanged = false;
+//    for(int i=0; i<8; i++) {
+//        for(int a=0; a<3; a++) {
+//            cornersDidChanged = cornersDidChanged || (fabs(m_corners[i][a]-domain->corners[i][a]) > 1e-5);
+//            m_corners[i][a] = domain->corners[i][a];
+//        }
+//    }
+//    if(cornersDidChanged) emit cornersChanged(m_corners);
 }
 
 void System::updateSizeAndOrigin(Domain *domain)
