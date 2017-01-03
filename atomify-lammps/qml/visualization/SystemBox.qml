@@ -249,8 +249,8 @@ Entity {
         Material {
             id: surfaceMaterial
             parameters: [
-                Parameter { name: "low"; value: simulator.system.origin },
-                Parameter { name: "high"; value: simulator.system.size }
+                Parameter { name: "origin"; value: simulator.system.origin },
+                Parameter { name: "transformationMatrix"; value: simulator.system.transformationMatrix }
             ]
             effect: Effect {
                 techniques: Technique {
@@ -271,8 +271,8 @@ Entity {
 #version 330
 in vec4 vertexPosition;
 in vec3 vertexNormal;
-uniform vec3 low;
-uniform vec3 high;
+uniform vec3 origin;
+uniform mat3 transformationMatrix;
 out vec3 normal0;
 out vec3 position0;
 uniform mat4 mvp;
@@ -285,8 +285,11 @@ void main()
 {
     vec3 position = vertexPosition.xyz;
     position += vec3(0.5);
-    position += low;
-    position *= (high - low);
+    mat3 m = transformationMatrix;
+    m[0][0] += 1.0;
+    m[1][1] += 1.0;
+    m[2][2] += 1.0;
+    position = m * position + origin - vec3(0.5);
     normal0 = modelNormalMatrix * vertexNormal;
     gl_Position = mvp * vec4(position, 1.0);
 }"
