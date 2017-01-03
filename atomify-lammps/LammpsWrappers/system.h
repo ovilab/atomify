@@ -6,6 +6,7 @@
 #include <mpi.h>
 #include <lammps.h>
 #include <qvector.h>
+#include <domain.h>
 
 class System : public QObject
 {
@@ -110,6 +111,8 @@ private:
     float m_volume = 0;
     bool m_isValid = false;
     QVector<QVector3D> m_corners;
+    void updateCorners(LAMMPS_NS::Domain *domain);
+    void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
 };
 
 #endif // SYSTEM_H

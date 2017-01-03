@@ -25,27 +25,8 @@ System::System(AtomifySimulator *simulator)
     setVariables(new Variables(simulator));
 }
 
-void System::synchronize(LAMMPSController *lammpsController)
+void System::updateCorners(Domain *domain)
 {
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        reset();
-        return;
-    }
-    setIsValid(true);
-
-    m_regions->synchronize(lammpsController);
-    m_groups->synchronize(lammpsController);
-    m_atoms->synchronize(lammpsController);
-    m_computes->synchronize(lammpsController);
-    m_variables->synchronize(lammpsController);
-    m_fixes->synchronize(lammpsController);
-
-    Domain *domain = lammps->domain;
-    Atom *atom = lammps->atom;
-    Update *update = lammps->update;
-    if(!domain || !atom || !update) return; // These may not be set in LAMMPS (they probably are, but an easy test).
-
     domain->box_corners();
     m_corners.resize(8);
     bool cornersDidChanged = false;
@@ -56,7 +37,10 @@ void System::synchronize(LAMMPSController *lammpsController)
         }
     }
     if(cornersDidChanged) emit cornersChanged(m_corners);
+}
 
+void System::updateSizeAndOrigin(Domain *domain)
+{
     bool originDidChange = false;
     bool sizeDidChange = false;
     for(int i=0; i<3; i++) {
@@ -79,6 +63,31 @@ void System::synchronize(LAMMPSController *lammpsController)
         emit sizeChanged(m_size);
         emit centerChanged(center());
     }
+}
+
+void System::synchronize(LAMMPSController *lammpsController)
+{
+    LAMMPS *lammps = lammpsController->lammps();
+    if(!lammps) {
+        reset();
+        return;
+    }
+    setIsValid(true);
+
+    m_regions->synchronize(lammpsController);
+    m_groups->synchronize(lammpsController);
+    m_atoms->synchronize(lammpsController);
+    m_computes->synchronize(lammpsController);
+    m_variables->synchronize(lammpsController);
+    m_fixes->synchronize(lammpsController);
+
+    Domain *domain = lammps->domain;
+    Atom *atom = lammps->atom;
+    Update *update = lammps->update;
+    if(!domain || !atom || !update) return; // These may not be set in LAMMPS (they probably are, but an easy test).
+
+    updateCorners(domain);
+    updateSizeAndOrigin(domain);
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
