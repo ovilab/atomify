@@ -22,6 +22,7 @@
 #include "error.h"
 #include "update.h"
 #include "compute_pe_atom.h"
+#include "compute_stress_atom.h"
 #include <iostream>
 using namespace std;
 using namespace LAMMPS_NS;
@@ -74,9 +75,11 @@ void FixAtomify::update_computes()
 {
   for(int i=0; i<modify->ncompute; i++) {
     ComputePEAtom *peAtom = dynamic_cast<ComputePEAtom *>(modify->compute[i]);
-    if(peAtom) {
-        update_compute(peAtom->id);
-    }
+    if(peAtom) { update_compute(peAtom->id); }
+
+    ComputeStressAtom *stressAtom = dynamic_cast<ComputeStressAtom*>(modify->compute[i]);
+    if(stressAtom) { update_compute(stressAtom->id); }
+
   }
 
   update_compute("thermo_press");
