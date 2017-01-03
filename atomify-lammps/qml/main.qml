@@ -9,10 +9,13 @@ import Atomify 1.0
 import SimVis 1.0
 import Qt.labs.settings 1.0
 import QtCharts  2.0
+//import Qt.labs.platform 1.0
 import "mobile"
 import "mobile/style"
 import "desktop"
 import "plotting"
+import "."
+
 QQC1.ApplicationWindow {
     id: applicationRoot
     title: "Atomify LAMMPS"
@@ -21,23 +24,68 @@ QQC1.ApplicationWindow {
     width: 1280
     height: 1024
 
-//    QQC1.MenuBar {
-//        QQC1.Menu {
-//            title: "File"
-//            QQC1.MenuItem {
-//                text: "New script"
-//            }
-//            QQC1.MenuItem {
-//                text: "Open"
-//            }
-//            QQC1.MenuItem {
-//                text: "Save"
-//            }
-//            QQC1.MenuItem {
-//                text: "Save as"
-//            }
-//        }
-//    }
+    menuBar: QQC1.MenuBar {
+        QQC1.Menu {
+            title: "File"
+            QQC1.MenuItem {
+                text: "New script"
+                onTriggered: {
+                    EventCenter.postEvent("editorWindow.newTab")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Open"
+                onTriggered: {
+                    EventCenter.postEvent("editorWindow.openTab")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Save"
+                onTriggered: {
+                    EventCenter.postEvent("editor.save")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Save as"
+                onTriggered: {
+                    EventCenter.postEvent("editor.saveAs")
+                }
+            }
+        }
+        QQC1.Menu {
+            title: "Edit"
+            QQC1.MenuItem {
+                text: "Undo"
+                onTriggered: {
+                    EventCenter.postEvent("editor.textArea.undo")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Redo"
+                onTriggered: {
+                    EventCenter.postEvent("editor.textArea.redo")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Cut"
+                onTriggered: {
+                    EventCenter.postEvent("editor.textArea.cut")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Copy"
+                onTriggered: {
+                    EventCenter.postEvent("editor.textArea.copy")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Paste"
+                onTriggered: {
+                    EventCenter.postEvent("editor.textArea.paste")
+                }
+            }
+        }
+    }
 
     Settings {
         id: settings

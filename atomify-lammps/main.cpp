@@ -35,6 +35,7 @@
 #include "windowgl2.h"
 #include "codeeditorbackend.h"
 #include "states.h"
+
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -69,6 +70,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<WindowGL2>("Atomify", 1, 0, "WindowGL2");
     qmlRegisterType<MouseMover>("Atomify", 1, 0, "MouseMover");
     qmlRegisterType<States>("Atomify", 1, 0, "States");
+
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
     app.setOrganizationName("Ovilab");

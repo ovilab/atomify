@@ -71,5 +71,8 @@
         <file>visualization/Guide.qml</file>
         <file>desktop/TrackballController.qml</file>
         <file>desktop/FlymodeController.qml</file>
+        <file>EventCenter.qml</file>
+        <file>qmldir</file>
+        <file>EventMapper.qml</file>
     </qresource>
 </RCC>

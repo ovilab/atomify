@@ -130,4 +130,5 @@ DISTFILES += \
     ../snappy-qt5.conf \
     ../atomify-lammps.wrapper \
     ../snapcraft.yaml \
-    ../configure.py
+    ../configure.py \
+    qml/qmldir

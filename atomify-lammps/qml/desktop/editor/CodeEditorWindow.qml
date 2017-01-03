@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 import Atomify 1.0
 
+import "../.."
+
 Item {
     id: root
     property alias dummyEditor: dummyEditor
@@ -155,7 +157,9 @@ Item {
             indexOfCurrentTab -= 1
         }
 
-        tabBar.currentIndex = indexOfCurrentTab
+        if(indexOfCurrentTab) {
+            tabBar.currentIndex = indexOfCurrentTab
+        }
 
         updateOpenFiles()
     }
@@ -273,6 +277,14 @@ Item {
             simulator.didReset.connect( function() {
                 runScript()
             })
+        }
+    }
+
+    EventMapper {
+        mapping: {
+             "editor.textArea": currentEditor.textArea,
+             "editor": currentEditor,
+             "editorWindow": root
         }
     }
 
