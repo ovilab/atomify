@@ -44,8 +44,18 @@ void System::synchronize(LAMMPSController *lammpsController)
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
     Update *update = lammps->update;
-
     if(!domain || !atom || !update) return; // These may not be set in LAMMPS (they probably are, but an easy test).
+
+    domain->box_corners();
+    m_corners.resize(8);
+    bool cornersDidChanged = false;
+    for(int i=0; i<8; i++) {
+        for(int a=0; a<3; a++) {
+            cornersDidChanged = cornersDidChanged || (fabs(m_corners[i][a]-domain->corners[i][a]) > 1e-5);
+            m_corners[i][a] = domain->corners[i][a];
+        }
+    }
+    if(cornersDidChanged) emit cornersChanged(m_corners);
 
     bool originDidChange = false;
     bool sizeDidChange = false;
