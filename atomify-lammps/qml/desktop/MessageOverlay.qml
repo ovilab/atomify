@@ -80,8 +80,6 @@ Atomify is a live LAMMPS editor.
             }
         }
 
-        onHoveredLinkChanged: console.log(hoveredLink)
-
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.NoButton

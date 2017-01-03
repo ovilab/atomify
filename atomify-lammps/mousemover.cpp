@@ -9,7 +9,6 @@ MouseMover::MouseMover(QObject *parent) :
     QObject(parent),
     m_window(0)
 {
-    setShowCursor(true);
 }
 
 MouseMover::~MouseMover()
