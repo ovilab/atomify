@@ -93,7 +93,6 @@ void LAMMPSController::stop()
         lammps_close((void*)m_lammps);
         m_lammps = nullptr;
     }
-    paused = false;
     finished = false;
     didCancel = false;
     crashed = false;

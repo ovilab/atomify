@@ -95,9 +95,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     States &states = *atomifySimulator->states();
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
-    m_lammpsController.paused = states.paused()->active();
-    // If user pressed stop / restart, we should reset
+    if(states.paused()->active()) return;
 
+    // If user pressed stop / restart, we should reset
     if(m_lammpsController.crashed) {
         m_lammpsController.crashed = false;
         m_lammpsController.finished = true;

@@ -33,7 +33,6 @@ public:
     // Getters/setters
     QString scriptFilePath;
     QMap<QString, class SimulatorControl*> simulatorControls;
-    bool paused = false;
     bool finished = false;
     bool didCancel = false;
     bool crashed = false;
