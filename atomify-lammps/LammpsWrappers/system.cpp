@@ -36,7 +36,7 @@ void System::updateCorners(Domain *domain)
             m_corners[i][a] = domain->corners[i][a];
         }
     }
-    if(cornersDidChanged) emit cornersChanged(m_corners);
+    if(cornersDidChanged) emit cornersChanged();
 }
 
 void System::updateSizeAndOrigin(Domain *domain)

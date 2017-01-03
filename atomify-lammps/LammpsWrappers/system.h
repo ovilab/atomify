@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include <QObject>
+#include <QVariant>
 #include <QVector3D>
 #include <mpi.h>
 #include <lammps.h>
@@ -15,7 +16,7 @@ class System : public QObject
     Q_PROPERTY(QVector3D origin READ origin NOTIFY originChanged)
     Q_PROPERTY(QVector3D cameraPosition READ cameraPosition WRITE setCameraPosition NOTIFY cameraPositionChanged)
     Q_PROPERTY(QVector3D center READ center NOTIFY centerChanged)
-    Q_PROPERTY(QVector<QVector3D> corners READ corners NOTIFY cornersChanged)
+    Q_PROPERTY(QVariantList corners READ corners NOTIFY cornersChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
@@ -57,9 +58,13 @@ public:
     void reset();
     bool isValid() const;
 
-    QVector<QVector3D> corners() const
+    QVariantList corners() const
     {
-        return m_corners;
+        QVariantList list;
+        for(const auto& corner: m_corners) {
+            list.append(corner);
+        }
+        return list;
     }
 
 public slots:
@@ -91,7 +96,7 @@ signals:
     void isValidChanged(bool isValid);
     void cameraPositionChanged(QVector3D cameraPosition);
     void centerChanged(QVector3D center);
-    void cornersChanged(QVector<QVector3D> corners);
+    void cornersChanged();
 
 private:
     class Atoms* m_atoms = nullptr;
