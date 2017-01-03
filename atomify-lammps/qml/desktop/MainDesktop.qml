@@ -96,6 +96,8 @@ Item {
 
                     property real centerPointX: visualizerItem.width / 2
                     property real centerPointY: visualizerItem.height / 2
+                    property real correctionX: 0
+                    property real correctionY: 0
                     property real previousX: 0
                     property real previousY: 0
                     property bool ignoreNext: true
@@ -112,9 +114,6 @@ Item {
 
                         var midPoint = getGlobalPosition(Qt.point(centerPointX, centerPointY), visualizerItem)
 
-                        previousX = centerPointX
-                        previousY = centerPointY
-                        ignoreNext = true
                         mouseMover.move(midPoint.x, midPoint.y)
                     }
 
@@ -132,6 +131,11 @@ Item {
                     onPositionChanged: {
                         // TODO fix sudden jitter on fast movement
 
+                        console.log("Previous", previousX, previousY)
+                        console.log("Current", mouse.x, mouse.y)
+                        console.log("Center", centerPointX, centerPointY)
+                        console.log("Ignore", ignoreNext)
+
                         if(ignoreNext) {
                             previousX = mouse.x
                             previousY = mouse.y
@@ -142,7 +146,7 @@ Item {
                         var deltaX = mouse.x - previousX
                         var deltaY = mouse.y - previousY
 
-                        visualizer.flymodePanTilt(deltaX, -deltaY)
+                        visualizer.flymodePanTilt(deltaX + correctionX, -(deltaY + correctionY))
 
                         previousX = mouse.x
                         previousY = mouse.y
@@ -151,7 +155,12 @@ Item {
                            mouse.x < visualizerItem.width * 0.2 ||
                            mouse.y > visualizerItem.height * 0.8 ||
                            mouse.y < visualizerItem.height * 0.2) {
+                            correctionX = mouse.x - centerPointX
+                            correctionY = mouse.y - centerPointY
                             centerMouse()
+                        } else {
+                            correctionX = 0
+                            correctionY = 0
                         }
                     }
                 }
