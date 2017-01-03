@@ -62,10 +62,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         exit(1);
     }
 
-    // qDebug() << "Sync LAMMPS";
     system->synchronize(this);
-    // qDebug() << "Done with that";
-    // system->computes()->computeAll(this);
     system->atoms()->updateData(system);
     system->atoms()->createRenderererData();
     system->updateThreadOnDataObjects(qmlThread);
@@ -217,6 +214,7 @@ void LAMMPSController::start() {
     m_lammps->screen = NULL;
     finished = false;
     didCancel = false;
+    crashed = false;
     lammps_command(m_lammps, "fix atomify all atomify");
     if(!fixExists("atomify")) {
         qDebug() << "Damn, could not create the fix... :/";
@@ -231,7 +229,7 @@ void LAMMPSController::start() {
 bool LAMMPSController::tick()
 {
     if(!m_lammps) return false;
-    if(finished || didCancel) return false;
+    if(finished || didCancel || crashed) return false;
 
     QByteArray ba = scriptFilePath.toLatin1();
     scriptFilePath = "";
@@ -242,13 +240,12 @@ bool LAMMPSController::tick()
         bool hasError = m_lammps->error->get_last_error() != NULL;
         if(hasError) {
             // Handle error
-            QString message = QString::fromUtf8(m_lammps->error->get_last_error());
-            finished = true;
+            errorMessage = QString::fromUtf8(m_lammps->error->get_last_error());
+
+            crashed = true;
             // error = new LammpsError();
             // error->create(message, commandObject);
-            qDebug() << "LAMMPS error: " << message;
-            exit(1);
-
+            qDebug() << "LAMMPS error: " << errorMessage;
             return true;
         } else {
             qDebug() << "Finished the script";
@@ -257,15 +254,5 @@ bool LAMMPSController::tick()
         qDebug() << "Did cancel";
         didCancel = true;
     }
-
-//    if(!m_lammps || error || paused) return false;
-
-//    for(ScriptCommand &commandObject : commands) {
-//        const QString &command = commandObject.command();
-//        executeCommandInLAMMPS(command);
-//        m_canProcessSimulatorControls = commandObject.canProcessSimulatorControls();
-//    }
-
-//    commands.clear();
-//    return true;
+    return true;
 }

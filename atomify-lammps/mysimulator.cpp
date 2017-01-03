@@ -81,6 +81,11 @@ QString AtomifySimulator::scriptFilePath() const
     return m_scriptFilePath;
 }
 
+QString AtomifySimulator::error() const
+{
+    return m_error;
+}
+
 void MyWorker::synchronizeSimulator(Simulator *simulator)
 {
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
@@ -92,6 +97,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.system = atomifySimulator->system();
     m_lammpsController.paused = states.paused()->active();
     // If user pressed stop / restart, we should reset
+
+    if(m_lammpsController.crashed) {
+        m_lammpsController.crashed = false;
+        m_lammpsController.finished = true;
+        atomifySimulator->setError(m_lammpsController.errorMessage);
+        emit atomifySimulator->crashed();
+        return;
+    }
 
     if(states.reset()->active() && !m_cancelPending) {
         m_cancelPending = true;
@@ -190,4 +203,13 @@ void AtomifySimulator::setScriptFilePath(QString scriptFilePath)
 
     m_scriptFilePath = scriptFilePath;
     emit scriptFilePathChanged(scriptFilePath);
+}
+
+void AtomifySimulator::setError(QString error)
+{
+    if (m_error == error)
+        return;
+
+    m_error = error;
+    emit errorChanged(error);
 }

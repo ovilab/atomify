@@ -36,6 +36,8 @@ public:
     bool paused = false;
     bool finished = false;
     bool didCancel = false;
+    bool crashed = false;
+    QString errorMessage;
     LAMMPS_NS::LAMMPS *lammps() const;
     bool tick();
     void stop();

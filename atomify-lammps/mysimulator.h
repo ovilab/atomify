@@ -35,6 +35,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(int simulationSpeed READ simulationSpeed WRITE setSimulationSpeed NOTIFY simulationSpeedChanged)
     Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
     Q_PROPERTY(States* states READ states WRITE setStates NOTIFY statesChanged)
+    Q_PROPERTY(QString error READ error WRITE setError NOTIFY errorChanged)
     Q_PROPERTY(QString scriptFilePath READ scriptFilePath WRITE setScriptFilePath NOTIFY scriptFilePathChanged)
 public:
     int syncCount = 0;
@@ -48,12 +49,16 @@ public:
 
     QString scriptFilePath() const;
 
+    QString error() const;
+
 public slots:
     void setSimulationSpeed(int arg);
     void setSystem(class System* system);
     void setStates(class States* states);
 
     void setScriptFilePath(QString scriptFilePath);
+
+    void setError(QString error);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -73,6 +78,8 @@ signals:
 
     void scriptFilePathChanged(QString scriptFilePath);
 
+    void errorChanged(QString error);
+
 protected:
     virtual MyWorker *createWorker() override;
 
@@ -82,6 +89,7 @@ private:
     class States* m_states;
     int m_simulationSpeed;
     QString m_scriptFilePath;
+    QString m_error;
 };
 
 #endif // MYSIMULATOR_H
