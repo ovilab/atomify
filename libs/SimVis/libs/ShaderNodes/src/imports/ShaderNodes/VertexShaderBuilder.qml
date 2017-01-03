@@ -10,10 +10,7 @@ import QtQuick.Scene3D 2.0
 ShaderBuilder {
     id: vertexShaderBuilder
 
-    property string version: "es2"
-    
-    shaderType: ShaderBuilder.Fragment
-    material: materialRoot
+    property alias positionOut: _position.value
     
     // inputs
     property ShaderNode position: ShaderNode {
@@ -32,7 +29,10 @@ ShaderBuilder {
         result: "vertexTexCoord"
     }
     
-    sourceFile: "qrc:/ShaderNodes/shaders/" + version + "/shader_builder_material.vert"
+    shaderType: ShaderBuilder.Vertex
+    renderPass: builderRenderPass
+    
+    sourceFile: "qrc:/ShaderNodes/shaders/gl3/shader_builder_material.vert"
     
     outputs: [
         ShaderOutput {

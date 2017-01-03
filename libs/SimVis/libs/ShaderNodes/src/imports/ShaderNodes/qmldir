@@ -31,3 +31,7 @@ Sum 1.0 Sum.qml
 UniformValue 1.0 UniformValue.qml
 Value 1.0 Value.qml
 Noise 1.0 Noise.qml
+FragmentShaderBuilder 1.0 FragmentShaderBuilder.qml
+DeferredFragmentShaderBuilder 1.0 DeferredFragmentShaderBuilder.qml
+DeferredVertexShaderProgram 1.0 DeferredVertexShaderProgram.qml
+VertexShaderBuilder 1.0 VertexShaderBuilder.qml
