@@ -94,6 +94,9 @@ void LAMMPSController::stop()
         m_lammps = nullptr;
     }
     paused = false;
+    finished = false;
+    didCancel = false;
+    crashed = false;
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {
@@ -235,12 +238,13 @@ bool LAMMPSController::run()
     if(finished || didCancel || crashed) return false;
 
     QByteArray ba = scriptFilePath.toLatin1();
+    qDebug() << "Will run script " << scriptFilePath;
     scriptFilePath = "";
 
     try {
         lammps_file(m_lammps, ba.data());
-        finished = true;
         bool hasError = m_lammps->error->get_last_error() != NULL;
+        qDebug() << "Finished with that and error: " << hasError;
         if(hasError) {
             // Handle error
             errorMessage = QString::fromUtf8(m_lammps->error->get_last_error());
@@ -252,6 +256,7 @@ bool LAMMPSController::run()
             return true;
         } else {
             qDebug() << "Finished the script";
+            finished = true;
         }
     } catch(Cancelled cancelled) {
         qDebug() << "Did cancel";
