@@ -63,14 +63,28 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     }
 
     system->synchronize(this);
-    system->atoms()->updateData(system);
+    system->atoms()->processModifiers(system);
     system->atoms()->createRenderererData();
+    worker->m_reprocessRenderingData = false;
+
     system->updateThreadOnDataObjects(qmlThread);
 
     worker->setNeedsSynchronization(true);
     while(worker->needsSynchronization()) {
         if(QThread::currentThread()->isInterruptionRequested()) {
+            // Happens if main thread wants to exit application
             throw Cancelled();
+        }
+
+        if(worker->m_reprocessRenderingData) {
+            system->atoms()->processModifiers(system);
+            if(worker->m_workerRenderingMutex.tryLock()) {
+                // qDebug() << "Will create renderer data";
+                system->atoms()->createRenderererData();
+                worker->m_reprocessRenderingData = false;
+                // qDebug() << "Did  create renderer data";
+                worker->m_workerRenderingMutex.unlock();
+            }
         }
 
         QThread::currentThread()->msleep(17); // Sleep 1/60th of a second

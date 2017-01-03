@@ -95,7 +95,16 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     States &states = *atomifySimulator->states();
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
-    if(states.paused()->active()) return;
+    if(states.paused()->active()) {
+        if(m_workerRenderingMutex.tryLock()) {
+            // qDebug() << "Will synchronize renderer";
+            atomifySimulator->system()->atoms()->synchronizeRenderer();
+            // qDebug() << "Did synchronize renderer";
+            m_workerRenderingMutex.unlock();
+            m_reprocessRenderingData = true;
+        }
+        return;
+    }
 
     // If user pressed stop / restart, we should reset
     if(m_lammpsController.crashed) {
