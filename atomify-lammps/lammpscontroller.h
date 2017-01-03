@@ -39,7 +39,7 @@ public:
     bool crashed = false;
     QString errorMessage;
     LAMMPS_NS::LAMMPS *lammps() const;
-    bool tick();
+    bool run();
     void stop();
     void start();
     QThread *qmlThread = nullptr;

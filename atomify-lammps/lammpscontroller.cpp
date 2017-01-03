@@ -229,7 +229,7 @@ void LAMMPSController::start() {
     changeWorkingDirectoryToScriptLocation();
 }
 
-bool LAMMPSController::tick()
+bool LAMMPSController::run()
 {
     if(!m_lammps) return false;
     if(finished || didCancel || crashed) return false;
