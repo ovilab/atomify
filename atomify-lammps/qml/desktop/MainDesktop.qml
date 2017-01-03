@@ -93,6 +93,7 @@ Item {
                     id: flymodeOverlay
                     anchors.fill: visualizer
                     hoverEnabled: true
+                    propagateComposedEvents: true
 
                     property real centerPointX: visualizerItem.width / 2
                     property real centerPointY: visualizerItem.height / 2
@@ -129,6 +130,10 @@ Item {
                     }
 
                     onPositionChanged: {
+                        if(visualizer.mode !== "flymode") {
+                            return
+                        }
+
                         // TODO fix sudden jitter on fast movement
 
                         console.log("Previous", previousX, previousY)
@@ -163,6 +168,8 @@ Item {
                             correctionY = 0
                         }
                     }
+
+                    onPressed: mouse.accepted = false
                 }
 
                 MessageOverlay {
@@ -276,6 +283,14 @@ Item {
             sequence: "Alt+R"
             onActivated: {
                 visualizer.resetToSystemCenter()
+            }
+        }
+
+        Shortcut {
+            sequence: "Escape"
+            onActivated: {
+                visualizer.mode = "trackball"
+                visualizer.focus = true
             }
         }
     }

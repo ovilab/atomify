@@ -101,14 +101,6 @@ Pane {
     }
 
     Shortcut {
-        sequence: "Escape"
-        onActivated: {
-            visualizer.controller.mode = "trackball" // TODO stop this hack
-            visualizer.focus = true
-        }
-    }
-
-    Shortcut {
         sequence: "Ctrl+R"
         context: Qt.ApplicationShortcut
         onActivated: editorWindow.runScript()
