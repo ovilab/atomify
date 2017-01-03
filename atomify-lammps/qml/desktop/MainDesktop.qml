@@ -130,6 +130,8 @@ Item {
                     }
 
                     onPositionChanged: {
+                        // TODO fix sudden jitter on fast movement
+
                         if(ignoreNext) {
                             previousX = mouse.x
                             previousY = mouse.y

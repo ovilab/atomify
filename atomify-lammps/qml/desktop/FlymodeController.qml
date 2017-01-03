@@ -229,7 +229,7 @@ Entity {
                 root.camera.translate(Qt.vector3d(keyboardXAxis.value*flymodeFinalSpeed, 0.0, keyboardYAxis.value*flymodeFinalSpeed))
                 root.camera.translate(Qt.vector3d(0, flymodeFinalSpeed*keyboardTiltAxis.value, 0))
 
-                root.camera.pan(root.pan * dt * lookSpeed, d.upVector)
+                root.camera.pan(root.pan * dt * lookSpeed, d.firstPersonUp)
                 tiltWithLimits(root.tilt * dt * lookSpeed);
 
                 root.pan = 0
