@@ -182,6 +182,7 @@ Item {
                     visible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active
                     height: parent.height*0.2
                     y: parent.height*0.2
+                    errorMessage: simulator.error
 
                     welcome: simulator.states.idle.active
                     finished: simulator.states.finished.active

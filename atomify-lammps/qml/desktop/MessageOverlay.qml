@@ -28,7 +28,7 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Simulation crashed</h2>
-Error message: "+errorMessage
+"+errorMessage
 
     property string welcomeText:
         "
