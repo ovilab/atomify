@@ -148,7 +148,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::work()
 {
     m_workCount += 1;
-    m_lammpsController.tick();
+    m_lammpsController.run();
 
     auto dt = m_elapsed.elapsed();
     double delta = 16 - dt;
