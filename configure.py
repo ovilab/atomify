@@ -8,8 +8,6 @@ from os.path import join, abspath
 from sys import platform as _platform
 import glob
 
-stable_commit = "a2b4a794d9a2870b135ad596fe58ad79e2569570"
-
 def run_command(cmd):
     print cmd
     subprocess.call(cmd, shell=True, env=env)
@@ -64,7 +62,7 @@ if not os.path.isdir(lammps_source_dir):
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
 os.chdir(lammps_source_dir)
-run_command("git checkout atomify")
+run_command("git checkout atomify_new")
 run_command("git pull")
 os.chdir(root_path)
 

@@ -48,6 +48,7 @@ public:
     bool interactive() const;
     bool isPerAtom() const;
     bool hovered() const;
+    void updateData1D();
     const std::vector<double> &atomData() const;
     int perAtomIndex() const;
     int numPerAtomValues() const;
@@ -126,7 +127,7 @@ protected:
     QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
     QString createCommandPrefix() override;
-    long lastUpdate = -1;
+    long m_lastUpdate = -1;
 };
 
 #endif // COMPUTE_H

@@ -12,31 +12,39 @@
 #include <variable.h>
 #include <error.h>
 #include "parser/scriptcommand.h"
+#include <QThread>
+#include <lmptype.h>
+
+void synchronizeLAMMPS_callback(void *caller, int mode);
+
+class Cancelled : public std::exception { };
 
 class LAMMPSController
 {
 private:
-    void executeCommandInLAMMPS(QString command);
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
-    class System *m_system = nullptr;
-    bool m_canProcessSimulatorControls = false;
+    void changeWorkingDirectoryToScriptLocation();
 public:
+    class System *system = nullptr;
+
     LAMMPSController();
     ~LAMMPSController();
-
+    class MyWorker *worker = nullptr;
     // Getters/setters
+    QString scriptFilePath;
     QMap<QString, class SimulatorControl*> simulatorControls;
-    class LammpsError *error = nullptr;
     bool paused = false;
-    bool canProcessSimulatorControls() const;
-    QList<ScriptCommand> commands;
-    class System *system() const;
-    void setSystem(class System *system);
+    bool finished = false;
+    bool didCancel = false;
+    bool crashed = false;
+    QString errorMessage;
     LAMMPS_NS::LAMMPS *lammps() const;
     bool tick();
     void stop();
     void start();
+    QThread *qmlThread = nullptr;
 
+    void synchronizeLAMMPS(int mode);
     // LAMMPS internal access
     int findComputeId(QString identifier);
     int findVariableIndex(QString identifier);

@@ -21,20 +21,15 @@ bool Variables::isSupported(LAMMPSController *lammpsController, int ivar)
     return lammpsController->lammps()->input->variable->equalstyle(ivar) || lammpsController->lammps()->input->variable->atomstyle(ivar);
 }
 
-void Variables::synchronize(LAMMPSController *lammpsController)
+bool Variables::addOrRemove(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        reset();
-        return;
-    }
-
     Variable *variable = lammps->input->variable;
     int nvar;
     Info info(lammps);
     char **names = info.get_variable_names(nvar);
     bool anyChanges = false;
-    if(names == nullptr) return; // Maybe next time
+    if(names == nullptr) return false; // Maybe next time
 
     // First loop through all variables in LAMMPS to find new variables
     for(int i=0; i<nvar; i++) {
@@ -67,22 +62,36 @@ void Variables::synchronize(LAMMPSController *lammpsController)
         remove(variable->identifier());
     }
 
-    // Our list is now up to date with only active variables
+    return anyChanges;
+}
+
+void Variables::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) return;
+    bool anyChanges = addOrRemove(lammpsController);
 
     if(anyChanges) {
         setModel(QVariant::fromValue(m_data));
         setCount(m_data.size());
     }
-    // qDebug() << "We got " << m_data.size() << " variables of equal style";
 
-    if(!lammpsController->canProcessSimulatorControls()) return;
+    for(QObject *obj : m_data) {
+        CPVariable *variable = qobject_cast<CPVariable*>(obj);
+        variable->updateData1D();
+    }
+}
 
-    lammps->update->whichflag = 1;
+void Variables::copyData(LAMMPSController *lammpsController) {
     for(QObject *object : m_data) {
         CPVariable *variable = qobject_cast<CPVariable*>(object);
         variable->synchronize(lammpsController);
     }
-    lammps->update->whichflag = 0;
+}
+
+void Variables::synchronize(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) return;
+    copyData(lammpsController);
 }
 
 int Variables::count() const

@@ -46,22 +46,16 @@ void Computes::reset() {
     setCount(0);
 }
 
-void Computes::synchronize(LAMMPSController *lammpsController)
-{
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps || !lammps->modify) {
-        reset();
-        return;
-    }
-
-    Modify *modify = lammps->modify;
-    int numComputes = modify->ncompute;
+bool Computes::addOrRemove(LAMMPSController *lammpsController) {
     bool anyChanges = false;
-    for(int computeIndex=0; computeIndex<numComputes; computeIndex++) {
+    Modify *modify = lammpsController->lammps()->modify;
+
+    for(int computeIndex=0; computeIndex<modify->ncompute; computeIndex++) {
         Compute *compute = modify->compute[computeIndex];
         QString identifier = QString::fromUtf8(compute->id);
 
         if(!m_dataMap.contains(identifier)) {
+            // New compute we don't have in our list
             anyChanges = true;
             addCompute(identifier, lammpsController);
         }
@@ -81,25 +75,44 @@ void Computes::synchronize(LAMMPSController *lammpsController)
         removeCompute(compute->identifier());
     }
 
+    return anyChanges;
+}
+
+void Computes::updateThreadOnDataObjects(QThread *thread) {
     for(QObject *obj : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(obj);
         for(QVariant &variant : compute->data1D()) {
             Data1D *data = variant.value<Data1D *>();
-            emit data->updated(data);
+            if(data->thread() != thread) {
+                data->moveToThread(thread);
+            }
         }
     }
+}
+
+void Computes::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) return;
+
+    bool anyChanges = addOrRemove(lammpsController);
 
     if(anyChanges) {
         setModel(QVariant::fromValue(m_data));
         setCount(m_data.size());
     }
 
-    if(!lammpsController->canProcessSimulatorControls()) return;
-    for(QObject *object : m_data) {
-        CPCompute *compute = qobject_cast<CPCompute*>(object);
-        compute->copyData(lammpsController);
+    for(QObject *obj : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(obj);
+        compute->updateData1D();
     }
+}
 
+void Computes::synchronize(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+
+    computeAll(lammpsController);
+    copyAll(lammpsController);
 }
 
 void Computes::computeAll(LAMMPSController *lammpsController)
@@ -107,6 +120,13 @@ void Computes::computeAll(LAMMPSController *lammpsController)
     for(QObject *object : m_data) {
         CPCompute *compute = qobject_cast<CPCompute*>(object);
         compute->computeInLAMMPS(lammpsController);
+    }
+}
+
+void Computes::copyAll(LAMMPSController *lammpsController) {
+    for(QObject *object : m_data) {
+        CPCompute *compute = qobject_cast<CPCompute*>(object);
+        compute->copyData(lammpsController);
     }
 }
 
@@ -118,11 +138,6 @@ int Computes::count() const
 QVariant Computes::model() const
 {
     return m_model;
-}
-
-bool Computes::active() const
-{
-    return m_active;
 }
 
 QVector<CPCompute *> Computes::computes()
@@ -151,13 +166,4 @@ void Computes::setModel(QVariant model)
 
     m_model = model;
     emit modelChanged(model);
-}
-
-void Computes::setActive(bool active)
-{
-    if (m_active == active)
-        return;
-
-    m_active = active;
-    emit activeChanged(active);
 }

@@ -2,6 +2,7 @@
 #include "states.h"
 #include "LammpsWrappers/lammpserror.h"
 #include <fix_ave_time.h>
+#include <unistd.h>
 #include <integrate.h>
 #include <library.h>
 #include <atom.h>
@@ -17,6 +18,7 @@
 #include <fix_nve.h>
 #include <fix_nvt.h>
 #include <fix_npt.h>
+#include <fix_atomify.h>
 #include <stdio.h>
 #include <QDebug>
 #include <string>
@@ -24,25 +26,19 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
+#include <functional>
+#include "LammpsWrappers/computes.h"
 #include "parser/scriptcommand.h"
 #include "mysimulator.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include "LammpsWrappers/system.h"
+#include "LammpsWrappers/atoms.h"
 
 using namespace std;
 using namespace LAMMPS_NS;
 
-System *LAMMPSController::system() const
-{
-    return m_system;
-}
-
-void LAMMPSController::setSystem(System *system)
-{
-    m_system = system;
-}
-
-LAMMPSController::LAMMPSController()
+LAMMPSController::LAMMPSController() :
+    system(nullptr)
 {
 
 }
@@ -51,6 +47,36 @@ LAMMPSController::~LAMMPSController()
 {
     stop();
 }
+
+void synchronizeLAMMPS_callback(void *caller, int mode)
+{
+    LAMMPSController *controller = static_cast<LAMMPSController*>(caller);
+    controller->synchronizeLAMMPS(mode);
+}
+
+void LAMMPSController::synchronizeLAMMPS(int mode)
+{
+    if(mode != LAMMPS_NS::FixConst::END_OF_STEP && mode != LAMMPS_NS::FixConst::MIN_POST_FORCE) return;
+    if(!system) {
+        qDebug() << "Error, we dont have system object. Anders or Svenn-Arne did a horrible job here...";
+        exit(1);
+    }
+
+    system->synchronize(this);
+    system->atoms()->updateData(system);
+    system->atoms()->createRenderererData();
+    system->updateThreadOnDataObjects(qmlThread);
+
+    worker->setNeedsSynchronization(true);
+    while(worker->needsSynchronization()) {
+        QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
+    }
+
+    if(worker->m_cancelPending) {
+        qDebug() << "Throwing cancelled";
+        throw Cancelled();
+    }
+ }
 
 LAMMPS *LAMMPSController::lammps() const
 {
@@ -64,33 +90,7 @@ void LAMMPSController::stop()
         lammps_close((void*)m_lammps);
         m_lammps = nullptr;
     }
-
-    if(error) {
-        delete error;
-        error = nullptr;
-    }
-    commands.clear();
     paused = false;
-}
-
-void LAMMPSController::executeCommandInLAMMPS(QString command) {
-    if(m_lammps == nullptr) {
-        qDebug() << "Warning, trying to run a LAMMPS command with no LAMMPS object.";
-        qDebug() << "Command: " << command;
-        return;
-    }
-
-    if(true || !command.startsWith("run")) {
-        qDebug() << "EXECUTING LAMMPS COMMAND: " << command;
-    }
-
-    QByteArray commandBytes = command.toUtf8();
-    lammps_command((void*)m_lammps, (char*)commandBytes.data());
-}
-
-bool LAMMPSController::canProcessSimulatorControls() const
-{
-    return m_canProcessSimulatorControls;
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {
@@ -176,6 +176,18 @@ bool LAMMPSController::computeExists(QString identifier) {
     return (findComputeId(identifier) >= 0);
 }
 
+void LAMMPSController::changeWorkingDirectoryToScriptLocation() {
+    QFileInfo fileInfo(scriptFilePath);
+    if(!fileInfo.exists()) {
+        qDebug() << "File " << scriptFilePath << " does not exist";
+        return;
+    }
+
+    QString currentDirectory = fileInfo.absoluteDir().path();
+    QByteArray currentDirBytes = currentDirectory.toUtf8();
+    chdir(currentDirBytes.constData());
+}
+
 void LAMMPSController::start() {
     if(m_lammps) {
         stop();
@@ -200,29 +212,47 @@ void LAMMPSController::start() {
     //    sprintf(argv[5], "1");
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;
-    error = nullptr;
-    commands.clear();
+    finished = false;
+    didCancel = false;
+    crashed = false;
+    lammps_command(m_lammps, "fix atomify all atomify");
+    if(!fixExists("atomify")) {
+        qDebug() << "Damn, could not create the fix... :/";
+        exit(1);
+    }
+
+    FixAtomify *fix = dynamic_cast<FixAtomify*>(findFixByIdentifier(QString("atomify")));
+    fix->set_callback(&synchronizeLAMMPS_callback, this);
+    changeWorkingDirectoryToScriptLocation();
 }
 
 bool LAMMPSController::tick()
 {
-    if(!m_lammps || error || paused) return false;
+    if(!m_lammps) return false;
+    if(finished || didCancel || crashed) return false;
 
-    for(ScriptCommand &commandObject : commands) {
-        const QString &command = commandObject.command();
-        executeCommandInLAMMPS(command);
+    QByteArray ba = scriptFilePath.toLatin1();
+    scriptFilePath = "";
 
+    try {
+        lammps_file(m_lammps, ba.data());
+        finished = true;
         bool hasError = m_lammps->error->get_last_error() != NULL;
         if(hasError) {
             // Handle error
-            QString message = QString::fromUtf8(m_lammps->error->get_last_error());
-            error = new LammpsError();
-            error->create(message, commandObject);
-            return true;
-        }
-        m_canProcessSimulatorControls = commandObject.canProcessSimulatorControls();
-    }
+            errorMessage = QString::fromUtf8(m_lammps->error->get_last_error());
 
-    commands.clear();
+            crashed = true;
+            // error = new LammpsError();
+            // error->create(message, commandObject);
+            qDebug() << "LAMMPS error: " << errorMessage;
+            return true;
+        } else {
+            qDebug() << "Finished the script";
+        }
+    } catch(Cancelled cancelled) {
+        qDebug() << "Did cancel";
+        didCancel = true;
+    }
     return true;
 }

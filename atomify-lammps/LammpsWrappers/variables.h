@@ -18,6 +18,7 @@ public:
     QVariant model() const;
     QVector<class CPVariable*> variables();
 
+    void synchronizeQML(LAMMPSController *lammpsController);
 signals:
     void countChanged(int count);
     void modelChanged(QVariant model);
@@ -34,6 +35,8 @@ private:
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;
     bool isSupported(class LAMMPSController *lammpsController, int ivar);
+    void copyData(LAMMPSController *lammpsController);
+    bool addOrRemove(LAMMPSController *lammpsController);
 };
 
 #endif // VARIABLES_H

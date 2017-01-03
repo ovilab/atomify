@@ -22,19 +22,20 @@ Pane {
 
     function reportError() {
         if(simulator.crashed) {
-            var error = simulator.scriptHandler.error
-            if(error.scriptFile === "") {
-                consoleOutput.append(" Simulation crashed on line "+error.line)
-                consoleOutput.append(" Command: '"+error.command+"'")
-                consoleOutput.append(" Error: '"+error.message+"'")
-                editorWindow.errorLine = error.line
-            } else {
-                consoleOutput.append(" Simulation crashed.")
-                consoleOutput.append(" File: <a style=\"color: #56B6C2; font-weight: bold;\" href=\"file://"+error.scriptPath + "?errorLine="+error.line+"\">"+error.scriptFile+"</a> on line " + error.line)
-                consoleOutput.append(" Command: '"+error.command+"'")
-                consoleOutput.append(" Error: '"+error.message+"'")
-                editorWindow.errorLine = error.line
-            }
+            var error = simulator.error
+            consoleOutput.append(" Simulation crashed with message "+error)
+//            if(error.scriptFile === "") {
+//                consoleOutput.append(" Simulation crashed on line "+error.line)
+//                consoleOutput.append(" Command: '"+error.command+"'")
+//                consoleOutput.append(" Error: '"+error.message+"'")
+//                editorWindow.errorLine = error.line
+//            } else {
+//                consoleOutput.append(" Simulation crashed.")
+//                consoleOutput.append(" File: <a style=\"color: #56B6C2; font-weight: bold;\" href=\"file://"+error.scriptPath + "?errorLine="+error.line+"\">"+error.scriptFile+"</a> on line " + error.line)
+//                consoleOutput.append(" Command: '"+error.command+"'")
+//                consoleOutput.append(" Error: '"+error.message+"'")
+//                editorWindow.errorLine = error.line
+//            }
         }
     }
 

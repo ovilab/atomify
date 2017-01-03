@@ -16,8 +16,11 @@ Window {
         if(!compute) return
         updateSeries("line")
         for(var key in compute.data1D) {
-            compute.data1D[key].updated.connect(updateGraphs(key))
-            compute.data1D[key].xySeries = dataSeries[key]
+            var data = compute.data1D[key]
+            data.updated.connect(updateGraphs(key))
+
+            data.updateXYSeries(dataSeries[key])
+            data.xySeries = dataSeries[key]
         }
         title = "Compute '"+compute.identifier+"'"
         compute.willBeDestroyed.connect(function() {

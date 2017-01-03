@@ -27,19 +27,19 @@ System::System(AtomifySimulator *simulator)
 
 void System::synchronize(LAMMPSController *lammpsController)
 {
+    LAMMPS *lammps = lammpsController->lammps();
+    if(!lammps) {
+        reset();
+        return;
+    }
+    setIsValid(true);
+
     m_regions->synchronize(lammpsController);
     m_groups->synchronize(lammpsController);
     m_atoms->synchronize(lammpsController);
     m_computes->synchronize(lammpsController);
     m_variables->synchronize(lammpsController);
     m_fixes->synchronize(lammpsController);
-
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps) {
-        setIsValid(false);
-        return;
-    }
-    setIsValid(true);
 
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
@@ -80,8 +80,9 @@ void System::synchronize(LAMMPSController *lammpsController)
         emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
     }
 
-    if(m_simulationTime != update->atime) {
-        m_simulationTime = update->atime;
+    float currentTime = update->atime + update->dt*(update->ntimestep - update->atimestep);
+    if(m_simulationTime != currentTime) {
+        m_simulationTime = currentTime;
         emit simulationTimeChanged(m_simulationTime);
     }
 
@@ -147,6 +148,9 @@ int System::numberOfAtomTypes() const
 
 void System::reset()
 {
+    setIsValid(false);
+    m_fixes->reset();
+    m_atoms->reset();
     m_groups->reset();
     m_computes->reset();
     m_regions->reset();
@@ -163,7 +167,6 @@ void System::reset()
     emit originChanged(m_origin);
     emit numberOfAtomsChanged(m_numberOfAtoms);
     emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
-    m_atoms->reset();
 }
 
 float System::volume() const
@@ -174,6 +177,20 @@ float System::volume() const
 bool System::isValid() const
 {
     return m_isValid;
+}
+
+void System::synchronizeQML(LAMMPSController *lammpsController)
+{
+    m_computes->synchronizeQML(lammpsController);
+    m_variables->synchronizeQML(lammpsController);
+    m_fixes->synchronizeQML(lammpsController);
+    m_regions->synchronizeQML(lammpsController);
+    m_groups->synchronizeQML(lammpsController);
+}
+
+void System::updateThreadOnDataObjects(QThread *thread)
+{
+    m_computes->updateThreadOnDataObjects(thread);
 }
 
 QVector3D System::cameraPosition() const

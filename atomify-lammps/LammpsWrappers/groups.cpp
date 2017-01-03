@@ -10,10 +10,10 @@ Groups::Groups(AtomifySimulator *simulator)
 
 void Groups::add(QString identifier) {
     if(m_dataMap.contains(identifier)) return;
-    CPGroup *newGroup = new CPGroup(this);
-    newGroup->setIdentifier(identifier);
-    m_data.push_back(newGroup);
-    m_dataMap.insert(identifier, newGroup);
+    CPGroup *group = new CPGroup();
+    group->setIdentifier(identifier);
+    m_data.push_back(group);
+    m_dataMap.insert(identifier, group);
 }
 
 void Groups::remove(QString identifier) {
@@ -25,15 +25,9 @@ void Groups::remove(QString identifier) {
     delete group;
 }
 
-void Groups::synchronize(LAMMPSController *lammpsController)
+bool Groups::addOrRemove(LAMMPSController *lammpsController)
 {
-    LAMMPS *lammps = lammpsController->lammps();
-    if(!lammps || !lammps->group) {
-        reset();
-        return;
-    }
-
-    Group *lammpsGroup = lammps->group;
+    Group *lammpsGroup = lammpsController->lammps()->group;
     int numGroups = lammpsGroup->ngroup;
     setCount(numGroups);
 
@@ -59,12 +53,23 @@ void Groups::synchronize(LAMMPSController *lammpsController)
         remove(identifier);
     }
 
+    return anyChanges;
+}
+
+void Groups::synchronizeQML(LAMMPSController *lammpsController)
+{
+    if(!lammpsController->lammps()) { return; }
+    bool anyChanges = addOrRemove(lammpsController);
+    if(anyChanges) {
+        setModel(QVariant::fromValue(m_data));
+    }
+}
+
+void Groups::synchronize(LAMMPSController *lammpsController)
+{
     for(QObject *obj : m_data) {
         CPGroup *group = static_cast<CPGroup*>(obj);
         group->update(lammpsController->lammps());
-    }
-    if(anyChanges) {
-        setModel(QVariant::fromValue(m_data));
     }
 }
 

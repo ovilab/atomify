@@ -7,7 +7,7 @@
 #include "../../dataproviders/data1d.h"
 
 CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
-    m_histogram(nullptr)
+    m_histogram(new Data1D(this))
 {
 }
 
@@ -49,7 +49,7 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
                 m_data.push_back(QVariant::fromValue(data));
             }
         }
-        if(fix->nextvalid() == lammpsController->system()->currentTimestep()+1) {
+        if(fix->nextvalid() == lammpsController->system->currentTimestep()+1) {
             QStringList labels = {"x", "y", "z"};
 
             int x = dim[0];
@@ -58,10 +58,10 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
 
             QSize size(nlayers[0], nlayers[1]);
 
-            float xMin = lammpsController->system()->origin()[x];
-            float xMax = lammpsController->system()->origin()[x] + lammpsController->system()->size()[x];
-            float zMin = lammpsController->system()->origin()[z];
-            float zMax = lammpsController->system()->origin()[z] + lammpsController->system()->size()[z];
+            float xMin = lammpsController->system->origin()[x];
+            float xMax = lammpsController->system->origin()[x] + lammpsController->system->size()[x];
+            float zMin = lammpsController->system->origin()[z];
+            float zMax = lammpsController->system->origin()[z] + lammpsController->system->size()[z];
 
             QString xLabel = labels[x];
             QString yLabel = labels[y];
@@ -111,10 +111,7 @@ bool CPFix::copyData(FixAveHisto *fix, LAMMPSController *lammpsController) {
     if(!fix) return false;
     int nbins;
     fix->extract("nbins", nbins);
-    if(!m_histogram) {
-        m_histogram = new Data1D(this);
-        m_histogram->setEnabled(true);
-    }
+    m_histogram->setEnabled(true);
 
 //    for(int i=0; i<nbins; i++) {
 //        double binCenter = fix->compute_array(i, 0);
@@ -129,9 +126,9 @@ bool CPFix::copyData(FixAveHisto *fix, LAMMPSController *lammpsController) {
 
 void CPFix::copyData(LAMMPSController *lammpsController)
 {
-    // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
-    if(lastUpdate != -1 && (lammpsController->system()->currentTimestep()-lastUpdate) < m_frequency) return;
-    // if(lammpsController->system()->timesteps() % m_frequency != 0) return;
+    // if(lammpsController->system->timesteps() % m_frequency != 0) return;
+    if(lastUpdate != -1 && (lammpsController->system->currentTimestep()-lastUpdate) < m_frequency) return;
+    // if(lammpsController->system->timesteps() % m_frequency != 0) return;
     Fix *lmp_fix = lammpsController->findFixByIdentifier(identifier());
     if(lmp_fix == nullptr) return;
     if(copyData(dynamic_cast<FixAveChunk*>(lmp_fix), lammpsController)) return;

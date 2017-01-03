@@ -16,7 +16,6 @@
 #include "LammpsWrappers/simulatorcontrols/cpfix.h"
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
 #include "LammpsWrappers/simulatorcontrols/nvt.h"
-#include "parser/scripthandler.h"
 #include "LammpsWrappers/simulatorcontrols/rdf.h"
 #include "vendor.h"
 #include "datasource.h"
@@ -36,11 +35,9 @@
 #include "windowgl2.h"
 #include "codeeditorbackend.h"
 #include "states.h"
-#include "LammpsWrappers/lammpserror.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
-    qmlRegisterType<ScriptHandler>("Atomify", 1, 0, "ScriptHandler");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
@@ -72,7 +69,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<WindowGL2>("Atomify", 1, 0, "WindowGL2");
     qmlRegisterType<MouseMover>("Atomify", 1, 0, "MouseMover");
     qmlRegisterType<States>("Atomify", 1, 0, "States");
-    qmlRegisterType<LammpsError>("Atomify", 1, 0, "LammpsError");
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
     app.setOrganizationName("Ovilab");
