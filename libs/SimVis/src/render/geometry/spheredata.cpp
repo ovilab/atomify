@@ -28,6 +28,13 @@ void SphereData::setData(QVector<SphereVBOData> data) {
     emit countChanged(m_count);
 }
 
+void SphereData::setData(QByteArray byteArray, int count)
+{
+    m_buffer->setData(byteArray);
+    m_count = count;
+    emit countChanged(m_count);
+}
+
 void SphereData::setData(const QVector<QVector3D> &positions, const QVector<QVector3D> &colors, const QVector<float> &scales)
 {
     if(positions.size() != colors.size() || positions.size() != scales.size()) {
