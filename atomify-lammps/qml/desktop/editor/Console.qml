@@ -8,11 +8,6 @@ ColumnLayout {
     property AtomifySimulator simulator
     property TextArea output: consoleOutput
     property alias textField: singleCommand
-    onSimulatorChanged: {
-        simulator.scriptHandler.onConsoleOutput.connect(function(message) {
-            consoleOutput.append(message)
-        })
-    }
 
     function clear() {
         consoleOutput.text = ""
