@@ -120,6 +120,6 @@ else:
 print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
-run_command("make yes-rigid yes-manybody")
+run_command("make yes-rigid yes-manybody yes-mc yes-molecule yes-granular yes-kspace")
 run_command("make -j4 " + lammps_build_type + " mode=lib")
 os.chdir(root_path)
