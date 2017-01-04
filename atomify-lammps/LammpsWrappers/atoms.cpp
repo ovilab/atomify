@@ -5,6 +5,7 @@
 #include <neighbor.h>
 #include <neigh_request.h>
 #include <neigh_list.h>
+#include <force.h>
 #include "modifiers/modifiers.h"
 #include "mysimulator.h"
 #include "bonds.h"
@@ -251,17 +252,15 @@ bool Atoms::doWeHavefullNeighborList(Neighbor *neighbor) {
     }
 }
 
-void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
-    bondsDataRaw.resize(0);
+bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSController *controller)
+{
     if(!m_bonds->enabled()) {
-        m_bondsDataRaw.clear();
-        return;
+        return false;
     }
 
     bool hasNeighborLists = controller->lammps()->neighbor->nlist > 0;
     if(!hasNeighborLists) {
-        m_bondsDataRaw.clear();
-        return;
+        return false;
     }
 
     Neighbor *neighbor = controller->lammps()->neighbor;
@@ -272,7 +271,6 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
 
     bondsDataRaw.reserve(atomData.positions.size());
     bool fullNeighborList = doWeHavefullNeighborList(neighbor);
-    unsigned long numBonds = 0;
     for(int ii=0; ii<atomData.size(); ii++) {
         if(!atomData.visible[ii]) continue;
         int i = atomData.originalIndex[ii];
@@ -305,7 +303,6 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
             if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
-                numBonds++;
                 BondVBOData bond;
                 bond.vertex1[0] = position_i[0];
                 bond.vertex1[1] = position_i[1];
@@ -322,7 +319,57 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
             }
         }
     }
-    setNumberOfBonds(numBonds);
+    return true;
+}
+
+bool Atoms::generateBondDataFromBondList(AtomData &atomData, LAMMPSController *controller)
+{
+    Atom *atom = controller->lammps()->atom;
+    if(atom->nbonds==0) return false;
+    for(int ii=0; ii<atomData.size(); ii++) {
+        int i = atomData.originalIndex[ii];
+        QVector3D position_i = atomData.positions[ii];
+        const QVector3D deltaPosition = atomData.deltaPositions[ii];
+        position_i += deltaPosition;
+
+        for(int jj=0; jj<atom->num_bond[i]; jj++) {
+            int j = atom->map(atom->bond_atom[i][jj]);
+            if(j < 0 || j>=atomData.size()) continue;
+            if(!controller->lammps()->force->newton_bond && i<j) continue;
+
+            QVector3D position_j = atomData.positions[j] + deltaPosition;
+
+            BondVBOData bond;
+            bond.vertex1[0] = position_i[0];
+            bond.vertex1[1] = position_i[1];
+            bond.vertex1[2] = position_i[2];
+            bond.vertex2[0] = position_j[0];
+            bond.vertex2[1] = position_j[1];
+            bond.vertex2[2] = position_j[2];
+            float bondRadius = 0.1*m_bondScale;
+            bond.radius1 = bondRadius;
+            bond.radius2 = bondRadius;
+            bond.sphereRadius1 = atomData.radii[i]*m_sphereScale;
+            bond.sphereRadius2 = atomData.radii[j]*m_sphereScale;
+            bondsDataRaw.push_back(bond);
+        }
+    }
+
+    return true;
+}
+
+void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
+    bondsDataRaw.resize(0);
+
+    bool didCreateFromNeighborList = generateBondDataFromNeighborList(atomData, controller);
+    bool didCreateFromBondList = generateBondDataFromBondList(atomData, controller);
+
+    if(!didCreateFromBondList && !didCreateFromNeighborList) {
+        m_bondsDataRaw.clear();
+        return;
+    }
+
+    setNumberOfBonds(bondsDataRaw.size());
     m_bondsDataRaw.resize(bondsDataRaw.size() * sizeof(BondVBOData));
     BondVBOData *posData = reinterpret_cast<BondVBOData*>(m_bondsDataRaw.data());
     // TODO can we just set the address here? Instead of copying.

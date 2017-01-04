@@ -89,7 +89,9 @@ private:
     class Bonds* m_bonds = nullptr;
     QVariantList m_modifiers;
     void generateBondData(AtomData &atomData, LAMMPSController *controller);
-    void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
+    void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPSController *controller);
+    bool generateBondDataFromNeighborList(AtomData &atomData, class LAMMPSController *controller);
+    bool generateBondDataFromBondList(AtomData &atomData, LAMMPSController *controller);
     void generateSphereData(AtomData &atomData);
     bool doWeHavefullNeighborList(class LAMMPS_NS::Neighbor *neighbor);
     bool m_sort = false;
