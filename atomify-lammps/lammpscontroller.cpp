@@ -263,7 +263,7 @@ bool LAMMPSController::run()
             QString command = "run 1000000000";
 
             qDebug() << "Will do continue in LAMMPS";
-            lammps_command(m_lammps, command.toLatin1().data());
+            lammps_command(m_lammps, command.toUtf8().data());
         } else {
             lammps_file(m_lammps, ba.data());
         }
