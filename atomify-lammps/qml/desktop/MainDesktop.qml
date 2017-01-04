@@ -213,7 +213,7 @@ Item {
 
                 MessageOverlay {
                     id: messageOverlay
-                    property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.cancelling.active
+                    property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active
 
                     anchors.fill: parent
                     visible: false
