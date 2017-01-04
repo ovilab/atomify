@@ -51,7 +51,7 @@ AtomifySimulator::AtomifySimulator() :
     m_simulationSpeed(1)
 {
     m_states->setupStates(*this);
-    m_parser.setSystem(m_system);
+    m_parser.setSimulator(this);
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -196,6 +196,11 @@ CommandParser &AtomifySimulator::parser()
     return m_parser;
 }
 
+QVector3D AtomifySimulator::cameraPositionRequest() const
+{
+    return m_cameraPositionRequest;
+}
+
 int AtomifySimulator::simulationSpeed() const
 {
     return m_simulationSpeed;
@@ -245,4 +250,12 @@ void AtomifySimulator::setError(QString error)
 
     m_error = error;
     emit errorChanged(error);
+}
+
+void AtomifySimulator::setCameraPositionRequest(QVector3D cameraPositionRequest)
+{
+    if (m_cameraPositionRequest == cameraPositionRequest)
+        return;
+
+    m_cameraPositionRequest = cameraPositionRequest;
 }

@@ -17,7 +17,6 @@ class System : public QObject
     Q_PROPERTY(QVector3D origin READ origin NOTIFY originChanged)
     Q_PROPERTY(QVector3D cameraPosition READ cameraPosition WRITE setCameraPosition NOTIFY cameraPositionChanged)
     Q_PROPERTY(QVector3D center READ center NOTIFY centerChanged)
-    Q_PROPERTY(QVariantList corners READ corners NOTIFY cornersChanged)
     Q_PROPERTY(QMatrix4x4 transformationMatrix READ transformationMatrix NOTIFY transformationMatrixChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
@@ -60,15 +59,6 @@ public:
     void reset();
     bool isValid() const;
 
-    QVariantList corners() const
-    {
-        QVariantList list;
-        for(const auto& corner: m_corners) {
-            list.append(corner);
-        }
-        return list;
-    }
-
     QMatrix4x4 transformationMatrix() const
     {
         return m_transformationMatrix;
@@ -103,8 +93,6 @@ signals:
     void isValidChanged(bool isValid);
     void cameraPositionChanged(QVector3D cameraPosition);
     void centerChanged(QVector3D center);
-    void cornersChanged();
-
     void transformationMatrixChanged(QMatrix4x4 transformationMatrix);
 
 private:
@@ -124,8 +112,7 @@ private:
     int m_numberOfAtomTypes = 0;
     float m_volume = 0;
     bool m_isValid = false;
-    QVector<QVector3D> m_corners;
-    void updateCorners(LAMMPS_NS::Domain *domain);
+    void updateTransformationMatrix(LAMMPS_NS::Domain *domain);
     void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
     QMatrix4x4 m_transformationMatrix;
 };

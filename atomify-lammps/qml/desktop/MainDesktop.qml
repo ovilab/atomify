@@ -213,7 +213,7 @@ Item {
 
                 MessageOverlay {
                     id: messageOverlay
-                    property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active
+                    property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active
 
                     anchors.fill: parent
                     visible: false
@@ -222,6 +222,8 @@ Item {
                     welcome: simulator.states.idle.active
                     finished: simulator.states.finished.active
                     crashed: simulator.states.crashed.active
+                    cancelling: simulator.states.reset.active
+
                     onContinueClicked: simulator.continued()
                     onNewTabClicked: editor.editorWindow.newTab()
                     onExamplesClicked: rightbar.showExamples()

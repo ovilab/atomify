@@ -28,15 +28,6 @@ Entity {
         dummy
     ]
 
-    onCornersChanged: {
-        console.log("Corners changed")
-        console.log(corners)
-        console.log(corners.length)
-        for(var i in corners) {
-            console.log(corners[i])
-        }
-    }
-
     function getScale(direction) {
         var dir = Qt.vector3d(0, 0, 0)
         dir[direction] = 1

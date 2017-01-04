@@ -68,7 +68,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     m_lastSynchronization = m_lammps->update->ntimestep;
 
     system->atoms()->processModifiers(system);
-    system->atoms()->createRenderererData();
+    system->atoms()->createRenderererData(this);
     worker->m_reprocessRenderingData = false;
 
     system->updateThreadOnDataObjects(qmlThread);
@@ -83,7 +83,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         if(worker->m_reprocessRenderingData) {
             system->atoms()->processModifiers(system);
             if(worker->m_workerRenderingMutex.tryLock()) {
-                system->atoms()->createRenderererData();
+                system->atoms()->createRenderererData(this);
                 worker->m_reprocessRenderingData = false;
                 worker->m_workerRenderingMutex.unlock();
             }
@@ -255,7 +255,7 @@ bool LAMMPSController::run()
 
     if(finished || didCancel || crashed) return false;
 
-    QByteArray ba = scriptFilePath.toLatin1();
+    QByteArray ba = scriptFilePath.toUtf8();
     scriptFilePath = "";
 
     try {
@@ -263,7 +263,7 @@ bool LAMMPSController::run()
             QString command = "run 1000000000";
 
             qDebug() << "Will do continue in LAMMPS";
-            lammps_command(m_lammps, command.toLatin1().data());
+            lammps_command(m_lammps, command.toUtf8().data());
         } else {
             lammps_file(m_lammps, ba.data());
         }
