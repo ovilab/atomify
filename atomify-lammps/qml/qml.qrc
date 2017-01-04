@@ -56,7 +56,6 @@
         <file>visualization/FinalQuadEntity.qml</file>
         <file>desktop/MessageOverlay.qml</file>
         <file>visualization/SystemBox.qml</file>
-        <file>desktop/RightBar/Examples.qml</file>
         <file>desktop/RightBar/RightBar.qml</file>
         <file>desktop/RightBar/Rendering.qml</file>
         <file>desktop/RightBar/ComputesColumn.qml</file>

@@ -32,10 +32,6 @@ Page {
             height: swipeView.height
             visualizer: root.visualizer
         }
-
-        Examples {
-
-        }
     }
 
     header: TabBar {
