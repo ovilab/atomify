@@ -40,6 +40,7 @@ Scene3D {
     property string renderMode: "forward"
     property string renderQuality: "medium"
     property bool mainCompleted: false
+    property bool captureCursor: false
     property MessageDialog dialog: MessageDialog {
         text: "Render quality will be changed when the application is restarted."
     }

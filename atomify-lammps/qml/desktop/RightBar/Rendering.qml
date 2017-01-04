@@ -56,6 +56,11 @@ Pane {
                         }
                     }
 
+                    Shortcut {
+                        sequence: "G"
+                        onActivated: visualizer.guidesVisible = !visualizer.guidesVisible
+                    }
+
                     CheckBox {
                         id: outlineCheckBox
                         text: "Show outline"
@@ -66,6 +71,11 @@ Pane {
                             property: "systemBoxVisible"
                             value: outlineCheckBox.checked
                         }
+                    }
+
+                    Shortcut {
+                        sequence: "M"
+                        onActivated: visualizer.systemBoxVisible = !visualizer.systemBoxVisible
                     }
 
                 }

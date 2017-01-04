@@ -1,9 +1,11 @@
 import QtQuick 2.7
+import QtQuick.Controls.Material 2.0
 import QtQuick.Controls 1.5
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
+import QtQml.StateMachine 1.0 as DSM
 import Atomify 1.0
 import SimVis 1.0
 import Qt.labs.settings 1.0
@@ -20,6 +22,11 @@ Item {
     property alias mouseMover: visualizer.mouseMover
     property bool focusMode: false
 
+    signal releaseCursor()
+    signal changeMode()
+    signal focusViewport()
+    signal unfocusViewport()
+    signal captureCursor()
 
     function toggleFocusMode() {
         if(focusMode) {
@@ -36,7 +43,6 @@ Item {
             tabDisable.showTabDisable.start()
         }
     }
-
 
     Component.onCompleted: {
         // editorTab.lammpsEditor.runScript()
@@ -70,9 +76,9 @@ Item {
                 width: 500
                 simulator: root.simulator
                 visualizer: root.visualizer
-//                Component.onCompleted: {
-//                    simulator.crashed.connect(editor.reportError)
-//                }
+                //                Component.onCompleted: {
+                //                    simulator.crashed.connect(editor.reportError)
+                //                }
             }
 
             Item {
@@ -85,8 +91,16 @@ Item {
                     id: visualizer
                     rootItem: visualizerItem
                     anchors.fill: parent
-                    focus: true
+                    onFocusChanged: {
+                        if(focus) {
+                            focusViewport()
+                        } else {
+                            unfocusViewport()
+                        }
+                    }
                     focusMode: root.focusMode
+                    mode: flymodeState.active ? "flymode" : "trackball"
+                    captureCursor: capturedState.active
                 }
 
                 MouseArea {
@@ -94,7 +108,7 @@ Item {
                     anchors.fill: visualizer
                     hoverEnabled: true
                     propagateComposedEvents: true
-                    cursorShape: visualizer.mode == "flymode" ? Qt.BlankCursor : undefined
+                    cursorShape: visualizer.mode == "flymode" && visualizer.captureCursor ? Qt.BlankCursor : undefined
 
                     property real centerPointX: visualizerItem.width / 2
                     property real centerPointY: visualizerItem.height / 2
@@ -130,7 +144,7 @@ Item {
                     }
 
                     onPositionChanged: {
-                        if(visualizer.mode !== "flymode") {
+                        if(visualizer.mode !== "flymode" || !visualizer.captureCursor) {
                             return
                         }
 
@@ -152,9 +166,9 @@ Item {
                         previousY = mouse.y
 
                         if(mouse.x > visualizerItem.width * 0.8 ||
-                           mouse.x < visualizerItem.width * 0.2 ||
-                           mouse.y > visualizerItem.height * 0.8 ||
-                           mouse.y < visualizerItem.height * 0.2) {
+                                mouse.x < visualizerItem.width * 0.2 ||
+                                mouse.y > visualizerItem.height * 0.8 ||
+                                mouse.y < visualizerItem.height * 0.2) {
                             correctionX = mouse.x - centerPointX
                             correctionY = mouse.y - centerPointY
                             centerMouse()
@@ -165,14 +179,40 @@ Item {
                     }
 
                     onPressed: {
+                        mouse.accepted = false
+                        if(visualizer.mode !== "flymode") {
+                            return
+                        }
+                        captureCursor()
                         previousX = mouse.x
                         previousY = mouse.y
-                        mouse.accepted = false
                     }
                 }
 
+                Rectangle {
+                    anchors {
+                        fill: parent
+                        margins: 8
+                    }
+                    border {
+                        width: 2.0
+                        color: {
+                            if(focusedState.active) {
+                                if(capturedState.active) {
+                                    return Material.accent
+                                } else {
+                                    return Material.primary
+                                }
+                            } else {
+                                return Qt.rgba(1.0, 1.0, 1.0, 0.2)
+                            }
+                        }
+                    }
+                    color: "transparent"
+                }
+
                 MessageOverlay {
-                    id: overlays
+                    id: messageOverlay
                     property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active
 
                     anchors.fill: parent
@@ -312,17 +352,15 @@ Item {
                 }
             }
         }
-
         Shortcut {
-            sequence: "Alt+C"
+            sequence: "C"
             onActivated: {
-                flymodeOverlay.reset()
-                visualizer.changeMode()
+                changeMode()
             }
         }
 
         Shortcut {
-            sequence: "Alt+R"
+            sequence: "O"
             onActivated: {
                 visualizer.resetToSystemCenter()
             }
@@ -331,8 +369,13 @@ Item {
         Shortcut {
             sequence: "Escape"
             onActivated: {
-                visualizer.mode = "trackball"
-                visualizer.focus = true
+                focusViewport()
+                releaseCursor()
+                messageOverlay.visible = false
+//                visualizer.focus = true
+//                if(visualizer.captureCursor) {
+//                    visualizer.captureCursor = false
+//                }
             }
         }
     }
@@ -341,5 +384,97 @@ Item {
         id: tabDisable
         x: parent.width*0.5 - 0.5*width
         y: 10
+    }
+
+    DSM.StateMachine {
+        id: stateMachine
+        running: true
+        childMode: DSM.State.ParallelStates
+
+        DSM.State {
+            id: cameraStateGroup
+            initialState: trackballState
+            DSM.State {
+                id: trackballState
+                DSM.SignalTransition {
+                    targetState: flymodeState
+                    signal: changeMode
+                }
+                onEntered: {
+                    console.log("Trackball entered")
+                }
+            }
+            DSM.State {
+                id: flymodeState
+                DSM.SignalTransition {
+                    targetState: trackballState
+                    signal: changeMode
+                }
+                onEntered: {
+                    console.log("Flymode entered")
+                    flymodeOverlay.reset()
+                }
+            }
+        }
+        DSM.State {
+            id: focusStateGroup
+            initialState: focusedState
+            DSM.State {
+                id: unfocusedState
+                DSM.SignalTransition {
+                    targetState: focusedState
+                    signal: focusViewport
+                }
+                onEntered: {
+                    console.log("UnFocus entered")
+                }
+            }
+            DSM.State {
+                id: focusedState
+                DSM.SignalTransition {
+                    targetState: unfocusedState
+                    signal: unfocusViewport
+                }
+                onEntered: {
+                    console.log("Focus entered")
+                }
+            }
+        }
+        DSM.State {
+            id: captureStateGroup
+            initialState: uncapturedState
+            DSM.State {
+                id: capturedState
+                DSM.SignalTransition {
+                    targetState: uncapturedState
+                    signal: unfocusViewport
+                }
+                DSM.SignalTransition {
+                    targetState: uncapturedState
+                    signal: releaseCursor
+                }
+                DSM.SignalTransition {
+                    targetState: uncapturedState
+                    signal: trackballState.entered
+                }
+                onEntered: {
+                    console.log("captured entered")
+                }
+            }
+            DSM.State {
+                id: uncapturedState
+                DSM.SignalTransition {
+                    targetState: capturedState
+                    signal: flymodeState.entered
+                }
+                DSM.SignalTransition {
+                    targetState: capturedState
+                    signal: captureCursor
+                }
+                onEntered: {
+                    console.log("unCaptured entered")
+                }
+            }
+        }
     }
 }

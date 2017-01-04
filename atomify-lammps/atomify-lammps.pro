@@ -132,3 +132,5 @@ DISTFILES += \
     ../snapcraft.yaml \
     ../configure.py \
     qml/qmldir
+
+STATECHARTS +=
