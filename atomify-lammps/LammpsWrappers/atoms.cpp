@@ -123,7 +123,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         m_atomData.deltaPositions[i] = QVector3D();
     }
 
-    if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
+    // if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
 }
 
 void Atoms::processModifiers(System *system)
@@ -217,9 +217,20 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
         return;
     }
 
-    const Neighborlist &neighborList = atomData.neighborList;
-    if(neighborList.neighbors.size()==0) return;
-    long numPairs = 0;
+//    const Neighborlist &neighborList = atomData.neighborList;
+//    if(neighborList.neighbors.size()==0) return;
+//    long numPairs = 0;
+
+    bool hasNeighborLists = controller->lammps()->neighbor->nlist > 0;
+    if(!hasNeighborLists) {
+        m_bondsDataRaw.clear();
+        return;
+    }
+
+    NeighList *list = controller->lammps()->neighbor->lists[0];
+    const int inum = list->inum;
+    int *numneigh = list->numneigh;
+    int **firstneigh = list->firstneigh;
 
     bondsDataRaw.reserve(atomData.positions.size());
     for(int ii=0; ii<atomData.size(); ii++) {
@@ -233,9 +244,16 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
         const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
         const float sphereRadius_i = atomData.radii[ii];
 
-        if(neighborList.neighbors.size() <= i) continue;
-        for(const int &j : neighborList.neighbors[i]) {
+        if(i >= inum) continue; // Atom i is outside the neighbor list. Will probably not happen, but let's skip in that case.
+
+        int *jlist = firstneigh[i];
+        int jnum = numneigh[i];
+        for (int jj = 0; jj < jnum; jj++) {
+            int j = jlist[jj];
+            j &= NEIGHMASK;
+            if(j >= atomData.size()) continue; // Probably a ghost atom from LAMMPS
             if(!atomData.visible[j]) continue;
+
             QVector3D position_j = atomData.positions[j];
             position_j += deltaPosition_i;
 
@@ -245,7 +263,6 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
             float dy = position_i[1] - position_j[1];
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
-            numPairs++;
             if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
                 BondVBOData bond;
                 bond.vertex1[0] = position_i[0];

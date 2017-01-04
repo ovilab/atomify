@@ -84,7 +84,7 @@ private:
     BondData* m_bondData = nullptr;
     class Bonds* m_bonds = nullptr;
     QVariantList m_modifiers;
-    void generateBondData(AtomData &atomData);
+    void generateBondData(AtomData &atomData, LAMMPSController *controller);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     bool m_sort = false;
