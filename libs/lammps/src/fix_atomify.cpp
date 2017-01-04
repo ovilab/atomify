@@ -45,8 +45,8 @@ FixAtomify::~FixAtomify() { }
 int FixAtomify::setmask()
 {
   int mask = 0;
-  mask |= POST_PARSE_COMMAND;
-  mask |= POST_EXECUTE_COMMAND;
+  // mask |= POST_PARSE_COMMAND;
+  // mask |= POST_EXECUTE_COMMAND;
   mask |= END_OF_STEP;
   mask |= MIN_POST_FORCE;
   return mask;
