@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/QmlPreviewer">
+        <file>QmlPreviewerButton.qml</file>
+        <file>QmlPreviewerDialog.qml</file>
+    </qresource>
+</RCC>
