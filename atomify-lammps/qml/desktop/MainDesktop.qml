@@ -278,8 +278,7 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                flymodeOverlay.reset()
-                                visualizer.changeMode()
+                                changeMode()
                             }
                         }
                     }
