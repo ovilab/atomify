@@ -1,8 +1,10 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
+import QtQuick.XmlListModel 2.0
+import Qt.labs.folderlistmodel 2.1
 
 Rectangle {
     id: root
@@ -59,10 +61,17 @@ Rectangle {
         requestStart()
     }
 
+    function refresh() {
+        folderListModel.folder = "file:///tmp"
+        requestStart()
+        folderListModel.folder = "qrc:/qtqmlpreview"
+    }
+
     function reload() {
         loader.source = ""
-        var clippedName = filePath.toString().replace(projectPath.toString(), "")
-        loader.source = "qrc:///qtqmlpreview/" + clippedName
+//        var clippedName = filePath.toString().replace(projectPath.toString(), "")
+//        loader.source = "qrc:///qtqmlpreview/" + clippedName
+        loader.source = filePath.toString().replace("file:", "qrc")
     }
 
     function requestStart() {
@@ -80,7 +89,7 @@ Rectangle {
         category: "qmlPreviewer"
     }
 
-    Item {
+    Pane {
         id: pane
         anchors {
             left: parent.left
@@ -90,102 +99,221 @@ Rectangle {
 
         width: 300
 
-        Column {
-            id: column
-            spacing: 16
-
+        Flickable {
             anchors.fill: parent
+            contentHeight: column.height
 
-            Button {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
+            Column {
+                id: column
+                spacing: 16
 
-                text: "Select project path"
-                onClicked: folderDialog.open()
-            }
-
-            Label {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-
-                text: cleanPath(projectPath)
-            }
-
-            Button {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
-                text: "Select file to preview"
-                onClicked: fileDialog.open()
-            }
-
-            Label {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-
-                text: cleanPath(filePath)
-            }
-
-            Button {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
-
-                text: "Add QRC files"
-                onClicked: qrcDialog.open()
-            }
-
-            ListView {
                 anchors {
                     left: parent.left
                     right: parent.right
                 }
 
-                height: 300
-
-                model: root.qrcPaths
-                delegate: Rectangle {
-                    width: parent.width
-                    height: 64
-                    Text {
-                        anchors.centerIn: parent
-                        text: baseName(modelData)
+                Label {
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
                     }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            var paths = root.qrcPaths
-                            paths.splice(index, 1)
-                            root.qrcPaths = paths
+                    text: "Select project path"
+                }
+
+                Button {
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    text: "Browse"
+                    onClicked: folderDialog.open()
+                }
+
+                Label {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+
+                    text: cleanPath(projectPath)
+                }
+
+                Label {
+                    text: "QRC files"
+                }
+
+                ListView {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    height: 300
+
+                    model: root.qrcPaths
+                    delegate: Rectangle {
+                        width: parent.width
+                        height: 64
+                        Text {
+                            anchors.centerIn: parent
+                            text: baseName(modelData)
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                var paths = root.qrcPaths
+                                paths.splice(index, 1)
+                                root.qrcPaths = paths
+                            }
+                        }
+
+                    }
+                }
+
+                Button {
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+
+                    text: "Add .qrc"
+                    onClicked: qrcDialog.open()
+                }
+
+                Label {
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    text: "Select file to preview"
+                }
+
+                Button {
+                    text: "Up"
+//                    enabled: folderListModel.folder != "file::/qtqmlpreview/"
+                    onClicked: {
+                        folderListModel.folder = folderListModel.parentFolder
+                    }
+                }
+
+                ListView {
+                    id: fileView
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    height: 300
+                    clip: true
+
+                    model: FolderListModel {
+                        id: folderListModel
+                        showDirsFirst: true
+                        showHidden: true
+                        folder: "qrc:/qtqmlpreview"
+                        rootFolder: "qrc:/qtqmlpreview"
+                        onFolderChanged: {
+                            console.log("Current folder:", folder)
                         }
                     }
-
+                    delegate: ItemDelegate {
+                        text: fileName
+                        highlighted: ListView.isCurrentItem
+                        onClicked: {
+                            if(fileIsDir) {
+                                folderListModel.folder = fileURL
+                            } else {
+                                fileView.currentIndex = index
+                                console.log("File URL", fileURL, filePath)
+                                root.filePath = fileURL.toString().replace("file::/", "qrc:/")
+                            }
+                        }
+                    }
                 }
-            }
 
-            Button {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
+                //            ListView {
+                //                id: fileView
+                //                anchors {
+                //                    left: parent.left
+                //                    right: parent.right
+                //                }
+                //                height: 300
+
+                //                model: XmlListModel {
+                //                    id: xmlModel
+                //                    source: "file:///home/svenni/Sync/projects/atomify/atomify-lammps/atomify-lammps/qml/qml.qrc"
+                //                    query: "/RCC/qresource/file"
+
+                //                    XmlRole { name: "filename"; query: "string()" }
+                //                }
+                //                delegate: ItemDelegate {
+                //                    text: filename
+                //                    onClicked: fileView.currentIndex = index
+                //                }
+                //                highlight: Rectangle {
+                //                    color: "grey"
+                //                }
+                //            }
+
+                //            ListView {
+                //                anchors {
+                //                    left: parent.left
+                //                    right: parent.right
+                //                }
+
+                //                height: 300
+
+                //                model: XmlListModel {
+                //                    id: xmlModel
+                //                    source: "file:///tmp/test.xml"
+                //                    query: "/catalog/book"
+                //                    // query the book title
+                //                    XmlRole { name: "title"; query: "title/string()" }
+
+                //                    // query the book's year
+                //                    XmlRole { name: "year"; query: "year/number()" }
+
+                //                    // query the book's type (the '@' indicates 'type' is an attribute, not an element)
+                //                    XmlRole { name: "type"; query: "@type/string()" }
+
+                //                    // query the book's first listed author (note in XPath the first index is 1, not 0)
+                //                    XmlRole { name: "first_author"; query: "author[1]/string()" }
+
+                //                    // query the wanted attribute as a boolean
+                //                    XmlRole { name: "wanted"; query: "boolean(@wanted)" }
+                //                }
+                //                delegate: Column {
+                //                    Text { text: title + " (" + type + ")"; font.bold: wanted }
+                //                    Text { text: first_author }
+                //                    Text { text: year }
+                //                }
+                //            }
+
+                //            Label {
+                //                anchors {
+                //                    left: parent.left
+                //                    right: parent.right
+                //                }
+                //                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+
+                //                text: cleanPath(filePath)
+                //            }
+
+                Button {
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    text: "Select background color"
+
+                    onClicked: colorDialog.open()
                 }
-                text: "Select background color"
 
-                onClicked: colorDialog.open()
-            }
+                Button {
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    text: "Refresh"
 
-            Button {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
+                    onClicked: {
+                        refresh()
+                    }
                 }
-                text: "Refresh"
-
-                onClicked: requestStart()
             }
         }
     }

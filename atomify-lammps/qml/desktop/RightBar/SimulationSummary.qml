@@ -6,7 +6,8 @@ import "../../plotting"
 
 Flickable {
     id: rectangleRoot
-    property System system
+    property var system: System {}
+
     flickableDirection: Flickable.VerticalFlick
     contentHeight: column.height
     ScrollBar.vertical: ScrollBar {}

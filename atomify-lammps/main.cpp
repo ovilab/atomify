@@ -6,6 +6,7 @@
 #include <QOpenGLContext>
 #include <QQuickWindow>
 #include <QQuickView>
+#include <QmlPreviewer>
 #ifdef Q_OS_LINUX
 #include <locale>
 #endif
@@ -86,18 +87,24 @@ int main(int argc, char *argv[])
 #endif
     QSurfaceFormat::setDefaultFormat(format);
 
+
     // Application version
     QQmlApplicationEngine engine;
-    qpm::init(app, engine);
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    QmlPreviewer previewer(app);
+    if(argc > 2) {
+        previewer.show();
+    } else {
+        qpm::init(app, engine);
+        engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
 #ifdef Q_OS_LINUX
-    setlocale(LC_ALL, "C");
-    setlocale(LC_NUMERIC, "C");
+        setlocale(LC_ALL, "C");
+        setlocale(LC_NUMERIC, "C");
 #endif
 
-    for(QKeySequence k : QKeySequence::keyBindings(QKeySequence::FullScreen)) {
-        qDebug() << "Use " << k.toString() << " to toggle fullscreen.";
+        for(QKeySequence k : QKeySequence::keyBindings(QKeySequence::FullScreen)) {
+            qDebug() << "Use " << k.toString() << " to toggle fullscreen.";
+        }
     }
 
     return app.exec();

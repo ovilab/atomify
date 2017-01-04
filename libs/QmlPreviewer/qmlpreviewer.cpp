@@ -61,17 +61,19 @@ void QmlPreviewer::handleDialogStart(QVariant qrcPaths, QUrl filePath)
     }
 
     QVariantList paths = qrcPaths.toList();
+    QUrl projectPath;
     m_qrcPaths.clear();
     for(QVariant path : paths) {
         QUrl pathUrl = path.toUrl();
-        QString hash = QCryptographicHash::hash(pathUrl.toString().toLatin1(), QCryptographicHash::Md5).toBase64().replace("=", "");
+        QString hash = QCryptographicHash::hash(pathUrl.toString().toLatin1(), QCryptographicHash::Md5).toBase64().replace("=", "").replace("/", "").replace("\\", "");
         QVariantMap map{
             {"path", pathUrl},
             {"rcc", hash + QString(".rcc")},
             {"hash", hash}
         };
         m_qrcPaths.append(map);
-        m_projectPath = path.toString();
+        m_projectPath = path.toUrl().adjusted(QUrl::RemoveFilename).toLocalFile();
+        projectPath = path.toUrl().adjusted(QUrl::RemoveFilename);
     }
     m_filePath = filePath.toLocalFile();
 
@@ -81,7 +83,13 @@ void QmlPreviewer::handleDialogStart(QVariant qrcPaths, QUrl filePath)
         m_watcher.addPath(next);
     }
 
-    reload(m_filePath);
+    QString localPath = m_filePath;
+    localPath.replace(QRegularExpression("^:/"), "");
+    QUrl result = projectPath.resolved(QUrl(localPath));
+    qDebug() << "Project path" << m_projectPath;
+    qDebug() << "Local path" << localPath;
+    qDebug() << "Result" << result.toLocalFile();
+    reload(result.toLocalFile());
 }
 
 void QmlPreviewer::show()

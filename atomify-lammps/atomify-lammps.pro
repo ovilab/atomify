@@ -36,6 +36,7 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 #include(../SimVis/examples/examples_vendor.pri) # replace with qpm installation
 include(../libs/SimVis/package_vendor.pri)
+include(../libs/QmlPreviewer/qmlpreviewer.pri)
 
 ios {
     QMAKE_INFO_PLIST = iOS.plist
