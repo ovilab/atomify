@@ -32,6 +32,7 @@ class Atoms : public QObject
     Q_PROPERTY(float bondScale READ bondScale WRITE setBondScale NOTIFY bondScaleChanged)
     Q_PROPERTY(float sphereScale READ sphereScale WRITE setSphereScale NOTIFY sphereScaleChanged)
     Q_PROPERTY(QString renderingMode READ renderingMode WRITE setRenderingMode NOTIFY renderingModeChanged)
+    Q_PROPERTY(int numberOfBonds READ numberOfBonds WRITE setNumberOfBonds NOTIFY numberOfBondsChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPSController *lammpsController);
@@ -54,6 +55,7 @@ public:
     QString renderingMode() const;
     bool dirtyData() const;
     void setDirtyData(bool dirtyData);
+    int numberOfBonds() const;
 
 public slots:
     void setModifiers(QVariantList modifiers);
@@ -61,6 +63,7 @@ public slots:
     void setBondScale(float bondScale);
     void setSphereScale(float sphereScale);
     void setRenderingMode(QString renderingMode);
+    void setNumberOfBonds(int numberOfBonds);
 
 signals:
     void sphereDataChanged(SphereData* sphereData);
@@ -71,6 +74,7 @@ signals:
     void bondScaleChanged(float bondScale);
     void sphereScaleChanged(float sphereScale);
     void renderingModeChanged(QString renderingMode);
+    void numberOfBondsChanged(int numberOfBonds);
 
 private:
     AtomData m_atomData;
@@ -87,11 +91,13 @@ private:
     void generateBondData(AtomData &atomData, LAMMPSController *controller);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
+    bool doWeHavefullNeighborList(class LAMMPS_NS::Neighbor *neighbor);
     bool m_sort = false;
     bool m_dirtyData = false;
     float m_bondScale = 1.0;
     float m_sphereScale = 1.0;
     QString m_renderingMode = "Ball and stick";
+    int m_numberOfBonds = 0;
 };
 
 #endif // ATOMS_H

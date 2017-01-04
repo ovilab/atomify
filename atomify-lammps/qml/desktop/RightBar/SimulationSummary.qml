@@ -97,6 +97,9 @@ Flickable {
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Label {
+                    text: "Number of bonds: "+system.atoms.numberOfBonds
+                }
+                Label {
                     text: "Average density: "+(system.numberOfAtoms/system.volume).toFixed(4)
                 }
                 Label {

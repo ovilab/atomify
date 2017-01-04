@@ -3,6 +3,7 @@
 #include <atom.h>
 #include <domain.h>
 #include <neighbor.h>
+#include <neigh_request.h>
 #include <neigh_list.h>
 #include "modifiers/modifiers.h"
 #include "mysimulator.h"
@@ -210,6 +211,43 @@ void Atoms::setDirtyData(bool dirtyData)
     m_dirtyData = dirtyData;
 }
 
+int Atoms::numberOfBonds() const
+{
+    return m_numberOfBonds;
+}
+
+bool Atoms::doWeHavefullNeighborList(Neighbor *neighbor) {
+    // We will find the first atom i with at least one non-ghost neighbor. We then check if atom i is in the list of j's neighbors
+    NeighList *list = neighbor->lists[0];
+    const int inum = list->inum;
+    int *numneigh = list->numneigh;
+    int **firstneigh = list->firstneigh;
+    int *ilist = list->ilist;
+
+    for (int ii = 0; ii < inum; ii++) {
+        int i = ilist[ii];
+        int *jlist = firstneigh[i];
+        int jnum = numneigh[i];
+        for (int jj = 0; jj < jnum; jj++) {
+            int j = jlist[jj];
+            j &= NEIGHMASK;
+            if(j<inum) {
+                // We found an atom i with non-ghost neighbor j
+                int *otherlist = firstneigh[j];
+                int othernum = numneigh[j];
+                for (int kk = 0; kk < othernum; kk++) {
+                    // If any of its neighbors is atom i, we have full list
+                    int k = otherlist[kk];
+                    k &= NEIGHMASK;
+                    if(k==i) return true;
+                }
+                // If none of its neighbors is atom i, half list
+                return false;
+            }
+        }
+    }
+}
+
 void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
     bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
@@ -217,22 +255,21 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
         return;
     }
 
-//    const Neighborlist &neighborList = atomData.neighborList;
-//    if(neighborList.neighbors.size()==0) return;
-//    long numPairs = 0;
-
     bool hasNeighborLists = controller->lammps()->neighbor->nlist > 0;
     if(!hasNeighborLists) {
         m_bondsDataRaw.clear();
         return;
     }
 
-    NeighList *list = controller->lammps()->neighbor->lists[0];
+    Neighbor *neighbor = controller->lammps()->neighbor;
+    NeighList *list = neighbor->lists[0];
     const int inum = list->inum;
     int *numneigh = list->numneigh;
     int **firstneigh = list->firstneigh;
 
     bondsDataRaw.reserve(atomData.positions.size());
+    bool fullNeighborList = doWeHavefullNeighborList(neighbor);
+    unsigned long numBonds = 0;
     for(int ii=0; ii<atomData.size(); ii++) {
         if(!atomData.visible[ii]) continue;
         int i = atomData.originalIndex[ii];
@@ -251,6 +288,7 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
         for (int jj = 0; jj < jnum; jj++) {
             int j = jlist[jj];
             j &= NEIGHMASK;
+            if(fullNeighborList && j>i) continue;
             if(j >= atomData.size()) continue; // Probably a ghost atom from LAMMPS
             if(!atomData.visible[j]) continue;
 
@@ -264,6 +302,7 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
             if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
+                numBonds++;
                 BondVBOData bond;
                 bond.vertex1[0] = position_i[0];
                 bond.vertex1[1] = position_i[1];
@@ -280,6 +319,7 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
             }
         }
     }
+    setNumberOfBonds(numBonds);
     m_bondsDataRaw.resize(bondsDataRaw.size() * sizeof(BondVBOData));
     BondVBOData *posData = reinterpret_cast<BondVBOData*>(m_bondsDataRaw.data());
     // TODO can we just set the address here? Instead of copying.
@@ -424,4 +464,13 @@ void Atoms::setRenderingMode(QString renderingMode)
 
     m_renderingMode = renderingMode;
     emit renderingModeChanged(renderingMode);
+}
+
+void Atoms::setNumberOfBonds(int numberOfBonds)
+{
+    if (m_numberOfBonds == numberOfBonds)
+        return;
+
+    m_numberOfBonds = numberOfBonds;
+    emit numberOfBondsChanged(numberOfBonds);
 }
