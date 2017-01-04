@@ -31,6 +31,7 @@ class Atoms : public QObject
     Q_PROPERTY(bool sort READ sort WRITE setSort NOTIFY sortChanged)
     Q_PROPERTY(float bondScale READ bondScale WRITE setBondScale NOTIFY bondScaleChanged)
     Q_PROPERTY(float sphereScale READ sphereScale WRITE setSphereScale NOTIFY sphereScaleChanged)
+    Q_PROPERTY(QString renderingMode READ renderingMode WRITE setRenderingMode NOTIFY renderingModeChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPSController *lammpsController);
@@ -51,11 +52,15 @@ public:
     float bondScale() const;
     float sphereScale() const;
 
+    QString renderingMode() const;
+
 public slots:
     void setModifiers(QVariantList modifiers);
     void setSort(bool sort);
     void setBondScale(float bondScale);
     void setSphereScale(float sphereScale);
+
+    void setRenderingMode(QString renderingMode);
 
 signals:
     void sphereDataChanged(SphereData* sphereData);
@@ -65,6 +70,8 @@ signals:
     void sortChanged(bool sort);
     void bondScaleChanged(float bondScale);
     void sphereScaleChanged(float sphereScale);
+
+    void renderingModeChanged(QString renderingMode);
 
 private:
     AtomData m_atomData;
@@ -84,6 +91,7 @@ private:
     bool m_sort = false;
     float m_bondScale = 1.0;
     float m_sphereScale = 1.0;
+    QString m_renderingMode = "Ball and stick";
 };
 
 #endif // ATOMS_H

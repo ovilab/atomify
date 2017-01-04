@@ -190,7 +190,7 @@ Pane {
                         height: periodicXSlider.height
                         Label {
                             width: parent.width*0.4
-                            text: "X = "+periodicXSlider.value
+                            text: "X: "+periodicXSlider.value
                         }
                         QQC1.Slider {
                             id: periodicXSlider
@@ -212,7 +212,7 @@ Pane {
                         height: periodicYSlider.height
                         Label {
                             width: parent.width*0.4
-                            text: "Y = "+periodicYSlider.value
+                            text: "Y: "+periodicYSlider.value
                         }
                         QQC1.Slider {
                             id: periodicYSlider
@@ -234,7 +234,7 @@ Pane {
                         height: periodicZSlider.height
                         Label {
                             width: parent.width*0.4
-                            text: "Z = "+periodicZSlider.value
+                            text: "Z: "+periodicZSlider.value
                         }
                         QQC1.Slider {
                             id: periodicZSlider
@@ -258,15 +258,36 @@ Pane {
                 title: "Rendering mode"
                 Column {
                     width: parent.width
+                    ComboBox {
+                        id: renderingMode
+                        model: ["Ball and stick", "Stick", "Wireframe"]
+                        focusPolicy: Qt.NoFocus
+                        onCurrentTextChanged: {
+                            visualizer.simulator.system.atoms.renderingMode = currentText
+
+                            if(currentText === "Ball and stick") {
+                                sphereScaleSlider.value = 1.0
+                                bondScaleSlider.value = 1.0
+                            } else if(currentText === "Wireframe") {
+                                sphereScaleSlider.value = 1.0
+                                bondScaleSlider.value = 0.3
+                            } else if(currentText === "Stick") {
+                                sphereScaleSlider.value = 1.1
+                                bondScaleSlider.value = 1.5
+                            }
+                        }
+                    }
+
                     Row {
                         width: parent.width
                         height: sphereScaleSlider.height
                         Label {
                             width: parent.width*0.4
-                            text: "Spheres: "+sphereScaleSlider.value.toFixed(1)
+                            text: "Sphere size: "
                         }
                         QQC1.Slider {
                             id: sphereScaleSlider
+                            enabled: renderingMode.currentText==="Ball and stick"
                             width: parent.width*0.6
                             minimumValue: 0.1
                             maximumValue: 2.0
@@ -285,7 +306,7 @@ Pane {
                         height: bondScaleSlider.height
                         Label {
                             width: parent.width*0.4
-                            text: "Bonds: "+bondScaleSlider.value.toFixed(1)
+                            text: "Bond size: "
                         }
                         QQC1.Slider {
                             id: bondScaleSlider

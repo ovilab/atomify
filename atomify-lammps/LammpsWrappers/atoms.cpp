@@ -145,8 +145,8 @@ void Atoms::processModifiers(System *system)
 }
 
 void Atoms::createRenderererData() {
-    generateBondData(m_atomDataProcessed);
     generateSphereData(m_atomDataProcessed);
+    generateBondData(m_atomDataProcessed);
 }
 
 float Atoms::bondScale() const
@@ -159,6 +159,11 @@ float Atoms::sphereScale() const
     return m_sphereScale;
 }
 
+QString Atoms::renderingMode() const
+{
+    return m_renderingMode;
+}
+
 void Atoms::synchronizeRenderer() {
     int numSpheres = m_sphereDataRaw.size() / sizeof(SphereVBOData);
     m_sphereData->setData(m_sphereDataRaw, numSpheres);
@@ -166,7 +171,6 @@ void Atoms::synchronizeRenderer() {
     int numBonds = m_bondsDataRaw.size() / sizeof(BondVBOData);
     m_bondData->setData(m_bondsDataRaw, numBonds);
 }
-
 void Atoms::generateSphereData(AtomData &atomData) {
     int visibleAtomCount = 0;
 
@@ -174,7 +178,9 @@ void Atoms::generateSphereData(AtomData &atomData) {
         if(atomData.visible[i]) {
             atomData.positions[visibleAtomCount] = atomData.positions[i];
             atomData.colors[visibleAtomCount] = atomData.colors[i];
-            atomData.radii[visibleAtomCount] = atomData.radii[i]*m_sphereScale;
+            atomData.radii[visibleAtomCount] = atomData.radii[i];
+            if(m_renderingMode == "Stick") atomData.radii[visibleAtomCount] = 0.1*m_bondScale;
+            else if(m_renderingMode == "Wireframe") atomData.radii[visibleAtomCount] = 0.1*m_bondScale;
             visibleAtomCount++;
         }
     }
@@ -188,7 +194,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
         SphereVBOData &vbo = vboData[i];
         vbo.position = atomData.positions[i] + atomData.deltaPositions[i];
         vbo.color = atomData.colors[i];
-        vbo.radius = atomData.radii[i];
+        vbo.radius = atomData.radii[i]*m_sphereScale;
     }
 }
 
@@ -239,8 +245,8 @@ void Atoms::generateBondData(AtomData &atomData) {
                 float bondRadius = 0.1*m_bondScale;
                 bond.radius1 = bondRadius;
                 bond.radius2 = bondRadius;
-                bond.sphereRadius1 = sphereRadius_i;
-                bond.sphereRadius2 = atomData.radii[j];
+                bond.sphereRadius1 = sphereRadius_i*m_sphereScale;
+                bond.sphereRadius2 = atomData.radii[j]*m_sphereScale;
                 bondsDataRaw.push_back(bond);
             }
         }
@@ -380,4 +386,13 @@ void Atoms::setSphereScale(float sphereScale)
 
     m_sphereScale = sphereScale;
     emit sphereScaleChanged(sphereScale);
+}
+
+void Atoms::setRenderingMode(QString renderingMode)
+{
+    if (m_renderingMode == renderingMode)
+        return;
+
+    m_renderingMode = renderingMode;
+    emit renderingModeChanged(renderingMode);
 }
