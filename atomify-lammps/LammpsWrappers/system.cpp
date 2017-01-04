@@ -27,7 +27,7 @@ System::System(AtomifySimulator *simulator)
     m_transformationMatrix.setToIdentity();
 }
 
-void System::updateCorners(Domain *domain)
+void System::updateTransformationMatrix(Domain *domain)
 {
     double *h = domain->h;
     float transformationMatrixValues[] = {
@@ -88,7 +88,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     Update *update = lammps->update;
     if(!domain || !atom || !update) return; // These may not be set in LAMMPS (they probably are, but an easy test).
 
-    updateCorners(domain);
+    updateTransformationMatrix(domain);
     updateSizeAndOrigin(domain);
 
     if(m_numberOfAtoms != atom->natoms) {

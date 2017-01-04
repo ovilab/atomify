@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick 2.7
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -97,6 +97,17 @@ Scene3D {
         flymodeController.panTilt(pan, tilt)
     }
 
+    function animateCameraTo(position, upVector, viewCenter, duration) {
+        animateCamera.duration = 1000
+        animateCameraPosition.from = trackballCamera.position
+        animateCameraPosition.to = position
+        animateCameraUpVector.from = trackballCamera.upVector
+        animateCameraUpVector.to = upVector
+        animateCameraViewCenter.from = trackballCamera.viewCenter
+        animateCameraViewCenter.to = viewCenter
+        animateCamera.running = true
+    }
+
     Entity {
         id: visualizer
         property Spheres spheres: spheres
@@ -152,6 +163,32 @@ Scene3D {
             visualizer.updateNearestPoint()
         }
 
+        ParallelAnimation {
+            id: animateCamera
+            property int duration: 1000
+
+            Vector3dAnimation {
+                id: animateCameraPosition
+                target: trackballCamera
+                property: "position"
+                duration: animateCamera.duration
+                easing.type: Easing.InOutQuad
+            }
+            Vector3dAnimation {
+                id: animateCameraUpVector
+                target: trackballCamera
+                property: "upVector"
+                duration: animateCamera.duration
+                easing.type: Easing.InOutQuad
+            }
+            Vector3dAnimation {
+                id: animateCameraViewCenter
+                target: trackballCamera
+                property: "viewCenter"
+                duration: animateCamera.duration
+                easing.type: Easing.InOutQuad
+            }
+        }
 
         Camera {
             id: trackballCamera
@@ -306,6 +343,9 @@ Scene3D {
             simulationSpeed: 1
             system.onSizeChanged: { visualizer.updateNearestPoint() }
             system.onOriginChanged: { visualizer.updateNearestPoint() }
+            onNewCameraPositionRequest: {
+                animateCameraTo(cameraPositionRequest, Qt.vector3d(0, 0, 1), Qt.vector3d(0,0,0), 500)
+            }
 
             system.atoms.modifiers: [
                 colorModifier,

@@ -112,7 +112,7 @@ private:
     int m_numberOfAtomTypes = 0;
     float m_volume = 0;
     bool m_isValid = false;
-    void updateCorners(LAMMPS_NS::Domain *domain);
+    void updateTransformationMatrix(LAMMPS_NS::Domain *domain);
     void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
     QMatrix4x4 m_transformationMatrix;
 };
