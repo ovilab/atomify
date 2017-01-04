@@ -299,8 +299,7 @@ Item {
         text: "The current file '"+currentEditor.fileName+"' has unsaved changes. "
         standardButtons: StandardButton.Cancel | StandardButton.Save
         onAccepted: {
-            currentEditor.save()
-            runScript()
+            currentEditor.save(runScript)
         }
     }
 
