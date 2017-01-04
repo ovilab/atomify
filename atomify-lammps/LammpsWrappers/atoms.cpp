@@ -244,8 +244,8 @@ void Atoms::generateBondData(AtomData &atomData) {
                 float bondRadius = 0.1*m_bondScale;
                 bond.radius1 = bondRadius;
                 bond.radius2 = bondRadius;
-                bond.sphereRadius1 = sphereRadius_i*m_sphereScale;
-                bond.sphereRadius2 = atomData.radii[j]*m_sphereScale;
+                bond.sphereRadius1 = sphereRadius_i;
+                bond.sphereRadius2 = atomData.radii[j];
                 bondsDataRaw.push_back(bond);
             }
         }
