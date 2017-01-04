@@ -255,7 +255,7 @@ bool LAMMPSController::run()
 
     if(finished || didCancel || crashed) return false;
 
-    QByteArray ba = scriptFilePath.toLatin1();
+    QByteArray ba = scriptFilePath.toUtf8();
     scriptFilePath = "";
 
     try {
