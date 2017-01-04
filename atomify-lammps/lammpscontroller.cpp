@@ -68,7 +68,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     m_lastSynchronization = m_lammps->update->ntimestep;
 
     system->atoms()->processModifiers(system);
-    system->atoms()->createRenderererData();
+    system->atoms()->createRenderererData(this);
     worker->m_reprocessRenderingData = false;
 
     system->updateThreadOnDataObjects(qmlThread);
@@ -83,7 +83,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         if(worker->m_reprocessRenderingData) {
             system->atoms()->processModifiers(system);
             if(worker->m_workerRenderingMutex.tryLock()) {
-                system->atoms()->createRenderererData();
+                system->atoms()->createRenderererData(this);
                 worker->m_reprocessRenderingData = false;
                 worker->m_workerRenderingMutex.unlock();
             }

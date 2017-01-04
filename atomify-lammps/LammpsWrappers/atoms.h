@@ -48,18 +48,18 @@ public:
     void reset();
     bool sort() const;
     void synchronizeRenderer();
-    void createRenderererData();
+    void createRenderererData(LAMMPSController *lammpsController);
     float bondScale() const;
     float sphereScale() const;
-
     QString renderingMode() const;
+    bool dirtyData() const;
+    void setDirtyData(bool dirtyData);
 
 public slots:
     void setModifiers(QVariantList modifiers);
     void setSort(bool sort);
     void setBondScale(float bondScale);
     void setSphereScale(float sphereScale);
-
     void setRenderingMode(QString renderingMode);
 
 signals:
@@ -70,7 +70,6 @@ signals:
     void sortChanged(bool sort);
     void bondScaleChanged(float bondScale);
     void sphereScaleChanged(float sphereScale);
-
     void renderingModeChanged(QString renderingMode);
 
 private:
@@ -89,6 +88,7 @@ private:
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     bool m_sort = false;
+    bool m_dirtyData = false;
     float m_bondScale = 1.0;
     float m_sphereScale = 1.0;
     QString m_renderingMode = "Ball and stick";

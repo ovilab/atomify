@@ -103,6 +103,8 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         for(float &radii : m_atomData.radii) radii = 1.0;
     }
 
+    // lammps->
+
     for(int i=0; i<numberOfAtoms; i++) {
         m_atomData.types[i] = types[i];
         m_atomData.originalIndex[i] = i;
@@ -144,9 +146,9 @@ void Atoms::processModifiers(System *system)
     }
 }
 
-void Atoms::createRenderererData() {
+void Atoms::createRenderererData(LAMMPSController *lammpsController) {
     generateSphereData(m_atomDataProcessed);
-    generateBondData(m_atomDataProcessed);
+    generateBondData(m_atomDataProcessed, lammpsController);
 }
 
 float Atoms::bondScale() const
@@ -198,7 +200,17 @@ void Atoms::generateSphereData(AtomData &atomData) {
     }
 }
 
-void Atoms::generateBondData(AtomData &atomData) {
+bool Atoms::dirtyData() const
+{
+    return m_dirtyData;
+}
+
+void Atoms::setDirtyData(bool dirtyData)
+{
+    m_dirtyData = dirtyData;
+}
+
+void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
     bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
         m_bondsDataRaw.clear();
