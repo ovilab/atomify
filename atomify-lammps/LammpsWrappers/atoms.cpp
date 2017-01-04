@@ -338,6 +338,16 @@ bool Atoms::generateBondDataFromBondList(AtomData &atomData, LAMMPSController *c
             if(!controller->lammps()->force->newton_bond && i<j) continue;
 
             QVector3D position_j = atomData.positions[j] + deltaPosition;
+            float dx = fabs(position_i[0] - position_j[0]);
+            float dy = fabs(position_i[1] - position_j[1]);
+            float dz = fabs(position_i[2] - position_j[2]);
+            double dr2 = dx*dx + dy*dy + dz*dz;
+            double dr2max = 25; // arbitrary units. TODO!
+
+            if(dr2 > dr2max || dx > 0.5*controller->system->size().x() || dy > 0.5*controller->system->size().y() || dz > 0.5*controller->system->size().z() ) {
+                // Periodic image
+                continue;
+            }
 
             BondVBOData bond;
             bond.vertex1[0] = position_i[0];
@@ -406,6 +416,12 @@ void Atoms::setAtomColorAndScale(int atomType, QColor color, float size)
     m_atomStyles[atomType]->radius = size;
 }
 
+void Atoms::setAtomSize(int atomType, float radius) {
+    if(atomType >= m_atomStyles.size()) return;
+
+    m_atomStyles[atomType]->radius = radius;
+}
+
 void Atoms::setAtomColor(int atomType, QColor color) {
     if(atomType >= m_atomStyles.size()) return;
 
@@ -437,6 +453,27 @@ void Atoms::reset()
     m_atomDataProcessed.reset();
     m_bonds->reset();
     m_atomStyles.clear();
+
+    m_atomStyleTypes["helium"]->radius = 1.40;          m_atomStyleTypes["helium"]->color = QColor("#D9FFFF");
+    m_atomStyleTypes["lithium"]->radius = 1.82;         m_atomStyleTypes["lithium"]->color = QColor("#CC80FF");
+    m_atomStyleTypes["beryllium"]->radius = 1.53;       m_atomStyleTypes["beryllium"]->color = QColor("#C2FF00");
+    m_atomStyleTypes["boron"]->radius = 1.92;           m_atomStyleTypes["boron"]->color = QColor("#FFB5B5");
+    m_atomStyleTypes["carbon"]->radius = 1.70;          m_atomStyleTypes["carbon"]->color = QColor("#909090");
+    m_atomStyleTypes["nitrogen"]->radius = 1.55;        m_atomStyleTypes["nitrogen"]->color = QColor("#3050F8");
+    m_atomStyleTypes["oxygen"]->radius = 1.52;          m_atomStyleTypes["oxygen"]->color = QColor("#AA0000");
+    m_atomStyleTypes["fluorine"]->radius = 1.35;        m_atomStyleTypes["fluorine"]->color = QColor("#90E050");
+    m_atomStyleTypes["neon"]->radius = 1.54;            m_atomStyleTypes["neon"]->color = QColor("#3050F8");
+    m_atomStyleTypes["sodium"]->radius = 2.27;          m_atomStyleTypes["sodium"]->color = QColor("#AB5CF2");
+    m_atomStyleTypes["magnesium"]->radius = 1.73;       m_atomStyleTypes["magnesium"]->color = QColor("#8AFF00");
+    m_atomStyleTypes["aluminium"]->radius = 1.84;       m_atomStyleTypes["aluminium"]->color = QColor("#BFA6A6");
+    m_atomStyleTypes["silicon"]->radius = 2.27;         m_atomStyleTypes["silicon"]->color = QColor("#F0C8A0");
+    m_atomStyleTypes["phosphorus"]->radius = 1.80;      m_atomStyleTypes["phosphorus"]->color = QColor("#FF8000");
+    m_atomStyleTypes["sulfur"]->radius = 1.80;          m_atomStyleTypes["sulfur"]->color = QColor("#FFFF30");
+    m_atomStyleTypes["chlorine"]->radius = 1.75;        m_atomStyleTypes["chlorine"]->color = QColor("#1FF01F");
+    m_atomStyleTypes["argon"]->radius = 1.88;           m_atomStyleTypes["argon"]->color = QColor("#80D1E3");
+    m_atomStyleTypes["potassium"]->radius = 2.75;       m_atomStyleTypes["potassium"]->color = QColor("#8F40D4");
+    m_atomStyleTypes["calcium"]->radius = 2.31;         m_atomStyleTypes["calcium"]->color = QColor("#3DFF00");
+
     for(int i=0; i<50; i++) {
         m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
         m_atomStyles.push_back(m_atomStyleTypes["helium"]);
