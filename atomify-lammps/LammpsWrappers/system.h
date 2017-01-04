@@ -104,7 +104,6 @@ signals:
     void cameraPositionChanged(QVector3D cameraPosition);
     void centerChanged(QVector3D center);
     void cornersChanged();
-
     void transformationMatrixChanged(QMatrix4x4 transformationMatrix);
 
 private:

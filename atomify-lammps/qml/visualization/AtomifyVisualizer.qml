@@ -304,6 +304,9 @@ Scene3D {
         AtomifySimulator {
             id: simulator
             simulationSpeed: 1
+            system.onSizeChanged: { visualizer.updateNearestPoint() }
+            system.onOriginChanged: { visualizer.updateNearestPoint() }
+
             system.atoms.modifiers: [
                 colorModifier,
                 propertyModifier,
