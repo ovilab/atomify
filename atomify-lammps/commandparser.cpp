@@ -44,6 +44,7 @@ void CommandParser::parseCommand(QString command)
     atomType(command);
     bond(command);
     atomColorAndSize(command);
+    atomSize(command);
 }
 
 void CommandParser::atomColor(QString command)
@@ -67,6 +68,18 @@ void CommandParser::atomType(QString command)
     if(!castOk) return;
     QString atomTypeName = match.captured(2);
     m_system->atoms()->setAtomType(atomType, atomTypeName);
+}
+
+void CommandParser::atomSize(QString command)
+{
+    QRegularExpression regex("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\d*.\\d|\\d*)$");
+    QRegularExpressionMatch match = regex.match(command);
+    bool castOk;
+    int atomType = match.captured(1).toInt(&castOk);
+    if(!castOk) return;
+    float radius = match.captured(2).toFloat(&castOk);
+    if(!castOk) return;
+    m_system->atoms()->setAtomSize(atomType, radius);
 }
 
 void CommandParser::bond(QString command) {

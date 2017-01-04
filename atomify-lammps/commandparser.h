@@ -25,6 +25,7 @@ private:
     void atomColor(QString command);
     void atomType(QString command);
     void bond(QString command);
+    void atomSize(QString command);
 };
 
 #endif // COMMANDPARSER_H
