@@ -2,5 +2,7 @@
     <qresource prefix="/QmlPreviewer">
         <file>QmlPreviewerButton.qml</file>
         <file>QmlPreviewerDialog.qml</file>
+        <file>ResizeHandle.qml</file>
+        <file>ResizeRectangle.qml</file>
     </qresource>
 </RCC>

@@ -15,7 +15,7 @@ QmlPreviewer::QmlPreviewer(QApplication &app)
     connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, &QmlPreviewer::reload);
 }
 
-void QmlPreviewer::reload(QString path)
+void QmlPreviewer::reload()
 {
     m_view.engine()->clearComponentCache();
 
@@ -41,13 +41,24 @@ void QmlPreviewer::reload(QString path)
         qDebug() << "Registering" << map["rcc"].toString();
 
         QResource::registerResource(map["rcc"].toString(), m_prefix);
+
+        QDirIterator it(QString(":" + m_prefix), QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            QString next = it.next();
+            QString relativeFilePath = next;
+            QUrl qrcDirectory = map["path"].toUrl().adjusted(QUrl::RemoveFilename);
+            relativeFilePath = relativeFilePath.replace(":/qtqmlpreview/", "");
+            qDebug() << "Path" << qrcDirectory;
+            qDebug() << "Relative" << relativeFilePath;
+            QUrl result = qrcDirectory.resolved(QUrl(relativeFilePath));
+            qDebug() << "Adding path" << result.toLocalFile();
+            m_watcher.addPath(result.toLocalFile());
+        }
+
+        qDebug() << "Watching" << m_watcher.files().count() << "files";
     }
 
     QMetaObject::invokeMethod(m_rootItem, "reload");
-
-    if(!path.isEmpty()) {
-        m_watcher.addPath(path);
-    }
 }
 
 void QmlPreviewer::handleDialogStart(QVariant qrcPaths, QUrl filePath)
@@ -72,24 +83,10 @@ void QmlPreviewer::handleDialogStart(QVariant qrcPaths, QUrl filePath)
             {"hash", hash}
         };
         m_qrcPaths.append(map);
-        m_projectPath = path.toUrl().adjusted(QUrl::RemoveFilename).toLocalFile();
         projectPath = path.toUrl().adjusted(QUrl::RemoveFilename);
     }
     m_filePath = filePath.toLocalFile();
-
-    QDirIterator it(m_projectPath, QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
-    while (it.hasNext()) {
-        QString next = it.next();
-        m_watcher.addPath(next);
-    }
-
-    QString localPath = m_filePath;
-    localPath.replace(QRegularExpression("^:/"), "");
-    QUrl result = projectPath.resolved(QUrl(localPath));
-    qDebug() << "Project path" << m_projectPath;
-    qDebug() << "Local path" << localPath;
-    qDebug() << "Result" << result.toLocalFile();
-    reload(result.toLocalFile());
+    reload();
 }
 
 void QmlPreviewer::show()
