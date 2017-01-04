@@ -6,14 +6,13 @@ import "../../plotting"
 
 Column {
     id: root
-    property bool expanded: false
-    height: row.height + list.height
+    property var system
     
     function create2DPlotWindow(fix, point) {
         var component = Qt.createComponent("../../plotting/Plot2D.qml");
         if (component.status === Component.Ready) {
             console.log("Can create now. it is ready")
-            var plotter = component.createObject(rectangleRoot);
+            var plotter = component.createObject(root);
             plotter.x = point.x - plotter.width*0.5
             plotter.y = point.y - plotter.height*0.5
             plotter.fix = fix
@@ -24,37 +23,9 @@ Column {
         }
     }
     
-    Row {
-        id: row
-        spacing: 2
-        height: label.height
-        
-        Image {
-            id: collapse
-            y: 3
-            source: root.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.expanded = !root.expanded
-            }
-        }
-        Label {
-            id: label
-            text: "Fixes: "+system.fixes.count
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.expanded = !root.expanded
-            }
-        }
-    }
-    
-    ListView {
+    Repeater {
         id: list
-        anchors.top: row.bottom
-        x: label.x
         model: system ? system.fixes.model : null
-        height: visible ? count*26 : 0
-        visible: root.expanded
         delegate: Row {
             visible: list.visible
             Label {

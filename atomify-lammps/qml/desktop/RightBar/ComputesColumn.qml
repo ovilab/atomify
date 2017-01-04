@@ -6,15 +6,14 @@ import Atomify 1.0
 import "../../plotting"
 Column {
     id: root
-    height: row.height + list.height
-    property bool expanded: false
+    property var system
 
     function createComputeWindow(compute, point) {
         var qmlFile = compute.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/ComputePlotter.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
-            console.log("Rectangle root: ", rectangleRoot)
-            var computePlotter = component.createObject(rectangleRoot);
+            console.log("Rectangle root: ", root)
+            var computePlotter = component.createObject(root);
             computePlotter.x = point.x - computePlotter.width*0.5
             computePlotter.y = point.y - computePlotter.height*0.5
             computePlotter.compute = compute
@@ -22,36 +21,9 @@ Column {
         }
     }
     
-    Row {
-        id: row
-        spacing: 2
-
-        Image {
-            id: collapseComputes
-            y: 3
-            source: root.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.expanded = !root.expanded
-            }
-        }
-        Label {
-            id: label
-            text: "Computes: "+system.computes.count
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.expanded = !root.expanded
-            }
-        }
-    }
-    
-    ListView {
+    Repeater {
         id: list
-        anchors.top: row.bottom
-        x: label.x
         model: system ? system.computes.model : null
-        height: visible ? count*20 : 0
-        visible: root.expanded
         delegate: Row {
             visible: list.visible
             height: 20

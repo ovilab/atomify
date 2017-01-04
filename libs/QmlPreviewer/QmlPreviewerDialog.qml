@@ -261,6 +261,7 @@ Rectangle {
                     fill: parent
                     margins: 24
                 }
+                clip: true
             }
         }
     }

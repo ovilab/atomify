@@ -6,40 +6,11 @@ import "../../plotting"
 
 Column {
     id: root
-    property bool expanded
-    height: row.height + list.height
-    
-    Row {
-        id: row
-        spacing: 2
-        height: regionsLabel.height
-        
-        Image {
-            id: collapseRegions
-            y: 3
-            source: root.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.expanded = !root.expanded
-            }
-        }
-        Label {
-            id: regionsLabel
-            text: "Regions: "+system.regions.count
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.expanded = !root.expanded
-            }
-        }
-    }
-    
-    ListView {
+    property var system
+
+    Repeater {
         id: list
-        anchors.top: row.bottom
-        x: regionsLabel.x
         model: system ? system.regions.model : null
-        height: visible ? count*26 : 0
-        visible: root.expanded
         delegate: Row {
             spacing: 5
             Image {

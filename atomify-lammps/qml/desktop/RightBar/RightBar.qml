@@ -25,16 +25,13 @@ Page {
             height: swipeView.height
             // contentHeight: 2*height
             system: root.system
+            visualizer: root.visualizer
         }
 
         Rendering {
             width: swipeView.width
             height: swipeView.height
             visualizer: root.visualizer
-        }
-
-        Examples {
-
         }
     }
 
@@ -51,10 +48,6 @@ Page {
         }
         TabButton {
             text: "Rendering"
-            font.pixelSize: 12
-        }
-        TabButton {
-            text: "Examples"
             font.pixelSize: 12
         }
     }

@@ -3,13 +3,69 @@ import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.0
 import Atomify 1.0
 import "../../plotting"
+import "../../visualization"
 
 Flickable {
-    id: rectangleRoot
-    property var system: System {}
+    id: root
+    property var system: System {} /*{
+        "groups": {
+            "model": [{
+                    "identifier": "test",
+                    "count": 200
+                },
+                {
+                    "identifier": "other",
+                    "count": 200
+                }]
+        },
+        "regions": {
+            "model": [{
+                    "identifier": "test",
+                    "count": 200
+                },
+                {
+                    "identifier": "other",
+                    "count": 200
+                }]
+        },
+        "fixes": {
+            "model": [{
+                    "identifier": "test",
+                    "count": 200
+                },
+                {
+                    "identifier": "other",
+                    "count": 200
+                }]
+        },
+        "computes": {
+            "model": [{
+                    "identifier": "test",
+                    "count": 200
+                },
+                {
+                    "identifier": "other",
+                    "count": 200
+                }]
+        },
+        "variables": {
+            "model": [{
+                    "identifier": "test",
+                    "count": 200
+                },
+                {
+                    "identifier": "other",
+                    "count": 200
+                }]
+        }
+    }*/
+
+    property var visualizer: {
+        "mode": "flymode"
+    }
 
     flickableDirection: Flickable.VerticalFlick
-    contentHeight: column.height
+    contentHeight: column.height + 16
     ScrollBar.vertical: ScrollBar {}
     function getGlobalPosition(p, item) {
         var globalX = p.x
@@ -61,27 +117,37 @@ Flickable {
         spacing: 10
 
         GroupBox {
-            id: simulationSummary
-            title: "Simulation summary"
-            width: parent.width
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "Camera"
 
             Column {
                 Label {
-                    text: "Camera position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
+                    text: "Position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
                 }
                 Label {
-                    text: "Reset camera"
-                    color: "steelblue"
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: visualizer.resetToSystemCenter()
-                    }
+                    text: "Mode: " + (visualizer.mode === "flymode" ? "Flymode" : "Trackball")
+                }
+            }
+        }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "System"
+
+            Column {
+                Label {
+                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
                 }
                 Label {
-                    text: "System size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
-                }
-                Label {
-                    text: "System volume: "+system.volume.toFixed(2)
+                    text: "Volume: "+system.volume.toFixed(2)
                 }
                 Label {
                     text: "Units: "+system.units.name
@@ -95,188 +161,222 @@ Flickable {
                 Label {
                     text: "Number of atom types: "+system.numberOfAtomTypes
                 }
+            }
+        }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "Time"
+
+            Column {
                 Label {
                     text: "Current timestep: "+system.currentTimestep
                 }
                 Label {
                     text: "Time: "+system.simulationTime.toFixed(2)
                 }
-                Column {
-                    id: groupsColumn
-                    property bool expanded
-                    height: groupsRow.height + groupsList.height
+            }
+        }
 
-                    Row {
-                        id: groupsRow
-                        spacing: 2
-                        height: groupsLabel.height
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
+            title: "Groups"
+
+            Column {
+                id: groupsColumn
+
+                Repeater {
+                    id: groupsList
+                    model: system ? system.groups.model : undefined
+                    height: visible ? count*26 : 0
+                    delegate: Row {
+                        spacing: 5
                         Image {
-                            id: collapseGroups
-                            y: 3
-                            source: groupsColumn.expanded ? "qrc:/images/collapse.gif" : "qrc:/images/expand.gif"
+                            id: groupVisible
+                            width: 15
+                            height: 15
+                            y: 1
+                            source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: groupsColumn.expanded = !groupsColumn.expanded
+                                hoverEnabled: true
+                                onHoveredChanged: {
+                                    model.modelData.hovered = containsMouse
+                                }
+                                onClicked: model.modelData.visible = !model.modelData.visible
+                                cursorShape: Qt.PointingHandCursor
                             }
                         }
                         Label {
-                            id: groupsLabel
-                            text: "Groups: "+system.groups.count
+                            id: groupLabel
+                            visible: groupsList.visible
+                            text: model.modelData.identifier+": "+model.modelData.count+" atoms"
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: groupsColumn.expanded = !groupsColumn.expanded
-                            }
-                        }
-                    }
-
-                    ListView {
-                        id: groupsList
-                        anchors.top: groupsRow.bottom
-                        x: groupsLabel.x
-                        model: system ? system.groups.model : null
-                        height: visible ? count*26 : 0
-                        visible: groupsColumn.expanded
-                        delegate: Row {
-                            spacing: 5
-                            Image {
-                                id: groupVisible
-                                width: 15
-                                height: 15
-                                y: 1
-                                source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
-                                MouseArea {
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    onHoveredChanged: {
-                                        model.modelData.hovered = containsMouse
-                                    }
-                                    onClicked: model.modelData.visible = !model.modelData.visible
-                                    cursorShape: Qt.PointingHandCursor
-                                }
-                            }
-                            Label {
-                                id: groupLabel
-                                visible: groupsList.visible
-                                text: model.modelData.identifier+": "+model.modelData.count+" atoms"
-                                MouseArea {
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    onClicked: model.modelData.visible = !model.modelData.visible
-                                    onHoveredChanged: {
-                                        model.modelData.hovered = containsMouse
-                                    }
+                                hoverEnabled: true
+                                onClicked: model.modelData.visible = !model.modelData.visible
+                                onHoveredChanged: {
+                                    model.modelData.hovered = containsMouse
                                 }
                             }
                         }
                     }
-                }
-
-                RegionsColumn {
-                    id: regionsColumn
-                }
-
-                ComputesColumn {
-                    id: computesColumn
-                }
-
-                VariablesColumn {
-                    id: variablesColumn
-                }
-
-                FixesColumn {
-                    id: fixesColumn
                 }
             }
         }
-//        GroupBox {
-//            id: keyboardShortcuts
-//            width: parent.width
-//            title: "Keyboard shortcuts"
 
-//            Column {
-//                id: shortcutRoot
-//                width: parent.width
-//                property int labelWidth: 115
-//                property string controlName: {
-//                    if(Qt.platform.os === "osx") {
-//                        return "⌘"
-//                    }
-//                    return "Ctrl+"
-//                }
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
-//                RowLayout {
-//                    width: parent.width
-//                    Label {
-//                        Layout.minimumWidth: shortcutRoot.labelWidth
-//                        Layout.maximumWidth: shortcutRoot.labelWidth
-//                        text: "Run script "
-//                    }
-//                    Label {
-//                        text: ": "+shortcutRoot.controlName+"R"
-//                    }
-//                }
+            title: "Regions"
 
-//                RowLayout {
-//                    width: parent.width
-//                    Label {
-//                        Layout.minimumWidth: shortcutRoot.labelWidth
-//                        Layout.maximumWidth: shortcutRoot.labelWidth
-//                        text: "New script "
-//                    }
-//                    Label {
-//                        text: ": "+shortcutRoot.controlName+"N"
-//                    }
-//                }
+            RegionsColumn {
+                id: regionsColumn
+                system: root.system
+            }
+        }
 
-//                RowLayout {
-//                    width: parent.width
-//                    Label {
-//                        Layout.minimumWidth: shortcutRoot.labelWidth
-//                        Layout.maximumWidth: shortcutRoot.labelWidth
-//                        text: "Save script "
-//                    }
-//                    Label {
-//                        text: ": "+shortcutRoot.controlName+"S"
-//                    }
-//                }
 
-//                RowLayout {
-//                    width: parent.width
-//                    Label {
-//                        Layout.minimumWidth: shortcutRoot.labelWidth
-//                        Layout.maximumWidth: shortcutRoot.labelWidth
-//                        text: "Open script"
-//                    }
-//                    Label {
-//                        text: ": "+shortcutRoot.controlName+"O"
-//                    }
-//                }
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
-//                RowLayout {
-//                    width: parent.width
-//                    Label {
-//                        Layout.minimumWidth: shortcutRoot.labelWidth
-//                        Layout.maximumWidth: shortcutRoot.labelWidth
-//                        text: "Toggle pause"
-//                    }
-//                    Label {
-//                        text: ": "+shortcutRoot.controlName+"P / Space"
-//                    }
-//                }
+            title: "Computes"
 
-//                RowLayout {
-//                    width: parent.width
-//                    Label {
-//                        Layout.minimumWidth: shortcutRoot.labelWidth
-//                        Layout.maximumWidth: shortcutRoot.labelWidth
-//                        text: "Toggle focus mode "
-//                    }
-//                    Label {
-//                        text: ": Tab"
-//                    }
-//                }
-//            }
-//        }
+            ComputesColumn {
+                id: computesColumn
+                system: root.system
+            }
+        }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "Variables"
+
+            VariablesColumn {
+                id: variablesColumn
+                system: root.system
+            }
+        }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "Fixes"
+
+            FixesColumn {
+                id: fixesColumn
+                system: root.system
+            }
+        }
+        //        GroupBox {
+        //            id: keyboardShortcuts
+        //            width: parent.width
+        //            title: "Keyboard shortcuts"
+
+        //            Column {
+        //                id: shortcutRoot
+        //                width: parent.width
+        //                property int labelWidth: 115
+        //                property string controlName: {
+        //                    if(Qt.platform.os === "osx") {
+        //                        return "⌘"
+        //                    }
+        //                    return "Ctrl+"
+        //                }
+
+        //                RowLayout {
+        //                    width: parent.width
+        //                    Label {
+        //                        Layout.minimumWidth: shortcutRoot.labelWidth
+        //                        Layout.maximumWidth: shortcutRoot.labelWidth
+        //                        text: "Run script "
+        //                    }
+        //                    Label {
+        //                        text: ": "+shortcutRoot.controlName+"R"
+        //                    }
+        //                }
+
+        //                RowLayout {
+        //                    width: parent.width
+        //                    Label {
+        //                        Layout.minimumWidth: shortcutRoot.labelWidth
+        //                        Layout.maximumWidth: shortcutRoot.labelWidth
+        //                        text: "New script "
+        //                    }
+        //                    Label {
+        //                        text: ": "+shortcutRoot.controlName+"N"
+        //                    }
+        //                }
+
+        //                RowLayout {
+        //                    width: parent.width
+        //                    Label {
+        //                        Layout.minimumWidth: shortcutRoot.labelWidth
+        //                        Layout.maximumWidth: shortcutRoot.labelWidth
+        //                        text: "Save script "
+        //                    }
+        //                    Label {
+        //                        text: ": "+shortcutRoot.controlName+"S"
+        //                    }
+        //                }
+
+        //                RowLayout {
+        //                    width: parent.width
+        //                    Label {
+        //                        Layout.minimumWidth: shortcutRoot.labelWidth
+        //                        Layout.maximumWidth: shortcutRoot.labelWidth
+        //                        text: "Open script"
+        //                    }
+        //                    Label {
+        //                        text: ": "+shortcutRoot.controlName+"O"
+        //                    }
+        //                }
+
+        //                RowLayout {
+        //                    width: parent.width
+        //                    Label {
+        //                        Layout.minimumWidth: shortcutRoot.labelWidth
+        //                        Layout.maximumWidth: shortcutRoot.labelWidth
+        //                        text: "Toggle pause"
+        //                    }
+        //                    Label {
+        //                        text: ": "+shortcutRoot.controlName+"P / Space"
+        //                    }
+        //                }
+
+        //                RowLayout {
+        //                    width: parent.width
+        //                    Label {
+        //                        Layout.minimumWidth: shortcutRoot.labelWidth
+        //                        Layout.maximumWidth: shortcutRoot.labelWidth
+        //                        text: "Toggle focus mode "
+        //                    }
+        //                    Label {
+        //                        text: ": Tab"
+        //                    }
+        //                }
+        //            }
+        //        }
     }
 }
