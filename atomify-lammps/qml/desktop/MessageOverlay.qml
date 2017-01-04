@@ -12,6 +12,16 @@ Rectangle {
     property bool welcome: true
     property bool finished: false
     property bool crashed: false
+    property bool cancelling: false
+    property string cancellingText:
+        "
+<style>
+h2 { text-align: center; }
+a { font-weight: bold; color: #56b1b4; text-decoration: none; }
+</style>
+<h2>Cancelling ...</h2>
+<p>Cancelling simulation. This may take some time.</p>
+"
     property string finishedText:
         "
 <style>
@@ -62,6 +72,8 @@ Atomify is a live LAMMPS editor.
                 return finishedText
             } else if(crashed) {
                 return crashedText
+            } else if(cancelling) {
+                return cancellingText
             }
             return ""
         }
