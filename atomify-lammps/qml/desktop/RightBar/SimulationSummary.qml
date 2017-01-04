@@ -195,6 +195,10 @@ Flickable {
 
             Column {
                 id: groupsColumn
+                Label {
+                    text: "No groups"
+                    visible: groupsList.count==0
+                }
 
                 Repeater {
                     id: groupsList

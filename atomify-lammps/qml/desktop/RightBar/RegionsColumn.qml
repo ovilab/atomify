@@ -8,6 +8,11 @@ Column {
     id: root
     property var system
 
+    Label {
+        text: "No regions"
+        visible: list.count==0
+    }
+
     Repeater {
         id: list
         model: system ? system.regions.model : null

@@ -20,6 +20,11 @@ Column {
             computePlotter.show()
         }
     }
+
+    Label {
+        text: "No computes"
+        visible: list.count==0
+    }
     
     Repeater {
         id: list
