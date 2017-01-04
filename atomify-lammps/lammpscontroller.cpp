@@ -62,10 +62,11 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         exit(1);
     }
 
+    system->synchronize(this);
+
     if(m_lammps->update->ntimestep - m_lastSynchronization < simulationSpeed) return;
     m_lastSynchronization = m_lammps->update->ntimestep;
 
-    system->synchronize(this);
     system->atoms()->processModifiers(system);
     system->atoms()->createRenderererData();
     worker->m_reprocessRenderingData = false;
