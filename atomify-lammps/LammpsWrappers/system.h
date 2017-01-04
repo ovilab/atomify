@@ -8,8 +8,7 @@
 #include <lammps.h>
 #include <qvector.h>
 #include <domain.h>
-#include <QMatrix3x3>
-#include <qmatrix4x4.h>
+#include <QMatrix4x4>
 
 class System : public QObject
 {
