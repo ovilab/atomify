@@ -196,7 +196,7 @@ Scene3D {
                                visualizer.camera.upVector.normalized()).plus(
                                visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
             strength: 0.5
-            attenuation: 0.1
+            attenuation: 0.5
         }
         Light {
             id: light2
@@ -205,7 +205,7 @@ Scene3D {
                                visualizer.camera.upVector.normalized()).plus(
                                visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
             strength: 0.5
-            attenuation: 2.0
+            attenuation: 25.0
         }
 
         TrackballController {
