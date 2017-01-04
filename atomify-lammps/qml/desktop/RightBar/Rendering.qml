@@ -252,6 +252,57 @@ Pane {
                     }
                 }
             }
+
+            GroupBox {
+                width: parent.width
+                title: "Rendering mode"
+                Column {
+                    width: parent.width
+                    Row {
+                        width: parent.width
+                        height: sphereScaleSlider.height
+                        Label {
+                            width: parent.width*0.4
+                            text: "Spheres: "+sphereScaleSlider.value.toFixed(1)
+                        }
+                        QQC1.Slider {
+                            id: sphereScaleSlider
+                            width: parent.width*0.6
+                            minimumValue: 0.1
+                            maximumValue: 2.0
+                            stepSize: 0.1
+                            value: visualizer.simulator.system.atoms.sphereScale
+                            Binding {
+                                target: visualizer.simulator.system.atoms
+                                property: "sphereScale"
+                                value: sphereScaleSlider.value
+                            }
+                        }
+                    }
+
+                    Row {
+                        width: parent.width
+                        height: bondScaleSlider.height
+                        Label {
+                            width: parent.width*0.4
+                            text: "Bonds: "+bondScaleSlider.value.toFixed(1)
+                        }
+                        QQC1.Slider {
+                            id: bondScaleSlider
+                            width: parent.width*0.6
+                            minimumValue: 0.1
+                            maximumValue: 2.0
+                            stepSize: 0.1
+                            value: visualizer.simulator.system.atoms.bondScale
+                            Binding {
+                                target: visualizer.simulator.system.atoms
+                                property: "bondScale"
+                                value: bondScaleSlider.value
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -29,7 +29,8 @@ class Atoms : public QObject
     Q_PROPERTY(Bonds* bonds READ bonds NOTIFY bondsChanged)
     Q_PROPERTY(QVariantList modifiers READ modifiers WRITE setModifiers NOTIFY modifiersChanged)
     Q_PROPERTY(bool sort READ sort WRITE setSort NOTIFY sortChanged)
-    Q_PROPERTY(float bondRadius READ bondRadius WRITE setBondRadius NOTIFY bondRadiusChanged)
+    Q_PROPERTY(float bondScale READ bondScale WRITE setBondScale NOTIFY bondScaleChanged)
+    Q_PROPERTY(float sphereScale READ sphereScale WRITE setSphereScale NOTIFY sphereScaleChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPSController *lammpsController);
@@ -43,24 +44,27 @@ public:
     BondData* bondData() const;
     class Bonds* bonds() const;
     AtomData &atomData();
-    float bondRadius() const;
     void reset();
     bool sort() const;
     void synchronizeRenderer();
-
     void createRenderererData();
+    float bondScale() const;
+    float sphereScale() const;
+
 public slots:
-    void setBondRadius(float bondRadius);
     void setModifiers(QVariantList modifiers);
     void setSort(bool sort);
+    void setBondScale(float bondScale);
+    void setSphereScale(float sphereScale);
 
 signals:
     void sphereDataChanged(SphereData* sphereData);
     void bondDataChanged(BondData* bondData);
     void bondsChanged(class Bonds* bonds);
-    void bondRadiusChanged(float bondRadius);
     void modifiersChanged(QVariantList modifiers);
     void sortChanged(bool sort);
+    void bondScaleChanged(float bondScale);
+    void sphereScaleChanged(float sphereScale);
 
 private:
     AtomData m_atomData;
@@ -74,11 +78,12 @@ private:
     BondData* m_bondData = nullptr;
     class Bonds* m_bonds = nullptr;
     QVariantList m_modifiers;
-    float m_bondRadius = 0.1;
     void generateBondData(AtomData &atomData);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     bool m_sort = false;
+    float m_bondScale = 1.0;
+    float m_sphereScale = 1.0;
 };
 
 #endif // ATOMS_H

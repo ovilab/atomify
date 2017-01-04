@@ -122,12 +122,19 @@ Scene3D {
             var x = camera.position.x
             var y = camera.position.y
             var z = camera.position.z
-            var x0 = simulator.system.origin.x
-            var y0 = simulator.system.origin.y
-            var z0 = simulator.system.origin.z
-            var x1 = simulator.system.origin.x + simulator.system.size.x
-            var y1 = simulator.system.origin.y + simulator.system.size.y
-            var z1 = simulator.system.origin.z + simulator.system.size.z
+
+
+            var imageLowX = Math.floor( (periodicImages.numberOfCopiesX - 1)/2)
+            var imageLowY = Math.floor( (periodicImages.numberOfCopiesY - 1)/2)
+            var imageLowZ = Math.floor( (periodicImages.numberOfCopiesZ - 1)/2)
+
+            var x0 = simulator.system.origin.x - simulator.system.size.x*imageLowX
+            var y0 = simulator.system.origin.y - simulator.system.size.y*imageLowY
+            var z0 = simulator.system.origin.z - simulator.system.size.z*imageLowZ
+
+            var x1 = x0 + simulator.system.size.x*periodicImages.numberOfCopiesX
+            var y1 = y0 + simulator.system.size.y*periodicImages.numberOfCopiesY
+            var z1 = z0 + simulator.system.size.z*periodicImages.numberOfCopiesZ
 
             var xp = x
             var yp = y
@@ -197,7 +204,7 @@ Scene3D {
                                visualizer.camera.upVector.normalized()).plus(
                                visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
             strength: 0.5
-            attenuation: 0.1
+            attenuation: 0.5
         }
         Light {
             id: light2
@@ -206,7 +213,7 @@ Scene3D {
                                visualizer.camera.upVector.normalized()).plus(
                                visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
             strength: 0.5
-            attenuation: 2.0
+            attenuation: 25.0
         }
 
         TrackballController {
@@ -336,6 +343,9 @@ Scene3D {
             numberOfCopiesX: 1
             numberOfCopiesY: 1
             numberOfCopiesZ: 1
+            onNumberOfCopiesXChanged: visualizer.updateNearestPoint()
+            onNumberOfCopiesYChanged: visualizer.updateNearestPoint()
+            onNumberOfCopiesZChanged: visualizer.updateNearestPoint()
         }
 
         StandardMaterial {

@@ -118,6 +118,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         m_atomData.positions[i][2] = position[2];
         m_atomData.bitmask[i] = atom->mask[i];
         m_atomData.visible[i] = true;
+        m_atomData.deltaPositions[i] = QVector3D();
     }
 
     if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
@@ -144,14 +145,26 @@ void Atoms::processModifiers(System *system)
 }
 
 void Atoms::createRenderererData() {
-    generateSphereData(m_atomDataProcessed);
     generateBondData(m_atomDataProcessed);
+    generateSphereData(m_atomDataProcessed);
+}
+
+float Atoms::bondScale() const
+{
+    return m_bondScale;
+}
+
+float Atoms::sphereScale() const
+{
+    return m_sphereScale;
 }
 
 void Atoms::synchronizeRenderer() {
     int numSpheres = m_sphereDataRaw.size() / sizeof(SphereVBOData);
     m_sphereData->setData(m_sphereDataRaw, numSpheres);
-    m_bondData->setData(bondsDataRaw);
+
+    int numBonds = m_bondsDataRaw.size() / sizeof(BondVBOData);
+    m_bondData->setData(m_bondsDataRaw, numBonds);
 }
 
 void Atoms::generateSphereData(AtomData &atomData) {
@@ -159,9 +172,9 @@ void Atoms::generateSphereData(AtomData &atomData) {
 
     for(int i = 0; i<atomData.size(); i++) {
         if(atomData.visible[i]) {
-            atomData.positions[visibleAtomCount] = atomData.positions[i] + atomData.deltaPositions[i];
+            atomData.positions[visibleAtomCount] = atomData.positions[i];
             atomData.colors[visibleAtomCount] = atomData.colors[i];
-            atomData.radii[visibleAtomCount] = atomData.radii[i];
+            atomData.radii[visibleAtomCount] = atomData.radii[i]*m_sphereScale;
             visibleAtomCount++;
         }
     }
@@ -173,7 +186,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
     SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(m_sphereDataRaw.data());
     for(int i=0; i<visibleAtomCount; i++) {
         SphereVBOData &vbo = vboData[i];
-        vbo.position = atomData.positions[i];
+        vbo.position = atomData.positions[i] + atomData.deltaPositions[i];
         vbo.color = atomData.colors[i];
         vbo.radius = atomData.radii[i];
     }
@@ -182,6 +195,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
 void Atoms::generateBondData(AtomData &atomData) {
     bondsDataRaw.resize(0);
     if(!m_bonds->enabled()) {
+        m_bondsDataRaw.clear();
         return;
     }
 
@@ -189,12 +203,9 @@ void Atoms::generateBondData(AtomData &atomData) {
     if(neighborList.neighbors.size()==0) return;
     long numPairs = 0;
 
-    QElapsedTimer t;
-    t.start();
     bondsDataRaw.reserve(atomData.positions.size());
     for(int ii=0; ii<atomData.size(); ii++) {
         if(!atomData.visible[ii]) continue;
-
         int i = atomData.originalIndex[ii];
 
         const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
@@ -208,9 +219,7 @@ void Atoms::generateBondData(AtomData &atomData) {
         for(const int &j : neighborList.neighbors[i]) {
             if(!atomData.visible[j]) continue;
             QVector3D position_j = atomData.positions[j];
-            position_j[0] += deltaPosition_i[0];
-            position_j[1] += deltaPosition_i[1];
-            position_j[2] += deltaPosition_i[2];
+            position_j += deltaPosition_i;
 
             const int &atomType_j = atomData.types[j];
 
@@ -227,15 +236,15 @@ void Atoms::generateBondData(AtomData &atomData) {
                 bond.vertex2[0] = position_j[0];
                 bond.vertex2[1] = position_j[1];
                 bond.vertex2[2] = position_j[2];
-                bond.radius1 = m_bondRadius;
-                bond.radius2 = m_bondRadius;
+                float bondRadius = 0.1*m_bondScale;
+                bond.radius1 = bondRadius;
+                bond.radius2 = bondRadius;
                 bond.sphereRadius1 = sphereRadius_i;
                 bond.sphereRadius2 = atomData.radii[j];
                 bondsDataRaw.push_back(bond);
             }
         }
     }
-
     m_bondsDataRaw.resize(bondsDataRaw.size() * sizeof(BondVBOData));
     BondVBOData *posData = reinterpret_cast<BondVBOData*>(m_bondsDataRaw.data());
     // TODO can we just set the address here? Instead of copying.
@@ -248,11 +257,6 @@ SphereData *Atoms::sphereData() const
 {
     return m_sphereData;
 }
-
-//QVector<Modifier *> &Atoms::modifiers()
-//{
-//    return m_modifiers;
-//}
 
 QVector<AtomStyle *> &Atoms::atomStyles()
 {
@@ -296,11 +300,6 @@ Bonds *Atoms::bonds() const
 AtomData &Atoms::atomData()
 {
     return m_atomData;
-}
-
-float Atoms::bondRadius() const
-{
-    return m_bondRadius;
 }
 
 void Atoms::reset()
@@ -347,15 +346,6 @@ QVariantList Atoms::modifiers() const
     return m_modifiers;
 }
 
-void Atoms::setBondRadius(float bondRadius)
-{
-    if (m_bondRadius == bondRadius)
-        return;
-
-    m_bondRadius = bondRadius;
-    emit bondRadiusChanged(bondRadius);
-}
-
 void Atoms::setModifiers(QVariantList modifiers)
 {
     if (m_modifiers == modifiers)
@@ -372,4 +362,22 @@ void Atoms::setSort(bool sort)
 
     m_sort = sort;
     emit sortChanged(sort);
+}
+
+void Atoms::setBondScale(float bondScale)
+{
+    if (m_bondScale == bondScale)
+        return;
+
+    m_bondScale = bondScale;
+    emit bondScaleChanged(bondScale);
+}
+
+void Atoms::setSphereScale(float sphereScale)
+{
+    if (m_sphereScale == sphereScale)
+        return;
+
+    m_sphereScale = sphereScale;
+    emit sphereScaleChanged(sphereScale);
 }

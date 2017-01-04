@@ -79,7 +79,8 @@ SOURCES += \
     windowgl2.cpp \
     mousemover.cpp \
     states.cpp \
-    dataproviders/data1d.cpp
+    dataproviders/data1d.cpp \
+    commandparser.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -119,7 +120,8 @@ HEADERS += \
     windowgl2.h \
     mousemover.h \
     states.h \
-    dataproviders/data1d.h
+    dataproviders/data1d.h \
+    commandparser.h
 
 # Temporary use of quickcontrols2 without install
 

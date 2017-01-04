@@ -51,6 +51,7 @@ AtomifySimulator::AtomifySimulator() :
     m_simulationSpeed(1)
 {
     m_states->setupStates(*this);
+    m_parser.setSystem(m_system);
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -91,17 +92,24 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     QElapsedTimer t;
     t.start();
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
+    m_lammpsController.simulationSpeed = atomifySimulator->simulationSpeed();
     m_lammpsController.qmlThread = QThread::currentThread();
 
     atomifySimulator->syncCount += 1;
     States &states = *atomifySimulator->states();
+//    if(states.continued()->active()) qDebug() << "Continued";
+//    if(states.crashed()->active()) qDebug() << "Crashed";
+//    if(states.finished()->active()) qDebug() << "Finished";
+//    if(states.idle()->active()) qDebug() << "Idle";
+//    if(states.parsing()->active()) qDebug() << "Parsing";
+//    if(states.paused()->active()) qDebug() << "Paused";
+//    if(states.reset()->active()) qDebug() << "Reset";
+
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
     if(states.paused()->active()) {
         if(m_workerRenderingMutex.tryLock()) {
-            // qDebug() << "Will synchronize renderer";
             atomifySimulator->system()->atoms()->synchronizeRenderer();
-            // qDebug() << "Did synchronize renderer";
             m_workerRenderingMutex.unlock();
             m_reprocessRenderingData = true;
         }
@@ -155,6 +163,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
         m_lammpsController.scriptFilePath = atomifySimulator->scriptFilePath();
+        atomifySimulator->parser().parseFile(atomifySimulator->scriptFilePath());
         m_lammpsController.start();
         return;
     }
@@ -180,6 +189,11 @@ void MyWorker::work()
 MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
+}
+
+CommandParser &AtomifySimulator::parser()
+{
+    return m_parser;
 }
 
 int AtomifySimulator::simulationSpeed() const

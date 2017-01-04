@@ -63,6 +63,10 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     }
 
     system->synchronize(this);
+
+    if(m_lammps->update->ntimestep - m_lastSynchronization < simulationSpeed) return;
+    m_lastSynchronization = m_lammps->update->ntimestep;
+
     system->atoms()->processModifiers(system);
     system->atoms()->createRenderererData();
     worker->m_reprocessRenderingData = false;
@@ -79,10 +83,8 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         if(worker->m_reprocessRenderingData) {
             system->atoms()->processModifiers(system);
             if(worker->m_workerRenderingMutex.tryLock()) {
-                // qDebug() << "Will create renderer data";
                 system->atoms()->createRenderererData();
                 worker->m_reprocessRenderingData = false;
-                // qDebug() << "Did  create renderer data";
                 worker->m_workerRenderingMutex.unlock();
             }
         }
@@ -111,6 +113,7 @@ void LAMMPSController::stop()
     finished = false;
     didCancel = false;
     crashed = false;
+    m_lastSynchronization = 0;
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {

@@ -19,6 +19,7 @@ Item {
     property int currentLine: -1
     property int errorLine: -1
     property string openFiles: ""
+    property real lastRunScript: 0
     property string lastOpenedFolder
     clip: true
     signal clearConsole()
@@ -31,11 +32,18 @@ Item {
     }
 
     function runScript() {
+        var now = new Date().getTime()
+        var dt = now - lastRunScript
+        if(dt < 500) return; // Hack because I'm tired. The state machinery doesn't work perfectly. If Cmd+R is spammed it hangs without this hack fix
+
+        if(simulator.states.reset.active) return;
+
         if(!simulator.states.idle.active) {
             simulator.reset()
             simulator.didReset.connect(runScript)
             return;
         }
+        lastRunScript = now
 
         simulator.didReset.disconnect(runScript)
         editorWindow.activeEditor = editorWindow.currentEditor
