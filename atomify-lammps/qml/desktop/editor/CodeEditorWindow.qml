@@ -32,6 +32,11 @@ Item {
     }
 
     function runScript() {
+        if(currentEditor.changedSinceLastSave) {
+            saveChangesDialog.open()
+            return;
+        }
+
         var now = new Date().getTime()
         var dt = now - lastRunScript
         if(dt < 500) return; // Hack because I'm tired. The state machinery doesn't work perfectly. If Cmd+R is spammed it hangs without this hack fix
@@ -285,6 +290,17 @@ Item {
             simulator.didReset.connect( function() {
                 runScript()
             })
+        }
+    }
+
+    MessageDialog {
+        id: saveChangesDialog
+        title: "Save changes?"
+        text: "The current file '"+currentEditor.fileName+"' has unsaved changes. "
+        standardButtons: StandardButton.Cancel | StandardButton.Save
+        onAccepted: {
+            currentEditor.save()
+            runScript()
         }
     }
 
