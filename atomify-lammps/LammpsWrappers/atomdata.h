@@ -6,7 +6,7 @@
 
 class AtomData {
 public:
-    bool granular = false;
+    bool radiiFromLAMMPS = false;
     QVector<QVector3D> positions;
     QVector<QVector3D> deltaPositions; // For periodic copies
     QVector<QVector3D> colors;

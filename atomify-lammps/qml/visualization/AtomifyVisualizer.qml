@@ -34,8 +34,6 @@ Scene3D {
     property bool addPeriodicCopies: false
     property alias ambientOcclusion: ssaoQuadEntity.ambientOcclusion
     property alias finalShaderBuilder: finalQuadEntity.shaderBuilder
-    property alias sphereScale: colorModifier.scale
-    property real bondRadius: 0.1
     property alias periodicImages: periodicImages
     property string renderMode: "forward"
     property string renderQuality: "medium"
@@ -75,12 +73,6 @@ Scene3D {
         } else if(renderQuality === "high") {
             renderMode = "deferred"
             ambientOcclusion.samples = 32
-        }
-    }
-
-    onBondRadiusChanged: {
-        if(simulator != undefined) {
-            simulator.system.atoms.bondRadius = bondRadius
         }
     }
 
@@ -323,7 +315,6 @@ Scene3D {
 
         ColorModifier {
             id: colorModifier
-            scale: 0.2
         }
 
         GroupModifier {

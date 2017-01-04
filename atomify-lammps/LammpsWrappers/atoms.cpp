@@ -105,7 +105,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     }
 
     // lammps->
-
+    m_atomData.radiiFromLAMMPS = lammps->atom->radius_flag;
     for(int i=0; i<numberOfAtoms; i++) {
         m_atomData.types[i] = types[i];
         m_atomData.originalIndex[i] = i;
@@ -114,6 +114,9 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         position[0] = atom->x[i][0];
         position[1] = atom->x[i][1];
         position[2] = atom->x[i][2];
+        if(m_atomData.radiiFromLAMMPS) {
+            m_atomData.radii[i] = atom->radius[i];
+        }
         domain->remap(position); // remap into system boundaries with PBC
 
         m_atomData.positions[i][0] = position[0];
