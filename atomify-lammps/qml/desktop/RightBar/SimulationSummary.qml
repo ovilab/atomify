@@ -59,14 +59,6 @@ Flickable {
 
         spacing: 10
 
-        TextArea {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            height: 200
-        }
-
         GroupBox {
             id: simulationSummary
             title: "Simulation summary"

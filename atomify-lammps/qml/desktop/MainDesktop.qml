@@ -199,9 +199,9 @@ Item {
                         color: {
                             if(focusedState.active) {
                                 if(capturedState.active) {
-                                    return Material.accent
+                                    return Material.color(Material.Green)
                                 } else {
-                                    return Material.primary
+                                    return Material.accent
                                 }
                             } else {
                                 return Qt.rgba(1.0, 1.0, 1.0, 0.2)
