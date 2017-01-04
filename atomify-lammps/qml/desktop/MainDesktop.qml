@@ -315,6 +315,11 @@ Item {
     Item {
         id: shortcuts
         Shortcut {
+            sequence: "Return"
+            onActivated: messageOverlay.visible = false
+        }
+
+        Shortcut {
             sequence: "Ctrl+P"
             context: Qt.ApplicationShortcut
             onActivated: simulator.togglePaused()
@@ -373,6 +378,7 @@ Item {
                 focusViewport()
                 releaseCursor()
                 messageOverlay.visible = false
+                visualizer.forceActiveFocus()
 //                visualizer.focus = true
 //                if(visualizer.captureCursor) {
 //                    visualizer.captureCursor = false
