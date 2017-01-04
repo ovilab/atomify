@@ -49,10 +49,6 @@ Page {
             text: "Rendering"
             font.pixelSize: 12
         }
-        TabButton {
-            text: "Examples"
-            font.pixelSize: 12
-        }
     }
 
     footer: Item {
