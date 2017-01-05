@@ -73,117 +73,6 @@ Entity {
         }
         return indexVector
     }
-    
-    //    NodeInstantiator {
-    //        model: 4
-    //        Entity {
-    //            enabled: root.enabled
-    //            components: [,
-    //                outlineMaterial,
-    //                mesh,
-    //                transformX,
-    //                layer
-    //            ]
-    //            Transform {
-    //                id: transformX
-    //                translation: {
-    //                    if(corners.length < 1) {
-    //                        return Qt.vector3d(0, 0, 0)
-    //                    }
-    //                    var low = index*2
-
-    //                    return corners[index*2].plus(corners[low + 1].minus(corners[low]).times(0.5))
-    //                }
-    //                scale3D: {
-    //                    if(corners.length < 1) {
-    //                        return Qt.vector3d(1, 1, 1)
-    //                    }
-
-    //                    var low = index*2
-    //                    var side = corners[low + 1].minus(corners[low]).plus(Qt.vector3d(0, 0.5, 0.5))
-    //                    return side
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    Light { id: dummy }
-    
-    //    NodeInstantiator {
-    //        model: 4
-    //        Entity {
-    //            enabled: root.enabled
-    //            components: [,
-    //                outlineMaterial,
-    //                mesh,
-    //                transformY,
-    //                layer
-    //            ]
-    //            Transform {
-    //                id: transformY
-    //                property var map: [
-    //                    [0,2],
-    //                    [1,3],
-    //                    [4,6],
-    //                    [5,7]
-    //                ]
-    //                property var low: map[index][0]
-    //                property var high: map[index][1]
-    //                translation: {
-    //                    if(corners.length < 1) {
-    //                        return Qt.vector3d(0, 0, 0)
-    //                    }
-    //                    return corners[low].plus(corners[high].minus(corners[low]).times(0.5))
-    //                }
-    //                scale3D: {
-    //                    if(corners.length < 1) {
-    //                        return Qt.vector3d(1, 1, 1)
-    //                    }
-
-    //                    var side = corners[high].minus(corners[low]).plus(Qt.vector3d(0.5, 0.0, 0.5))
-    //                    return side
-    //                }
-    //            }
-    //        }
-    //    }
-    
-    //    NodeInstantiator {
-    //        model: 4
-    //        Entity {
-    //            enabled: root.enabled
-    //            components: [,
-    //                outlineMaterial,
-    //                mesh,
-    //                transformZ,
-    //                layer
-    //            ]
-    //            Transform {
-    //                id: transformZ
-    //                property var map: [
-    //                    [0,4],
-    //                    [1,5],
-    //                    [2,6],
-    //                    [3,7]
-    //                ]
-    //                property var low: map[index][0]
-    //                property var high: map[index][1]
-    //                translation: {
-    //                    if(corners.length < 1) {
-    //                        return Qt.vector3d(0, 0, 0)
-    //                    }
-    //                    return corners[low].plus(corners[high].minus(corners[low]).times(0.5))
-    //                }
-    //                scale3D: {
-    //                    if(corners.length < 1) {
-    //                        return Qt.vector3d(1, 1, 1)
-    //                    }
-
-    //                    var side = corners[high].minus(corners[low]).plus(Qt.vector3d(0.5, 0.5, 0.0))
-    //                    return side
-    //                }
-    //            }
-    //        }
-    //    }
 
     CuboidMesh {id: mesh}
 
@@ -205,11 +94,6 @@ Entity {
             //            surfaceTransform
         ]
 
-        //        Transform {
-        //            id: surfaceTransform
-        //            translation: root.size.times(0.5).plus(root.origin)
-        //            scale3D: root.sizePlus
-        //        }
         Timer {
             id: timer
             property real time
@@ -227,15 +111,6 @@ Entity {
                 previousTime = Date.now()
             }
         }
-
-//        ShaderBuilderMaterial {
-//            id: surfaceMaterial
-//            fragmentColor: StandardMaterial {
-//                color: Qt.rgba(1, 1, 1, sideAlpha)
-//                lights: root.lights
-//            }
-//            deferredColor: Qt.rgba(1, 1, 1, sideAlpha)
-//        }
 
         Material {
             id: surfaceMaterial
@@ -292,6 +167,27 @@ void main()
                                     color: Qt.rgba(1, 1, 1, sideAlpha)
                                     lights: root.lights
                                 }
+//                                fragmentColor: StandardMaterial {
+//                                    lights: root.lights
+//                                    color: Add {
+//                                        value1: Qt.rgba(1, 1, 1, sideAlpha)
+//                                        value2: fragmentShaderBuilder.textureCoordinate
+//                                    }
+//                                }
+
+//                                fragmentColor: StandardMaterial {
+//                                    color: Add {
+////                                        value1: Qt.rgba(1, 1, 1, sideAlpha)
+//                                        value1: 0.0
+//                                        value2: Multiply {
+//                                            value1: CombineRgbVectorAlpha {
+//                                                vector: fragmentShaderBuilder.position
+//                                                alpha: 1.0
+//                                            }
+//                                        }
+//                                    }
+//                                    lights: root.lights
+//                                }
                             }
                         }
                         renderStates: [

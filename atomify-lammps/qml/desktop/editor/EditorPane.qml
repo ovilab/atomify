@@ -51,47 +51,38 @@ Pane {
             onDidRun: visualizer.focus = true
         }
 
-        RowLayout {
-            anchors {
-                right: parent.right
-            }
-
-//            Button {
-//                id: clear
-//                text: "Clear output"
-//                focusPolicy: Qt.NoFocus
-//                onClicked: {
-//                    consoleItem.clear()
-//                }
+//        RowLayout {
+//            anchors {
+//                right: parent.right
 //            }
 
-            Button {
-                id: runButton
-                focusPolicy: Qt.NoFocus
-                anchors {
-                    right: parent.right
-                }
-                text: {
-                    if(simulator.states.idle.active || simulator.states.finished.active) {
-                        return "Run script"
-                    } else {
-                        return "Stop script"
-                    }
-                }
+//            Button {
+//                id: runButton
+//                focusPolicy: Qt.NoFocus
+//                anchors {
+//                    right: parent.right
+//                }
+//                text: {
+//                    if(simulator.states.idle.active || simulator.states.finished.active) {
+//                        return "Run script"
+//                    } else {
+//                        return "Stop script"
+//                    }
+//                }
 
-                enabled: !simulator.states.reset.active // Waiting to reset...
+//                enabled: !simulator.states.reset.active // Waiting to reset...
 
-                onClicked: {
-                    if(simulator.states.finished.active) {
-                        editorWindow.runScript()
-                    } else if(!simulator.states.idle.active) {
-                        simulator.reset()
-                    } else {
-                        editorWindow.runScript()
-                    }
-                }
-            }
-        }
+//                onClicked: {
+//                    if(simulator.states.finished.active) {
+//                        editorWindow.runScript()
+//                    } else if(!simulator.states.idle.active) {
+//                        simulator.reset()
+//                    } else {
+//                        editorWindow.runScript()
+//                    }
+//                }
+//            }
+//        }
 
 //        Console {
 //            id: consoleItem

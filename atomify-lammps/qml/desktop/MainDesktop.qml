@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls.Material 2.0
-import QtQuick.Controls 1.5
+import QtQuick.Controls 2.0
+import QtQuick.Controls 1.5 as QQC1
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
@@ -11,6 +12,7 @@ import SimVis 1.0
 import Qt.labs.settings 1.0
 import "../visualization"
 import "editor"
+import "items"
 import "RightBar"
 import "../plotting"
 Item {
@@ -61,8 +63,197 @@ Item {
         }
     }
 
-    SplitView {
-        anchors.fill: parent
+    Rectangle {
+        id: modeMenuContainer
+
+        anchors {
+            left: parent.left
+            top: parent.top
+            bottom: parent.bottom
+        }
+
+        width: 96
+
+        LinearGradient {
+            anchors.fill: parent
+            start: Qt.point(0, 0)
+            end: Qt.point(width, 10)
+            gradient: Gradient {
+                GradientStop {
+                    color: Material.color(Material.Grey, Material.Shade900)
+                    position: 0.0
+                }
+                GradientStop {
+                    color: Material.color(Material.Grey, Material.Shade900)
+                    position: 1.0
+                }
+            }
+        }
+
+        Image {
+            id: photonflowLogo
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                margins: 12
+            }
+
+            height: width
+            mipmap: true
+            smooth: true
+            source: "qrc:/images/eye-on.png"
+            fillMode: Image.PreserveAspectFit
+        }
+
+        Label {
+            id: logoText
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                top: photonflowLogo.bottom
+                topMargin: 8
+            }
+
+            text: "Atomify\n2.0"
+            font.pixelSize: 12
+            horizontalAlignment: Text.AlignHCenter
+        }
+
+        Column {
+            id: modeMenu
+
+            property int currentIndex: 0
+            property string currentMode: modeModel.get(currentIndex).mode
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+                right: parent.right
+                margins: 16
+            }
+            spacing: 24
+
+            Repeater {
+                model: ListModel {
+                    id: modeModel
+                    ListElement {
+                        image: "qrc:/images/ic_image_white_48dp.png"
+                        name: "View"
+                        mode: "view"
+                    }
+                    ListElement {
+                        image: "qrc:/images/ic_mode_edit_white_48dp.png"
+                        name: "Edit"
+                        mode: "edit"
+                    }
+                    ListElement {
+                        image: "qrc:/images/ic_view_quilt_white_48dp.png"
+                        name: "Examples"
+                        mode: "examples"
+                    }
+                    ListElement {
+                        image: "qrc:/images/ic_help_white_48dp.png"
+                        name: "Help"
+                        mode: "help"
+                    }
+                }
+
+                ToggleButton {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    toggled: modeMenu.currentIndex === index
+                    source: image
+                    text: name
+                    onClicked: {
+                        modeMenu.currentIndex = index
+                    }
+                }
+            }
+        }
+
+        Column {
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                margins: 16
+            }
+            spacing: 24
+
+            ToggleButton {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 8
+                }
+                source: {
+                    if(simulator.states.paused.active || stopButton.toggled) {
+                        return "qrc:/images/ic_play_arrow_white_48dp.png"
+                    } else {
+                        return "qrc:/images/ic_pause_white_48dp.png"
+                    }
+                }
+                toggled: !stopButton.toggled
+                text: {
+                    if(stopButton.toggled) {
+                        return "Simulate"
+                    } else {
+                        if(simulator.states.paused.active) {
+                            return "Paused"
+                        } else {
+                            return "Running"
+                        }
+                    }
+                }
+                onClicked: {
+                    if(simulator.states.idle.active) {
+                        editor.editorWindow.runScript()
+                    } else {
+                        simulator.togglePaused()
+                    }
+                }
+            }
+            ToggleButton {
+                id: stopButton
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 8
+                }
+                source: "qrc:/images/ic_stop_white_48dp.png"
+                toggled: simulator.states.finished.active || simulator.states.idle.active
+                text: toggled ? "Stopped" : "Stop"
+                onClicked: {
+                    simulator.reset()
+                }
+            }
+            ToggleButton {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 8
+                }
+                source: "qrc:/images/ic_refresh_white_48dp.png"
+                text: "Restart"
+                onClicked: {
+                    editor.editorWindow.runScript()
+                }
+            }
+        }
+    }
+
+    QQC1.SplitView {
+        id: editView
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: modeMenuContainer.right
+            right: parent.right
+        }
+
+        visible: modeMenu.currentMode === "edit" || modeMenu.currentMode === "view"
 
         Settings {
             property alias editorWidth: editor.width
@@ -77,6 +268,8 @@ Item {
             width: 400
             simulator: root.simulator
             visualizer: root.visualizer
+
+            visible: modeMenu.currentMode === "edit"
         }
 
         Item {
@@ -235,17 +428,6 @@ Item {
                 }
             }
 
-            ControlBar {
-                id: controlBar1
-                simulator: root.simulator
-                visualizer: root.visualizer
-                hidden: root.focusMode
-                anchors.horizontalCenter: parent.horizontalCenter
-                y: parent.height - 100
-                width: 320
-                height: 64
-            }
-
             Row {
                 anchors {
                     right: parent.right
@@ -254,32 +436,54 @@ Item {
                 }
                 spacing: anchors.margins / 2
 
-                Image {
-                    source: "qrc:/images/reset_camera.png"
-                    width: 48
-                    height: width
-                    fillMode: Image.PreserveAspectFit
+                IconButton {
+                    source: "qrc:/images/ic_camera_white_36dp.png"
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            flymodeOverlay.reset()
-                            visualizer.resetToSystemCenter()
+                    onClicked: {
+                        visualizer.grabToImage(function(result) {
+                            console.log("Saving screesnhot")
+                            fileDialogSave.callback = function() {
+                                // TODO: figure out why file:// doesn't work for saveToFile function
+                                result.saveToFile(fileDialogSave.fileUrl.toString().replace("file://",""));
+                            }
+                            fileDialogSave.visible = true
+                        })
+                    }
+
+                    FileDialog {
+                        id: fileDialogSave
+                        selectExisting : false
+                        property var callback
+                        title: "Please choose a location to save"
+
+                        nameFilters: [ "Image files (*.jpg *.png)" ]
+
+                        onAccepted: {
+                            if(callback !== undefined) {
+                                console.log("Calling back")
+                                callback()
+                                callback = undefined
+                            }
                         }
                     }
                 }
 
-                Image {
-                    source: "qrc:/images/switch_camera.png"
-                    width: 48
-                    height: width
-                    fillMode: Image.PreserveAspectFit
+                IconButton {
+                    source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            changeMode()
+                    onClicked: {
+                        if(flymodeState.active) {
+                            flymodeOverlay.reset()
                         }
+                        visualizer.resetToSystemCenter()
+                    }
+                }
+
+                IconButton {
+                    source: "qrc:/images/switch_camera.png"
+
+                    onClicked: {
+                        changeMode()
                     }
                 }
             }
@@ -303,9 +507,25 @@ Item {
             id: rightbar
             Layout.fillHeight: true
             Layout.minimumWidth: 200
+            visible: modeMenu.currentMode === "edit"
             width: 300
             system: simulator.system
             visualizer: root.visualizer
+        }
+    }
+
+    Pane {
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: modeMenuContainer.right
+            right: parent.right
+        }
+        visible: modeMenu.currentMode === "examples"
+
+        Label {
+            anchors.centerIn: parent
+            text: "Examples"
         }
     }
 
@@ -377,6 +597,26 @@ Item {
                 messageOverlay.visible = false
                 visualizer.forceActiveFocus()
             }
+        }
+
+        Shortcut {
+            sequence: "Ctrl+1"
+            onActivated: modeMenu.currentIndex = 0
+        }
+
+        Shortcut {
+            sequence: "Ctrl+2"
+            onActivated: modeMenu.currentIndex = 1
+        }
+
+        Shortcut {
+            sequence: "Ctrl+3"
+            onActivated: modeMenu.currentIndex = 2
+        }
+
+        Shortcut {
+            sequence: "Ctrl+4"
+            onActivated: modeMenu.currentIndex = 3
         }
     }
 

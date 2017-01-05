@@ -73,5 +73,8 @@
         <file>EventCenter.qml</file>
         <file>qmldir</file>
         <file>EventMapper.qml</file>
+        <file>desktop/items/ToggleButton.qml</file>
+        <file>desktop/items/ToggleImage.qml</file>
+        <file>desktop/IconButton.qml</file>
     </qresource>
 </RCC>

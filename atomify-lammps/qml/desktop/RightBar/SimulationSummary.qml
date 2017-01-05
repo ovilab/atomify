@@ -176,11 +176,34 @@ Flickable {
             title: "Time"
 
             Column {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
                 Label {
                     text: "Current timestep: "+system.currentTimestep
                 }
                 Label {
                     text: "Time: "+system.simulationTime.toFixed(2)
+                }
+                Label {
+                    text: "Simulation speed: "+speedSlider.value+"x"
+                }
+                Slider {
+                    id: speedSlider
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    from: 1
+                    to: 100
+                    stepSize: 1
+                    value: simulator ? simulator.simulationSpeed : 1
+                    onValueChanged: {
+                        if(simulator != undefined) {
+                            simulator.simulationSpeed = value
+                        }
+                    }
                 }
             }
         }

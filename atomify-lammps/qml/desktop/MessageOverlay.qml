@@ -63,7 +63,6 @@ Atomify is a live LAMMPS editor.
             verticalCenterOffset: -parent.height * 0.2
         }
         textFormat: TextEdit.RichText
-        font.pointSize: 12
         wrapMode: TextArea.WordWrap
         text: {
             if(welcome) {

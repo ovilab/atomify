@@ -48,13 +48,13 @@ Scene3D {
     multisample: true
     aspects: ["render", "input", "logic"]
 
-    onFocusModeChanged: {
-        if(focusMode) {
-            root.mode = "flymode"
-        } else {
-            root.mode = "trackball"
-        }
-    }
+//    onFocusModeChanged: {
+//        if(focusMode) {
+//            root.mode = "flymode"
+//        } else {
+//            root.mode = "trackball"
+//        }
+//    }
 
     onRenderQualityChanged: {
         if(mainCompleted) {
