@@ -266,13 +266,13 @@ Pane {
                             visualizer.simulator.system.atoms.renderingMode = currentText
 
                             if(currentText === "Ball and stick") {
-                                sphereScaleSlider.value = 1.0
+                                sphereScaleSlider.value = 0.0
                                 bondScaleSlider.value = 1.0
                             } else if(currentText === "Wireframe") {
-                                sphereScaleSlider.value = 1.0
+                                sphereScaleSlider.value = 0.0
                                 bondScaleSlider.value = 0.3
                             } else if(currentText === "Stick") {
-                                sphereScaleSlider.value = 1.1
+                                sphereScaleSlider.value = 0.1
                                 bondScaleSlider.value = 1.5
                             }
                         }
@@ -290,7 +290,7 @@ Pane {
                             property real expValue: Math.exp(value)
                             enabled: renderingMode.currentText==="Ball and stick"
                             width: parent.width*0.6
-                            minimumValue: 0.1
+                            minimumValue: -2.0
                             maximumValue: 4.0
                             stepSize: 0.1
                             value: Math.log(visualizer.simulator.system.atoms.sphereScale)
