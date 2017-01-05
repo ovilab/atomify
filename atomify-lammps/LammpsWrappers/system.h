@@ -21,6 +21,7 @@ class System : public QObject
     Q_PROPERTY(QMatrix4x4 transformationMatrix READ transformationMatrix NOTIFY transformationMatrixChanged)
     Q_PROPERTY(QMatrix3x3 cellMatrix READ cellMatrix WRITE setCellMatrix NOTIFY cellMatrixChanged)
     Q_PROPERTY(QString boundaryStyle READ boundaryStyle WRITE setBoundaryStyle NOTIFY boundaryStyleChanged)
+    Q_PROPERTY(bool triclinic READ triclinic WRITE setTriclinic NOTIFY triclinicChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
@@ -63,11 +64,8 @@ public:
     bool isValid() const;
     QMatrix4x4 transformationMatrix() const;
     QMatrix3x3 cellMatrix() const;
-
-    QString boundaryStyle() const
-    {
-        return m_boundaryStyle;
-    }
+    QString boundaryStyle() const;
+    bool triclinic() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -80,15 +78,8 @@ public slots:
     void setUnits(class Units* units);
     void setFixes(class Fixes* fixes);
     void setCellMatrix(QMatrix3x3 cellMatrix);
-
-    void setBoundaryStyle(QString boundaryStyle)
-    {
-        if (m_boundaryStyle == boundaryStyle)
-            return;
-
-        m_boundaryStyle = boundaryStyle;
-        emit boundaryStyleChanged(boundaryStyle);
-    }
+    void setBoundaryStyle(QString boundaryStyle);
+    void setTriclinic(bool triclinic);
 
 signals:
     void originChanged(QVector3D origin);
@@ -110,8 +101,8 @@ signals:
     void centerChanged(QVector3D center);
     void transformationMatrixChanged(QMatrix4x4 transformationMatrix);
     void cellMatrixChanged(QMatrix3x3 cellMatrix);
-
     void boundaryStyleChanged(QString boundaryStyle);
+    void triclinicChanged(bool triclinic);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -136,7 +127,8 @@ private:
     void updateBoundaryStyle(LAMMPS_NS::Domain *domain);
     QMatrix4x4 m_transformationMatrix;
     QMatrix3x3 m_cellMatrix;
-    QString m_boundaryStyle;
+    QString m_boundaryStyle = "None";
+    bool m_triclinic = false;
 };
 
 #endif // SYSTEM_H

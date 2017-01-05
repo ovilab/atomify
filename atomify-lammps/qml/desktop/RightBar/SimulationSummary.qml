@@ -144,11 +144,8 @@ Flickable {
 
             Column {
                 Label {
-                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
-                }
-                Label {
-                    textFormat: Qt.RichText
-                    text: "Volume: "+system.volume.toFixed(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
+                    text: "Triclinic"
+                    visible: system.triclinic
                 }
                 Label {
                     text: "Units: "+system.units.name
@@ -164,6 +161,13 @@ Flickable {
                 }
                 Label {
                     text: "Number of bonds: "+system.atoms.numberOfBonds
+                }
+                Label {
+                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                }
+                Label {
+                    textFormat: Qt.RichText
+                    text: "Volume: "+system.volume.toFixed(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
                 }
                 Label {
                     textFormat: Qt.RichText

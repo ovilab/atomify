@@ -24,7 +24,6 @@ System::System(AtomifySimulator *simulator)
     setFixes(new Fixes(simulator));
     setVariables(new Variables(simulator));
     m_transformationMatrix.setToIdentity();
-    setBoundaryStyle("None");
 }
 
 void System::computeCellMatrix(Domain *domain) {
@@ -138,6 +137,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     updateSizeAndOrigin(domain);
     computeCellMatrix(domain);
     updateBoundaryStyle(domain);
+    setTriclinic(domain->triclinic);
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -218,6 +218,7 @@ int System::numberOfAtomTypes() const
 void System::reset()
 {
     setIsValid(false);
+    setTriclinic(false);
     m_fixes->reset();
     m_atoms->reset();
     m_groups->reset();
@@ -258,6 +259,16 @@ QMatrix4x4 System::transformationMatrix() const
 QMatrix3x3 System::cellMatrix() const
 {
     return m_cellMatrix;
+}
+
+QString System::boundaryStyle() const
+{
+    return m_boundaryStyle;
+}
+
+bool System::triclinic() const
+{
+    return m_triclinic;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -383,6 +394,24 @@ void System::setCellMatrix(QMatrix3x3 cellMatrix)
 
     m_cellMatrix = cellMatrix;
     emit cellMatrixChanged(cellMatrix);
+}
+
+void System::setBoundaryStyle(QString boundaryStyle)
+{
+    if (m_boundaryStyle == boundaryStyle)
+        return;
+
+    m_boundaryStyle = boundaryStyle;
+    emit boundaryStyleChanged(boundaryStyle);
+}
+
+void System::setTriclinic(bool triclinic)
+{
+    if (m_triclinic == triclinic)
+        return;
+
+    m_triclinic = triclinic;
+    emit triclinicChanged(triclinic);
 }
 
 void System::setVariables(Variables *variables)
