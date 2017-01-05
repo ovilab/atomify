@@ -51,10 +51,10 @@ void System::computeCellMatrix(Domain *domain) {
 void System::updateTransformationMatrix(Domain *domain)
 {
     double *h = domain->h;
-    float transformationMatrixValues[] = {
-        h[0], h[5], h[4], 0,
-        0,    h[1], h[3], 0,
-        0,    0,    h[2], 0,
+    float transformationMatrixValues[] = { // Must cast for clang
+        float(h[0]), float(h[5]), float(h[4]), 0,
+        0,    float(h[1]), float(h[3]), 0,
+        0,    0,    float(h[2]), 0,
         0,    0,    0,    0
     };
 
