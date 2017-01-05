@@ -21,6 +21,14 @@ Item {
     property string openFiles: ""
     property real lastRunScript: 0
     property string lastOpenedFolder
+    onVisibleChanged: {
+        if(visible) {
+            if(visualizer.simulator.scriptFilePath!=="") {
+                openTab("file://"+visualizer.simulator.scriptFilePath)
+            }
+        }
+    }
+
     clip: true
     signal clearConsole()
     signal didRun()
