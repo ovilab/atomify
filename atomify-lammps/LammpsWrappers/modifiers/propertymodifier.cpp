@@ -76,7 +76,11 @@ void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double>
 
 void PropertyModifier::apply(AtomData &atomData)
 {
-    if(!enabled()) return;
+    if(!enabled()) {
+        setActive(false);
+        m_previousHovered = nullptr;
+        return;
+    }
     QVector<CPCompute*> computes = m_system->computes()->computes();
     for(CPCompute *compute : computes) {
         if(compute->hovered() && compute->isPerAtom()) {
