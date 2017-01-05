@@ -42,52 +42,61 @@ void Units::synchronize(LAMMPS *lammps)
             setName("Real");
             setTime("fs");
             setVolume( QString("Å<sup>%1</sup>").arg(m_dimensions));
-            setDensity(QString("g/cm<sup>3</sup>").arg(m_dimensions));
+            setDensity(QString("g/cm<sup>%1</sup>").arg(m_dimensions));
             setLength("Å");
         } else if (strcmp(unit_style,"metal") == 0) {
             type = Metal;
             setName("Metal");
             setTime("ps");
-            setVolume(QString("Å<sup>3</sup>").arg(m_dimensions));
-            setDensity(QString("g/cm<sup>3</sup>").arg(m_dimensions));
+            setVolume(QString("Å<sup>%1</sup>").arg(m_dimensions));
+            setDensity(QString("g/cm<sup>%1</sup>").arg(m_dimensions));
             setLength("Å");
         } else if (strcmp(unit_style,"si") == 0) {
             type = SI;
             setName("SI");
             setTime("s");
-            setVolume(QString("m<sup>3</sup>").arg(m_dimensions));
-            setDensity(QString("kg/m<sup>3</sup>").arg(m_dimensions));
+            setVolume(QString("m<sup>%1</sup>").arg(m_dimensions));
+            setDensity(QString("kg/m<sup>%1</sup>").arg(m_dimensions));
             setLength("m");
         } else if (strcmp(unit_style,"cgs") == 0) {
             type = CGS;
             setName("CGS");
             setLength("cm");
             setTime("s");
-            setVolume(QString("cm<sup>3</sup>").arg(m_dimensions));
-            setDensity(QString("g/cm<sup>3</sup>").arg(m_dimensions));
+            setVolume(QString("cm<sup>%1</sup>").arg(m_dimensions));
+            setDensity(QString("g/cm<sup>%1</sup>").arg(m_dimensions));
         } else if (strcmp(unit_style,"electron") == 0) {
             type = Electron;
             setName("Electron");
             setLength("Bohr");
             setTime("fs");
-            setVolume(QString("Bohr<sup>3</sup>").arg(m_dimensions));
+            setVolume(QString("Bohr<sup>%1</sup>").arg(m_dimensions));
             setDensity("");
         } else if (strcmp(unit_style,"micro") == 0) {
             type = Micro;
             setName("Micro");
             setTime("μs");
-            setVolume(QString("μm<sup>3</sup>").arg(m_dimensions));
-            setDensity(QString("pg/μm<sup>3</sup>").arg(m_dimensions));
+            setVolume(QString("μm<sup>%1</sup>").arg(m_dimensions));
+            setDensity(QString("pg/μm<sup>%1</sup>").arg(m_dimensions));
             setLength("μm");
         } else if (strcmp(unit_style,"nano") == 0) {
             type = Nano;
             setName("Nano");
             setLength("nm");
             setTime("ns");
-            setVolume(QString("nm<sup>3</sup>").arg(m_dimensions));
-            setDensity(QString("ag/nm<sup>3</sup>").arg(m_dimensions));
+            setVolume(QString("nm<sup>%1</sup>").arg(m_dimensions));
+            setDensity(QString("ag/nm<sup>%1</sup>").arg(m_dimensions));
         }
     }
+}
+
+void Units::reset()
+{
+    setName("None");
+    setTime("");
+    setVolume("");
+    setDensity("");
+    setLength("");
 }
 
 QString Units::name() const

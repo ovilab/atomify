@@ -154,6 +154,12 @@ Flickable {
                     text: "Units: "+system.units.name
                 }
                 Label {
+                    text: "Dimensions: "+system.units.dimensions
+                }
+                Label {
+                    text: "Boundary: "+system.boundaryStyle
+                }
+                Label {
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Label {

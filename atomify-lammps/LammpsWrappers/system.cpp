@@ -24,6 +24,7 @@ System::System(AtomifySimulator *simulator)
     setFixes(new Fixes(simulator));
     setVariables(new Variables(simulator));
     m_transformationMatrix.setToIdentity();
+    setBoundaryStyle("None");
 }
 
 void System::computeCellMatrix(Domain *domain) {
@@ -56,6 +57,34 @@ void System::updateTransformationMatrix(Domain *domain)
 
     m_transformationMatrix = QMatrix4x4(transformationMatrixValues);
     emit transformationMatrixChanged(m_transformationMatrix);
+}
+
+void System::updateBoundaryStyle(Domain *domain)
+{
+    QString style;
+    for (int idim = 0; idim < domain->dimension; idim++) {
+        if(domain->boundary[idim][0] == 0) {
+            style += "p ";
+            continue;
+        } else {
+            // Loop over the two sides and append only one letter if they are the same, append both if they differ
+            for (int iside = 0; iside < 2; iside++) {
+                QString dimStyle = "";
+                if(domain->boundary[idim][iside] == 1) dimStyle = "f";
+                else if(domain->boundary[idim][iside] == 2) dimStyle = "s";
+                else if(domain->boundary[idim][iside] == 3) dimStyle = "m";
+
+                if(iside == 0) {
+                    style += dimStyle;
+                    continue;
+                } else if(domain->boundary[idim][0] != domain->boundary[idim][1]) {
+                    style += dimStyle;
+                }
+                style += " ";
+            }
+        }
+    }
+    setBoundaryStyle(style);
 }
 
 void System::updateSizeAndOrigin(Domain *domain)
@@ -108,6 +137,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     updateTransformationMatrix(domain);
     updateSizeAndOrigin(domain);
     computeCellMatrix(domain);
+    updateBoundaryStyle(domain);
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -194,12 +224,14 @@ void System::reset()
     m_computes->reset();
     m_regions->reset();
     m_variables->reset();
+    m_units->reset();
     m_currentTimestep = 0;
     m_simulationTime = 0;
     m_size = QVector3D();
     m_origin = QVector3D();
     m_numberOfAtoms = 0;
     m_numberOfAtomTypes = 0;
+    setBoundaryStyle("None");
     emit currentTimestepChanged(m_currentTimestep);
     emit simulationTimeChanged(m_simulationTime);
     emit sizeChanged(m_size);
@@ -221,6 +253,11 @@ bool System::isValid() const
 QMatrix4x4 System::transformationMatrix() const
 {
     return m_transformationMatrix;
+}
+
+QMatrix3x3 System::cellMatrix() const
+{
+    return m_cellMatrix;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -337,6 +374,15 @@ void System::setFixes(Fixes *fixes)
 
     m_fixes = fixes;
     emit fixesChanged(fixes);
+}
+
+void System::setCellMatrix(QMatrix3x3 cellMatrix)
+{
+    if (m_cellMatrix == cellMatrix)
+        return;
+
+    m_cellMatrix = cellMatrix;
+    emit cellMatrixChanged(cellMatrix);
 }
 
 void System::setVariables(Variables *variables)

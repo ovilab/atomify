@@ -20,6 +20,7 @@ class System : public QObject
     Q_PROPERTY(QVector3D center READ center NOTIFY centerChanged)
     Q_PROPERTY(QMatrix4x4 transformationMatrix READ transformationMatrix NOTIFY transformationMatrixChanged)
     Q_PROPERTY(QMatrix3x3 cellMatrix READ cellMatrix WRITE setCellMatrix NOTIFY cellMatrixChanged)
+    Q_PROPERTY(QString boundaryStyle READ boundaryStyle WRITE setBoundaryStyle NOTIFY boundaryStyleChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
@@ -61,10 +62,11 @@ public:
     void reset();
     bool isValid() const;
     QMatrix4x4 transformationMatrix() const;
+    QMatrix3x3 cellMatrix() const;
 
-    QMatrix3x3 cellMatrix() const
+    QString boundaryStyle() const
     {
-        return m_cellMatrix;
+        return m_boundaryStyle;
     }
 
 public slots:
@@ -77,14 +79,15 @@ public slots:
     void setCameraPosition(QVector3D cameraPosition);
     void setUnits(class Units* units);
     void setFixes(class Fixes* fixes);
+    void setCellMatrix(QMatrix3x3 cellMatrix);
 
-    void setCellMatrix(QMatrix3x3 cellMatrix)
+    void setBoundaryStyle(QString boundaryStyle)
     {
-        if (m_cellMatrix == cellMatrix)
+        if (m_boundaryStyle == boundaryStyle)
             return;
 
-        m_cellMatrix = cellMatrix;
-        emit cellMatrixChanged(cellMatrix);
+        m_boundaryStyle = boundaryStyle;
+        emit boundaryStyleChanged(boundaryStyle);
     }
 
 signals:
@@ -106,9 +109,9 @@ signals:
     void cameraPositionChanged(QVector3D cameraPosition);
     void centerChanged(QVector3D center);
     void transformationMatrixChanged(QMatrix4x4 transformationMatrix);
-
-
     void cellMatrixChanged(QMatrix3x3 cellMatrix);
+
+    void boundaryStyleChanged(QString boundaryStyle);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -130,8 +133,10 @@ private:
     void updateTransformationMatrix(LAMMPS_NS::Domain *domain);
     void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
     void computeCellMatrix(LAMMPS_NS::Domain *domain);
+    void updateBoundaryStyle(LAMMPS_NS::Domain *domain);
     QMatrix4x4 m_transformationMatrix;
     QMatrix3x3 m_cellMatrix;
+    QString m_boundaryStyle;
 };
 
 #endif // SYSTEM_H

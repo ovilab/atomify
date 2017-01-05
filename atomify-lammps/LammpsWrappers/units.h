@@ -17,13 +17,13 @@ public:
     enum Type { LJ, Real, Metal, SI, CGS, Electron, Micro, Nano };
     explicit Units(QObject *parent = 0);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
+    void reset();
     QString name() const;
     QString time() const;
     QString volume() const;
     QString density() const;
     QString length() const;
     int dimensions() const;
-
 signals:
     void nameChanged(QString name);
     void timeChanged(QString time);
