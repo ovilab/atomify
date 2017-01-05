@@ -147,6 +147,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         m_lammpsController.stop();
         atomifySimulator->system()->synchronize(&m_lammpsController);
         atomifySimulator->system()->atoms()->reset();
+        atomifySimulator->system()->atoms()->synchronizeRenderer();
         emit atomifySimulator->didReset();
         return;
     }
