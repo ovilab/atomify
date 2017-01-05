@@ -4,7 +4,7 @@ import QtQuick.Controls 2.0
 Rectangle {
     id: root
     signal continueClicked()
-    signal ljClicked()
+    signal editClicked()
     signal examplesClicked()
     signal newTabClicked()
     signal hideClicked()
@@ -48,9 +48,9 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Welcome to Atomify</h2>
-Atomify is a live LAMMPS editor.
-<div style=\"margin-top: 5px\">&bull; Open the <a href=\"LJ\">Lennard Jones</a> example to quickly get started with LAMMPS.</div>
-<div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a></div>
+Atomify is a live LAMMPS editor. Here you can edit, run and analyze your scripts.
+<div style=\"margin-top: 5px\">&bull; Edit the current script in the <a href=\"edit\">edit</a> menu. (Ctrl+2)</div>
+<div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a> (Ctrl+3)</div>
 <div style=\"margin-top: 5px\">&bull; Start a <a href=\"newTab\">new script</a> (Ctrl+N)</div>
 "
 
@@ -80,8 +80,8 @@ Atomify is a live LAMMPS editor.
         onLinkActivated: {
             if(link==="continue") {
                 root.continueClicked()
-            } else if(link==="LJ") {
-                root.ljClicked()
+            } else if(link==="edit") {
+                root.editClicked()
             } else if(link==="examples") {
                 root.examplesClicked()
             } else if(link==="newTab") {

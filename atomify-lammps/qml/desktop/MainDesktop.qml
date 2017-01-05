@@ -425,8 +425,13 @@ Item {
                 cancelling: simulator.states.reset.active
 
                 onContinueClicked: simulator.continued()
-                onNewTabClicked: editor.editorWindow.newTab()
-                onExamplesClicked: rightbar.showExamples()
+                onEditClicked: modeMenu.currentIndex = 1
+                onNewTabClicked: {
+                    modeMenu.currentIndex = 1
+                    editor.editorWindow.newTab()
+                }
+
+                onExamplesClicked: modeMenu.currentIndex = 2
                 onHideClicked: visible = false
                 onShouldBeVisibleChanged: {
                     if(shouldBeVisible) {
@@ -450,7 +455,6 @@ Item {
 
                     onClicked: {
                         visualizer.grabToImage(function(result) {
-                            console.log("Saving screesnhot")
                             fileDialogSave.callback = function() {
                                 // TODO: figure out why file:// doesn't work for saveToFile function
                                 result.saveToFile(fileDialogSave.fileUrl.toString().replace("file://",""));
