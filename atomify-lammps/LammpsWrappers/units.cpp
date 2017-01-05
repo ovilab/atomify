@@ -4,7 +4,7 @@
 using namespace LAMMPS_NS;
 Units::Units(QObject *parent) : QObject(parent)
 {
-
+    setName("None");
 }
 
 void Units::synchronize(LAMMPS *lammps)
@@ -51,33 +51,38 @@ void Units::synchronize(LAMMPS *lammps)
         } else if (strcmp(unit_style,"si") == 0) {
             type = SI;
             setName("SI");
-            setTime("");
-            setVolume("");
-            setDensity("");
+            setTime("s");
+            setVolume("m<sup>3</sup>");
+            setDensity("kg/m<sup>3</sup>");
+            setLength("m");
         } else if (strcmp(unit_style,"cgs") == 0) {
             type = CGS;
             setName("CGS");
-            setTime("");
-            setVolume("");
-            setDensity("");
+            setLength("cm");
+            setTime("s");
+            setVolume("cm<sup>3</sup>");
+            setDensity("g/cm<sup>3</sup>");
         } else if (strcmp(unit_style,"electron") == 0) {
             type = Electron;
             setName("Electron");
-            setTime("");
-            setVolume("");
+            setLength("Bohr");
+            setTime("fs");
+            setVolume("Bohr<sup>3</sup>");
             setDensity("");
         } else if (strcmp(unit_style,"micro") == 0) {
             type = Micro;
             setName("Micro");
-            setTime("");
-            setVolume("");
-            setDensity("");
+            setTime("μs");
+            setVolume("μm<sup>3</sup>");
+            setDensity("pg/μm<sup>3</sup>");
+            setLength("μm");
         } else if (strcmp(unit_style,"nano") == 0) {
             type = Nano;
             setName("Nano");
-            setTime("");
-            setVolume("");
-            setDensity("");
+            setLength("nm");
+            setTime("ns");
+            setVolume("nm<sup>3</sup>");
+            setDensity("ag/nm<sup>3</sup>");
         }
     }
 }
