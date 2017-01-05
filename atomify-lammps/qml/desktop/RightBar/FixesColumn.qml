@@ -22,6 +22,11 @@ Column {
             console.log("Error :(")
         }
     }
+
+    Label {
+        text: "No fixes"
+        visible: list.count==0
+    }
     
     Repeater {
         id: list

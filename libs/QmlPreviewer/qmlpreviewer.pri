@@ -1,6 +1,6 @@
 SOURCES += $$PWD/qmlpreviewer.cpp
-HEADERS += $$PWD/qmlpreviewer.h \
-    $$PWD/QmlPreviewer
+HEADERS += $$PWD/qmlpreviewer.h
+
 INCLUDEPATH += $$PWD
 RESOURCES += \
     $$PWD/qmlpreviewer.qrc

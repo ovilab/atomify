@@ -437,8 +437,8 @@ void Modify::end_of_step()
 
 void Modify::post_parse_command()
 {
-  for (int i = 0; i < n_end_of_step; i++)
-      fix[list_end_of_step[i]]->post_parse_command();
+  // for (int i = 0; i < n_end_of_step; i++)
+  //     fix[list_end_of_step[i]]->post_parse_command();
 }
 
 /* ----------------------------------------------------------------------
@@ -447,8 +447,8 @@ void Modify::post_parse_command()
 
 void Modify::post_execute_command()
 {
-  for (int i = 0; i < n_end_of_step; i++)
-      fix[list_end_of_step[i]]->post_execute_command();
+  // for (int i = 0; i < n_end_of_step; i++)
+  //     fix[list_end_of_step[i]]->post_execute_command();
 }
 
 /* ----------------------------------------------------------------------

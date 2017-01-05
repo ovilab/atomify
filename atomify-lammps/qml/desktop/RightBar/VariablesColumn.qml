@@ -19,6 +19,11 @@ Column {
         }
     }
 
+    Label {
+        text: "No variables"
+        visible: list.count==0
+    }
+
     Repeater {
         id: list
         model: system ? system.variables.model : null
