@@ -607,34 +607,23 @@ Item {
             }
         }
 
-        property string tabShortcutModifier: Qt.platform.os === "osx" ? "Ctrl" : "Alt"
-
         Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+1"
+            sequence: "Ctrl+1"
             onActivated: modeMenu.currentIndex = 0
         }
 
         Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+2"
-            onActivated: {
-                modeMenu.currentIndex = 1
-            }
+            sequence: "Ctrl+2"
+            onActivated: modeMenu.currentIndex = 1
         }
 
         Shortcut {
-            sequence: "Meta+1"
-            onActivated: {
-                console.log("Did press meta")
-            }
-        }
-
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+3"
+            sequence: "Ctrl+3"
             onActivated: modeMenu.currentIndex = 2
         }
 
         Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+4"
+            sequence: "Ctrl+4"
             onActivated: modeMenu.currentIndex = 3
         }
     }
