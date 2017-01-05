@@ -112,52 +112,52 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
 
 bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController) {
     return false;
-//    if(!compute) return false;
-//    ensureExists("histogram", true);
-//    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system->numberOfAtoms();
-//    m_atomData = vector<double>(values, values+numAtoms);
+    //    if(!compute) return false;
+    //    ensureExists("histogram", true);
+    //    double *values = compute->vector_atom;
+    //    int numAtoms = lammpsController->system->numberOfAtoms();
+    //    m_atomData = vector<double>(values, values+numAtoms);
 
-//    Data1D *data = ensureExists("histogram", true);
-//    data->createHistogram(m_atomData);
+    //    Data1D *data = ensureExists("histogram", true);
+    //    data->createHistogram(m_atomData);
 
-//    setIsPerAtom(true);
-//    setInteractive(true);
-//    return true;
+    //    setIsPerAtom(true);
+    //    setInteractive(true);
+    //    return true;
 }
 
 bool CPCompute::copyData(ComputeClusterAtom *compute, LAMMPSController *lammpsController) {
     return false;
-//    if(!compute) return false;
+    //    if(!compute) return false;
 
-//    ensureExists("histogram", true);
-//    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system->numberOfAtoms();
-//    m_atomData = vector<double>(values, values+numAtoms);
+    //    ensureExists("histogram", true);
+    //    double *values = compute->vector_atom;
+    //    int numAtoms = lammpsController->system->numberOfAtoms();
+    //    m_atomData = vector<double>(values, values+numAtoms);
 
-//    Data1D *data = ensureExists("histogram", true);
-//    data->createHistogram(m_atomData);
+    //    Data1D *data = ensureExists("histogram", true);
+    //    data->createHistogram(m_atomData);
 
-//    setIsPerAtom(true);
-//    setInteractive(true);
-//    return true;
+    //    setIsPerAtom(true);
+    //    setInteractive(true);
+    //    return true;
 }
 
 bool CPCompute::copyData(ComputeCNAAtom *compute, LAMMPSController *lammpsController) {
     return false;
-//    if(!compute) return false;
+    //    if(!compute) return false;
 
-//    ensureExists("histogram", true);
-//    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system->numberOfAtoms();
-//    m_atomData = vector<double>(values, values+numAtoms);
+    //    ensureExists("histogram", true);
+    //    double *values = compute->vector_atom;
+    //    int numAtoms = lammpsController->system->numberOfAtoms();
+    //    m_atomData = vector<double>(values, values+numAtoms);
 
-//    Data1D *data = ensureExists("histogram", true);
-//    data->createHistogram(m_atomData);
+    //    Data1D *data = ensureExists("histogram", true);
+    //    data->createHistogram(m_atomData);
 
-//    setIsPerAtom(true);
-//    setInteractive(true);
-//    return true;
+    //    setIsPerAtom(true);
+    //    setInteractive(true);
+    //    return true;
 }
 
 bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsController) {
@@ -176,19 +176,19 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
 bool CPCompute::copyData(ComputePropertyAtom *compute, LAMMPSController *lammpsController) {
     return false;
 
-//    if(!compute) return false;
-//    if(compute->size_peratom_cols > 0) return true; // We don't support vector quantities yet
+    //    if(!compute) return false;
+    //    if(compute->size_peratom_cols > 0) return true; // We don't support vector quantities yet
 
-//    double *values = compute->vector_atom;
-//    int numAtoms = lammpsController->system->numberOfAtoms();
-//    m_atomData = vector<double>(values, values+numAtoms);
+    //    double *values = compute->vector_atom;
+    //    int numAtoms = lammpsController->system->numberOfAtoms();
+    //    m_atomData = vector<double>(values, values+numAtoms);
 
-//    Data1D *data = ensureExists("histogram", true);
-//    data->createHistogram(m_atomData);
+    //    Data1D *data = ensureExists("histogram", true);
+    //    data->createHistogram(m_atomData);
 
-//    setIsPerAtom(true);
-//    setInteractive(true);
-//    return true;
+    //    setIsPerAtom(true);
+    //    setInteractive(true);
+    //    return true;
 }
 
 bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController) {
@@ -353,49 +353,53 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     return true;
 }
 
+bool CPCompute::validateStatus(Compute *compute, LAMMPS *lammps) {
+    if( (compute->peflag||compute->peatomflag) && lammps->update->ntimestep != lammps->update->eflag_global) return false;
+    if( (compute->pressflag||compute->pressatomflag) && lammps->update->ntimestep != lammps->update->vflag_global) return false;
+    return true;
+}
+
 void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     Compute *compute = lammpsController->findComputeByIdentifier(identifier());
     if(compute->scalar_flag == 1) {
-        try {
-            compute->compute_scalar();
-        } catch (LAMMPSException &exception) {
-            // TODO: handle this better than just ignoring exception.
-
-//            qDebug() << "ERROR: LAMMPS threw an exception!";
-//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        if(validateStatus(compute, lammpsController->lammps())) {
+            try {
+                compute->compute_scalar();
+            } catch (LAMMPSException &exception) {
+                // TODO: handle this better than just ignoring exception.
+            }
         }
     }
 
     if(compute->vector_flag == 1) {
-        try {
-            compute->compute_vector();
-        } catch (LAMMPSException &exception) {
-            // TODO: handle this better than just ignoring exception.
-//            qDebug() << "ERROR: LAMMPS threw an exception!";
-//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        if(validateStatus(compute, lammpsController->lammps())) {
+            try {
+                compute->compute_vector();
+            } catch (LAMMPSException &exception) {
+                // TODO: handle this better than just ignoring exception.
+            }
         }
     }
 
     if(compute->array_flag == 1) {
-        try {
-            compute->compute_array();
-        } catch (LAMMPSException &exception) {
-            // TODO: handle this better than just ignoring exception.
-//            qDebug() << "ERROR: LAMMPS threw an exception!";
-//            qDebug() << "ERROR: File:" << QString::fromStdString(exception.file());
-//            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.error());
+        if(validateStatus(compute, lammpsController->lammps())) {
+            try {
+                compute->compute_array();
+            } catch (LAMMPSException &exception) {
+                // TODO: handle this better than just ignoring exception.
+            }
         }
     }
 
     if(compute->peratom_flag == 1) {
-        try {
-            compute->compute_peratom();
-        }  catch(LAMMPSAbortException & ae) {
-            qDebug() << "Yeah didn't go so well: " << ae.message.c_str();
-        } catch(LAMMPSException & e) { \
-            qDebug() << "Yeah didn't go so well: " << e.message.c_str();
+        if(validateStatus(compute, lammpsController->lammps())) {
+            try {
+                compute->compute_peratom();
+            }  catch(LAMMPSAbortException & ae) {
+                qDebug() << "Yeah didn't go so well: " << ae.message.c_str();
+            } catch(LAMMPSException & e) { \
+                qDebug() << "Yeah didn't go so well: " << e.message.c_str();
+            }
         }
     }
 }
