@@ -31,7 +31,6 @@ Scene3D {
     property alias light1: light1
     property alias light2: light2
     property real scale: 0.23
-    property bool addPeriodicCopies: false
     property alias ambientOcclusion: ssaoQuadEntity.ambientOcclusion
     property alias finalShaderBuilder: finalQuadEntity.shaderBuilder
     property alias periodicImages: periodicImages

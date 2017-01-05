@@ -199,7 +199,10 @@ Flickable {
                     text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
                 }
                 Label {
-                    text: "Simulation speed: "+speedSlider.value+"x"
+                    text: "Achieved speed: "+system.performance.effectiveSimulationSpeed.toFixed(2)+"x"
+                }
+                Label {
+                    text: "Target speed: "+speedSlider.value+"x"
                 }
                 Slider {
                     id: speedSlider

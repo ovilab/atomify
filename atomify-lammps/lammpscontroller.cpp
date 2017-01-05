@@ -69,9 +69,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         long t = m_timer.restart();
         double timePerTimestep = t / 50.0 / 1000; // Convert to seconds
         double speed = (1.0 / 60.0) / timePerTimestep;
-        qDebug() << "Time per timestep: " << timePerTimestep << " since t = " << t << " which gives speed: " << speed;
         system->performance()->setEffectiveSimulationSpeed(speed);
-        // qDebug() << "Speed: " << speed;
     }
 
     if(m_lammps->update->ntimestep - m_lastSynchronizationTimestep < simulationSpeed) return;
@@ -254,6 +252,7 @@ void LAMMPSController::start() {
         qDebug() << "Damn, could not create the fix... :/";
         exit(1);
     }
+    m_timer.restart();
 
     FixAtomify *fix = dynamic_cast<FixAtomify*>(findFixByIdentifier(QString("atomify")));
     fix->set_callback(&synchronizeLAMMPS_callback, this);
