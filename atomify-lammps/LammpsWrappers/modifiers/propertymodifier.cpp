@@ -23,10 +23,23 @@ void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double>
         m_cleanPoints.push_back(p);
     }
 
+    // Min amd max of dataset
     double min = *std::min_element(std::begin(m_cleanPoints), std::end(m_cleanPoints));
     double max = *std::max_element(std::begin(m_cleanPoints), std::end(m_cleanPoints));
-    setMin(min);
-    setMax(max);
+
+    if(m_previousHovered == nullptr) {
+        // We have just hovered a new variable/compute, always use these
+        setMin(min);
+        setMax(max);
+    } else {
+        // Keep old values if they are larger/smaller
+        double newMin = std::min(min, m_min);
+        double newMax = std::max(max, m_max);
+        setMin(newMin);
+        setMax(newMax);
+    }
+
+
     double range = m_max - m_min;
     double oneOverRange = 1.0 / range;
 
@@ -71,6 +84,9 @@ void PropertyModifier::apply(AtomData &atomData)
             const std::vector<double> &values = compute->atomData();
             if(values.size() == atomData.size()) {
                 applyColors(atomData, values, compute->groupBit());
+                if(compute != m_previousHovered) {
+                    m_previousHovered = compute;
+                }
                 return;
             }
         }
@@ -79,15 +95,19 @@ void PropertyModifier::apply(AtomData &atomData)
     QVector<CPVariable*> variables = m_system->variables()->variables();
     for(CPVariable *variable : variables) {
         if(variable->hovered() && variable->isPerAtom()) {
+            setActive(true);
             const std::vector<double> &values = variable->atomData();
             if(values.size() == atomData.size()) {
                 applyColors(atomData, values, 1); // groupBit = 1 will be true for all bitwise (i.e. all groups)
-                setActive(true);
+                if(variable != m_previousHovered) {
+                    m_previousHovered = variable;
+                }
                 return;
             }
         }
     }
     setActive(false);
+    m_previousHovered = nullptr;
 }
 
 bool PropertyModifier::active() const

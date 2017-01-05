@@ -4,7 +4,8 @@ import QtQuick.Controls 2.0
 Item {
     id: root
     property real min: 0
-    property real max: 1
+    property real max: 0
+
     property bool hidden: true
     opacity: hidden ? 0.0 : 1.0
 

@@ -31,6 +31,7 @@ signals:
     void minChanged(double min);
 
 private:
+    class SimulatorControl *m_previousHovered = nullptr;
     void applyColors(AtomData &atomData, const std::vector<double> &values, int groupBit);
     bool m_active = false;
     std::vector<float> m_cleanPoints;
