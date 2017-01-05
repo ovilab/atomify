@@ -7,6 +7,7 @@ import "../../visualization"
 
 Flickable {
     id: root
+    property var simulator
     property var system: System {} /*{
         "groups": {
             "model": [{

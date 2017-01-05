@@ -8,6 +8,7 @@ Page {
     id: root
     property System system
     property AtomifyVisualizer visualizer
+    property AtomifySimulator simulator
     focusPolicy: Qt.NoFocus
 
     function showExamples() {
@@ -26,6 +27,7 @@ Page {
             // contentHeight: 2*height
             system: root.system
             visualizer: root.visualizer
+            simulator: root.simulator
         }
 
         Rendering {

@@ -524,6 +524,7 @@ Item {
             width: 300
             system: simulator.system
             visualizer: root.visualizer
+            simulator: simulator
         }
     }
 
