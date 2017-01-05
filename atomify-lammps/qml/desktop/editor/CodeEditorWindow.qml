@@ -320,68 +320,68 @@ Item {
     Item {
         id: shortcuts
 
-        property string tabShortcutModifier: Qt.platform.os === "osx" ? "Ctrl" : "Alt"
+//        property string tabShortcutModifier: Qt.platform.os === "osx" ? "Ctrl" : "Alt"
 
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+1"
-            onActivated: {
-                if(editorCount >= 1) tabBar.setCurrentIndex(0)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+2"
-            onActivated: {
-                if(editorCount >= 2) tabBar.setCurrentIndex(1)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+3"
-            onActivated: {
-                if(editorCount >= 3) tabBar.setCurrentIndex(2)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+4"
-            onActivated: {
-                if(editorCount >= 4) tabBar.setCurrentIndex(3)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+5"
-            onActivated: {
-                if(editorCount >= 5) tabBar.setCurrentIndex(4)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+6"
-            onActivated: {
-                if(editorCount >= 6) tabBar.setCurrentIndex(5)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+7"
-            onActivated: {
-                if(editorCount >= 7) tabBar.setCurrentIndex(6)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+8"
-            onActivated: {
-                if(editorCount >= 8) tabBar.setCurrentIndex(7)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+9"
-            onActivated: {
-                if(editorCount >= 9) tabBar.setCurrentIndex(8)
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+0"
-            onActivated: {
-                if(editorCount >= 10) tabBar.setCurrentIndex(9)
-            }
-        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+1"
+//            onActivated: {
+//                if(editorCount >= 1) tabBar.setCurrentIndex(0)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+2"
+//            onActivated: {
+//                if(editorCount >= 2) tabBar.setCurrentIndex(1)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+3"
+//            onActivated: {
+//                if(editorCount >= 3) tabBar.setCurrentIndex(2)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+4"
+//            onActivated: {
+//                if(editorCount >= 4) tabBar.setCurrentIndex(3)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+5"
+//            onActivated: {
+//                if(editorCount >= 5) tabBar.setCurrentIndex(4)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+6"
+//            onActivated: {
+//                if(editorCount >= 6) tabBar.setCurrentIndex(5)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+7"
+//            onActivated: {
+//                if(editorCount >= 7) tabBar.setCurrentIndex(6)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+8"
+//            onActivated: {
+//                if(editorCount >= 8) tabBar.setCurrentIndex(7)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+9"
+//            onActivated: {
+//                if(editorCount >= 9) tabBar.setCurrentIndex(8)
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+0"
+//            onActivated: {
+//                if(editorCount >= 10) tabBar.setCurrentIndex(9)
+//            }
+//        }
         Shortcut {
             sequence: StandardKey.New
             onActivated: {
