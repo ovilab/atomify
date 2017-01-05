@@ -617,8 +617,14 @@ Item {
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+2"
             onActivated: {
-                console.log("Did press ctrl + 2")
                 modeMenu.currentIndex = 1
+            }
+        }
+
+        Shortcut {
+            sequence: "Meta+1"
+            onActivated: {
+                console.log("Did press meta")
             }
         }
 
