@@ -383,6 +383,20 @@ Item {
             }
         }
         Shortcut {
+            sequence: shortcuts.tabShortcutModifier + "+Left"
+            onActivated: {
+                if(tabBar.currentIndex > 0) tabBar.currentIndex -= 1
+                else tabBar.currentIndex = editorCount-1
+            }
+        }
+        Shortcut {
+            sequence: shortcuts.tabShortcutModifier + "+Right"
+            onActivated: {
+                if(tabBar.currentIndex < editorCount-1) tabBar.currentIndex += 1
+                else tabBar.currentIndex = 0
+            }
+        }
+        Shortcut {
             sequence: StandardKey.New
             onActivated: {
                 newTab()
