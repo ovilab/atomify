@@ -14,6 +14,9 @@ CommandParser::CommandParser()
 
 void CommandParser::parseFile(QString fileName)
 {
+    moveCameraPosition = false;
+    moveCameraViewCenter = false;
+
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -26,6 +29,16 @@ void CommandParser::parseFile(QString fileName)
             line.remove(0,2);
             parseCommand(line);
         }
+    }
+
+    file.close();
+
+    if(moveCameraPosition && moveCameraViewCenter) {
+        emit m_simulator->newCameraPositionAndViewCenterRequest(m_simulator->cameraPositionRequest(), m_simulator->cameraViewCenterRequest());
+    } else if(moveCameraPosition) {
+        emit m_simulator->newCameraPositionRequest(m_simulator->cameraPositionRequest());
+    } else if(moveCameraViewCenter) {
+        emit m_simulator->newViewCenterRequest(m_simulator->cameraViewCenterRequest());
     }
 }
 
@@ -46,7 +59,10 @@ void CommandParser::parseCommand(QString command)
     bond(command);
     atomColorAndSize(command);
     atomSize(command);
-    cameraPosition(command);
+
+    // TODO: make this much better :P
+    moveCameraPosition |= cameraPosition(command);
+    moveCameraViewCenter |= viewCenter(command);
 }
 
 void CommandParser::atomColor(QString command)
@@ -84,21 +100,40 @@ void CommandParser::atomSize(QString command)
     m_simulator->system()->atoms()->setAtomSize(atomType, radius);
 }
 
-void CommandParser::cameraPosition(QString command)
+bool CommandParser::cameraPosition(QString command)
 {
     QStringList words = command.split(" ");
-    if(words.size() != 4) return;
-    if(words[0] != "camera") return;
+    if(words.size() != 5) return false;
+    if(words[0] != "camera" || words[1].toLower() != "position") return false;
     float x,y,z;
     bool castOk;
-    x = words[1].toFloat(&castOk);
-    if(!castOk) return;
-    y = words[2].toFloat(&castOk);
-    if(!castOk) return;
-    z = words[3].toFloat(&castOk);
+    x = words[2].toFloat(&castOk);
+    if(!castOk) return false;
+    y = words[3].toFloat(&castOk);
+    if(!castOk) return false;
+    z = words[4].toFloat(&castOk);
+    if(!castOk) return false;
 
     m_simulator->setCameraPositionRequest(QVector3D(x,y,z));
-    emit m_simulator->newCameraPositionRequest(m_simulator->cameraPositionRequest());
+    return true;
+}
+
+bool CommandParser::viewCenter(QString command)
+{
+    QStringList words = command.split(" ");
+    if(words.size() != 5) return false;
+    if(words[0] != "camera" || words[1].toLower() != "viewcenter") return false;
+    float x,y,z;
+    bool castOk;
+    x = words[2].toFloat(&castOk);
+    if(!castOk) return false;
+    y = words[3].toFloat(&castOk);
+    if(!castOk) return false;
+    z = words[4].toFloat(&castOk);
+    if(!castOk) return false;
+
+    m_simulator->setCameraViewCenterRequest(QVector3D(x,y,z));
+    return true;
 }
 
 void CommandParser::bond(QString command) {

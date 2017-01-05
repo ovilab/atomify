@@ -194,6 +194,11 @@ QVector3D AtomifySimulator::cameraPositionRequest() const
     return m_cameraPositionRequest;
 }
 
+QVector3D AtomifySimulator::cameraViewCenterRequest() const
+{
+    return m_cameraViewCenterRequest;
+}
+
 int AtomifySimulator::simulationSpeed() const
 {
     return m_simulationSpeed;
@@ -251,4 +256,13 @@ void AtomifySimulator::setCameraPositionRequest(QVector3D cameraPositionRequest)
         return;
 
     m_cameraPositionRequest = cameraPositionRequest;
+}
+
+void AtomifySimulator::setCameraViewCenterRequest(QVector3D cameraViewCenterRequest)
+{
+    if (m_cameraViewCenterRequest == cameraViewCenterRequest)
+        return;
+
+    m_cameraViewCenterRequest = cameraViewCenterRequest;
+    emit cameraViewCenterRequestChanged(cameraViewCenterRequest);
 }
