@@ -191,10 +191,11 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_volume = m_size[0]*m_size[1]*m_size[2];
     emit volumeChanged(m_volume);
 
-    lammps->output->thermo->compute(1);
     setDt(lammps->update->dt);
-    calculateTimestepsPerSeconds(lammps);
-    calculateCPURemain(lammps);
+
+//    lammps->output->thermo->compute(1);
+//    calculateTimestepsPerSeconds(lammps);
+//    calculateCPURemain(lammps);
 
     m_units->synchronize(lammps);
 }
