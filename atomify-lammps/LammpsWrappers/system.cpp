@@ -23,8 +23,25 @@ System::System(AtomifySimulator *simulator)
     setUnits(new Units(simulator));
     setFixes(new Fixes(simulator));
     setVariables(new Variables(simulator));
-
     m_transformationMatrix.setToIdentity();
+}
+
+void System::computeCellMatrix(Domain *domain) {
+    domain->box_corners();
+    QVector3D a(domain->corners[1][0], domain->corners[1][1], domain->corners[1][2]);
+    QVector3D b(domain->corners[2][0], domain->corners[2][1], domain->corners[2][2]);
+    QVector3D c(domain->corners[4][0], domain->corners[4][1], domain->corners[4][2]);
+    QVector3D origo(domain->corners[0][0], domain->corners[0][1], domain->corners[0][2]);
+    a -= origo;
+    b -= origo;
+    c -= origo;
+    float values[] = {
+        a[0], b[0], c[0],
+        a[1], b[1], c[1],
+        a[2], b[2], c[2]
+    };
+
+    setCellMatrix(QMatrix3x3(values));
 }
 
 void System::updateTransformationMatrix(Domain *domain)
@@ -90,6 +107,7 @@ void System::synchronize(LAMMPSController *lammpsController)
 
     updateTransformationMatrix(domain);
     updateSizeAndOrigin(domain);
+    computeCellMatrix(domain);
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -198,6 +216,11 @@ float System::volume() const
 bool System::isValid() const
 {
     return m_isValid;
+}
+
+QMatrix4x4 System::transformationMatrix() const
+{
+    return m_transformationMatrix;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)

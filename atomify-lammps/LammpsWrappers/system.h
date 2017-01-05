@@ -9,6 +9,7 @@
 #include <qvector.h>
 #include <domain.h>
 #include <QMatrix4x4>
+#include <QMatrix3x3>
 
 class System : public QObject
 {
@@ -18,6 +19,7 @@ class System : public QObject
     Q_PROPERTY(QVector3D cameraPosition READ cameraPosition WRITE setCameraPosition NOTIFY cameraPositionChanged)
     Q_PROPERTY(QVector3D center READ center NOTIFY centerChanged)
     Q_PROPERTY(QMatrix4x4 transformationMatrix READ transformationMatrix NOTIFY transformationMatrixChanged)
+    Q_PROPERTY(QMatrix3x3 cellMatrix READ cellMatrix WRITE setCellMatrix NOTIFY cellMatrixChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
@@ -58,10 +60,11 @@ public:
     void updateThreadOnDataObjects(QThread *thread);
     void reset();
     bool isValid() const;
+    QMatrix4x4 transformationMatrix() const;
 
-    QMatrix4x4 transformationMatrix() const
+    QMatrix3x3 cellMatrix() const
     {
-        return m_transformationMatrix;
+        return m_cellMatrix;
     }
 
 public slots:
@@ -74,6 +77,15 @@ public slots:
     void setCameraPosition(QVector3D cameraPosition);
     void setUnits(class Units* units);
     void setFixes(class Fixes* fixes);
+
+    void setCellMatrix(QMatrix3x3 cellMatrix)
+    {
+        if (m_cellMatrix == cellMatrix)
+            return;
+
+        m_cellMatrix = cellMatrix;
+        emit cellMatrixChanged(cellMatrix);
+    }
 
 signals:
     void originChanged(QVector3D origin);
@@ -95,6 +107,9 @@ signals:
     void centerChanged(QVector3D center);
     void transformationMatrixChanged(QMatrix4x4 transformationMatrix);
 
+
+    void cellMatrixChanged(QMatrix3x3 cellMatrix);
+
 private:
     class Atoms* m_atoms = nullptr;
     class Regions* m_regions = nullptr;
@@ -114,7 +129,9 @@ private:
     bool m_isValid = false;
     void updateTransformationMatrix(LAMMPS_NS::Domain *domain);
     void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
+    void computeCellMatrix(LAMMPS_NS::Domain *domain);
     QMatrix4x4 m_transformationMatrix;
+    QMatrix3x3 m_cellMatrix;
 };
 
 #endif // SYSTEM_H
