@@ -11,7 +11,6 @@ Rectangle {
 
     signal start(var qrcPaths)
 
-    property url projectPath
     property var qrcPaths: []
     property string qrcPathsStringified
     property url filePath
@@ -56,10 +55,6 @@ Rectangle {
         reload()
     }
 
-    onProjectPathChanged: {
-        refresh()
-    }
-
     function refresh() {
         requestStart()
         folderListModel.folder = ""
@@ -78,7 +73,6 @@ Rectangle {
     }
 
     Settings {
-        property alias projectPath: root.projectPath
         property alias filePath: root.filePath
         property alias qrcPaths: root.qrcPathsStringified
         property alias backgroundColor: colorDialog.color
