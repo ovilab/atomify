@@ -128,8 +128,9 @@ void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
     if(m_currentTimestep % 10 == 0) {
         double value;
         lammps->output->thermo->evaluate_keyword("spcpu", &value);
+        if(value < 0) return;
         double oldValue = m_performance->timestepsPerSecond();
-        value = 0.9*oldValue + 0.1*value; // low pass filter
+        value = 0.6*oldValue + 0.4*value; // low pass filter
         performance()->setTimestepsPerSecond(value);
     }
 }
