@@ -21,11 +21,13 @@ class System : public QObject
     Q_PROPERTY(QMatrix4x4 transformationMatrix READ transformationMatrix NOTIFY transformationMatrixChanged)
     Q_PROPERTY(QMatrix3x3 cellMatrix READ cellMatrix WRITE setCellMatrix NOTIFY cellMatrixChanged)
     Q_PROPERTY(QString boundaryStyle READ boundaryStyle WRITE setBoundaryStyle NOTIFY boundaryStyleChanged)
+    Q_PROPERTY(double cpuremain READ cpuremain WRITE setCpuremain NOTIFY cpuremainChanged)
     Q_PROPERTY(bool triclinic READ triclinic WRITE setTriclinic NOTIFY triclinicChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
+    Q_PROPERTY(double dt READ dt WRITE setDt NOTIFY dtChanged)
     Q_PROPERTY(int currentTimestep READ currentTimestep NOTIFY currentTimestepChanged)
     Q_PROPERTY(Performance *performance READ performance WRITE setPerformance NOTIFY performanceChanged)
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
@@ -68,6 +70,12 @@ public:
     QString boundaryStyle() const;
     bool triclinic() const;
     class Performance * performance() const;
+    double cpuremain() const;
+
+    double dt() const
+    {
+        return m_dt;
+    }
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -83,6 +91,16 @@ public slots:
     void setBoundaryStyle(QString boundaryStyle);
     void setTriclinic(bool triclinic);
     void setPerformance(class Performance * performance);
+    void setCpuremain(double cpuremain);
+
+    void setDt(double dt)
+    {
+        if (m_dt == dt)
+            return;
+
+        m_dt = dt;
+        emit dtChanged(dt);
+    }
 
 signals:
     void originChanged(QVector3D origin);
@@ -107,6 +125,9 @@ signals:
     void boundaryStyleChanged(QString boundaryStyle);
     void triclinicChanged(bool triclinic);
     void performanceChanged(class Performance * performance);
+    void cpuremainChanged(double cpuremain);
+
+    void dtChanged(double dt);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -134,6 +155,10 @@ private:
     QMatrix3x3 m_cellMatrix;
     QString m_boundaryStyle = "None";
     bool m_triclinic = false;
+    double m_cpuremain = 0;
+    void calculateCPURemain(LAMMPS_NS::LAMMPS *lammps);
+    void calculateTimestepsPerSeconds(LAMMPS_NS::LAMMPS *lammps);
+    double m_dt = 0;
 };
 
 #endif // SYSTEM_H

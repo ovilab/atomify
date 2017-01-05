@@ -1,6 +1,8 @@
 #include "system.h"
 #include <domain.h>
 #include <atom.h>
+#include <output.h>
+#include <thermo.h>
 #include <update.h>
 #include "atoms.h"
 #include "regions.h"
@@ -114,6 +116,24 @@ void System::updateSizeAndOrigin(Domain *domain)
     }
 }
 
+void System::calculateCPURemain(LAMMPS *lammps)
+{
+    double value;
+    lammps->output->thermo->evaluate_keyword("cpuremain", &value);
+    m_cpuremain = value;
+}
+
+void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
+{
+    if(m_currentTimestep % 10 == 0) {
+        double value;
+        lammps->output->thermo->evaluate_keyword("spcpu", &value);
+        double oldValue = m_performance->timestepsPerSecond();
+        value = 0.9*oldValue + 0.1*value; // low pass filter
+        performance()->setTimestepsPerSecond(value);
+    }
+}
+
 void System::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
@@ -169,6 +189,11 @@ void System::synchronize(LAMMPSController *lammpsController)
     }
     m_volume = m_size[0]*m_size[1]*m_size[2];
     emit volumeChanged(m_volume);
+
+    lammps->output->thermo->compute(1);
+    setDt(lammps->update->dt);
+    calculateTimestepsPerSeconds(lammps);
+    calculateCPURemain(lammps);
 
     m_units->synchronize(lammps);
 }
@@ -229,6 +254,9 @@ void System::reset()
     m_regions->reset();
     m_variables->reset();
     m_units->reset();
+    m_performance->reset();
+    setDt(0);
+    setCpuremain(0);
     m_currentTimestep = 0;
     m_simulationTime = 0;
     m_size = QVector3D();
@@ -277,6 +305,11 @@ bool System::triclinic() const
 Performance *System::performance() const
 {
     return m_performance;
+}
+
+double System::cpuremain() const
+{
+    return m_cpuremain;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -429,6 +462,15 @@ void System::setPerformance(Performance *performance)
 
     m_performance = performance;
     emit performanceChanged(performance);
+}
+
+void System::setCpuremain(double cpuremain)
+{
+    if (m_cpuremain == cpuremain)
+        return;
+
+    m_cpuremain = cpuremain;
+    emit cpuremainChanged(cpuremain);
 }
 
 void System::setVariables(Variables *variables)

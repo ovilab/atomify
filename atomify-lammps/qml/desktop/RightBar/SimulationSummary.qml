@@ -157,6 +157,9 @@ Flickable {
                     text: "Boundary: "+system.boundaryStyle
                 }
                 Label {
+                    text: "Timestep: "+system.dt
+                }
+                Label {
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Label {
@@ -349,6 +352,9 @@ Flickable {
                 }
                 Label {
                     text: "Memory usage Atomify: "+ (system.performance.memoryAtomify / 1024 / 1024).toFixed(0) +" MB"
+                }
+                Label {
+                    text: "Timesteps per second: "+ (system.performance.timestepsPerSecond).toFixed(1)
                 }
 
             }
