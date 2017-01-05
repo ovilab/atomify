@@ -177,13 +177,6 @@ void MyWorker::work()
 {
     m_workCount += 1;
     m_lammpsController.run();
-
-    auto dt = m_elapsed.elapsed();
-    double delta = 16 - dt;
-    if(delta > 0) {
-        QThread::currentThread()->msleep(delta);
-    }
-    m_elapsed.restart();
 }
 
 MyWorker *AtomifySimulator::createWorker()

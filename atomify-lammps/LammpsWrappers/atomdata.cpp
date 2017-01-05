@@ -37,7 +37,14 @@ void AtomData::reset()
     originalIndex.clear();
     bitmask.clear();
     visible.clear();
-    neighborList.reset(0);
+}
+
+long AtomData::memoryUsage()
+{
+    return (positions.capacity() + deltaPositions.capacity() + colors.capacity())*sizeof(QVector3D)
+            +(radii.capacity())*sizeof(float)
+            +(originalIndex.capacity() + types.capacity() + bitmask.capacity())*sizeof(int)
+            +visible.capacity()*sizeof(bool);
 }
 
 AtomData::~AtomData()

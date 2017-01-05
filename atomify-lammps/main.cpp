@@ -18,6 +18,7 @@
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
 #include "LammpsWrappers/simulatorcontrols/nvt.h"
 #include "LammpsWrappers/simulatorcontrols/rdf.h"
+#include "performance.h"
 #include "vendor.h"
 #include "datasource.h"
 #include "LammpsWrappers/atoms.h"
@@ -71,6 +72,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<WindowGL2>("Atomify", 1, 0, "WindowGL2");
     qmlRegisterType<MouseMover>("Atomify", 1, 0, "MouseMover");
     qmlRegisterType<States>("Atomify", 1, 0, "States");
+    qmlRegisterType<Performance>("Atomify", 1, 0, "Performance");
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);

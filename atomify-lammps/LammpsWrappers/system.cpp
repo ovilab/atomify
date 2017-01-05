@@ -11,6 +11,7 @@
 #include "../mysimulator.h"
 #include "modifiers/modifier.h"
 #include "units.h"
+#include "../performance.h"
 
 using namespace LAMMPS_NS;
 
@@ -23,8 +24,26 @@ System::System(AtomifySimulator *simulator)
     setUnits(new Units(simulator));
     setFixes(new Fixes(simulator));
     setVariables(new Variables(simulator));
-
+    setPerformance(new Performance(simulator));
     m_transformationMatrix.setToIdentity();
+}
+
+void System::computeCellMatrix(Domain *domain) {
+    domain->box_corners();
+    QVector3D a(domain->corners[1][0], domain->corners[1][1], domain->corners[1][2]);
+    QVector3D b(domain->corners[2][0], domain->corners[2][1], domain->corners[2][2]);
+    QVector3D c(domain->corners[4][0], domain->corners[4][1], domain->corners[4][2]);
+    QVector3D origo(domain->corners[0][0], domain->corners[0][1], domain->corners[0][2]);
+    a -= origo;
+    b -= origo;
+    c -= origo;
+    float values[] = {
+        a[0], b[0], c[0],
+        a[1], b[1], c[1],
+        a[2], b[2], c[2]
+    };
+
+    setCellMatrix(QMatrix3x3(values));
 }
 
 void System::updateTransformationMatrix(Domain *domain)
@@ -39,6 +58,34 @@ void System::updateTransformationMatrix(Domain *domain)
 
     m_transformationMatrix = QMatrix4x4(transformationMatrixValues);
     emit transformationMatrixChanged(m_transformationMatrix);
+}
+
+void System::updateBoundaryStyle(Domain *domain)
+{
+    QString style;
+    for (int idim = 0; idim < domain->dimension; idim++) {
+        if(domain->boundary[idim][0] == 0) {
+            style += "p ";
+            continue;
+        } else {
+            // Loop over the two sides and append only one letter if they are the same, append both if they differ
+            for (int iside = 0; iside < 2; iside++) {
+                QString dimStyle = "";
+                if(domain->boundary[idim][iside] == 1) dimStyle = "f";
+                else if(domain->boundary[idim][iside] == 2) dimStyle = "s";
+                else if(domain->boundary[idim][iside] == 3) dimStyle = "m";
+
+                if(iside == 0) {
+                    style += dimStyle;
+                    continue;
+                } else if(domain->boundary[idim][0] != domain->boundary[idim][1]) {
+                    style += dimStyle;
+                }
+                style += " ";
+            }
+        }
+    }
+    setBoundaryStyle(style);
 }
 
 void System::updateSizeAndOrigin(Domain *domain)
@@ -82,6 +129,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_computes->synchronize(lammpsController);
     m_variables->synchronize(lammpsController);
     m_fixes->synchronize(lammpsController);
+    m_performance->synchronize(lammpsController);
 
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
@@ -90,6 +138,9 @@ void System::synchronize(LAMMPSController *lammpsController)
 
     updateTransformationMatrix(domain);
     updateSizeAndOrigin(domain);
+    computeCellMatrix(domain);
+    updateBoundaryStyle(domain);
+    setTriclinic(domain->triclinic);
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -170,18 +221,21 @@ int System::numberOfAtomTypes() const
 void System::reset()
 {
     setIsValid(false);
+    setTriclinic(false);
     m_fixes->reset();
     m_atoms->reset();
     m_groups->reset();
     m_computes->reset();
     m_regions->reset();
     m_variables->reset();
+    m_units->reset();
     m_currentTimestep = 0;
     m_simulationTime = 0;
     m_size = QVector3D();
     m_origin = QVector3D();
     m_numberOfAtoms = 0;
     m_numberOfAtomTypes = 0;
+    setBoundaryStyle("None");
     emit currentTimestepChanged(m_currentTimestep);
     emit simulationTimeChanged(m_simulationTime);
     emit sizeChanged(m_size);
@@ -198,6 +252,31 @@ float System::volume() const
 bool System::isValid() const
 {
     return m_isValid;
+}
+
+QMatrix4x4 System::transformationMatrix() const
+{
+    return m_transformationMatrix;
+}
+
+QMatrix3x3 System::cellMatrix() const
+{
+    return m_cellMatrix;
+}
+
+QString System::boundaryStyle() const
+{
+    return m_boundaryStyle;
+}
+
+bool System::triclinic() const
+{
+    return m_triclinic;
+}
+
+Performance *System::performance() const
+{
+    return m_performance;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -314,6 +393,42 @@ void System::setFixes(Fixes *fixes)
 
     m_fixes = fixes;
     emit fixesChanged(fixes);
+}
+
+void System::setCellMatrix(QMatrix3x3 cellMatrix)
+{
+    if (m_cellMatrix == cellMatrix)
+        return;
+
+    m_cellMatrix = cellMatrix;
+    emit cellMatrixChanged(cellMatrix);
+}
+
+void System::setBoundaryStyle(QString boundaryStyle)
+{
+    if (m_boundaryStyle == boundaryStyle)
+        return;
+
+    m_boundaryStyle = boundaryStyle;
+    emit boundaryStyleChanged(boundaryStyle);
+}
+
+void System::setTriclinic(bool triclinic)
+{
+    if (m_triclinic == triclinic)
+        return;
+
+    m_triclinic = triclinic;
+    emit triclinicChanged(triclinic);
+}
+
+void System::setPerformance(Performance *performance)
+{
+    if (m_performance == performance)
+        return;
+
+    m_performance = performance;
+    emit performanceChanged(performance);
 }
 
 void System::setVariables(Variables *variables)

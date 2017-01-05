@@ -14,6 +14,7 @@
 #include "parser/scriptcommand.h"
 #include <QThread>
 #include <lmptype.h>
+#include <qelapsedtimer.h>
 
 void synchronizeLAMMPS_callback(void *caller, int mode);
 
@@ -23,8 +24,11 @@ class LAMMPSController
 {
 private:
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
-    unsigned long m_lastSynchronization = 0;
+    unsigned long m_lastSynchronizationTimestep = 0;
     void changeWorkingDirectoryToScriptLocation();
+    QElapsedTimer m_timer;
+    unsigned long m_synchronizationCount = 0;
+    double m_timePerTimestep = 0;
 public:
     class System *system = nullptr;
     unsigned long simulationSpeed = 1;

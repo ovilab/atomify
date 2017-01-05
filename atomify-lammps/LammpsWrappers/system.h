@@ -9,6 +9,7 @@
 #include <qvector.h>
 #include <domain.h>
 #include <QMatrix4x4>
+#include <QMatrix3x3>
 
 class System : public QObject
 {
@@ -18,11 +19,15 @@ class System : public QObject
     Q_PROPERTY(QVector3D cameraPosition READ cameraPosition WRITE setCameraPosition NOTIFY cameraPositionChanged)
     Q_PROPERTY(QVector3D center READ center NOTIFY centerChanged)
     Q_PROPERTY(QMatrix4x4 transformationMatrix READ transformationMatrix NOTIFY transformationMatrixChanged)
+    Q_PROPERTY(QMatrix3x3 cellMatrix READ cellMatrix WRITE setCellMatrix NOTIFY cellMatrixChanged)
+    Q_PROPERTY(QString boundaryStyle READ boundaryStyle WRITE setBoundaryStyle NOTIFY boundaryStyleChanged)
+    Q_PROPERTY(bool triclinic READ triclinic WRITE setTriclinic NOTIFY triclinicChanged)
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
     Q_PROPERTY(int currentTimestep READ currentTimestep NOTIFY currentTimestepChanged)
+    Q_PROPERTY(Performance *performance READ performance WRITE setPerformance NOTIFY performanceChanged)
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
     Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
     Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
@@ -58,11 +63,11 @@ public:
     void updateThreadOnDataObjects(QThread *thread);
     void reset();
     bool isValid() const;
-
-    QMatrix4x4 transformationMatrix() const
-    {
-        return m_transformationMatrix;
-    }
+    QMatrix4x4 transformationMatrix() const;
+    QMatrix3x3 cellMatrix() const;
+    QString boundaryStyle() const;
+    bool triclinic() const;
+    class Performance * performance() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -74,6 +79,10 @@ public slots:
     void setCameraPosition(QVector3D cameraPosition);
     void setUnits(class Units* units);
     void setFixes(class Fixes* fixes);
+    void setCellMatrix(QMatrix3x3 cellMatrix);
+    void setBoundaryStyle(QString boundaryStyle);
+    void setTriclinic(bool triclinic);
+    void setPerformance(class Performance * performance);
 
 signals:
     void originChanged(QVector3D origin);
@@ -94,6 +103,10 @@ signals:
     void cameraPositionChanged(QVector3D cameraPosition);
     void centerChanged(QVector3D center);
     void transformationMatrixChanged(QMatrix4x4 transformationMatrix);
+    void cellMatrixChanged(QMatrix3x3 cellMatrix);
+    void boundaryStyleChanged(QString boundaryStyle);
+    void triclinicChanged(bool triclinic);
+    void performanceChanged(class Performance * performance);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -103,6 +116,7 @@ private:
     class Units* m_units = nullptr;
     class Fixes* m_fixes = nullptr;
     class Variables* m_variables = nullptr;
+    class Performance* m_performance = nullptr;
     QVector3D m_origin;
     QVector3D m_size;
     QVector3D m_cameraPosition;
@@ -114,7 +128,12 @@ private:
     bool m_isValid = false;
     void updateTransformationMatrix(LAMMPS_NS::Domain *domain);
     void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
+    void computeCellMatrix(LAMMPS_NS::Domain *domain);
+    void updateBoundaryStyle(LAMMPS_NS::Domain *domain);
     QMatrix4x4 m_transformationMatrix;
+    QMatrix3x3 m_cellMatrix;
+    QString m_boundaryStyle = "None";
+    bool m_triclinic = false;
 };
 
 #endif // SYSTEM_H

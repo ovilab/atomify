@@ -36,7 +36,12 @@ void PeriodicImages::apply(AtomData &atomData)
             for(int imageZ = imageLow[2]; imageZ <= imageHigh[2]; imageZ++) {
                 if(imageX == 0 && imageY == 0 && imageZ == 0) continue;
 
-                const QVector3D deltaPosition(imageX*m_system->size().x(), imageY*m_system->size().y(), imageZ*m_system->size().z());
+                const QMatrix3x3 &T = m_system->cellMatrix();
+                const QVector3D deltaPosition(
+                            T(0,0)*imageX + T(0,1)*imageY + T(0,2)*imageZ,
+                            T(1,0)*imageX + T(1,1)*imageY + T(1,2)*imageZ,
+                            T(2,0)*imageX + T(2,1)*imageY + T(2,2)*imageZ
+                            );
 
                 for(int atomIndex = 0; atomIndex<originalCount; atomIndex++) {
                     atomData.positions[nextIndex] = atomData.positions[atomIndex];

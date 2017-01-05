@@ -20,14 +20,13 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_sphereData = new SphereData(simulator);
     m_bondData = new BondData(simulator);
     m_bonds = new Bonds();
-    m_atomData.neighborList.bonds = m_bonds;
 
     m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#CCCCCC"));
     m_atomStyleTypes.insert("helium", new AtomStyle(1.40, "#D9FFFF"));
     m_atomStyleTypes.insert("lithium", new AtomStyle(1.82, "#CC80FF"));
     m_atomStyleTypes.insert("beryllium", new AtomStyle(1.53, "#C2FF00"));
     m_atomStyleTypes.insert("boron", new AtomStyle(1.92, "#FFB5B5"));
-    m_atomStyleTypes.insert("carbon", new AtomStyle(1.70, "#909090"));
+    m_atomStyleTypes.insert("carbon", new AtomStyle(1.70, "#505050"));
     m_atomStyleTypes.insert("nitrogen", new AtomStyle(1.55, "#3050F8"));
     m_atomStyleTypes.insert("oxygen", new AtomStyle(1.52, "#AA0000"));
     m_atomStyleTypes.insert("fluorine", new AtomStyle(1.35, "#90E050"));
@@ -154,6 +153,13 @@ void Atoms::processModifiers(System *system)
 void Atoms::createRenderererData(LAMMPSController *lammpsController) {
     generateSphereData(m_atomDataProcessed);
     generateBondData(m_atomDataProcessed, lammpsController);
+}
+
+long Atoms::memoryUsage()
+{
+    return m_atomData.memoryUsage() + m_atomDataProcessed.memoryUsage() +
+           (m_bondsDataRaw.capacity() + m_sphereDataRaw.capacity())*sizeof(char) +
+           bondsDataRaw.size()*sizeof(BondVBOData);
 }
 
 float Atoms::bondScale() const
@@ -458,7 +464,7 @@ void Atoms::reset()
     m_atomStyleTypes["lithium"]->radius = 1.82;         m_atomStyleTypes["lithium"]->color = QColor("#CC80FF");
     m_atomStyleTypes["beryllium"]->radius = 1.53;       m_atomStyleTypes["beryllium"]->color = QColor("#C2FF00");
     m_atomStyleTypes["boron"]->radius = 1.92;           m_atomStyleTypes["boron"]->color = QColor("#FFB5B5");
-    m_atomStyleTypes["carbon"]->radius = 1.70;          m_atomStyleTypes["carbon"]->color = QColor("#909090");
+    m_atomStyleTypes["carbon"]->radius = 1.70;          m_atomStyleTypes["carbon"]->color = QColor("#505050");
     m_atomStyleTypes["nitrogen"]->radius = 1.55;        m_atomStyleTypes["nitrogen"]->color = QColor("#3050F8");
     m_atomStyleTypes["oxygen"]->radius = 1.52;          m_atomStyleTypes["oxygen"]->color = QColor("#AA0000");
     m_atomStyleTypes["fluorine"]->radius = 1.35;        m_atomStyleTypes["fluorine"]->color = QColor("#90E050");

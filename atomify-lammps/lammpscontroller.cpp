@@ -33,6 +33,7 @@
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include "LammpsWrappers/system.h"
 #include "LammpsWrappers/atoms.h"
+#include "performance.h"
 
 using namespace std;
 using namespace LAMMPS_NS;
@@ -63,9 +64,18 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     }
 
     system->synchronize(this);
+    m_synchronizationCount++;
+    if(m_synchronizationCount % 50 == 0) {
+        long t = m_timer.restart();
+        double timePerTimestep = t / 50.0 / 1000; // Convert to seconds
+        double speed = (1.0 / 60.0) / timePerTimestep;
+        qDebug() << "Time per timestep: " << timePerTimestep << " since t = " << t << " which gives speed: " << speed;
+        system->performance()->setEffectiveSimulationSpeed(speed);
+        // qDebug() << "Speed: " << speed;
+    }
 
-    if(m_lammps->update->ntimestep - m_lastSynchronization < simulationSpeed) return;
-    m_lastSynchronization = m_lammps->update->ntimestep;
+    if(m_lammps->update->ntimestep - m_lastSynchronizationTimestep < simulationSpeed) return;
+    m_lastSynchronizationTimestep = m_lammps->update->ntimestep;
 
     system->atoms()->processModifiers(system);
     system->atoms()->createRenderererData(this);
@@ -89,7 +99,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
             }
         }
 
-        QThread::currentThread()->msleep(17); // Sleep 1/60th of a second
+        QThread::currentThread()->msleep(1); // Sleep 1/60th of a second
     }
 
     if(worker->m_cancelPending) {
@@ -113,7 +123,8 @@ void LAMMPSController::stop()
     finished = false;
     didCancel = false;
     crashed = false;
-    m_lastSynchronization = 0;
+    m_synchronizationCount = 0;
+    m_lastSynchronizationTimestep = 0;
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {

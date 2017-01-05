@@ -144,13 +144,17 @@ Flickable {
 
             Column {
                 Label {
-                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
-                }
-                Label {
-                    text: "Volume: "+system.volume.toFixed(2)
+                    text: "Triclinic"
+                    visible: system.triclinic
                 }
                 Label {
                     text: "Units: "+system.units.name
+                }
+                Label {
+                    text: "Dimensions: "+system.units.dimensions
+                }
+                Label {
+                    text: "Boundary: "+system.boundaryStyle
                 }
                 Label {
                     text: "Number of atoms: "+system.numberOfAtoms
@@ -159,7 +163,15 @@ Flickable {
                     text: "Number of bonds: "+system.atoms.numberOfBonds
                 }
                 Label {
-                    text: "Average density: "+(system.numberOfAtoms/system.volume).toFixed(4)
+                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                }
+                Label {
+                    textFormat: Qt.RichText
+                    text: "Volume: "+system.volume.toFixed(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
+                }
+                Label {
+                    textFormat: Qt.RichText
+                    text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toFixed(4)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
                 }
                 Label {
                     text: "Number of atom types: "+system.numberOfAtomTypes
@@ -184,7 +196,7 @@ Flickable {
                     text: "Current timestep: "+system.currentTimestep
                 }
                 Label {
-                    text: "Time: "+system.simulationTime.toFixed(2)
+                    text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
                 }
                 Label {
                     text: "Simulation speed: "+speedSlider.value+"x"
@@ -319,94 +331,24 @@ Flickable {
                 system: root.system
             }
         }
-        //        GroupBox {
-        //            id: keyboardShortcuts
-        //            width: parent.width
-        //            title: "Keyboard shortcuts"
 
-        //            Column {
-        //                id: shortcutRoot
-        //                width: parent.width
-        //                property int labelWidth: 115
-        //                property string controlName: {
-        //                    if(Qt.platform.os === "osx") {
-        //                        return "⌘"
-        //                    }
-        //                    return "Ctrl+"
-        //                }
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Run script "
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"R"
-        //                    }
-        //                }
+            title: "Performance"
 
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "New script "
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"N"
-        //                    }
-        //                }
+            Column {
+                Label {
+                    text: "Memory usage LAMMPS: "+ (system.performance.memoryLAMMPS / 1024 / 1024).toFixed(0) +" MB"
+                }
+                Label {
+                    text: "Memory usage Atomify: "+ (system.performance.memoryAtomify / 1024 / 1024).toFixed(0) +" MB"
+                }
 
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Save script "
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"S"
-        //                    }
-        //                }
-
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Open script"
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"O"
-        //                    }
-        //                }
-
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Toggle pause"
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"P / Space"
-        //                    }
-        //                }
-
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Toggle focus mode "
-        //                    }
-        //                    Label {
-        //                        text: ": Tab"
-        //                    }
-        //                }
-        //            }
-        //        }
+            }
+        }
     }
 }

@@ -57,6 +57,7 @@ public:
     void setDirtyData(bool dirtyData);
     int numberOfBonds() const;
     void setAtomSize(int atomType, float radius);
+    long memoryUsage();
 public slots:
     void setModifiers(QVariantList modifiers);
     void setSort(bool sort);
