@@ -144,10 +144,11 @@ Flickable {
 
             Column {
                 Label {
-                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"
+                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
                 }
                 Label {
-                    text: "Volume: "+system.volume.toFixed(2)
+                    textFormat: Qt.RichText
+                    text: "Volume: "+system.volume.toFixed(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
                 }
                 Label {
                     text: "Units: "+system.units.name
@@ -159,7 +160,8 @@ Flickable {
                     text: "Number of bonds: "+system.atoms.numberOfBonds
                 }
                 Label {
-                    text: "Average density: "+(system.numberOfAtoms/system.volume).toFixed(4)
+                    textFormat: Qt.RichText
+                    text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toFixed(4)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
                 }
                 Label {
                     text: "Number of atom types: "+system.numberOfAtomTypes
@@ -180,7 +182,7 @@ Flickable {
                     text: "Current timestep: "+system.currentTimestep
                 }
                 Label {
-                    text: "Time: "+system.simulationTime.toFixed(2)
+                    text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
                 }
             }
         }
