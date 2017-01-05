@@ -170,9 +170,7 @@ Item {
             indexOfCurrentTab -= 1
         }
 
-        if(indexOfCurrentTab) {
-            tabBar.currentIndex = indexOfCurrentTab
-        }
+        tabBar.currentIndex = indexOfCurrentTab
 
         updateOpenFiles()
     }
@@ -296,7 +294,7 @@ Item {
     MessageDialog {
         id: saveChangesDialog
         title: "Save changes?"
-        text: "The current file '"+currentEditor.fileName+"' has unsaved changes. "
+        text: "The current file '"+ (currentEditor ? currentEditor.fileName : "")+"' has unsaved changes. "
         standardButtons: StandardButton.Cancel | StandardButton.Save
         onAccepted: {
             currentEditor.save(runScript)
@@ -305,7 +303,7 @@ Item {
 
     EventMapper {
         mapping: {
-             "editor.textArea": currentEditor.textArea,
+             "editor.textArea": currentEditor ? currentEditor.textArea : null,
              "editor": currentEditor,
              "editorWindow": root
         }
