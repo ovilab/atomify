@@ -9,7 +9,7 @@ import Qt.labs.folderlistmodel 2.1
 Rectangle {
     id: root
 
-    signal start(var qrcPaths, url filePath)
+    signal start(var qrcPaths)
 
     property url projectPath
     property var qrcPaths: []
@@ -53,7 +53,7 @@ Rectangle {
     }
 
     onFilePathChanged: {
-        refresh()
+        reload()
     }
 
     onProjectPathChanged: {
@@ -65,23 +65,16 @@ Rectangle {
         folderListModel.folder = ""
         var rootPath = "qrc:/qtqmlpreview"
         console.log("WOOP", folderListModel.folder == "", folderListModel.folder, folderListModel.rootFolder)
-//        if(folderListModel.folder.toString().substring(0, rootPath.length) != rootPath) {
-            folderListModel.folder = rootPath
-//            folderListModel.rootFolder = rootPath
-//        }
+        folderListModel.folder = rootPath
     }
 
     function reload() {
         loader.source = ""
-//        var clippedName = filePath.toString().replace(projectPath.toString(), "")
-//        loader.source = "qrc:///qtqmlpreview/" + clippedName
         loader.source = filePath.toString().replace("file:", "qrc")
     }
 
     function requestStart() {
-        if(filePath.toString().length > 0 && projectPath.toString().length > 0) {
-            start(qrcPaths, filePath)
-        }
+        start(qrcPaths)
     }
 
     Settings {

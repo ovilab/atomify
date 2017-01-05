@@ -19,7 +19,7 @@ void QmlPreviewer::reload()
 {
     m_view.engine()->clearComponentCache();
 
-    qDebug() << "Reloading" << m_filePath;
+    qDebug() << "Reloading";
 
     for(auto qrcPath : m_qrcPaths) {
         QVariantMap map = qrcPath.toMap();
@@ -61,7 +61,7 @@ void QmlPreviewer::reload()
     QMetaObject::invokeMethod(m_rootItem, "reload");
 }
 
-void QmlPreviewer::handleDialogStart(QVariant qrcPaths, QUrl filePath)
+void QmlPreviewer::handleDialogStart(QVariant qrcPaths)
 {
     qDebug() << "Handle dialog start";
 
@@ -85,7 +85,6 @@ void QmlPreviewer::handleDialogStart(QVariant qrcPaths, QUrl filePath)
         m_qrcPaths.append(map);
         projectPath = path.toUrl().adjusted(QUrl::RemoveFilename);
     }
-    m_filePath = filePath.toLocalFile();
     reload();
 }
 
@@ -96,5 +95,5 @@ void QmlPreviewer::show()
     m_view.show();
 
     m_rootItem = m_view.rootObject();
-    connect(m_rootItem, SIGNAL(start(QVariant, QUrl)), this, SLOT(handleDialogStart(QVariant, QUrl)));
+    connect(m_rootItem, SIGNAL(start(QVariant)), this, SLOT(handleDialogStart(QVariant)));
 }
