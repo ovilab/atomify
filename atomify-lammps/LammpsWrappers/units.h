@@ -12,63 +12,33 @@ class Units : public QObject
     Q_PROPERTY(QString volume READ volume WRITE setVolume NOTIFY volumeChanged)
     Q_PROPERTY(QString density READ density WRITE setDensity NOTIFY densityChanged)
     Q_PROPERTY(QString length READ length WRITE setLength NOTIFY lengthChanged)
+    Q_PROPERTY(int dimensions READ dimensions WRITE setDimensions NOTIFY dimensionsChanged)
 public:
     enum Type { LJ, Real, Metal, SI, CGS, Electron, Micro, Nano };
     explicit Units(QObject *parent = 0);
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
     QString name() const;
-
     QString time() const;
-
     QString volume() const;
-
-    QString density() const
-    {
-        return m_density;
-    }
-
-    QString length() const
-    {
-        return m_length;
-    }
+    QString density() const;
+    QString length() const;
+    int dimensions() const;
 
 signals:
-
     void nameChanged(QString name);
-
     void timeChanged(QString time);
-
     void volumeChanged(QString volume);
-
     void densityChanged(QString density);
-
     void lengthChanged(QString length);
+    void dimensionsChanged(int dimensions);
 
 public slots:
-
-void setName(QString name);
-
-void setTime(QString time);
-
-void setVolume(QString volume);
-
-void setDensity(QString density)
-{
-    if (m_density == density)
-        return;
-
-    m_density = density;
-    emit densityChanged(density);
-}
-
-void setLength(QString length)
-{
-    if (m_length == length)
-        return;
-
-    m_length = length;
-    emit lengthChanged(length);
-}
+    void setName(QString name);
+    void setTime(QString time);
+    void setVolume(QString volume);
+    void setDensity(QString density);
+    void setLength(QString length);
+    void setDimensions(int dimensions);
 
 private:
     Type type;
@@ -78,6 +48,7 @@ private:
     QString m_volume;
     QString m_density;
     QString m_length;
+    int m_dimensions = 3;
 };
 
 #endif // ATOMIFY_UNITS_H

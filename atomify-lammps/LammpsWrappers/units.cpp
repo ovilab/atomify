@@ -1,5 +1,6 @@
 #include "units.h"
 #include <update.h>
+#include <domain.h>
 
 using namespace LAMMPS_NS;
 Units::Units(QObject *parent) : QObject(parent)
@@ -17,6 +18,8 @@ void Units::synchronize(LAMMPS *lammps)
     if(unit_style && strcmp(unit_style, lammps->update->unit_style)!=0) {
         doUpdate = true;
     }
+
+    setDimensions(lammps->domain->dimension);
 
     if(doUpdate) {
         if(unit_style) {
@@ -38,51 +41,51 @@ void Units::synchronize(LAMMPS *lammps)
             type = Real;
             setName("Real");
             setTime("fs");
-            setVolume("Å<sup>3</sup>");
-            setDensity("g/cm<sup>3</sup>");
+            setVolume( QString("Å<sup>%1</sup>").arg(m_dimensions));
+            setDensity(QString("g/cm<sup>3</sup>").arg(m_dimensions));
             setLength("Å");
         } else if (strcmp(unit_style,"metal") == 0) {
             type = Metal;
             setName("Metal");
             setTime("ps");
-            setVolume("Å<sup>3</sup>");
-            setDensity("g/cm<sup>3</sup>");
+            setVolume(QString("Å<sup>3</sup>").arg(m_dimensions));
+            setDensity(QString("g/cm<sup>3</sup>").arg(m_dimensions));
             setLength("Å");
         } else if (strcmp(unit_style,"si") == 0) {
             type = SI;
             setName("SI");
             setTime("s");
-            setVolume("m<sup>3</sup>");
-            setDensity("kg/m<sup>3</sup>");
+            setVolume(QString("m<sup>3</sup>").arg(m_dimensions));
+            setDensity(QString("kg/m<sup>3</sup>").arg(m_dimensions));
             setLength("m");
         } else if (strcmp(unit_style,"cgs") == 0) {
             type = CGS;
             setName("CGS");
             setLength("cm");
             setTime("s");
-            setVolume("cm<sup>3</sup>");
-            setDensity("g/cm<sup>3</sup>");
+            setVolume(QString("cm<sup>3</sup>").arg(m_dimensions));
+            setDensity(QString("g/cm<sup>3</sup>").arg(m_dimensions));
         } else if (strcmp(unit_style,"electron") == 0) {
             type = Electron;
             setName("Electron");
             setLength("Bohr");
             setTime("fs");
-            setVolume("Bohr<sup>3</sup>");
+            setVolume(QString("Bohr<sup>3</sup>").arg(m_dimensions));
             setDensity("");
         } else if (strcmp(unit_style,"micro") == 0) {
             type = Micro;
             setName("Micro");
             setTime("μs");
-            setVolume("μm<sup>3</sup>");
-            setDensity("pg/μm<sup>3</sup>");
+            setVolume(QString("μm<sup>3</sup>").arg(m_dimensions));
+            setDensity(QString("pg/μm<sup>3</sup>").arg(m_dimensions));
             setLength("μm");
         } else if (strcmp(unit_style,"nano") == 0) {
             type = Nano;
             setName("Nano");
             setLength("nm");
             setTime("ns");
-            setVolume("nm<sup>3</sup>");
-            setDensity("ag/nm<sup>3</sup>");
+            setVolume(QString("nm<sup>3</sup>").arg(m_dimensions));
+            setDensity(QString("ag/nm<sup>3</sup>").arg(m_dimensions));
         }
     }
 }
@@ -100,6 +103,21 @@ QString Units::time() const
 QString Units::volume() const
 {
     return m_volume;
+}
+
+QString Units::density() const
+{
+    return m_density;
+}
+
+QString Units::length() const
+{
+    return m_length;
+}
+
+int Units::dimensions() const
+{
+    return m_dimensions;
 }
 
 void Units::setName(QString name)
@@ -127,4 +145,31 @@ void Units::setVolume(QString volume)
 
     m_volume = volume;
     emit volumeChanged(volume);
+}
+
+void Units::setDensity(QString density)
+{
+    if (m_density == density)
+        return;
+
+    m_density = density;
+    emit densityChanged(density);
+}
+
+void Units::setLength(QString length)
+{
+    if (m_length == length)
+        return;
+
+    m_length = length;
+    emit lengthChanged(length);
+}
+
+void Units::setDimensions(int dimensions)
+{
+    if (m_dimensions == dimensions)
+        return;
+
+    m_dimensions = dimensions;
+    emit dimensionsChanged(dimensions);
 }
