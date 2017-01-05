@@ -287,16 +287,17 @@ Pane {
                         }
                         QQC1.Slider {
                             id: sphereScaleSlider
+                            property real expValue: Math.exp(value)
                             enabled: renderingMode.currentText==="Ball and stick"
                             width: parent.width*0.6
                             minimumValue: 0.1
-                            maximumValue: 2.0
+                            maximumValue: 4.0
                             stepSize: 0.1
-                            value: visualizer.simulator.system.atoms.sphereScale
+                            value: Math.log(visualizer.simulator.system.atoms.sphereScale)
                             Binding {
                                 target: visualizer.simulator.system.atoms
                                 property: "sphereScale"
-                                value: sphereScaleSlider.value
+                                value: sphereScaleSlider.expValue
                             }
                         }
                     }
