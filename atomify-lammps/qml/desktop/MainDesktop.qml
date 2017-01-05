@@ -522,9 +522,9 @@ Item {
             Layout.minimumWidth: 200
             visible: modeMenu.currentMode === "edit"
             width: 300
-            system: simulator.system
+            system: root.simulator.system
             visualizer: root.visualizer
-            simulator: simulator
+            simulator: root.simulator
         }
     }
 
