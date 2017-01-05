@@ -60,7 +60,7 @@ Column {
                 color: (computeTitleLabel.numPerAtomValues > 1) ? "steelblue" : "white"
                 text: {
                     if(computeTitleLabel.hasScalarData) {
-                        ": "+model.modelData.scalarValue.toFixed(3)
+                        ": "+model.modelData.scalarValue.toPrecision(4)
                     } else if(computeTitleLabel.numPerAtomValues > 1) {
                         "   ["+(computeTitleLabel.compute.perAtomIndex+1)+"]"
                     } else ""
