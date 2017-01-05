@@ -21,6 +21,14 @@ Item {
     property string openFiles: ""
     property real lastRunScript: 0
     property string lastOpenedFolder
+    onVisibleChanged: {
+        if(visible) {
+            if(visualizer.simulator.scriptFilePath!=="") {
+                openTab("file://"+visualizer.simulator.scriptFilePath)
+            }
+        }
+    }
+
     clip: true
     signal clearConsole()
     signal didRun()
@@ -312,7 +320,7 @@ Item {
     Item {
         id: shortcuts
 
-        property string tabShortcutModifier: Qt.platform.os === "osx" ? "Ctrl" : "Alt"
+        property string tabShortcutModifier: Qt.platform.os === "osx" ? "Alt" : "Alt"
 
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+1"
@@ -375,43 +383,45 @@ Item {
             }
         }
         Shortcut {
-            sequence: StandardKey.New
+            sequence: shortcuts.tabShortcutModifier + "+Left"
             onActivated: {
-                newTab()
+                if(tabBar.currentIndex > 0) tabBar.currentIndex -= 1
+                else tabBar.currentIndex = editorCount-1
             }
+        }
+        Shortcut {
+            sequence: shortcuts.tabShortcutModifier + "+Right"
+            onActivated: {
+                if(tabBar.currentIndex < editorCount-1) tabBar.currentIndex += 1
+                else tabBar.currentIndex = 0
+            }
+        }
+        Shortcut {
+            sequence: StandardKey.New
+            onActivated: if(root.visible) newTab()
         }
         Shortcut {
             sequence: StandardKey.AddTab
-            onActivated: {
-                newTab()
-            }
+            onActivated: if(root.visible) newTab()
         }
         Shortcut {
             sequence: StandardKey.Open
-            onActivated: {
-                openTab()
-            }
+            onActivated: if(root.visible) openTab()
         }
 
         Shortcut {
             sequence: StandardKey.Save
-            onActivated: {
-                currentEditor.save()
-            }
+            onActivated: if(root.visible) currentEditor.save()
         }
 
         Shortcut {
             sequence: StandardKey.Close
-            onActivated: {
-                closeTab()
-            }
+            onActivated: if(root.visible) closeTab()
         }
 
         Shortcut {
             sequence: StandardKey.SaveAs
-            onActivated: {
-                currentEditor.saveAs()
-            }
+            onActivated: if(root.visible) currentEditor.saveAs()
         }
     }
 

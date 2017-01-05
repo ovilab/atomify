@@ -15,6 +15,14 @@ Performance::Performance(QObject *parent) : QObject(parent)
 
 }
 
+void Performance::reset()
+{
+    setMemoryAtomify(0);
+    setMemoryLAMMPS(0);
+    setEffectiveSimulationSpeed(1);
+    setTimestepsPerSecond(0);
+}
+
 void Performance::synchronize(LAMMPSController *controller)
 {
     LAMMPS *lammps = controller->lammps();
@@ -44,6 +52,11 @@ double Performance::effectiveSimulationSpeed() const
     return m_effectiveSimulationSpeed;
 }
 
+double Performance::timestepsPerSecond() const
+{
+    return m_timestepsPerSecond;
+}
+
 void Performance::setMemoryLAMMPS(long memoryLAMMPS)
 {
     if (m_memoryLAMMPS == memoryLAMMPS)
@@ -69,4 +82,13 @@ void Performance::setEffectiveSimulationSpeed(double effectiveSimulationSpeed)
 
     m_effectiveSimulationSpeed = effectiveSimulationSpeed;
     emit effectiveSimulationSpeedChanged(effectiveSimulationSpeed);
+}
+
+void Performance::setTimestepsPerSecond(double timestepsPerSecond)
+{
+    if (m_timestepsPerSecond == timestepsPerSecond)
+        return;
+
+    m_timestepsPerSecond = timestepsPerSecond;
+    emit timestepsPerSecondChanged(timestepsPerSecond);
 }

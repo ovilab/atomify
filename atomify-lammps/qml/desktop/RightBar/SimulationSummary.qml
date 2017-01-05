@@ -157,21 +157,25 @@ Flickable {
                     text: "Boundary: "+system.boundaryStyle
                 }
                 Label {
+                    text: "Timestep: "+system.dt
+                }
+                Label {
                     text: "Number of atoms: "+system.numberOfAtoms
                 }
                 Label {
                     text: "Number of bonds: "+system.atoms.numberOfBonds
+                    visible: system.atoms.numberOfBonds>0
                 }
                 Label {
                     text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
                 }
                 Label {
                     textFormat: Qt.RichText
-                    text: "Volume: "+system.volume.toFixed(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
+                    text: "Volume: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
                 }
                 Label {
                     textFormat: Qt.RichText
-                    text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toFixed(4)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
+                    text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
                 }
                 Label {
                     text: "Number of atom types: "+system.numberOfAtomTypes
@@ -199,7 +203,10 @@ Flickable {
                     text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
                 }
                 Label {
-                    text: "Simulation speed: "+speedSlider.value+"x"
+                    text: "Achieved speed: "+system.performance.effectiveSimulationSpeed.toFixed(2)+"x"
+                }
+                Label {
+                    text: "Target speed: "+speedSlider.value+"x"
                 }
                 Slider {
                     id: speedSlider
@@ -346,6 +353,9 @@ Flickable {
                 }
                 Label {
                     text: "Memory usage Atomify: "+ (system.performance.memoryAtomify / 1024 / 1024).toFixed(0) +" MB"
+                }
+                Label {
+                    text: "Timesteps per second: "+ (system.performance.timestepsPerSecond).toFixed(1)
                 }
 
             }

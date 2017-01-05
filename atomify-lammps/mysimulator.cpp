@@ -19,6 +19,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <QFileInfo>
 #include <QStandardPaths>
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
@@ -52,6 +53,11 @@ AtomifySimulator::AtomifySimulator() :
 {
     m_states->setupStates(*this);
     m_parser.setSimulator(this);
+    QString initialScript("/Users/anderhaf/Desktop/old/lj.in");
+    QFileInfo info(initialScript);
+    if(info.exists()) {
+        m_scriptFilePath = initialScript;
+    }
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -199,6 +205,11 @@ QVector3D AtomifySimulator::cameraViewCenterRequest() const
     return m_cameraViewCenterRequest;
 }
 
+bool AtomifySimulator::welcomeSimulationRunning() const
+{
+    return m_welcomeSimulationRunning;
+}
+
 int AtomifySimulator::simulationSpeed() const
 {
     return m_simulationSpeed;
@@ -233,6 +244,7 @@ void AtomifySimulator::setStates(States *states)
 
 void AtomifySimulator::setScriptFilePath(QString scriptFilePath)
 {
+    setWelcomeSimulationRunning(false);
     scriptFilePath.replace("file://", "");
     if (m_scriptFilePath == scriptFilePath)
         return;
@@ -265,4 +277,13 @@ void AtomifySimulator::setCameraViewCenterRequest(QVector3D cameraViewCenterRequ
 
     m_cameraViewCenterRequest = cameraViewCenterRequest;
     emit cameraViewCenterRequestChanged(cameraViewCenterRequest);
+}
+
+void AtomifySimulator::setWelcomeSimulationRunning(bool welcomeSimulationRunning)
+{
+    if (m_welcomeSimulationRunning == welcomeSimulationRunning)
+        return;
+
+    m_welcomeSimulationRunning = welcomeSimulationRunning;
+    emit welcomeSimulationRunningChanged(welcomeSimulationRunning);
 }
