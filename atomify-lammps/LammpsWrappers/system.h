@@ -71,11 +71,7 @@ public:
     bool triclinic() const;
     class Performance * performance() const;
     double cpuremain() const;
-
-    double dt() const
-    {
-        return m_dt;
-    }
+    double dt() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -93,14 +89,7 @@ public slots:
     void setPerformance(class Performance * performance);
     void setCpuremain(double cpuremain);
 
-    void setDt(double dt)
-    {
-        if (m_dt == dt)
-            return;
-
-        m_dt = dt;
-        emit dtChanged(dt);
-    }
+    void setDt(double dt);
 
 signals:
     void originChanged(QVector3D origin);
@@ -126,7 +115,6 @@ signals:
     void triclinicChanged(bool triclinic);
     void performanceChanged(class Performance * performance);
     void cpuremainChanged(double cpuremain);
-
     void dtChanged(double dt);
 
 private:

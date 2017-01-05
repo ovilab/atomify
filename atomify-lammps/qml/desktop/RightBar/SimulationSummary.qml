@@ -164,17 +164,18 @@ Flickable {
                 }
                 Label {
                     text: "Number of bonds: "+system.atoms.numberOfBonds
+                    visible: system.atoms.numberOfBonds>0
                 }
                 Label {
                     text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
                 }
                 Label {
                     textFormat: Qt.RichText
-                    text: "Volume: "+system.volume.toFixed(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
+                    text: "Volume: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
                 }
                 Label {
                     textFormat: Qt.RichText
-                    text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toFixed(4)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
+                    text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
                 }
                 Label {
                     text: "Number of atom types: "+system.numberOfAtomTypes

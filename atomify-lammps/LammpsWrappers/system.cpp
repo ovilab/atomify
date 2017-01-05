@@ -312,6 +312,11 @@ double System::cpuremain() const
     return m_cpuremain;
 }
 
+double System::dt() const
+{
+    return m_dt;
+}
+
 void System::synchronizeQML(LAMMPSController *lammpsController)
 {
     m_computes->synchronizeQML(lammpsController);
@@ -471,6 +476,15 @@ void System::setCpuremain(double cpuremain)
 
     m_cpuremain = cpuremain;
     emit cpuremainChanged(cpuremain);
+}
+
+void System::setDt(double dt)
+{
+    if (m_dt == dt)
+        return;
+
+    m_dt = dt;
+    emit dtChanged(dt);
 }
 
 void System::setVariables(Variables *variables)
