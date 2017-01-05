@@ -40,6 +40,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(QString error READ error WRITE setError NOTIFY errorChanged)
     Q_PROPERTY(QString scriptFilePath READ scriptFilePath WRITE setScriptFilePath NOTIFY scriptFilePathChanged)
     Q_PROPERTY(QVector3D cameraPositionRequest READ cameraPositionRequest WRITE setCameraPositionRequest NOTIFY cameraPositionRequestChanged)
+    Q_PROPERTY(QVector3D cameraViewCenterRequest READ cameraViewCenterRequest WRITE setCameraViewCenterRequest NOTIFY cameraViewCenterRequestChanged)
 public:
     int syncCount = 0;
     AtomifySimulator();
@@ -53,6 +54,7 @@ public:
     QString error() const;
     CommandParser &parser();
     QVector3D cameraPositionRequest() const;
+    QVector3D cameraViewCenterRequest() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -61,6 +63,7 @@ public slots:
     void setScriptFilePath(QString scriptFilePath);
     void setError(QString error);
     void setCameraPositionRequest(QVector3D cameraPositionRequest);
+    void setCameraViewCenterRequest(QVector3D cameraViewCenterRequest);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -80,7 +83,10 @@ signals:
     void scriptFilePathChanged(QString scriptFilePath);
     void errorChanged(QString error);
     void cameraPositionRequestChanged(QVector3D cameraPositionRequest);
-    void newCameraPositionRequest(QVector3D cameraPositionRequest);
+    void cameraViewCenterRequestChanged(QVector3D cameraViewCenterRequest);
+    void newCameraPositionRequest(QVector3D cameraPosition);
+    void newViewCenterRequest(QVector3D viewCenter);
+    void newCameraPositionAndViewCenterRequest(QVector3D cameraPosition, QVector3D viewCenter);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -94,6 +100,7 @@ private:
     QString m_error;
     CommandParser m_parser;
     QVector3D m_cameraPositionRequest;
+    QVector3D m_cameraViewCenterRequest;
 };
 
 #endif // MYSIMULATOR_H

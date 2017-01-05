@@ -106,6 +106,7 @@ Scene3D {
         animateCameraViewCenter.from = trackballCamera.viewCenter
         animateCameraViewCenter.to = viewCenter
         animateCamera.running = true
+        console.log("Will move view center to ", viewCenter)
     }
 
     Entity {
@@ -204,6 +205,7 @@ Scene3D {
             position: Qt.vector3d(0.0, 50.0, 0.0) // do not change without taking upvector into account
             viewCenter: Qt.vector3d(0, 0, 0) // do not change without taking upvector into account
             upVector: Qt.vector3d(0.0, 0.0, 1.0)
+            onViewCenterChanged: console.log("View center: ", viewCenter)
         }
 
         Camera {
@@ -344,7 +346,16 @@ Scene3D {
             system.onSizeChanged: { visualizer.updateNearestPoint() }
             system.onOriginChanged: { visualizer.updateNearestPoint() }
             onNewCameraPositionRequest: {
+                console.log("Moving camera to ", cameraPositionRequest)
                 animateCameraTo(cameraPositionRequest, Qt.vector3d(0, 0, 1), Qt.vector3d(0,0,0), 500)
+            }
+            onNewCameraPositionAndViewCenterRequest: {
+                console.log("Moving camera to ", cameraPositionRequest, " and view center to: ", cameraViewCenterRequest)
+                animateCameraTo(cameraPositionRequest, Qt.vector3d(0, 0, 1), cameraViewCenterRequest, 500)
+            }
+            onNewViewCenterRequest: {
+                console.log("Moving view center to: ", cameraViewCenterRequest)
+                animateCameraTo(visualizer.camera.position, Qt.vector3d(0, 0, 1), cameraViewCenterRequest, 500)
             }
 
             system.atoms.modifiers: [

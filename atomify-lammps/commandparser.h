@@ -19,6 +19,8 @@ private:
     QString regexColor = QString("#[0-9a-fA-F]{6,6}");
     QString regexTabOrSpace = QString("\\s*|\\t*");
     QString regexWord = QString("\\w*");
+    bool moveCameraPosition = false;
+    bool moveCameraViewCenter= false;
 
     void parseCommand(QString command);
     void atomColorAndSize(QString command);
@@ -26,7 +28,8 @@ private:
     void atomType(QString command);
     void bond(QString command);
     void atomSize(QString command);
-    void cameraPosition(QString command);
+    bool cameraPosition(QString command);
+    bool viewCenter(QString command);
 };
 
 #endif // COMMANDPARSER_H
