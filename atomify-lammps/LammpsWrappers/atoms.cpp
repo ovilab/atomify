@@ -20,7 +20,6 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_sphereData = new SphereData(simulator);
     m_bondData = new BondData(simulator);
     m_bonds = new Bonds();
-    m_atomData.neighborList.bonds = m_bonds;
 
     m_atomStyleTypes.insert("hydrogen", new AtomStyle(1.20, "#CCCCCC"));
     m_atomStyleTypes.insert("helium", new AtomStyle(1.40, "#D9FFFF"));
@@ -154,6 +153,13 @@ void Atoms::processModifiers(System *system)
 void Atoms::createRenderererData(LAMMPSController *lammpsController) {
     generateSphereData(m_atomDataProcessed);
     generateBondData(m_atomDataProcessed, lammpsController);
+}
+
+long Atoms::memoryUsage()
+{
+    return m_atomData.memoryUsage() + m_atomDataProcessed.memoryUsage() +
+           (m_bondsDataRaw.capacity() + m_sphereDataRaw.capacity())*sizeof(char) +
+           bondsDataRaw.size()*sizeof(BondVBOData);
 }
 
 float Atoms::bondScale() const

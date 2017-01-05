@@ -308,94 +308,24 @@ Flickable {
                 system: root.system
             }
         }
-        //        GroupBox {
-        //            id: keyboardShortcuts
-        //            width: parent.width
-        //            title: "Keyboard shortcuts"
 
-        //            Column {
-        //                id: shortcutRoot
-        //                width: parent.width
-        //                property int labelWidth: 115
-        //                property string controlName: {
-        //                    if(Qt.platform.os === "osx") {
-        //                        return "⌘"
-        //                    }
-        //                    return "Ctrl+"
-        //                }
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
 
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Run script "
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"R"
-        //                    }
-        //                }
+            title: "Performance"
 
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "New script "
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"N"
-        //                    }
-        //                }
+            Column {
+                Label {
+                    text: "Memory usage LAMMPS: "+ (system.performance.memoryLAMMPS / 1024 / 1024).toFixed(0) +" MB"
+                }
+                Label {
+                    text: "Memory usage Atomify: "+ (system.performance.memoryAtomify / 1024 / 1024).toFixed(0) +" MB"
+                }
 
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Save script "
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"S"
-        //                    }
-        //                }
-
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Open script"
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"O"
-        //                    }
-        //                }
-
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Toggle pause"
-        //                    }
-        //                    Label {
-        //                        text: ": "+shortcutRoot.controlName+"P / Space"
-        //                    }
-        //                }
-
-        //                RowLayout {
-        //                    width: parent.width
-        //                    Label {
-        //                        Layout.minimumWidth: shortcutRoot.labelWidth
-        //                        Layout.maximumWidth: shortcutRoot.labelWidth
-        //                        text: "Toggle focus mode "
-        //                    }
-        //                    Label {
-        //                        text: ": Tab"
-        //                    }
-        //                }
-        //            }
-        //        }
+            }
+        }
     }
 }

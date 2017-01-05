@@ -15,13 +15,13 @@ public:
     QVector<int> bitmask; // For detecting group membership
     QVector<int> types;
     QVector<bool> visible;
-    Neighborlist neighborList;
     bool isValid();
     void resize(int size);
     int size();
     void reset();
     void sort(QVector3D cameraPosition);
     ~AtomData();
+    long memoryUsage();
 };
 
 #endif // ATOMDATA_H

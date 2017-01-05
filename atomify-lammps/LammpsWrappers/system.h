@@ -27,6 +27,7 @@ class System : public QObject
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
     Q_PROPERTY(int currentTimestep READ currentTimestep NOTIFY currentTimestepChanged)
+    Q_PROPERTY(Performance *performance READ performance WRITE setPerformance NOTIFY performanceChanged)
     Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
     Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
     Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
@@ -66,6 +67,7 @@ public:
     QMatrix3x3 cellMatrix() const;
     QString boundaryStyle() const;
     bool triclinic() const;
+    class Performance * performance() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -80,6 +82,7 @@ public slots:
     void setCellMatrix(QMatrix3x3 cellMatrix);
     void setBoundaryStyle(QString boundaryStyle);
     void setTriclinic(bool triclinic);
+    void setPerformance(class Performance * performance);
 
 signals:
     void originChanged(QVector3D origin);
@@ -103,6 +106,7 @@ signals:
     void cellMatrixChanged(QMatrix3x3 cellMatrix);
     void boundaryStyleChanged(QString boundaryStyle);
     void triclinicChanged(bool triclinic);
+    void performanceChanged(class Performance * performance);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -112,6 +116,7 @@ private:
     class Units* m_units = nullptr;
     class Fixes* m_fixes = nullptr;
     class Variables* m_variables = nullptr;
+    class Performance* m_performance = nullptr;
     QVector3D m_origin;
     QVector3D m_size;
     QVector3D m_cameraPosition;

@@ -11,6 +11,7 @@
 #include "../mysimulator.h"
 #include "modifiers/modifier.h"
 #include "units.h"
+#include "../performance.h"
 
 using namespace LAMMPS_NS;
 
@@ -23,6 +24,7 @@ System::System(AtomifySimulator *simulator)
     setUnits(new Units(simulator));
     setFixes(new Fixes(simulator));
     setVariables(new Variables(simulator));
+    setPerformance(new Performance(simulator));
     m_transformationMatrix.setToIdentity();
 }
 
@@ -127,6 +129,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_computes->synchronize(lammpsController);
     m_variables->synchronize(lammpsController);
     m_fixes->synchronize(lammpsController);
+    m_performance->synchronize(lammpsController);
 
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
@@ -271,6 +274,11 @@ bool System::triclinic() const
     return m_triclinic;
 }
 
+Performance *System::performance() const
+{
+    return m_performance;
+}
+
 void System::synchronizeQML(LAMMPSController *lammpsController)
 {
     m_computes->synchronizeQML(lammpsController);
@@ -412,6 +420,15 @@ void System::setTriclinic(bool triclinic)
 
     m_triclinic = triclinic;
     emit triclinicChanged(triclinic);
+}
+
+void System::setPerformance(Performance *performance)
+{
+    if (m_performance == performance)
+        return;
+
+    m_performance = performance;
+    emit performanceChanged(performance);
 }
 
 void System::setVariables(Variables *variables)

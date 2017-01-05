@@ -81,7 +81,8 @@ SOURCES += \
     mousemover.cpp \
     states.cpp \
     dataproviders/data1d.cpp \
-    commandparser.cpp
+    commandparser.cpp \
+    performance.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -122,7 +123,8 @@ HEADERS += \
     mousemover.h \
     states.h \
     dataproviders/data1d.h \
-    commandparser.h
+    commandparser.h \
+    performance.h
 
 # Temporary use of quickcontrols2 without install
 
