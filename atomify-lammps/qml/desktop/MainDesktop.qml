@@ -29,7 +29,6 @@ Item {
     signal focusViewport()
     signal unfocusViewport()
     signal captureCursor()
-
     function toggleFocusMode() {
         if(focusMode) {
             rightbar.width = 300
@@ -46,8 +45,18 @@ Item {
         }
     }
 
+    Timer {
+        id: startsimtimer
+        interval: 250
+        onTriggered: {
+            if(visualizer.simulator.scriptFilePath !== "") {
+                visualizer.simulator.started()
+            }
+        }
+    }
+
     Component.onCompleted: {
-        // editorTab.lammpsEditor.runScript()
+        startsimtimer.start()
     }
 
     DropArea {
@@ -404,13 +413,13 @@ Item {
 
             MessageOverlay {
                 id: messageOverlay
-                property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active
+                property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active || simulator.welcomeSimulationRunning
 
                 anchors.fill: parent
                 visible: false
 
                 errorMessage: simulator.error
-                welcome: simulator.states.idle.active
+                welcome: simulator.states.idle.active || simulator.welcomeSimulationRunning
                 finished: simulator.states.finished.active
                 crashed: simulator.states.crashed.active
                 cancelling: simulator.states.reset.active
