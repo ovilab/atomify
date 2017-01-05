@@ -398,42 +398,30 @@ Item {
         }
         Shortcut {
             sequence: StandardKey.New
-            onActivated: {
-                newTab()
-            }
+            onActivated: if(root.visible) newTab()
         }
         Shortcut {
             sequence: StandardKey.AddTab
-            onActivated: {
-                newTab()
-            }
+            onActivated: if(root.visible) newTab()
         }
         Shortcut {
             sequence: StandardKey.Open
-            onActivated: {
-                openTab()
-            }
+            onActivated: if(root.visible) openTab()
         }
 
         Shortcut {
             sequence: StandardKey.Save
-            onActivated: {
-                currentEditor.save()
-            }
+            onActivated: if(root.visible) currentEditor.save()
         }
 
         Shortcut {
             sequence: StandardKey.Close
-            onActivated: {
-                closeTab()
-            }
+            onActivated: if(root.visible) closeTab()
         }
 
         Shortcut {
             sequence: StandardKey.SaveAs
-            onActivated: {
-                currentEditor.saveAs()
-            }
+            onActivated: if(root.visible) currentEditor.saveAs()
         }
     }
 
