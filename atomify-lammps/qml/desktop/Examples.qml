@@ -7,7 +7,10 @@ import StandardPaths 1.0
 Pane {
     id: root
 
-    signal simulationClicked(var script)
+    signal simulationClicked(var fileName)
+
+    property string dataDir: StandardPaths.writableLocation(StandardPaths.AppDataLocation, ".")
+    property string examplesDir: Qt.resolvedUrl(dataDir + "/examples")
 
     property var tagModel: []
     property var tagMap: {
@@ -75,7 +78,7 @@ Pane {
 //        req.open("GET", serverUrl + "/classes/Simulation");
 //        req.setRequestHeader("X-Parse-Application-Id", "atomify");
 
-        var localPath = StandardPaths.writableLocation(StandardPaths.AppDataLocation, "examples/examples.json")
+        var localPath = Qt.resolvedUrl(examplesDir + "/examples.json")
         console.log("Getting", localPath)
         req.open("GET", localPath)
 
@@ -246,7 +249,14 @@ Pane {
 
                                         height: width
                                         fillMode: Image.PreserveAspectCrop
-                                        source: exampleData.image ? exampleData.image.url : ""
+//                                        source: exampleData.image ? exampleData.image.url : ""
+
+                                        Component.onCompleted: {
+                                            console.log("Folder", exampleData.folder)
+                                            console.log("Thumb", exampleData.thumbnails[0])
+                                        }
+
+                                        source: Qt.resolvedUrl(root.dataDir + "/" + exampleData.folder + "/" + exampleData.thumbnails[0])
                                         smooth: true
                                         antialiasing: true
                                         mipmap: true
@@ -311,7 +321,7 @@ Pane {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     onClicked: {
-                                        console.log("TODO: Download files")
+                                        simulationClicked(Qt.resolvedUrl(dataDir + "/" + exampleData.folder + "/" + exampleData.inputScript))
                                     }
                                 }
                             }

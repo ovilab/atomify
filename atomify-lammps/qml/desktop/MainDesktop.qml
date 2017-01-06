@@ -23,12 +23,14 @@ Item {
     property alias renderQuality: visualizer.renderQuality
     property alias mouseMover: visualizer.mouseMover
     property bool focusMode: false
+    property string viewMode: "view"
 
     signal releaseCursor()
     signal changeMode()
     signal focusViewport()
     signal unfocusViewport()
     signal captureCursor()
+
     function toggleFocusMode() {
         if(focusMode) {
             rightbar.width = 300
@@ -132,7 +134,21 @@ Item {
             id: modeMenu
 
             property int currentIndex: 0
-            property string currentMode: modeModel.get(currentIndex).mode
+
+            onCurrentIndexChanged: {
+                root.viewMode = modeModel.get(currentIndex).mode
+            }
+
+            Connections {
+                target: root
+                onViewModeChanged: {
+                    for(var i = 0; i < modeModel.count; i++) {
+                        if(modeModel.get(i).mode === root.viewMode) {
+                            modeMenu.currentIndex = i
+                        }
+                    }
+                }
+            }
 
             anchors {
                 verticalCenter: parent.verticalCenter
@@ -262,7 +278,7 @@ Item {
             right: parent.right
         }
 
-        visible: modeMenu.currentMode === "edit" || modeMenu.currentMode === "view"
+        visible: root.viewMode === "edit" || root.viewMode === "view"
 
         Settings {
             property alias editorWidth: editor.width
@@ -278,7 +294,7 @@ Item {
             simulator: root.simulator
             visualizer: root.visualizer
 
-            visible: modeMenu.currentMode === "edit"
+            visible: root.viewMode === "edit"
         }
 
         Item {
@@ -520,7 +536,7 @@ Item {
             id: rightbar
             Layout.fillHeight: true
             Layout.minimumWidth: 200
-            visible: modeMenu.currentMode === "edit"
+            visible: root.viewMode === "edit"
             width: 300
             system: root.simulator.system
             visualizer: root.visualizer
@@ -535,7 +551,12 @@ Item {
             left: modeMenuContainer.right
             right: parent.right
         }
-        visible: modeMenu.currentMode === "examples"
+        visible: root.viewMode === "examples"
+        onSimulationClicked: {
+            editor.editorWindow.openTab(fileName)
+            editor.editorWindow.runScript()
+            root.viewMode = "view"
+        }
     }
 
     Item {
