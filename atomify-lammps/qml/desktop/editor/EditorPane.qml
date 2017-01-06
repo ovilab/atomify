@@ -93,9 +93,9 @@ Pane {
 //        }
     }
 
-    Shortcut {
-        sequence: "Ctrl+R"
-        context: Qt.ApplicationShortcut
-        onActivated: editorWindow.runScript()
-    }
+//    Shortcut {
+//        sequence: "Ctrl+R"
+//        context: Qt.ApplicationShortcut
+//        onActivated: editorWindow.runScript()
+//    }
 }

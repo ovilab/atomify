@@ -398,33 +398,6 @@ Item {
                 else tabBar.currentIndex = 0
             }
         }
-        Shortcut {
-            sequence: StandardKey.New
-            onActivated: if(root.visible) newTab()
-        }
-        Shortcut {
-            sequence: StandardKey.AddTab
-            onActivated: if(root.visible) newTab()
-        }
-        Shortcut {
-            sequence: StandardKey.Open
-            onActivated: if(root.visible) openTab()
-        }
-
-        Shortcut {
-            sequence: StandardKey.Save
-            onActivated: if(root.visible) currentEditor.save()
-        }
-
-        Shortcut {
-            sequence: StandardKey.Close
-            onActivated: if(root.visible) closeTab()
-        }
-
-        Shortcut {
-            sequence: StandardKey.SaveAs
-            onActivated: if(root.visible) currentEditor.saveAs()
-        }
     }
 
 }

@@ -15,6 +15,8 @@ import "editor"
 import "items"
 import "RightBar"
 import "../plotting"
+import ".."
+
 Item {
     id: root
 
@@ -556,6 +558,14 @@ Item {
             editor.editorWindow.openTab(fileName)
             editor.editorWindow.runScript()
             root.viewMode = "view"
+        }
+    }
+
+
+    EventMapper {
+        mapping: {
+            "desktop": root,
+            "visualizer": visualizer
         }
     }
 

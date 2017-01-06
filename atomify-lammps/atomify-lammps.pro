@@ -86,7 +86,8 @@ SOURCES += \
     commandparser.cpp \
     performance.cpp \
     parsefileuploader.cpp \
-    standardpaths.cpp
+    standardpaths.cpp \
+    keysequence.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -130,7 +131,8 @@ HEADERS += \
     commandparser.h \
     performance.h \
     parsefileuploader.h \
-    standardpaths.h
+    standardpaths.h \
+    keysequence.h
 
 # Temporary use of quickcontrols2 without install
 

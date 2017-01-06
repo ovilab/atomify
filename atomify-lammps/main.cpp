@@ -39,6 +39,7 @@
 #include "states.h"
 #include "parsefileuploader.h"
 #include "standardpaths.h"
+#include "keysequence.h"
 
 void copyExamplesToLocalFolder()
 {
@@ -118,6 +119,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
 
     qmlRegisterSingletonType<StandardPaths>("StandardPaths", 1, 0, "StandardPaths", &StandardPaths::qmlInstance);
+
+    qmlRegisterSingletonType<KeySequence>("KeySequence", 1, 0, "KeySequence", &KeySequence::qmlInstance);
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
