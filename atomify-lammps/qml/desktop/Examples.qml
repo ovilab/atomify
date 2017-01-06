@@ -15,6 +15,8 @@ Pane {
     property var tagModel: []
     property var tagMap: {
         "water": "Water",
+        "lammps": "LAMMPS",
+        "moltemplate": "Moltemplate",
         "silica": "Silica",
         "other": "Other"
     }
