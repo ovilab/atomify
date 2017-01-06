@@ -51,11 +51,12 @@ Item {
 
     Timer {
         id: startsimtimer
+        property string dataDir: StandardPaths.writableLocation(StandardPaths.AppDataLocation, ".")
+        property string examplesDir: Qt.resolvedUrl(dataDir + "/examples")
         interval: 250
         onTriggered: {
-            if(visualizer.simulator.scriptFilePath !== "") {
-                visualizer.simulator.started()
-            }
+            visualizer.simulator.scriptFilePath = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simplediffusion.in")
+            visualizer.simulator.started()
         }
     }
 
