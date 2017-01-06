@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Atomify 1.0
+import StandardPaths 1.0
 
 Pane {
     id: root
@@ -70,10 +71,17 @@ Pane {
         var status
         var wasLoading
         var req = new XMLHttpRequest;
-        req.open("GET", serverUrl + "/classes/Simulation");
-        req.setRequestHeader("X-Parse-Application-Id", "atomify");
+
+//        req.open("GET", serverUrl + "/classes/Simulation");
+//        req.setRequestHeader("X-Parse-Application-Id", "atomify");
+
+        var localPath = StandardPaths.writableLocation(StandardPaths.AppDataLocation, "examples/examples.json")
+        console.log("Getting", localPath)
+        req.open("GET", localPath)
+
         req.onreadystatechange = function() {
             status = req.readyState;
+            console.log("Response 1:", req.responseText)
             if (status === XMLHttpRequest.DONE) {
                 try {
                     var objectArray = JSON.parse(req.responseText);

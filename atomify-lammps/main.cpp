@@ -38,6 +38,7 @@
 #include "codeeditorbackend.h"
 #include "states.h"
 #include "parsefileuploader.h"
+#include "standardpaths.h"
 
 void copyExamplesToLocalFolder()
 {
@@ -65,7 +66,8 @@ void copyExamplesToLocalFolder()
         QString targetPath = dataDir.absoluteFilePath(relativeFilePath);
 
         if(QFile(targetPath).exists()) {
-            continue;
+            QFile(targetPath).remove();
+//            continue;
         }
 
         QFile file(qrcFileName);
@@ -114,6 +116,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<Performance>("Atomify", 1, 0, "Performance");
 
     qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
+
+    qmlRegisterSingletonType<StandardPaths>("StandardPaths", 1, 0, "StandardPaths", &StandardPaths::qmlInstance);
 
     // QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
