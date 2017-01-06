@@ -43,6 +43,13 @@ QQC1.ApplicationWindow {
                 }
             }
             QQC1.MenuItem {
+                text: "Close"
+                shortcut: StandardKey.Close
+                onTriggered: {
+                    EventCenter.postEvent("editorWindow.closeTab")
+                }
+            }
+            QQC1.MenuItem {
                 text: "Save"
                 shortcut: StandardKey.Save
                 onTriggered: {
@@ -119,6 +126,13 @@ QQC1.ApplicationWindow {
                 shortcut: "Ctrl+R"
                 onTriggered: {
                     EventCenter.postEvent("editorWindow.runScript")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Toggle pause"
+                shortcut: StandardKey.Print
+                onTriggered: {
+                    mainDesktop.simulator.togglePaused()
                 }
             }
         }
