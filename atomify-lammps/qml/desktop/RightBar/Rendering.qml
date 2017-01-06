@@ -258,25 +258,38 @@ Pane {
                 title: "Rendering mode"
                 Column {
                     width: parent.width
-                    ComboBox {
-                        id: renderingMode
-                        model: ["Ball and stick", "Stick", "Wireframe"]
-                        focusPolicy: Qt.NoFocus
-                        onCurrentTextChanged: {
-                            visualizer.simulator.system.atoms.renderingMode = currentText
 
-                            if(currentText === "Ball and stick") {
-                                sphereScaleSlider.value = 0.0
-                                bondScaleSlider.value = 1.0
-                            } else if(currentText === "Wireframe") {
-                                sphereScaleSlider.value = 0.0
-                                bondScaleSlider.value = 0.3
-                            } else if(currentText === "Stick") {
-                                sphereScaleSlider.value = 0.1
-                                bondScaleSlider.value = 1.5
+                    RadioButton {
+                            checked: true
+                            text: qsTr("Ball and stick")
+                            onCheckedChanged: {
+                                if(checked) {
+                                    visualizer.simulator.system.atoms.renderingMode = "Ball and stick"
+                                    sphereScaleSlider.value = 0.0
+                                    bondScaleSlider.value = 1.0
+                                }
                             }
                         }
-                    }
+                        RadioButton {
+                            text: qsTr("Stick")
+                            onCheckedChanged: {
+                                if(checked) {
+                                    visualizer.simulator.system.atoms.renderingMode = "Stick"
+                                    sphereScaleSlider.value = 0.0
+                                    bondScaleSlider.value = 0.3
+                                }
+                            }
+                        }
+                        RadioButton {
+                            text: qsTr("Wireframe")
+                            onCheckedChanged: {
+                                if(checked) {
+                                    visualizer.simulator.system.atoms.renderingMode = "Wireframe"
+                                    sphereScaleSlider.value = 0.1
+                                    bondScaleSlider.value = 1.5
+                                }
+                            }
+                        }
 
                     Row {
                         width: parent.width
