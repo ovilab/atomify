@@ -39,6 +39,44 @@
 #include "states.h"
 #include "parsefileuploader.h"
 
+void copyExamplesToLocalFolder()
+{
+    QString dataDirPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dataDir(dataDirPath);
+    QDir rootQrcFolder(":/");
+    QDirIterator exampleIterator(":/examples", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
+    while(exampleIterator.hasNext()) {
+        const QString &qrcFileName = exampleIterator.next();
+        QFileInfo qrcFileInfo(qrcFileName);
+        QString qrcDirPath = qrcFileInfo.dir().absolutePath();
+        QString relativeDirPath = rootQrcFolder.relativeFilePath(qrcDirPath);
+        QString relativeFilePath = rootQrcFolder.relativeFilePath(qrcFileName);
+
+        QString targetDirPath = dataDir.absoluteFilePath(relativeDirPath);
+        QDir targetDir(targetDirPath);
+        if(!targetDir.exists()) {
+            bool pathCreated = targetDir.mkpath(".");
+            if(!pathCreated) {
+                qWarning() << "Could not create" << targetDir.absolutePath();
+                continue;
+            }
+        }
+
+        QString targetPath = dataDir.absoluteFilePath(relativeFilePath);
+
+        if(QFile(targetPath).exists()) {
+            continue;
+        }
+
+        QFile file(qrcFileName);
+        bool fileCopied = file.copy(targetPath);
+        if(!fileCopied) {
+            qWarning() << "Could not copy" << qrcFileName << "to" << targetPath;
+            continue;
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -92,6 +130,7 @@ int main(int argc, char *argv[])
 #endif
     QSurfaceFormat::setDefaultFormat(format);
 
+    copyExamplesToLocalFolder();
 
     // Application version
     QQmlApplicationEngine engine;
