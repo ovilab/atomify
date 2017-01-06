@@ -80,24 +80,24 @@ Item {
             top: parent.top
             bottom: parent.bottom
         }
-
+        color: Material.color(Material.Grey, Material.Shade900)
         width: 96
 
-        LinearGradient {
-            anchors.fill: parent
-            start: Qt.point(0, 0)
-            end: Qt.point(width, 10)
-            gradient: Gradient {
-                GradientStop {
-                    color: Material.color(Material.Grey, Material.Shade900)
-                    position: 0.0
-                }
-                GradientStop {
-                    color: Material.color(Material.Grey, Material.Shade900)
-                    position: 1.0
-                }
-            }
-        }
+//        LinearGradient {
+//            anchors.fill: parent
+//            start: Qt.point(0, 0)
+//            end: Qt.point(width, 10)
+//            gradient: Gradient {
+//                GradientStop {
+//                    color: Material.color(Material.Grey, Material.Shade900)
+//                    position: 0.0
+//                }
+//                GradientStop {
+//                    color: Material.color(Material.Grey, Material.Shade900)
+//                    position: 1.0
+//                }
+//            }
+//        }
 
         Image {
             id: photonflowLogo
