@@ -83,6 +83,14 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("ovilab");
     app.setApplicationName("Atomify");
 
+    QSurfaceFormat format;
+#ifndef Q_OS_ANDROID
+    format.setMajorVersion(3);
+    format.setMinorVersion(3);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    // format.setSamples(32);
+#endif
+    QSurfaceFormat::setDefaultFormat(format);
 
 
     // Application version
@@ -91,23 +99,8 @@ int main(int argc, char *argv[])
     if(argc > 2) {
         previewer.show();
     } else {
-
         qpm::init(app, engine);
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-        QSurfaceFormat format;
-    #ifndef Q_OS_ANDROID
-        format.setMajorVersion(3);
-        format.setMinorVersion(3);
-        format.setProfile(QSurfaceFormat::CoreProfile);
-        // format.setSamples(32);
-    #endif
-        QSurfaceFormat::setDefaultFormat(format);
-
-        if(engine.rootObjects().size() == 0) {
-            qFatal("Could not find root object");
-        }
-        auto *applicationWindow = engine.rootObjects().first();
-        QMetaObject::invokeMethod(applicationWindow, "loadScene");
 
 #ifdef Q_OS_LINUX
         setlocale(LC_ALL, "C");

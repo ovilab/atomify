@@ -87,14 +87,11 @@ QQC1.ApplicationWindow {
         }
     }
 
-    function loadScene() {
-        desktopLoader.sourceComponent = mainDesktopComponent
-    }
-
     Settings {
         id: settings
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
+        property alias renderQuality: mainDesktop.renderQuality
     }
 
     function resetStyle() {
@@ -113,22 +110,15 @@ QQC1.ApplicationWindow {
 
     Component.onCompleted: {
         resetStyle()
+        mainDesktop.visualizer.mainCompleted = true
     }
 
-    Loader {
+    MainDesktop {
+        id: mainDesktop
         anchors.fill: parent
-        id: desktopLoader
-    }
-
-    Component {
-        id: mainDesktopComponent
-        MainDesktop {
-            id: mainDesktop
-            anchors.fill: parent
-            mouseMover: MouseMover {
-                id: mouseMover
-                window: applicationRoot
-            }
+        mouseMover: MouseMover {
+            id: mouseMover
+            window: applicationRoot
         }
     }
 
