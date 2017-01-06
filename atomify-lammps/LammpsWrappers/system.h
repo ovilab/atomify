@@ -88,7 +88,6 @@ public slots:
     void setTriclinic(bool triclinic);
     void setPerformance(class Performance * performance);
     void setCpuremain(double cpuremain);
-
     void setDt(double dt);
 
 signals:
@@ -139,6 +138,7 @@ private:
     void updateSizeAndOrigin(LAMMPS_NS::Domain *domain);
     void computeCellMatrix(LAMMPS_NS::Domain *domain);
     void updateBoundaryStyle(LAMMPS_NS::Domain *domain);
+    void updateCenter(LAMMPS_NS::Domain *domain);
     QMatrix4x4 m_transformationMatrix;
     QMatrix3x3 m_cellMatrix;
     QString m_boundaryStyle = "None";
@@ -146,6 +146,7 @@ private:
     double m_cpuremain = 0;
     void calculateCPURemain(LAMMPS_NS::LAMMPS *lammps);
     void calculateTimestepsPerSeconds(LAMMPS_NS::LAMMPS *lammps);
+    QVector3D m_center;
     double m_dt = 0;
 };
 

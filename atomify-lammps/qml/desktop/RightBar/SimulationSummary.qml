@@ -171,6 +171,9 @@ Flickable {
                     text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
                 }
                 Label {
+                    text: "Center: ("+system.center.x.toFixed(1)+", "+system.center.y.toFixed(1)+", "+system.center.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                }
+                Label {
                     textFormat: Qt.RichText
                     text: "Volume: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
                 }
