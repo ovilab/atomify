@@ -260,6 +260,7 @@ Pane {
                     width: parent.width
 
                     RadioButton {
+                        id: ballAndStick
                         checked: true
                         text: qsTr("Ball and stick")
                         onCheckedChanged: {
@@ -301,7 +302,7 @@ Pane {
                         QQC1.Slider {
                             id: sphereScaleSlider
                             property real expValue: Math.exp(value)
-                            enabled: renderingMode.currentText==="Ball and stick"
+                            enabled: ballAndStick.checked
                             width: parent.width*0.6
                             minimumValue: -2.0
                             maximumValue: 4.0
