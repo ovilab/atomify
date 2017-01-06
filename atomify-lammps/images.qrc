@@ -70,5 +70,9 @@
         <file>images/ic_stop_white_48dp.png</file>
         <file>images/ic_center_focus_strong_white_36dp.png</file>
         <file>images/ic_center_focus_strong_white_48dp.png</file>
+        <file>images/ic_play_circle_outline_white_48dp.png</file>
+        <file>images/ic_play_circle_outline_white_36dp.png</file>
+        <file>images/ic_file_download_white_36dp.png</file>
+        <file>images/ic_file_download_white_48dp.png</file>
     </qresource>
 </RCC>

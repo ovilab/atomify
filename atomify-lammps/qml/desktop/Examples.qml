@@ -11,8 +11,8 @@ Pane {
     property var tagModel: []
     property var tagMap: {
         "water": "Water",
-                "silica": "Silica",
-                "other": "Other"
+        "silica": "Silica",
+        "other": "Other"
     }
 
     property Item screenshotObject
@@ -75,7 +75,13 @@ Pane {
         req.onreadystatechange = function() {
             status = req.readyState;
             if (status === XMLHttpRequest.DONE) {
-                var objectArray = JSON.parse(req.responseText);
+                try {
+                    var objectArray = JSON.parse(req.responseText);
+                } catch (exception) {
+                    console.log("Response", req.responseText)
+                    throw exception
+                }
+
                 if (objectArray.errors !== undefined)
                     console.log("Error fetching tweets: " + objectArray.errors[0].message)
                 else {
@@ -206,7 +212,8 @@ Pane {
                             model: simulationsView.listModel.length
 
                             Rectangle {
-                                property var modelData: simulationsView.listModel[index]
+                                property var exampleData: simulationsView.listModel[index]
+                                property bool downloaded: true
 
                                 width: 240
                                 height: column.height
@@ -231,10 +238,28 @@ Pane {
 
                                         height: width
                                         fillMode: Image.PreserveAspectCrop
-                                        source: modelData.image ? modelData.image.url : ""
+                                        source: exampleData.image ? exampleData.image.url : ""
                                         smooth: true
                                         antialiasing: true
                                         mipmap: true
+
+                                        Image {
+                                            anchors {
+                                                centerIn: parent
+                                            }
+                                            width: parent.width * 0.6
+                                            height: width
+
+                                            opacity: exampleMouseArea.containsMouse ? 1.0 : 0.0
+                                            source: downloaded ? "qrc:/images/ic_play_circle_outline_white_48dp.png" : "qrc:/images/ic_file_download_white_48dp.png"
+
+                                            Behavior on opacity {
+                                                NumberAnimation {
+                                                    duration: 240
+                                                    easing.type: Easing.InOutQuad
+                                                }
+                                            }
+                                        }
                                     }
 
                                     Item {
@@ -253,7 +278,7 @@ Pane {
                                         font.weight: Font.Bold
                                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                                        text: modelData.name
+                                        text: exampleData.name
                                     }
 
                                     Label {
@@ -264,28 +289,19 @@ Pane {
                                         }
                                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                                        text: modelData.description ? modelData.description : "No description"
+                                        text: exampleData.description ? exampleData.description : "No description"
                                     }
 
                                     Item {
                                         height: 16
                                         width: 1
                                     }
-
-                                    //                    Label {
-                                    //                        anchors {
-                                    //                            left: parent.left
-                                    //                            right: parent.right
-                                    //                        }
-                                    //                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                                    //                        text: "Tags: " + (modelData.tags ? JSON.stringify(modelData.tags) : "No tags")
-                                    //                    }
-
                                 }
 
                                 MouseArea {
+                                    id: exampleMouseArea
                                     anchors.fill: parent
+                                    hoverEnabled: true
                                     onClicked: {
                                         console.log("TODO: Download files")
                                     }
