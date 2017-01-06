@@ -53,11 +53,6 @@ AtomifySimulator::AtomifySimulator() :
 {
     m_states->setupStates(*this);
     m_parser.setSimulator(this);
-    QString initialScript("/Users/anderhaf/Desktop/old/lj.in");
-    QFileInfo info(initialScript);
-    if(info.exists()) {
-        m_scriptFilePath = initialScript;
-    }
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -245,7 +240,7 @@ void AtomifySimulator::setStates(States *states)
 
 void AtomifySimulator::setScriptFilePath(QString scriptFilePath)
 {
-    setWelcomeSimulationRunning(false);
+    if(!m_scriptFilePath.isEmpty()) setWelcomeSimulationRunning(false);
     scriptFilePath.replace("file://", "");
     if (m_scriptFilePath == scriptFilePath)
         return;
