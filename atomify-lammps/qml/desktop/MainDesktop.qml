@@ -588,11 +588,11 @@ Item {
             context: Qt.ApplicationShortcut
             onActivated: simulator.togglePaused()
         }
-        Shortcut {
-            sequence: "Tab"
-            context: Qt.ApplicationShortcut
-            onActivated: toggleFocusMode()
-        }
+//        Shortcut {
+//            sequence: "Tab"
+//            context: Qt.ApplicationShortcut
+//            onActivated: toggleFocusMode()
+//        }
         Shortcut {
             sequence: "Ctrl+I"
             context: Qt.ApplicationShortcut
