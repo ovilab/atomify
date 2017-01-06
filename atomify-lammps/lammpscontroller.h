@@ -24,7 +24,7 @@ class LAMMPSController
 {
 private:
     LAMMPS_NS::LAMMPS *m_lammps = nullptr;
-    unsigned long m_lastSynchronizationTimestep = 0;
+    long m_lastSynchronizationTimestep = 0;
     void changeWorkingDirectoryToScriptLocation();
     QElapsedTimer m_timer;
     unsigned long m_synchronizationCount = 0;

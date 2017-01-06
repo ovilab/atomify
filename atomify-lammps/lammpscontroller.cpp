@@ -125,7 +125,7 @@ void LAMMPSController::stop()
     didCancel = false;
     crashed = false;
     m_synchronizationCount = 0;
-    m_lastSynchronizationTimestep = 0;
+    m_lastSynchronizationTimestep = -1000;
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {

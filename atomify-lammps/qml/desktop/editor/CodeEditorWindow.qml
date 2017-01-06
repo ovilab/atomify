@@ -159,6 +159,7 @@ Item {
             }
 
             showDoYouWantToSave(currentEditor.fileName)
+            return
         } else {
             var indexOfCurrentTab = stackLayout.currentIndex
             var editor = currentEditor
@@ -181,6 +182,7 @@ Item {
         tabBar.currentIndex = indexOfCurrentTab
 
         updateOpenFiles()
+        visualizer.simulator.scriptFilePath = ""
     }
 
     function openTab(filename, errorLine) {

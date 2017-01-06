@@ -121,6 +121,7 @@ private:
     int m_perAtomIndex = 0;
     int m_numPerAtomValues = 0;
     int m_groupBit = 0;
+    bool validateStatus(Compute *compute, LAMMPS *lammps);
 protected:
     virtual void updateCommand() override;
     QList<QString> enabledCommands() override;

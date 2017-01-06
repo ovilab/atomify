@@ -74,16 +74,21 @@ void FixAtomify::update_compute(const char computeId[])
 void FixAtomify::update_computes()
 {
   for(int i=0; i<modify->ncompute; i++) {
-    ComputePEAtom *peAtom = dynamic_cast<ComputePEAtom *>(modify->compute[i]);
-    if(peAtom) { update_compute(peAtom->id); }
+    Compute *compute = modify->compute[i];
+    if(compute->peatomflag || compute->peflag || compute->pressatomflag || compute->pressflag) {
+      compute->addstep(update->ntimestep+1);
+      // update_compute(peAtom->id);
+    }
+    // ComputePEAtom *peAtom = dynamic_cast<ComputePEAtom *>(modify->compute[i]);
+    // if(peAtom) { update_compute(peAtom->id); }
 
-    ComputeStressAtom *stressAtom = dynamic_cast<ComputeStressAtom*>(modify->compute[i]);
-    if(stressAtom) { update_compute(stressAtom->id); }
+    // ComputeStressAtom *stressAtom = dynamic_cast<ComputeStressAtom*>(modify->compute[i]);
+    // if(stressAtom) { update_compute(stressAtom->id); }
 
   }
 
-  update_compute("thermo_press");
-  update_compute("thermo_pe");
+  // update_compute("thermo_press");
+  // update_compute("thermo_pe");
 }
 
 void FixAtomify::end_of_step()

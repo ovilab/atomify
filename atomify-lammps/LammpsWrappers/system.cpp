@@ -51,10 +51,10 @@ void System::computeCellMatrix(Domain *domain) {
 void System::updateTransformationMatrix(Domain *domain)
 {
     double *h = domain->h;
-    float transformationMatrixValues[] = {
-        h[0], h[5], h[4], 0,
-        0,    h[1], h[3], 0,
-        0,    0,    h[2], 0,
+    float transformationMatrixValues[] = { // Must cast for clang
+        float(h[0]), float(h[5]), float(h[4]), 0,
+        0,    float(h[1]), float(h[3]), 0,
+        0,    0,    float(h[2]), 0,
         0,    0,    0,    0
     };
 
@@ -128,8 +128,9 @@ void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
     if(m_currentTimestep % 10 == 0) {
         double value;
         lammps->output->thermo->evaluate_keyword("spcpu", &value);
+        if(value < 0) return;
         double oldValue = m_performance->timestepsPerSecond();
-        value = 0.9*oldValue + 0.1*value; // low pass filter
+        value = 0.6*oldValue + 0.4*value; // low pass filter
         performance()->setTimestepsPerSecond(value);
     }
 }
@@ -190,10 +191,11 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_volume = m_size[0]*m_size[1]*m_size[2];
     emit volumeChanged(m_volume);
 
-    lammps->output->thermo->compute(1);
     setDt(lammps->update->dt);
-    calculateTimestepsPerSeconds(lammps);
-    calculateCPURemain(lammps);
+
+//    lammps->output->thermo->compute(1);
+//    calculateTimestepsPerSeconds(lammps);
+//    calculateCPURemain(lammps);
 
     m_units->synchronize(lammps);
 }
