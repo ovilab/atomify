@@ -38,6 +38,8 @@ include(deployment.pri)
 include(../libs/SimVis/package_vendor.pri)
 include(../libs/QmlPreviewer/qmlpreviewer.pri)
 
+RESOURCES += examples/examples.qrc
+
 ios {
     QMAKE_INFO_PLIST = iOS.plist
 }

@@ -1,3 +1,6 @@
 [submodule "SimVis"]
 	path = SimVis
 	url = https://github.com/ComputationalPhysics/SimVis.git
+[submodule "atomify-lammps/examples"]
+	path = atomify-lammps/examples
+	url = git@github.com:ovilab/atomify-lammps-examples.git
