@@ -42,7 +42,7 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_atomStyleTypes.insert("potassium", new AtomStyle(2.75, "#8F40D4"));
     m_atomStyleTypes.insert("calcium", new AtomStyle(2.31, "#3DFF00"));
 
-    for(int i=0; i<50; i++) {
+    for(int i=0; i<200; i++) {
         m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
         m_atomStyles.push_back(m_atomStyleTypes["helium"]);
         m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
@@ -348,7 +348,7 @@ bool Atoms::generateBondDataFromBondList(AtomData &atomData, LAMMPSController *c
             float dy = fabs(position_i[1] - position_j[1]);
             float dz = fabs(position_i[2] - position_j[2]);
             double dr2 = dx*dx + dy*dy + dz*dz;
-            double dr2max = 25; // arbitrary units. TODO!
+            double dr2max = 40; // arbitrary units. TODO!
 
             if(dr2 > dr2max || dx > 0.5*controller->system->size().x() || dy > 0.5*controller->system->size().y() || dz > 0.5*controller->system->size().z() ) {
                 // Periodic image
@@ -482,7 +482,7 @@ void Atoms::reset()
     m_atomStyleTypes["potassium"]->radius = 2.75;       m_atomStyleTypes["potassium"]->color = QColor("#8F40D4");
     m_atomStyleTypes["calcium"]->radius = 2.31;         m_atomStyleTypes["calcium"]->color = QColor("#3DFF00");
 
-    for(int i=0; i<50; i++) {
+    for(int i=0; i<200; i++) {
         m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
         m_atomStyles.push_back(m_atomStyleTypes["helium"]);
         m_atomStyles.push_back(m_atomStyleTypes["lithium"]);
