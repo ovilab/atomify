@@ -268,6 +268,10 @@ bool LAMMPSController::run()
 
     if(finished || didCancel || crashed) return false;
 
+    if(!QFile(scriptFilePath).exists()) {
+        qWarning() << "LAMMPSController::run: Script does not exist:" << scriptFilePath;
+        return false;
+    }
     QByteArray ba = scriptFilePath.toUtf8();
     scriptFilePath = "";
 
