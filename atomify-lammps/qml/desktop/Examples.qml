@@ -9,7 +9,7 @@ Pane {
 
     signal simulationClicked(var fileName)
 
-    property string dataDir: StandardPaths.writableLocation(StandardPaths.AppDataLocation, ".")
+    property string dataDir: StandardPaths.writableLocation(StandardPaths.AppDataLocation, "")
     property string examplesDir: Qt.resolvedUrl(dataDir + "/examples")
 
     property var tagModel: []
