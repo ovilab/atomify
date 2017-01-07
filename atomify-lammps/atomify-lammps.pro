@@ -38,6 +38,9 @@ include(deployment.pri)
 include(../libs/SimVis/package_vendor.pri)
 include(../libs/QmlPreviewer/qmlpreviewer.pri)
 
+!exists(examples/examples.qrc) {
+    system(cd examples; python generateExamples.py)
+}
 RESOURCES += examples/examples.qrc
 
 ios {
