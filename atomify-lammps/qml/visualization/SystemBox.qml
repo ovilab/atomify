@@ -28,52 +28,6 @@ Entity {
         dummy
     ]
 
-    function getScale(direction) {
-        var dir = Qt.vector3d(0, 0, 0)
-        dir[direction] = 1
-        var added = Qt.vector3d(0.3, 0.3, 0.3)
-        added[direction] = 0
-        var result = sizePlus.times(dir).plus(added)
-        return result
-    }
-
-    function getTranslation(direction, index) {
-        var a = -0.5 + index % 2
-        var b = -0.5 + Math.floor(index / 2)
-        var indexVector
-        switch(direction) {
-        case "x":
-            indexVector = Qt.vector3d(0, a, b)
-            break
-        case "y":
-            indexVector = Qt.vector3d(b, 0, a)
-            break
-        case "z":
-            indexVector = Qt.vector3d(a, b, 0)
-            break
-        }
-        var scaled = sizePlus.times(indexVector)
-        return scaled
-    }
-
-    function getIndexVector(direction, index) {
-        var a = -0.5 + index % 2
-        var b = -0.5 + Math.floor(index / 2)
-        var indexVector
-        switch(direction) {
-        case "x":
-            indexVector = Qt.vector3d(0, a, b)
-            break
-        case "y":
-            indexVector = Qt.vector3d(b, 0, a)
-            break
-        case "z":
-            indexVector = Qt.vector3d(a, b, 0)
-            break
-        }
-        return indexVector
-    }
-
     CuboidMesh {id: mesh}
 
     ShaderBuilderMaterial {
