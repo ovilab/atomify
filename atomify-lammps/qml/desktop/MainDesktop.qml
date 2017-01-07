@@ -277,7 +277,7 @@ Item {
 
             Layout.fillHeight: true
             Layout.minimumWidth: 200
-            width: 400
+            width: 600
             simulator: root.simulator
             visualizer: root.visualizer
 
