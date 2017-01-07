@@ -86,6 +86,7 @@ QQC1.ApplicationWindow {
 
             QQC1.MenuItem {
                 text: "Cut"
+                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
                 shortcut: StandardKey.Cut
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.cut")
@@ -93,6 +94,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Copy"
+                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
                 shortcut: StandardKey.Copy
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.copy")
