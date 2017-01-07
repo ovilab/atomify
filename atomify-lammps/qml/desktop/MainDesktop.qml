@@ -18,7 +18,7 @@ import "RightBar"
 import "../plotting"
 import ".."
 
-Item {
+Rectangle {
     id: root
 
     property AtomifySimulator simulator: visualizer.simulator
@@ -32,6 +32,8 @@ Item {
     signal focusViewport()
     signal unfocusViewport()
     signal captureCursor()
+
+    color: Material.background
 
     Timer {
         id: startsimtimer
@@ -264,8 +266,8 @@ Item {
             left: modeMenuContainer.right
             right: parent.right
         }
-
         visible: root.viewMode === "edit" || root.viewMode === "view"
+        handleDelegate: Item { width: 4 }
 
         Settings {
             property alias editorWidth: editor.width
