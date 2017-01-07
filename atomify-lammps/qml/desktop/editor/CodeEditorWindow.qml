@@ -123,7 +123,7 @@ Item {
         var codeEditorComponent = Qt.createComponent("CodeEditor.qml")
         var newCodeEditor = codeEditorComponent.createObject(stackLayout);
         newCodeEditor.changedSinceLastSave = false
-        fileListView.currentIndex = fileListView.count - 1
+        stackLayout.currentIndex = fileListView.count - 1
         focusCurrentEditor()
 
         updateOpenFiles()
@@ -135,7 +135,14 @@ Item {
     }
 
     function closeTab() {
-        if(currentEditor === null) return;
+        if(currentEditor === null) {
+            // TODO this should never happen, if it does, we should rather set currentEditor in a more permanent way
+            console.log("Current editor is null, cannot close tab. Current index:",
+                        stackLayout.currentIndex,
+                        stackLayout.itemAt(stackLayout.currentIndex),
+                        currentEditor)
+            return;
+        }
 
         if(currentEditor.changedSinceLastSave) {
             // Ask user to save the file before we close the tab
@@ -163,8 +170,8 @@ Item {
             newTab()
         }
 
-        if(indexOfCurrentTab >= editorCount) {
-            indexOfCurrentTab -= 1
+        if(stackLayout.currentIndex >= editorCount) {
+            stackLayout.currentIndex -= 1
         }
 
         updateOpenFiles()
@@ -195,7 +202,7 @@ Item {
                 // TODO can we replace with Qt.resolvedUrl(filename)
                 if(editor.fileUrl == filename) { // == is correct because the string objects aren't identical, just equal strings
                     currentEditor.errorLine = errorLine
-                    fileListView.currentIndex = i
+                    stackLayout.currentIndex = i
                     return
                 }
             }
@@ -211,7 +218,7 @@ Item {
             var newCodeEditor = codeEditorComponent.createObject(stackLayout, {errorLine: errorLine });
             newCodeEditor.open(filename)
             newCodeEditor.changedSinceLastSave = false
-            fileListView.currentIndex = fileListView.count - 1
+            stackLayout.currentIndex = fileListView.count - 1
             updateOpenFiles()
         }
     }
@@ -241,28 +248,56 @@ Item {
             }
         }
 
-        ListView {
-            id: fileListView
-            Layout.fillHeight: true
+        Flickable {
             Layout.minimumWidth: 160
+            Layout.fillHeight: true
             ScrollBar.vertical: ScrollBar {}
             ScrollBar.horizontal: ScrollBar {}
-            model: stackLayout.count
-            width: 100
-
-            delegate: ItemDelegate {
-                property CodeEditor codeEditor: stackLayout.itemAt(index)
+            contentHeight: fileColumn.height
+            Column {
+                id: fileColumn
                 anchors {
-                    left: parent ? parent.left : undefined
-                    right: parent ? parent.right : undefined
-                    rightMargin: 8
+                    left: parent.left
+                    right: parent.right
                 }
 
-                highlighted: index === fileListView.currentIndex
-                height: 32
-                text: codeEditor.title
-                onClicked: {
-                    fileListView.currentIndex = index
+                Repeater {
+                    id: fileListView
+                    model: stackLayout.count
+
+                    ItemDelegate {
+                        property CodeEditor codeEditor: stackLayout.itemAt(index)
+                        anchors {
+                            left: parent ? parent.left : undefined
+                            right: parent ? parent.right : undefined
+                            rightMargin: 8
+                        }
+
+                        highlighted: index === stackLayout.currentIndex
+                        height: 32
+                        text: codeEditor.title
+                        onClicked: {
+                            stackLayout.currentIndex = index
+                        }
+                    }
+                }
+
+                ItemDelegate {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    height: 32
+
+                    Label {
+                        anchors.centerIn: parent
+                        text: "+"
+                    }
+
+                    onClicked: {
+                        newTab()
+                    }
                 }
             }
         }
@@ -271,7 +306,6 @@ Item {
             id: stackLayout
             Layout.fillWidth: true
             Layout.fillHeight: true
-            currentIndex: fileListView.currentIndex
             onCountChanged: {
                 updateOpenFiles()
             }
@@ -354,75 +388,75 @@ Item {
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+1"
             onActivated: {
-                if(editorCount >= 1) fileListView.currentIndex = 0
+                if(editorCount >= 1) stackLayout.currentIndex = 0
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+2"
             onActivated: {
-                if(editorCount >= 2) fileListView.currentIndex = 1
+                if(editorCount >= 2) stackLayout.currentIndex = 1
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+3"
             onActivated: {
-                if(editorCount >= 3) fileListView.currentIndex = 2
+                if(editorCount >= 3) stackLayout.currentIndex = 2
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+4"
             onActivated: {
-                if(editorCount >= 4) fileListView.currentIndex = 3
+                if(editorCount >= 4) stackLayout.currentIndex = 3
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+5"
             onActivated: {
-                if(editorCount >= 5) fileListView.currentIndex = 4
+                if(editorCount >= 5) stackLayout.currentIndex = 4
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+6"
             onActivated: {
-                if(editorCount >= 6) fileListView.currentIndex = 5
+                if(editorCount >= 6) stackLayout.currentIndex = 5
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+7"
             onActivated: {
-                if(editorCount >= 7) fileListView.currentIndex = 6
+                if(editorCount >= 7) stackLayout.currentIndex = 6
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+8"
             onActivated: {
-                if(editorCount >= 8) fileListView.currentIndex = 7
+                if(editorCount >= 8) stackLayout.currentIndex = 7
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+9"
             onActivated: {
-                if(editorCount >= 9) fileListView.currentIndex = 8
+                if(editorCount >= 9) stackLayout.currentIndex = 8
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+0"
             onActivated: {
-                if(editorCount >= 10) fileListView.currentIndex = 9
+                if(editorCount >= 10) stackLayout.currentIndex = 9
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+Left"
             onActivated: {
-                if(fileListView.currentIndex > 0) fileListView.currentIndex -= 1
-                else fileListView.currentIndex = editorCount-1
+                if(stackLayout.currentIndex > 0) stackLayout.currentIndex -= 1
+                else stackLayout.currentIndex = editorCount-1
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+Right"
             onActivated: {
-                if(fileListView.currentIndex < editorCount-1) fileListView.currentIndex += 1
-                else fileListView.currentIndex = 0
+                if(stackLayout.currentIndex < editorCount-1) stackLayout.currentIndex += 1
+                else stackLayout.currentIndex = 0
             }
         }
     }
