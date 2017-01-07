@@ -67,17 +67,6 @@ Item {
         didRun()
     }
 
-    Settings {
-        property alias lastOpenedFolder: root.lastOpenedFolder
-        property alias openFiles: root.openFiles
-    }
-
-    CodeEditor {
-        id: dummyEditor
-        visible: false
-
-    }
-
     Component.onCompleted: {
         if(openFiles==="") {
             // First time app opens, this is an empty string which doesn't parse as array
@@ -131,8 +120,10 @@ Item {
     }
 
     function newTab() {
-        var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { }", stackLayout);
-        var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
+        var codeEditorComponent = Qt.createComponent("CodeEditor.qml")
+        var newCodeEditor = codeEditorComponent.createObject(stackLayout);
+        var tabButtonComponent = Qt.createComponent("CodeEditorTabButton.qml")
+        var newTabButton = tabButtonComponent.createObject(tabBar);
         newTabButton.codeEditor = newCodeEditor
         newCodeEditor.changedSinceLastSave = false
         tabBar.setCurrentIndex(tabBar.count-1) // select it
@@ -224,14 +215,27 @@ Item {
             }
 
             // Nope. Not open, so open in a new tab instead
-            var newCodeEditor = Qt.createQmlObject("import QtQuick 2.7; CodeEditor { errorLine: "+errorLine+" }", stackLayout);
-            var newTabButton = Qt.createQmlObject("import QtQuick 2.7; import QtQuick.Controls 2.0; CodeEditorTabButton { }", tabBar);
+            var codeEditorComponent = Qt.createComponent("CodeEditor.qml")
+            var newCodeEditor = codeEditorComponent.createObject(stackLayout, {errorLine: errorLine });
+            var tabButtonComponent = Qt.createComponent("CodeEditorTabButton.qml")
+            var newTabButton = tabButtonComponent.createObject(tabBar);
             newTabButton.codeEditor = newCodeEditor
             newCodeEditor.open(filename)
             newCodeEditor.changedSinceLastSave = false
             tabBar.setCurrentIndex(tabBar.count-1)
             updateOpenFiles()
         }
+    }
+
+    Settings {
+        property alias lastOpenedFolder: root.lastOpenedFolder
+        property alias openFiles: root.openFiles
+    }
+
+    CodeEditor {
+        id: dummyEditor
+        visible: false
+
     }
 
     ColumnLayout {
@@ -245,7 +249,7 @@ Item {
             }
         }
 
-        SwipeView {
+        StackLayout  {
             id: stackLayout
             Layout.fillWidth: true
             Layout.fillHeight: true
