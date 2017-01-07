@@ -18,7 +18,7 @@ Entity {
     id: root
     property var layer
     property bool showSurfaces: true
-    property real outlineAlpha: 0.4
+    property real outlineAlpha: 0.6
     property real sideAlpha: 0.2
     property vector3d origin
     property vector3d size
@@ -87,22 +87,29 @@ Entity {
                     renderPasses: RenderPass {
                         id: builderRenderPass
                         shaderProgram: ShaderProgram {
+
                             vertexShaderCode: "
 #version 330
-in vec4 vertexPosition;
-in vec3 vertexNormal;
-uniform vec3 origin;
-uniform mat4 transformationMatrix;
-out vec3 normal;
-out vec3 position;
 uniform mat4 mvp;
 uniform mat4 modelMatrix;
 uniform mat4 modelView;
 uniform mat3 modelNormalMatrix;
 uniform mat3 modelViewNormal;
 uniform vec4 meshColor;
+uniform vec3 origin;
+uniform mat4 transformationMatrix;
+
+in vec4 vertexPosition;
+in vec3 vertexNormal;
+in vec2 vertexTexCoord;
+
+out vec3 normal;
+out vec3 position;
+out vec2 texCoord;
+
 void main()
 {
+    texCoord = vertexTexCoord;
     position = vertexPosition.xyz;
     position += vec3(0.5);
     mat3 m = mat3(transformationMatrix);
@@ -117,31 +124,27 @@ void main()
                             fragmentShaderCode: fragmentShaderBuilder.finalShader
                             FragmentShaderBuilder {
                                 id: fragmentShaderBuilder
+
+                                ShaderNode {
+                                    id: isOnEdge
+                                    type: "float"
+                                    result: "float(max(abs(texCoord.x - 0.5), abs(texCoord.y - 0.5)) > 0.49)"
+                                }
+
                                 fragmentColor: StandardMaterial {
-                                    color: Qt.rgba(1, 1, 1, sideAlpha)
+                                    color: Add {
+                                        value1: CombineRgbVectorAlpha {
+                                            vector: Qt.rgba(0.5, 0.6, 0.8)
+                                            alpha: Multiply {
+                                                value1: root.outlineAlpha
+                                                value2: isOnEdge
+                                            }
+                                        }
+                                        value2: Qt.rgba(1.0, 1.0, 1.0, root.sideAlpha)
+                                    }
+
                                     lights: root.lights
                                 }
-//                                fragmentColor: StandardMaterial {
-//                                    lights: root.lights
-//                                    color: Add {
-//                                        value1: Qt.rgba(1, 1, 1, sideAlpha)
-//                                        value2: fragmentShaderBuilder.textureCoordinate
-//                                    }
-//                                }
-
-//                                fragmentColor: StandardMaterial {
-//                                    color: Add {
-////                                        value1: Qt.rgba(1, 1, 1, sideAlpha)
-//                                        value1: 0.0
-//                                        value2: Multiply {
-//                                            value1: CombineRgbVectorAlpha {
-//                                                vector: fragmentShaderBuilder.position
-//                                                alpha: 1.0
-//                                            }
-//                                        }
-//                                    }
-//                                    lights: root.lights
-//                                }
                             }
                         }
                         renderStates: [
