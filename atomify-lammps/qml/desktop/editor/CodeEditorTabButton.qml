@@ -16,7 +16,6 @@ TabButton {
             text = codeEditor.title
         })
     }
-
+    width: parent ? Math.min(140, parent.width / 4) : 140
     implicitWidth: width
-    width: parent ? parent.width / parent.count : 0
 }
