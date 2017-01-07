@@ -68,7 +68,7 @@ QQC1.ApplicationWindow {
             title: "Edit"
             QQC1.MenuItem {
                 text: "Undo"
-                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.canUndo
+                enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.canUndo
                 shortcut: StandardKey.Undo
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.undo")
@@ -76,7 +76,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Redo"
-                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.canRedo
+                enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.canRedo
                 shortcut: StandardKey.Redo
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.redo")
@@ -86,7 +86,7 @@ QQC1.ApplicationWindow {
 
             QQC1.MenuItem {
                 text: "Cut"
-                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
+                enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
                 shortcut: StandardKey.Cut
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.cut")
@@ -94,7 +94,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Copy"
-                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
+                enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
                 shortcut: StandardKey.Copy
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.copy")
@@ -102,7 +102,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Paste"
-                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.canPaste
+                enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.canPaste
                 shortcut: StandardKey.Paste
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.paste")
