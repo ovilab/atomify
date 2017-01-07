@@ -25,6 +25,7 @@ Rectangle {
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
     property alias mouseMover: visualizer.mouseMover
+    property alias editor: editor
     property string viewMode: "view"
 
     signal releaseCursor()

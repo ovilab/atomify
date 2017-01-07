@@ -68,6 +68,7 @@ QQC1.ApplicationWindow {
             title: "Edit"
             QQC1.MenuItem {
                 text: "Undo"
+                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.canUndo
                 shortcut: StandardKey.Undo
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.undo")
@@ -75,6 +76,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Redo"
+                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.canRedo
                 shortcut: StandardKey.Redo
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.redo")
@@ -98,6 +100,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Paste"
+                enabled: mainDesktop.editor.editorWindow.currentEditor.textArea.canPaste
                 shortcut: StandardKey.Paste
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.paste")
@@ -131,7 +134,8 @@ QQC1.ApplicationWindow {
                 }
             }
             QQC1.MenuItem {
-                text: "Toggle pause"
+                text: mainDesktop.simulator.states.paused.active ? "Unpause" : "Pause"
+                enabled: mainDesktop.simulator.states.parsing.active || mainDesktop.simulator.states.continued.active || mainDesktop.simulator.states.paused.active
                 shortcut: StandardKey.Print
                 onTriggered: {
                     mainDesktop.simulator.togglePaused()
@@ -139,6 +143,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Increase simulation speed"
+                enabled: mainDesktop.simulator.simulationSpeed < 100
                 shortcut: "+"
                 onTriggered: {
                     EventCenter.postEvent("simulator.increaseSimulationSpeed")
@@ -146,6 +151,7 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuItem {
                 text: "Decrease simulation speed"
+                enabled: mainDesktop.simulator.simulationSpeed > 1
                 shortcut: "-"
                 onTriggered: {
                     EventCenter.postEvent("simulator.decreaseSimulationSpeed")
