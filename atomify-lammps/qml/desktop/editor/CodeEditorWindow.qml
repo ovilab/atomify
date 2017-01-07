@@ -13,7 +13,8 @@ Item {
     id: root
     property alias dummyEditor: dummyEditor
     property AtomifySimulator simulator
-    property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
+    property CodeEditor currentEditor: (editorCount===0) ? null : stackLayout.itemAt(stackLayout.currentIndex)
+
     property CodeEditor activeEditor
     property alias editorCount: stackLayout.count
     property int currentLine: -1
@@ -375,7 +376,7 @@ Item {
     EventMapper {
         mapping: {
              "editor.textArea": currentEditor ? currentEditor.textArea : null,
-             "editor": currentEditor,
+             "editor": currentEditor ? currentEditor : null,
              "editorWindow": root
         }
     }
