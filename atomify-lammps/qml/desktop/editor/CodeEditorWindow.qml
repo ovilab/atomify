@@ -1,7 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Qt.labs.settings 1.0
-//import QtQuick.Controls 1.5
+import QtQuick.Controls 1.5 as QQC1
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 import Atomify 1.0
@@ -14,7 +15,6 @@ Item {
     property AtomifySimulator simulator
     property CodeEditor currentEditor: (stackLayout.currentIndex==-1) ? null : stackLayout.itemAt(stackLayout.currentIndex)
     property CodeEditor activeEditor
-    property CodeEditorTabButton currentTabButton: (tabBar.currentIndex==-1) ? null : tabBar.itemAt(tabBar.currentIndex)
     property alias editorCount: stackLayout.count
     property int currentLine: -1
     property int errorLine: -1
@@ -122,11 +122,8 @@ Item {
     function newTab() {
         var codeEditorComponent = Qt.createComponent("CodeEditor.qml")
         var newCodeEditor = codeEditorComponent.createObject(stackLayout);
-        var tabButtonComponent = Qt.createComponent("CodeEditorTabButton.qml")
-        var newTabButton = tabButtonComponent.createObject(tabBar);
-        newTabButton.codeEditor = newCodeEditor
         newCodeEditor.changedSinceLastSave = false
-        tabBar.setCurrentIndex(tabBar.count-1) // select it
+        stackLayout.currentIndex = fileListView.count - 1
         focusCurrentEditor()
 
         updateOpenFiles()
@@ -138,7 +135,14 @@ Item {
     }
 
     function closeTab() {
-        if(currentEditor === null) return;
+        if(currentEditor === null) {
+            // TODO this should never happen, if it does, we should rather set currentEditor in a more permanent way
+            console.log("Current editor is null, cannot close tab. Current index:",
+                        stackLayout.currentIndex,
+                        stackLayout.itemAt(stackLayout.currentIndex),
+                        currentEditor)
+            return;
+        }
 
         if(currentEditor.changedSinceLastSave) {
             // Ask user to save the file before we close the tab
@@ -146,10 +150,8 @@ Item {
                 // Callback is to close the tab
                 var indexOfCurrentTab = stackLayout.currentIndex
                 var editor = currentEditor
-                currentTabButton.codeEditor = null
                 currentEditor.parent = null
                 editor.destroy()
-                tabBar.removeItem(indexOfCurrentTab)
                 messageDialog.cb = null
             }
 
@@ -159,10 +161,8 @@ Item {
             var indexOfCurrentTab = stackLayout.currentIndex
             var editor = currentEditor
 
-            currentTabButton.codeEditor = null
             currentEditor.parent = null
             editor.destroy()
-            tabBar.removeItem(indexOfCurrentTab)
             messageDialog.cb = null
         }
 
@@ -170,11 +170,9 @@ Item {
             newTab()
         }
 
-        if(indexOfCurrentTab >= editorCount) {
-            indexOfCurrentTab -= 1
+        if(stackLayout.currentIndex >= editorCount) {
+            stackLayout.currentIndex -= 1
         }
-
-        tabBar.currentIndex = indexOfCurrentTab
 
         updateOpenFiles()
         visualizer.simulator.scriptFilePath = ""
@@ -201,9 +199,10 @@ Item {
             for(var i=0; i<stackLayout.count; i++) {
                 var editor = stackLayout.itemAt(i)
 
-                if(editor.fileUrl==filename) { // == is correct because the string objects aren't identical, just equal strings
-                    tabBar.currentIndex = i
+                // TODO can we replace with Qt.resolvedUrl(filename)
+                if(editor.fileUrl == filename) { // == is correct because the string objects aren't identical, just equal strings
                     currentEditor.errorLine = errorLine
+                    stackLayout.currentIndex = i
                     return
                 }
             }
@@ -217,12 +216,9 @@ Item {
             // Nope. Not open, so open in a new tab instead
             var codeEditorComponent = Qt.createComponent("CodeEditor.qml")
             var newCodeEditor = codeEditorComponent.createObject(stackLayout, {errorLine: errorLine });
-            var tabButtonComponent = Qt.createComponent("CodeEditorTabButton.qml")
-            var newTabButton = tabButtonComponent.createObject(tabBar);
-            newTabButton.codeEditor = newCodeEditor
             newCodeEditor.open(filename)
             newCodeEditor.changedSinceLastSave = false
-            tabBar.setCurrentIndex(tabBar.count-1)
+            stackLayout.currentIndex = fileListView.count - 1
             updateOpenFiles()
         }
     }
@@ -230,22 +226,79 @@ Item {
     Settings {
         property alias lastOpenedFolder: root.lastOpenedFolder
         property alias openFiles: root.openFiles
+        property alias fileListViewWidth: fileListView.width
+        property alias stackLayoutWidth: stackLayout.width
     }
 
     CodeEditor {
         id: dummyEditor
         visible: false
-
     }
 
-    ColumnLayout {
+    QQC1.SplitView {
         anchors.fill: parent
-        spacing: 0
-        TabBar {
-            id: tabBar
-            anchors {
-                left: parent.left
-                right: parent.right
+        handleDelegate: Item {
+            width: 4
+            Rectangle {
+                anchors {
+                    fill: parent
+                    margins: 1
+                }
+                color: Material.color(Material.Grey, Material.Shade900)
+            }
+        }
+
+        Flickable {
+            Layout.minimumWidth: 160
+            Layout.fillHeight: true
+            ScrollBar.vertical: ScrollBar {}
+            ScrollBar.horizontal: ScrollBar {}
+            contentHeight: fileColumn.height
+            Column {
+                id: fileColumn
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+
+                Repeater {
+                    id: fileListView
+                    model: stackLayout.count
+
+                    ItemDelegate {
+                        property CodeEditor codeEditor: stackLayout.itemAt(index)
+                        anchors {
+                            left: parent ? parent.left : undefined
+                            right: parent ? parent.right : undefined
+                            rightMargin: 8
+                        }
+
+                        highlighted: index === stackLayout.currentIndex
+                        height: 32
+                        text: codeEditor.title
+                        onClicked: {
+                            stackLayout.currentIndex = index
+                        }
+                    }
+                }
+
+                ItemDelegate {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    height: 32
+
+                    Label {
+                        anchors.centerIn: parent
+                        text: "+"
+                    }
+
+                    onClicked: {
+                        newTab()
+                    }
+                }
             }
         }
 
@@ -253,7 +306,6 @@ Item {
             id: stackLayout
             Layout.fillWidth: true
             Layout.fillHeight: true
-            currentIndex: tabBar.currentIndex
             onCountChanged: {
                 updateOpenFiles()
             }
@@ -336,75 +388,75 @@ Item {
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+1"
             onActivated: {
-                if(editorCount >= 1) tabBar.setCurrentIndex(0)
+                if(editorCount >= 1) stackLayout.currentIndex = 0
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+2"
             onActivated: {
-                if(editorCount >= 2) tabBar.setCurrentIndex(1)
+                if(editorCount >= 2) stackLayout.currentIndex = 1
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+3"
             onActivated: {
-                if(editorCount >= 3) tabBar.setCurrentIndex(2)
+                if(editorCount >= 3) stackLayout.currentIndex = 2
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+4"
             onActivated: {
-                if(editorCount >= 4) tabBar.setCurrentIndex(3)
+                if(editorCount >= 4) stackLayout.currentIndex = 3
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+5"
             onActivated: {
-                if(editorCount >= 5) tabBar.setCurrentIndex(4)
+                if(editorCount >= 5) stackLayout.currentIndex = 4
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+6"
             onActivated: {
-                if(editorCount >= 6) tabBar.setCurrentIndex(5)
+                if(editorCount >= 6) stackLayout.currentIndex = 5
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+7"
             onActivated: {
-                if(editorCount >= 7) tabBar.setCurrentIndex(6)
+                if(editorCount >= 7) stackLayout.currentIndex = 6
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+8"
             onActivated: {
-                if(editorCount >= 8) tabBar.setCurrentIndex(7)
+                if(editorCount >= 8) stackLayout.currentIndex = 7
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+9"
             onActivated: {
-                if(editorCount >= 9) tabBar.setCurrentIndex(8)
+                if(editorCount >= 9) stackLayout.currentIndex = 8
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+0"
             onActivated: {
-                if(editorCount >= 10) tabBar.setCurrentIndex(9)
+                if(editorCount >= 10) stackLayout.currentIndex = 9
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+Left"
             onActivated: {
-                if(tabBar.currentIndex > 0) tabBar.currentIndex -= 1
-                else tabBar.currentIndex = editorCount-1
+                if(stackLayout.currentIndex > 0) stackLayout.currentIndex -= 1
+                else stackLayout.currentIndex = editorCount-1
             }
         }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+Right"
             onActivated: {
-                if(tabBar.currentIndex < editorCount-1) tabBar.currentIndex += 1
-                else tabBar.currentIndex = 0
+                if(stackLayout.currentIndex < editorCount-1) stackLayout.currentIndex += 1
+                else stackLayout.currentIndex = 0
             }
         }
     }
