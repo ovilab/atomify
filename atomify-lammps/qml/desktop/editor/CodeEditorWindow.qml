@@ -195,6 +195,7 @@ Item {
                 // TODO can we replace with Qt.resolvedUrl(filename)
                 if(editor.fileUrl == filename) { // == is correct because the string objects aren't identical, just equal strings
                     currentEditor.errorLine = errorLine
+                    fileListView.currentIndex = i
                     return
                 }
             }
@@ -252,13 +253,13 @@ Item {
             delegate: ItemDelegate {
                 property CodeEditor codeEditor: stackLayout.itemAt(index)
                 anchors {
-                    left: parent.left
-                    right: parent.right
+                    left: parent ? parent.left : undefined
+                    right: parent ? parent.right : undefined
                     rightMargin: 8
                 }
 
                 highlighted: index === fileListView.currentIndex
-                height: font.pixelSize * 2.2
+                height: 32
                 text: codeEditor.title
                 onClicked: {
                     fileListView.currentIndex = index
