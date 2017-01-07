@@ -268,20 +268,19 @@ bool LAMMPSController::run()
 
     if(finished || didCancel || crashed) return false;
 
-    if(!QFile(scriptFilePath).exists()) {
-        qWarning() << "LAMMPSController::run: Script does not exist:" << scriptFilePath;
-        return false;
-    }
-    QByteArray ba = scriptFilePath.toUtf8();
-    scriptFilePath = "";
-
     try {
         if(doContinue) {
             QString command = "run 1000000000";
 
             qDebug() << "Will do continue in LAMMPS";
             lammps_command(m_lammps, command.toUtf8().data());
-        } else {
+        } else {            
+            QByteArray ba = scriptFilePath.toUtf8();
+            if(!QFile(scriptFilePath).exists()) {
+                qWarning() << "LAMMPSController::run: Script does not exist:" << scriptFilePath;
+                return false;
+            }
+            scriptFilePath = "";
             lammps_file(m_lammps, ba.data());
         }
 
