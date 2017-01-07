@@ -77,6 +77,8 @@ void copyExamplesToLocalFolder()
             qWarning() << "Could not copy" << qrcFileName << "to" << targetPath;
             continue;
         }
+        QFile targetFile(targetPath);
+        targetFile.setPermissions(targetFile.permissions() | QFile::WriteOwner | QFile::WriteUser);
     }
 }
 
