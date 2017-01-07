@@ -54,13 +54,17 @@ void CodeEditorBackend::setFileUrl(QUrl fileUrl)
 
 bool CodeEditorBackend::save()
 {
-    QFile file(m_fileUrl.toLocalFile());
+    QString filePath = m_fileUrl.toLocalFile();
+    QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Could not open file for saving" << filePath;
+        qDebug() << "ERROR:" << file.errorString();
         return false;
     }
 
     file.write(m_text.toUtf8());
     file.close();
+    qDebug() << "Saved to file" << filePath;
     return true;
 }
 
@@ -96,14 +100,16 @@ QVariantMap CodeEditorBackend::getParameters(QUrl path)
 
 bool CodeEditorBackend::load()
 {
-    QFile file(m_fileUrl.toLocalFile());
+    QString filePath = m_fileUrl.toLocalFile();
+    QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Could not open file " << m_fileUrl;
+        qDebug() << "Could not open file " << filePath;
         return false;
     }
     QByteArray content = file.readAll();
     setText(QString::fromUtf8(content.constData(), content.length()));
 
     file.close();
+    qDebug() << "Read contents of" << filePath;
     return true;
 }
