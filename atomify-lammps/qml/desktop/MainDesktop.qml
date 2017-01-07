@@ -41,8 +41,11 @@ Rectangle {
         property string examplesDir: Qt.resolvedUrl(dataDir + "/examples")
         interval: 250
         onTriggered: {
-            visualizer.simulator.scriptFilePath = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
-            visualizer.simulator.started()
+            var initialExampleUrl = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
+//            visualizer.simulator.scriptFilePath = initialExampleUrl
+//            visualizer.simulator.started()
+            editor.editorWindow.openTab(initialExampleUrl)
+            editor.editorWindow.runScript()
         }
     }
 
