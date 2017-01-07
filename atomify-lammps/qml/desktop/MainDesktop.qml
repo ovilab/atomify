@@ -554,7 +554,8 @@ Rectangle {
     EventMapper {
         mapping: {
             "desktop": root,
-            "visualizer": visualizer
+            "visualizer": visualizer,
+            "simulator": visualizer.simulator
         }
     }
 
@@ -579,24 +580,6 @@ Rectangle {
             sequence: "Ctrl+I"
             context: Qt.ApplicationShortcut
             onActivated: editor.editorWindow.currentEditor.textArea.forceActiveFocus()
-        }
-        Shortcut {
-            sequence: "+"
-            context: Qt.ApplicationShortcut
-            onActivated: {
-                if(simulator.simulationSpeed < 100) {
-                    simulator.setSimulationSpeed(simulator.simulationSpeed+1)
-                }
-            }
-        }
-        Shortcut {
-            sequence: "-"
-            context: Qt.ApplicationShortcut
-            onActivated: {
-                if(simulator.simulationSpeed > 1) {
-                    simulator.setSimulationSpeed(simulator.simulationSpeed-1)
-                }
-            }
         }
 
         Shortcut {

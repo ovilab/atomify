@@ -137,6 +137,20 @@ QQC1.ApplicationWindow {
                     mainDesktop.simulator.togglePaused()
                 }
             }
+            QQC1.MenuItem {
+                text: "Increase simulation speed"
+                shortcut: "+"
+                onTriggered: {
+                    EventCenter.postEvent("simulator.increaseSimulationSpeed")
+                }
+            }
+            QQC1.MenuItem {
+                text: "Decrease simulation speed"
+                shortcut: "-"
+                onTriggered: {
+                    EventCenter.postEvent("simulator.decreaseSimulationSpeed")
+                }
+            }
         }
     }
 

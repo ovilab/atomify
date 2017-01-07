@@ -68,6 +68,20 @@ void AtomifySimulator::togglePaused()
     }
 }
 
+void AtomifySimulator::increaseSimulationSpeed()
+{
+    if(m_simulationSpeed < 100) {
+        setSimulationSpeed(m_simulationSpeed + 1);
+    }
+}
+
+void AtomifySimulator::decreaseSimulationSpeed()
+{
+    if(m_simulationSpeed > 1) {
+        setSimulationSpeed(m_simulationSpeed - 1);
+    }
+}
+
 System *AtomifySimulator::system() const
 {
     return m_system;

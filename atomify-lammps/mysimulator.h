@@ -49,6 +49,8 @@ public:
 
     int simulationSpeed() const;
     Q_INVOKABLE void togglePaused();
+    Q_INVOKABLE void increaseSimulationSpeed();
+    Q_INVOKABLE void decreaseSimulationSpeed();
     class System* system() const;
     class States* states() const;
     QString scriptFilePath() const;
