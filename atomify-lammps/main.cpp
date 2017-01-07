@@ -67,8 +67,7 @@ void copyExamplesToLocalFolder()
         QString targetPath = dataDir.absoluteFilePath(relativeFilePath);
 
         if(QFile(targetPath).exists()) {
-            QFile(targetPath).remove();
-//            continue;
+            continue;
         }
 
         QFile file(qrcFileName);
