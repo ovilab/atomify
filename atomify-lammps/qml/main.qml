@@ -80,6 +80,8 @@ QQC1.ApplicationWindow {
                     EventCenter.postEvent("editor.textArea.redo")
                 }
             }
+            QQC1.MenuSeparator { }
+
             QQC1.MenuItem {
                 text: "Cut"
                 shortcut: StandardKey.Cut
