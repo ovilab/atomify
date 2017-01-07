@@ -598,19 +598,6 @@ Rectangle {
                 }
             }
         }
-        Shortcut {
-            sequence: "C"
-            onActivated: {
-                changeMode()
-            }
-        }
-
-        Shortcut {
-            sequence: "O"
-            onActivated: {
-                visualizer.resetToSystemCenter()
-            }
-        }
 
         Shortcut {
             sequence: "Escape"
