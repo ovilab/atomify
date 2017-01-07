@@ -570,7 +570,7 @@ Item {
             context: Qt.ApplicationShortcut
             onActivated: simulator.togglePaused()
         }
-//        Shortcut {
+        Shortcut {
             sequence: "Ctrl+I"
             context: Qt.ApplicationShortcut
             onActivated: editor.editorWindow.currentEditor.textArea.forceActiveFocus()
