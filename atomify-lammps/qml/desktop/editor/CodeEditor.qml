@@ -118,6 +118,8 @@ Item {
             bottom: parent.bottom
         }
         clip: true
+        ScrollBar.vertical: ScrollBar {}
+        ScrollBar.horizontal: ScrollBar {}
 
         TextArea.flickable: TextArea {
             id: textArea
@@ -194,7 +196,6 @@ Item {
                 lineNumbers.update()
             }
         }
-        ScrollBar.vertical: ScrollBar {}
 
     }
 
