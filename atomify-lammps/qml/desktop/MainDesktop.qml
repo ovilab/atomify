@@ -6,6 +6,7 @@ import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
+import StandardPaths 1.0
 import QtQml.StateMachine 1.0 as DSM
 import Atomify 1.0
 import SimVis 1.0
@@ -34,11 +35,12 @@ Item {
 
     Timer {
         id: startsimtimer
+        property string dataDir: StandardPaths.writableLocation(StandardPaths.AppDataLocation, ".")
+        property string examplesDir: Qt.resolvedUrl(dataDir + "/examples")
         interval: 250
         onTriggered: {
-            if(visualizer.simulator.scriptFilePath !== "") {
-                visualizer.simulator.started()
-            }
+            visualizer.simulator.scriptFilePath = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
+            visualizer.simulator.started()
         }
     }
 
@@ -568,7 +570,7 @@ Item {
             context: Qt.ApplicationShortcut
             onActivated: simulator.togglePaused()
         }
-        Shortcut {
+//        Shortcut {
             sequence: "Ctrl+I"
             context: Qt.ApplicationShortcut
             onActivated: editor.editorWindow.currentEditor.textArea.forceActiveFocus()

@@ -21,6 +21,8 @@ Item {
     property string openFiles: ""
     property real lastRunScript: 0
     property string lastOpenedFolder
+    onCurrentEditorChanged: focusCurrentEditor()
+
     onVisibleChanged: {
         if(visible) {
             if(visualizer.simulator.scriptFilePath!=="") {
@@ -123,7 +125,9 @@ Item {
     }
 
     function focusCurrentEditor() {
-        if(currentEditor) currentEditor.textArea.focus = true
+        if(currentEditor) {
+            currentEditor.textArea.forceActiveFocus()
+        }
     }
 
     function newTab() {
@@ -183,6 +187,7 @@ Item {
 
         updateOpenFiles()
         visualizer.simulator.scriptFilePath = ""
+        focusCurrentEditor()
     }
 
     function openTab(filename, errorLine) {

@@ -48,6 +48,17 @@ void System::computeCellMatrix(Domain *domain) {
     setCellMatrix(QMatrix3x3(values));
 }
 
+void System::updateCenter(Domain *domain)
+{
+    QVector3D origo(domain->corners[0][0], domain->corners[0][1], domain->corners[0][2]);
+    QVector3D end(domain->corners[7][0], domain->corners[7][1], domain->corners[7][2]);
+    QVector3D newCenter = origo + 0.5*(end-origo);
+    if( !(newCenter - m_center).isNull()) {
+        m_center = newCenter;
+        emit centerChanged(m_center);
+    }
+}
+
 void System::updateTransformationMatrix(Domain *domain)
 {
     double *h = domain->h;
@@ -162,6 +173,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     computeCellMatrix(domain);
     updateBoundaryStyle(domain);
     setTriclinic(domain->triclinic);
+    updateCenter(domain);
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
@@ -265,10 +277,12 @@ void System::reset()
     m_origin = QVector3D();
     m_numberOfAtoms = 0;
     m_numberOfAtomTypes = 0;
+    m_center = QVector3D();
     setBoundaryStyle("None");
     emit currentTimestepChanged(m_currentTimestep);
     emit simulationTimeChanged(m_simulationTime);
     emit sizeChanged(m_size);
+    emit centerChanged(m_center);
     emit originChanged(m_origin);
     emit numberOfAtomsChanged(m_numberOfAtoms);
     emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
@@ -340,7 +354,7 @@ QVector3D System::cameraPosition() const
 
 QVector3D System::center() const
 {
-    return m_origin+0.5*m_size;
+    return m_center;
 }
 
 Variables *System::variables() const
