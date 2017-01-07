@@ -82,17 +82,15 @@ Pane {
 //        req.setRequestHeader("X-Parse-Application-Id", "atomify");
 
         var localPath = Qt.resolvedUrl(examplesDir + "/examples.json")
-        console.log("Getting", localPath)
         req.open("GET", localPath)
 
         req.onreadystatechange = function() {
             status = req.readyState;
-            console.log("Response 1:", req.responseText)
             if (status === XMLHttpRequest.DONE) {
                 try {
                     var objectArray = JSON.parse(req.responseText);
                 } catch (exception) {
-                    console.log("Response", req.responseText)
+                    console.log("Error! Response", req.responseText)
                     throw exception
                 }
 
@@ -252,12 +250,6 @@ Pane {
 
                                         height: width
                                         fillMode: Image.PreserveAspectCrop
-//                                        source: exampleData.image ? exampleData.image.url : ""
-
-                                        Component.onCompleted: {
-                                            console.log("Folder", exampleData.folder)
-                                            console.log("Thumb", exampleData.thumbnails[0])
-                                        }
 
                                         source: Qt.resolvedUrl(root.dataDir + "/" + exampleData.folder + "/" + exampleData.thumbnails[0])
                                         smooth: true
