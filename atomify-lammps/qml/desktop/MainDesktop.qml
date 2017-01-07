@@ -24,7 +24,6 @@ Item {
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
     property alias mouseMover: visualizer.mouseMover
-    property bool focusMode: false
     property string viewMode: "view"
 
     signal releaseCursor()
@@ -32,22 +31,6 @@ Item {
     signal focusViewport()
     signal unfocusViewport()
     signal captureCursor()
-
-    function toggleFocusMode() {
-        if(focusMode) {
-            rightbar.width = 300
-            rightbar.visible = true
-            editor.visible = true
-            focusMode = false
-            tabDisable.hideTabDisable.start()
-        } else {
-            rightbar.width = 0
-            editor.visible = false
-            rightbar.visible = false
-            focusMode = true
-            tabDisable.showTabDisable.start()
-        }
-    }
 
     Timer {
         id: startsimtimer
@@ -316,7 +299,6 @@ Item {
                         unfocusViewport()
                     }
                 }
-                focusMode: root.focusMode
                 mode: flymodeState.active ? "flymode" : "trackball"
                 captureCursor: capturedState.active
             }
@@ -587,14 +569,8 @@ Item {
             onActivated: simulator.togglePaused()
         }
         Shortcut {
-            sequence: "Tab"
-            context: Qt.ApplicationShortcut
-            onActivated: toggleFocusMode()
-        }
-        Shortcut {
             sequence: "Ctrl+I"
             context: Qt.ApplicationShortcut
-            enabled: !visualizer.focusMode
             onActivated: editor.editorWindow.currentEditor.textArea.forceActiveFocus()
         }
         Shortcut {
