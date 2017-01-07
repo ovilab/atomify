@@ -3,13 +3,6 @@ compiler:
 - gcc
 sudo: required
 services: docker
-notifications:
-  slack:
-    on_success: change
-    on_failure: always
-    rooms:
-      secure: XWZ6IEeCqMrnEqf1jqgS6j2XFC0qsIDsNmI+aJfIBhLcG+Zo7pbEdownrnSLa4P2UxgBWN1YepQbAegOZavleF7/+eBKBAuxKx3tTyCtsaAWsvPHhuxryg8VNnRNzHzQVTqDzJfekTw/9yNDGYPtzxtD0e+8jwAHqLdFdtEFHRc=
-
 before_install:
 - docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
 script:
