@@ -612,6 +612,21 @@ Rectangle {
             sequence: "Ctrl+4"
             onActivated: modeMenu.currentIndex = 3
         }
+
+        Shortcut {
+            sequence: "1"
+            onActivated: simulator.simulationSpeed = 1
+        }
+
+        Shortcut {
+            sequence: "2"
+            onActivated: simulator.simulationSpeed = 5
+        }
+
+        Shortcut {
+            sequence: "3"
+            onActivated: simulator.simulationSpeed = 30
+        }
     }
 
     DisableMessage {
