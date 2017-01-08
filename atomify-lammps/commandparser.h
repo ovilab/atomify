@@ -8,7 +8,7 @@ class CommandParser
 {
 public:
     CommandParser();
-    void parseFile(QString fileName);
+    void parseFile(QString fileName, bool moveCamera);
     class AtomifySimulator *simulator() const;
     void setSimulator(class AtomifySimulator *simulator);
 

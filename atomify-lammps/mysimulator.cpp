@@ -179,7 +179,11 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
         m_lammpsController.scriptFilePath = atomifySimulator->scriptFilePath();
-        atomifySimulator->parser().parseFile(atomifySimulator->scriptFilePath());
+
+        // Don't move camera if we rerun a simulation
+        bool moveCamera = atomifySimulator->scriptFilePath() != atomifySimulator->lastScript();
+        atomifySimulator->parser().parseFile(atomifySimulator->scriptFilePath(), moveCamera);
+        atomifySimulator->setLastScript(atomifySimulator->scriptFilePath());
         m_lammpsController.start();
         return;
     }
@@ -198,6 +202,16 @@ void MyWorker::work()
 MyWorker *AtomifySimulator::createWorker()
 {
     return new MyWorker();
+}
+
+QString AtomifySimulator::lastScript() const
+{
+    return m_lastScript;
+}
+
+void AtomifySimulator::setLastScript(const QString &lastScript)
+{
+    m_lastScript = lastScript;
 }
 
 CommandParser &AtomifySimulator::parser()
