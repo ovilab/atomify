@@ -295,14 +295,16 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
         for (int jj = 0; jj < jnum; jj++) {
             int j = jlist[jj];
             j &= NEIGHMASK;
-            if(fullNeighborList && j>i) continue;
+            if(fullNeighborList && j<i) continue; // Newton's third law applies on full lists. We don't draw 2 bonds per pair.
             if(j >= atomData.size()) continue; // Probably a ghost atom from LAMMPS
-            if(!atomData.visible[j]) continue;
+            if(!atomData.visible[j]) continue; // Don't show bond if not both atoms are visible.
+
+            const int &atomType_j = atomData.types[j];
+            if(bondLengths.size()<=atomTypeJ) continue; //
 
             QVector3D position_j = atomData.positions[j];
             position_j += deltaPosition_i;
 
-            const int &atomType_j = atomData.types[j];
 
             float dx = position_i[0] - position_j[0];
             float dy = position_i[1] - position_j[1];
@@ -316,7 +318,7 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
                 bond.vertex2[0] = position_j[0];
                 bond.vertex2[1] = position_j[1];
                 bond.vertex2[2] = position_j[2];
-                float bondRadius = 0.1*m_bondScale;
+                float bondRadius = 0.1*m_bondScale; // TODO: move this magic number to a variable
                 bond.radius1 = bondRadius;
                 bond.radius2 = bondRadius;
                 bond.sphereRadius1 = sphereRadius_i*m_sphereScale;
