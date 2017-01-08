@@ -164,9 +164,6 @@ Flickable {
                     property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
                     toolTipText: explainationP+explainationF+explainationS+explainationM
                     text: "Boundary: "+system.boundaryStyle
-                    onTextChanged: {
-                        console.log("Thing: ", system.boundaryStyle.search("s"))
-                    }
                 }
                 Label {
                     text: "Timestep: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
@@ -217,10 +214,12 @@ Flickable {
                 Label {
                     text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "1x speed means 60 frames per second."
                     text: "Achieved speed: "+system.performance.effectiveSimulationSpeed.toFixed(2)+"x"
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "1x speed means 60 frames per second."
                     text: "Target speed: "+speedSlider.value+"x"
                 }
                 Slider {
@@ -233,11 +232,7 @@ Flickable {
                     to: 100
                     stepSize: 1
                     value: simulator ? simulator.simulationSpeed : 1
-                    onValueChanged: {
-                        if(simulator != undefined) {
-                            simulator.simulationSpeed = value
-                        }
-                    }
+                    onValueChanged: if(simulator !== undefined) { simulator.simulationSpeed = value }
                 }
             }
         }
@@ -247,7 +242,6 @@ Flickable {
                 left: parent.left
                 right: parent.right
             }
-
             title: "Groups"
 
             Column {
