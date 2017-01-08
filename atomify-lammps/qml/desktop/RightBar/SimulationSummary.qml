@@ -169,7 +169,7 @@ Flickable {
                     }
                 }
                 Label {
-                    text: "Timestep: "+system.dt
+                    text: "Timestep: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
                 }
                 Label {
                     text: "Number of atoms: "+system.numberOfAtoms
