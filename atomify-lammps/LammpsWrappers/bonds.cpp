@@ -5,7 +5,7 @@ Bonds::Bonds()
     reset();
 }
 
-bool Bonds::enabled() const
+bool Bonds::active() const
 {
     bool anyActiveBonds = false;
     for(const QVector<float> &vec : m_bondLengths) {
@@ -17,6 +17,11 @@ bool Bonds::enabled() const
         }
     }
     return m_enabled && anyActiveBonds;
+}
+
+bool Bonds::enabled() const
+{
+    return m_enabled;
 }
 
 QVector<QVector<float> > &Bonds::bondLengths()
@@ -45,8 +50,6 @@ void Bonds::reset()
             length = 0.0;
         }
     }
-
-    m_enabled = false;
 }
 
 void Bonds::setEnabled(bool enabled)
