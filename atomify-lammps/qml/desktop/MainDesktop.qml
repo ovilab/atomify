@@ -491,7 +491,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
-                    toolTipText: "Reset camera [o]"
+                    toolTipText: "Reset to origin [o]"
 
                     onClicked: {
                         if(flymodeState.active) {

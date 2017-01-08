@@ -112,7 +112,7 @@ QQC1.ApplicationWindow {
         QQC1.Menu {
             title: "Camera"
             QQC1.MenuItem {
-                text: "Change camera"
+                text: "Switch camera"
                 shortcut: "C"
                 onTriggered: {
                     EventCenter.postEvent("desktop.changeMode")
