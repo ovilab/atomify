@@ -9,7 +9,7 @@ Step 1)
 You will need Qt 5.7 with both Qt Charts and Qt Data Visualization. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download/](https://www.qt.io/download/) (you can scroll down to the Open Source download section) and install it from there. Remember to include Qt Charts and Qt Data visualization when you install.
 
 Step 2)
-Clone the repository `git clone https://github.com/ovilab/atomify-lammps.git`.
+Clone the repository `git clone --recursive https://github.com/ovilab/atomify-lammps.git`.
 
 Step 3)
 Open the atomify-lammps directory and run `python configure.py` which will configure and compile LAMMPS. 
