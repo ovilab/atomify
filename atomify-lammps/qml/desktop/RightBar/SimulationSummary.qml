@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.0
 import Atomify 1.0
+import "../items"
 import "../../plotting"
 import "../../visualization"
 
@@ -148,14 +149,24 @@ Flickable {
                     text: "Triclinic"
                     visible: system.triclinic
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "Shows the units used by the current simulation."
                     text: "Units: "+system.units.name
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "The current simulations is "+system.units.dimensions+"-dimensional."
                     text: "Dimensions: "+system.units.dimensions
                 }
-                Label {
+                ToolTipLabel {
+                    property string explainationP: (system.boundaryStyle.search("p")>-1) ? "p is periodic. " : ""
+                    property string explainationF: (system.boundaryStyle.search("f")>-1) ? "f is non-periodic and fixed. " : ""
+                    property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
+                    property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
+                    toolTipText: explainationP+explainationF+explainationS+explainationM
                     text: "Boundary: "+system.boundaryStyle
+                    onTextChanged: {
+                        console.log("Thing: ", system.boundaryStyle.search("s"))
+                    }
                 }
                 Label {
                     text: "Timestep: "+system.dt
