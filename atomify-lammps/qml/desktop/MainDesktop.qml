@@ -460,7 +460,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/ic_camera_white_36dp.png"
-
+                    toolTipText: "Screenshot"
                     onClicked: {
                         visualizer.grabToImage(function(result) {
                             fileDialogSave.callback = function() {
@@ -491,6 +491,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
+                    toolTipText: "Reset camera [o]"
 
                     onClicked: {
                         if(flymodeState.active) {
@@ -502,6 +503,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/switch_camera.png"
+                    toolTipText: "Switch camera [c]"
 
                     onClicked: {
                         changeMode()
