@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     if(argc>1) {
         if(strcmp(argv[1], "--cleardata")==0) {
             QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/Ovilab/Atomify";
-            qDebug() << "Dir: " << dir;
+            qDebug() << "Deleting contents in " << dir;
 
             QDir dataDir(dir);
             dataDir.removeRecursively();
