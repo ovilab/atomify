@@ -17,7 +17,7 @@ import "RightBar"
 import "../plotting"
 Image {
     id: root
-
+    property string toolTipText: ""
     signal clicked
 
     width: 48
@@ -26,9 +26,14 @@ Image {
     mipmap: true
     
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
+        hoverEnabled: true
         onClicked: {
             root.clicked()
         }
     }
+
+    ToolTip.visible: mouseArea.containsMouse && root.toolTipText.length>0
+    ToolTip.text: qsTr(root.toolTipText)
 }
