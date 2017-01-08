@@ -284,6 +284,7 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
         const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
         const QVector3D position_i = atomData.positions[ii] + deltaPosition_i;
         const int atomType_i = atomData.types[ii];
+        if(m_bonds->bondLengths().size()<=atomType_i) continue; // We only store atom bonds between atom types < 32
 
         const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
         const float sphereRadius_i = atomData.radii[ii];
@@ -300,7 +301,7 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
             if(!atomData.visible[j]) continue; // Don't show bond if not both atoms are visible.
 
             const int &atomType_j = atomData.types[j];
-            if(bondLengths.size()<=atomTypeJ) continue; //
+            if(bondLengths.size()<=atomType_j) continue; // We only store atom bonds between atom types < 32
 
             QVector3D position_j = atomData.positions[j];
             position_j += deltaPosition_i;
