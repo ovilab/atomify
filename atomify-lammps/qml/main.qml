@@ -160,6 +160,17 @@ QQC1.ApplicationWindow {
                 }
             }
         }
+
+        QQC1.Menu {
+            title: "Rendering"
+            QQC1.MenuItem {
+                text: "Capture screenshot"
+                // shortcut: "Ctrl+R"
+                onTriggered: {
+                    mainDesktop.captureScreenshot()
+                }
+            }
+        }
     }
 
     Settings {

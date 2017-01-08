@@ -50,6 +50,16 @@ Rectangle {
         }
     }
 
+    function captureScreenshot() {
+        visualizer.grabToImage(function(result) {
+            fileDialogSave.callback = function() {
+                // TODO: figure out why file:// doesn't work for saveToFile function
+                result.saveToFile(fileDialogSave.fileUrl.toString().replace("file://",""));
+            }
+            fileDialogSave.visible = true
+        })
+    }
+
     Component.onCompleted: {
         startsimtimer.start()
     }
@@ -459,37 +469,6 @@ Rectangle {
                 spacing: anchors.margins / 2
 
                 IconButton {
-                    source: "qrc:/images/ic_camera_white_36dp.png"
-                    toolTipText: "Screenshot"
-                    onClicked: {
-                        visualizer.grabToImage(function(result) {
-                            fileDialogSave.callback = function() {
-                                // TODO: figure out why file:// doesn't work for saveToFile function
-                                result.saveToFile(fileDialogSave.fileUrl.toString().replace("file://",""));
-                            }
-                            fileDialogSave.visible = true
-                        })
-                    }
-
-                    FileDialog {
-                        id: fileDialogSave
-                        selectExisting : false
-                        property var callback
-                        title: "Please choose a location to save"
-
-                        nameFilters: [ "Image files (*.jpg *.png)" ]
-
-                        onAccepted: {
-                            if(callback !== undefined) {
-                                console.log("Calling back")
-                                callback()
-                                callback = undefined
-                            }
-                        }
-                    }
-                }
-
-                IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
                     toolTipText: "Reset to origin [o]"
 
@@ -710,6 +689,23 @@ Rectangle {
                 onEntered: {
                     console.log("unCaptured entered")
                 }
+            }
+        }
+    }
+
+    FileDialog {
+        id: fileDialogSave
+        selectExisting : false
+        property var callback
+        title: "Please choose a location to save"
+
+        nameFilters: [ "Image files (*.png)" ]
+
+        onAccepted: {
+            if(callback !== undefined) {
+                console.log("Calling back")
+                callback()
+                callback = undefined
             }
         }
     }
