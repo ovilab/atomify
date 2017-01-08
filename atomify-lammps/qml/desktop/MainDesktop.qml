@@ -140,6 +140,7 @@ Rectangle {
 
             onCurrentIndexChanged: {
                 root.viewMode = modeModel.get(currentIndex).mode
+                if(root.viewMode === "edit") messageOverlay.visible = false
             }
 
             Connections {
