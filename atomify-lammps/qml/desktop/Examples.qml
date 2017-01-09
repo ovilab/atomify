@@ -170,9 +170,12 @@ Pane {
 
     }
     Flickable {
+        id: flickable
         anchors.fill: parent
         contentHeight: content.height
         ScrollBar.vertical: ScrollBar {}
+        boundsBehavior: Flickable.StopAtBounds
+
         Column {
             id: content
             anchors {
