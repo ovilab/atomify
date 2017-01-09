@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.0
 import Atomify 1.0
+import "../items"
 import "../../plotting"
 import "../../visualization"
 
@@ -148,17 +149,24 @@ Flickable {
                     text: "Triclinic"
                     visible: system.triclinic
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "Shows the units used by the current simulation."
                     text: "Units: "+system.units.name
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "The current simulations is "+system.units.dimensions+"-dimensional."
                     text: "Dimensions: "+system.units.dimensions
                 }
-                Label {
+                ToolTipLabel {
+                    property string explainationP: (system.boundaryStyle.search("p")>-1) ? "p is periodic. " : ""
+                    property string explainationF: (system.boundaryStyle.search("f")>-1) ? "f is non-periodic and fixed. " : ""
+                    property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
+                    property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
+                    toolTipText: explainationP+explainationF+explainationS+explainationM
                     text: "Boundary: "+system.boundaryStyle
                 }
                 Label {
-                    text: "Timestep: "+system.dt
+                    text: "Timestep: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
                 }
                 Label {
                     text: "Number of atoms: "+system.numberOfAtoms
@@ -206,10 +214,12 @@ Flickable {
                 Label {
                     text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "1x speed means 60 frames per second."
                     text: "Achieved speed: "+system.performance.effectiveSimulationSpeed.toFixed(2)+"x"
                 }
-                Label {
+                ToolTipLabel {
+                    toolTipText: "1x speed means 60 frames per second."
                     text: "Target speed: "+speedSlider.value+"x"
                 }
                 Slider {
@@ -222,11 +232,7 @@ Flickable {
                     to: 100
                     stepSize: 1
                     value: simulator ? simulator.simulationSpeed : 1
-                    onValueChanged: {
-                        if(simulator != undefined) {
-                            simulator.simulationSpeed = value
-                        }
-                    }
+                    onValueChanged: if(simulator !== undefined) { simulator.simulationSpeed = value }
                 }
             }
         }
@@ -236,7 +242,6 @@ Flickable {
                 left: parent.left
                 right: parent.right
             }
-
             title: "Groups"
 
             Column {
@@ -358,10 +363,6 @@ Flickable {
                 Label {
                     text: "Memory usage Atomify: "+ (system.performance.memoryAtomify / 1024 / 1024).toFixed(0) +" MB"
                 }
-                Label {
-                    text: "Timesteps per second: "+ (system.performance.timestepsPerSecond).toFixed(1)
-                }
-
             }
         }
     }

@@ -50,6 +50,16 @@ Rectangle {
         }
     }
 
+    function captureScreenshot() {
+        visualizer.grabToImage(function(result) {
+            fileDialogSave.callback = function() {
+                // TODO: figure out why file:// doesn't work for saveToFile function
+                result.saveToFile(fileDialogSave.fileUrl.toString().replace("file://",""));
+            }
+            fileDialogSave.visible = true
+        })
+    }
+
     Component.onCompleted: {
         startsimtimer.start()
     }
@@ -76,6 +86,7 @@ Rectangle {
             bottom: parent.bottom
         }
         color: Material.color(Material.Grey, Material.Shade900)
+        onColorChanged: console.log("Color: ", color)
         width: 96
 
 //        LinearGradient {
@@ -130,6 +141,7 @@ Rectangle {
 
             onCurrentIndexChanged: {
                 root.viewMode = modeModel.get(currentIndex).mode
+                if(root.viewMode === "edit") messageOverlay.visible = false
             }
 
             Connections {
@@ -559,7 +571,12 @@ Rectangle {
     }
 
     Help {
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: modeMenuContainer.right
+            right: parent.right
+        }
         visible: root.viewMode === "help"
     }
 

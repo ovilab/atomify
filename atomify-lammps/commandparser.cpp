@@ -12,7 +12,7 @@ CommandParser::CommandParser()
 
 }
 
-void CommandParser::parseFile(QString fileName)
+void CommandParser::parseFile(QString fileName, bool moveCamera)
 {
     moveCameraPosition = false;
     moveCameraViewCenter = false;
@@ -32,6 +32,8 @@ void CommandParser::parseFile(QString fileName)
     }
 
     file.close();
+
+    if(!moveCamera) return;
 
     if(moveCameraPosition && moveCameraViewCenter) {
         emit m_simulator->newCameraPositionAndViewCenterRequest(m_simulator->cameraPositionRequest(), m_simulator->cameraViewCenterRequest());

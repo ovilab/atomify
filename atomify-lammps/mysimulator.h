@@ -60,6 +60,9 @@ public:
     QVector3D cameraViewCenterRequest() const;
     bool welcomeSimulationRunning() const;
 
+    QString lastScript() const;
+    void setLastScript(const QString &lastScript);
+
 public slots:
     void setSimulationSpeed(int arg);
     void setSystem(class System* system);
@@ -104,6 +107,7 @@ private:
     int m_simulationSpeed;
     QString m_scriptFilePath;
     QString m_error;
+    QString m_lastScript;
     CommandParser m_parser;
     QVector3D m_cameraPositionRequest;
     QVector3D m_cameraViewCenterRequest;

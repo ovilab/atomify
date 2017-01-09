@@ -14,6 +14,7 @@ public:
     bool enabled() const;
     QVector<QVector<float>> &bondLengths();
     float maxBondLength();
+    bool active() const;
     void reset();
 public slots:
     void setEnabled(bool enabled);
@@ -23,7 +24,7 @@ signals:
 
 private:
     QVector<QVector<float>> m_bondLengths;
-    bool m_enabled = false;
+    bool m_enabled = true;
 };
 
 #endif // BONDS_H

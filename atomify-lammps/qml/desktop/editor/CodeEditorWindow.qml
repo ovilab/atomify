@@ -22,6 +22,7 @@ Item {
     property string openFiles: ""
     property real lastRunScript: 0
     property string lastOpenedFolder
+
     onCurrentEditorChanged: focusCurrentEditor()
 
     onVisibleChanged: {
@@ -29,6 +30,7 @@ Item {
             if(visualizer.simulator.scriptFilePath!=="") {
                 openTab("file://"+visualizer.simulator.scriptFilePath)
             }
+            focusCurrentEditor()
         }
     }
 
