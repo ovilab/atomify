@@ -18,6 +18,7 @@ Entity {
     property real dragSpeed: 100.0
     property vector3d viewCenter: root.camera.viewCenter
     property alias dragging: rightMouseButtonAction.active
+    property bool alternative: false
 
     property bool active: (shiftAction.active ||
                            leftMouseButtonAction.active ||
@@ -234,6 +235,19 @@ Entity {
                         buttons: [Qt.Key_Q]
                         scale: d.shiftPressed ? 0.0 : -1.0
                     }
+                },
+                Axis {
+                    id: keyboardZoomAxis
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_Z]
+                        scale: d.shiftPressed ? 0.0 : 1.0
+                    }
+                    ButtonAxisInput {
+                        sourceDevice: keyboardSourceDevice
+                        buttons: [Qt.Key_X]
+                        scale: d.shiftPressed ? 0.0 : -1.0
+                    }
                 }
             ] // axes
         },
@@ -257,10 +271,25 @@ Entity {
                 }
 
                 var trackballFinalSpeed = trackballSpeed * (shiftAction.active ? 5.0 : 1.0)
-                root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
+
+
                 tiltAboutViewCenterWithLimits(keyboardTiltAxis.value * trackballFinalSpeed)
 
-                root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * trackballFinalSpeed), Camera.DontTranslateViewCenter);
+                if(alternative) {
+                    root.camera.panAboutViewCenter(rollAxis.value * trackballFinalSpeed, d.firstPersonUp);
+                    var forwardInPlane = camera.viewVector.times(1.0)
+                    forwardInPlane.z = 0
+                    forwardInPlane = forwardInPlane.normalized()
+                    var rightInPlane = camera.viewVector.crossProduct(camera.upVector)
+                    rightInPlane.z = 0
+                    rightInPlane = rightInPlane.normalized()
+                    root.camera.translateWorld(forwardInPlane.times(keyboardYAxis.value * trackballFinalSpeed), Camera.TranslateViewCenter);
+                    root.camera.translateWorld(rightInPlane.times(keyboardXAxis.value * trackballFinalSpeed), Camera.TranslateViewCenter);
+                    root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardZoomAxis.value * trackballFinalSpeed), Camera.DontTranslateViewCenter);
+                } else {
+                    root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
+                    root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * trackballFinalSpeed), Camera.DontTranslateViewCenter);
+                }
 
                 if(rightMouseButtonAction.active) {
                     camera.translate(Qt.vector3d(-mouseXAxis.value * dragSpeed, -mouseYAxis.value * dragSpeed, 0.0))
