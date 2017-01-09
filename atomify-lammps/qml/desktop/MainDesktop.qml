@@ -160,6 +160,11 @@ Rectangle {
                         mode: "view"
                     }
                     ListElement {
+                        image: "qrc:/images/ic_timeline_white_48dp.png"
+                        name: "Analyse"
+                        mode: "analyse"
+                    }
+                    ListElement {
                         image: "qrc:/images/ic_mode_edit_white_48dp.png"
                         name: "Edit"
                         mode: "edit"
@@ -270,7 +275,7 @@ Rectangle {
             left: modeMenuContainer.right
             right: parent.right
         }
-        visible: root.viewMode === "edit" || root.viewMode === "view"
+        visible: root.viewMode === "edit" || root.viewMode === "view" || root.viewMode == "analyse"
         handleDelegate: Item { width: 4 }
 
         Settings {
@@ -528,7 +533,7 @@ Rectangle {
             id: rightbar
             Layout.fillHeight: true
             Layout.minimumWidth: 200
-            visible: root.viewMode === "edit"
+            visible: root.viewMode === "edit" || root.viewMode == "analyse"
             width: 300
             system: root.simulator.system
             visualizer: root.visualizer
@@ -551,6 +556,10 @@ Rectangle {
         }
     }
 
+    Help {
+        anchors.fill: parent
+        visible: modeMenu.currentMode === "help"
+    }
 
     EventMapper {
         mapping: {
@@ -611,6 +620,11 @@ Rectangle {
         Shortcut {
             sequence: "Ctrl+4"
             onActivated: modeMenu.currentIndex = 3
+        }
+
+        Shortcut {
+            sequence: "Ctrl+5"
+            onActivated: modeMenu.currentIndex = 4
         }
 
         Shortcut {
