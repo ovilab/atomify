@@ -44,7 +44,6 @@ Entity {
     function tiltAboutViewCenterWithLimits(tiltChange) {
         root.camera.tiltAboutViewCenter(tiltChange)
         if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
-            console.log(camera.upVector, camera.position, camera.viewCenter, camera.viewVector)
             root.camera.tiltAboutViewCenter(-tiltChange)
         }
     }
@@ -111,7 +110,6 @@ Entity {
         duration: 0.10
 
         onStepped: {
-            console.log(velocity)
             zoom(dt * 60 * velocity)
         }
     }
@@ -331,8 +329,8 @@ Entity {
                     pressed()
                 }
 
-                var shiftFactor = shiftAction.active ? 3.0 : 1.0
-//                var shiftFactor = 1.0
+//                var shiftFactor = shiftAction.active ? 3.0 : 1.0
+                var shiftFactor = 1.0
 
 
                 tiltAnimator.set(keyboardTiltAxis.value * shiftFactor * zoomSpeed)
