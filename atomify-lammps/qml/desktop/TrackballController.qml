@@ -331,12 +331,13 @@ Entity {
                     pressed()
                 }
 
-//                var shiftFactor = shiftAction.active ? 3.0 : 1.0
-                var shiftFactor = 1.0
+                var shiftFactor = shiftAction.active ? 3.0 : 1.0
+//                var shiftFactor = 1.0
+
 
                 tiltAnimator.set(keyboardTiltAxis.value * shiftFactor * zoomSpeed)
 
-                if(alternative) {
+                if(shiftAction.active) {
                     panAnimator.set(rollAxis.value * shiftFactor * panSpeed)
                     forwardAnimator.set(keyboardYAxis.value * shiftFactor * translationSpeed)
                     rightAnimator.set(keyboardXAxis.value * shiftFactor * translationSpeed)
