@@ -15,9 +15,7 @@ Pane {
                 left: parent.left
                 right: parent.right
             }
-
             spacing: 24
-
             Label {
                 text: "Help"
                 font.pixelSize: 32
