@@ -346,7 +346,10 @@ Scene3D {
                 animateCameraTo(cameraPositionRequest, Qt.vector3d(0, 0, 1), Qt.vector3d(0,0,0), 500)
             }
             onNewCameraPositionAndViewCenterRequest: {
-                animateCameraTo(cameraPositionRequest, Qt.vector3d(0, 0, 1), cameraViewCenterRequest, 500)
+                var viewVector = cameraViewCenterRequest.minus(cameraPositionRequest).normalized()
+                var rightVector = viewVector.crossProduct(Qt.vector3d(0, 0, 1)).normalized()
+                var upVector = rightVector.crossProduct(viewVector).normalized()
+                animateCameraTo(cameraPositionRequest, upVector, cameraViewCenterRequest, 500)
             }
             onNewViewCenterRequest: {
                 animateCameraTo(visualizer.camera.position, Qt.vector3d(0, 0, 1), cameraViewCenterRequest, 500)

@@ -260,7 +260,7 @@ bool Atoms::doWeHavefullNeighborList(Neighbor *neighbor) {
 
 bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSController *controller)
 {
-    if(!m_bonds->enabled()) {
+    if(!m_bonds->active()) {
         return false;
     }
 
