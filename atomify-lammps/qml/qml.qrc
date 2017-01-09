@@ -77,5 +77,6 @@
         <file>desktop/items/ToggleImage.qml</file>
         <file>desktop/IconButton.qml</file>
         <file>desktop/Examples.qml</file>
+        <file>desktop/Help.qml</file>
     </qresource>
 </RCC>
