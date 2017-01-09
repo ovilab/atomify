@@ -9,8 +9,9 @@ import Qt.labs.folderlistmodel 2.1
 Rectangle {
     id: root
 
-    signal start(var qrcPaths)
+    signal changeQrcPaths(var qrcPaths)
 
+    readonly property string rootPath: "file::/qtqmlpreview"
     property var qrcPaths: []
     property string qrcPathsStringified
     property url filePath
@@ -27,10 +28,6 @@ Rectangle {
 
     width: 1600
     height: 900
-
-    Component.onCompleted: {
-        refresh()
-    }
 
     onQrcPathsStringifiedChanged: {
         var paths = JSON.parse(qrcPathsStringified)
@@ -49,6 +46,7 @@ Rectangle {
         }
         qrcPathsStringified = JSON.stringify(stringPaths)
         console.log("Stringified as", qrcPathsStringified)
+        notifyChangeQrcPaths()
     }
 
     onFilePathChanged: {
@@ -56,20 +54,25 @@ Rectangle {
     }
 
     function refresh() {
-        requestStart()
+        notifyChangeQrcPaths()
+//        var currentPath = folderListModel.folder
+    }
+
+    function refreshFileView() {
+        console.log("Refresh file view")
         folderListModel.folder = ""
-        var rootPath = "qrc:/qtqmlpreview"
-        console.log("WOOP", folderListModel.folder == "", folderListModel.folder, folderListModel.rootFolder)
         folderListModel.folder = rootPath
     }
 
     function reload() {
+        console.log("Reload")
         loader.source = ""
         loader.source = filePath.toString().replace("file:", "qrc")
     }
 
-    function requestStart() {
-        start(qrcPaths)
+    function notifyChangeQrcPaths() {
+        console.log("Change qrc paths")
+        changeQrcPaths(qrcPaths)
     }
 
     Settings {
@@ -156,8 +159,13 @@ Rectangle {
 
                     Button {
                         text: "Up"
-    //                    enabled: folderListModel.folder != "file::/qtqmlpreview/"
+                        enabled: folderListModel.folder != rootPath
                         onClicked: {
+                            if(!folderListModel.parentFolder) {
+                                return
+                            }
+
+                            console.log(folderListModel.folder, folderListModel.parentFolder)
                             folderListModel.folder = folderListModel.parentFolder
                         }
                     }

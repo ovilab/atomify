@@ -17,7 +17,7 @@ signals:
 public slots:
     void reload();
     void show();
-    void handleDialogStart(QVariant qrcPaths);
+    void setQrcPaths(QVariant qrcPaths);
 private:
     QFileSystemWatcher m_watcher;
     QQuickView m_view;
