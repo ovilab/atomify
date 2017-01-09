@@ -20,6 +20,7 @@ Entity {
     property vector3d viewCenter: root.camera.viewCenter
     property alias dragging: rightMouseButtonAction.active
     property bool alternative: false
+    property bool translationActive: shiftAction.active
 
     property bool active: (shiftAction.active ||
                            leftMouseButtonAction.active ||

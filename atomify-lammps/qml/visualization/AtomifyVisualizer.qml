@@ -451,7 +451,7 @@ Scene3D {
         }
 
         Entity {
-            enabled: trackballController.dragging
+            enabled: trackballController.dragging || trackballController.translationActive
             components: [
                 sphereMesh,
                 whiteMaterial,
@@ -461,7 +461,11 @@ Scene3D {
             SphereMesh {id: sphereMesh}
             ShaderBuilderMaterial {
                 id: whiteMaterial
-                fragmentColor: "white"
+                fragmentColor: StandardMaterial {
+                    color: "white"
+                    lights: visualizer.lights
+                    ambientIntensity: 10.0
+                }
             }
             Transform {
                 id: viewCenterTransform
