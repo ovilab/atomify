@@ -12,9 +12,10 @@ Entity {
     property Camera camera
     property real linearSpeed: 40.0
     property real lookSpeed: 500.0
-    property real zoomSpeed: 20.0
     property real zoomLimit: 2.0
-    property real trackballSpeed: 1.0
+    property real zoomSpeed: 3.0
+    property real translationSpeed: 1.6
+    property real panSpeed: 3.6
     property real dragSpeed: 100.0
     property vector3d viewCenter: root.camera.viewCenter
     property alias dragging: rightMouseButtonAction.active
@@ -43,6 +44,7 @@ Entity {
     function tiltAboutViewCenterWithLimits(tiltChange) {
         root.camera.tiltAboutViewCenter(tiltChange)
         if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
+            console.log(camera.upVector, camera.position, camera.viewCenter, camera.viewVector)
             root.camera.tiltAboutViewCenter(-tiltChange)
         }
     }
@@ -50,6 +52,13 @@ Entity {
     function zoomDistance(firstPoint, secondPoint) {
         var u = secondPoint.minus(firstPoint); u = u.times(u);
         return u.x + u.y + u.z;
+    }
+
+    function zoom(value) {
+        var scale = 1.0 + value / 100
+        var newViewVector = camera.viewVector.times(scale)
+        var delta = newViewVector.minus(camera.viewVector)
+        camera.translateWorld(delta, Camera.DontTranslateViewCenter)
     }
 
     function centerMouse() {
@@ -79,37 +88,73 @@ Entity {
             if(!root.enabled) {
                 return
             }
-            zoomAnimator.increase(-wheel.angleDelta.y * 0.005)
-            panAnimator.increase(-wheel.angleDelta.x * 0.003)
+            if(wheel.modifiers & Qt.ControlModifier) {
+                tiltAnimator.increase(wheel.angleDelta.y * 0.003)
+                panAnimator.increase(-wheel.angleDelta.x * 0.003)
+            } else {
+                scrollZoomAnimator.increase(wheel.angleDelta.y * 0.006)
+            }
+        }
+    }
+
+    SmoothAnimator {
+        id: tiltAnimator
+        duration: 0.10
+        onStepped: {
+            tiltAboutViewCenterWithLimits(velocity * dt * 60)
         }
     }
 
     SmoothAnimator {
         id: zoomAnimator
 
-        duration: 0.3
+        duration: 0.10
 
         onStepped: {
-            if(shiftAction.active) {
-                tiltAboutViewCenterWithLimits(-velocity)
-            } else {
-                var scale = 1.0 + velocity / 100
-                var newViewVector = camera.viewVector.times(scale)
-                var delta = camera.viewVector.minus(newViewVector)
-                camera.translateWorld(delta, Camera.DontTranslateViewCenter)
-            }
+            console.log(velocity)
+            zoom(dt * 60 * velocity)
+        }
+    }
+
+    SmoothAnimator {
+        id: scrollZoomAnimator
+
+        duration: 0.16
+
+        onStepped: {
+            zoom(dt * 60 * velocity)
         }
     }
 
     SmoothAnimator {
         id: panAnimator
 
-        duration: 0.2
+        duration: 0.10
 
         onStepped: {
-            if(!controlAction.active) {
-                camera.panAboutViewCenter(velocity, d.firstPersonUp)
-            }
+            camera.panAboutViewCenter(velocity * dt * 60, d.firstPersonUp)
+        }
+    }
+
+    SmoothAnimator {
+        id: forwardAnimator
+        duration: 0.10
+        onStepped: {
+            var forwardInPlane = camera.viewVector.times(1.0)
+            forwardInPlane.z = 0
+            forwardInPlane = forwardInPlane.normalized()
+            root.camera.translateWorld(forwardInPlane.times(velocity * dt * 60), Camera.TranslateViewCenter);
+        }
+    }
+
+    SmoothAnimator {
+        id: rightAnimator
+        duration: 0.10
+        onStepped: {
+            var rightInPlane = camera.viewVector.crossProduct(camera.upVector)
+            rightInPlane.z = 0
+            rightInPlane = rightInPlane.normalized()
+            root.camera.translateWorld(rightInPlane.times(velocity * dt * 60), Camera.TranslateViewCenter);
         }
     }
 
@@ -286,29 +331,31 @@ Entity {
                     pressed()
                 }
 
-                panAnimator.step(dt)
-                zoomAnimator.step(dt)
+//                var shiftFactor = shiftAction.active ? 3.0 : 1.0
+                var shiftFactor = 1.0
 
-                var trackballFinalSpeed = trackballSpeed * (shiftAction.active ? 5.0 : 1.0)
-
-
-                tiltAboutViewCenterWithLimits(keyboardTiltAxis.value * trackballFinalSpeed)
+                tiltAnimator.set(keyboardTiltAxis.value * shiftFactor * zoomSpeed)
 
                 if(alternative) {
-                    root.camera.panAboutViewCenter(rollAxis.value * trackballFinalSpeed, d.firstPersonUp);
-                    var forwardInPlane = camera.viewVector.times(1.0)
-                    forwardInPlane.z = 0
-                    forwardInPlane = forwardInPlane.normalized()
-                    var rightInPlane = camera.viewVector.crossProduct(camera.upVector)
-                    rightInPlane.z = 0
-                    rightInPlane = rightInPlane.normalized()
-                    root.camera.translateWorld(forwardInPlane.times(keyboardYAxis.value * trackballFinalSpeed), Camera.TranslateViewCenter);
-                    root.camera.translateWorld(rightInPlane.times(keyboardXAxis.value * trackballFinalSpeed), Camera.TranslateViewCenter);
-                    root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardZoomAxis.value * trackballFinalSpeed), Camera.DontTranslateViewCenter);
+                    panAnimator.set(rollAxis.value * shiftFactor * panSpeed)
+                    forwardAnimator.set(keyboardYAxis.value * shiftFactor * translationSpeed)
+                    rightAnimator.set(keyboardXAxis.value * shiftFactor * translationSpeed)
+                    zoomAnimator.set(keyboardZoomAxis.value * shiftFactor * zoomSpeed)
                 } else {
-                    root.camera.panAboutViewCenter(keyboardXAxis.value * trackballFinalSpeed, d.firstPersonUp);
-                    root.camera.translate(Qt.vector3d(0.0, 0.0, keyboardYAxis.value * trackballFinalSpeed), Camera.DontTranslateViewCenter);
+                    if(Math.abs(keyboardXAxis.value) > 0) {
+                        panAnimator.set(keyboardXAxis.value * panSpeed * shiftFactor)
+                    }
+                    if(Math.abs(keyboardYAxis.value) > 0) {
+                        zoomAnimator.set(keyboardYAxis.value * shiftFactor * zoomSpeed)
+                    }
                 }
+
+                panAnimator.step(dt)
+                zoomAnimator.step(dt)
+                scrollZoomAnimator.step(dt)
+                tiltAnimator.step(dt)
+                forwardAnimator.step(dt)
+                rightAnimator.step(dt)
 
                 if(rightMouseButtonAction.active) {
                     camera.translate(Qt.vector3d(-mouseXAxis.value * dragSpeed, -mouseYAxis.value * dragSpeed, 0.0))

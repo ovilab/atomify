@@ -15,7 +15,12 @@ QtObject {
     readonly property real velocity: d.velocity
 
     function increase(delta) {
-        d.velocity += delta
+        d.velocity += delta / duration
+        d.timeLeft = duration
+    }
+
+    function set(target) {
+        d.velocity = target
         d.timeLeft = duration
     }
 

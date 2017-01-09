@@ -79,7 +79,6 @@
         <file>desktop/Examples.qml</file>
         <file>desktop/items/ToolTipLabel.qml</file>
         <file>desktop/Help.qml</file>
-        <file>desktop/SmoothVector3dAnimation.qml</file>
         <file>desktop/SmoothAnimator.qml</file>
     </qresource>
 </RCC>
