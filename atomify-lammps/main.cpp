@@ -159,10 +159,10 @@ int main(int argc, char *argv[])
     // Application version
     QQmlApplicationEngine engine;
     QmlPreviewer previewer(app);
+    qpm::init(app, engine);
     if(argc > 2) {
         previewer.show();
     } else {
-        qpm::init(app, engine);
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
 #ifdef Q_OS_LINUX
