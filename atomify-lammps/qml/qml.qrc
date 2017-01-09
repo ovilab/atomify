@@ -78,5 +78,6 @@
         <file>desktop/IconButton.qml</file>
         <file>desktop/Examples.qml</file>
         <file>desktop/items/ToolTipLabel.qml</file>
+        <file>desktop/Help.qml</file>
     </qresource>
 </RCC>
