@@ -558,7 +558,7 @@ Rectangle {
 
     Help {
         anchors.fill: parent
-        visible: modeMenu.currentMode === "help"
+        visible: root.viewMode === "help"
     }
 
     EventMapper {
