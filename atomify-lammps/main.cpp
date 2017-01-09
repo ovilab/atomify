@@ -81,18 +81,18 @@ void copyExamplesToLocalFolder()
     }
 }
 
+void clearData()
+{
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    qDebug() << "Deleting Atomify contents in " << dir;
+
+    QDir dataDir(dir);
+    dataDir.removeRecursively();
+    exit(0);
+}
+
 int main(int argc, char *argv[])
 {
-    if(argc>1) {
-        if(strcmp(argv[1], "--cleardata")==0) {
-            QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/Ovilab/Atomify";
-            qDebug() << "Deleting contents in " << dir;
-
-            QDir dataDir(dir);
-            dataDir.removeRecursively();
-            return 0;
-        }
-    }
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
@@ -147,6 +147,12 @@ int main(int argc, char *argv[])
     // format.setSamples(32);
 #endif
     QSurfaceFormat::setDefaultFormat(format);
+
+    if(argc>1) {
+        if(strcmp(argv[1], "--cleardata")==0) {
+            clearData();
+        }
+    }
 
     copyExamplesToLocalFolder();
 
