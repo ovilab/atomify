@@ -40,9 +40,11 @@ Entity {
         return Qt.point(globalX, globalY)
     }
 
-    QtObject {
-        id: d
-        property vector3d firstPersonUp: Qt.vector3d(0, 0, 1)
+    function tiltAboutViewCenterWithLimits(tiltChange) {
+        root.camera.tiltAboutViewCenter(tiltChange)
+        if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
+            root.camera.tiltAboutViewCenter(-tiltChange)
+        }
     }
 
     function zoomDistance(firstPoint, secondPoint) {
@@ -59,6 +61,11 @@ Entity {
         root.mouseMover.move(midPoint.x, midPoint.y)
     }
 
+    QtObject {
+        id: d
+        property vector3d firstPersonUp: Qt.vector3d(0, 0, 1)
+    }
+
     MouseHandler {
         id: mouseHandler
         sourceDevice: mouseSourceDevice
@@ -72,21 +79,37 @@ Entity {
             if(!root.enabled) {
                 return
             }
-            var scale = 1 - wheel.angleDelta.y / 1000
-            if(1.0 - scale > 0.1) {
-                scale = 0.9
-            } else if(scale - 1.0 > 0.1) {
-                scale = 1.1
-            }
+            zoomAnimator.increase(-wheel.angleDelta.y * 0.005)
+            panAnimator.increase(-wheel.angleDelta.x * 0.003)
+        }
+    }
 
-            var newPos = camera.viewCenter.minus(camera.viewVector.times(scale))
-            if(newPos.minus(camera.viewCenter).length() < 1) {
-                newPos = newPos.normalized()
-            } else if(newPos.minus(camera.viewCenter).length() > 1e6) {
-                return;
-            }
+    SmoothAnimator {
+        id: zoomAnimator
 
-            camera.position = newPos
+        duration: 0.3
+
+        onStepped: {
+            if(shiftAction.active) {
+                tiltAboutViewCenterWithLimits(-velocity)
+            } else {
+                var scale = 1.0 + velocity / 100
+                var newViewVector = camera.viewVector.times(scale)
+                var delta = camera.viewVector.minus(newViewVector)
+                camera.translateWorld(delta, Camera.DontTranslateViewCenter)
+            }
+        }
+    }
+
+    SmoothAnimator {
+        id: panAnimator
+
+        duration: 0.2
+
+        onStepped: {
+            if(!controlAction.active) {
+                camera.panAboutViewCenter(velocity, d.firstPersonUp)
+            }
         }
     }
 
@@ -254,13 +277,6 @@ Entity {
         FrameAction {
             property real timeSinceLastAction: 0.0
 
-            function tiltAboutViewCenterWithLimits(tiltChange) {
-                root.camera.tiltAboutViewCenter(tiltChange)
-                if(d.firstPersonUp.dotProduct(camera.upVector) < 0) {
-                    root.camera.tiltAboutViewCenter(-tiltChange)
-                }
-            }
-
             onTriggered: {
                 if(!root.enabled) {
                     return
@@ -269,6 +285,9 @@ Entity {
                 if(leftMouseButtonAction.active || rightMouseButtonAction.active) {
                     pressed()
                 }
+
+                panAnimator.step(dt)
+                zoomAnimator.step(dt)
 
                 var trackballFinalSpeed = trackballSpeed * (shiftAction.active ? 5.0 : 1.0)
 
