@@ -23,10 +23,11 @@ void QmlPreviewer::reload()
 
     for(auto qrcPath : m_qrcPaths) {
         QVariantMap map = qrcPath.toMap();
-        qDebug() << "Unregistering" << map["rcc"].toString();
+        qDebug() << "Unregistering" << map["path"].toString();
         QResource::unregisterResource(map["rcc"].toString(), m_prefix);
     }
 
+    // TODO multiple files cannot be loaded to the same prefix, only the first loaded appears
 
     for(auto qrcPath : m_qrcPaths) {
         QVariantMap map = qrcPath.toMap();
@@ -38,36 +39,41 @@ void QmlPreviewer::reload()
         process.waitForFinished();
         qDebug() << process.readAllStandardError();
 
-        qDebug() << "Registering" << map["rcc"].toString();
+        qDebug() << "Registering" << map["path"].toString();
 
-        QResource::registerResource(map["rcc"].toString(), m_prefix);
+        bool ok = QResource::registerResource(map["rcc"].toString(), m_prefix);
+        if(!ok) {
+            qWarning() << "Could not register resource for" << map["path"].toString() << map["rcc"].toString();
+        }
 
         QDirIterator it(QString(":" + m_prefix), QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) {
             QString next = it.next();
             QString relativeFilePath = next;
             QUrl qrcDirectory = map["path"].toUrl().adjusted(QUrl::RemoveFilename);
-            relativeFilePath = relativeFilePath.replace(":/qtqmlpreview/", "");
-            qDebug() << "Path" << qrcDirectory;
-            qDebug() << "Relative" << relativeFilePath;
-            QUrl result = qrcDirectory.resolved(QUrl(relativeFilePath));
-            qDebug() << "Adding path" << result.toLocalFile();
-            m_watcher.addPath(result.toLocalFile());
+            relativeFilePath = relativeFilePath.replace(":" + m_prefix + "/", "");
+            qDebug() << "- Path" << qrcDirectory;
+            qDebug() << "- Relative" << relativeFilePath;
+            QString result = qrcDirectory.resolved(QUrl(relativeFilePath)).toLocalFile();
+            qDebug() << "- Result" << result;
+            if(QFileInfo::exists(result)) {
+                qDebug() << "-- Adding path" << result;
+                m_watcher.addPath(result);
+            }
         }
 
         qDebug() << "Watching" << m_watcher.files().count() << "files";
     }
-
     QMetaObject::invokeMethod(m_rootItem, "reload");
 }
 
-void QmlPreviewer::handleDialogStart(QVariant qrcPaths)
+void QmlPreviewer::setQrcPaths(QVariant qrcPaths)
 {
     qDebug() << "Handle dialog start";
 
     for(auto qrcPath : m_qrcPaths) {
         QVariantMap map = qrcPath.toMap();
-        qDebug() << "Unregistering" << map["rcc"].toString();
+        qDebug() << "Unregistering" << map["path"].toString();
         QResource::unregisterResource(map["rcc"].toString(), m_prefix);
     }
 
@@ -86,14 +92,15 @@ void QmlPreviewer::handleDialogStart(QVariant qrcPaths)
         projectPath = path.toUrl().adjusted(QUrl::RemoveFilename);
     }
     reload();
+    QMetaObject::invokeMethod(m_rootItem, "refreshFileView");
 }
 
 void QmlPreviewer::show()
 {
     m_view.setSource(QUrl("qrc:///QmlPreviewer/QmlPreviewerDialog.qml"));
     m_view.setResizeMode(QQuickView::SizeRootObjectToView);
-    m_view.show();
-
     m_rootItem = m_view.rootObject();
-    connect(m_rootItem, SIGNAL(start(QVariant)), this, SLOT(handleDialogStart(QVariant)));
+    connect(m_rootItem, SIGNAL(changeQrcPaths(QVariant)), this, SLOT(setQrcPaths(QVariant)));
+    QMetaObject::invokeMethod(m_rootItem, "refresh");
+    m_view.show();
 }
