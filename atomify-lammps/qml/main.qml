@@ -45,6 +45,7 @@ QQC1.ApplicationWindow {
             QQC1.MenuItem {
                 text: "Close"
                 shortcut: StandardKey.Close
+                enabled: applicationRoot.activeFocusItem !== null
                 onTriggered: {
                     EventCenter.postEvent("editorWindow.closeTab")
                 }
