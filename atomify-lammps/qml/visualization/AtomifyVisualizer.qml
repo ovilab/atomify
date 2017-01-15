@@ -35,7 +35,7 @@ Scene3D {
     property alias finalShaderBuilder: finalQuadEntity.shaderBuilder
     property alias periodicImages: periodicImages
     property string renderMode: "forward"
-    property string renderQuality: "medium"
+    property string renderQuality: "low"
     property bool mainCompleted: false
     property bool captureCursor: false
     property MessageDialog dialog: MessageDialog {
@@ -56,10 +56,10 @@ Scene3D {
 //    }
 
     onRenderQualityChanged: {
-        if(mainCompleted) {
-            dialog.open()
-            return
-        }
+//        if(mainCompleted) {
+//            dialog.open()
+//            return
+//        }
 
         if(renderQuality === "low") {
             renderMode = "forward"
