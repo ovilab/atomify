@@ -36,9 +36,11 @@ void Simulator::step()
         m_workerThread.start(QThread::TimeCriticalPriority);
     }
     if(m_worker->m_needsSynchronization && m_workerSynchronizeMutex.tryLock()) {
+        m_timer.setInterval(1);
         m_worker->synchronizeSimulator(this);
         m_workerSynchronizeMutex.unlock();
     } else if(m_workerMutex.tryLock()) {
+        m_timer.setInterval(200);
         m_worker->synchronizeSimulator(this);
         QMetaObject::invokeMethod(m_worker, "workAndUnlock",
                                   Qt::QueuedConnection,
