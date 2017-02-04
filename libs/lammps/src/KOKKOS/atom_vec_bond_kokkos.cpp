@@ -905,10 +905,10 @@ struct AtomVecBondKokkos_UnpackBorder {
       _x(i+_first,0) = _buf(i,0);
       _x(i+_first,1) = _buf(i,1);
       _x(i+_first,2) = _buf(i,2);
-      _tag(i+_first) = static_cast<int> (_buf(i,3));
+      _tag(i+_first) = static_cast<tagint> (_buf(i,3));
       _type(i+_first) = static_cast<int>  (_buf(i,4));
       _mask(i+_first) = static_cast<int>  (_buf(i,5));
-      _molecule(i+_first) = static_cast<int> (_buf(i,6));
+      _molecule(i+_first) = static_cast<tagint> (_buf(i,6));
 
   }
 };
@@ -1460,7 +1460,7 @@ int AtomVecBondKokkos::unpack_restart(double *buf)
 
   double **extra = atom->extra;
   if (atom->nextra_store) {
-    int size = static_cast<int> (ubuf(buf[m++]).i) - m;
+    int size = static_cast<int> (buf[0]) - m;
     for (int i = 0; i < size; i++) extra[nlocal][i] = buf[m++];
   }
 

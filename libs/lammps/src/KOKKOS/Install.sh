@@ -91,6 +91,8 @@ action fix_reaxc_species_kokkos.cpp fix_reaxc_species.cpp
 action fix_reaxc_species_kokkos.h fix_reaxc_species.h
 action fix_setforce_kokkos.cpp
 action fix_setforce_kokkos.h
+action fix_momentum_kokkos.cpp
+action fix_momentum_kokkos.h
 action fix_wall_reflect_kokkos.cpp
 action fix_wall_reflect_kokkos.h
 action gridcomm_kokkos.cpp gridcomm.cpp
@@ -100,6 +102,7 @@ action improper_harmonic_kokkos.h improper_harmonic.h
 action kokkos.cpp
 action kokkos.h
 action kokkos_type.h
+action kokkos_few.h
 action memory_kokkos.h
 action modify_kokkos.cpp
 action modify_kokkos.h
@@ -170,6 +173,8 @@ action pair_lj_gromacs_kokkos.cpp
 action pair_lj_gromacs_kokkos.h
 action pair_lj_sdk_kokkos.cpp pair_lj_sdk.cpp
 action pair_lj_sdk_kokkos.h pair_lj_sdk.h
+action pair_morse_kokkos.cpp
+action pair_morse_kokkos.h
 action pair_reax_c_kokkos.cpp pair_reax_c.cpp
 action pair_reax_c_kokkos.h pair_reax_c.h
 action pair_sw_kokkos.cpp pair_sw.cpp
