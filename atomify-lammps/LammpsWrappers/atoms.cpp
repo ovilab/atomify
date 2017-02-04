@@ -464,6 +464,7 @@ void Atoms::reset()
     m_atomStyles.clear();
     m_bondsDataRaw.clear();
     m_sphereDataRaw.clear();
+    setNumberOfBonds(0);
 
     m_atomStyleTypes["helium"]->radius = 1.40;          m_atomStyleTypes["helium"]->color = QColor("#D9FFFF");
     m_atomStyleTypes["lithium"]->radius = 1.82;         m_atomStyleTypes["lithium"]->color = QColor("#CC80FF");
