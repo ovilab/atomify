@@ -1,18 +1,18 @@
 #include "spheresimulator.h"
 #include <QDebug>
 #include <SimVis/SphereData>
-SphereSimulator::SphereSimulator(QNode *parent)
+NoiseSimulator::NoiseSimulator(QNode *parent)
     : Simulator(parent)
     , m_sphereData(new SphereData(this))
 {
 }
 
-double SphereSimulator::dt() const
+double NoiseSimulator::dt() const
 {
     return m_dt;
 }
 
-void SphereSimulator::setDt(double dt)
+void NoiseSimulator::setDt(double dt)
 {
     if (m_dt == dt)
         return;
@@ -21,12 +21,12 @@ void SphereSimulator::setDt(double dt)
     emit dtChanged(dt);
 }
 
-SimulatorWorker *SphereSimulator::createWorker()
+SimulatorWorker *NoiseSimulator::createWorker()
 {
-    return new SphereWorker();
+    return new NoiseWorker();
 }
 
-SphereWorker::SphereWorker()
+NoiseWorker::NoiseWorker()
 {
     m_positions.resize(5000);
     m_velocities.resize(m_positions.size());
@@ -44,9 +44,9 @@ SphereWorker::SphereWorker()
     }
 }
 
-void SphereWorker::synchronizeSimulator(Simulator *simulator)
+void NoiseWorker::synchronizeSimulator(Simulator *simulator)
 {
-    SphereSimulator *mySimulator = qobject_cast<SphereSimulator*>(simulator);
+    NoiseSimulator *mySimulator = qobject_cast<NoiseSimulator*>(simulator);
     if(mySimulator) {
         // Synchronize data between QML thread and computing thread (MySimulator is on QML, MyWorker is computing thread).
         // This is for instance data from user through GUI (sliders, buttons, text fields etc)
@@ -56,7 +56,7 @@ void SphereWorker::synchronizeSimulator(Simulator *simulator)
     }
 }
 
-void SphereWorker::work()
+void NoiseWorker::work()
 {
     for(int i=0; i<m_positions.size(); i++) {
         float ax = ((2.0*rand() / double(RAND_MAX))-1.0);

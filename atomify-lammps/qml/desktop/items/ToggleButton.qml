@@ -15,7 +15,7 @@ Item {
     property alias source: toggleImage.source
     property alias text: buttonText.text
     property string toolTipText: ""
-
+    property real scale: 1.0
     height: buttonColumn.height
 
     ToolTip.text: toolTipText

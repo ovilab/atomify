@@ -4,10 +4,10 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
 
-unix:!macx {
+#unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
-}
+#}
 
 CONFIG += warn_off
 DEFINES += LAMMPS_EXCEPTIONS LAMMPS_GZIP LAMMPS_MEMALIGN=64

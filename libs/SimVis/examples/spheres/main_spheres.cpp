@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     // Fixes motion problems, see https://bugreports.qt.io/browse/QTBUG-53165
     qputenv("QSG_RENDER_LOOP", "basic");
 
-    qmlRegisterType<SphereSimulator>("SphereSimulator", 1, 0, "SphereSimulator");
+    qmlRegisterType<NoiseSimulator>("SphereSimulator", 1, 0, "SphereSimulator");
     QApplication app(argc, argv);
 
     QQuickView view;
