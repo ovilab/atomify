@@ -1,6 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 1.5 as QQC1
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 import SimVis 1.0
