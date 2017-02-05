@@ -278,6 +278,7 @@ void System::reset()
     m_numberOfAtoms = 0;
     m_numberOfAtomTypes = 0;
     m_center = QVector3D();
+    m_volume = 0;
     setBoundaryStyle("None");
     emit currentTimestepChanged(m_currentTimestep);
     emit simulationTimeChanged(m_simulationTime);
@@ -286,6 +287,7 @@ void System::reset()
     emit originChanged(m_origin);
     emit numberOfAtomsChanged(m_numberOfAtoms);
     emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
+    emit volumeChanged(m_volume);
 }
 
 float System::volume() const
