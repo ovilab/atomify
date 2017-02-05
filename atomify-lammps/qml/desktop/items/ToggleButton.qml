@@ -1,5 +1,6 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick 2.7
+import QtQuick.Controls 1.4 as QQC1
+import QtQuick.Controls 2.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
@@ -13,8 +14,13 @@ Item {
     property alias toggled: toggleImage.toggled
     property alias source: toggleImage.source
     property alias text: buttonText.text
+    property string toolTipText: ""
 
     height: buttonColumn.height
+
+    ToolTip.text: toolTipText
+    ToolTip.visible: mouseArea.containsMouse && toolTipText.length>0
+
     Column {
         id: buttonColumn
         anchors {
@@ -31,7 +37,7 @@ Item {
             }
             height: width
         }
-        Text {
+        Label {
             id: buttonText
             anchors {
                 left: parent.left
@@ -44,7 +50,9 @@ Item {
         }
     }
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
+        hoverEnabled: true
         onClicked: {
             root.clicked()
         }

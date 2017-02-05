@@ -199,6 +199,20 @@ Rectangle {
                         right: parent.right
                     }
                     toggled: modeMenu.currentIndex === index
+                    toolTipText: {
+                        if(index===0) {
+                            return "Focus on the visualization by hiding both the editor and analysis bar "+ctrl1.nativeText
+                        } else if (index===1) {
+                            return "Focus on the visualization and analysis by hiding the editor "+ctrl2.nativeText
+                        } else if (index===2) {
+                            return "Shows both the editor and the analysis "+ctrl3.nativeText
+                        } else if (index===3) {
+                            return "Explore the examples we've added to Atomify "+ctrl4.nativeText
+                        } else if (index===4) {
+                            return "Shows the help pane "+ctrl5.nativeText
+                        }
+                    }
+
                     source: image
                     text: name
                     onClicked: {
@@ -591,42 +605,55 @@ Rectangle {
         }
 
         Shortcut {
+            id: ctrl1
             sequence: "Ctrl+1"
+            context: Qt.ApplicationShortcut
             onActivated: modeMenu.currentIndex = 0
         }
 
         Shortcut {
             sequence: "Ctrl+2"
+            id: ctrl2
+            context: Qt.ApplicationShortcut
             onActivated: modeMenu.currentIndex = 1
         }
 
         Shortcut {
             sequence: "Ctrl+3"
+            id: ctrl3
+            context: Qt.ApplicationShortcut
             onActivated: modeMenu.currentIndex = 2
         }
 
         Shortcut {
             sequence: "Ctrl+4"
+            id: ctrl4
+            context: Qt.ApplicationShortcut
             onActivated: modeMenu.currentIndex = 3
         }
 
         Shortcut {
+            id: ctrl5
             sequence: "Ctrl+5"
+            context: Qt.ApplicationShortcut
             onActivated: modeMenu.currentIndex = 4
         }
 
         Shortcut {
             sequence: "1"
+            context: Qt.ApplicationShortcut
             onActivated: simulator.simulationSpeed = 1
         }
 
         Shortcut {
             sequence: "2"
+            context: Qt.ApplicationShortcut
             onActivated: simulator.simulationSpeed = 5
         }
 
         Shortcut {
             sequence: "3"
+            context: Qt.ApplicationShortcut
             onActivated: simulator.simulationSpeed = 30
         }
     }
