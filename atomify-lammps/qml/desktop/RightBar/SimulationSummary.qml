@@ -358,6 +358,9 @@ Flickable {
 
             Column {
                 Label {
+                    text: "FPS: "+ root.visualizer.fps
+                }
+                Label {
                     text: "Memory usage LAMMPS: "+ (system.performance.memoryLAMMPS / 1024 / 1024).toFixed(0) +" MB"
                 }
                 Label {

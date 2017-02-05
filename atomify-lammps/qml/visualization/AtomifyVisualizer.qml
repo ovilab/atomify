@@ -8,6 +8,7 @@ import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
+import Qt3D.Logic 2.0
 
 import QtQuick.Scene3D 2.0
 
@@ -31,6 +32,8 @@ Scene3D {
     property alias light1: light1
     property alias light2: light2
     property real scale: 0.23
+    property int fps: 0
+    property int frames: 0
     property alias ambientOcclusion: ssaoQuadEntity.ambientOcclusion
     property alias finalShaderBuilder: finalQuadEntity.shaderBuilder
     property alias periodicImages: periodicImages
@@ -270,6 +273,22 @@ Scene3D {
 
         Layer {
             id: outlineLayer
+        }
+
+        FrameAction {
+            onTriggered: {
+                root.frames++
+            }
+        }
+
+        Timer {
+            interval: 1000
+            running: true
+            repeat: true
+            onTriggered: {
+                root.fps = root.frames
+                root.frames = 0
+            }
         }
 
         ForwardFrameGraph {
