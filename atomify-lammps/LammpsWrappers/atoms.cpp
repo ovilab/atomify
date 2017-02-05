@@ -151,8 +151,8 @@ void Atoms::processModifiers(System *system)
 }
 
 void Atoms::createRenderererData(LAMMPSController *lammpsController) {
-    generateSphereData(m_atomDataProcessed);
     generateBondData(m_atomDataProcessed, lammpsController);
+    generateSphereData(m_atomDataProcessed);
 }
 
 long Atoms::memoryUsage()
@@ -305,7 +305,6 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
 
             QVector3D position_j = atomData.positions[j];
             position_j += deltaPosition_i;
-
 
             float dx = position_i[0] - position_j[0];
             float dy = position_i[1] - position_j[1];
