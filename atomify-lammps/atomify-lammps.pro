@@ -143,6 +143,10 @@ HEADERS += \
 
 # Temporary use of quickcontrols2 without install
 
+RC_ICONS = atomify_lammps/images/atomify_logo.ico
+macx:ICON = images/atomify_logo.icns
+macx:QMAKE_INFO_PLIST = info.plist
+
 DISTFILES += \
     iOS.plist \
     qml/qtquickcontrols2.conf \

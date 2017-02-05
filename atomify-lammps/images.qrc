@@ -75,5 +75,6 @@
         <file>images/ic_file_download_white_36dp.png</file>
         <file>images/ic_file_download_white_48dp.png</file>
         <file>images/atomify_logo.png</file>
+        <file>images/atomify_logo.icns</file>
     </qresource>
 </RCC>
