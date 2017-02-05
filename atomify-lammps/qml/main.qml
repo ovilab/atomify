@@ -171,20 +171,20 @@ QQC1.ApplicationWindow {
                     mainDesktop.captureScreenshot()
                 }
             }
-            QQC1.MenuItem {
-                text: "High quality"
-                checkable: true
-                checked: mainDesktop.renderQuality==="medium"
-                shortcut: "q"
-                onTriggered: {
-                    if(mainDesktop.renderQuality==="medium") {
-                        mainDesktop.renderQuality="low"
-                    } else {
-                        mainDesktop.renderQuality="medium"
-                    }
-                    console.log("Switching render quality to ", mainDesktop.renderQuality)
-                }
-            }
+//            QQC1.MenuItem {
+//                text: "High quality"
+//                checkable: true
+//                checked: mainDesktop.renderQuality==="medium"
+//                shortcut: "q"
+//                onTriggered: {
+//                    if(mainDesktop.renderQuality==="medium") {
+//                        mainDesktop.renderQuality="low"
+//                    } else {
+//                        mainDesktop.renderQuality="medium"
+//                    }
+//                    console.log("Switching render quality to ", mainDesktop.renderQuality)
+//                }
+//            }
         }
     }
 
