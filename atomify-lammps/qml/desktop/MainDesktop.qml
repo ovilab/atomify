@@ -117,7 +117,7 @@ Rectangle {
             height: width
             mipmap: true
             smooth: true
-            source: "qrc:/images/eye-on.png"
+            source: "qrc:/images/atomify_logo.png"
             fillMode: Image.PreserveAspectFit
         }
 
