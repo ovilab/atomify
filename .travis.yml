@@ -6,7 +6,7 @@ services: docker
 before_install:
 - docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
 script:
-- docker run ovilab/atomify-lammps /bin/bash -c "/opt/qt57/bin/qmake atomify-lammps.pro && make"
+- docker run ovilab/atomify-lammps /bin/bash -c "/opt/qt58/bin/qmake atomify-lammps.pro && make"
 before_deploy:
 - mkdir output
 - docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps snapcraft
