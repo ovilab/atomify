@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>SpheresScene.qml</file>
         <file>main_spheres.qml</file>
+        <file>FlyModeController.qml</file>
     </qresource>
 </RCC>

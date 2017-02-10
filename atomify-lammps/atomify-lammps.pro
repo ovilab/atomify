@@ -4,10 +4,10 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
 
-unix:!macx {
+#unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
-}
+#}
 
 CONFIG += warn_off
 DEFINES += LAMMPS_EXCEPTIONS LAMMPS_GZIP LAMMPS_MEMALIGN=64
@@ -142,6 +142,10 @@ HEADERS += \
     keysequence.h
 
 # Temporary use of quickcontrols2 without install
+
+RC_ICONS = atomify_lammps/images/atomify_logo.ico
+macx:ICON = images/atomify_logo.icns
+macx:QMAKE_INFO_PLIST = info.plist
 
 DISTFILES += \
     iOS.plist \

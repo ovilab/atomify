@@ -138,7 +138,6 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Ovilab");
     app.setOrganizationDomain("ovilab");
     app.setApplicationName("Atomify");
-
     QSurfaceFormat format;
 #ifndef Q_OS_ANDROID
     format.setMajorVersion(3);
@@ -164,7 +163,11 @@ int main(int argc, char *argv[])
         previewer.show();
     } else {
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
+#ifdef Q_OS_MAC
+        QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
+        window->setIcon(QIcon(":/images/atomify_logo.icns"));
+        app.setWindowIcon(QIcon(":/images/atomify_logo.icns"));
+#endif
 #ifdef Q_OS_LINUX
         setlocale(LC_ALL, "C");
         setlocale(LC_NUMERIC, "C");

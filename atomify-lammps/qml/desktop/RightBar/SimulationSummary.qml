@@ -1,6 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.2
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import Atomify 1.0
 import "../items"
 import "../../plotting"
@@ -357,6 +357,9 @@ Flickable {
             title: "Performance"
 
             Column {
+                Label {
+                    text: "FPS: "+ root.visualizer.fps
+                }
                 Label {
                     text: "Memory usage LAMMPS: "+ (system.performance.memoryLAMMPS / 1024 / 1024).toFixed(0) +" MB"
                 }

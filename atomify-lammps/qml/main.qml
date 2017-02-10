@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import QtQuick.Controls 1.4 as QQC1
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
@@ -171,20 +171,20 @@ QQC1.ApplicationWindow {
                     mainDesktop.captureScreenshot()
                 }
             }
-            QQC1.MenuItem {
-                text: "High quality"
-                checkable: true
-                checked: mainDesktop.renderQuality==="medium"
-                shortcut: "q"
-                onTriggered: {
-                    if(mainDesktop.renderQuality==="medium") {
-                        mainDesktop.renderQuality="low"
-                    } else {
-                        mainDesktop.renderQuality="medium"
-                    }
-                    console.log("Switching render quality to ", mainDesktop.renderQuality)
-                }
-            }
+//            QQC1.MenuItem {
+//                text: "High quality"
+//                checkable: true
+//                checked: mainDesktop.renderQuality==="medium"
+//                shortcut: "q"
+//                onTriggered: {
+//                    if(mainDesktop.renderQuality==="medium") {
+//                        mainDesktop.renderQuality="low"
+//                    } else {
+//                        mainDesktop.renderQuality="medium"
+//                    }
+//                    console.log("Switching render quality to ", mainDesktop.renderQuality)
+//                }
+//            }
         }
     }
 

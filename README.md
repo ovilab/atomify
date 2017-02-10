@@ -6,13 +6,17 @@ The typical workflow when developing scripts for LAMMPS includes working with se
 
 ## How to build ##
 Step 1)
-You will need Qt 5.7 with both Qt Charts and Qt Data Visualization. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download/](https://www.qt.io/download/) (you can scroll down to the Open Source download section) and install it from there. Remember to include Qt Charts and Qt Data visualization when you install.
+You will need Qt 5.8. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download-open-source/](https://www.qt.io/download-open-source/) and install it from there. When you run the installer, you can just press skip when it asks you for the account. If you are using Mac, you can also uncheck the ~10GB iOS package unless you want that.
 
 Step 2)
-Clone the repository `git clone --recursive https://github.com/ovilab/atomify-lammps.git`.
+Clone the repository `git clone --recursive https://github.com/ovilab/atomify-lammps.git`
 
 Step 3)
 Open the atomify-lammps directory and run `python configure.py` which will configure and compile LAMMPS. 
 
 Step 4)
 Open atomify-lammps.pro in Qt Creator and build/run.
+
+## How to add/remove LAMMPS packages ##
+LAMMPS is located in libs/lammps, so you can do any changes you want to (add packages, your own codes and so on). You need to recompile LAMMPS with (being in the libs/lammps/src folder)
+`make atomify mode=lib`
