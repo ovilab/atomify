@@ -16,3 +16,7 @@ Open the atomify-lammps directory and run `python configure.py` which will confi
 
 Step 4)
 Open atomify-lammps.pro in Qt Creator and build/run.
+
+## How to add/remove LAMMPS packages ##
+LAMMPS is located in libs/lammps, so you can do any changes you want to (add packages, your own codes and so on). You need to recompile LAMMPS with (being in the libs/lammps/src folder)
+`make atomify mode=lib`
