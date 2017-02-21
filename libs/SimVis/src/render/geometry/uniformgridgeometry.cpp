@@ -63,8 +63,8 @@ void UniformGridGeometry::init()
     const quint32 stride = 3 * sizeof(float); // 3 floats, x y z
 
     m_positionAttribute->setName(QAttribute::defaultPositionAttributeName());
-    m_positionAttribute->setDataType(QAttribute::Float);
-    m_positionAttribute->setDataSize(3);
+    m_positionAttribute->setVertexBaseType(QAttribute::Float);
+    m_positionAttribute->setVertexSize(3);
     m_positionAttribute->setAttributeType(QAttribute::VertexAttribute);
     m_positionAttribute->setBuffer(m_vertexBuffer);
     m_positionAttribute->setByteStride(stride);

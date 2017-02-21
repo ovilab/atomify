@@ -109,16 +109,16 @@ void SpheresPointGeometry::init()
     const int indexCount = 4;
 
     m_positionAttribute->setName(QAttribute::defaultPositionAttributeName());
-    m_positionAttribute->setDataType(QAttribute::Float);
-    m_positionAttribute->setDataSize(3);
+    m_positionAttribute->setVertexBaseType(QAttribute::Float);
+    m_positionAttribute->setVertexSize(3);
     m_positionAttribute->setAttributeType(QAttribute::VertexAttribute);
     m_positionAttribute->setBuffer(m_vertexBuffer);
     m_positionAttribute->setByteStride(stride);
     m_positionAttribute->setCount(vertexCount);
 
     m_idAttribute->setName("vertexId");
-    m_idAttribute->setDataType(QAttribute::Float);
-    m_idAttribute->setDataSize(1);
+    m_idAttribute->setVertexBaseType(QAttribute::Float);
+    m_idAttribute->setVertexSize(1);
     m_idAttribute->setAttributeType(QAttribute::VertexAttribute);
     m_idAttribute->setBuffer(m_vertexBuffer);
     m_idAttribute->setByteStride(stride);
@@ -126,7 +126,7 @@ void SpheresPointGeometry::init()
     m_idAttribute->setCount(vertexCount);
 
     m_indexAttribute->setAttributeType(QAttribute::IndexAttribute);
-    m_indexAttribute->setDataType(QAttribute::UnsignedShort);
+    m_indexAttribute->setVertexBaseType(QAttribute::UnsignedShort);
     m_indexAttribute->setBuffer(m_indexBuffer);
     m_indexAttribute->setCount(indexCount);
 
