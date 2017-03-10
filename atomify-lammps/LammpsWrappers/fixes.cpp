@@ -46,11 +46,11 @@ void Fixes::reset() {
 
 bool Fixes::addOrRemove(LAMMPSController *lammpsController)
 {
-    Modify *modify = lammpsController->lammps()->modify;
+    LAMMPS_NS::Modify *modify = lammpsController->lammps()->modify;
     bool anyChanges = false;
     for(int fixIndex=0; fixIndex<modify->nfix; fixIndex++) {
 
-        Fix *fix = modify->fix[fixIndex];
+        LAMMPS_NS::Fix *fix = modify->fix[fixIndex];
         QString identifier = QString::fromUtf8(fix->id);
 
         if(!m_dataMap.contains(identifier)) {

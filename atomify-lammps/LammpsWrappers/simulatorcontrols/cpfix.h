@@ -1,8 +1,8 @@
 #ifndef CPFIX_H
 #define CPFIX_H
 #include "simulatorcontrol.h"
-#include <style_fix.h>
-using namespace LAMMPS_NS;
+#include <fix_ave_chunk.h>
+#include <fix_ave_histo.h>
 class CPFix : public SimulatorControl
 {
     Q_OBJECT
@@ -54,8 +54,8 @@ private:
     QString m_group = "all";
     int m_frequency = 10;
     bool m_interactive = false;
-    bool copyData(FixAveChunk *fix, class LAMMPSController *lammpsController);
-    bool copyData(FixAveHisto *fix, class LAMMPSController *lammpsController);
+    bool copyData(LAMMPS_NS::FixAveChunk *fix, class LAMMPSController *lammpsController);
+    bool copyData(LAMMPS_NS::FixAveHisto *fix, class LAMMPSController *lammpsController);
     QVariantList m_data;
     QList<class Data2D*> m_dataRaw;
     QVariant m_model;

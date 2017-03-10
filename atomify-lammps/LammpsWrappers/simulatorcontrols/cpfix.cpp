@@ -13,13 +13,13 @@ CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
 
 CPFix::~CPFix() { }
 
-bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
+bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsController) {
     enum{BIN1D,BIN2D,BIN3D,BINSPHERE,BINCYLINDER,
          TYPE,MOLECULE,COMPUTE,FIX,VARIABLE};
 
     if(!fix) return false;
     int dimension;
-    ComputeChunkAtom *chunk = static_cast<ComputeChunkAtom*>(fix->extract("cchunk", dimension));
+    LAMMPS_NS::ComputeChunkAtom *chunk = static_cast<LAMMPS_NS::ComputeChunkAtom*>(fix->extract("cchunk", dimension));
     int *nvalues = static_cast<int*>(fix->extract("nvalues", dimension));
     int *nchunk = static_cast<int*>(fix->extract("nchunk", dimension));
     int *colextra = static_cast<int*>(fix->extract("colextra", dimension));
@@ -105,7 +105,7 @@ bool CPFix::copyData(FixAveChunk *fix, LAMMPSController *lammpsController) {
     }
 }
 
-bool CPFix::copyData(FixAveHisto *fix, LAMMPSController *lammpsController) {
+bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsController) {
     // TODO Implement this
     return false;
     if(!fix) return false;
@@ -129,9 +129,9 @@ void CPFix::copyData(LAMMPSController *lammpsController)
     // if(lammpsController->system->timesteps() % m_frequency != 0) return;
     if(lastUpdate != -1 && (lammpsController->system->currentTimestep()-lastUpdate) < m_frequency) return;
     // if(lammpsController->system->timesteps() % m_frequency != 0) return;
-    Fix *lmp_fix = lammpsController->findFixByIdentifier(identifier());
+    LAMMPS_NS::Fix *lmp_fix = lammpsController->findFixByIdentifier(identifier());
     if(lmp_fix == nullptr) return;
-    if(copyData(dynamic_cast<FixAveChunk*>(lmp_fix), lammpsController)) return;
+    if(copyData(dynamic_cast<LAMMPS_NS::FixAveChunk*>(lmp_fix), lammpsController)) return;
 }
 
 bool CPFix::interactive() const
