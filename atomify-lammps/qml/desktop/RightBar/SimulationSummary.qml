@@ -149,9 +149,11 @@ Flickable {
                     text: "Triclinic"
                     visible: system.triclinic
                 }
-                ToolTipLabel {
-                    toolTipText: "Shows the units used by the current simulation."
-                    text: "Units: "+system.units.name
+                Label {
+                    text: "Units: <a href=\"units\">"+system.units.name+"</a>"
+                    onLinkActivated: {
+                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/units.html")
+                    }
                 }
                 ToolTipLabel {
                     toolTipText: "The current simulations is "+system.units.dimensions+"-dimensional."
