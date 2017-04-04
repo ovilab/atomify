@@ -45,6 +45,11 @@ include(../libs/QmlPreviewer/qmlpreviewer.pri)
 !exists(examples/examples.qrc) {
     system(cd examples; python generateExamples.py)
 }
+
+!exists(examples/examples.qrc) {
+    error("examples/examples.qrc missing. Did you forget to run python configure.py?")
+}
+CONFIG += resources_big
 RESOURCES += examples/examples.qrc
 
 ios {

@@ -15,8 +15,8 @@ def run_command(cmd):
 lammps_build_type = "atomify"
 env = os.environ.copy()
 
-# Set up SimVis
-#run_command("git submodule update --init --recursive")
+# Set up examples
+run_command("git submodule update --init --recursive")
 
 # Set up LAMMPS
 

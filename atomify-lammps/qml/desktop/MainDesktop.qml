@@ -43,8 +43,8 @@ Rectangle {
         interval: 250
         onTriggered: {
             var initialExampleUrl = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
-//            visualizer.simulator.scriptFilePath = initialExampleUrl
-//            visualizer.simulator.started()
+            //            visualizer.simulator.scriptFilePath = initialExampleUrl
+            //            visualizer.simulator.started()
             editor.editorWindow.openTab(initialExampleUrl)
             editor.editorWindow.runScript()
         }
@@ -86,84 +86,78 @@ Rectangle {
             bottom: parent.bottom
         }
         color: Material.color(Material.Grey, Material.Shade900)
-        onColorChanged: console.log("Color: ", color)
-        width: 96
+        width: 72
 
-//        LinearGradient {
-//            anchors.fill: parent
-//            start: Qt.point(0, 0)
-//            end: Qt.point(width, 10)
-//            gradient: Gradient {
-//                GradientStop {
-//                    color: Material.color(Material.Grey, Material.Shade900)
-//                    position: 0.0
-//                }
-//                GradientStop {
-//                    color: Material.color(Material.Grey, Material.Shade900)
-//                    position: 1.0
-//                }
-//            }
-//        }
-
-        Image {
-            id: photonflowLogo
+        ColumnLayout {
             anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-                margins: 12
+                fill: parent
+                topMargin: 16
+                bottomMargin: 16
             }
 
-            height: width
-            mipmap: true
-            smooth: true
-            source: "qrc:/images/atomify_logo.png"
-            fillMode: Image.PreserveAspectFit
-        }
-
-        Label {
-            id: logoText
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                top: photonflowLogo.bottom
-                topMargin: 8
-            }
-
-            text: "Atomify\n2.0"
-            font.pixelSize: 12
-            horizontalAlignment: Text.AlignHCenter
-        }
-
-        Column {
-            id: modeMenu
-
-            property int currentIndex: 0
-
-            onCurrentIndexChanged: {
-                root.viewMode = modeModel.get(currentIndex).mode
-                if(root.viewMode === "edit") messageOverlay.visible = false
-            }
-
-            Connections {
-                target: root
-                onViewModeChanged: {
-                    for(var i = 0; i < modeModel.count; i++) {
-                        if(modeModel.get(i).mode === root.viewMode) {
-                            modeMenu.currentIndex = i
-                        }
+            Item {
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumHeight: 16
+                Layout.maximumHeight: modeMenuContainer.width
+                Image {
+                    anchors {
+                        top: parent.top
+                        bottom: logoLabel.top
+                        left: parent.left
+                        right: parent.right
                     }
+
+                    mipmap: true
+                    smooth: true
+                    source: "qrc:/images/atomify_logo.png"
+                    fillMode: Image.PreserveAspectFit
+                }
+
+                Label {
+                    id: logoLabel
+                    anchors {
+                        left: parent.left
+                        leftMargin: 8
+                        rightMargin: 8
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+
+                    fontSizeMode: Text.Fit
+                    height: 24
+
+                    text: "Atomify 2.0"
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
 
-            anchors {
-                verticalCenter: parent.verticalCenter
-                left: parent.left
-                right: parent.right
-                margins: 16
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
-            spacing: 24
 
             Repeater {
+                id: modeMenu
+
+                property int currentIndex: 0
+
+                onCurrentIndexChanged: {
+                    root.viewMode = modeModel.get(currentIndex).mode
+                    if(root.viewMode === "edit") messageOverlay.visible = false
+                }
+
+                Connections {
+                    target: root
+                    onViewModeChanged: {
+                        for(var i = 0; i < modeModel.count; i++) {
+                            if(modeModel.get(i).mode === root.viewMode) {
+                                modeMenu.currentIndex = i
+                            }
+                        }
+                    }
+                }
+
                 model: ListModel {
                     id: modeModel
                     ListElement {
@@ -194,10 +188,10 @@ Rectangle {
                 }
 
                 ToggleButton {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.minimumHeight: 32
+                    Layout.maximumHeight: modeMenuContainer.width
                     toggled: modeMenu.currentIndex === index
                     toolTipText: {
                         if(index===0) {
@@ -221,23 +215,17 @@ Rectangle {
                     }
                 }
             }
-        }
 
-        Column {
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-                margins: 16
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
-            spacing: 24
 
             ToggleButton {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: 8
-                }
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumHeight: 48
+                Layout.maximumHeight: modeMenuContainer.width
                 source: {
                     if(simulator.states.paused.active || stopButton.toggled) {
                         return "qrc:/images/ic_play_arrow_white_48dp.png"
@@ -267,11 +255,10 @@ Rectangle {
             }
             ToggleButton {
                 id: stopButton
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: 8
-                }
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumHeight: 48
+                Layout.maximumHeight: modeMenuContainer.width
                 source: "qrc:/images/ic_stop_white_48dp.png"
                 toggled: simulator.states.finished.active || simulator.states.idle.active
                 text: toggled ? "Stopped" : "Stop"
@@ -280,11 +267,10 @@ Rectangle {
                 }
             }
             ToggleButton {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: 8
-                }
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.minimumHeight: 48
+                Layout.maximumHeight: modeMenuContainer.width
                 source: "qrc:/images/ic_refresh_white_48dp.png"
                 text: "Restart"
                 onClicked: {
@@ -567,8 +553,8 @@ Rectangle {
     EventMapper {
         mapping: {
             "desktop": root,
-            "visualizer": visualizer,
-            "simulator": visualizer.simulator
+                    "visualizer": visualizer,
+                    "simulator": visualizer.simulator
         }
     }
 

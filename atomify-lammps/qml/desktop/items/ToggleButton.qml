@@ -16,38 +16,33 @@ Item {
     property alias text: buttonText.text
     property string toolTipText: ""
     property real scale: 1.0
-    height: buttonColumn.height
 
     ToolTip.text: toolTipText
     ToolTip.visible: mouseArea.containsMouse && toolTipText.length>0
 
-    Column {
-        id: buttonColumn
+    ToggleImage {
+        id: toggleImage
+        anchors {
+            top: parent.top
+            bottom: buttonText.top
+            left: parent.left
+            right: parent.right
+            leftMargin: 16
+            rightMargin: 16
+        }
+    }
+
+    Label {
+        id: buttonText
         anchors {
             left: parent.left
             right: parent.right
+            bottom: parent.bottom
         }
-        spacing: 8
-        ToggleImage {
-            id: toggleImage
-            anchors {
-                left: parent.left
-                right: parent.right
-                margins: 8
-            }
-            height: width
-        }
-        Label {
-            id: buttonText
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
 
-            color: "#ccc"
-            text: name
-            horizontalAlignment: Text.AlignHCenter
-        }
+        color: "#ccc"
+        text: name
+        horizontalAlignment: Text.AlignHCenter
     }
     MouseArea {
         id: mouseArea
