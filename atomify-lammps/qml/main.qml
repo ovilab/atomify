@@ -19,7 +19,7 @@ import "."
 
 QQC1.ApplicationWindow {
     id: applicationRoot
-    title: "Atomify LAMMPS"
+    title: "Atomify"
     visible: true
 
     width: 1280
