@@ -6,7 +6,13 @@ Item {
     property alias source: image.source
     
     Rectangle {
-        anchors.fill: parent
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            right: parent.right
+        }
+        height: width
+
         // opacity: toggled ? 0.5 : 0.0
         visible: Qt.platform.os==="osx" ? toggled : false
         color: "#3377ef"
