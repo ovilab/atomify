@@ -451,13 +451,17 @@ Rectangle {
                 cancelling: simulator.states.reset.active
 
                 onContinueClicked: simulator.continued()
-                onEditClicked: modeMenu.currentIndex = 1
+                onEditClicked: modeMenu.currentIndex = 2
                 onNewTabClicked: {
-                    modeMenu.currentIndex = 1
+                    modeMenu.currentIndex = 2
                     editor.editorWindow.newTab()
                 }
+                onOpenClicked: {
+                    modeMenu.currentIndex = 2
+                    editor.editorWindow.openTab()
+                }
 
-                onExamplesClicked: modeMenu.currentIndex = 2
+                onExamplesClicked: modeMenu.currentIndex = 3
                 onHideClicked: visible = false
                 onShouldBeVisibleChanged: {
                     if(shouldBeVisible) {

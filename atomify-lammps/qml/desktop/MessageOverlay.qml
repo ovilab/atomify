@@ -5,6 +5,7 @@ Rectangle {
     id: root
     signal continueClicked()
     signal editClicked()
+    signal openClicked()
     signal examplesClicked()
     signal newTabClicked()
     signal hideClicked()
@@ -48,10 +49,11 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Welcome to Atomify</h2>
-Atomify is a live LAMMPS editor. Here you can edit, run and analyze your scripts.
+Atomify is a live LAMMPS editor. Here you can edit, run and analyze your simulations.
 <div style=\"margin-top: 5px\">&bull; Edit the current script in the <a href=\"edit\">edit</a> menu. (Ctrl+2)</div>
 <div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a> (Ctrl+3)</div>
 <div style=\"margin-top: 5px\">&bull; Start a <a href=\"newTab\">new script</a> (Ctrl+N)</div>
+<div style=\"margin-top: 5px\">&bull; Open one of your <a href=\"open\">existing scripts</a> (Ctrl+O)</div>
 "
 
     color: Qt.rgba(0.1, 0.1, 0.1, 0.7)
@@ -86,6 +88,8 @@ Atomify is a live LAMMPS editor. Here you can edit, run and analyze your scripts
                 root.examplesClicked()
             } else if(link==="newTab") {
                 root.newTabClicked()
+            } else if(link==="open") {
+                root.openClicked()
             } else if(link==="hide") {
                 root.hideClicked()
             }
