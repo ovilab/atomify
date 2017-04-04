@@ -13,8 +13,10 @@ public:
 
     Q_INVOKABLE QString keyBindings(QKeySequence::StandardKey key);
 
-    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
+    Q_INVOKABLE static QString nativeText(QKeySequence::StandardKey key);
+    Q_INVOKABLE static QString nativeText(const QString &key);
 
+    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
 };
 
 #endif // KEYSEQUENCE_H

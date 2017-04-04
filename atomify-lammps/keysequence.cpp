@@ -30,3 +30,11 @@ QObject* KeySequence::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine)
 
     return new KeySequence;
 }
+
+QString KeySequence::nativeText(QKeySequence::StandardKey key) {
+    return QKeySequence(key).toString(QKeySequence::NativeText);
+}
+
+QString KeySequence::nativeText(const QString &key) {
+    return QKeySequence(key).toString(QKeySequence::NativeText);
+}

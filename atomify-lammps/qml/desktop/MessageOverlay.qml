@@ -56,7 +56,7 @@ Atomify is a live LAMMPS editor. Here you can edit, run and analyze your simulat
 <div style=\"margin-top: 5px\">&bull; Edit the current script in the <a href=\"edit\">edit</a> menu. (" + EventCenter.nativeText("mode.edit") + ")</div>
 <div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a> (" + EventCenter.nativeText("mode.examples") + ")</div>
 <div style=\"margin-top: 5px\">&bull; Start a <a href=\"newTab\">new script</a> (" + EventCenter.nativeText("editor.new") + ")</div>
-<div style=\"margin-top: 5px\">&bull; Open one of your <a href=\"open\">existing scripts</a> (Ctrl+O)</div>
+<div style=\"margin-top: 5px\">&bull; Open one of your <a href=\"open\">existing scripts</a> (" + EventCenter.nativeText("editor.open") + ")</div>
 <br>
 Learn more about Atomify at <a href=\"website\">ovilab.net/atomify</a>. We love feedback, bugreports and ideas for new features.
 "

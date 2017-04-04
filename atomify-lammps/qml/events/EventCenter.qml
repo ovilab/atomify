@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick 2.7
+import KeySequence 1.0
 
 QtObject {
     signal triggered(string name, var data)
@@ -32,7 +33,7 @@ QtObject {
             var definition = definitions[i]
             if(definition.name === name) {
                 var sequence = definition.sequence || definition.shortcut // Shortcut or MenuItem
-                return sequence.toString(sequence.NativeText)
+                return KeySequence.nativeText(sequence)
             }
         }
         return "[" + name + "]"
