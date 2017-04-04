@@ -25,9 +25,11 @@ Rectangle {
     property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
+    property alias backgroundColor: visualizer.backgroundColor
     property alias mouseMover: visualizer.mouseMover
     property alias editor: editor
     property string viewMode: "view"
+    property string title: "Atomify"
 
     signal releaseCursor()
     signal changeMode()
@@ -111,8 +113,19 @@ Rectangle {
 
                     mipmap: true
                     smooth: true
-                    source: "qrc:/images/atomify_logo.png"
+                    source: "qrc:/images/atomify_logo_inapp.png"
                     fillMode: Image.PreserveAspectFit
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onHoveredChanged: {
+                            if(containsMouse) {
+                                root.title = "Caffeinify"
+                            } else {
+                                root.title = "Atomify"
+                            }
+                        }
+                    }
                 }
 
                 Label {
@@ -232,6 +245,18 @@ Rectangle {
                         }
                     }
                 }
+                toolTipText: {
+                    if(stopButton.toggled) {
+                        return " Start simulating current script (SHORTCUT)"
+                    } else {
+                        if(simulator.states.paused.active) {
+                            return "Resume current simulation (SHORTCUT)"
+                        } else {
+                            return "Pause current simulation (SHORTCUT)"
+                        }
+                    }
+                }
+
                 onClicked: {
                     if(simulator.states.idle.active) {
                         editor.editorWindow.runScript()
@@ -252,6 +277,9 @@ Rectangle {
                 onClicked: {
                     simulator.reset()
                 }
+                toolTipText: {
+                    return "Stop current simulation (SHORTCUT)"
+                }
             }
             ToggleButton {
                 Layout.fillHeight: true
@@ -262,6 +290,9 @@ Rectangle {
                 text: "Restart"
                 onClicked: {
                     editor.editorWindow.runScript()
+                }
+                toolTipText: {
+                    return "Restart current simulation (SHORTCUT)"
                 }
             }
         }
@@ -438,13 +469,17 @@ Rectangle {
                 cancelling: simulator.states.reset.active
 
                 onContinueClicked: simulator.continued()
-                onEditClicked: modeMenu.currentIndex = 1
+                onEditClicked: modeMenu.currentIndex = 2
                 onNewTabClicked: {
-                    modeMenu.currentIndex = 1
+                    modeMenu.currentIndex = 2
                     editor.editorWindow.newTab()
                 }
+                onOpenClicked: {
+                    modeMenu.currentIndex = 2
+                    editor.editorWindow.openTab()
+                }
 
-                onExamplesClicked: modeMenu.currentIndex = 2
+                onExamplesClicked: modeMenu.currentIndex = 3
                 onHideClicked: visible = false
                 onShouldBeVisibleChanged: {
                     if(shouldBeVisible) {
@@ -465,7 +500,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
-                    toolTipText: "Reset to origin [o]"
+                    toolTipText: "Reset to origin (o)"
 
                     onClicked: {
                         if(flymodeState.active) {
@@ -477,7 +512,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/switch_camera.png"
-                    toolTipText: "Switch camera [c]"
+                    toolTipText: "Switch camera (c)"
 
                     onClicked: {
                         changeMode()

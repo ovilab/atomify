@@ -151,8 +151,8 @@ void Atoms::processModifiers(System *system)
 }
 
 void Atoms::createRenderererData(LAMMPSController *lammpsController) {
-    generateBondData(m_atomDataProcessed, lammpsController);
     generateSphereData(m_atomDataProcessed);
+    generateBondData(m_atomDataProcessed, lammpsController);
 }
 
 long Atoms::memoryUsage()

@@ -246,7 +246,7 @@ void LAMMPSController::start() {
     //    sprintf(argv[4], "gpu");
     //    sprintf(argv[5], "1");
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
-    m_lammps->screen = NULL;
+    // m_lammps->screen = NULL;
     finished = false;
     didCancel = false;
     crashed = false;

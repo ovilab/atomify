@@ -19,7 +19,7 @@ import "events"
 
 QQC1.ApplicationWindow {
     id: applicationRoot
-    title: "Atomify LAMMPS"
+    title: mainDesktop.title
     visible: true
 
     width: 1280
@@ -242,6 +242,7 @@ QQC1.ApplicationWindow {
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
         property alias renderQuality: mainDesktop.renderQuality
+        property alias backgroundColor: mainDesktop.backgroundColor
     }
 
     function resetStyle() {
