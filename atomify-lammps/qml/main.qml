@@ -36,6 +36,7 @@ QQC1.ApplicationWindow {
                 text: "New script"
                 shortcut: StandardKey.New
                 onTriggered: {
+                    EventCenter.postEvent("mode.edit")
                     EventCenter.postEvent("editor.new")
                 }
             }
@@ -44,6 +45,7 @@ QQC1.ApplicationWindow {
                 text: "Open"
                 shortcut: StandardKey.Open
                 onTriggered: {
+                    EventCenter.postEvent("mode.edit")
                     EventCenter.postEvent("editor.open")
                 }
             }
@@ -52,6 +54,7 @@ QQC1.ApplicationWindow {
                 shortcut: StandardKey.Close
                 enabled: applicationRoot.activeFocusItem !== null
                 onTriggered: {
+                    EventCenter.postEvent("mode.edit")
                     EventCenter.postEvent("editor.close")
                 }
             }
@@ -66,6 +69,7 @@ QQC1.ApplicationWindow {
                 text: "Save as"
                 shortcut: StandardKey.SaveAs
                 onTriggered: {
+                    EventCenter.postEvent("mode.edit")
                     EventCenter.postEvent("editor.saveAs")
                 }
             }

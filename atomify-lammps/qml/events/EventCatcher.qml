@@ -4,13 +4,13 @@ import "."
 
 QtObject {
     id: root
-    signal triggered
+    signal triggered(var data)
     property string name
     readonly property var connections: Connections {
         target: EventCenter
         onTriggered: {
             if(name === root.name) {
-                root.triggered()
+                root.triggered(data)
             }
         }
     }

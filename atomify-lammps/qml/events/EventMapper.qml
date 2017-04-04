@@ -14,8 +14,6 @@ Connections {
     target: EventCenter
     property var mapping
     onTriggered: {
-        console.log("Received command", name)
-        
         for(var needle in mapping) {
             if(name.substring(0, needle.length) === needle) {
                 var command = name.substring(needle.length + 1)

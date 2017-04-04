@@ -379,7 +379,6 @@ Item {
     EventCatcher {
         name: "editor.new"
         onTriggered: {
-            EventCenter.postEvent("mode.edit")
             root.newTab()
         }
     }
@@ -387,15 +386,20 @@ Item {
     EventCatcher {
         name: "editor.open"
         onTriggered: {
-            EventCenter.postEvent("mode.edit")
-            root.openTab()
+            root.openTab(data)
+        }
+    }
+
+    EventCatcher {
+        name: "editor.run"
+        onTriggered: {
+            root.runScript()
         }
     }
 
     EventCatcher {
         name: "editor.close"
         onTriggered: {
-            EventCenter.postEvent("mode.edit")
             root.closeTab()
         }
     }
@@ -403,7 +407,6 @@ Item {
     EventCatcher {
         name: "editor.save"
         onTriggered: {
-            EventCenter.postEvent("mode.edit")
             currentEditor.save()
         }
     }

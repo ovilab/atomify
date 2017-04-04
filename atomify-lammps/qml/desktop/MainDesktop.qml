@@ -556,9 +556,9 @@ Rectangle {
         }
         visible: root.viewMode === "examples"
         onSimulationClicked: {
-            editor.editorWindow.openTab(fileName)
-            editor.editorWindow.runScript()
-            root.viewMode = "view"
+            EventCenter.postEvent("editor.open", fileName)
+            EventCenter.postEvent("editor.run")
+            EventCenter.postEvent("mode.view")
         }
     }
 
