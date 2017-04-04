@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls 1.5 as QQC1
+import QtQuick.Dialogs 1.2
 import Atomify 1.0
 import Qt.labs.settings 1.0
 import "../../visualization"
@@ -49,14 +50,24 @@ Pane {
                         text: "Show guides"
                         checked: visualizer.guidesVisible
                         focusPolicy: Qt.NoFocus
+                        ToolTip {
+                            visible: guidesCheckBoxMouseArea.containsMouse
+                            text: "Show/hide coordinate axis guides ("+guidesCheckBoxShortcut.nativeText+")"
+                        }
                         Binding {
                             target: visualizer
                             property: "guidesVisible"
                             value: guidesCheckBox.checked
                         }
+                        MouseArea {
+                            id: guidesCheckBoxMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                        }
                     }
 
                     Shortcut {
+                        id: guidesCheckBoxShortcut
                         sequence: "G"
                         onActivated: visualizer.guidesVisible = !visualizer.guidesVisible
                     }
@@ -66,18 +77,28 @@ Pane {
                         text: "Show outline"
                         checked: visualizer.systemBoxVisible
                         focusPolicy: Qt.NoFocus
+                        ToolTip {
+                            visible: outlineCheckBoxMouseArea.containsMouse
+                            text: "Show/hide system box defining simulation region ("+outlineCheckBoxShortcut.nativeText+")"
+                        }
+
                         Binding {
                             target: visualizer
                             property: "systemBoxVisible"
                             value: outlineCheckBox.checked
                         }
+                        MouseArea {
+                            id: outlineCheckBoxMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                        }
                     }
 
                     Shortcut {
+                        id: outlineCheckBoxShortcut
                         sequence: "M"
                         onActivated: visualizer.systemBoxVisible = !visualizer.systemBoxVisible
                     }
-
                 }
 
             }
@@ -339,6 +360,19 @@ Pane {
                     }
                 }
             }
+        }
+    }
+
+    ColorDialog {
+        id: colorDialog
+        title: "Please choose a color"
+        onAccepted: {
+            console.log("You chose: " + colorDialog.color)
+
+        }
+        onRejected: {
+            console.log("Canceled")
+
         }
     }
 }
