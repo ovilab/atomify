@@ -41,8 +41,9 @@ QQC1.ApplicationWindow {
                 }
             }
 
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Open"
+                name: "editor.open"
                 shortcut: StandardKey.Open
                 onTriggered: {
                     EventCenter.postEvent("mode.edit")
