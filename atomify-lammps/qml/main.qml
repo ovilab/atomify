@@ -44,7 +44,7 @@ QQC1.ApplicationWindow {
                 text: "Open"
                 shortcut: StandardKey.Open
                 onTriggered: {
-                    EventCenter.postEvent("editorWindow.openTab")
+                    EventCenter.postEvent("editor.open")
                 }
             }
             QQC1.MenuItem {
@@ -52,7 +52,7 @@ QQC1.ApplicationWindow {
                 shortcut: StandardKey.Close
                 enabled: applicationRoot.activeFocusItem !== null
                 onTriggered: {
-                    EventCenter.postEvent("editorWindow.closeTab")
+                    EventCenter.postEvent("editor.close")
                 }
             }
             QQC1.MenuItem {

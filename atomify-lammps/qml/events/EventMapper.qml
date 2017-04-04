@@ -9,6 +9,8 @@ import Atomify 1.0
 import "."
 
 Connections {
+    // TODO: This is deprecated and should be replaced by EventCatcher
+
     target: EventCenter
     property var mapping
     onTriggered: {

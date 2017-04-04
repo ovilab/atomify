@@ -384,10 +384,41 @@ Item {
         }
     }
 
+    EventCatcher {
+        name: "editor.open"
+        onTriggered: {
+            EventCenter.postEvent("mode.edit")
+            root.openTab()
+        }
+    }
+
+    EventCatcher {
+        name: "editor.close"
+        onTriggered: {
+            EventCenter.postEvent("mode.edit")
+            root.closeTab()
+        }
+    }
+
+    EventCatcher {
+        name: "editor.save"
+        onTriggered: {
+            EventCenter.postEvent("mode.edit")
+            currentEditor.save()
+        }
+    }
+
+    EventCatcher {
+        name: "editor.saveAs"
+        onTriggered: {
+            EventCenter.postEvent("mode.edit")
+            currentEditor.saveAs()
+        }
+    }
+
     EventMapper {
         mapping: {
              "editor.textArea": currentEditor ? currentEditor.textArea : null,
-             "editor": currentEditor ? currentEditor : null,
              "editorWindow": root
         }
     }
