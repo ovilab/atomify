@@ -110,7 +110,7 @@ Rectangle {
 
                     mipmap: true
                     smooth: true
-                    source: "qrc:/images/atomify_logo.png"
+                    source: "qrc:/images/atomify_logo_inapp.png"
                     fillMode: Image.PreserveAspectFit
                 }
 
