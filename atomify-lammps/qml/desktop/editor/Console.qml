@@ -58,7 +58,7 @@ ColumnLayout {
                 onActivated: {
                     if(singleCommand.text != "") {
                         if(simulator.states.paused.active) {
-                            simulator.togglePaused()
+                            simulator.togglePause()
                         }
 
                         simulator.scriptHandler.runCommand(singleCommand.text, true)

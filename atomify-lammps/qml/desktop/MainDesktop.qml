@@ -15,6 +15,7 @@ import "../visualization"
 import "editor"
 import "items"
 import "RightBar"
+import "../events"
 import "../plotting"
 import ".."
 
@@ -143,49 +144,48 @@ Rectangle {
                 property int currentIndex: 0
 
                 onCurrentIndexChanged: {
-                    root.viewMode = modeModel.get(currentIndex).mode
+                    root.viewMode = model[currentIndex].mode
                     if(root.viewMode === "edit") messageOverlay.visible = false
                 }
 
                 Connections {
                     target: root
                     onViewModeChanged: {
-                        for(var i = 0; i < modeModel.count; i++) {
-                            if(modeModel.get(i).mode === root.viewMode) {
+                        for(var i in model) {
+                            var mode = model[i].mode
+                            if(mode === root.viewMode) {
                                 modeMenu.currentIndex = i
                             }
                         }
                     }
                 }
 
-                model: ListModel {
-                    id: modeModel
-                    ListElement {
-                        image: "qrc:/images/ic_image_white_48dp.png"
-                        name: "View"
-                        mode: "view"
+                model: [
+                    {
+                        image: "qrc:/images/ic_image_white_48dp.png",
+                        name: "View",
+                        mode: "view",
+                        tooltip: "Show only visualization (" + EventCenter.nativeText("mode.view") + ")"
+                    },
+                    {
+                        image: "qrc:/images/ic_timeline_white_48dp.png",
+                        name: "Analyse",
+                        mode: "analyse",
+                        tooltip: "Show analysis (" + EventCenter.nativeText("mode.analyse") + ")"
+                    },
+                    {
+                        image: "qrc:/images/ic_mode_edit_white_48dp.png",
+                        name: "Edit",
+                        mode: "edit",
+                        tooltip: "Show both editor and analysis  (" + EventCenter.nativeText("mode.edit") + ")"
+                    },
+                    {
+                        image: "qrc:/images/ic_view_quilt_white_48dp.png",
+                        name: "Examples",
+                        mode: "examples",
+                        tooltip: "Explore examples  (" + EventCenter.nativeText("mode.examples") + ")"
                     }
-                    ListElement {
-                        image: "qrc:/images/ic_timeline_white_48dp.png"
-                        name: "Analyse"
-                        mode: "analyse"
-                    }
-                    ListElement {
-                        image: "qrc:/images/ic_mode_edit_white_48dp.png"
-                        name: "Edit"
-                        mode: "edit"
-                    }
-                    ListElement {
-                        image: "qrc:/images/ic_view_quilt_white_48dp.png"
-                        name: "Examples"
-                        mode: "examples"
-                    }
-//                    ListElement {
-//                        image: "qrc:/images/ic_help_white_48dp.png"
-//                        name: "Help"
-//                        mode: "help"
-//                    }
-                }
+                ]
 
                 ToggleButton {
                     Layout.fillHeight: true
@@ -193,23 +193,10 @@ Rectangle {
                     Layout.minimumHeight: 32
                     Layout.maximumHeight: modeMenuContainer.width
                     toggled: modeMenu.currentIndex === index
-                    toolTipText: {
-                        if(index===0) {
-                            return "Focus on the visualization by hiding both the editor and analysis bar "+ctrl1.nativeText
-                        } else if (index===1) {
-                            return "Focus on the visualization and analysis by hiding the editor "+ctrl2.nativeText
-                        } else if (index===2) {
-                            return "Shows both the editor and the analysis "+ctrl3.nativeText
-                        } else if (index===3) {
-                            return "Explore the examples we've added to Atomify "+ctrl4.nativeText
-                        }
-//                        else if (index===4) {
-//                            return "Shows the help pane "+ctrl5.nativeText
-//                        }
-                    }
+                    toolTipText: modelData.tooltip
 
-                    source: image
-                    text: name
+                    source: modelData.image
+                    text: modelData.name
                     onClicked: {
                         modeMenu.currentIndex = index
                     }
@@ -249,7 +236,7 @@ Rectangle {
                     if(simulator.states.idle.active) {
                         editor.editorWindow.runScript()
                     } else {
-                        simulator.togglePaused()
+                        simulator.togglePause()
                     }
                 }
             }
@@ -552,9 +539,11 @@ Rectangle {
 
     EventMapper {
         mapping: {
-            "desktop": root,
-                    "visualizer": visualizer,
-                    "simulator": visualizer.simulator
+            return {
+                "desktop": root,
+                "visualizer": visualizer,
+                "simulator": visualizer.simulator
+            }
         }
     }
 
@@ -565,25 +554,19 @@ Rectangle {
             onActivated: messageOverlay.visible = false
         }
 
-        Shortcut {
-            sequence: "Ctrl+P"
-            context: Qt.ApplicationShortcut
-            onActivated: simulator.togglePaused()
-        }
-        Shortcut {
-            sequence: "Space"
-            context: Qt.ApplicationShortcut
-            onActivated: simulator.togglePaused()
-        }
-        Shortcut {
-            sequence: "Ctrl+I"
-            context: Qt.ApplicationShortcut
-            onActivated: editor.editorWindow.currentEditor.textArea.forceActiveFocus()
+        EventCatcher {
+            name: "simulator.togglePause"
+            onTriggered: simulator.togglePause()
         }
 
-        Shortcut {
-            sequence: "Escape"
-            onActivated: {
+        EventCatcher {
+            name: "editor.focus"
+            onTriggered: editor.editorWindow.currentEditor.textArea.forceActiveFocus()
+        }
+
+        EventCatcher {
+            name: "escape"
+            onTriggered: {
                 focusViewport()
                 releaseCursor()
                 messageOverlay.visible = false
@@ -591,57 +574,39 @@ Rectangle {
             }
         }
 
-        Shortcut {
-            id: ctrl1
-            sequence: "Ctrl+1"
-            context: Qt.ApplicationShortcut
-            onActivated: modeMenu.currentIndex = 0
+        EventCatcher {
+            name: "mode.view"
+            onTriggered: modeMenu.currentIndex = 0
         }
 
-        Shortcut {
-            sequence: "Ctrl+2"
-            id: ctrl2
-            context: Qt.ApplicationShortcut
-            onActivated: modeMenu.currentIndex = 1
+        EventCatcher {
+            name: "mode.analyse"
+            onTriggered: modeMenu.currentIndex = 1
         }
 
-        Shortcut {
-            sequence: "Ctrl+3"
-            id: ctrl3
-            context: Qt.ApplicationShortcut
-            onActivated: modeMenu.currentIndex = 2
+        EventCatcher {
+            name: "mode.edit"
+            onTriggered: modeMenu.currentIndex = 2
         }
 
-        Shortcut {
-            sequence: "Ctrl+4"
-            id: ctrl4
-            context: Qt.ApplicationShortcut
-            onActivated: modeMenu.currentIndex = 3
+        EventCatcher {
+            name: "mode.examples"
+            onTriggered: modeMenu.currentIndex = 3
         }
 
-//        Shortcut {
-//            id: ctrl5
-//            sequence: "Ctrl+5"
-//            context: Qt.ApplicationShortcut
-//            onActivated: modeMenu.currentIndex = 4
-//        }
-
-        Shortcut {
-            sequence: "1"
-            context: Qt.ApplicationShortcut
-            onActivated: simulator.simulationSpeed = 1
+        EventCatcher {
+            name: "simulator.speed.normal"
+            onTriggered: simulator.simulationSpeed = 1
         }
 
-        Shortcut {
-            sequence: "2"
-            context: Qt.ApplicationShortcut
-            onActivated: simulator.simulationSpeed = 5
+        EventCatcher {
+            name: "simulator.speed.fast"
+            onTriggered: simulator.simulationSpeed = 5
         }
 
-        Shortcut {
-            sequence: "3"
-            context: Qt.ApplicationShortcut
-            onActivated: simulator.simulationSpeed = 30
+        EventCatcher {
+            name: "simulator.speed.faster"
+            onTriggered: simulator.simulationSpeed = 30
         }
     }
 

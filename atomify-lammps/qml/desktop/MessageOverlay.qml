@@ -1,6 +1,9 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 
+import ".."
+import "../events"
+
 Rectangle {
     id: root
     signal continueClicked()
@@ -49,9 +52,9 @@ a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Welcome to Atomify</h2>
 Atomify is a live LAMMPS editor. Here you can edit, run and analyze your scripts.
-<div style=\"margin-top: 5px\">&bull; Edit the current script in the <a href=\"edit\">edit</a> menu. (Ctrl+2)</div>
-<div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a> (Ctrl+3)</div>
-<div style=\"margin-top: 5px\">&bull; Start a <a href=\"newTab\">new script</a> (Ctrl+N)</div>
+<div style=\"margin-top: 5px\">&bull; Edit the current script in the <a href=\"edit\">edit</a> menu. (" + EventCenter.nativeText("mode.edit") + ")</div>
+<div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a> (" + EventCenter.nativeText("mode.examples") + ")</div>
+<div style=\"margin-top: 5px\">&bull; Start a <a href=\"newTab\">new script</a> (" + EventCenter.nativeText("editor.new") + ")</div>
 "
 
     color: Qt.rgba(0.1, 0.1, 0.1, 0.7)

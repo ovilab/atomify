@@ -160,6 +160,10 @@ DISTFILES += \
     ../atomify-lammps.wrapper \
     ../snapcraft.yaml \
     ../configure.py \
-    qml/qmldir
+    qml/qmldir \
+    qml/events/qmldir \
+    qml/events/EventCenter.qml \
+    qml/events/Shortcut.qml \
+    qml/events/EventMapper.qml
 
 STATECHARTS +=

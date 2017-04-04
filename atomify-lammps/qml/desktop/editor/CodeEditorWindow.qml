@@ -8,6 +8,7 @@ import QtQuick.Dialogs 1.2
 import Atomify 1.0
 
 import "../.."
+import "../../events"
 
 Item {
     id: root
@@ -372,6 +373,14 @@ Item {
         standardButtons: StandardButton.Cancel | StandardButton.Save
         onAccepted: {
             currentEditor.save(runScript)
+        }
+    }
+
+    EventCatcher {
+        name: "editor.new"
+        onTriggered: {
+            EventCenter.postEvent("mode.edit")
+            root.newTab()
         }
     }
 

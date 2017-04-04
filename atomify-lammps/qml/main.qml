@@ -15,7 +15,7 @@ import "mobile"
 import "mobile/style"
 import "desktop"
 import "plotting"
-import "."
+import "events"
 
 QQC1.ApplicationWindow {
     id: applicationRoot
@@ -31,13 +31,15 @@ QQC1.ApplicationWindow {
     menuBar: QQC1.MenuBar {
         QQC1.Menu {
             title: "File"
-            QQC1.MenuItem {
+            EventMenuItem {
+                name: "editor.new"
                 text: "New script"
                 shortcut: StandardKey.New
                 onTriggered: {
-                    EventCenter.postEvent("editorWindow.newTab")
+                    EventCenter.postEvent("editor.new")
                 }
             }
+
             QQC1.MenuItem {
                 text: "Open"
                 shortcut: StandardKey.Open
@@ -144,7 +146,7 @@ QQC1.ApplicationWindow {
                 enabled: mainDesktop.simulator.states.parsing.active || mainDesktop.simulator.states.continued.active || mainDesktop.simulator.states.paused.active
                 shortcut: StandardKey.Print
                 onTriggered: {
-                    mainDesktop.simulator.togglePaused()
+                    mainDesktop.simulator.togglePause()
                 }
             }
             QQC1.MenuItem {
@@ -174,20 +176,64 @@ QQC1.ApplicationWindow {
                     mainDesktop.captureScreenshot()
                 }
             }
-//            QQC1.MenuItem {
-//                text: "High quality"
-//                checkable: true
-//                checked: mainDesktop.renderQuality==="medium"
-//                shortcut: "q"
-//                onTriggered: {
-//                    if(mainDesktop.renderQuality==="medium") {
-//                        mainDesktop.renderQuality="low"
-//                    } else {
-//                        mainDesktop.renderQuality="medium"
-//                    }
-//                    console.log("Switching render quality to ", mainDesktop.renderQuality)
-//                }
-//            }
+        }
+    }
+
+    Item {
+        id: shortcuts
+        EventShortcut {
+            sequence: "Ctrl+P"
+            name: "simulator.togglePause"
+        }
+
+        EventShortcut {
+            sequence: "Space"
+            name: "simulator.togglePause"
+        }
+
+        EventShortcut {
+            sequence: "Ctrl+I"
+            name: "editor.focus"
+        }
+
+        EventShortcut {
+            sequence: "Escape"
+            name: "escape"
+        }
+
+        EventShortcut {
+            sequence: "Ctrl+1"
+            name: "mode.view"
+        }
+
+        EventShortcut {
+            sequence: "Ctrl+2"
+            name: "mode.analyse"
+        }
+
+        EventShortcut {
+            sequence: "Ctrl+3"
+            name: "mode.edit"
+        }
+
+        EventShortcut {
+            sequence: "Ctrl+4"
+            name: "mode.examples"
+        }
+
+        EventShortcut {
+            sequence: "1"
+            name: "simulator.speed.normal"
+        }
+
+        EventShortcut {
+            sequence: "2"
+            name: "simulator.speed.fast"
+        }
+
+        EventShortcut {
+            sequence: "3"
+            name: "simulator.speed.faster"
         }
     }
 

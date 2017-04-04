@@ -33,7 +33,7 @@ Rectangle {
         enabled: simulator.states.parsing.active || simulator.states.continued.active || simulator.states.paused.active || simulator.states.finished.active
         width: height
         onClicked: {
-            simulator.togglePaused()
+            simulator.togglePause()
         }
         iconSource: {
             if(!simulator) {

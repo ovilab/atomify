@@ -70,9 +70,6 @@
         <file>visualization/Guide.qml</file>
         <file>desktop/TrackballController.qml</file>
         <file>desktop/FlymodeController.qml</file>
-        <file>EventCenter.qml</file>
-        <file>qmldir</file>
-        <file>EventMapper.qml</file>
         <file>desktop/items/ToggleButton.qml</file>
         <file>desktop/items/ToggleImage.qml</file>
         <file>desktop/IconButton.qml</file>
@@ -80,5 +77,11 @@
         <file>desktop/items/ToolTipLabel.qml</file>
         <file>desktop/Help.qml</file>
         <file>desktop/SmoothAnimator.qml</file>
+        <file>events/EventCenter.qml</file>
+        <file>events/EventMapper.qml</file>
+        <file>events/qmldir</file>
+        <file>events/EventShortcut.qml</file>
+        <file>events/EventMenuItem.qml</file>
+        <file>events/EventCatcher.qml</file>
     </qresource>
 </RCC>
