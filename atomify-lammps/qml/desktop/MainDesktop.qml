@@ -186,11 +186,11 @@ Rectangle {
                         name: "Examples"
                         mode: "examples"
                     }
-                    ListElement {
-                        image: "qrc:/images/ic_help_white_48dp.png"
-                        name: "Help"
-                        mode: "help"
-                    }
+//                    ListElement {
+//                        image: "qrc:/images/ic_help_white_48dp.png"
+//                        name: "Help"
+//                        mode: "help"
+//                    }
                 }
 
                 ToggleButton {
@@ -208,9 +208,10 @@ Rectangle {
                             return "Shows both the editor and the analysis "+ctrl3.nativeText
                         } else if (index===3) {
                             return "Explore the examples we've added to Atomify "+ctrl4.nativeText
-                        } else if (index===4) {
-                            return "Shows the help pane "+ctrl5.nativeText
                         }
+//                        else if (index===4) {
+//                            return "Shows the help pane "+ctrl5.nativeText
+//                        }
                     }
 
                     source: image
@@ -632,12 +633,12 @@ Rectangle {
             onActivated: modeMenu.currentIndex = 3
         }
 
-        Shortcut {
-            id: ctrl5
-            sequence: "Ctrl+5"
-            context: Qt.ApplicationShortcut
-            onActivated: modeMenu.currentIndex = 4
-        }
+//        Shortcut {
+//            id: ctrl5
+//            sequence: "Ctrl+5"
+//            context: Qt.ApplicationShortcut
+//            onActivated: modeMenu.currentIndex = 4
+//        }
 
         Shortcut {
             sequence: "1"
