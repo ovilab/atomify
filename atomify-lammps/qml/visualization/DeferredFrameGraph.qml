@@ -17,6 +17,7 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Viewport {
     id: root
 
+    property alias clearColor: clearBuffer.clearColor
     property real width: 10
     property real height: 10
     property alias blurTexture: blurTexture
@@ -120,6 +121,7 @@ Viewport {
                         LayerFilter {
                             layers: atomLayer
                             ClearBuffers {
+                                id: clearBuffer
                                 clearColor: "#000"
                                 buffers: ClearBuffers.ColorDepthBuffer
                             }

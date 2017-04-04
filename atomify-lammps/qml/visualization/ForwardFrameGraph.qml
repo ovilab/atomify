@@ -22,6 +22,7 @@ Viewport {
     property Layer atomLayer
     property Layer guideLayer
     property Layer outlineLayer
+    property alias clearColor: clearBuffer.clearColor
 
     normalizedRect: Qt.rect(0.0, 0.0, 1.0, 1.0)
 
@@ -35,6 +36,7 @@ Viewport {
                     LayerFilter {
                         layers: atomLayer
                         ClearBuffers {
+                            id: clearBuffer
                             clearColor: "#000"
                             buffers: ClearBuffers.ColorDepthBuffer
                         }

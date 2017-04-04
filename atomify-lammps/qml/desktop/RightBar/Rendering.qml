@@ -105,6 +105,30 @@ Pane {
 
             GroupBox {
                 width: parent.width
+                height: 75
+                title: "Background color"
+                Rectangle {
+                    id: backgroundColor
+                    anchors.fill: parent
+                    color: visualizer.backgroundColor
+
+                    Binding {
+                        target: visualizer
+                        property: "backgroundColor"
+                        value: color
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            colorDialog.open()
+                        }
+                    }
+                }
+            }
+
+            GroupBox {
+                width: parent.width
                 title: "Light 1"
                 Column {
                     width: parent.width
@@ -366,13 +390,8 @@ Pane {
     ColorDialog {
         id: colorDialog
         title: "Please choose a color"
-        onAccepted: {
-            console.log("You chose: " + colorDialog.color)
-
-        }
-        onRejected: {
-            console.log("Canceled")
-
-        }
+        color: visualizer.backgroundColor
+        currentColor: visualizer.backgroundColor
+        onCurrentColorChanged: visualizer.backgroundColor = colorDialog.currentColor
     }
 }

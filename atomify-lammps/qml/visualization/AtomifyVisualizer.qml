@@ -20,6 +20,7 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Scene3D {
     id: root
     signal changedRenderQuality
+    property color backgroundColor: "black"
     property alias propertyModifier: propertyModifier
     property bool guidesVisible
     property bool systemBoxVisible
@@ -298,6 +299,7 @@ Scene3D {
             atomLayer: atomLayer
             guideLayer: guideLayer
             outlineLayer: outlineLayer
+            clearColor: root.backgroundColor
         }
 
         DeferredFrameGraph {
@@ -309,6 +311,7 @@ Scene3D {
             atomLayer: atomLayer
             guideLayer: guideLayer
             outlineLayer: outlineLayer
+            clearColor: root.backgroundColor
         }
         components: [
             RenderSettings {

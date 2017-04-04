@@ -196,6 +196,7 @@ QQC1.ApplicationWindow {
         property alias width: applicationRoot.width
         property alias height: applicationRoot.height
         property alias renderQuality: mainDesktop.renderQuality
+        property alias backgroundColor: mainDesktop.backgroundColor
     }
 
     function resetStyle() {

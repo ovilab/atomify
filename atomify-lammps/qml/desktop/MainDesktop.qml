@@ -24,6 +24,7 @@ Rectangle {
     property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
+    property alias backgroundColor: visualizer.backgroundColor
     property alias mouseMover: visualizer.mouseMover
     property alias editor: editor
     property string viewMode: "view"
