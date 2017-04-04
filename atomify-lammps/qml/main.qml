@@ -19,7 +19,7 @@ import "."
 
 QQC1.ApplicationWindow {
     id: applicationRoot
-    title: "Atomify"
+    title: mainDesktop.title
     visible: true
 
     width: 1280

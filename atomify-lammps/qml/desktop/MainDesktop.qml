@@ -27,6 +27,7 @@ Rectangle {
     property alias mouseMover: visualizer.mouseMover
     property alias editor: editor
     property string viewMode: "view"
+    property string title: "Atomify"
 
     signal releaseCursor()
     signal changeMode()
@@ -112,6 +113,17 @@ Rectangle {
                     smooth: true
                     source: "qrc:/images/atomify_logo_inapp.png"
                     fillMode: Image.PreserveAspectFit
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onHoveredChanged: {
+                            if(containsMouse) {
+                                root.title = "Caffeinify"
+                            } else {
+                                root.title = "Atomify"
+                            }
+                        }
+                    }
                 }
 
                 Label {
@@ -195,16 +207,16 @@ Rectangle {
                     toggled: modeMenu.currentIndex === index
                     toolTipText: {
                         if(index===0) {
-                            return "Focus on the visualization by hiding both the editor and analysis bar "+ctrl1.nativeText
+                            return "Focus on the visualization by hiding both the editor and analysis bar ("+ctrl1.nativeText+")"
                         } else if (index===1) {
-                            return "Focus on the visualization and analysis by hiding the editor "+ctrl2.nativeText
+                            return "Focus on the visualization and analysis by hiding the editor ("+ctrl2.nativeText+")"
                         } else if (index===2) {
-                            return "Shows both the editor and the analysis "+ctrl3.nativeText
+                            return "Shows both the editor and the analysis ("+ctrl3.nativeText+")"
                         } else if (index===3) {
-                            return "Explore the examples we've added to Atomify "+ctrl4.nativeText
+                            return "Explore the examples we've added to Atomify ("+ctrl4.nativeText+")"
                         }
 //                        else if (index===4) {
-//                            return "Shows the help pane "+ctrl5.nativeText
+//                            return "Shows the help pane ("+ctrl5.nativeText+")"
 //                        }
                     }
 
@@ -245,6 +257,18 @@ Rectangle {
                         }
                     }
                 }
+                toolTipText: {
+                    if(stopButton.toggled) {
+                        return " Start simulating current script (SHORTCUT)"
+                    } else {
+                        if(simulator.states.paused.active) {
+                            return "Resume current simulation (SHORTCUT)"
+                        } else {
+                            return "Pause current simulation (SHORTCUT)"
+                        }
+                    }
+                }
+
                 onClicked: {
                     if(simulator.states.idle.active) {
                         editor.editorWindow.runScript()
@@ -265,6 +289,9 @@ Rectangle {
                 onClicked: {
                     simulator.reset()
                 }
+                toolTipText: {
+                    return "Stop current simulation (SHORTCUT)"
+                }
             }
             ToggleButton {
                 Layout.fillHeight: true
@@ -275,6 +302,9 @@ Rectangle {
                 text: "Restart"
                 onClicked: {
                     editor.editorWindow.runScript()
+                }
+                toolTipText: {
+                    return "Restart current simulation (SHORTCUT)"
                 }
             }
         }
@@ -482,7 +512,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
-                    toolTipText: "Reset to origin [o]"
+                    toolTipText: "Reset to origin (o)"
 
                     onClicked: {
                         if(flymodeState.active) {
@@ -494,7 +524,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/switch_camera.png"
-                    toolTipText: "Switch camera [c]"
+                    toolTipText: "Switch camera (c)"
 
                     onClicked: {
                         changeMode()
