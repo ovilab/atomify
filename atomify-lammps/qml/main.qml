@@ -25,6 +25,9 @@ QQC1.ApplicationWindow {
     width: 1280
     height: 1024
 
+    minimumHeight: 480
+    minimumWidth: 640
+
     menuBar: QQC1.MenuBar {
         QQC1.Menu {
             title: "File"
