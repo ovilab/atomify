@@ -576,8 +576,7 @@ Rectangle {
         mapping: {
             return {
                 "desktop": root,
-                "visualizer": visualizer,
-                "simulator": visualizer.simulator
+                "visualizer": visualizer
             }
         }
     }

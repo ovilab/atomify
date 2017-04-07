@@ -57,13 +57,17 @@ AtomifySimulator::AtomifySimulator() :
 
 AtomifySimulator::~AtomifySimulator() { }
 
-void AtomifySimulator::togglePaused()
+void AtomifySimulator::togglePause()
 {
+    qDebug() << "Toggle pause";
     if(m_states->paused()->active()) {
+        qDebug() << "Was paused";
         emit unPaused();
     } else if(m_states->parsing()->active() || m_states->continued()->active()) {
+        qDebug() << "Was parsing";
         emit paused();
     } else if(m_states->finished()->active()) {
+        qDebug() << "Was finished";
         emit continued();
     }
 }

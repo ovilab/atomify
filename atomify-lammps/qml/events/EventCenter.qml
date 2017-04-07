@@ -8,7 +8,7 @@ QtObject {
     property var definitions: []
 
     function postEvent(name, data) {
-        console.log("Triggering", data)
+        console.log("Posting event", name, data)
         triggered(name, data)
     }
 
