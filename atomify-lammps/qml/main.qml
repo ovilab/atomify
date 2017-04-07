@@ -50,24 +50,27 @@ QQC1.ApplicationWindow {
                     EventCenter.postEvent("editor.open")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Close"
                 shortcut: StandardKey.Close
+                name: "editor.close"
                 enabled: applicationRoot.activeFocusItem !== null
                 onTriggered: {
                     EventCenter.postEvent("mode.edit")
                     EventCenter.postEvent("editor.close")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Save"
+                name: "editor.save"
                 shortcut: StandardKey.Save
                 onTriggered: {
                     EventCenter.postEvent("editor.save")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Save as"
+                name: "editor.saveAs"
                 shortcut: StandardKey.SaveAs
                 onTriggered: {
                     EventCenter.postEvent("mode.edit")
@@ -77,16 +80,18 @@ QQC1.ApplicationWindow {
         }
         QQC1.Menu {
             title: "Edit"
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Undo"
+                name: "editor.undo"
                 enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.canUndo
                 shortcut: StandardKey.Undo
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.undo")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Redo"
+                name: "editor.redo"
                 enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.canRedo
                 shortcut: StandardKey.Redo
                 onTriggered: {
@@ -95,24 +100,27 @@ QQC1.ApplicationWindow {
             }
             QQC1.MenuSeparator { }
 
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Cut"
+                name: "editor.cut"
                 enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
                 shortcut: StandardKey.Cut
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.cut")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Copy"
+                name: "editor.copy"
                 enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.selectedText.length > 0
                 shortcut: StandardKey.Copy
                 onTriggered: {
                     EventCenter.postEvent("editor.textArea.copy")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Paste"
+                name: "editor.paste"
                 enabled: mainDesktop.editor.editorWindow.currentEditor && mainDesktop.editor.editorWindow.currentEditor.textArea.canPaste
                 shortcut: StandardKey.Paste
                 onTriggered: {
@@ -122,14 +130,14 @@ QQC1.ApplicationWindow {
         }
         QQC1.Menu {
             title: "Camera"
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Switch camera"
                 shortcut: "C"
                 onTriggered: {
                     EventCenter.postEvent("desktop.changeMode")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Reset to origin"
                 shortcut: "O"
                 onTriggered: {
@@ -139,14 +147,14 @@ QQC1.ApplicationWindow {
         }
         QQC1.Menu {
             title: "Run"
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Run script"
                 shortcut: "Ctrl+R"
                 onTriggered: {
                     EventCenter.postEvent("editorWindow.runScript")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: mainDesktop.simulator.states.paused.active ? "Unpause" : "Pause"
                 enabled: mainDesktop.simulator.states.parsing.active || mainDesktop.simulator.states.continued.active || mainDesktop.simulator.states.paused.active
                 shortcut: StandardKey.Print
@@ -154,7 +162,7 @@ QQC1.ApplicationWindow {
                     mainDesktop.simulator.togglePause()
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Increase simulation speed"
                 enabled: mainDesktop.simulator.simulationSpeed < 100
                 shortcut: "+"
@@ -162,7 +170,7 @@ QQC1.ApplicationWindow {
                     EventCenter.postEvent("simulator.increaseSimulationSpeed")
                 }
             }
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Decrease simulation speed"
                 enabled: mainDesktop.simulator.simulationSpeed > 1
                 shortcut: "-"
@@ -174,7 +182,7 @@ QQC1.ApplicationWindow {
 
         QQC1.Menu {
             title: "Rendering"
-            QQC1.MenuItem {
+            EventMenuItem {
                 text: "Capture screenshot"
                 // shortcut: "Ctrl+R"
                 onTriggered: {
@@ -194,6 +202,9 @@ QQC1.ApplicationWindow {
         EventShortcut {
             sequence: "Space"
             name: "simulator.togglePause"
+            onActivated: {
+                console.log("Caught space")
+            }
         }
 
         EventShortcut {
