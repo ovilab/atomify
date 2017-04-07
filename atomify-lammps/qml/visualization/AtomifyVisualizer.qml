@@ -245,7 +245,7 @@ Scene3D {
                                visualizer.camera.upVector.normalized()).plus(
                                visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
             strength: 0.5
-            attenuation: 25.0
+            attenuation: 5.0
         }
 
         TrackballController {
