@@ -19,6 +19,14 @@ Item {
 
     ToolTip.text: toolTipText
     ToolTip.visible: mouseArea.containsMouse && toolTipText.length>0
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onClicked: {
+            root.clicked()
+        }
+    }
 
     ToggleImage {
         id: toggleImage
@@ -43,13 +51,5 @@ Item {
         color: "#ccc"
         text: name
         horizontalAlignment: Text.AlignHCenter
-    }
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: {
-            root.clicked()
-        }
     }
 }
