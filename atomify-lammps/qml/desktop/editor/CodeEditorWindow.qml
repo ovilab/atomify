@@ -294,13 +294,60 @@ Item {
 
                     height: 32
 
+                    Label { }
+                }
+
+                ItemDelegate {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    height: 32
+
                     Label {
                         anchors.centerIn: parent
-                        text: "+"
+                        text: "New ("+EventCenter.nativeText("editor.new")+")"
                     }
 
                     onClicked: {
                         newTab()
+                    }
+                }
+
+                ItemDelegate {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    height: 32
+
+                    Label {
+                        anchors.centerIn: parent
+                        text: "Open ("+EventCenter.nativeText("editor.open")+")"
+                    }
+
+                    onClicked: {
+                        openTab()
+                    }
+                }
+
+                ItemDelegate {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    height: 32
+
+                    Label {
+                        anchors.centerIn: parent
+                        text: "Close ("+EventCenter.nativeText("editor.close")+")"
+                    }
+
+                    onClicked: {
+                        closeTab()
                     }
                 }
             }
