@@ -49,7 +49,7 @@ Rectangle {
             //            visualizer.simulator.scriptFilePath = initialExampleUrl
             //            visualizer.simulator.started()
             editor.editorWindow.openTab(initialExampleUrl)
-            editor.editorWindow.runScript()
+            // editor.editorWindow.runScript()
         }
     }
 

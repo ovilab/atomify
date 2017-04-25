@@ -227,6 +227,8 @@ int Atoms::numberOfBonds() const
 }
 
 bool Atoms::doWeHavefullNeighborList(Neighbor *neighbor) {
+    return false;
+
     // We will find the first atom i with at least one non-ghost neighbor. We then check if atom i is in the list of j's neighbors
     NeighList *list = neighbor->lists[0];
     const int inum = list->inum;
@@ -260,6 +262,7 @@ bool Atoms::doWeHavefullNeighborList(Neighbor *neighbor) {
 
 bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSController *controller)
 {
+    return false;
     if(!m_bonds->active()) {
         return false;
     }

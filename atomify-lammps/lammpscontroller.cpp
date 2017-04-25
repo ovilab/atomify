@@ -222,29 +222,59 @@ void LAMMPSController::changeWorkingDirectoryToScriptLocation() {
     QByteArray currentDirBytes = currentDirectory.toUtf8();
     chdir(currentDirBytes.constData());
 }
+#include <kokkos.h>
+#include <omp.h>
 
 void LAMMPSController::start() {
     if(m_lammps) {
         stop();
     }
 
-    int nargs = 1;
+    // omp_set_num_threads(1);
+
+    qDebug() << "omp_get_max_threads: " << omp_get_max_threads();
+    qDebug() << "Thread pool size: " << Kokkos::OpenMP::thread_pool_size(0);
+
+    // -k on -sf kk
+    int nargs = 7;
     char **argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];
     }
+
     if(nargs>0) {
         sprintf(argv[0], "myprogram");
     }
     if(nargs>1) {
-        sprintf(argv[1], "-sf");
+        sprintf(argv[1], "-k");
     }
     if(nargs>2) {
-        sprintf(argv[2], "gpu");
+        sprintf(argv[2], "on");
     }
+
+//    if(nargs>3) {
+//        sprintf(argv[3], "-sf");
+//    }
+//    if(nargs>4) {
+//        sprintf(argv[4], "kk");
+//    }
+    if(nargs>3) {
+        sprintf(argv[3], "t");
+    }
+    if(nargs>4) {
+        sprintf(argv[4], "%d", omp_get_max_threads());
+    }
+    if(nargs>5) {
+        sprintf(argv[5], "-sf");
+    }
+    if(nargs>6) {
+        sprintf(argv[6], "kk");
+    }
+
     //    sprintf(argv[3], "-pk");
     //    sprintf(argv[4], "gpu");
     //    sprintf(argv[5], "1");
+    // nargs = 1;
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     // m_lammps->screen = NULL;
     finished = false;
