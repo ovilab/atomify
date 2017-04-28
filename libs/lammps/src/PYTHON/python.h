@@ -21,6 +21,7 @@ namespace LAMMPS_NS {
 class Python : protected Pointers {
  public:
   int python_exists;
+  bool external_interpreter;
 
   Python(class LAMMPS *);
   ~Python();
@@ -94,12 +95,12 @@ path and name are correct.
 
 E: Could not process Python file
 
-The Python code in the specified file was not run sucessfully by
+The Python code in the specified file was not run successfully by
 Python, probably due to errors in the Python code.
 
 E: Could not process Python string
 
-The Python code in the here string was not run sucessfully by Python,
+The Python code in the here string was not run successfully by Python,
 probably due to errors in the Python code.
 
 E: Could not find Python function
@@ -123,7 +124,7 @@ Self-explanatory.
 
 E: Python function evaluation failed
 
-The Python function did not run succesfully and/or did not return a
+The Python function did not run successfully and/or did not return a
 value (if it is supposed to return a value).  This is probably due to
 some error condition in the function.
 

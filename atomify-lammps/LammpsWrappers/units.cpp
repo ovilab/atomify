@@ -1,6 +1,7 @@
 #include "units.h"
 #include <update.h>
 #include <domain.h>
+#include <QDebug>
 
 using namespace LAMMPS_NS;
 Units::Units(QObject *parent) : QObject(parent)
@@ -25,7 +26,7 @@ void Units::synchronize(LAMMPS *lammps)
         if(unit_style) {
             delete [] unit_style;
         }
-        int n = strlen(lammps->update->unit_style) + 1;
+        int n = strlen(lammps->update->unit_style) + 10;
         unit_style = new char[n];
         strcpy(unit_style,lammps->update->unit_style);
 
@@ -92,11 +93,18 @@ void Units::synchronize(LAMMPS *lammps)
 
 void Units::reset()
 {
+
     setName("None");
     setTime("");
     setVolume("");
     setDensity("");
     setLength("");
+
+    if(unit_style) {
+        delete [] unit_style;
+    }
+
+    unit_style = nullptr;
 }
 
 QString Units::name() const

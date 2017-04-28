@@ -615,7 +615,7 @@ void PPPMKokkos<DeviceType>::compute(int eflag, int vflag)
   // set energy/virial flags
   // invoke allocate_peratom() if needed for first time
 
-  if (eflag || vflag) ev_setup(eflag,vflag);
+  if (eflag || vflag) ev_setup(eflag,vflag,0);
   else evflag = evflag_atom = eflag_global = vflag_global =
          eflag_atom = vflag_atom = 0;
 
@@ -3158,7 +3158,7 @@ double PPPMKokkos<DeviceType>::memory_usage()
   if (peratom_allocate_flag)
     bytes += 6 * nbrick * sizeof(FFT_SCALAR);
 
-  bytes += cg->memory_usage();
+  if (cg) bytes += cg->memory_usage();
 
   return bytes;
 }

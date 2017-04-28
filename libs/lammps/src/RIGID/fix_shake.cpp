@@ -66,6 +66,7 @@ FixShake::FixShake(LAMMPS *lmp, int narg, char **arg) :
   virial_flag = 1;
   create_attribute = 1;
   dof_flag = 1;
+
   // error check
 
   molecular = atom->molecular;
@@ -447,7 +448,6 @@ void FixShake::setup(int vflag)
       next_output = (ntimestep/output_every)*output_every + output_every;
   } else next_output = -1;
 
-
   // set respa to 0 if verlet is used and to 1 otherwise
 
   if (strstr(update->integrate_style,"verlet")) 
@@ -476,7 +476,6 @@ void FixShake::setup(int vflag)
   // precalculate constraining forces for first integration step
 
   shake_end_of_step(vflag);
-
 }
 
 /* ----------------------------------------------------------------------
@@ -592,6 +591,7 @@ void FixShake::post_force(int vflag)
   }
   
   // store vflag for coordinate_constraints_end_of_step()
+
   vflag_post_force = vflag;
 }
 

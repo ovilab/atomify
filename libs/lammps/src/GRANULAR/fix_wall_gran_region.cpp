@@ -131,9 +131,8 @@ void FixWallGranRegion::init()
 void FixWallGranRegion::post_force(int vflag)
 {
   int i,m,nc,iwall;
-  double rinv,fx,fy,fz,tooclose;
   double dx,dy,dz,rsq,meff;
-  double xc[3],vwall[3];
+  double vwall[3];
 
   // do not update shear history during setup
 
@@ -278,8 +277,8 @@ void FixWallGranRegion::update_contacts(int i, int nc)
   iold = 0;
   while (iold < ncontact[i]) {
     for (m = 0; m < nc; m++)
-      if (region->contact[m].iwall = walls[i][iold]) break;
-    if (m < nc) {
+      if (region->contact[m].iwall == walls[i][iold]) break;
+    if (m >= nc) {
       ilast = ncontact[i]-1;
       for (j = 0; j < sheardim; j++)
         shearmany[i][iold][j] = shearmany[i][ilast][j];

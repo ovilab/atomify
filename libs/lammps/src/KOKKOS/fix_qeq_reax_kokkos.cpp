@@ -82,7 +82,7 @@ void FixQEqReaxKokkos<DeviceType>::init()
 
   FixQEqReax::init();
 
-  neighflag = lmp->kokkos->neighflag;
+  neighflag = lmp->kokkos->neighflag_qeq;
   int irequest = neighbor->nrequest - 1;
   
   neighbor->requests[irequest]->
@@ -98,6 +98,7 @@ void FixQEqReaxKokkos<DeviceType>::init()
     neighbor->requests[irequest]->half = 0;
   } else { //if (neighflag == HALF || neighflag == HALFTHREAD)
     neighbor->requests[irequest]->fix = 1;
+    neighbor->requests[irequest]->pair = 0;
     neighbor->requests[irequest]->full = 0;
     neighbor->requests[irequest]->half = 1;
     neighbor->requests[irequest]->ghost = 1;

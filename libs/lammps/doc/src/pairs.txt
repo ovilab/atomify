@@ -39,6 +39,7 @@ Pair Styles :h1
    pair_hbond_dreiding
    pair_hybrid
    pair_kim
+   pair_kolmogorov_crespi_z
    pair_lcbop
    pair_line_lj
    pair_list
@@ -59,13 +60,15 @@ Pair Styles :h1
    pair_meam_sw_spline
    pair_mgpt
    pair_mie
+   pair_momb
    pair_morse
    pair_multi_lucy
    pair_multi_lucy_rx
    pair_nb3b_harmonic
    pair_nm
    pair_none
-   pair_oxdna_excv
+   pair_oxdna
+   pair_oxdna2
    pair_peri
    pair_polymorphic
    pair_quip

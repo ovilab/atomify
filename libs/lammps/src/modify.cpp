@@ -450,26 +450,6 @@ void Modify::end_of_step()
 }
 
 /* ----------------------------------------------------------------------
-   post-parse-command call, only for relevant fixes
-------------------------------------------------------------------------- */
-
-void Modify::post_parse_command()
-{
-  // for (int i = 0; i < n_end_of_step; i++)
-  //     fix[list_end_of_step[i]]->post_parse_command();
-}
-
-/* ----------------------------------------------------------------------
-   post-execute-command call, only for relevant fixes
-------------------------------------------------------------------------- */
-
-void Modify::post_execute_command()
-{
-  // for (int i = 0; i < n_end_of_step; i++)
-  //     fix[list_end_of_step[i]]->post_execute_command();
-}
-
-/* ----------------------------------------------------------------------
    thermo energy call, only for relevant fixes
    called by Thermo class
    compute_scalar() is fix call to return energy
@@ -974,10 +954,24 @@ void Modify::delete_fix(const char *id)
 
 int Modify::find_fix(const char *id)
 {
-  if(id==NULL) return -1;
+  if (id == NULL) return -1;
   int ifix;
   for (ifix = 0; ifix < nfix; ifix++)
     if (strcmp(id,fix[ifix]->id) == 0) break;
+  if (ifix == nfix) return -1;
+  return ifix;
+}
+
+/* ----------------------------------------------------------------------
+   find a fix by style
+   return index of fix or -1 if not found
+------------------------------------------------------------------------- */
+
+int Modify::find_fix_by_style(const char *style)
+{
+  int ifix;
+  for (ifix = 0; ifix < nfix; ifix++)
+    if (strcmp(style,fix[ifix]->style) == 0) break;
   if (ifix == nfix) return -1;
   return ifix;
 }

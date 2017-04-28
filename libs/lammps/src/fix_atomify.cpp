@@ -102,23 +102,9 @@ void FixAtomify::end_of_step()
 
 /* ---------------------------------------------------------------------- */
 
-void FixAtomify::post_parse_command()
-{
-  (this->callback)(ptr_caller,POST_PARSE_COMMAND);
-}
-
-/* ---------------------------------------------------------------------- */
-
 void FixAtomify::min_post_force(int vflag)
 {
   (this->callback)(ptr_caller,MIN_POST_FORCE);
-}
-
-/* ---------------------------------------------------------------------- */
-
-void FixAtomify::post_execute_command()
-{
-  (this->callback)(ptr_caller,POST_EXECUTE_COMMAND);
 }
 
 /* ---------------------------------------------------------------------- */

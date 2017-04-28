@@ -4,8 +4,8 @@
 ; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
 ;
 [subrepo]
-	remote = git@github.com:Ovilab/lammps.git
+	remote = git@github.com:ovilab/lammps
 	branch = atomify
-	commit = 9058b0928be4755e0b19267534747e15d7488d85
-	parent = 64d8f3f97f37c6994b1921c59f570fbc2e5025c1
-	cmdver = 0.3.1
+	commit = e4062633a7326d75d9171e0b10a922c932555853
+	parent = ac227077b1718c3917b25c09e192159569f47ac7
+	cmdver = 0.3.0

@@ -281,12 +281,12 @@ the "minimize"_minimize.html command.  A parallel tempering
 
 3.4 Commands listed by category :link(cmd_4),h4
 
-This section lists all LAMMPS commands, grouped by category.  The
-"next section"_#cmd_5 lists the same commands alphabetically.  The
+This section lists core LAMMPS commands, grouped by category.
+The "next section"_#cmd_5 lists all commands alphabetically.  The
 next section also includes (long) lists of style options for entries
 that appear in the following categories as a single command (fix,
 compute, pair, etc).  Commands that are added by user packages are not
-included in these categories, but they are in the next section.
+included in the categories here, but they are in the next section.
 
 Initialization:
 
@@ -361,7 +361,7 @@ Settings:
 "timer"_timer.html,
 "timestep"_timestep.html
 
-Operations within timestepping (fixes) and diagnositics (computes):
+Operations within timestepping (fixes) and diagnostics (computes):
 
 "compute"_compute.html,
 "compute_modify"_compute_modify.html,
@@ -687,6 +687,7 @@ package"_Section_start.html#start_3.
 "eos/cv"_fix_eos_cv.html,
 "eos/table"_fix_eos_table.html,
 "eos/table/rx"_fix_eos_table_rx.html,
+"filter/corotate"_fix_filter_corotate.html,
 "flow/gauss"_fix_flow_gauss.html,
 "gle"_fix_gle.html,
 "grem"_fix_grem.html,
@@ -939,6 +940,8 @@ KOKKOS, o = USER-OMP, t = OPT.
 "lj/charmm/coul/charmm/implicit (ko)"_pair_charmm.html,
 "lj/charmm/coul/long (giko)"_pair_charmm.html,
 "lj/charmm/coul/msm"_pair_charmm.html,
+"lj/charmmfsw/coul/charmmfsh"_pair_charmm.html,
+"lj/charmmfsw/coul/long"_pair_charmm.html,
 "lj/class2 (gko)"_pair_class2.html,
 "lj/class2/coul/cut (ko)"_pair_class2.html,
 "lj/class2/coul/long (gko)"_pair_class2.html,
@@ -969,7 +972,7 @@ KOKKOS, o = USER-OMP, t = OPT.
 "lubricateU/poly"_pair_lubricateU.html,
 "meam"_pair_meam.html,
 "mie/cut (o)"_pair_mie.html,
-"morse (got)"_pair_morse.html,
+"morse (gkot)"_pair_morse.html,
 "nb3b/harmonic (o)"_pair_nb3b_harmonic.html,
 "nm/cut (o)"_pair_nm.html,
 "nm/cut/coul/cut (o)"_pair_nm.html,
@@ -1016,6 +1019,7 @@ package"_Section_start.html#start_3.
 "eff/cut"_pair_eff.html,
 "exp6/rx"_pair_exp6_rx.html,
 "gauss/cut"_pair_gauss.html,
+"kolmogorov/crespi/z"_pair_kolmogorov_crespi_z.html,
 "lennard/mdf"_pair_mdf.html,
 "list"_pair_list.html,
 "lj/charmm/coul/long/soft (o)"_pair_charmm.html,
@@ -1033,6 +1037,7 @@ package"_Section_start.html#start_3.
 "meam/spline (o)"_pair_meam_spline.html,
 "meam/sw/spline"_pair_meam_sw_spline.html,
 "mgpt"_pair_mgpt.html,
+"momb"_pair_momb.html,
 "morse/smooth/linear"_pair_morse.html,
 "morse/soft"_pair_morse.html,
 "multi/lucy"_pair_multi_lucy.html,
@@ -1042,6 +1047,10 @@ package"_Section_start.html#start_3.
 "oxdna/hbond"_pair_oxdna.html,
 "oxdna/stk"_pair_oxdna.html,
 "oxdna/xstk"_pair_oxdna.html,
+"oxdna2/coaxstk"_pair_oxdna2.html,
+"oxdna2/dh"_pair_oxdna2.html,
+"oxdna2/excv"_pair_oxdna2.html,
+"oxdna2/stk"_pair_oxdna2.html,
 "quip"_pair_quip.html,
 "reax/c (k)"_pair_reax_c.html,
 "smd/hertz"_pair_smd_hertz.html,
@@ -1059,7 +1068,7 @@ package"_Section_start.html#start_3.
 "table/rx"_pair_table_rx.html,
 "tersoff/table (o)"_pair_tersoff.html,
 "thole"_pair_thole.html,
-"tip4p/long/soft (o)"_pair_lj_soft.html :tb(c=4,ea=c)
+"tip4p/long/soft (o)"_pair_lj_soft.html :tb(c=4,ea=c) 
 
 :line
 
@@ -1076,7 +1085,7 @@ KOKKOS, o = USER-OMP, t = OPT.
 "none"_bond_none.html,
 "zero"_bond_zero.html,
 "hybrid"_bond_hybrid.html,
-"class2 (o)"_bond_class2.html,
+"class2 (ko)"_bond_class2.html,
 "fene (iko)"_bond_fene.html,
 "fene/expand (o)"_bond_fene_expand.html,
 "harmonic (ko)"_bond_harmonic.html,
@@ -1091,7 +1100,8 @@ package"_Section_start.html#start_3.
 
 "harmonic/shift (o)"_bond_harmonic_shift.html,
 "harmonic/shift/cut (o)"_bond_harmonic_shift_cut.html,
-"oxdna/fene"_bond_oxdna_fene.html :tb(c=4,ea=c)
+"oxdna/fene"_bond_oxdna.html,
+"oxdna2/fene"_bond_oxdna.html :tb(c=4,ea=c)
 
 :line
 
@@ -1109,7 +1119,7 @@ USER-OMP, t = OPT.
 "zero"_angle_zero.html,
 "hybrid"_angle_hybrid.html,
 "charmm (ko)"_angle_charmm.html,
-"class2 (o)"_angle_class2.html,
+"class2 (ko)"_angle_class2.html,
 "cosine (o)"_angle_cosine.html,
 "cosine/delta (o)"_angle_cosine_delta.html,
 "cosine/periodic (o)"_angle_cosine_periodic.html,
@@ -1145,7 +1155,8 @@ USER-OMP, t = OPT.
 "zero"_dihedral_zero.html,
 "hybrid"_dihedral_hybrid.html,
 "charmm (ko)"_dihedral_charmm.html,
-"class2 (o)"_dihedral_class2.html,
+"charmmfsw"_dihedral_charmm.html,
+"class2 (ko)"_dihedral_class2.html,
 "harmonic (io)"_dihedral_harmonic.html,
 "helix (o)"_dihedral_helix.html,
 "multi/harmonic (o)"_dihedral_multi_harmonic.html,
@@ -1177,7 +1188,7 @@ USER-OMP, t = OPT.
 "none"_improper_none.html,
 "zero"_improper_zero.html,
 "hybrid"_improper_hybrid.html,
-"class2 (o)"_improper_class2.html,
+"class2 (ko)"_improper_class2.html,
 "cvff (io)"_improper_cvff.html,
 "harmonic (ko)"_improper_harmonic.html,
 "umbrella (o)"_improper_umbrella.html :tb(c=4,ea=c)

@@ -151,7 +151,7 @@ Pane {
                             id: light1Attenuation
                             width: parent.width*0.6
                             minimumValue: 0
-                            maximumValue: 50
+                            maximumValue: 5
                             value: visualizer.light1.attenuation
 
                             Binding {
@@ -200,7 +200,7 @@ Pane {
                             id: light2Attenuation
                             width: parent.width*0.6
                             minimumValue: 0
-                            maximumValue: 50
+                            maximumValue: 20
                             value: visualizer.light2.attenuation
 
                             Binding {
@@ -296,6 +296,7 @@ Pane {
                         id: ballAndStick
                         checked: true
                         text: qsTr("Ball and stick")
+                        focusPolicy: Qt.NoFocus
                         onCheckedChanged: {
                             if(checked) {
                                 visualizer.simulator.system.atoms.renderingMode = "Ball and stick"
@@ -306,6 +307,7 @@ Pane {
                     }
                     RadioButton {
                         text: qsTr("Stick")
+                        focusPolicy: Qt.NoFocus
                         onCheckedChanged: {
                             if(checked) {
                                 visualizer.simulator.system.atoms.renderingMode = "Stick"
@@ -316,6 +318,7 @@ Pane {
                     }
                     RadioButton {
                         text: qsTr("Wireframe")
+                        focusPolicy: Qt.NoFocus
                         onCheckedChanged: {
                             if(checked) {
                                 visualizer.simulator.system.atoms.renderingMode = "Wireframe"
