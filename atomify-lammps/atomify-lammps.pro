@@ -1,5 +1,6 @@
 TEMPLATE = app
 CONFIG += c++11
+CONFIG += appstore
 DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
@@ -8,6 +9,12 @@ QT += qml quick widgets opengl openglextensions svg charts datavisualization
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
 #}
+
+unix:macx {
+    #APPCERT = "3rd Party Mac Developer Application: Anders Hafreager"
+    #INSTALLERCERT = "3rd Party Mac Developer Installer: Anders Hafreager"
+    #BUNDLEID = net.ovilab.atomify
+}
 
 CONFIG += warn_off
 DEFINES += LAMMPS_EXCEPTIONS LAMMPS_GZIP LAMMPS_MEMALIGN=64
@@ -149,10 +156,12 @@ HEADERS += \
 # Temporary use of quickcontrols2 without install
 
 RC_ICONS = atomify_lammps/images/atomify_logo.ico
-macx:ICON = images/atomify_logo.icns
+macx:ICON = images/icon.icns
 macx:QMAKE_INFO_PLIST = info.plist
 
 DISTFILES += \
+    entitlements.plist \
+    images/atomify_logo@2x.icns \
     iOS.plist \
     qml/qtquickcontrols2.conf \
     ../.travis.yml \
