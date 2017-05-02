@@ -1,23 +1,23 @@
 language: cpp
-compiler:
-- gcc
-sudo: required
-services: docker
-before_install:
-- docker build -t ovilab/atomify-lammps -f .docker/atomify-lammps/Dockerfile .
-script:
-- docker run ovilab/atomify-lammps /bin/bash -c "/opt/qt58/bin/qmake atomify-lammps.pro && make"
-before_deploy:
-- mkdir output
-- docker run -v $(pwd)/output:/app/output ovilab/atomify-lammps snapcraft
-- sudo chown -R $USER:$USER output
-- ls -l output
-deploy:
-  provider: releases
-  skip_cleanup: true
-  file_glob: true
-  api_key:
-    secure: zArZaaHe6ICyfZLsWG610NxLlnquL+66D+J2GaYwS+BQqgpLzfpuKxZeFMidt5IfODct+nf5qzVcWnxMFTD3Baaeqsfua7FYL+6ZPcJTX9g/qFMNhXRQyl2FCl9ykNkM0rBz2BddhezC4c4cZkzwlBkvR7NcvmbMqJxKAeGMUVg=
-  file: output/atomify-lammps*.snap
-  on:
-    tags: true
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: required
+    services: docker
+    compiler:
+    - gcc
+    install:
+    - docker run -v $(pwd):/app snapcore/snapcraft bash -c "cd /app/ && .travis/ubuntu.sh"
+    after_success:
+    - openssl aes-256-cbc -K "$encrypted_06a73dfebfd3_key" -iv "$encrypted_06a73dfebfd3_iv"
+      -in .snapcraft/travis_snapcraft.cfg -out .snapcraft/snapcraft.cfg -d
+    snapcraft/travis_snapcraft.cfg -out .snapcraft/snapcraft.cfg -d
+    deploy:
+      true:
+        branch: dev
+      provider: script
+      script: docker run -v $(pwd):$(pwd) -t ubuntu:xenial sh -c "apt update -qq && apt
+        install snapcraft -y && cd $(pwd) && snapcraft && snapcraft push *.snap --release
+        edge"
+      skip_cleanup: true

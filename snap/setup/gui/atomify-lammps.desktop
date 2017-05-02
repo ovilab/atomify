@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Atomify LAMMPS
+Comment=Editor for the molecular dynamics simulator LAMMPS
+Exec=atomify-lammps
+Icon=${SNAP}/meta/gui/atomify-lammps.png
+Terminal=false
+Categories=Education;
+Keywords=lammps;molecules;atoms;atom;molecule;lammps;
