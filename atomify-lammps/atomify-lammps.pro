@@ -160,8 +160,6 @@ macx:ICON = images/icon.icns
 macx:QMAKE_INFO_PLIST = info.plist
 
 DISTFILES += \
-    entitlements.plist \
-    images/atomify_logo@2x.icns \
     iOS.plist \
     qml/qtquickcontrols2.conf \
     ../.travis.yml \
