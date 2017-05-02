@@ -385,16 +385,16 @@ Scene3D {
                 regionModifier,
                 periodicImages
             ]
+        }
 
-            EventCatcher {
-                name: "simulator.increaseSimulationSpeed"
-                onTriggered: simulator.increaseSimulationSpeed()
-            }
+        EventCatcher {
+            name: "simulator.increaseSimulationSpeed"
+            onTriggered: simulator.increaseSimulationSpeed()
+        }
 
-            EventCatcher {
-                name: "simulator.decreaseSimulationSpeed"
-                onTriggered: simulator.decreaseSimulationSpeed()
-            }
+        EventCatcher {
+            name: "simulator.decreaseSimulationSpeed"
+            onTriggered: simulator.decreaseSimulationSpeed()
         }
 
         ColorModifier {

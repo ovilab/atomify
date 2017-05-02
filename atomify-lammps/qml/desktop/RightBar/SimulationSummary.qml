@@ -217,11 +217,7 @@ Flickable {
                     text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
                 }
                 ToolTipLabel {
-                    toolTipText: "1x speed means 60 frames per second."
-                    text: "Achieved speed: "+system.performance.effectiveSimulationSpeed.toFixed(2)+"x"
-                }
-                ToolTipLabel {
-                    toolTipText: "1x speed means 60 frames per second."
+                    toolTipText: "1x targets 60 frames per second."
                     text: "Target speed: "+speedSlider.value+"x"
                 }
                 Slider {

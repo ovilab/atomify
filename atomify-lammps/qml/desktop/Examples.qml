@@ -21,6 +21,7 @@ Pane {
         "silica": "Silica",
         "other": "Other"
     }
+    property var tagList: ["lammps", "silica", "water", "moltemplate", "diffusion", "other"]
 
     property Item screenshotObject
     property string currentScript
@@ -98,10 +99,11 @@ Pane {
                     console.log("Error fetching tweets: " + objectArray.errors[0].message)
                 else {
                     var newTagModel = []
-                    for(var i in tagMap) {
+                    for(var i in tagList) {
+                        var tag = tagList[i]
                         newTagModel.push({
-                                             "tag": i,
-                                             "name": tagMap[i],
+                                             "tag": tag,
+                                             "name": tagMap[tag],
                                              "simulations": []
                                          })
                     }
@@ -128,9 +130,6 @@ Pane {
                         }
                     }
                     tagModel = newTagModel
-                }
-                if (wasLoading == true) {
-                    console.log("Is loaded")
                 }
             }
             wasLoading = (status === XMLHttpRequest.LOADING);
