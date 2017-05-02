@@ -5,7 +5,7 @@ sudo: required
 services: docker
 compiler: gcc
 install:
-- docker run -v $(pwd):/app snapcore/snapcraft bash -c "ubuntu:xenial sh -c "apt update -qq && apt
+- docker run -v $(pwd):/app -t ubuntu:xenial sh -c "apt update -qq && apt
   install snapcraft -y && cd /app/ && .travis/ubuntu.sh"
 after_success:
 - openssl aes-256-cbc -K $encrypted_06a73dfebfd3_key -iv $encrypted_06a73dfebfd3_iv
