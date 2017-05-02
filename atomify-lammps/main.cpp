@@ -81,13 +81,10 @@ void copyExamplesToLocalFolder()
     }
 }
 
-void clearData()
+void showDataDir()
 {
     QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    qDebug() << "Deleting Atomify contents in " << dir;
-
-    QDir dataDir(dir);
-    dataDir.removeRecursively();
+    qDebug() << "Atomify contents are found in " << dir;
     exit(0);
 }
 
@@ -148,8 +145,8 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 
     if(argc>1) {
-        if(strcmp(argv[1], "--cleardata")==0) {
-            clearData();
+        if(strcmp(argv[1], "--showdatadir")==0) {
+            showDataDir();
         }
     }
 
