@@ -1,50 +1,93 @@
-name: atomify-lammps
-version: "2.0.4"
+name: atomify
+version: "2.0.5"
 summary: Atomify LAMMPS
 description: Editor for the molecular dynamics simulator LAMMPS
 confinement: strict
+grade: stable
 
 apps:
-    neuronify:
-        command: atomify-lammps
-        plugs: ['unity7', 'x11', 'opengl', 'network', 'network-bind', 'home']
+  atomify:
+    command: atomify
+    plugs: ['unity7', 'x11', 'opengl', 'network', 'network-bind', 'home']
+  gdb:
+    command: gdb
+    plugs: [unity7, opengl, network]
 
 parts:
-    qml:
-        plugin: qt57
+  # qml:
+  #   plugin: qt57
+  #   build-packages:
+  #       - g++
+  #       - libqt5x11extras5-dev
+  #       - libpoppler-qt5-dev
+  #       - libqt5widgets5
+  #       - libqt5printsupport5
+  #       - qttools5-dev-tools
+  #       - pkg-config
+  #   stage-packages:
+  #       - rar
+  #       - unzip
+  #       - unace
+  #       - tar
+  #       - libc-bin
+  #       - libxkbcommon0
+  #       - ttf-ubuntu-font-family
+  #       - dmz-cursor-theme
+  #       - light-themes
+  #       - shared-mime-info
+  #       - libgdk-pixbuf2.0-0
+  #       - libx11-xcb1
+  #       - libgl1-mesa-dev
+  #       - libegl1-mesa
+  #       - libxrender-dev
+  #       - libgpg-error0
+  #       - libgcrypt20
+  #       - liblzma5
+  #       - libselinux1
+  #       - libpcre3
+  #       - zlib1g
+  #       - libexpat1
+  #       - libc6
+  #       - libgcc1
+  #       - libgcc-5-dev
+  #       - libstdc++6
+  #       - libxi6
+  #       - libuuid1
+  #       - fontconfig
+  # 
+  # blah:
+  #   plugin: nil
+  #   after:
+  #     - qml
+  # 
+  # something:
+  #   plugin: nil
+  #   after:
+  #     - blah
+  #     - desktop-qt5
+  blah:
+    plugin: qt57
 
-    move:
-        plugin: copy
-        files:
-            atomify-lammps: atomify-lammps
-            lib: lib
-            qml: qml
-            plugins: plugins
-
-    dep:
-        plugin: nil
-        stage-packages:
-            - libc-bin
-            - libxkbcommon0
-            - ttf-ubuntu-font-family
-            - dmz-cursor-theme
-            - light-themes
-            - shared-mime-info
-            - libgdk-pixbuf2.0-0
-            - libx11-xcb1
-            - libgl1-mesa-dev
-            - libegl1-mesa
-            - libxrender-dev
-            - libgpg-error0
-            - libgcrypt20
-            - liblzma5
-            - libselinux1
-            - libpcre3
-            - zlib1g
-            - libexpat1
-            - libc6
-            - libgcc1
-            - libgcc-5-dev
-            - libstdc++6
-            - libxi6
-            - libuuid1
+  move:
+    plugin: dump
+    source: snapdump
+    stage:
+      - bin
+      - lib
+      - plugins
+      # - platforms
+      - qml
+      - atomify
+    # after: 
+      # - environment
+      # - desktop-qt5
+  # environment:
+  #   source: snap
+  #   plugin: dump
+  #   organize:
+  #     snappy-qt5.conf: etc/xdg/qtchooser/snappy-qt5.conf
+  #         
+  gdb:
+    plugin: nil
+    stage-packages:
+      - gdb
