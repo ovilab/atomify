@@ -5,15 +5,16 @@ sudo: required
 services: docker
 compiler: gcc
 install:
-- docker run -v $(pwd):/app snapcore/snapcraft bash -c "cd /app/ && .travis/ubuntu.sh"
+- docker run -v $(pwd):/app snapcore/snapcraft bash -c "ubuntu:xenial sh -c "apt update -qq && apt
+  install snapcraft -y && cd /app/ && .travis/ubuntu.sh"
 after_success:
 - openssl aes-256-cbc -K $encrypted_06a73dfebfd3_key -iv $encrypted_06a73dfebfd3_iv
   -in .snapcraft/travis_snapcraft.cfg -out .snapcraft/snapcraft.cfg -d
 deploy:
   on:
-    branch: dev
+    branch: travis-test
   provider: script
-  script: docker run -v $(pwd):$(pwd) -t ubuntu:xenial sh -c "apt update -qq && apt
-    install snapcraft -y && cd $(pwd) && snapcraft && snapcraft push *.snap --release
+  script: docker run -v $(pwd):/app -t ubuntu:xenial sh -c "apt update -qq && apt
+    install snapcraft -y && cd /app/ && snapcraft && snapcraft push *.snap --release
     edge"
   skip_cleanup: true
