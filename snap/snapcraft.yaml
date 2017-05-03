@@ -9,9 +9,6 @@ apps:
   atomify:
     command: desktop-launch custom-qt-helper atomify
     plugs: ['unity7', 'x11', 'opengl', 'network', 'network-bind', 'home']
-  gdb:
-    command: gdb
-    plugs: [unity7, opengl, network]
 
 parts:
   move:
@@ -24,7 +21,7 @@ parts:
       - qml
   conf:
     plugin: dump
-    source: .snapcraft
+    source: .snapcraftm
     stage:
       - bin
   helpers:
