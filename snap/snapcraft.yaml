@@ -21,7 +21,7 @@ parts:
       - qml
   conf:
     plugin: dump
-    source: .snapcraftm
+    source: .snapcraft
     stage:
       - bin
   helpers:
