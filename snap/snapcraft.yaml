@@ -1,50 +1,33 @@
-name: atomify-lammps
-version: "2.0.4"
+name: atomify
+version: "2.0.5"
 summary: Atomify LAMMPS
 description: Editor for the molecular dynamics simulator LAMMPS
 confinement: strict
+grade: stable
 
 apps:
-    neuronify:
-        command: atomify-lammps
-        plugs: ['unity7', 'x11', 'opengl', 'network', 'network-bind', 'home']
+  atomify:
+    command: desktop-launch custom-qt-helper atomify
+    plugs: ['unity7', 'x11', 'opengl', 'network', 'network-bind', 'home']
 
 parts:
-    qml:
-        plugin: qt57
-
-    move:
-        plugin: copy
-        files:
-            atomify-lammps: atomify-lammps
-            lib: lib
-            qml: qml
-            plugins: plugins
-
-    dep:
-        plugin: nil
-        stage-packages:
-            - libc-bin
-            - libxkbcommon0
-            - ttf-ubuntu-font-family
-            - dmz-cursor-theme
-            - light-themes
-            - shared-mime-info
-            - libgdk-pixbuf2.0-0
-            - libx11-xcb1
-            - libgl1-mesa-dev
-            - libegl1-mesa
-            - libxrender-dev
-            - libgpg-error0
-            - libgcrypt20
-            - liblzma5
-            - libselinux1
-            - libpcre3
-            - zlib1g
-            - libexpat1
-            - libc6
-            - libgcc1
-            - libgcc-5-dev
-            - libstdc++6
-            - libxi6
-            - libuuid1
+  move:
+    plugin: dump
+    source: snapdump
+    stage:
+      - bin
+      - lib
+      - plugins
+      - qml
+  conf:
+    plugin: dump
+    source: .snapcraft
+    stage:
+      - bin
+  helpers:
+    plugin: nil
+    after:
+      - move # NOTE move and conf must be here due install error for desktop-qt5 otherwise
+      - conf
+      - desktop-qt5
+  

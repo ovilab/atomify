@@ -1,6 +1,6 @@
-Add the following to this folder before you snap:
+Add the following to the "./snapdump" folder before you snap:
 
-- neuronify (binary file)
+- atomify (binary file)
 - Qt lib directory
 - Qt plugins directory
 - Qt qml directory
@@ -8,7 +8,7 @@ Add the following to this folder before you snap:
 Run the following commands:
 
     snapcraft snap
-    sudo snap install neuronify*.snap
-    neuronify
+    sudo snap install atomify*.snap
+    atomify
 
 If everything works as expected, neuronify should run now.
