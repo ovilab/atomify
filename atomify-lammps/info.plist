@@ -9,7 +9,7 @@
         <key>CFBundleIconFile</key>
         <string>@ICON@</string>
         <key>CFBundleIdentifier</key>
-        <string>atomify.ovilab.net</string>
+        <string>net.ovilab.atomify</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleName</key>
@@ -17,13 +17,15 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>1.0</string>
+        <string>2.0</string>
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
         <string>1</string>
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.education</string>
         <key>LSMinimumSystemVersion</key>
-        <string>${MACOSX_DEPLOYMENT_TARGET}</string>
+        <string>10.12.0</string>
         <key>NSHumanReadableCopyright</key>
         <string>Copyright © 2017 Ovilab. All rights reserved.</string>
         <key>NSMainNibFile</key>

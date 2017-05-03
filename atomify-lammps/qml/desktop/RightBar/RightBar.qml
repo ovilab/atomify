@@ -55,7 +55,7 @@ Page {
     }
 
     footer: Item {
-        height: 50
+        height: 150
         width: parent.width
         Text {
             anchors.left: parent.left
@@ -65,13 +65,14 @@ Page {
             anchors.margins: 10
             textFormat: TextEdit.RichText
             font.family: "DejaVu Sans Mono"
-            font.pixelSize: 16
+            font.pixelSize: 12
             text: "
 <style>
 h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 p { color: white; }
 </style>
+<p>Atomify is developed by Anders Hafreager and Svenn-Arne Dragly.</p>
 <p>Please report bugs <a href=\"reportBug\">here</a>.</p>
 "
             onLinkActivated: {
