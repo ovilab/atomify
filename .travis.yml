@@ -15,6 +15,6 @@ deploy:
   'on':
     branch: travis-tests
   provider: script
-  script: docker run -v $(pwd):/app -t ubuntu:xenial sh -c "cd /app/ && snapcraft && snapcraft push *.snap --release
+  script: docker run -v $(pwd):/app -t atomify sh -c "cd /app/ && snapcraft && snapcraft push *.snap --release
     edge"
   skip_cleanup: true
