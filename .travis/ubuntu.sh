@@ -11,4 +11,4 @@ cp -r $QTDIR/lib ${SNAP_DUMP}/
 cp -r $QTDIR/plugins ${SNAP_DUMP}/
 cp -r $QTDIR/plugins/platforms ${SNAP_DUMP}/
 cp -r $QTDIR/qml ${SNAP_DUMP}/
-cp atomify-lammps/atomify-lammps ${SNAP_DUMP}/atomify
+cp atomify-lammps/atomify-lammps ${SNAP_DUMP}/bin/atomify

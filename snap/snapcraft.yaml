@@ -7,15 +7,13 @@ grade: stable
 
 apps:
   atomify:
-    command: atomify
+    command: desktop-launch custom-qt-helper atomify
     plugs: ['unity7', 'x11', 'opengl', 'network', 'network-bind', 'home']
   gdb:
     command: gdb
     plugs: [unity7, opengl, network]
 
 parts:
-  blah:
-    plugin: qt57
   move:
     plugin: dump
     source: snapdump
@@ -24,8 +22,15 @@ parts:
       - lib
       - plugins
       - qml
-      - atomify   
-  gdb:
+  conf:
+    plugin: dump
+    source: .snapcraft
+    stage:
+      - bin
+  helpers:
     plugin: nil
-    stage-packages:
-      - gdb
+    after:
+      - move # NOTE move and conf must be here due install error for desktop-qt5 otherwise
+      - conf
+      - desktop-qt5
+  
