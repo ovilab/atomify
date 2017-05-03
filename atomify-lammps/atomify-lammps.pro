@@ -5,15 +5,9 @@ DEFINES += LAMMPS_GZIP
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
 
-#unix:!macx {
+unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
-#}
-
-unix:macx {
-    #APPCERT = "3rd Party Mac Developer Application: Anders Hafreager"
-    #INSTALLERCERT = "3rd Party Mac Developer Installer: Anders Hafreager"
-    #BUNDLEID = net.ovilab.atomify
 }
 
 CONFIG += warn_off
