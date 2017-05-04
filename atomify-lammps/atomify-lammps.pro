@@ -152,6 +152,11 @@ HEADERS += \
 RC_ICONS = atomify_lammps/images/atomify_logo.ico
 macx:ICON = images/icon.icns
 macx:QMAKE_INFO_PLIST = info.plist
+#isEmpty(PREFIX) {
+# PREFIX = /usr/local
+#}
+#TARGET = Atomify
+#TARGET.path = $$PREFIX/
 
 DISTFILES += \
     iOS.plist \
