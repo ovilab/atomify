@@ -72,7 +72,8 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 p { color: white; }
 </style>
-<p>Atomify is developed by Anders Hafreager and Svenn-Arne Dragly.</p>
+<p>Atomify is developed by Anders Hafreager<br>
+and Svenn-Arne Dragly, University of Oslo.</p>
 <p>Please report bugs <a href=\"reportBug\">here</a>.</p>
 "
             onLinkActivated: {
