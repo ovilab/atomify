@@ -19,6 +19,12 @@ parts:
       - lib
       - plugins
       - qml
+  packages:
+    plugin: nil
+    stage-packages:
+      - libgl1-mesa-dri
+      - libgl1-mesa-glx
+      - xserver-xorg-video-intel 
   conf:
     plugin: dump
     source: .snapcraft
