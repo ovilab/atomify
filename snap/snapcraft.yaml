@@ -35,5 +35,6 @@ parts:
     after:
       - move # NOTE move and conf must be here due install error for desktop-qt5 otherwise
       - conf
+      - packages
       - desktop-qt5
   
