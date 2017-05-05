@@ -21,11 +21,11 @@
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>1</string>
+        <string>3</string>
         <key>LSApplicationCategoryType</key>
         <string>public.app-category.education</string>
         <key>LSMinimumSystemVersion</key>
-        <string>10.12.0</string>
+        <string>10.9.0</string>
         <key>NSHumanReadableCopyright</key>
         <string>Copyright © 2017 Ovilab. All rights reserved.</string>
         <key>NSMainNibFile</key>
