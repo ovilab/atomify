@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.3
 import Atomify 1.0
 import "../../visualization"
@@ -57,10 +58,20 @@ Page {
     footer: Item {
         height: 150
         width: parent.width
+        Rectangle {
+            id: rect
+            height: 2
+            color: Material.accent
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 5
+        }
+
         Text {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
+            anchors.top: rect.bottom
 
             anchors.margins: 10
             textFormat: TextEdit.RichText
