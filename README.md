@@ -17,10 +17,10 @@ Step 2)
 Clone the repository `git clone --recursive https://github.com/ovilab/atomify.git`
 
 Step 3)
-Open the atomify-lammps directory and run `python configure.py` which will configure and compile LAMMPS. 
+Open the atomify directory and run `python configure.py` which will configure and compile LAMMPS. 
 
 Step 4)
-Open atomify-lammps.pro in Qt Creator and build/run.
+Open atomify.pro in Qt Creator and build/run.
 
 ## How to add/remove LAMMPS packages ##
 LAMMPS is located in libs/lammps, so you can do any changes you want to (add packages, your own codes and so on). You need to recompile LAMMPS with (being in the libs/lammps/src folder)
