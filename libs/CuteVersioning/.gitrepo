@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:ovilab/CuteVersioning
+	branch = dev
+	commit = 1557db4d3ceeba170f2c2d4cc05a61d3e6f57e47
+	parent = 1c0f058a4636d5bbbcd56013737365c24f8968ec
+	cmdver = 0.3.0
