@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = atomify
+SUBDIRS = src
 CONFIG += ordered
