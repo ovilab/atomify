@@ -148,6 +148,11 @@ int main(int argc, char *argv[])
         if(strcmp(argv[1], "--showdatadir")==0) {
             showDataDir();
         }
+
+        if(strcmp(argv[1], "--version")==0) {
+            printf("2.0");
+            exit(0);
+        }
     }
 
     copyExamplesToLocalFolder();
