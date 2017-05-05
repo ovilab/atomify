@@ -9,6 +9,7 @@ unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
 }
+#QMAKE_MAC_SDK = macosx10.9
 
 CONFIG += warn_off
 DEFINES += LAMMPS_EXCEPTIONS LAMMPS_GZIP LAMMPS_MEMALIGN=64
