@@ -38,6 +38,11 @@ RESOURCES += images.qrc \
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
+!isEmpty(PREFIX) {
+    target.path=$$PREFIX/
+    export(target.path)
+}
+
 # Default rules for deployment.
 include(deployment.pri)
 #include(../SimVis/examples/examples_vendor.pri) # replace with qpm installation
@@ -153,11 +158,6 @@ HEADERS += \
 RC_ICONS = atomify_lammps/images/atomify_logo.ico
 macx:ICON = images/icon.icns
 macx:QMAKE_INFO_PLIST = info.plist
-#isEmpty(PREFIX) {
-# PREFIX = /usr/local
-#}
-#TARGET = Atomify
-#TARGET.path = $$PREFIX/
 
 DISTFILES += \
     iOS.plist \
