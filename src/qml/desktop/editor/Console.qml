@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.2
 import Atomify 1.0
 
