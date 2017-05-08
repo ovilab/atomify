@@ -14,10 +14,12 @@ def run_command(cmd):
 
 lammps_build_type = "atomify"
 env = os.environ.copy()
-
+currentPath = os.getcwd()
 # Set up examples
 run_command("git submodule update --init --recursive")
-
+os.chdir(os.path.join("src","examples"))
+run_command("python generateExamples.py")
+os.chdir(currentPath)
 # Set up LAMMPS
 
 if _platform == "darwin":

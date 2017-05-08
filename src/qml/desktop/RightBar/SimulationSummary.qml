@@ -218,7 +218,7 @@ Flickable {
                 }
                 ToolTipLabel {
                     toolTipText: "1x targets 60 frames per second."
-                    text: "Target speed: "+speedSlider.value+"x"
+                    text: "Target speed: "+speedSlider.value.toFixed(0)+"x"
                 }
                 Slider {
                     id: speedSlider
@@ -229,6 +229,7 @@ Flickable {
                     from: 1
                     to: 100
                     stepSize: 1
+                    snapMode: Slider.SnapAlways
                     value: simulator ? simulator.simulationSpeed : 1
                     onValueChanged: if(simulator !== undefined) { simulator.simulationSpeed = value }
                 }
