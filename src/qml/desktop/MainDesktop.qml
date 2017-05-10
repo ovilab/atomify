@@ -74,6 +74,7 @@ Rectangle {
                 var numUrls = drop.urls.length
                 for(var i=0; i<drop.urls.length; i++) {
                     var url = drop.urls[i]
+                    EventCenter.postEvent("mode.edit")
                     editor.editorWindow.openTab(url)
                 }
             }
