@@ -146,6 +146,23 @@ Flickable {
 
             Column {
                 Label {
+                    text: {
+                        var state = ""
+                        if(simulator.states.paused.active) {
+                            state = "Paused"
+                        } else if(simulator.states.finished.active) {
+                            state = "Finished"
+                        } else {
+                            state = system.state
+                        }
+
+                        return "State: "+state
+                    }
+
+                    visible: system.state!==""
+                }
+
+                Label {
                     text: "Triclinic"
                     visible: system.triclinic
                 }

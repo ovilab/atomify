@@ -38,6 +38,7 @@ class System : public QObject
     Q_PROPERTY(Fixes* fixes READ fixes WRITE setFixes NOTIFY fixesChanged)
     Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
+    Q_PROPERTY(QString state READ state WRITE setState NOTIFY stateChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
 
@@ -72,6 +73,7 @@ public:
     class Performance * performance() const;
     double cpuremain() const;
     double dt() const;
+    QString state() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -89,6 +91,7 @@ public slots:
     void setPerformance(class Performance * performance);
     void setCpuremain(double cpuremain);
     void setDt(double dt);
+    void setState(QString state);
 
 signals:
     void originChanged(QVector3D origin);
@@ -115,6 +118,7 @@ signals:
     void performanceChanged(class Performance * performance);
     void cpuremainChanged(double cpuremain);
     void dtChanged(double dt);
+    void stateChanged(QString state);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -148,6 +152,7 @@ private:
     void calculateTimestepsPerSeconds(LAMMPS_NS::LAMMPS *lammps);
     QVector3D m_center;
     double m_dt = 0;
+    QString m_state;
 };
 
 #endif // SYSTEM_H

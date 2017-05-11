@@ -163,6 +163,15 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_fixes->synchronize(lammpsController);
     m_performance->synchronize(lammpsController);
 
+    // 0 for unset, 1 for dynamics, 2 for min
+    if(lammps->update->whichflag==0) {
+        setState("");
+    } else if(lammps->update->whichflag==1) {
+        setState("Dynamics");
+    } else if(lammps->update->whichflag==2) {
+        setState("Minimizing");
+    }
+
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
     Update *update = lammps->update;
@@ -335,6 +344,11 @@ double System::dt() const
     return m_dt;
 }
 
+QString System::state() const
+{
+    return m_state;
+}
+
 void System::synchronizeQML(LAMMPSController *lammpsController)
 {
     m_computes->synchronizeQML(lammpsController);
@@ -503,6 +517,15 @@ void System::setDt(double dt)
 
     m_dt = dt;
     emit dtChanged(dt);
+}
+
+void System::setState(QString state)
+{
+    if (m_state == state)
+        return;
+
+    m_state = state;
+    emit stateChanged(state);
 }
 
 void System::setVariables(Variables *variables)
