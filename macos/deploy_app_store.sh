@@ -5,15 +5,17 @@
 # Create icons with
 # iconutil -c icns icon.iconset
 # sudo installer -store -pkg Atomify.pkg -target /
-rm -r Atomify.app
-cp -r atomify-lammps.app Atomify.app
+mkdir tmp
+rm -rf tmp/*
+cp -r Atomify.app tmp
+cd tmp
 xattr -cr Atomify.app
-~/Qt/5.9/clang_64/bin/macdeployqt Atomify.app -qmldir=/projects/atomify/editor/atomify-lammps/atomify-lammps/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
+~/Qt/5.9/clang_64/bin/macdeployqt Atomify.app -qmldir=/projects/atomify/editor/atomify/src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
 cd "Atomify.app"
 find . -name *.dSYM | xargs -I $ rm -R $
 cd ..
-cp atomify-lammps.app/Contents/MacOS/atomify-lammps Atomify.app/Contents/MacOS/
+cp ../Atomify.app/Contents/MacOS/atomify-lammps Atomify.app/Contents/MacOS/
 codesign -s "3rd Party Mac Developer Application: Anders Hafreager" --entitlements /projects/atomify/editor/atomify-lammps/atomify-lammps/entitlements.plist Atomify.app
 productbuild --component Atomify.app /Applications --sign "3rd Party Mac Developer Installer: Anders Hafreager" Atomify.pkg
-~/Qt/5.9/clang_64/bin/macdeployqt Atomify.app -qmldir=/projects/atomify/editor/atomify-lammps/atomify-lammps/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
+~/Qt/5.9/clang_64/bin/macdeployqt Atomify.app -qmldir=/projects/atomify/editor/atomify/src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
 productbuild --component Atomify.app /Applications --sign "3rd Party Mac Developer Installer: Anders Hafreager" Atomify.pkg
