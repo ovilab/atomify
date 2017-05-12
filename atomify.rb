@@ -1,7 +1,7 @@
 class Atomify < Formula
   desc "Live LAMMPS visualizer"
   homepage "http://ovilab.net/atomify"
-  url "https://github.com/ovilab/atomify/releases/download/v2.0.6/atomify.tar.gz"
+  url "https://github.com/ovilab/atomify/releases/download/v2.0.7/atomify-2.0.7-macos.tar.gz"
   version "v2.0.6"
   sha256 "10ecc1209b51142ba13868477b0f53107c1c2b44eae75312c7a2f35d225ffd33"
   head "https://github.com/ovilab/atomify.git", :using => :git, :branch => :dev
