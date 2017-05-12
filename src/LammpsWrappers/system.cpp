@@ -218,10 +218,8 @@ void System::synchronize(LAMMPSController *lammpsController)
     setLammpsVersion(QString(LAMMPS_VERSION));
 
 #ifdef MACAPPSTORE
-    qDebug() << "Mac app store = true";
     setMacAppStore(true);
 #else
-    qDebug() << "Mac app store = false";
     setMacAppStore(false);
 #endif
 
