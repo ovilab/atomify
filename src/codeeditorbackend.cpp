@@ -88,6 +88,20 @@ bool CodeEditorBackend::fileExists(QString path)
     return info.exists();
 }
 
+bool CodeEditorBackend::filePathIsWritable(QString filePath)
+{
+    filePath.replace("file://", "");
+    QDir dir = QFileInfo(filePath).absoluteDir();
+    QString tmpFile = QDir::cleanPath(dir.absolutePath() + QDir::separator() + "tmp1337");
+    QFile f(tmpFile);
+    if(!f.open(QIODevice::WriteOnly)) {
+        return false;
+    }
+    f.close();
+    dir.remove(tmpFile);
+    return true;
+}
+
 QString CodeEditorBackend::cleanPath(QString path)
 {
     return "file://"+QUrl(path).toLocalFile();

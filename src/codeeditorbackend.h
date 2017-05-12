@@ -22,6 +22,7 @@ public:
 
     QString folder() const;
     Q_INVOKABLE bool fileExists(QString path);
+    Q_INVOKABLE bool filePathIsWritable(QString filePath);
     Q_INVOKABLE QString cleanPath(QString path);
     Q_INVOKABLE QVariantMap getParameters(QUrl path);
 signals:
