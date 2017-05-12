@@ -217,6 +217,14 @@ void System::synchronize(LAMMPSController *lammpsController)
     setDt(lammps->update->dt);
     setLammpsVersion(QString(LAMMPS_VERSION));
 
+#ifdef MACAPPSTORE
+    qDebug() << "Mac app store = true";
+    setMacAppStore(true);
+#else
+    qDebug() << "Mac app store = false";
+    setMacAppStore(false);
+#endif
+
 //    lammps->output->thermo->compute(1);
 //    calculateTimestepsPerSeconds(lammps);
 //    calculateCPURemain(lammps);
@@ -355,6 +363,11 @@ QString System::state() const
 QString System::lammpsVersion() const
 {
     return m_lammpsVersion;
+}
+
+bool System::macAppStore() const
+{
+    return m_macAppStore;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -543,6 +556,15 @@ void System::setLammpsVersion(QString lammpsVersion)
 
     m_lammpsVersion = lammpsVersion;
     emit lammpsVersionChanged(lammpsVersion);
+}
+
+void System::setMacAppStore(bool macAppStore)
+{
+    if (m_macAppStore == macAppStore)
+        return;
+
+    m_macAppStore = macAppStore;
+    emit macAppStoreChanged(macAppStore);
 }
 
 void System::setVariables(Variables *variables)
