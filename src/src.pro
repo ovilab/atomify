@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += c++11
 CONFIG += appstore
 DEFINES += LAMMPS_GZIP
-TARGET = atomify
+TARGET = Atomify
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
 
