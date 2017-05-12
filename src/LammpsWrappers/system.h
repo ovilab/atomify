@@ -10,6 +10,7 @@
 #include <domain.h>
 #include <QMatrix4x4>
 #include <QMatrix3x3>
+#include <version.h>
 
 class System : public QObject
 {
@@ -39,6 +40,7 @@ class System : public QObject
     Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
     Q_PROPERTY(QString state READ state WRITE setState NOTIFY stateChanged)
+    Q_PROPERTY(QString lammpsVersion READ lammpsVersion WRITE setLammpsVersion NOTIFY lammpsVersionChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
 
@@ -74,6 +76,7 @@ public:
     double cpuremain() const;
     double dt() const;
     QString state() const;
+    QString lammpsVersion() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -92,6 +95,7 @@ public slots:
     void setCpuremain(double cpuremain);
     void setDt(double dt);
     void setState(QString state);
+    void setLammpsVersion(QString lammpsVersion);
 
 signals:
     void originChanged(QVector3D origin);
@@ -119,6 +123,7 @@ signals:
     void cpuremainChanged(double cpuremain);
     void dtChanged(double dt);
     void stateChanged(QString state);
+    void lammpsVersionChanged(QString lammpsVersion);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -153,6 +158,7 @@ private:
     QVector3D m_center;
     double m_dt = 0;
     QString m_state;
+    QString m_lammpsVersion;
 };
 
 #endif // SYSTEM_H

@@ -1,9 +1,4 @@
 #include "system.h"
-#include <domain.h>
-#include <atom.h>
-#include <output.h>
-#include <thermo.h>
-#include <update.h>
 #include "atoms.h"
 #include "regions.h"
 #include "groups.h"
@@ -14,6 +9,13 @@
 #include "modifiers/modifier.h"
 #include "units.h"
 #include "../performance.h"
+
+#include <force.h>
+#include <domain.h>
+#include <atom.h>
+#include <output.h>
+#include <thermo.h>
+#include <update.h>
 
 using namespace LAMMPS_NS;
 
@@ -213,6 +215,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     emit volumeChanged(m_volume);
 
     setDt(lammps->update->dt);
+    setLammpsVersion(QString(LAMMPS_VERSION));
 
 //    lammps->output->thermo->compute(1);
 //    calculateTimestepsPerSeconds(lammps);
@@ -347,6 +350,11 @@ double System::dt() const
 QString System::state() const
 {
     return m_state;
+}
+
+QString System::lammpsVersion() const
+{
+    return m_lammpsVersion;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -526,6 +534,15 @@ void System::setState(QString state)
 
     m_state = state;
     emit stateChanged(state);
+}
+
+void System::setLammpsVersion(QString lammpsVersion)
+{
+    if (m_lammpsVersion == lammpsVersion)
+        return;
+
+    m_lammpsVersion = lammpsVersion;
+    emit lammpsVersionChanged(lammpsVersion);
 }
 
 void System::setVariables(Variables *variables)

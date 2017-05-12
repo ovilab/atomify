@@ -384,5 +384,20 @@ Flickable {
                 }
             }
         }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "LAMMPS"
+
+            Column {
+                Label {
+                    text: "Version: "+ system.lammpsVersion
+                }
+            }
+        }
     }
 }
