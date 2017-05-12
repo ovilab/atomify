@@ -14,7 +14,7 @@ xattr -cr Atomify.app
 cd "Atomify.app"
 find . -name *.dSYM | xargs -I $ rm -R $
 cd ..
-cp ../Atomify.app/Contents/MacOS/atomify-lammps Atomify.app/Contents/MacOS/
+cp ../Atomify.app/Contents/MacOS/atomify Atomify.app/Contents/MacOS/
 codesign -s "3rd Party Mac Developer Application: Anders Hafreager" --entitlements /projects/atomify/editor/atomify/macos/entitlements.plist Atomify.app
 productbuild --component Atomify.app /Applications --sign "3rd Party Mac Developer Installer: Anders Hafreager" Atomify.pkg
 ~/Qt/5.9/clang_64/bin/macdeployqt Atomify.app -qmldir=/projects/atomify/editor/atomify/src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
