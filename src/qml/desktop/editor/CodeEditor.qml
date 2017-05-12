@@ -6,6 +6,8 @@ import Atomify 1.0
 
 Item {
     id: root
+    clip: true
+
     property alias text: textArea.text
     property alias textArea: textArea
     property string title: changedSinceLastSave ? fileName+"*" : fileName
@@ -16,7 +18,33 @@ Item {
     property int currentLine: -1
     property int errorLine: -1
 
-    clip: true
+    onCurrentLineChanged: {
+        lineNumbers.currentLine = currentLine
+        textArea.update()
+    }
+
+    onErrorLineChanged: {
+        lineNumbers.errorLine = errorLine
+        textArea.update()
+    }
+
+    function loadAndUpdateTextField() {
+        backend.load()
+        textArea.text = backend.text
+        changedSinceLastSave = false
+    }
+
+    function refresh() {
+        if(backend.fileUrl=="") return
+
+        if(backend.anyChangesOnDisk()) {
+            if(changedSinceLastSave) {
+                loadChangedFileDialog.open()
+                return
+            }
+            loadAndUpdateTextField()
+        }
+    }
 
     function fileExists(path) {
         return backend.fileExists(path);
@@ -30,15 +58,6 @@ Item {
         return backend.getParameters(path);
     }
 
-    onCurrentLineChanged: {
-        lineNumbers.currentLine = currentLine
-        textArea.update()
-    }
-
-    onErrorLineChanged: {
-        lineNumbers.errorLine = errorLine
-        textArea.update()
-    }
 
     function clear() {
         currentLine = -1
@@ -48,9 +67,7 @@ Item {
 
     function open(fileUrl) {
         backend.fileUrl = fileUrl
-        backend.load()
-        textArea.text = backend.text
-        changedSinceLastSave = false
+        loadAndUpdateTextField()
     }
 
     function save(cb) {
@@ -173,5 +190,14 @@ Item {
                 cb = null
             }
         }
+    }
+
+    MessageDialog {
+        id: loadChangedFileDialog
+        title: ""
+
+        text: root.fileName+" has changed on disk. Do you want to reload it?"
+        standardButtons: StandardButton.No | StandardButton.Yes
+        onYes: loadAndUpdateTextField()
     }
 }
