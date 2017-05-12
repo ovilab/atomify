@@ -33,7 +33,7 @@ Item {
 
     onCurrentEditorChanged: {
         focusCurrentEditor()
-        currentEditor.refresh()
+        if(currentEditor) currentEditor.refresh()
     }
 
 
