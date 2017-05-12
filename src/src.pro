@@ -10,11 +10,15 @@ unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
 }
+
 macx {
     QMAKE_MAC_SDK = macosx10.9
     ICON = images/icon.icns
     QMAKE_INFO_PLIST = info.plist
 }
+
+# DEFINES += MACAPPSTORE
+
 ios {
     QMAKE_INFO_PLIST = iOS.plist
 }

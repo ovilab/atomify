@@ -3,6 +3,7 @@ import QtQuick.Controls 2.1
 
 import QtQuick.Dialogs 1.2
 import Atomify 1.0
+import "../../events"
 
 Item {
     id: root
@@ -17,6 +18,11 @@ Item {
     property bool changedSinceLastSave: false
     property int currentLine: -1
     property int errorLine: -1
+
+    Component.onCompleted: {
+        highlighter.setTextDocument(textArea.textDocument)
+        EventCenter.register("editor.cantwrite")
+    }
 
     onCurrentLineChanged: {
         lineNumbers.currentLine = currentLine
@@ -43,6 +49,10 @@ Item {
                 return
             }
             loadAndUpdateTextField()
+        }
+
+        if(root.visible && backend.fileExists(fileUrl) && !backend.filePathIsWritable(fileUrl)) {
+            EventCenter.postEvent("editor.cantwrite", fileName)
         }
     }
 
@@ -94,10 +104,6 @@ Item {
         }
         fileDialogSave.folder = "file://"+root.folder
         fileDialogSave.open()
-    }
-
-    Component.onCompleted: {
-        highlighter.setTextDocument(textArea.textDocument)
     }
 
     Highlighter {

@@ -13,10 +13,35 @@ Rectangle {
     signal newTabClicked()
     signal hideClicked()
 
+    onHideClicked: {
+        hideClickedAtLeastOnce = true
+        cantWrite = false
+        visible = false
+    }
+
+    Timer {
+        interval: 1000
+        repeat: true
+        running: true
+        onTriggered: console.log("Welcome now: ", welcome)
+    }
+
+    property bool hideClickedAtLeastOnce: false // TODO: state machinery should be used...
     property bool welcome: true
     property bool finished: false
     property bool crashed: false
     property bool cancelling: false
+    property bool cantWrite: false // TODO: rename to showCantWrite
+    property string cantWriteMacOSAppStoreText:
+        "
+<style>
+h2 { text-align: center; }
+a { font-weight: bold; color: #56b1b4; text-decoration: none; }
+</style>
+<h2>File access problem:</h2>
+<p>This simulation is in a directory which Atomify cannot write to. Due to limitations<br>
+to file access in the Mac App Store, your simulations must be in the Downloads folder. </p>"
+
     property string cancellingText:
         "
 <style>
@@ -72,7 +97,9 @@ Learn more about Atomify at <a href=\"website\">ovilab.net/atomify</a>. We love 
         textFormat: TextEdit.RichText
         wrapMode: TextArea.WordWrap
         text: {
-            if(welcome) {
+            if(cantWrite) {
+                return cantWriteMacOSAppStoreText
+            } else if(welcome) {
                 return welcomeText
             } else if(finished) {
                 return finishedText
