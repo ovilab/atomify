@@ -14,13 +14,13 @@ unix:!macx {
 macx {
     QMAKE_MAC_SDK = macosx10.9
     ICON = images/icon.icns
-    QMAKE_INFO_PLIST = info.plist
+    QMAKE_INFO_PLIST = ../macos/macos.plist
 }
 
 # DEFINES += MACAPPSTORE
 
 ios {
-    QMAKE_INFO_PLIST = iOS.plist
+    QMAKE_INFO_PLIST = ../ios/ios.plist
 }
 
 CONFIG += warn_off
@@ -162,7 +162,8 @@ HEADERS += \
 RC_ICONS = atomify_lammps/images/atomify_logo.ico
 
 DISTFILES += \
-    iOS.plist \
+    ../ios/ios.plist \
+    ../macos/macos.plist \
     qml/qtquickcontrols2.conf \
     ../.travis.yml \
     ../snappy-qt5.conf \
