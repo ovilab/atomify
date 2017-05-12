@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += c++11
 CONFIG += appstore
 DEFINES += LAMMPS_GZIP
-TARGET = Atomify
+TARGET = atomify
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
 
@@ -15,6 +15,7 @@ macx {
     QMAKE_MAC_SDK = macosx10.9
     ICON = images/icon.icns
     QMAKE_INFO_PLIST = ../macos/macos.plist
+    TARGET = Atomify
 }
 
 # DEFINES += MACAPPSTORE
