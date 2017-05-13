@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/simulations/reaxff">
+        <file>ssz_13/ssz_13.png</file>
+        <file>ssz_13/ssz_13.qml</file>
+        <file>ssz_13/ssz_13.in</file>
+        <file>ssz_13/ffield_Psofogiannakis_CuOH_2015</file>
+        <file>ssz_13/CHA_wAl.data</file>
+    </qresource>
+</RCC>

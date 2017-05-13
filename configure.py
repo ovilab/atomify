@@ -82,23 +82,16 @@ else:
     lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
     lammps_pri.close()
 
-errorCppFile = join(lammps_source_dir_src, "error.cpp")
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
-if not os.path.isfile(errorCppFile):
-    print "Error, could not find file to patch: "+errorCppFile
-    print "Make sure you provided the correct LAMMPS folder."
-    exit()
 
 if not os.path.isfile(fix_ave_timeHFile):
     print "Error, could not find file to patch: "+fix_ave_timeHFile
     print "Make sure you provided the correct LAMMPS folder."
     exit()
 
-print "Attempting to patch lammps source files error.cpp and fix_ave_time.h."
+print "Attempting to patch lammps source files and fix_ave_time.h."
 print "If these are already patched, just press enter (which by default answers 'no' on the questions) twice for each already patched file.\n"
 
-errorCppPatchFile = join(patch_path, "error.cpp.patch")
-run_command("patch %s < %s" % (errorCppFile, errorCppPatchFile)) 
 fix_ave_timeHPatchFile = join(patch_path, "fix_ave_time.h.patch")
 run_command("patch %s < %s" % (fix_ave_timeHFile, fix_ave_timeHPatchFile)) 
 shutil.copy(join(patch_path, "lammpsexception.h"), lammps_source_dir_src)

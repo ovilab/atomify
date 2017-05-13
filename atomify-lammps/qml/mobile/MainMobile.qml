@@ -31,9 +31,7 @@ Item {
                 "qrc:/simulations/lammps/flow_pois",
                 "qrc:/simulations/lammps/friction",
                 "qrc:/simulations/lammps/indent",
-                "qrc:/simulations/lammps/micelle",
-                "qrc:/simulations/lammps/obstacle",
-                "qrc:/simulations/lammps/shear"
+                "qrc:/simulations/lammps/obstacle"
             ]
         },
         {
@@ -65,6 +63,12 @@ Item {
             simulations: [
                 "qrc:/simulations/diffusion/simple_diffusion",
                 "qrc:/simulations/diffusion/diffusion_coefficient"
+            ]
+        },
+        {
+            name: "ReaxFF",
+            simulations: [
+                "qrc:/simulations/reaxff/ssz_13"
             ]
         }
     ]
