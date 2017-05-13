@@ -192,6 +192,7 @@ QQC1.ApplicationWindow {
 
             EventMenuItem {
                 text: "Full screen"
+                name: "app.fullscreen"
                 shortcut: StandardKey.FullScreen
                 checkable: true
                 checked: visibility === Window.FullScreen
