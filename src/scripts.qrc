@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>scripts/default.lmp</file>
-    </qresource>
-</RCC>
