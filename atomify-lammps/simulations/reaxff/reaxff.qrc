@@ -5,5 +5,59 @@
         <file>ssz_13/ssz_13.in</file>
         <file>ssz_13/ffield_Psofogiannakis_CuOH_2015</file>
         <file>ssz_13/CHA_wAl.data</file>
+        <file>AB/AB.png</file>
+        <file>AB/AB.qml</file>
+        <file>AB/AB.in</file>
+        <file>AB/data.AB</file>
+        <file>AB/ffield.reax.AB</file>
+        <file>AB/lmp_control</file>
+        <file>AB/param.qeq</file>
+        <file>AuO/AuO.in</file>
+        <file>AuO/AuO.png</file>
+        <file>AuO/AuO.qml</file>
+        <file>AuO/data.AuO</file>
+        <file>AuO/ffield.reax.AuO</file>
+        <file>AuO/lmp_control</file>
+        <file>AuO/param.qeq</file>
+        <file>CHO/CHO.in</file>
+        <file>CHO/CHO.png</file>
+        <file>CHO/CHO.qml</file>
+        <file>CHO/data.CHO</file>
+        <file>CHO/ffield.reax.cho</file>
+        <file>CHO/lmp_control</file>
+        <file>CHO/param.qeq</file>
+        <file>FeOH3/data.FeOH3</file>
+        <file>FeOH3/FeOH3.in</file>
+        <file>FeOH3/FeOH3.png</file>
+        <file>FeOH3/FeOH3.qml</file>
+        <file>FeOH3/ffield.reax.Fe_O_C_H</file>
+        <file>FeOH3/lmp_control</file>
+        <file>FeOH3/param.qeq</file>
+        <file>RDX/data.RDX</file>
+        <file>RDX/ffield.reax.rdx</file>
+        <file>RDX/lmp_control</file>
+        <file>RDX/param.qeq</file>
+        <file>RDX/RDX.in</file>
+        <file>RDX/RDX.png</file>
+        <file>RDX/RDX.qml</file>
+        <file>ssz_13/CHA_wAl.data</file>
+        <file>ssz_13/ffield_Psofogiannakis_CuOH_2015</file>
+        <file>ssz_13/ssz_13.in</file>
+        <file>ssz_13/ssz_13.png</file>
+        <file>ssz_13/ssz_13.qml</file>
+        <file>VOH/data.VOH</file>
+        <file>VOH/ffield.reax.V_O_C_H</file>
+        <file>VOH/lmp_control</file>
+        <file>VOH/param.qeq</file>
+        <file>VOH/VOH.in</file>
+        <file>VOH/VOH.png</file>
+        <file>VOH/VOH.qml</file>
+        <file>ZnOH2/data.ZnOH2</file>
+        <file>ZnOH2/ffield.reax.ZnOH</file>
+        <file>ZnOH2/lmp_control</file>
+        <file>ZnOH2/param.qeq</file>
+        <file>ZnOH2/ZnOH2.in</file>
+        <file>ZnOH2/ZnOH2.png</file>
+        <file>ZnOH2/ZnOH2.qml</file>
     </qresource>
 </RCC>

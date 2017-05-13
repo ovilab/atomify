@@ -68,7 +68,14 @@ Item {
         {
             name: "ReaxFF",
             simulations: [
-                "qrc:/simulations/reaxff/ssz_13"
+                "qrc:/simulations/reaxff/ssz_13",
+                "qrc:/simulations/reaxff/AB",
+                "qrc:/simulations/reaxff/AuO",
+                "qrc:/simulations/reaxff/CHO",
+                "qrc:/simulations/reaxff/FeOH3",
+                "qrc:/simulations/reaxff/RDX",
+                "qrc:/simulations/reaxff/VOH",
+                "qrc:/simulations/reaxff/ZnOH2"
             ]
         }
     ]
