@@ -19,13 +19,6 @@ Rectangle {
         visible = false
     }
 
-    Timer {
-        interval: 1000
-        repeat: true
-        running: true
-        onTriggered: console.log("Welcome now: ", welcome)
-    }
-
     property bool hideClickedAtLeastOnce: false // TODO: state machinery should be used...
     property bool welcome: true
     property bool finished: false
