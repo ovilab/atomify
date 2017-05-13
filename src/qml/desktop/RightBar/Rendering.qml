@@ -5,6 +5,7 @@ import QtQuick.Dialogs 1.2
 import Atomify 1.0
 import Qt.labs.settings 1.0
 import "../../visualization"
+
 Pane {
     id: root
     property AtomifyVisualizer visualizer
@@ -29,7 +30,6 @@ Pane {
             }
 
             spacing: 10
-
 
             GroupBox {
                 anchors {
@@ -61,12 +61,6 @@ Pane {
                         }                        
                     }
 
-                    Shortcut {
-                        id: guidesCheckBoxShortcut
-                        sequence: "G"
-                        onActivated: visualizer.guidesVisible = !visualizer.guidesVisible
-                    }
-
                     CheckBox {
                         id: outlineCheckBox
                         text: "Show outline"
@@ -80,12 +74,6 @@ Pane {
                             property: "systemBoxVisible"
                             value: outlineCheckBox.checked
                         }
-                    }
-
-                    Shortcut {
-                        id: outlineCheckBoxShortcut
-                        sequence: "M"
-                        onActivated: visualizer.systemBoxVisible = !visualizer.systemBoxVisible
                     }
                 }
 

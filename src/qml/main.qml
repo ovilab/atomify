@@ -204,6 +204,28 @@ QQC1.ApplicationWindow {
                     }
                 }
             }
+
+            EventMenuItem {
+                text: "Show guides"
+                name: "visualizer.showguides"
+                shortcut: "G"
+                checkable: true
+                checked: mainDesktop.visualizer.guidesVisible
+                onTriggered: {
+                    mainDesktop.visualizer.guidesVisible = !mainDesktop.visualizer.guidesVisible
+                }
+            }
+
+            EventMenuItem {
+                text: "Show outline"
+                name: "visualizer.showoutline"
+                shortcut: "M"
+                checkable: true
+                checked: mainDesktop.visualizer.systemBoxVisible
+                onTriggered: {
+                    mainDesktop.visualizer.systemBoxVisible = !mainDesktop.visualizer.systemBoxVisible
+                }
+            }
         }
     }
 
