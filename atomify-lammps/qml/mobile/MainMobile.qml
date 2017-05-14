@@ -30,7 +30,6 @@ Item {
                 "qrc:/simulations/lammps/flow_couette",
                 "qrc:/simulations/lammps/flow_pois",
                 "qrc:/simulations/lammps/friction",
-                "qrc:/simulations/lammps/indent",
                 "qrc:/simulations/lammps/obstacle"
             ]
         },
