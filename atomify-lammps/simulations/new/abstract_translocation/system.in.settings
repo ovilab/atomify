@@ -1,0 +1,17 @@
+    #            i     j     epsilon sigma cutoff
+    pair_coeff 1 1  0.60  3.0   7.5    #<--attractive
+    group groupA type 1  #(Atoms of this type belong to the "A" group)
+    #            i     j     epsilon sigma cutoff
+    pair_coeff 2 2  0.05  3.0   7.5    #<--repulsive (approximately)
+    group groupB type 2  #(Atoms of this type belong to the "B" group)
+    pair_coeff 3 3    0.05   2.0
+    pair_coeff 4  4     0.50   2.0
+    #           bond-type          k     r0
+    bond_coeff  1   30.0   1.2
+    bond_coeff  2          30.0   2.0    # "bb" shorthand for "backbone"
+    #            angle-type         k    theta0
+    angle_coeff  1   50.00  160
+    angle_coeff  2  50.00  120
+    angle_coeff  3        50.00  120
+    #                  dihedral-type      K1      K2      K3      K4
+    dihedral_coeff  1  1.411036 -0.271016 3.145034 0.0

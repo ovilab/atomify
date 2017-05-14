@@ -30,6 +30,7 @@ RESOURCES += images.qrc \
     simulations/silica/silica.qrc \
     simulations/granular/granular.qrc \
     simulations/reaxff/reaxff.qrc \
+    simulations/new/new.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

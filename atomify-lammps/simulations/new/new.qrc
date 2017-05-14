@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/simulations/new">
+        <file>abstract_translocation/abstract_translocation.png</file>
+        <file>abstract_translocation/abstract_translocation.in</file>
+        <file>abstract_translocation/abstract_translocation.qml</file>
+        <file>abstract_translocation/system.in</file>
+        <file>abstract_translocation/system.in.init</file>
+        <file>abstract_translocation/system.in.settings</file>
+        <file>abstract_translocation/system.data</file>
+        <file>alkane_chain_single/alkane_chain_single.png</file>
+        <file>alkane_chain_single/alkane_chain_single.in</file>
+        <file>alkane_chain_single/alkane_chain_single.qml</file>
+        <file>alkane_chain_single/system.in</file>
+        <file>alkane_chain_single/system.in.charges</file>
+        <file>alkane_chain_single/system.in.init</file>
+        <file>alkane_chain_single/system.in.settings</file>
+        <file>alkane_chain_single/system_after_min.data</file>
+        <file>cmap/charmm22.cmap</file>
+        <file>cmap/cmap.png</file>
+        <file>cmap/cmap.in</file>
+        <file>cmap/cmap.qml</file>
+        <file>cmap/gagg.data</file>
+    </qresource>
+</RCC>

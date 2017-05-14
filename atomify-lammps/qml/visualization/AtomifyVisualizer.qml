@@ -120,9 +120,9 @@ Item {
         nearPlane: 0.1
         farPlane: 100000
         position: Qt.vector3d(0,0,5)
-//        onPositionChanged: {
-//            console.log("Pos: "+ position + "    up: "+ upVector + "    viewCenter: " + viewCenter + "    fpsUpVector: "+navigator.firstPersonUpVector)
-//        }
+        onPositionChanged: {
+            console.log("Pos: "+ position + "    up: "+ upVector + "    viewCenter: " + viewCenter + "    fpsUpVector: "+navigator.firstPersonUpVector)
+        }
     }
 
     ParallelAnimation {

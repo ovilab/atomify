@@ -34,6 +34,26 @@ Item {
             ]
         },
         {
+            name: "ReaxFF",
+            simulations: [
+                "qrc:/simulations/reaxff/CHO",
+                "qrc:/simulations/reaxff/ssz_13",
+                "qrc:/simulations/reaxff/VOH",
+                "qrc:/simulations/reaxff/AB",
+                "qrc:/simulations/reaxff/FeOH3",
+                "qrc:/simulations/reaxff/RDX",
+                "qrc:/simulations/reaxff/ZnOH2"
+            ]
+        },
+        {
+            name: "New",
+            simulations: [
+                "qrc:/simulations/new/abstract_translocation",
+                "qrc:/simulations/new/alkane_chain_single",
+                "qrc:/simulations/new/cmap"
+            ]
+        },
+        {
             name: "Water",
             simulations: [
                 "qrc:/simulations/water/singlewater",
@@ -62,18 +82,6 @@ Item {
             simulations: [
                 "qrc:/simulations/diffusion/simple_diffusion",
                 "qrc:/simulations/diffusion/diffusion_coefficient"
-            ]
-        },
-        {
-            name: "ReaxFF",
-            simulations: [
-                "qrc:/simulations/reaxff/CHO",
-                "qrc:/simulations/reaxff/ssz_13",
-                "qrc:/simulations/reaxff/VOH",
-                "qrc:/simulations/reaxff/AB",
-                "qrc:/simulations/reaxff/FeOH3",
-                "qrc:/simulations/reaxff/RDX",
-                "qrc:/simulations/reaxff/ZnOH2"
             ]
         }
     ]
