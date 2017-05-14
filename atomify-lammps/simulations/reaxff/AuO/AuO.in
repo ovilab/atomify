@@ -2,7 +2,7 @@
 # .....
 #/atom 1 oxygen
 #/atom 2 gold
-#/atom 1 2 3.0
+#/bond 1 2 3.0
 units		real
 
 atom_style	charge

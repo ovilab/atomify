@@ -7,9 +7,9 @@ import "qrc:/mobile/dashboard/controls"
 
 Simulation {
     id: root
-    name: "SSZ-13 ReaxFF"
-    description: "<p>One of the most complex force fields is called ReaxFF. It is very heavy for the computer, but there is no reason why it should not run on your phone/tablet.</p>
-<p>The structure here is another zeolite called SSZ-13 (or CHA) and has one of the silicon sites replaced with Aluminum.</p>"
+    name: "Zeolite SSZ-13"
+    description: "<p>This structure is another zeolite called SSZ-13 (or CHA) and has one of the silicon sites replaced with Aluminum and a hydrogen atom.</p>
+    <p>This is a very heavy simulation, so unless your phone/tablet is very new, you must zoom and carefully look for movement.</p>"
     initialCameraPosition: Qt.vector3d(0,0,50)
     initialUpVector: Qt.vector3d(0,-1,0)
     controllers: [

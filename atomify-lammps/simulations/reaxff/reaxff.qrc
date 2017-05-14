@@ -1,10 +1,5 @@
 <RCC>
     <qresource prefix="/simulations/reaxff">
-        <file>ssz_13/ssz_13.png</file>
-        <file>ssz_13/ssz_13.qml</file>
-        <file>ssz_13/ssz_13.in</file>
-        <file>ssz_13/ffield_Psofogiannakis_CuOH_2015</file>
-        <file>ssz_13/CHA_wAl.data</file>
         <file>AB/AB.png</file>
         <file>AB/AB.qml</file>
         <file>AB/AB.in</file>
@@ -12,13 +7,6 @@
         <file>AB/ffield.reax.AB</file>
         <file>AB/lmp_control</file>
         <file>AB/param.qeq</file>
-        <file>AuO/AuO.in</file>
-        <file>AuO/AuO.png</file>
-        <file>AuO/AuO.qml</file>
-        <file>AuO/data.AuO</file>
-        <file>AuO/ffield.reax.AuO</file>
-        <file>AuO/lmp_control</file>
-        <file>AuO/param.qeq</file>
         <file>CHO/CHO.in</file>
         <file>CHO/CHO.png</file>
         <file>CHO/CHO.qml</file>

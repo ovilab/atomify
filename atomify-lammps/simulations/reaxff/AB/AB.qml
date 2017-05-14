@@ -7,8 +7,11 @@ import "qrc:/mobile/dashboard/controls"
 
 Simulation {
     id: root
-    name: "AB"
-    description: "AB"
+    name: "Ammonia-Borine (AB)"
+    description: "<p>Combustion of Ammonia-Borine (AB) can be simulated with ReaxFF. Two AB molecules meet and a H<sub>2</sub> molecule is formed.</p>
+<p><b>Things to look for</b></p>
+<p>Can you see when the first H<sub>2</sub> molecule forms?</p>
+"
     initialCameraPosition: Qt.vector3d(0,0,20)
     initialUpVector: Qt.vector3d(0,-1,0)
     
