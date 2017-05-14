@@ -7,8 +7,8 @@ import "qrc:/mobile/dashboard/controls"
 
 Simulation {
     id: root
-    name: "RDX"
-    description: "RDX"
+    name: "RDX explosive"
+    description: "<p>RDX is an organic compound normally used as an explosive, especially in world war II. "
     initialCameraPosition: Qt.vector3d(0,0,20)
     initialUpVector: Qt.vector3d(0,-1,0)
     

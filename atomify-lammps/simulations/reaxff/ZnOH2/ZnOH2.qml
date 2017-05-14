@@ -7,8 +7,8 @@ import "qrc:/mobile/dashboard/controls"
 
 Simulation {
     id: root
-    name: "ZnOH2"
-    description: "ZnOH2"
+    name: "Zn(OH)<sub>2</sub>"
+    description: "<p>In this simulation, we see Zn(OH)<sub>2</sub> at high temperature.</p>"
     initialCameraPosition: Qt.vector3d(0,0,20)
     initialUpVector: Qt.vector3d(0,-1,0)
     

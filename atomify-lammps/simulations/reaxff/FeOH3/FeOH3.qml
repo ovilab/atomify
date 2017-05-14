@@ -7,8 +7,8 @@ import "qrc:/mobile/dashboard/controls"
 
 Simulation {
     id: root
-    name: "FeOH3"
-    description: "FeOH3"
+    name: "Iron(III) hydroxide"
+    description: "<p>In this simulation, we see low density Iron(III) hydroxide (Fe(OH)<sub>3</sub>) at high temperature.</p>"
     initialCameraPosition: Qt.vector3d(0,0,20)
     initialUpVector: Qt.vector3d(0,-1,0)
     

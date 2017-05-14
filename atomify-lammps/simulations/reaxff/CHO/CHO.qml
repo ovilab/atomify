@@ -7,8 +7,11 @@ import "qrc:/mobile/dashboard/controls"
 
 Simulation {
     id: root
-    name: "CHO"
-    description: "CHO"
+    name: "Hydrocarbon oxcidation"
+    description: "<p>Hydrocarbons (such as pentane) will at high temperatures react with oxygen and form water, CO, CO<sub>2</sub>, HO<sub>2</sub> and OH.</p>
+<p><b>Things to look for</b></p>
+<p>Can you see any water formation? (Hint: it probably takes some time...)</p>
+"
     initialCameraPosition: Qt.vector3d(0,0,20)
     initialUpVector: Qt.vector3d(0,-1,0)
     

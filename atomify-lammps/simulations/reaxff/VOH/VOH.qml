@@ -7,8 +7,8 @@ import "qrc:/mobile/dashboard/controls"
 
 Simulation {
     id: root
-    name: "VOH"
-    description: "VOH"
+    name: "Vanadium Oxide"
+    description: "<p>In this simulation, we see vanadium oxide being simulated using ReaxFF at high temperature."
     initialCameraPosition: Qt.vector3d(0,0,20)
     initialUpVector: Qt.vector3d(0,-1,0)
     
