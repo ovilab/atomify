@@ -1,7 +1,8 @@
 import QtQuick 2.5
 import "qrc:/core"
-
+import "qrc:/mobile/dashboard/controls"
 Simulation {
+    id: root
     name: "Couette flow"
     description: "<p>Couette flow happens in a liquid between two walls if the walls don't move with the same velocity. In this simulation, the upper wall is given a velocity.</p>
 <p><b>Things to look for</b></p>
@@ -9,5 +10,10 @@ Simulation {
 "
     initialCameraPosition: Qt.vector3d(0,0,22)
     initialUpVector: Qt.vector3d(0,-1,0)
+    controllers: [
+        Summary {
+            system: root.system
+        }
+    ]
 }
 
