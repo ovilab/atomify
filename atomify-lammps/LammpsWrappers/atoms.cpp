@@ -2,6 +2,7 @@
 #include <atom.h>
 #include <domain.h>
 #include <neighbor.h>
+#include <force.h>
 #include <neigh_list.h>
 #include "modifiers/modifiers.h"
 #include "mysimulator.h"
@@ -228,7 +229,7 @@ void Atoms::updateData(System *system, LAMMPS *lammps)
     }
 
     applyDeltaPositions(atomData);
-    generateBondData(atomData);
+    generateBondData(atomData, lammps);
     generateSphereData(atomData);
 }
 
@@ -258,8 +259,165 @@ void Atoms::generateSphereData(AtomData &atomData) {
     m_spheresData.resize(visibleAtomCount);
 }
 
-void Atoms::generateBondData(AtomData &atomData) {
+bool Atoms::doWeHavefullNeighborList(Neighbor *neighbor) {
+    // We will find the first atom i with at least one non-ghost neighbor. We then check if atom i is in the list of j's neighbors
+    NeighList *list = neighbor->lists[0];
+    const int inum = list->inum;
+    int *numneigh = list->numneigh;
+    int **firstneigh = list->firstneigh;
+    int *ilist = list->ilist;
+
+    for (int ii = 0; ii < inum; ii++) {
+        int i = ilist[ii];
+        int *jlist = firstneigh[i];
+        int jnum = numneigh[i];
+        for (int jj = 0; jj < jnum; jj++) {
+            int j = jlist[jj];
+            j &= NEIGHMASK;
+            if(j<inum) {
+                // We found an atom i with non-ghost neighbor j
+                int *otherlist = firstneigh[j];
+                int othernum = numneigh[j];
+                for (int kk = 0; kk < othernum; kk++) {
+                    // If any of its neighbors is atom i, we have full list
+                    int k = otherlist[kk];
+                    k &= NEIGHMASK;
+                    if(k==i) return true;
+                }
+                // If none of its neighbors is atom i, half list
+                return false;
+            }
+        }
+    }
+}
+
+bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSController *controller)
+{
+//    if(!m_bonds->enabled()) {
+//        return false;
+//    }
+
+//    bool hasNeighborLists = controller->lammps()->neighbor->nlist > 0;
+//    if(!hasNeighborLists) {
+//        return false;
+//    }
+
+//    Neighbor *neighbor = controller->lammps()->neighbor;
+//    NeighList *list = neighbor->lists[0];
+//    const int inum = list->inum;
+//    int *numneigh = list->numneigh;
+//    int **firstneigh = list->firstneigh;
+
+//    bool fullNeighborList = doWeHavefullNeighborList(neighbor);
+//    for(int ii=0; ii<atomData.size(); ii++) {
+//        if(!atomData.visible[ii]) continue;
+//        int i = atomData.originalIndex[ii];
+
+//        const QVector3D deltaPosition_i = atomData.deltaPositions[ii];
+//        const QVector3D position_i = atomData.positions[ii] + deltaPosition_i;
+//        const int atomType_i = atomData.types[ii];
+//        if(m_bonds->bondLengths().size()<=atomType_i) continue; // We only store atom bonds between atom types < 32
+
+//        const QVector<float> &bondLengths = m_bonds->bondLengths()[atomType_i];
+//        const float sphereRadius_i = atomData.radii[ii];
+
+//        if(i >= inum) continue; // Atom i is outside the neighbor list. Will probably not happen, but let's skip in that case.
+
+//        int *jlist = firstneigh[i];
+//        int jnum = numneigh[i];
+//        for (int jj = 0; jj < jnum; jj++) {
+//            int j = jlist[jj];
+//            j &= NEIGHMASK;
+//            if(fullNeighborList && j<i) continue; // Newton's third law applies on full lists. We don't draw 2 bonds per pair.
+//            if(j >= atomData.size()) continue; // Probably a ghost atom from LAMMPS
+//            if(!atomData.visible[j]) continue; // Don't show bond if not both atoms are visible.
+
+//            const int &atomType_j = atomData.types[j];
+//            if(bondLengths.size()<=atomType_j) continue; // We only store atom bonds between atom types < 32
+
+//            QVector3D position_j = atomData.positions[j];
+//            position_j += deltaPosition_i;
+
+//            float dx = position_i[0] - position_j[0];
+//            float dy = position_i[1] - position_j[1];
+//            float dz = position_i[2] - position_j[2];
+//            float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
+//            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
+//                BondVBOData bond;
+//                bond.vertex1[0] = position_i[0];
+//                bond.vertex1[1] = position_i[1];
+//                bond.vertex1[2] = position_i[2];
+//                bond.vertex2[0] = position_j[0];
+//                bond.vertex2[1] = position_j[1];
+//                bond.vertex2[2] = position_j[2];
+//                float bondRadius = 0.1*m_bondScale; // TODO: move this magic number to a variable
+//                bond.radius1 = bondRadius;
+//                bond.radius2 = bondRadius;
+//                bond.sphereRadius1 = sphereRadius_i*m_sphereScale;
+//                bond.sphereRadius2 = atomData.radii[j]*m_sphereScale;
+//                bondsDataRaw.push_back(bond);
+//            }
+//        }
+//    }
+//    return true;
+}
+
+bool Atoms::generateBondDataFromBondList(AtomData &atomData, LAMMPS *lammps)
+{
+    Atom *atom = lammps->atom;
+    if(atom->nbonds==0) return false;
+    for(int ii=0; ii<atomData.size(); ii++) {
+        int i = atomData.originalIndex[ii];
+        QVector3D position_i = atomData.positions[ii];
+        const QVector3D deltaPosition = atomData.deltaPositions[ii];
+        position_i += deltaPosition;
+
+        for(int jj=0; jj<atom->num_bond[i]; jj++) {
+            int j = atom->map(atom->bond_atom[i][jj]);
+            if(j < 0 || j>=atomData.size()) continue;
+            if(!lammps->force->newton_bond && i<j) continue;
+
+            QVector3D position_j = atomData.positions[j] + deltaPosition;
+            float dx = fabs(position_i[0] - position_j[0]);
+            float dy = fabs(position_i[1] - position_j[1]);
+            float dz = fabs(position_i[2] - position_j[2]);
+            double dr2 = dx*dx + dy*dy + dz*dz;
+            double dr2max = 40; // arbitrary units. TODO!
+
+            // if(dr2 > dr2max || dx > 0.5*controller->system->size().x() || dy > 0.5*controller->system->size().y() || dz > 0.5*controller->system->size().z() ) {
+            if(dr2 > dr2max) {
+                // Periodic image
+                continue;
+            }
+
+            BondData bond;
+            bond.vertex1Position[0] = position_i[0];
+            bond.vertex1Position[1] = position_i[1];
+            bond.vertex1Position[2] = position_i[2];
+
+            bond.vertex2Position[0] = position_j[0];
+            bond.vertex2Position[1] = position_j[1];
+            bond.vertex2Position[2] = position_j[2];
+
+            bond.radius1 = m_bondRadius;
+            bond.radius2 = m_bondRadius;
+
+            bond.sphereRadius1 = atomData.radii[ii];
+            bond.sphereRadius2 = atomData.radii[j];
+            m_bondsData.push_back(bond);
+        }
+    }
+
+    return true;
+}
+
+void Atoms::generateBondData(AtomData &atomData, LAMMPS *lammps) {
     m_bondsData.resize(0);
+
+    if(generateBondDataFromBondList(atomData, lammps)) {
+        return;
+    }
+
     if(!m_bonds->enabled()) {
         return;
     }
@@ -315,7 +473,6 @@ void Atoms::generateBondData(AtomData &atomData) {
             }
         }
     }
-    // qDebug() << m_bondsData.size() << " bonds created in " << t.elapsed()  << " ms. Memory usage: " << m_bondsData.size()*sizeof(BondData);
 }
 
 QVector<AtomStyle *> &Atoms::atomStyles()

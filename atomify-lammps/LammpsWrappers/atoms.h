@@ -6,9 +6,9 @@
 #include <QVariantList>
 #include <mpi.h>
 #include <lammps.h>
-#include "atomdata.h"
 #include <SimVis/Bonds>
 #include <SimVis/Spheres>
+#include "atomdata.h"
 struct AtomStyle {
     QColor color;
     float radius;
@@ -68,10 +68,13 @@ private:
     float m_bondRadius = 0.1;
     float m_sphereRadius = 1.0;
     float m_occlusionFactor = 1000;
-    void generateBondData(AtomData &atomData);
+    void generateBondData(AtomData &atomData, LAMMPS_NS::LAMMPS *lammps);
     void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPS_NS::LAMMPS &lammps);
     void generateSphereData(AtomData &atomData);
     void applyDeltaPositions(AtomData &atomData);
+    bool generateBondDataFromBondList(AtomData &atomData, LAMMPS_NS::LAMMPS *lammps);
+    bool generateBondDataFromNeighborList(AtomData &atomData, class LAMMPSController *controller);
+    bool doWeHavefullNeighborList(LAMMPS_NS::Neighbor *neighbor);
 };
 
 #endif // ATOMS_H
