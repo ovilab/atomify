@@ -49,7 +49,6 @@ Item {
             name: "New",
             simulations: [
                 "qrc:/simulations/new/abstract_translocation",
-                "qrc:/simulations/new/alkane_chain_single",
                 "qrc:/simulations/new/cmap"
             ]
         },
