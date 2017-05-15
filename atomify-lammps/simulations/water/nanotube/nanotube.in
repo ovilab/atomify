@@ -10,7 +10,7 @@
 #/atom 3 hydrogen
 #/bond 2 3 2.0
 #/bond 1 1 2.0
-
+log none
 # ----------------------------- Initialization Section --------------------
 
 include system.in.init

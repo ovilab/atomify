@@ -1,7 +1,7 @@
 #/atom 1 silicon
 #/atom 2 oxygen
 #/bond 1 2 2.6
-
+log none
 # USC (Anders Hafreager, UiO)
 # using metal units: http://lammps.sandia.gov/doc/units.html
 units		metal

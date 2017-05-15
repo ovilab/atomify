@@ -2,7 +2,7 @@ variable porosity equal 0.75
 #/atom 1 silicon
 #/atom 2 oxygen
 #/bond 1 2 2.6
-
+log none
 units                   metal
 boundary                p p p
 atom_style              atomic

@@ -1,3 +1,8 @@
+#/atom 1 oxygen
+#/atom 2 hydrogen
+#/bond 1 2 2.0
+
+log none
 units		metal
 boundary	p p p
 
@@ -18,6 +23,3 @@ timestep	0.00025
 
 thermo_style custom step time atoms density temp etotal 
 thermo 1000
-#/atom 1 oxygen
-#/atom 2 hydrogen
-#/bond 1 2 2.0

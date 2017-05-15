@@ -1,7 +1,7 @@
 #/atom 1 oxygen
 #/atom 2 hydrogen
 #/bond 1 2 2.0
-
+log none
 units		metal
 boundary	p p p
 
