@@ -13,6 +13,7 @@
 #/atom 11 sodium
 #/atom 12 magnesium
 #/atom 13 aluminum
+log none
 
 units           real
 neigh_modify    delay 2 every 1

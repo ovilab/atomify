@@ -6,6 +6,7 @@
 #/bond 1 3 3.5
 #/bond 1 2 2.6
 #/bond 3 4 2.0
+log none
 units real
 atom_style charge
 

@@ -1,4 +1,5 @@
 # Pour granular particles into chute container, then induce flow
+log none
 atom_style sphere
 boundary f f fm
 newton off

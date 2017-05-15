@@ -1,5 +1,5 @@
 # 2-d LJ flow simulation
-
+log none
 dimension	2
 boundary	p s p
 

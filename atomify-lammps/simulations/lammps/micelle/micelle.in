@@ -1,5 +1,5 @@
 # 2d micelle simulation
-
+log none
 dimension	2
 
 neighbor	0.3 bin

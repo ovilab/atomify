@@ -1,5 +1,5 @@
 # 2d LJ crack simulation
-
+log none
 dimension	2
 boundary	s s p
 

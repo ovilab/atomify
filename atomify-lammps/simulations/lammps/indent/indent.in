@@ -1,5 +1,5 @@
 # 2d indenter simulation
-
+log none
 dimension	2
 boundary	p s p
 

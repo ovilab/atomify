@@ -8,7 +8,7 @@
 #/bond 2 3 2.0
 #/bond 3 3 2.0
 #/bond 2 2 2.0
-
+log none
 units		real
 
 atom_style	charge
