@@ -1,0 +1,35 @@
+#/atom 1 oxygen
+#/atom 2 hydrogen
+#/bond 1 2 3.0
+# You can run LAMMPS this way
+#   lmp_linux -i run.in.nvt
+# (Assuming your LAMMPS binary is named "lmp_linux")
+#
+# PREREQUISITES:
+# You will need these files (created by moltemplate.sh):
+#    system.in.init, system.in.settings (See README_setup.sh)
+# You will also need this file: system_after_npt.data
+# This file is created by running LAMMPS on the run.in.npt file.
+#
+# ------------------------------- Initialization Section --------------------
+
+include         system.in.init
+
+# ------------------------------- Atom Definition Section -------------------
+
+# Read the coordinates after pressure equilibration
+#read_data    system_after_npt.data
+
+# (Or, if you prefer, you can read the original coordinates using
+read_data     system.data
+
+# ------------------------------- Settings Section --------------------------
+
+include         system.in.settings
+
+# ------------------------------- Run Section -------------------------------
+
+timestep        2.0
+fix             fxnvt all nvt temp 200.0 200.0 500.0 tchain 1
+thermo          500000
+run 100

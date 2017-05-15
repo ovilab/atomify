@@ -12,5 +12,13 @@
         <file>cmap/cmap.in</file>
         <file>cmap/cmap.qml</file>
         <file>cmap/gagg.data</file>
+        <file>ice_crystal/ice_crystal.png</file>
+        <file>ice_crystal/ice_crystal.in</file>
+        <file>ice_crystal/ice_crystal.qml</file>
+        <file>ice_crystal/system_after_npt.data</file>
+        <file>ice_crystal/system.data</file>
+        <file>ice_crystal/system.in</file>
+        <file>ice_crystal/system.in.init</file>
+        <file>ice_crystal/system.in.settings</file>
     </qresource>
 </RCC>

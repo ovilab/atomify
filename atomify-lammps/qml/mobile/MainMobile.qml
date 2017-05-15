@@ -49,7 +49,8 @@ Item {
             name: "New",
             simulations: [
                 "qrc:/simulations/new/abstract_translocation",
-                "qrc:/simulations/new/cmap"
+                "qrc:/simulations/new/cmap",
+                "qrc:/simulations/new/ice_crystal",
             ]
         },
         {
