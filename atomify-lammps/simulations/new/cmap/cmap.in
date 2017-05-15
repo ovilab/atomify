@@ -1,0 +1,39 @@
+# Created by charmm2lammps v1.8.2.6 beta on Thu Mar  3 20:56:57 EST 2016
+
+#/atom 1 hydrogen
+#/atom 2 helium
+#/atom 3 lithium
+#/atom 4 beryllium
+#/atom 5 boron
+#/atom 6 carbon
+#/atom 7 nitrogen
+#/atom 8 oxygen
+#/atom 9 fluorine
+#/atom 10 neon
+#/atom 11 sodium
+#/atom 12 magnesium
+#/atom 13 aluminum
+
+units           real
+neigh_modify    delay 2 every 1
+
+boundary        p p p
+
+atom_style      full
+bond_style      harmonic
+angle_style     charmm
+dihedral_style  charmm
+improper_style  harmonic
+
+pair_style      lj/charmm/coul/charmm 8 12
+pair_modify     mix arithmetic
+
+fix             cmap all cmap charmm22.cmap
+fix_modify      cmap energy yes
+
+read_data       gagg.data fix cmap crossterm CMAP
+special_bonds   charmm
+fix             1 all nve
+velocity        all create 0.0 12345678 dist uniform
+timestep        2.0
+thermo 100000
