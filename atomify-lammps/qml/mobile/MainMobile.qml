@@ -46,7 +46,7 @@ Item {
             ]
         },
         {
-            name: "New",
+            name: "Other",
             simulations: [
                 "qrc:/simulations/new/abstract_translocation",
                 "qrc:/simulations/new/cmap",
