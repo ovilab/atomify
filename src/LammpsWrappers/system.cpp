@@ -1,9 +1,4 @@
 #include "system.h"
-#include <domain.h>
-#include <atom.h>
-#include <output.h>
-#include <thermo.h>
-#include <update.h>
 #include "atoms.h"
 #include "regions.h"
 #include "groups.h"
@@ -14,6 +9,13 @@
 #include "modifiers/modifier.h"
 #include "units.h"
 #include "../performance.h"
+
+#include <force.h>
+#include <domain.h>
+#include <atom.h>
+#include <output.h>
+#include <thermo.h>
+#include <update.h>
 
 using namespace LAMMPS_NS;
 
@@ -163,6 +165,15 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_fixes->synchronize(lammpsController);
     m_performance->synchronize(lammpsController);
 
+    // 0 for unset, 1 for dynamics, 2 for min
+    if(lammps->update->whichflag==0) {
+        setState("");
+    } else if(lammps->update->whichflag==1) {
+        setState("Dynamics");
+    } else if(lammps->update->whichflag==2) {
+        setState("Minimizing");
+    }
+
     Domain *domain = lammps->domain;
     Atom *atom = lammps->atom;
     Update *update = lammps->update;
@@ -204,6 +215,13 @@ void System::synchronize(LAMMPSController *lammpsController)
     emit volumeChanged(m_volume);
 
     setDt(lammps->update->dt);
+    setLammpsVersion(QString(LAMMPS_VERSION));
+
+#ifdef MACAPPSTORE
+    setMacAppStore(true);
+#else
+    setMacAppStore(false);
+#endif
 
 //    lammps->output->thermo->compute(1);
 //    calculateTimestepsPerSeconds(lammps);
@@ -333,6 +351,21 @@ double System::cpuremain() const
 double System::dt() const
 {
     return m_dt;
+}
+
+QString System::state() const
+{
+    return m_state;
+}
+
+QString System::lammpsVersion() const
+{
+    return m_lammpsVersion;
+}
+
+bool System::macAppStore() const
+{
+    return m_macAppStore;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -503,6 +536,33 @@ void System::setDt(double dt)
 
     m_dt = dt;
     emit dtChanged(dt);
+}
+
+void System::setState(QString state)
+{
+    if (m_state == state)
+        return;
+
+    m_state = state;
+    emit stateChanged(state);
+}
+
+void System::setLammpsVersion(QString lammpsVersion)
+{
+    if (m_lammpsVersion == lammpsVersion)
+        return;
+
+    m_lammpsVersion = lammpsVersion;
+    emit lammpsVersionChanged(lammpsVersion);
+}
+
+void System::setMacAppStore(bool macAppStore)
+{
+    if (m_macAppStore == macAppStore)
+        return;
+
+    m_macAppStore = macAppStore;
+    emit macAppStoreChanged(macAppStore);
 }
 
 void System::setVariables(Variables *variables)

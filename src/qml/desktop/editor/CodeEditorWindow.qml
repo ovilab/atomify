@@ -12,10 +12,14 @@ import "../../events"
 
 Item {
     id: root
+    clip: true
+
+    signal clearConsole()
+    signal didRun()
+
     property alias dummyEditor: dummyEditor
     property AtomifySimulator simulator
     property CodeEditor currentEditor: (editorCount===0) ? null : stackLayout.itemAt(stackLayout.currentIndex)
-
     property CodeEditor activeEditor
     property alias editorCount: stackLayout.count
     property int currentLine: -1
@@ -23,21 +27,25 @@ Item {
     property string openFiles: ""
     property real lastRunScript: 0
     property string lastOpenedFolder
+    property bool applicationActive: Qt.application.state===Qt.ApplicationActive
+    onApplicationActiveChanged: if(applicationActive && visible) { currentEditor.refresh() }
+    onVisibleChanged: handleVisibleChanged()
 
-    onCurrentEditorChanged: focusCurrentEditor()
+    onCurrentEditorChanged: {
+        focusCurrentEditor()
+        if(currentEditor) currentEditor.refresh()
+    }
 
-    onVisibleChanged: {
+
+    function handleVisibleChanged() {
         if(visible) {
             if(visualizer.simulator.scriptFilePath!=="") {
                 openTab("file://"+visualizer.simulator.scriptFilePath)
             }
             focusCurrentEditor()
+            currentEditor.refresh()
         }
     }
-
-    clip: true
-    signal clearConsole()
-    signal didRun()
 
     onSimulatorChanged: {
         simulator.reset.connect(function() {

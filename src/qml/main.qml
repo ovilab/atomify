@@ -189,6 +189,43 @@ QQC1.ApplicationWindow {
                     mainDesktop.captureScreenshot()
                 }
             }
+
+            EventMenuItem {
+                text: "Full screen"
+                name: "app.fullscreen"
+                shortcut: StandardKey.FullScreen
+                checkable: true
+                checked: visibility === Window.FullScreen
+                onTriggered: {
+                    if(visibility === Window.FullScreen) {
+                        visibility = Window.AutomaticVisibility
+                    } else {
+                        visibility = Window.FullScreen
+                    }
+                }
+            }
+
+            EventMenuItem {
+                text: "Show guides"
+                name: "visualizer.showguides"
+                shortcut: "G"
+                checkable: true
+                checked: mainDesktop.visualizer.guidesVisible
+                onTriggered: {
+                    mainDesktop.visualizer.guidesVisible = !mainDesktop.visualizer.guidesVisible
+                }
+            }
+
+            EventMenuItem {
+                text: "Show outline"
+                name: "visualizer.showoutline"
+                shortcut: "M"
+                checkable: true
+                checked: mainDesktop.visualizer.systemBoxVisible
+                onTriggered: {
+                    mainDesktop.visualizer.systemBoxVisible = !mainDesktop.visualizer.systemBoxVisible
+                }
+            }
         }
     }
 
@@ -265,15 +302,9 @@ QQC1.ApplicationWindow {
         Style.reset(width, height, Screen)
     }
 
-    onWidthChanged: {
-        console.log("Width changed")
-        resetStyle()
-    }
+    onWidthChanged: resetStyle()
 
-    onHeightChanged: {
-        console.log("Height changed")
-        resetStyle()
-    }
+    onHeightChanged:resetStyle()
 
     Component.onCompleted: {
         resetStyle()
@@ -286,18 +317,6 @@ QQC1.ApplicationWindow {
         mouseMover: MouseMover {
             id: mouseMover
             window: applicationRoot
-        }
-    }
-
-    Shortcut {
-        sequence: StandardKey.FullScreen
-        context: Qt.ApplicationShortcut
-        onActivated: {
-            if(visibility === Window.FullScreen) {
-                visibility = Window.AutomaticVisibility
-            } else {
-                visibility = Window.FullScreen
-            }
         }
     }
 }

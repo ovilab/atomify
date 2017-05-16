@@ -667,7 +667,7 @@ int Neighbor::init_pair()
     
   // create new lists, one per request including added requests
   // wait to allocate initial pages until copy lists are detected
-  // NOTE: can I allocation now, instead of down below?
+  // NOTE: can I allocate now, instead of down below?
 
   nlist = nrequest;
   
@@ -1216,7 +1216,7 @@ void Neighbor::morph_copy()
     
     // check all other lists
 
-    for (j = 0; j < i; j++) {
+    for (j = 0; j < nrequest; j++) {
       if (i == j) continue;
       jrq = requests[j];
 
@@ -1224,10 +1224,13 @@ void Neighbor::morph_copy()
 
       if (jrq->copy && jrq->copylist == i) continue;
 
-      // parent list must be perpetual
-      // copied list can be perpetual or occasional
+      // other list (jrq) to copy from must be perpetual
+      // list that becomes a copy list (irq) can be perpetual or occasional
+      // if both lists are perpetual, require j < i
+      //   to prevent circular dependence with 3 or more copies of a list
 
       if (jrq->occasional) continue;
+      if (!irq->occasional && j > i) continue;
 
       // both lists must be half, or both full
 
@@ -1279,7 +1282,7 @@ void Neighbor::morph_copy()
     // turn list I into a copy of list J
     // do not copy a list from another copy list, but from its parent list
 
-    if (j < i) {
+    if (j < nrequest) {
       irq->copy = 1;
       if (jrq->copy) irq->copylist = jrq->copylist;
       else irq->copylist = j;

@@ -39,10 +39,6 @@ void CodeEditorBackend::setText(QString text)
 void CodeEditorBackend::setFileUrl(QUrl fileUrl)
 {
     fileUrl = QUrl::fromLocalFile(fileUrl.toLocalFile());
-//    qDebug() << "Url: ", fileUrl;
-//    qDebug() << "Url path: ", fileUrl.path();
-    // fileUrl = QUrl(fileUrl.path());
-
     if (m_fileUrl == fileUrl)
         return;
 
@@ -64,8 +60,19 @@ bool CodeEditorBackend::save()
 
     file.write(m_text.toUtf8());
     file.close();
-    qDebug() << "Saved to file" << filePath;
     return true;
+}
+
+bool CodeEditorBackend::anyChangesOnDisk()
+{
+    bool ok;
+    QString text = readFile(&ok);
+    if(!ok) return false; // TODO: handle errors on file reading
+    bool anyChanges = m_lastCheckedFileContents != text;
+    // Store the current contents of the file. If the user does not want to refresh file, don't
+    // spam every time the editor gets focus until there is a new change on disk.
+    m_lastCheckedFileContents = text;
+    return anyChanges;
 }
 
 QString CodeEditorBackend::folder() const
@@ -79,6 +86,20 @@ bool CodeEditorBackend::fileExists(QString path)
     QUrl url(path);
     QFileInfo info(url.toLocalFile());
     return info.exists();
+}
+
+bool CodeEditorBackend::filePathIsWritable(QString filePath)
+{
+    filePath.replace("file://", "");
+    QDir dir = QFileInfo(filePath).absoluteDir();
+    QString tmpFile = QDir::cleanPath(dir.absolutePath() + QDir::separator() + "tmp1337");
+    QFile f(tmpFile);
+    if(!f.open(QIODevice::WriteOnly)) {
+        return false;
+    }
+    f.close();
+    dir.remove(tmpFile);
+    return true;
 }
 
 QString CodeEditorBackend::cleanPath(QString path)
@@ -98,18 +119,26 @@ QVariantMap CodeEditorBackend::getParameters(QUrl path)
     return map;
 }
 
-bool CodeEditorBackend::load()
+QString CodeEditorBackend::readFile(bool *ok)
 {
     QString filePath = m_fileUrl.toLocalFile();
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Could not open file " << filePath;
-        return false;
+        *ok = false;
+        return QString("");
     }
     QByteArray content = file.readAll();
-    setText(QString::fromUtf8(content.constData(), content.length()));
 
-    file.close();
-    qDebug() << "Read contents of" << filePath;
-    return true;
+    *ok = true;
+    return QString::fromUtf8(content.constData(), content.length());
+}
+
+bool CodeEditorBackend::load()
+{
+    bool ok;
+    setText(readFile(&ok));
+    m_lastCheckedFileContents = m_text;
+
+    return ok;
 }

@@ -59,7 +59,6 @@ public:
     QVector3D cameraPositionRequest() const;
     QVector3D cameraViewCenterRequest() const;
     bool welcomeSimulationRunning() const;
-
     QString lastScript() const;
     void setLastScript(const QString &lastScript);
 

@@ -18,8 +18,11 @@ public:
     QString fileName() const;
     Q_INVOKABLE bool load();
     Q_INVOKABLE bool save();
+    Q_INVOKABLE bool anyChangesOnDisk();
+
     QString folder() const;
     Q_INVOKABLE bool fileExists(QString path);
+    Q_INVOKABLE bool filePathIsWritable(QString filePath);
     Q_INVOKABLE QString cleanPath(QString path);
     Q_INVOKABLE QVariantMap getParameters(QUrl path);
 signals:
@@ -34,7 +37,9 @@ public slots:
 
 private:
     QString m_text;
+    QString m_lastCheckedFileContents;
     QUrl m_fileUrl;
+    QString readFile(bool *ok);
 };
 
 #endif // CODEEDITORBACKEND_H

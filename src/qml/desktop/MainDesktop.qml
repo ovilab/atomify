@@ -74,6 +74,7 @@ Rectangle {
                 var numUrls = drop.urls.length
                 for(var i=0; i<drop.urls.length; i++) {
                     var url = drop.urls[i]
+                    EventCenter.postEvent("mode.edit")
                     editor.editorWindow.openTab(url)
                 }
             }
@@ -158,7 +159,7 @@ Rectangle {
 
                 onCurrentIndexChanged: {
                     root.viewMode = model[currentIndex].mode
-                    if(root.viewMode === "edit") messageOverlay.visible = false
+                    if(root.viewMode === "edit") messageOverlay.hideClickedAtLeastOnce = true
                 }
 
                 Connections {
@@ -457,13 +458,12 @@ Rectangle {
 
             MessageOverlay {
                 id: messageOverlay
-                property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active || simulator.welcomeSimulationRunning
-
+                property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active || welcome || cantWrite
                 anchors.fill: parent
                 visible: false
 
                 errorMessage: simulator.error
-                welcome: simulator.states.idle.active || simulator.welcomeSimulationRunning
+                welcome: (simulator.states.idle.active || simulator.welcomeSimulationRunning) && !hideClickedAtLeastOnce
                 finished: simulator.states.finished.active
                 crashed: simulator.states.crashed.active
                 cancelling: simulator.states.reset.active
@@ -480,7 +480,6 @@ Rectangle {
                 }
 
                 onExamplesClicked: modeMenu.currentIndex = 3
-                onHideClicked: visible = false
                 onShouldBeVisibleChanged: {
                     if(shouldBeVisible) {
                         visible = true
@@ -585,12 +584,23 @@ Rectangle {
         id: shortcuts
         Shortcut {
             sequence: "Return"
-            onActivated: messageOverlay.visible = false
+            onActivated: messageOverlay.hideClicked()
         }
 
         EventCatcher {
             name: "simulator.togglePause"
             onTriggered: simulator.togglePause()
+        }
+
+
+        EventCatcher {
+            name: "editor.cantwrite"
+            onTriggered: {
+                console.log("Mac app store: ", simulator.system.macAppStore)
+                if(simulator.system.macAppStore) {
+                    messageOverlay.cantWrite = true
+                }
+            }
         }
 
         EventCatcher {

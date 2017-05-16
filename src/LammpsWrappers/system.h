@@ -10,6 +10,7 @@
 #include <domain.h>
 #include <QMatrix4x4>
 #include <QMatrix3x3>
+#include <version.h>
 
 class System : public QObject
 {
@@ -38,6 +39,9 @@ class System : public QObject
     Q_PROPERTY(Fixes* fixes READ fixes WRITE setFixes NOTIFY fixesChanged)
     Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
+    Q_PROPERTY(QString state READ state WRITE setState NOTIFY stateChanged)
+    Q_PROPERTY(QString lammpsVersion READ lammpsVersion WRITE setLammpsVersion NOTIFY lammpsVersionChanged)
+    Q_PROPERTY(bool macAppStore READ macAppStore WRITE setMacAppStore NOTIFY macAppStoreChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
 
@@ -72,6 +76,9 @@ public:
     class Performance * performance() const;
     double cpuremain() const;
     double dt() const;
+    QString state() const;
+    QString lammpsVersion() const;
+    bool macAppStore() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -89,6 +96,9 @@ public slots:
     void setPerformance(class Performance * performance);
     void setCpuremain(double cpuremain);
     void setDt(double dt);
+    void setState(QString state);
+    void setLammpsVersion(QString lammpsVersion);
+    void setMacAppStore(bool macAppStore);
 
 signals:
     void originChanged(QVector3D origin);
@@ -115,6 +125,9 @@ signals:
     void performanceChanged(class Performance * performance);
     void cpuremainChanged(double cpuremain);
     void dtChanged(double dt);
+    void stateChanged(QString state);
+    void lammpsVersionChanged(QString lammpsVersion);
+    void macAppStoreChanged(bool macAppStore);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -148,6 +161,9 @@ private:
     void calculateTimestepsPerSeconds(LAMMPS_NS::LAMMPS *lammps);
     QVector3D m_center;
     double m_dt = 0;
+    QString m_state;
+    QString m_lammpsVersion;
+    bool m_macAppStore;
 };
 
 #endif // SYSTEM_H

@@ -59,15 +59,11 @@ AtomifySimulator::~AtomifySimulator() { }
 
 void AtomifySimulator::togglePause()
 {
-    qDebug() << "Toggle pause";
     if(m_states->paused()->active()) {
-        qDebug() << "Was paused";
         emit unPaused();
     } else if(m_states->parsing()->active() || m_states->continued()->active()) {
-        qDebug() << "Was parsing";
         emit paused();
     } else if(m_states->finished()->active()) {
-        qDebug() << "Was finished";
         emit continued();
     }
 }
@@ -116,14 +112,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     atomifySimulator->syncCount += 1;
     States &states = *atomifySimulator->states();
-//    if(states.continued()->active()) qDebug() << "Continued";
-//    if(states.crashed()->active()) qDebug() << "Crashed";
-//    if(states.finished()->active()) qDebug() << "Finished";
-//    if(states.idle()->active()) qDebug() << "Idle";
-//    if(states.parsing()->active()) qDebug() << "Parsing";
-//    if(states.paused()->active()) qDebug() << "Paused";
-//    if(states.reset()->active()) qDebug() << "Reset";
-
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
     if(states.paused()->active()) {
@@ -194,7 +182,6 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     atomifySimulator->system()->synchronizeQML(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
     m_needsSynchronization = false;
-    // qDebug() << "Synchronized after " << t.elapsed() << " ms";
 }
 
 void MyWorker::work()

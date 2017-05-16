@@ -10,7 +10,19 @@ unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
 }
-#QMAKE_MAC_SDK = macosx10.9
+
+macx {
+    QMAKE_MAC_SDK = macosx10.9
+    ICON = images/icon.icns
+    QMAKE_INFO_PLIST = ../macos/macos.plist
+    TARGET = Atomify
+}
+
+# DEFINES += MACAPPSTORE
+
+ios {
+    QMAKE_INFO_PLIST = ../ios/ios.plist
+}
 
 CONFIG += warn_off
 DEFINES += LAMMPS_EXCEPTIONS LAMMPS_GZIP LAMMPS_MEMALIGN=64
@@ -55,10 +67,6 @@ include(../libs/QmlPreviewer/qmlpreviewer.pri)
 }
 CONFIG += resources_big
 RESOURCES += examples/examples.qrc
-
-ios {
-    QMAKE_INFO_PLIST = iOS.plist
-}
 
 SOURCES += \
     main.cpp \
@@ -153,11 +161,10 @@ HEADERS += \
 # Temporary use of quickcontrols2 without install
 
 RC_ICONS = atomify_lammps/images/atomify_logo.ico
-macx:ICON = images/icon.icns
-macx:QMAKE_INFO_PLIST = info.plist
 
 DISTFILES += \
-    iOS.plist \
+    ../ios/ios.plist \
+    ../macos/macos.plist \
     qml/qtquickcontrols2.conf \
     ../.travis.yml \
     ../snappy-qt5.conf \

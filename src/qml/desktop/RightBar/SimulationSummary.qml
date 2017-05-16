@@ -146,6 +146,23 @@ Flickable {
 
             Column {
                 Label {
+                    text: {
+                        var state = ""
+                        if(simulator.states.paused.active) {
+                            state = "Paused"
+                        } else if(simulator.states.finished.active) {
+                            state = "Finished"
+                        } else {
+                            state = system.state
+                        }
+
+                        return "State: "+state
+                    }
+
+                    visible: system.state!==""
+                }
+
+                Label {
                     text: "Triclinic"
                     visible: system.triclinic
                 }
@@ -364,6 +381,21 @@ Flickable {
                 }
                 Label {
                     text: "Memory usage Atomify: "+ (system.performance.memoryAtomify / 1024 / 1024).toFixed(0) +" MB"
+                }
+            }
+        }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "LAMMPS"
+
+            Column {
+                Label {
+                    text: "Version: "+ system.lammpsVersion
                 }
             }
         }
