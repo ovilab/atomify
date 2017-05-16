@@ -16,7 +16,7 @@ Atoms::Atoms(AtomifySimulator *simulator)
 {
     // Colors from JMOL: http://jmol.sourceforge.net/jscolors/
     // Atomic radii from wikipedia (van der waals radius)
-
+    // https://en.wikipedia.org/wiki/Atomic_radii_of_the_elements_(data_page)
     m_sphereData = new SphereData(simulator);
     m_bondData = new BondData(simulator);
     m_bonds = new Bonds();
@@ -41,6 +41,60 @@ Atoms::Atoms(AtomifySimulator *simulator)
     m_atomStyleTypes.insert("argon", new AtomStyle(1.88, "#80D1E3"));
     m_atomStyleTypes.insert("potassium", new AtomStyle(2.75, "#8F40D4"));
     m_atomStyleTypes.insert("calcium", new AtomStyle(2.31, "#3DFF00"));
+    m_atomStyleTypes.insert("scandium", new AtomStyle(2.11, "#E6E6E6"));
+    m_atomStyleTypes.insert("titanium", new AtomStyle(2.00, "#BFC2C7"));
+    m_atomStyleTypes.insert("vanadium", new AtomStyle(2.00, "#A6A6AB"));
+    m_atomStyleTypes.insert("chromium", new AtomStyle(2.00, "#8A99C7"));
+    m_atomStyleTypes.insert("manganese", new AtomStyle(2.00, "#9C7AC7"));
+    m_atomStyleTypes.insert("iron", new AtomStyle(2.00, "#E06633"));
+    m_atomStyleTypes.insert("cobalt", new AtomStyle(2.00, "#F090A0"));
+    m_atomStyleTypes.insert("nickel", new AtomStyle(1.63, "#50D050"));
+    m_atomStyleTypes.insert("copper", new AtomStyle(1.40, "#C88033"));
+    m_atomStyleTypes.insert("zinc", new AtomStyle(1.39, "#7D80B0"));
+    m_atomStyleTypes.insert("gallium", new AtomStyle(1.87, "#C28F8F"));
+    m_atomStyleTypes.insert("germanium", new AtomStyle(2.11, "#668F8F"));
+    m_atomStyleTypes.insert("arsenic", new AtomStyle(1.85, "#BD80E3"));
+    m_atomStyleTypes.insert("selenium", new AtomStyle(1.90, "#FFA100"));
+    m_atomStyleTypes.insert("bromine", new AtomStyle(1.85, "#A62929"));
+    m_atomStyleTypes.insert("krypton", new AtomStyle(2.02, "#5CB8D1"));
+    m_atomStyleTypes.insert("rubidium", new AtomStyle(3.03, "#702EB0"));
+    m_atomStyleTypes.insert("strontium", new AtomStyle(2.49, "#00FF00"));
+    m_atomStyleTypes.insert("yttrium", new AtomStyle(2.00, "#94FFFF"));
+    m_atomStyleTypes.insert("zirconium", new AtomStyle(2.00, "#94E0E0"));
+    m_atomStyleTypes.insert("niobium", new AtomStyle(2.00, "#73C2C9"));
+    m_atomStyleTypes.insert("molybdenum", new AtomStyle(2.00, "#54B5B5"));
+    m_atomStyleTypes.insert("technetium", new AtomStyle(2.00, "#3B9E9E"));
+    m_atomStyleTypes.insert("ruthenium", new AtomStyle(2.00, "#248F8F"));
+    m_atomStyleTypes.insert("rhodium", new AtomStyle(2.00, "#0A7D8C"));
+    m_atomStyleTypes.insert("palladium", new AtomStyle(1.63, "#006985"));
+    m_atomStyleTypes.insert("silver", new AtomStyle(1.72, "#C0C0C0"));
+    m_atomStyleTypes.insert("cadmium", new AtomStyle(1.58, "#FFD98F"));
+    m_atomStyleTypes.insert("indium", new AtomStyle(1.93, "#A67573"));
+    m_atomStyleTypes.insert("tin", new AtomStyle(2.17, "#668080"));
+    m_atomStyleTypes.insert("antimony", new AtomStyle(2.06, "#9E63B5"));
+    m_atomStyleTypes.insert("tellurium", new AtomStyle(2.06, "#D47A00"));
+    m_atomStyleTypes.insert("iodine", new AtomStyle(1.98, "#940094"));
+    m_atomStyleTypes.insert("xenon", new AtomStyle(2.16, "#429EB0"));
+    m_atomStyleTypes.insert("caesium", new AtomStyle(3.43, "#57178F"));
+    m_atomStyleTypes.insert("barium", new AtomStyle(2.68, "#00C900"));
+    m_atomStyleTypes.insert("lanthanum", new AtomStyle(2.00, "#70D4FF"));
+    m_atomStyleTypes.insert("cerium", new AtomStyle(2.00, "#FFFFC7"));
+    m_atomStyleTypes.insert("praseodymium", new AtomStyle(2.00, "#D9FFC7"));
+    m_atomStyleTypes.insert("neodymium", new AtomStyle(2.00, "#C7FFC7"));
+    m_atomStyleTypes.insert("promethium", new AtomStyle(2.00, "#A3FFC7"));
+    m_atomStyleTypes.insert("samarium", new AtomStyle(2.00, "#8FFFC7"));
+    m_atomStyleTypes.insert("europium", new AtomStyle(2.00, "#61FFC7"));
+    m_atomStyleTypes.insert("gadolinium", new AtomStyle(2.00, "#45FFC7"));
+    m_atomStyleTypes.insert("terbium", new AtomStyle(2.00, "#30FFC7"));
+    m_atomStyleTypes.insert("dysprosium", new AtomStyle(2.00, "#1FFFC7"));
+    m_atomStyleTypes.insert("holmium", new AtomStyle(2.00, "#00FF9C"));
+    m_atomStyleTypes.insert("erbium", new AtomStyle(2.00, "#00E675"));
+    m_atomStyleTypes.insert("thulium", new AtomStyle(2.00, "#00D452"));
+    m_atomStyleTypes.insert("ytterbium", new AtomStyle(2.00, "#00BF38"));
+    m_atomStyleTypes.insert("lutetium", new AtomStyle(2.00, "#00AB24"));
+    m_atomStyleTypes.insert("hafnium", new AtomStyle(2.00, "#4DC2FF"));
+    m_atomStyleTypes.insert("tantalum", new AtomStyle(2.00, "#4DA6FF"));
+    m_atomStyleTypes.insert("tungsten", new AtomStyle(2.00, "#2194D6"));
 
     for(int i=0; i<200; i++) {
         m_atomStyles.push_back(m_atomStyleTypes["hydrogen"]);
