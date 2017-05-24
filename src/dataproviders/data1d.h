@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QXYSeries>
 #include <QLineSeries>
+#include <QMutex>
 
 using namespace QtCharts;
 class Data1D : public QObject
@@ -63,6 +64,7 @@ private:
     bool m_enabled = false;
     bool m_isHistogram = false;
     void updateMinMaxWithPoint(const QPointF &point);
+    QMutex m_mutex;
 };
 
 #endif // DATA1D_H
