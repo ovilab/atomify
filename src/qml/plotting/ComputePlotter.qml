@@ -68,6 +68,7 @@ Window {
         _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
 
         _axisY.applyNiceNumbers()
+        _axisX.applyNiceNumbers()
     }
 
     Timer {
@@ -115,7 +116,7 @@ Window {
 
                 ValueAxis {
                     id: _axisX
-                    tickCount: 3
+                    tickCount: 10
                     min: 0
                     max: 100
                     titleText: compute ? compute.xLabel : ""
