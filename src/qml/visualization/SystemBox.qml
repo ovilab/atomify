@@ -20,8 +20,6 @@ Entity {
     property bool showSurfaces: true
     property real outlineAlpha: 0.6
     property real sideAlpha: 0.2
-    property vector3d origin
-    property vector3d size
     property vector3d sizePlus: size.plus(Qt.vector3d(1, 1, 1))
     property var corners
     property var lights: [
@@ -69,7 +67,7 @@ Entity {
         Material {
             id: surfaceMaterial
             parameters: [
-                Parameter { name: "origin"; value: simulator.system.origin },
+                Parameter { name: "origin"; value: simulator.system.origin.times(simulator.system.atoms.globalScale) },
                 Parameter { name: "transformationMatrix"; value: simulator.system.transformationMatrix; }
             ]
             effect: Effect {

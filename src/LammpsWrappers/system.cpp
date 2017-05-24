@@ -38,6 +38,11 @@ void System::computeCellMatrix(Domain *domain) {
     QVector3D b(domain->corners[2][0], domain->corners[2][1], domain->corners[2][2]);
     QVector3D c(domain->corners[4][0], domain->corners[4][1], domain->corners[4][2]);
     QVector3D origo(domain->corners[0][0], domain->corners[0][1], domain->corners[0][2]);
+    a *= m_atoms->globalScale();
+    b *= m_atoms->globalScale();
+    c *= m_atoms->globalScale();
+    origo *= m_atoms->globalScale();
+
     a -= origo;
     b -= origo;
     c -= origo;
@@ -65,9 +70,9 @@ void System::updateTransformationMatrix(Domain *domain)
 {
     double *h = domain->h;
     float transformationMatrixValues[] = { // Must cast for clang
-        float(h[0]), float(h[5]), float(h[4]), 0,
-        0,    float(h[1]), float(h[3]), 0,
-        0,    0,    float(h[2]), 0,
+        float(h[0]*m_atoms->globalScale()), float(h[5]*m_atoms->globalScale()), float(h[4]*m_atoms->globalScale()), 0,
+        0,    float(h[1]*m_atoms->globalScale()), float(h[3]*m_atoms->globalScale()), 0,
+        0,    0,    float(h[2]*m_atoms->globalScale()), 0,
         0,    0,    0,    0
     };
 

@@ -173,9 +173,9 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         }
         domain->remap(position); // remap into system boundaries with PBC
 
-        m_atomData.positions[i][0] = position[0];
-        m_atomData.positions[i][1] = position[1];
-        m_atomData.positions[i][2] = position[2];
+        m_atomData.positions[i][0] = position[0]*m_globalScale;
+        m_atomData.positions[i][1] = position[1]*m_globalScale;
+        m_atomData.positions[i][2] = position[2]*m_globalScale;
         m_atomData.bitmask[i] = atom->mask[i];
         m_atomData.visible[i] = true;
         m_atomData.deltaPositions[i] = QVector3D();
@@ -214,6 +214,11 @@ long Atoms::memoryUsage()
     return m_atomData.memoryUsage() + m_atomDataProcessed.memoryUsage() +
            (m_bondsDataRaw.capacity() + m_sphereDataRaw.capacity())*sizeof(char) +
            bondsDataRaw.size()*sizeof(BondVBOData);
+}
+
+float Atoms::globalScale() const
+{
+    return m_globalScale;
 }
 
 float Atoms::bondScale() const
@@ -364,7 +369,7 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
             float dy = position_i[1] - position_j[1];
             float dz = position_i[2] - position_j[2];
             float rsq = dx*dx + dy*dy + dz*dz; // Componentwise has 10% lower execution time than (position_i - position_j).lengthSquared()
-            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j] ) {
+            if(rsq < bondLengths[atomType_j]*bondLengths[atomType_j]*m_globalScale*m_globalScale ) {
                 BondVBOData bond;
                 bond.vertex1[0] = position_i[0];
                 bond.vertex1[1] = position_i[1];
@@ -406,7 +411,7 @@ bool Atoms::generateBondDataFromBondList(AtomData &atomData, LAMMPSController *c
             double dr2 = dx*dx + dy*dy + dz*dz;
             double dr2max = 40; // arbitrary units. TODO!
 
-            if(dr2 > dr2max || dx > 0.5*controller->system->size().x() || dy > 0.5*controller->system->size().y() || dz > 0.5*controller->system->size().z() ) {
+            if(dr2 > dr2max*m_globalScale*m_globalScale || dx > 0.5*controller->system->size().x() || dy > 0.5*controller->system->size().y() || dz > 0.5*controller->system->size().z() ) {
                 // Periodic image
                 continue;
             }
@@ -625,4 +630,13 @@ void Atoms::setNumberOfBonds(int numberOfBonds)
 
     m_numberOfBonds = numberOfBonds;
     emit numberOfBondsChanged(numberOfBonds);
+}
+
+void Atoms::setGlobalScale(float globalScale)
+{
+    if (m_globalScale == globalScale)
+        return;
+
+    m_globalScale = globalScale;
+    emit globalScaleChanged(globalScale);
 }
