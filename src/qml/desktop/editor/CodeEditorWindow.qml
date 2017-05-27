@@ -534,18 +534,18 @@ Item {
                 if(editorCount >= 8) stackLayout.currentIndex = 7
             }
         }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+9"
-            onActivated: {
-                if(editorCount >= 9) stackLayout.currentIndex = 8
-            }
-        }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+0"
-            onActivated: {
-                if(editorCount >= 10) stackLayout.currentIndex = 9
-            }
-        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+9"
+//            onActivated: {
+//                if(editorCount >= 9) stackLayout.currentIndex = 8
+//            }
+//        }
+//        Shortcut {
+//            sequence: shortcuts.tabShortcutModifier + "+0"
+//            onActivated: {
+//                if(editorCount >= 10) stackLayout.currentIndex = 9
+//            }
+//        }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+Left"
             onActivated: {
