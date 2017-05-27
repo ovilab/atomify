@@ -637,6 +637,8 @@
 /pair_eam_fs_opt.h
 /pair_edip.cpp
 /pair_edip.h
+/pair_edip_multi.cpp
+/pair_edip_multi.h
 /pair_eff_cut.cpp
 /pair_eff_cut.h
 /pair_eff_inline.h
@@ -850,6 +852,11 @@
 /prd.h
 /python_impl.cpp
 /python_impl.h
+/python_compat.h
+/fix_python.cpp
+/fix_python.h
+/pair_python.cpp
+/pair_python.h
 /reader_molfile.cpp
 /reader_molfile.h
 /reaxc_allocate.cpp
