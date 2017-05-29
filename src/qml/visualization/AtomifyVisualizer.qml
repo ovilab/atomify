@@ -148,6 +148,14 @@ Scene3D {
             var x1 = x0 + simulator.system.size.x*periodicImages.numberOfCopiesX
             var y1 = y0 + simulator.system.size.y*periodicImages.numberOfCopiesY
             var z1 = z0 + simulator.system.size.z*periodicImages.numberOfCopiesZ
+            var scale = simulator.system.atoms.globalScale
+
+            x0 = x0*scale
+            x1 = x1*scale
+            y0 = y0*scale
+            y1 = y1*scale
+            z0 = z0*scale
+            z1 = z1*scale
 
             var xp = x
             var yp = y
