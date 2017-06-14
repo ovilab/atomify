@@ -1,4 +1,5 @@
 language: cpp
+cache: ccache
 os: linux
 dist: trusty
 sudo: required
