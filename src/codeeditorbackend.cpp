@@ -57,7 +57,7 @@ bool CodeEditorBackend::save()
         qDebug() << "ERROR:" << file.errorString();
         return false;
     }
-
+    m_lastCheckedFileContents = m_text;
     file.write(m_text.toUtf8());
     file.close();
     return true;

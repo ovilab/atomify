@@ -361,6 +361,28 @@ Pane {
                             }
                         }
                     }
+
+                    Row {
+                        width: parent.width
+                        height: globalScaleSlider.height
+                        Label {
+                            width: parent.width*0.4
+                            text: "Global scale: "
+                        }
+                        QQC1.Slider {
+                            id: globalScaleSlider
+                            width: parent.width*0.6
+                            minimumValue: 0.5
+                            maximumValue: 3.0
+                            stepSize: 0.1
+                            value: visualizer.simulator.system.atoms.globalScale
+                            Binding {
+                                target: visualizer.simulator.system.atoms
+                                property: "globalScale"
+                                value: globalScaleSlider.value
+                            }
+                        }
+                    }
                 }
             }
         }

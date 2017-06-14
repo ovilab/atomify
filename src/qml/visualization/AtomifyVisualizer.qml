@@ -91,10 +91,16 @@ Scene3D {
     function resetToSystemCenter() {
         // var right = camera.viewVector.normalized().cross(camera.upVector.normalized())
         var sizeY = Math.max(5.0, simulator.system.size.y)
-        visualizer.camera.viewCenter = simulator.system.center
-        visualizer.camera.position = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
+        var center = simulator.system.center
+        var cameraPos = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
+
+        center = center.times(simulator.system.atoms.globalScale)
+        visualizer.camera.viewCenter = center
+
+        cameraPos = cameraPos.times(simulator.system.atoms.globalScale)
+
+        visualizer.camera.position = cameraPos
         visualizer.camera.upVector = Qt.vector3d(0, 0, 1)
-        // camera.translate(Qt.vector3d(0, 0, 10), Camera.DontTranslateViewCenter)
     }
 
     function flymodePanTilt(pan, tilt) {
@@ -142,6 +148,14 @@ Scene3D {
             var x1 = x0 + simulator.system.size.x*periodicImages.numberOfCopiesX
             var y1 = y0 + simulator.system.size.y*periodicImages.numberOfCopiesY
             var z1 = z0 + simulator.system.size.z*periodicImages.numberOfCopiesZ
+            var scale = simulator.system.atoms.globalScale
+
+            x0 = x0*scale
+            x1 = x1*scale
+            y0 = y0*scale
+            y1 = y1*scale
+            z0 = z0*scale
+            z1 = z1*scale
 
             var xp = x
             var yp = y
@@ -510,9 +524,6 @@ Scene3D {
             id: systemBox
 
             enabled: root.systemBoxVisible //|| controller.dragging
-            origin: root.simulator.system.origin
-            size: root.simulator.system.size
-            corners: root.simulator.system.corners
             lights: visualizer.lights
             layer: forwardFrameGraph.outlineLayer
         }

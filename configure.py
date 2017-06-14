@@ -7,7 +7,6 @@ import shutil
 from os.path import join, abspath
 from sys import platform as _platform
 import glob
-
 def run_command(cmd):
     print cmd
     subprocess.call(cmd, shell=True, env=env)
@@ -123,5 +122,14 @@ print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
 run_command("make yes-rigid yes-manybody yes-mc yes-molecule yes-granular yes-replica yes-kspace yes-shock yes-misc yes-USER-MISC yes-user-reaxc")
+
+# Copy moltemplate extra files
+for filename in glob.iglob(os.path.join(patch_path, "moltemplate_additional_lammps_code", "*.cpp")):
+    print("Copying ", filename)
+    shutil.copy2(filename, lammps_source_dir_src)
+for filename in glob.iglob(os.path.join(patch_path, "moltemplate_additional_lammps_code", "*.h")):
+    print("Copying ", filename)
+    shutil.copy2(filename, lammps_source_dir_src)
+    
 run_command("make -j4 " + lammps_build_type + " mode=lib")
 os.chdir(root_path)

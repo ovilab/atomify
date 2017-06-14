@@ -3,6 +3,7 @@
 #include <limits>
 #include <QDebug>
 #include <cmath>
+#include <QMutexLocker>
 
 Data1D::Data1D(QObject *parent) : QObject(parent)
 {
@@ -31,6 +32,7 @@ float Data1D::yMax()
 
 void Data1D::updateLimits()
 {
+    QMutexLocker locker(&m_mutex);
     if(!m_minMaxValuesDirty) return;
 
     if(m_points.size() == 0) {
@@ -151,6 +153,7 @@ bool Data1D::enabled() const
 
 void Data1D::clear(bool silent)
 {
+    QMutexLocker locker(&m_mutex);
     m_minMaxValuesDirty = true;
     m_points.clear();
     if(!silent && m_xySeries) {
@@ -160,6 +163,7 @@ void Data1D::clear(bool silent)
 
 void Data1D::createHistogram(const std::vector<double> &points)
 {
+    QMutexLocker locker(&m_mutex);
     m_histogramPoints = points;
     setIsHistogram(true);
 }
@@ -171,6 +175,7 @@ void Data1D::add(float x, float y, bool silent)
 
 void Data1D::add(const QPointF &point, bool silent)
 {
+    QMutexLocker locker(&m_mutex);
     m_points.append(point);
     m_minMaxValuesDirty = true;
     if(!silent && m_xySeries) {

@@ -33,6 +33,7 @@ class Atoms : public QObject
     Q_PROPERTY(float sphereScale READ sphereScale WRITE setSphereScale NOTIFY sphereScaleChanged)
     Q_PROPERTY(QString renderingMode READ renderingMode WRITE setRenderingMode NOTIFY renderingModeChanged)
     Q_PROPERTY(int numberOfBonds READ numberOfBonds WRITE setNumberOfBonds NOTIFY numberOfBondsChanged)
+    Q_PROPERTY(float globalScale READ globalScale WRITE setGlobalScale NOTIFY globalScaleChanged)
 public:
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPSController *lammpsController);
@@ -58,6 +59,8 @@ public:
     int numberOfBonds() const;
     void setAtomSize(int atomType, float radius);
     long memoryUsage();
+    float globalScale() const;
+
 public slots:
     void setModifiers(QVariantList modifiers);
     void setSort(bool sort);
@@ -65,6 +68,7 @@ public slots:
     void setSphereScale(float sphereScale);
     void setRenderingMode(QString renderingMode);
     void setNumberOfBonds(int numberOfBonds);
+    void setGlobalScale(float globalScale);
 
 signals:
     void sphereDataChanged(SphereData* sphereData);
@@ -76,6 +80,7 @@ signals:
     void sphereScaleChanged(float sphereScale);
     void renderingModeChanged(QString renderingMode);
     void numberOfBondsChanged(int numberOfBonds);
+    void globalScaleChanged(float globalScale);
 
 private:
     AtomData m_atomData;
@@ -101,6 +106,7 @@ private:
     float m_sphereScale = 1.0;
     QString m_renderingMode = "Ball and stick";
     int m_numberOfBonds = 0;
+    float m_globalScale = 1.0;
 };
 
 #endif // ATOMS_H

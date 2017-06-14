@@ -146,7 +146,7 @@ void CommandParser::bond(QString command) {
     if(!castOk) return;
     int atomType2 = match.captured(2).toInt(&castOk);
     if(!castOk) return;
-    int bondLength = match.captured(3).toFloat(&castOk);
+    float bondLength = match.captured(3).toFloat(&castOk);
     if(!castOk) return;
 
     Bonds *bonds = m_simulator->system()->atoms()->bonds();
