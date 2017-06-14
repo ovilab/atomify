@@ -5,6 +5,9 @@
 
 The typical workflow when developing scripts for LAMMPS includes working with several programs. A text editor is needed to modify the scripts, the terminal to run LAMMPS, and programs like VMD or Ovito reading trajectories from a file dumped to the disk to visualize the system over time. If physical quantities are computed with LAMMPS, the data is often plotted with MATLAB or Python. This is a tedious process, especially for teaching purposes and for people who are new to LAMMPS. We here introduce Atomify, a high performance live visualizer for LAMMPS simulations with stunning graphics able to simulate and render more than 250000 atoms with good frame rate. Atomify supports OpenMP parallelization, GPU acceleration, live plotting of LAMMPS variables and computes and an easy to use code editor in one single program. The latter utilizes the powerful machinery already built into LAMMPS to allow easy access to advanced physical quantities. Atomify is open source software written in C++ built on top of Qt. 
 
+![Atomify lets you run LAMMPS and visualize the state live](https://github.com/ovilab/atomify/raw/dev/screenshots/screenshot.png "Atomify lets you run LAMMPS and visualize the state live")
+
+
 ## How to install ##
 ### MacOS ###
 Alternative 1) Download [the pkg](https://github.com/ovilab/atomify/releases/download/v2.0.9/Atomify-2.0.9-macos.pkg) (preferred).
