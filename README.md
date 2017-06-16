@@ -18,7 +18,7 @@ Install with Homebrew: `brew install https://raw.githubusercontent.com/ovilab/at
 Alternative 3) Download from [Mac App Store](https://itunes.apple.com/us/app/atomify/id1192327034?mt=12).
 
 ### Linux ###
-`sudo snap install atomify --edge`
+`sudo snap install atomify`
 
 ### Windows ###
 Coming soon.
