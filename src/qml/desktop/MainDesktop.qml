@@ -458,7 +458,15 @@ Rectangle {
 
             MessageOverlay {
                 id: messageOverlay
-                property bool shouldBeVisible: simulator.states.idle.active || simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active || welcome || cantWrite
+                property bool shouldBeVisible: simulator.states.finished.active || simulator.states.crashed.active || simulator.states.reset.active || welcome || cantWrite
+                onShouldBeVisibleChanged: {
+                    if(shouldBeVisible) {
+                        visible = true
+                    } else {
+                        visible = false
+                    }
+                }
+
                 anchors.fill: parent
                 visible: false
 
@@ -480,13 +488,6 @@ Rectangle {
                 }
 
                 onExamplesClicked: modeMenu.currentIndex = 3
-                onShouldBeVisibleChanged: {
-                    if(shouldBeVisible) {
-                        visible = true
-                    } else {
-                        visible = false
-                    }
-                }
             }
 
             Row {
