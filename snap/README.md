@@ -11,4 +11,4 @@ Run the following commands:
     sudo snap install atomify*.snap
     atomify
 
-If everything works as expected, neuronify should run now.
+If everything works as expected, atomify should run now.
