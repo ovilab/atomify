@@ -28,6 +28,7 @@ class FixAtomify : public Fix {
  public:
   FixAtomify(class LAMMPS *, int, char **);
   ~FixAtomify();
+  void lost_atoms();
   int setmask();
   void init();
   void end_of_step();
