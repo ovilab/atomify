@@ -2,16 +2,27 @@
 #include "lammpscontroller.h"
 #include "../system.h"
 #include "../../dataproviders/data2d.h"
+#include "../../dataproviders/data1d.h"
 #include <iostream>
 #include <compute_chunk_atom.h>
 #include "../../dataproviders/data1d.h"
 
 CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
-    m_histogram(new Data1D(this))
+    m_data1D(new Data1D(this))
 {
 }
 
 CPFix::~CPFix() { }
+
+Data1D *CPFix::ensureExists(QString key, bool enabledByDefault) {
+//    if(!m_data1DRaw.contains(key)) {
+//        Data1D *data = new Data1D();
+//        data->setEnabled(enabledByDefault);
+//        m_data1DRaw.insert(key, data);
+//        m_data1DRaw.insert(key, QVariant::fromValue<Data1D*>(data));
+//    }
+//    return m_data1DRaw[key];
+}
 
 bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsController) {
     enum{BIN1D,BIN2D,BIN3D,BINSPHERE,BINCYLINDER,
@@ -35,6 +46,28 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
     if(!which || !dim || !nlayers) {
         qDebug() << "Warning, could not get values from ComputeChunkAtom::extract.";
         return true;
+    }
+
+    if(*which == BIN1D) {
+        if(fix->nextvalid() == lammpsController->system->currentTimestep()+1) {
+            setInteractive(true);
+            qDebug() << "Nvalues: " << *nvalues << "   nchunk: " << *nchunk << "   colextra: " << *colextra;
+            qDebug() << "Which: " << *which << "   dim: " << *dim << "   nlayers: " << *nlayers;
+
+            m_data1D->clear(true);
+            for(int i=0; i<*nchunk; i++) {
+                int j = 0; // TODO: support multiple values
+
+                float x = fix->compute_array(i,0);
+                int valueIndex = *colextra+1+j;
+                float y = fix->compute_array(i, valueIndex);
+
+//                QString key = QString("Data");
+//                Data1D *data = ensureExists(key, true);
+//                data->clear(true);
+                m_data1D->add(x,y,true);
+            }
+        }
     }
 
     if(*which == BIN2D) {
@@ -111,7 +144,7 @@ bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsContro
     if(!fix) return false;
     int nbins;
     fix->extract("nbins", nbins);
-    m_histogram->setEnabled(true);
+    m_data1D->setEnabled(true);
 
 //    for(int i=0; i<nbins; i++) {
 //        double binCenter = fix->compute_array(i, 0);
@@ -149,9 +182,9 @@ QVariant CPFix::model() const
     return m_model;
 }
 
-Data1D *CPFix::histogram() const
+Data1D *CPFix::data1D() const
 {
-    return m_histogram;
+    return m_data1D;
 }
 
 void CPFix::update(LAMMPSController *lammpsController)
@@ -234,13 +267,13 @@ void CPFix::setModel(QVariant model)
     emit modelChanged(model);
 }
 
-void CPFix::setHistogram(Data1D *histogram)
+void CPFix::setData1D(Data1D *data1D)
 {
-    if (m_histogram == histogram)
+    if (m_data1D == data1D)
         return;
 
-    m_histogram = histogram;
-    emit histogramChanged(histogram);
+    m_data1D = data1D;
+    emit data1DChanged(m_data1D);
 }
 
 QList<QString> CPFix::resetCommands()

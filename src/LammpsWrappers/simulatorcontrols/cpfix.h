@@ -11,7 +11,6 @@ class CPFix : public SimulatorControl
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(QVariantList data READ data WRITE setData NOTIFY dataChanged)
     Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
-    Q_PROPERTY(Data1D* histogram READ histogram WRITE setHistogram NOTIFY histogramChanged)
 protected:
     QList<QString> enabledCommands() override;
     QList<QString> disableCommands() override;
@@ -31,7 +30,7 @@ public:
     bool interactive() const;
     QVariantList data() const;
     QVariant model() const;
-    class Data1D* histogram() const;
+    class Data1D* data1D() const;
 
 signals:
     void groupChanged(QString group);
@@ -40,7 +39,7 @@ signals:
     void dataChanged(QVariantList data);
     void updatedContent();
     void modelChanged(QVariant model);
-    void histogramChanged(class Data1D* histogram);
+    void data1DChanged(class Data1D* data1D);
 
 public slots:
     void setGroup(QString group);
@@ -48,7 +47,7 @@ public slots:
     void setInteractive(bool interactive);
     void setData(QVariantList data);
     void setModel(QVariant model);
-    void setHistogram(class Data1D* histogram);
+    void setData1D(class Data1D* data1D);
 
 private:
     QString m_group = "all";
@@ -59,7 +58,10 @@ private:
     QVariantList m_data;
     QList<class Data2D*> m_dataRaw;
     QVariant m_model;
-    class Data1D* m_histogram;
+    // QVariantMap m_data1D;
+    QMap<QString, class Data1D*> m_data1DRaw;
+    class Data1D* m_data1D;
+    class Data1D *ensureExists(QString key, bool enabledByDefault);
 };
 
 #endif // CPFIX_H
