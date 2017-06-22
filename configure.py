@@ -20,9 +20,11 @@ os.chdir(os.path.join("src","examples"))
 run_command("python generateExamples.py")
 os.chdir(currentPath)
 # Set up LAMMPS
+ompSupport = True
 
 if _platform == "darwin":
     lammps_build_type = "atomify"
+    ompSupport = False
 elif _platform == "win32":
     print "Windows is not supported yet"
     exit()
@@ -100,7 +102,10 @@ for filename in glob.glob(join(patch_path, "*.patch")):
     original_file = join(lammps_source_dir_src, basename.replace(".patch", ""))
     run_command("patch %s < %s" % (original_file, patch_file)) 
 
-shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE"))
+if ompSupport:
+    shutil.copy(join(patch_path, "Makefile.atomify-omp"), join(lammps_source_dir_src, "MAKE"))
+else:
+    shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE"))
 
 print "\nLAMMPS was (probably) successfully patched."
 
@@ -122,6 +127,8 @@ print "\nCompiling LAMMPS"
 
 os.chdir(lammps_source_dir_src)
 run_command("make yes-rigid yes-manybody yes-mc yes-molecule yes-granular yes-replica yes-kspace yes-shock yes-misc yes-USER-MISC yes-user-reaxc")
+if ompSupport:
+    run_command("make yes-user-omp")
 
 # Copy moltemplate extra files
 for filename in glob.iglob(os.path.join(patch_path, "moltemplate_additional_lammps_code", "*.cpp")):
