@@ -103,9 +103,9 @@ for filename in glob.glob(join(patch_path, "*.patch")):
     run_command("patch %s < %s" % (original_file, patch_file)) 
 
 if ompSupport:
-    shutil.copy(join(patch_path, "Makefile.atomify-omp"), join(lammps_source_dir_src, "MAKE"))
+    shutil.copy(join(patch_path, "Makefile.atomify-omp"), join(lammps_source_dir_src, "MAKE", "Makefile.atomify"))
 else:
-    shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE"))
+    shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE", "Makefile.atomify"))
 
 print "\nLAMMPS was (probably) successfully patched."
 
