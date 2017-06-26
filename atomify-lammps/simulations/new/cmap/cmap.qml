@@ -11,6 +11,10 @@ Simulation {
     controllers: [
         Summary {
             system: root.system
+        },
+        Thermometer {
+            xLabel: "Time [fs]"
+            xRange: 250
         }
     ]
 }

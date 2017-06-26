@@ -12,5 +12,10 @@
         <file>generate_nanoporous/betacristobalite.data</file>
         <file>generate_nanoporous/generate_nanoporous.png</file>
         <file>generate_nanoporous/generate_nanoporous.qml</file>
+        <file>faceted_cylinder/faceted_cylinder.data</file>
+        <file>faceted_cylinder/faceted_cylinder.in</file>
+        <file>faceted_cylinder/faceted_cylinder.png</file>
+        <file>faceted_cylinder/faceted_cylinder.qml</file>
+        <file>faceted_cylinder/SiC.vashishta</file>
     </qresource>
 </RCC>

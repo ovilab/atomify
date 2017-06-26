@@ -70,7 +70,7 @@ void ScriptParser::bond(QString command, std::function<void(int atomType1, int a
     if(!castOk) return;
     int atomType2 = match.captured(2).toInt(&castOk);
     if(!castOk) return;
-    int bondLength = match.captured(3).toFloat(&castOk);
+    float bondLength = match.captured(3).toFloat(&castOk);
     if(!castOk) return;
 
     action(atomType1, atomType2, bondLength);

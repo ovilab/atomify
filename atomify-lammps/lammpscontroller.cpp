@@ -85,6 +85,7 @@ void LAMMPSController::executeCommandInLAMMPS(QString command) {
     }
 
     try {
+        // qDebug() << "Running command " << command;
         QByteArray commandBytes = command.toUtf8();
         lammps_command((void*)m_lammps, (char*)commandBytes.data());
     } catch (LammpsException &exception) {
@@ -244,7 +245,10 @@ void LAMMPSController::executeActiveRunCommand() {
 
 void LAMMPSController::reset()
 {
-    int nargs = 1;
+    QString argumentString("-k on t 2 -sf kk");
+    QStringList arguments = argumentString.split(" ");
+
+    int nargs = arguments.length()+1;
     char **argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];
@@ -252,16 +256,14 @@ void LAMMPSController::reset()
     if(nargs>0) {
         sprintf(argv[0], "myprogram");
     }
-    if(nargs>1) {
-        sprintf(argv[1], "-sf");
-    }
-    if(nargs>2) {
-        sprintf(argv[2], "gpu");
+    for(int arg=1; arg<nargs; arg++) {
+        QString argument = arguments[arg-1];
+        sprintf(argv[arg], "%s", argument.toLocal8Bit().constData());
     }
 //    sprintf(argv[3], "-pk");
 //    sprintf(argv[4], "gpu");
 //    sprintf(argv[5], "1");
-
+    nargs = 1;
     setLammps(nullptr); // This will destroy the LAMMPS object within the LAMMPS library framework
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     m_lammps->screen = NULL;

@@ -51,6 +51,7 @@ Item {
                 "qrc:/simulations/new/abstract_translocation",
                 "qrc:/simulations/new/cmap",
                 "qrc:/simulations/new/ice_crystal",
+                "qrc:/simulations/silica/faceted_cylinder"
             ]
         },
         {

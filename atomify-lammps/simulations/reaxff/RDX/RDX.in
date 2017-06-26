@@ -27,4 +27,3 @@ fix             3 all temp/berendsen 3000.0 3000.0 100.0
 velocity all create 2000.0 492845 rot yes dist gaussian
 
 timestep	0.25
-run 10000
