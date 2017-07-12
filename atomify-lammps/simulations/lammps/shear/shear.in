@@ -1,5 +1,5 @@
 # 3d metal shear simulation
-
+log none
 units		metal
 boundary	s s p
 
@@ -61,16 +61,6 @@ velocity	mobile ramp vx 0.0 1.0 y 1.4 8.6 sum yes
 unfix		3
 fix		3 mobile temp/rescale 10 300.0 300.0 10.0 1.0
 fix_modify	3 temp new2d
-
-#dump		1 all atom 100 dump.shear
-
-#dump		2 all image 100 image.*.jpg type type &
-#		axes yes 0.8 0.02 view 0 0 zoom 1.5 up 0 1 0 adiam 2.0
-#dump_modify	2 pad 4
-
-#dump		3 all movie 100 movie.mpg type type &
-#		axes yes 0.8 0.02 view 0 0 zoom 1.5 up 0 1 0 adiam 2.0
-#dump_modify	3 pad 4
 
 thermo		100
 thermo_modify	temp new2d

@@ -4,18 +4,20 @@
         <file>betacristobalite/betacristobalite.data</file>
         <file>betacristobalite/betacristobalite.qml</file>
         <file>betacristobalite/betacristobalite.png</file>
-        <file>zeolite_zsm5/zeolite_zsm5.qml</file>
-        <file>zeolite_zsm5/zeolite_zsm5.in</file>
-        <file>zeolite_zsm5/zeolite_zsm5.png</file>
-        <file>zeolite_zsm5/zeolite_zsm5.data</file>
         <file>generate_nanoporous/generate_nanoporous.in</file>
         <file>generate_nanoporous/betacristobalite.data</file>
         <file>generate_nanoporous/generate_nanoporous.png</file>
         <file>generate_nanoporous/generate_nanoporous.qml</file>
+        <!--
+        <file>zeolite_zsm5/zeolite_zsm5.qml</file>
+        <file>zeolite_zsm5/zeolite_zsm5.in</file>
+        <file>zeolite_zsm5/zeolite_zsm5.png</file>
+        <file>zeolite_zsm5/zeolite_zsm5.data</file>
         <file>faceted_cylinder/faceted_cylinder.data</file>
         <file>faceted_cylinder/faceted_cylinder.in</file>
         <file>faceted_cylinder/faceted_cylinder.png</file>
         <file>faceted_cylinder/faceted_cylinder.qml</file>
         <file>faceted_cylinder/SiC.vashishta</file>
+        -->
     </qresource>
 </RCC>

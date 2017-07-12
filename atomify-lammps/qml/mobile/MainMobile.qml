@@ -46,10 +46,12 @@ Item {
             ]
         },
         {
-            name: "Other",
+            name: "Miscellaneous",
             simulations: [
+                "qrc:/simulations/new/sica_sheet",
                 "qrc:/simulations/new/abstract_translocation",
                 "qrc:/simulations/new/cmap",
+                "qrc:/simulations/new/sica_sheet_melt",
                 "qrc:/simulations/new/ice_crystal"
                 // ,"qrc:/simulations/silica/faceted_cylinder"
             ]
@@ -75,7 +77,7 @@ Item {
             simulations: [
                 "qrc:/simulations/silica/betacristobalite",
                 "qrc:/simulations/silica/generate_nanoporous",
-                "qrc:/simulations/silica/zeolite_zsm5"
+                "qrc:/simulations/reaxff/ssz_13",
             ]
         },
         {

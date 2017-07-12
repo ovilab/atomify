@@ -20,5 +20,11 @@
         <file>ice_crystal/system.in</file>
         <file>ice_crystal/system.in.init</file>
         <file>ice_crystal/system.in.settings</file>
+        <file>sica_sheet/sica_sheet.png</file>
+        <file>sica_sheet/sica_sheet.qml</file>
+        <file>sica_sheet/sica_sheet.in</file>
+        <file>sica_sheet_melt/sica_sheet_melt.in</file>
+        <file>sica_sheet_melt/sica_sheet_melt.png</file>
+        <file>sica_sheet_melt/sica_sheet_melt.qml</file>
     </qresource>
 </RCC>

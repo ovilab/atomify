@@ -65,14 +65,4 @@ timestep	0.003
 thermo		500
 thermo_modify	temp mobile
 
-#dump		1 all atom 500 dump.flow
-
-#dump		2 all image 100 image.*.jpg type type &
-#		zoom 1.6 adiam 1.5
-#dump_modify	2 pad 5
-
-#dump		3 all movie 100 movie.mpg type type &
-#		zoom 1.6 adiam 1.5
-#dump_modify	3 pad 5
-
 run		10000

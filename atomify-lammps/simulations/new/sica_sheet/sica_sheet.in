@@ -1,0 +1,32 @@
+#/atom 1 silicon
+#/atom 2 carbon
+#/atom 3 silicon
+#/bond 1 2 2.9
+log none
+
+units metal
+atom_style atomic
+boundary p p p
+
+lattice custom 3.205 a1 1.0 0 0 a2 0.5 $(sqrt(3)/2) 0 a3 0.5 $(1/(2*sqrt(3))) 0.83 basis 0 0 0 basis $(1/3) $(1/3) 0.0
+region myreg block 0.0 4.5 0.0 4.5 0 0.5 units lattice
+
+create_box 2 myreg
+create_atoms 2 box basis 1 1 basis 2 2
+
+pair_style vashishta
+pair_coeff * * ../../potentialparameters/SiC.vashishta Si C
+
+mass 1 28.06
+mass 2 12.0107
+
+change_box all z delta -20 20
+
+timestep 0.002
+
+replicate 2 3 1
+change_box all boundary m m p
+
+velocity all create 2000.0 4928459 rot yes dist gaussian
+fix nve all nve
+#/speed 4
