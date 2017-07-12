@@ -27,9 +27,9 @@ timestep	0.01
 
 fix nve all nve/sphere
 fix gravity all gravity 1.0 spherical 0.0 -180.0
-fix zlower all wall/gran 2000.0 NULL 20.0 NULL 0.5 0 zplane 1.0 2000.0
-fix xp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 xplane -$L $L
-fix yp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 yplane -$L $L
+fix zlower all wall/gran hooke/history 2000.0 NULL 20.0 NULL 0.5 0 zplane 1.0 2000.0
+fix xp all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 xplane -$L $L
+fix yp all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 yplane -$L $L
 
 region	slab block -$L $L -$L $L 10.0 15.0 units box
 fix ins all pour 8000 1 300719 vol 0.13 50 region slab
@@ -37,9 +37,9 @@ fix ins all pour 8000 1 300719 vol 0.13 50 region slab
 #/speed 10
 
 #/label Adding particles
-run	1000
+run 1000
 unfix zlower
-fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.0 2000.0 wiggle z ${A} ${period}
+fix zlower all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.0 2000.0 wiggle z ${A} ${period}
 #/label Starting to vibrate
 run 1000
 #/label Waiting for pattern

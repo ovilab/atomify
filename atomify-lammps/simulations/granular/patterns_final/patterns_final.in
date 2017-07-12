@@ -29,10 +29,10 @@ variable period equal "1.0/v_f"
 
 fix nve all nve/sphere
 fix gravity all gravity v_g spherical 0.0 -180.0
-fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.0 2000.0 wiggle z ${A} ${period}
+fix zlower all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.0 2000.0 wiggle z ${A} ${period}
 
-fix xp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 xplane -$L $L
-fix yp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 yplane -$L $L
+fix xp all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 xplane -$L $L
+fix yp all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 yplane -$L $L
 
 
 #/speed 10

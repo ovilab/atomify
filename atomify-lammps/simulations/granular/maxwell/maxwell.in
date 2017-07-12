@@ -22,8 +22,8 @@ variable period equal "1.0/v_f"
 
 create_box 1 reg
 fix wall all wall/region myWall harmonic 10.0 0.5 1.5
-fix xp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 xplane -4.0 4.0
-fix yp all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 yplane -8.0 8.0
+fix xp all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 xplane -4.0 4.0
+fix yp all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 yplane -8.0 8.0
 
 neighbor	0.2 bin
 neigh_modify	delay 0
@@ -35,7 +35,7 @@ timestep	0.01
 
 fix nve all nve/sphere
 fix gravity all gravity 1.0 spherical 0.0 -180.0
-fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 1.0 2000.0
+fix zlower all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 zplane 1.0 2000.0
 
 region left block EDGE EDGE -8 0 EDGE EDGE
 region right block EDGE EDGE 0 8 EDGE EDGE
@@ -51,7 +51,7 @@ run 1
 run 2000
 #/speed 50
 unfix zlower
-fix zlower all wall/gran 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.99 200.0 wiggle z 0.7 1
+fix zlower all wall/gran hooke/history 2000.0 NULL 50.0 NULL 0.5 0 zplane 0.99 200.0 wiggle z 0.7 1
 thermo 1000
 thermo_style custom step v_atomify_left v_atomify_right
 #/label Vibrating. One side will have'm all
