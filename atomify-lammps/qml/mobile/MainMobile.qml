@@ -61,7 +61,8 @@ Item {
             simulations: [
                 "qrc:/simulations/water/singlewater",
                 "qrc:/simulations/water/vapor",
-                "qrc:/simulations/water/nanotube"
+                "qrc:/simulations/water/nanotube",
+                "qrc:/simulations/new/gas_hydrates",
             ]
         },
         {

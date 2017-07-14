@@ -26,5 +26,9 @@
         <file>sica_sheet_melt/sica_sheet_melt.in</file>
         <file>sica_sheet_melt/sica_sheet_melt.png</file>
         <file>sica_sheet_melt/sica_sheet_melt.qml</file>
+        <file>gas_hydrates/methane_hydrate_SI_UA_charge.data</file>
+        <file>gas_hydrates/gas_hydrates.qml</file>
+        <file>gas_hydrates/gas_hydrates.png</file>
+        <file>gas_hydrates/gas_hydrates.in</file>
     </qresource>
 </RCC>
