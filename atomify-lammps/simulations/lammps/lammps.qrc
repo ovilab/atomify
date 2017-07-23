@@ -27,5 +27,8 @@
         <file>friction/friction.in</file>
         <file>friction/friction.png</file>
         <file>friction/friction.qml</file>
+        <file>lammps/lammps.qml</file>
+        <file>lammps/lammps.png</file>
+        <file>lammps/lammps.in</file>
     </qresource>
 </RCC>

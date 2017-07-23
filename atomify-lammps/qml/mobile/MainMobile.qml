@@ -26,6 +26,7 @@ Item {
         {
             name: "LAMMPS Examples",
             simulations: [
+                "qrc:/simulations/lammps/lammps",
                 "qrc:/simulations/lammps/crack",
                 "qrc:/simulations/lammps/flow_couette",
                 "qrc:/simulations/lammps/flow_pois",
