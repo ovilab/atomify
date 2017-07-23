@@ -8,8 +8,8 @@
 #/atom 1 carbon
 #/atom 2 oxygen
 #/atom 3 hydrogen
-#/bond 2 3 2.0
-#/bond 1 1 2.0
+#/bond 1 1 1.7
+
 log none
 # ----------------------------- Initialization Section --------------------
 
@@ -47,9 +47,11 @@ group mobile subtract all Cgraphene
 print "--------- beginning minimization (using fix langevin) ---------"
 
 timestep        0.1
-thermo          100
 # fix gravity mobile gravity 1.0 vector 0 0 1
 timestep        1.0
+
+velocity mobile create 500.0 4928459 rot yes dist gaussian
+
 fix fxMoveStuff mobile nvt temp 300.0 300.0 100.0
 compute tempMobile mobile temp
 fix_modify fxMoveStuff temp tempMobile

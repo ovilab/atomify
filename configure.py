@@ -101,6 +101,9 @@ print "\nLAMMPS was (probably) successfully patched."
 # set up packages
 os.chdir(join(lammps_source_dir_src))
 run_command("make yes-granular")
+run_command("make yes-manybody")
+run_command("make yes-user-reaxc")
+
 os.chdir(root_path)
 
 # build
