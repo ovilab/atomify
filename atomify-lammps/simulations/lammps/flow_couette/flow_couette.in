@@ -62,7 +62,5 @@ fix	     4 all enforce2d
 # Run
 
 timestep	0.003
-thermo		500
 thermo_modify	temp mobile
-
-run		10000
+#/speed 5
