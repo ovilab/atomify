@@ -414,9 +414,10 @@ bool Atoms::generateBondDataFromBondList(AtomData &atomData, LAMMPS *lammps)
 void Atoms::generateBondData(AtomData &atomData, LAMMPS *lammps) {
     m_bondsData.resize(0);
 
-    if(generateBondDataFromBondList(atomData, lammps)) {
-        return;
-    }
+    generateBondDataFromBondList(atomData, lammps);
+//    if(generateBondDataFromBondList(atomData, lammps)) {
+//        return;
+//    }
 
     if(!m_bonds->enabled()) {
         return;
@@ -427,7 +428,7 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPS *lammps) {
 
     QElapsedTimer t;
     t.start();
-    m_bondsData.reserve(atomData.positions.size());
+    m_bondsData.reserve(atomData.positions.size()+m_bondsData.size());
     for(int ii=0; ii<atomData.size(); ii++) {
         int i = atomData.originalIndex[ii];
 
