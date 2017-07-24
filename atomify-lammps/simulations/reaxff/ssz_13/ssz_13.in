@@ -15,7 +15,7 @@ replicate 2 2 2
 
 pair_style reax/c NULL 
 pair_coeff * * ffield_Psofogiannakis_CuOH_2015 Si Al O H
-fix qeq all qeq/reax 1 0.0 10.0 1e-6 reax/c
+fix qeq all qeq/reax 1 0.0 10.0 1e-4 reax/c
 
 timestep 0.25
 

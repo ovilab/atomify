@@ -16,10 +16,10 @@ pair_style	reax/c lmp_control
 pair_coeff	* * ffield.reax.ZnOH H O Zn
 
 neighbor	2 bin
-neigh_modify	every 10 delay 0 check no
+neigh_modify	every 1 delay 0 check yes
 
 fix 1 all nve
-fix	2 all qeq/reax 1 0.0 10.0 1e-6 param.qeq
+fix	2 all qeq/reax 1 0.0 10.0 1e-4 param.qeq
 fix 3 all temp/berendsen 2500.0 2500.0 100.0
 
 velocity all create 4000.0 492845 rot yes dist gaussian

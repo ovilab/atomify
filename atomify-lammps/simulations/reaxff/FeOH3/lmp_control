@@ -1,7 +1,4 @@
-simulation_name		FeOH3_example ! output files will carry this name + their specific ext
-
 tabulate_long_range	10000 ! denotes the granularity of long range tabulation, 0 means no tabulation
-energy_update_freq 	1
 
 nbrhood_cutoff		4.5  ! near neighbors cutoff for bond calculations in A
 hbond_cutoff		6.0  ! cutoff distance for hydrogen bond interactions
