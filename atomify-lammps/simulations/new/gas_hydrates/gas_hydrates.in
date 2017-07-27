@@ -1,6 +1,7 @@
 #/atom 1 oxygen
 #/atom 2 nitrogen
 #/bond 1 1 3.5
+log none
 
 units real
 dimension 3
