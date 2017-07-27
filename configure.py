@@ -103,6 +103,7 @@ os.chdir(join(lammps_source_dir_src))
 run_command("make yes-granular")
 run_command("make yes-manybody")
 run_command("make yes-user-reaxc")
+run_command("make yes-opt")
 
 os.chdir(root_path)
 
