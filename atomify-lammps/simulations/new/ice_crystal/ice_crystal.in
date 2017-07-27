@@ -1,6 +1,8 @@
 #/atom 1 oxygen
 #/atom 2 hydrogen
-#/bond 1 2 3.0
+#/bond 1 2 2.5
+
+log none
 # You can run LAMMPS this way
 #   lmp_linux -i run.in.nvt
 # (Assuming your LAMMPS binary is named "lmp_linux")
@@ -30,5 +32,8 @@ include         system.in.settings
 # ------------------------------- Run Section -------------------------------
 
 timestep        2.0
-fix             fxnvt all nvt temp 200.0 200.0 500.0
+#fix             fxnvt all nvt temp 200.0 200.0 500.0
+fix nve all nve
+velocity all create 300.0 4928459 rot yes dist gaussian
+
 thermo          500000
