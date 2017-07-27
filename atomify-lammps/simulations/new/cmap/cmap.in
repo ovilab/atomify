@@ -1,18 +1,18 @@
 # Created by charmm2lammps v1.8.2.6 beta on Thu Mar  3 20:56:57 EST 2016
 
 #/atom 1 hydrogen
-#/atom 2 helium
-#/atom 3 lithium
-#/atom 4 beryllium
-#/atom 5 boron
+#/atom 2 hydrogen
+#/atom 3 hydrogen
+#/atom 4 hydrogen
+#/atom 5 carbon
 #/atom 6 carbon
-#/atom 7 nitrogen
-#/atom 8 oxygen
-#/atom 9 fluorine
-#/atom 10 neon
-#/atom 11 sodium
-#/atom 12 magnesium
-#/atom 13 aluminum
+#/atom 7 carbon
+#/atom 8 carbon
+#/atom 9 carbon
+#/atom 10 nitrogen
+#/atom 11 nitrogen
+#/atom 12 oxygen
+#/atom 13 oxygen
 log none
 
 units           real
