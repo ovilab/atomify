@@ -4,7 +4,7 @@
 #/atom 2 oxygen
 #/atom 3 zinc
 
-#/bond 1 2 2.0
+#/bond 1 2 1.7
 #/bond 2 3 3.0
 log none
 units		real

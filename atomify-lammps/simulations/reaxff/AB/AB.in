@@ -3,8 +3,8 @@
 #/atom 1 hydrogen
 #/atom 2 boron
 #/atom 3 nitrogen
-#/bond 1 2 2.0
-#/bond 1 3 2.0
+#/bond 1 2 1.7
+#/bond 1 3 1.7
 #/bond 2 3 2.0
 log none
 units		real
@@ -22,6 +22,6 @@ fix		1 all nve
 fix     2 all qeq/reax 1 0.0 10.0 1e-4 param.qeq
 fix     3 all temp/berendsen 2000.0 2000.0 100.0
 
-timestep	0.1
+timestep	0.25
 thermo_style custom step press ke
 thermo		1
