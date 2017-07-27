@@ -19,7 +19,7 @@ mass		2 1.0
 
 # LJ potentials
 
-pair_style	lj/cut 2.5
+pair_style	lj/cut/opt 2.5
 pair_coeff	* * 1.0 1.0 2.5
 
 # define groups

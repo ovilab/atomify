@@ -57,7 +57,7 @@ set		region LAMMPS type 2
 # LJ and other system parameters
 
 mass		* 1.0
-pair_style	lj/cut 2.5
+pair_style	lj/cut/opt 2.5
 pair_coeff	* * 1.0 1.0 2.5
 
 timestep        0.005

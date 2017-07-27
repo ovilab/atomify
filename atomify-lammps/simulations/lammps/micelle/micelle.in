@@ -34,7 +34,7 @@ unfix		3
 
 # Main run
 
-pair_style	lj/cut 2.5
+pair_style	lj/cut/opt 2.5
 
 # solvent/head - full-size and long-range
 
