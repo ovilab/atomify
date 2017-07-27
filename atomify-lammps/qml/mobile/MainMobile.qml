@@ -47,6 +47,13 @@ Item {
             ]
         },
         {
+            name: "Diffusion",
+            simulations: [
+                "qrc:/simulations/diffusion/simple_diffusion",
+                "qrc:/simulations/diffusion/diffusion_coefficient"
+            ]
+        },
+        {
             name: "Miscellaneous",
             simulations: [
                 "qrc:/simulations/new/sica_sheet",
@@ -54,7 +61,6 @@ Item {
                 "qrc:/simulations/new/cmap",
                 "qrc:/simulations/new/sica_sheet_melt",
                 "qrc:/simulations/new/ice_crystal"
-                // ,"qrc:/simulations/silica/faceted_cylinder"
             ]
         },
         {
@@ -80,13 +86,6 @@ Item {
                 "qrc:/simulations/silica/betacristobalite",
                 "qrc:/simulations/silica/generate_nanoporous",
                 "qrc:/simulations/reaxff/ssz_13",
-            ]
-        },
-        {
-            name: "Diffusion",
-            simulations: [
-                "qrc:/simulations/diffusion/simple_diffusion",
-                "qrc:/simulations/diffusion/diffusion_coefficient"
             ]
         }
     ]
