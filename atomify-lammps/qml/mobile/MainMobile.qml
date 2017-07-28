@@ -56,6 +56,7 @@ Item {
         {
             name: "Miscellaneous",
             simulations: [
+                // "qrc:/simulations/new/polymer",
                 "qrc:/simulations/new/sica_sheet",
                 "qrc:/simulations/new/abstract_translocation",
                 "qrc:/simulations/new/cmap",
@@ -81,7 +82,7 @@ Item {
             ]
         },
         {
-            name: "Porous media",
+            name: "Nanoporous media",
             simulations: [
                 "qrc:/simulations/silica/betacristobalite",
                 "qrc:/simulations/silica/generate_nanoporous",
