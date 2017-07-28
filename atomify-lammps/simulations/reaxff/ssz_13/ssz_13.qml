@@ -9,7 +9,7 @@ Simulation {
     id: root
     name: "Zeolite SSZ-13"
     description: "<p>This structure is a zeolite called SSZ-13 (or CHA) and has one of the silicon sites replaced with Aluminum and a hydrogen atom.</p>
-    <p>This is a very heavy simulation, so unless your phone/tablet is very new, you must zoom and carefully look for movement.</p>"
+    <p>This is a very heavy simulation using ReaxFF, so unless your phone/tablet is very new, you must zoom and carefully look for movement.</p>"
     initialCameraPosition: Qt.vector3d(0,0,50)
     initialUpVector: Qt.vector3d(0,-1,0)
     controllers: [
