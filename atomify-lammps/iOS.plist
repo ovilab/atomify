@@ -29,7 +29,7 @@
                 </dict>
         </dict>
         <key>CFBundleIdentifier</key>
-        <string>com.ovilab.atomify</string>
+        <string>com.compphys.atomify</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>8.0</string>
         <key>CFBundleName</key>
@@ -37,7 +37,7 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>2.1</string>
+        <string>2.10</string>
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
