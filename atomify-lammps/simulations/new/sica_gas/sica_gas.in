@@ -8,11 +8,11 @@ units metal
 atom_style atomic
 boundary p p p
 
-region region block 0.0 10 0 10 0 10
+region region block 0.0 100 0 100 0 100
 
 create_box 2 region
 create_atoms 1 random 500 1234 region
-create_atoms 2 random 500 1234 region
+create_atoms 2 random 500 12345 region
 
 pair_style vashishta
 pair_coeff * * ../../potentialparameters/SiC.vashishta Si C
@@ -21,8 +21,19 @@ mass 1 28.06
 mass 2 12.0107
 
 timestep 0.002
+minimize 1e-3 1e-3 100 100
+fix nvt all nvt temp 1000 1000 1.0
+# fix nve all nve
+# fix langevin all langevin 1000.0 1000.0 1.0 699483
 
-velocity all create 1000.0 4928459 rot yes dist gaussian
-fix nvt all nvt temp 1000 1000
-minimize 1e-5 1e-5 100 100
-#/speed 4
+#/speed 100
+
+velocity all create 1000.0 100 rot yes mom yes
+run 1000
+velocity all create 1000.0 101 rot yes mom yes
+run 300
+velocity all create 1000.0 102 rot yes mom yes
+run 300
+velocity all create 1000.0 103 rot yes mom yes
+run 300
+velocity all create 1000.0 104 rot yes mom yes

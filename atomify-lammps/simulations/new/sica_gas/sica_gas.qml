@@ -5,10 +5,10 @@ import "qrc:/mobile/dashboard"
 
 Simulation {
     id: root
-    name: "Curly SiC nanosheet"
+    name: "SiC gas"
     description: "
 <p>
-Silicon carbide nanosheets is a new exciting material like graphene. If it has free ends and not on a substrate, it will curl into a ball.
+Gas of randomly placed silicon and carbon atoms.
 </p>
 
 <p><b>What to look for</b></p>
@@ -27,11 +27,6 @@ If you look carefully, you can see the atomic configuration going towards a diam
             xLabel: "Time [fs]"
             xScale: 1000
             xRange: 1000
-        },
-        Thermostat {
-            minimumValue: 10
-            maximumValue: 3000
-            temperatureDampening: 0.2
         }
     ]
 }
