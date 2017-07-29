@@ -14,6 +14,7 @@ Pane {
 
     property var tagModel: []
     property var tagMap: {
+        "reaxff": "ReaxFF",
         "diffusion": "Diffusion",
         "water": "Water",
         "lammps": "LAMMPS",
@@ -21,7 +22,7 @@ Pane {
         "silica": "Silica",
         "other": "Other"
     }
-    property var tagList: ["lammps", "silica", "water", "moltemplate", "diffusion", "other"]
+    property var tagList: ["lammps", "silica", "reaxff", "water", "moltemplate", "diffusion", "other"]
 
     property Item screenshotObject
     property string currentScript
