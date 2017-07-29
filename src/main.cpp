@@ -40,6 +40,33 @@
 #include "parsefileuploader.h"
 #include "standardpaths.h"
 #include "keysequence.h"
+#include <mpi.h>
+#include <input.h>
+
+using namespace LAMMPS_NS;
+int regularLAMMPS (int argc, char **argv)
+{
+  MPI_Init(&argc,&argv);
+
+#ifdef LAMMPS_EXCEPTIONS
+  try {
+    LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
+    lammps->input->file();
+    delete lammps;
+  } catch(LAMMPSAbortException & ae) {
+    MPI_Abort(ae.universe, 1);
+  } catch(LAMMPSException & e) {
+    MPI_Finalize();
+    exit(1);
+  }
+#else
+  LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
+  lammps->input->file();
+  delete lammps;
+#endif
+  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Finalize();
+}
 
 void copyExamplesToLocalFolder()
 {
@@ -90,6 +117,18 @@ void showDataDir()
 
 int main(int argc, char *argv[])
 {
+    if(argc>1) {
+        if(strcmp(argv[1], "--showdatadir")==0) {
+            // We need to create Qt app for this, but now we know that the user does not
+            // want to run a regular script.
+        } else if(strcmp(argv[1], "--version")==0) {
+            printf("2.0.10");
+            exit(0);
+        } else {
+            return regularLAMMPS(argc, argv);
+        }
+    }
+
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
@@ -147,11 +186,6 @@ int main(int argc, char *argv[])
     if(argc>1) {
         if(strcmp(argv[1], "--showdatadir")==0) {
             showDataDir();
-        }
-
-        if(strcmp(argv[1], "--version")==0) {
-            printf("2.0.10");
-            exit(0);
         }
     }
 
