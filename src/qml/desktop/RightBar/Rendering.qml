@@ -52,7 +52,7 @@ Pane {
                         hoverEnabled: true
                         ToolTip.visible: hovered
                         ToolTip.delay: 1000
-                        ToolTip.text: "Show/hide coordinate axis guides ("+guidesCheckBoxShortcut.nativeText+")"
+                        ToolTip.text: "Show/hide coordinate axis guides (G)" // TODO: use menuItem shortcut nativeText or similar
                         Binding {
                             target: visualizer
                             property: "guidesVisible"
@@ -67,7 +67,7 @@ Pane {
                         focusPolicy: Qt.NoFocus
                         ToolTip.visible: hovered
                         ToolTip.delay: 1000
-                        ToolTip.text: "Show/hide system box defining simulation region ("+outlineCheckBoxShortcut.nativeText+")"
+                        ToolTip.text: "Show/hide system box defining simulation region (M)" // TODO: use menuItem shortcut nativeText or similar
                         Binding {
                             target: visualizer
                             property: "systemBoxVisible"
