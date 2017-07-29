@@ -675,9 +675,6 @@ Rectangle {
                     targetState: flymodeState
                     signal: changeMode
                 }
-                onEntered: {
-                    console.log("Trackball entered")
-                }
             }
             DSM.State {
                 id: flymodeState
@@ -686,7 +683,6 @@ Rectangle {
                     signal: changeMode
                 }
                 onEntered: {
-                    console.log("Flymode entered")
                     flymodeOverlay.reset()
                 }
             }
@@ -700,18 +696,12 @@ Rectangle {
                     targetState: focusedState
                     signal: focusViewport
                 }
-                onEntered: {
-                    console.log("UnFocus entered")
-                }
             }
             DSM.State {
                 id: focusedState
                 DSM.SignalTransition {
                     targetState: unfocusedState
                     signal: unfocusViewport
-                }
-                onEntered: {
-                    console.log("Focus entered")
                 }
             }
         }
@@ -732,9 +722,6 @@ Rectangle {
                     targetState: uncapturedState
                     signal: trackballState.entered
                 }
-                onEntered: {
-                    console.log("captured entered")
-                }
             }
             DSM.State {
                 id: uncapturedState
@@ -745,9 +732,6 @@ Rectangle {
                 DSM.SignalTransition {
                     targetState: capturedState
                     signal: captureCursor
-                }
-                onEntered: {
-                    console.log("unCaptured entered")
                 }
             }
         }
@@ -763,7 +747,6 @@ Rectangle {
 
         onAccepted: {
             if(callback !== undefined) {
-                console.log("Calling back")
                 callback()
                 callback = undefined
             }
