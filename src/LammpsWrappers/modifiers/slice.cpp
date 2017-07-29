@@ -14,9 +14,17 @@ float Slice::distanceToPlane(const QVector3D &position, const QVector3D &plane, 
 bool Slice::vectorIsInside(const QVector3D &position) {
     QVector3D plane = m_normal*m_distance;
     if(m_width==0) {
-        return distanceToPlane(position, plane, m_normalizedNormal) < 0;
+        if(m_reversed) {
+            return distanceToPlane(position, plane, m_normalizedNormal) > 0;
+        } else {
+            return distanceToPlane(position, plane, m_normalizedNormal) < 0;
+        }
     } else {
-        return abs(distanceToPlane(position, plane, m_normalizedNormal)) < 0.5*m_width;
+        if(m_reversed) {
+            return abs(distanceToPlane(position, plane, m_normalizedNormal)) > 0.5*m_width;
+        } else {
+            return abs(distanceToPlane(position, plane, m_normalizedNormal)) < 0.5*m_width;
+        }
     }
 }
 
@@ -46,6 +54,11 @@ float Slice::width() const
     return m_width;
 }
 
+bool Slice::reversed() const
+{
+    return m_reversed;
+}
+
 void Slice::setDistance(float distance)
 {
     if (m_distance == distance)
@@ -70,4 +83,13 @@ void Slice::setWidth(float width)
 
     m_width = width;
     emit widthChanged(width);
+}
+
+void Slice::setReversed(bool reversed)
+{
+    if (m_reversed == reversed)
+        return;
+
+    m_reversed = reversed;
+    emit reversedChanged(m_reversed);
 }

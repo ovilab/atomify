@@ -92,6 +92,12 @@ GroupBox {
                 slice.width = value
             }
         }
+
+        CheckBox {
+            text: "Reversed: "
+            checked: slice.reversed
+            onCheckedChanged: slice.reversed = checked
+        }
     }
 }
 
