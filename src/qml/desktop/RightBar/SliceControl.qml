@@ -18,6 +18,7 @@ GroupBox {
     }
     ColumnLayout {
         id: columnLayout
+        width: parent.width
         visible: slice.enabled
         spacing: 10
 
@@ -27,43 +28,54 @@ GroupBox {
         }
 
         ScrollableNumberField {
+            width: parent.width
             value: slice.distance
             onValueChanged: slice.distance = value
         }
 
         Label {
             width: sliceRoot.labelWidth
-            text: "Normal (x,y,z): "
+            text: "Normal: "
         }
 
-        ScrollableNumberField {
-            value: slice.normal.x
-            onValueChanged: {
-                var x = parseFloat(value)
-                var y = parseFloat(slice.normal.y)
-                var z = parseFloat(slice.normal.z)
-                slice.normal = Qt.vector3d(x,y,z)
+        Row {
+            width: parent.width
+            spacing: 5
+            ScrollableNumberField {
+                value: slice.normal.x
+                width: (columnLayout.width-10)/3
+                onValueChanged: {
+                    var x = parseFloat(value)
+                    var y = parseFloat(slice.normal.y)
+                    var z = parseFloat(slice.normal.z)
+                    slice.normal = Qt.vector3d(x,y,z)
+                }
+                Component.onCompleted: {
+                    value = 1
+                    slice.normal = Qt.vector3d(1,0,0)
+                }
             }
-            Component.onCompleted: value = 1
-        }
 
-        ScrollableNumberField {
-            value: slice.normal.y
-            onValueChanged: {
-                var x = parseFloat(value)
-                var y = parseFloat(slice.normal.y)
-                var z = parseFloat(slice.normal.z)
-                slice.normal = Qt.vector3d(x,y,z)
+            ScrollableNumberField {
+                value: slice.normal.y
+                width: (columnLayout.width-10)/3
+                onValueChanged: {
+                    var x = parseFloat(slice.normal.x)
+                    var y = parseFloat(value)
+                    var z = parseFloat(slice.normal.z)
+                    slice.normal = Qt.vector3d(x,y,z)
+                }
             }
-        }
 
-        ScrollableNumberField {
-            value: slice.normal.z
-            onValueChanged: {
-                var x = parseFloat(slice.normal.x)
-                var y = parseFloat(slice.normal.y)
-                var z = parseFloat(value)
-                slice.normal = Qt.vector3d(x,y,z)
+            ScrollableNumberField {
+                value: slice.normal.z
+                width: (columnLayout.width-10)/3
+                onValueChanged: {
+                    var x = parseFloat(slice.normal.x)
+                    var y = parseFloat(slice.normal.y)
+                    var z = parseFloat(value)
+                    slice.normal = Qt.vector3d(x,y,z)
+                }
             }
         }
 
@@ -73,6 +85,7 @@ GroupBox {
         }
 
         ScrollableNumberField {
+            width: parent.width
             value: slice.width
             min: 0
             onValueChanged: {

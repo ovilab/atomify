@@ -5,7 +5,6 @@
 Slice::Slice()
 {
     setEnabled(false);
-    setNormal(QVector3D(1,0,0));
 }
 
 float Slice::distanceToPlane(const QVector3D &position, const QVector3D &plane, const QVector3D &normal) {
@@ -13,17 +12,18 @@ float Slice::distanceToPlane(const QVector3D &position, const QVector3D &plane, 
 }
 
 bool Slice::vectorIsInside(const QVector3D &position) {
-    QVector3D plane = m_normal*distance();
+    QVector3D plane = m_normal*m_distance;
     if(m_width==0) {
-        return distanceToPlane(position, plane, m_normal) < 0;
+        return distanceToPlane(position, plane, m_normalizedNormal) < 0;
     } else {
-        return abs(distanceToPlane(position, plane, m_normal)) < 0.5*m_width;
+        return abs(distanceToPlane(position, plane, m_normalizedNormal)) < 0.5*m_width;
     }
 }
 
 void Slice::apply(AtomData &atomData)
 {
     if(!enabled() || m_normal.length()==0) return;
+    m_normalizedNormal = m_normal.normalized();
     for(int i=0; i<atomData.size(); i++) {
         if(!vectorIsInside(atomData.positions[i])) {
             atomData.visible[i] = false;
@@ -59,8 +59,7 @@ void Slice::setNormal(QVector3D normal)
 {
     if (m_normal == normal)
         return;
-
-    m_normal = normal.normalized();
+    m_normal = normal;
     emit normalChanged(normal);
 }
 

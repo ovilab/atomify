@@ -17,9 +17,6 @@ TextField {
         }
     }
 
-//    validator: DoubleValidator {
-
-//    }
     onTextChanged: {
         if(isNaN(parseFloat(text))) {
             return;
@@ -35,7 +32,8 @@ TextField {
         anchors.fill: parent
         onWheel: {
             var speed = wheel.angleDelta.y/720
-            var newValue = root.value + (Math.abs(root.value)+1)*speed
+            var sign = wheel.inverted ? -1 : 1 // macOS has often inverted scrolling
+            var newValue = root.value + (Math.abs(root.value)+1)*speed*sign
             if(newValue < root.min) newValue = root.min
             else if(newValue > root.max) newValue = root.max
 

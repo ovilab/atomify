@@ -12,6 +12,7 @@ class Slice : public Modifier
 private:
     float m_distance = 0;
     QVector3D m_normal;
+    QVector3D m_normalizedNormal;
     float m_width = 0;
     bool vectorIsInside(const QVector3D &position);
     float distanceToPlane(const QVector3D &position, const QVector3D &plane, const QVector3D &normal);
