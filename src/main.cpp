@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
         }
 
         if(strcmp(argv[1], "--version")==0) {
-            printf("2.0.9");
+            printf("2.0.10");
             exit(0);
         }
     }
