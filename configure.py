@@ -21,10 +21,14 @@ run_command("python generateExamples.py")
 os.chdir(currentPath)
 # Set up LAMMPS
 ompSupport = True
+specifiedCompiler = None
 
 if _platform == "darwin":
     lammps_build_type = "atomify"
     ompSupport = False
+    if len(sys.argv) > 1 and sys.argv[1] == "brew":
+        ompSupport = True
+        specifiedCompiler = sys.argv[2]
 elif _platform == "win32":
     print "Windows is not supported yet"
     exit()
@@ -102,10 +106,7 @@ for filename in glob.glob(join(patch_path, "*.patch")):
     original_file = join(lammps_source_dir_src, basename.replace(".patch", ""))
     run_command("patch %s < %s" % (original_file, patch_file)) 
 
-if ompSupport:
-    shutil.copy(join(patch_path, "Makefile.atomify-omp"), join(lammps_source_dir_src, "MAKE", "Makefile.atomify"))
-else:
-    shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE", "Makefile.atomify"))
+shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE", "Makefile.atomify"))
 
 print "\nLAMMPS was (probably) successfully patched."
 
@@ -138,5 +139,12 @@ for filename in glob.iglob(os.path.join(patch_path, "moltemplate_additional_lamm
     print("Copying ", filename)
     shutil.copy2(filename, lammps_source_dir_src)
     
-run_command("make -j4 " + lammps_build_type + " mode=lib")
+if specifiedCompiler is not None:
+    run_command("CC="+specifiedCompiler+" OMP=1 make -j4 " + lammps_build_type + " mode=lib")
+else:
+    if ompSupport:
+        run_command("OMP=1 make -j4 " + lammps_build_type + " mode=lib")
+    else:
+        run_command("make -j4 " + lammps_build_type + " mode=lib")
+
 os.chdir(root_path)

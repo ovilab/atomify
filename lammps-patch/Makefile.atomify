@@ -6,13 +6,26 @@ SHELL = /bin/sh
 # compiler/linker settings
 # specify flags and libraries needed for your compiler
 
+ifndef CC
 CC =		g++
+endif
+
+ifdef OMP
+CCFLAGS =	-g -O3 -fopenmp
+else
 CCFLAGS =	-g -O3
+endif
+
 SHFLAGS =	-fPIC
 DEPFLAGS =	-M
 
-LINK =		g++
+LINK =		$(CC)
+ifdef OMP
+LINKFLAGS =	-g -O -fopenmp
+else
 LINKFLAGS =	-g -O
+endif
+
 LIB = 
 SIZE =		size
 
