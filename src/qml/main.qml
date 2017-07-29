@@ -132,6 +132,7 @@ QQC1.ApplicationWindow {
             title: "Camera"
             EventMenuItem {
                 text: "Switch camera"
+                name: "desktop.changeMode"
                 shortcut: "C"
                 onTriggered: {
                     EventCenter.postEvent("desktop.changeMode")
@@ -140,6 +141,7 @@ QQC1.ApplicationWindow {
             EventMenuItem {
                 text: "Reset to origin"
                 shortcut: "O"
+                name: "visualizer.resetToSystemCenter"
                 onTriggered: {
                     EventCenter.postEvent("visualizer.resetToSystemCenter")
                 }
@@ -150,6 +152,7 @@ QQC1.ApplicationWindow {
             EventMenuItem {
                 text: "Run script"
                 shortcut: "Ctrl+R"
+                name: "editorWindow.runScript"
                 onTriggered: {
                     EventCenter.postEvent("editorWindow.runScript")
                 }
@@ -239,9 +242,6 @@ QQC1.ApplicationWindow {
         EventShortcut {
             sequence: "Space"
             name: "simulator.togglePause"
-            onActivated: {
-                console.log("Caught space")
-            }
         }
 
         EventShortcut {

@@ -248,12 +248,12 @@ Rectangle {
                 }
                 toolTipText: {
                     if(stopButton.toggled) {
-                        return " Start simulating current script (SHORTCUT)"
+                        return " Start simulating current script ("+EventCenter.nativeText("editorWindow.runScript")+")"
                     } else {
                         if(simulator.states.paused.active) {
-                            return "Resume current simulation (SHORTCUT)"
+                            return "Resume current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
                         } else {
-                            return "Pause current simulation (SHORTCUT)"
+                            return "Pause current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
                         }
                     }
                 }
@@ -279,7 +279,7 @@ Rectangle {
                     simulator.reset()
                 }
                 toolTipText: {
-                    return "Stop current simulation (SHORTCUT)"
+                    return "Stop current simulation"
                 }
             }
             ToggleButton {
@@ -293,7 +293,7 @@ Rectangle {
                     editor.editorWindow.runScript()
                 }
                 toolTipText: {
-                    return "Restart current simulation (SHORTCUT)"
+                    return "Restart current simulation ("+EventCenter.nativeText("editorWindow.runScript")+")"
                 }
             }
         }
@@ -500,7 +500,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
-                    toolTipText: "Reset to origin (o)"
+                    toolTipText: "Reset to origin ("+EventCenter.nativeText("visualizer.resetToSystemCenter")+")"
 
                     onClicked: {
                         if(flymodeState.active) {
@@ -512,7 +512,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/switch_camera.png"
-                    toolTipText: "Switch camera (c)"
+                    toolTipText: "Switch camera ("+EventCenter.nativeText("desktop.changeMode")+")"
 
                     onClicked: {
                         changeMode()
