@@ -9,4 +9,4 @@ rm -rf .git
 cd src/examples
 rm -rf .git
 cd ../../..
-tar -cxvf atomify.tar.gz atomify
+tar -czvf atomify.tar.gz atomify
