@@ -487,6 +487,7 @@ Scene3D {
             enabled: root.guidesVisible
             color: "red"
             scale3D: Qt.vector3d(0.51, 1000, 0.51)
+            translate: Qt.vector3d(490,0,0)
             rotationZ: 90
             camera: visualizer.camera
             layer: forwardFrameGraph.guideLayer
@@ -496,6 +497,7 @@ Scene3D {
             enabled: root.guidesVisible
             color: "blue"
             scale3D: Qt.vector3d(0.53, 1000, 0.53)
+            translate: Qt.vector3d(0,0,490)
             rotationX: 90
             camera: visualizer.camera
             layer: forwardFrameGraph.guideLayer
@@ -505,6 +507,7 @@ Scene3D {
             enabled: root.guidesVisible
             color: "green"
             scale3D: Qt.vector3d(0.52, 1000, 0.52)
+            translate: Qt.vector3d(0,490,0)
             camera: visualizer.camera
             layer: forwardFrameGraph.guideLayer
         }
