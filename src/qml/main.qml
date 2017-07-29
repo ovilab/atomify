@@ -187,7 +187,6 @@ QQC1.ApplicationWindow {
             title: "Rendering"
             EventMenuItem {
                 text: "Capture screenshot"
-                // shortcut: "Ctrl+R"
                 onTriggered: {
                     mainDesktop.captureScreenshot()
                 }
