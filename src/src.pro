@@ -8,6 +8,8 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-variable
 #LIBS += -fopenmp
 CONFIG += warn_off
 
+TARGET=atomify
+
 # lammps.pri includes the path and libs to lammps
 # Run configure.py to generate lammps.pri
 
