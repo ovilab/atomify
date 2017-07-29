@@ -9,9 +9,12 @@ class Slice : public Modifier
     Q_PROPERTY(float distance READ distance WRITE setDistance NOTIFY distanceChanged)
     Q_PROPERTY(QVector3D normal READ normal WRITE setNormal NOTIFY normalChanged)
     Q_PROPERTY(float width READ width WRITE setWidth NOTIFY widthChanged)
+private:
     float m_distance = 0;
     QVector3D m_normal;
     float m_width = 0;
+    bool vectorIsInside(const QVector3D &position);
+    float distanceToPlane(const QVector3D &position, const QVector3D &plane, const QVector3D &normal);
 
 public:
     Slice();
@@ -21,13 +24,11 @@ public:
     virtual void apply(class AtomData &atomData) override;
     float distance() const;
     QVector3D normal() const;
-
     float width() const;
 
 public slots:
     void setDistance(float distance);
     void setNormal(QVector3D normal);
-
     void setWidth(float width);
 
 signals:

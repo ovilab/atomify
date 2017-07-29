@@ -9,7 +9,6 @@ import "../../visualization"
 Pane {
     id: root
     property AtomifyVisualizer visualizer
-
     Settings {
         property alias showGuides: guidesCheckBox.checked
         property alias showOutline: outlineCheckBox.checked
@@ -76,131 +75,13 @@ Pane {
                         }
                     }
                 }
-
             }
 
-            GroupBox {
+            SliceControl {
+                id: sliceControl
                 width: parent.width
-                height: 75
-                title: "Background color"
-                Rectangle {
-                    id: backgroundColor
-                    anchors.fill: parent
-                    color: visualizer.backgroundColor
-
-                    Binding {
-                        target: visualizer
-                        property: "backgroundColor"
-                        value: color
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            colorDialog.open()
-                        }
-                    }
-                }
+                slice: visualizer.sliceModifier
             }
-
-            GroupBox {
-                width: parent.width
-                title: "Light 1"
-                Column {
-                    width: parent.width
-                    Row {
-                        width: parent.width
-                        Label {
-                            width: parent.width*0.4
-                            text: "Strength"
-                        }
-                        QQC1.Slider {
-                            id: light1Strength
-                            width: parent.width*0.6
-                            minimumValue: 0
-                            maximumValue: 1
-                            value: visualizer.light1.strength
-
-                            Binding {
-                                target: visualizer.light1
-                                property: "strength"
-                                value: light1Strength.value
-                            }
-                        }
-                    }
-
-                    Row {
-                        width: parent.width
-                        Label {
-                            width: parent.width*0.4
-                            text: "Attenuation"
-                        }
-                        QQC1.Slider {
-                            id: light1Attenuation
-                            width: parent.width*0.6
-                            minimumValue: 0
-                            maximumValue: 5
-                            value: visualizer.light1.attenuation
-
-                            Binding {
-                                target: visualizer.light1
-                                property: "attenuation"
-                                value: light1Attenuation.value
-                            }
-                        }
-                    }
-                }
-            }
-
-            GroupBox {
-                width: parent.width
-                title: "Light 2"
-                Column {
-                    width: parent.width
-                    Row {
-                        width: parent.width
-                        Label {
-                            width: parent.width*0.4
-                            text: "Strength"
-                        }
-                        QQC1.Slider {
-                            id: light2Strength
-                            width: parent.width*0.6
-                            minimumValue: 0
-                            maximumValue: 1
-                            value: visualizer.light2.strength
-
-                            Binding {
-                                target: visualizer.light2
-                                property: "strength"
-                                value: light2Strength.value
-                            }
-                        }
-                    }
-
-                    Row {
-                        width: parent.width
-                        Label {
-                            width: parent.width*0.4
-                            text: "Attenuation"
-                        }
-                        QQC1.Slider {
-                            id: light2Attenuation
-                            width: parent.width*0.6
-                            minimumValue: 0
-                            maximumValue: 20
-                            value: visualizer.light2.attenuation
-
-                            Binding {
-                                target: visualizer.light2
-                                property: "attenuation"
-                                value: light2Attenuation.value
-                            }
-                        }
-                    }
-                }
-            }
-
             GroupBox {
                 width: parent.width
                 title: "Periodic images"
@@ -381,6 +262,128 @@ Pane {
                                 property: "globalScale"
                                 value: globalScaleSlider.value
                             }
+                        }
+                    }
+                }
+            }
+
+            GroupBox {
+                width: parent.width
+                title: "Light 1"
+                Column {
+                    width: parent.width
+                    Row {
+                        width: parent.width
+                        Label {
+                            width: parent.width*0.4
+                            text: "Strength"
+                        }
+                        QQC1.Slider {
+                            id: light1Strength
+                            width: parent.width*0.6
+                            minimumValue: 0
+                            maximumValue: 1
+                            value: visualizer.light1.strength
+
+                            Binding {
+                                target: visualizer.light1
+                                property: "strength"
+                                value: light1Strength.value
+                            }
+                        }
+                    }
+
+                    Row {
+                        width: parent.width
+                        Label {
+                            width: parent.width*0.4
+                            text: "Attenuation"
+                        }
+                        QQC1.Slider {
+                            id: light1Attenuation
+                            width: parent.width*0.6
+                            minimumValue: 0
+                            maximumValue: 5
+                            value: visualizer.light1.attenuation
+
+                            Binding {
+                                target: visualizer.light1
+                                property: "attenuation"
+                                value: light1Attenuation.value
+                            }
+                        }
+                    }
+                }
+            }
+
+            GroupBox {
+                width: parent.width
+                title: "Light 2"
+                Column {
+                    width: parent.width
+                    Row {
+                        width: parent.width
+                        Label {
+                            width: parent.width*0.4
+                            text: "Strength"
+                        }
+                        QQC1.Slider {
+                            id: light2Strength
+                            width: parent.width*0.6
+                            minimumValue: 0
+                            maximumValue: 1
+                            value: visualizer.light2.strength
+
+                            Binding {
+                                target: visualizer.light2
+                                property: "strength"
+                                value: light2Strength.value
+                            }
+                        }
+                    }
+
+                    Row {
+                        width: parent.width
+                        Label {
+                            width: parent.width*0.4
+                            text: "Attenuation"
+                        }
+                        QQC1.Slider {
+                            id: light2Attenuation
+                            width: parent.width*0.6
+                            minimumValue: 0
+                            maximumValue: 20
+                            value: visualizer.light2.attenuation
+
+                            Binding {
+                                target: visualizer.light2
+                                property: "attenuation"
+                                value: light2Attenuation.value
+                            }
+                        }
+                    }
+                }
+            }
+
+            GroupBox {
+                width: parent.width
+                height: 75
+                title: "Background color"
+                Rectangle {
+                    id: backgroundColor
+                    anchors.fill: parent
+                    color: visualizer.backgroundColor
+
+                    Binding {
+                        target: visualizer
+                        property: "backgroundColor"
+                        value: color
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            colorDialog.open()
                         }
                     }
                 }

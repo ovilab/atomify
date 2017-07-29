@@ -83,5 +83,6 @@
         <file>events/EventShortcut.qml</file>
         <file>events/EventMenuItem.qml</file>
         <file>events/EventCatcher.qml</file>
+        <file>desktop/items/ScrollableNumberField.qml</file>
     </qresource>
 </RCC>

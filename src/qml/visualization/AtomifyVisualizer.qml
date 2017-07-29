@@ -23,6 +23,7 @@ Scene3D {
     signal changedRenderQuality
     property color backgroundColor: "black"
     property alias propertyModifier: propertyModifier
+    property alias sliceModifier: sliceModifier
     property bool guidesVisible
     property bool systemBoxVisible
     property var rootItem
@@ -397,7 +398,8 @@ Scene3D {
                 propertyModifier,
                 groupModifier,
                 regionModifier,
-                periodicImages
+                periodicImages,
+                sliceModifier
             ]
         }
 
@@ -413,22 +415,32 @@ Scene3D {
 
         ColorModifier {
             id: colorModifier
+            enabled: true
         }
 
         GroupModifier {
             id: groupModifier
+            enabled: true
         }
 
         RegionModifier {
             id: regionModifier
+            enabled: true
         }
 
         PropertyModifier {
             id: propertyModifier
+            enabled: true
+        }
+
+        SliceModifier {
+            id: sliceModifier
+            enabled: false
         }
 
         PeriodicImages {
             id: periodicImages
+            enabled: true
             numberOfCopiesX: 1
             numberOfCopiesY: 1
             numberOfCopiesZ: 1
