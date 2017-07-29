@@ -38,12 +38,12 @@ GroupBox {
             text: "Normal: "
         }
 
-        Row {
+        RowLayout {
             width: parent.width
             spacing: 5
             ScrollableNumberField {
                 value: slice.normal.x
-                width: (columnLayout.width-10)/3
+                Layout.fillWidth: true
                 onValueChanged: {
                     var x = parseFloat(value)
                     var y = parseFloat(slice.normal.y)
@@ -58,7 +58,7 @@ GroupBox {
 
             ScrollableNumberField {
                 value: slice.normal.y
-                width: (columnLayout.width-10)/3
+                Layout.fillWidth: true
                 onValueChanged: {
                     var x = parseFloat(slice.normal.x)
                     var y = parseFloat(value)
@@ -69,7 +69,7 @@ GroupBox {
 
             ScrollableNumberField {
                 value: slice.normal.z
-                width: (columnLayout.width-10)/3
+                Layout.fillWidth: true
                 onValueChanged: {
                     var x = parseFloat(slice.normal.x)
                     var y = parseFloat(slice.normal.y)
