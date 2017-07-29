@@ -56,6 +56,7 @@ Page {
     }
 
     footer: Item {
+        id: footer
         height: 150
         width: parent.width
         Rectangle {
@@ -90,6 +91,22 @@ and Svenn-Arne Dragly, University of Oslo.</p>
             onLinkActivated: {
                 if(link==="reportBug") {
                     Qt.openUrlExternally("https://github.com/ovilab/atomify-lammps/issues")
+                }
+            }
+        }
+
+        Image {
+            anchors.top: parent.top
+            anchors.right: parent.right
+            source: "qrc:/images/close_white.png"
+            width: parent.width*0.1
+            height: width
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                   footer.height = 0
+                    footer.visible = false
                 }
             }
         }
