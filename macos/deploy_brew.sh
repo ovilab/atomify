@@ -1,5 +1,6 @@
 #!/bin/bash
 cd /tmp
+rm -r atomify_build
 mkdir atomify_build
 cd atomify_build
 git clone --recursive git@github.com:ovilab/atomify
