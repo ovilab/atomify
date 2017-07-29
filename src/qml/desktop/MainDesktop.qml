@@ -742,8 +742,8 @@ Rectangle {
         selectExisting : false
         property var callback
         title: "Please choose a location to save"
-
-        nameFilters: [ "Image files (*.jpg *.png)" ]
+        // nameFilters: [ "Image files (*.jpg *.png)" ]
+        nameFilters: [ "Image files (*.png)" ]
 
         onAccepted: {
             if(callback !== undefined) {
