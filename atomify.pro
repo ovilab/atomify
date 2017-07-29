@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = atomify-lammps
+SUBDIRS = src
 CONFIG += ordered
