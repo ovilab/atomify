@@ -532,6 +532,28 @@ Scene3D {
             }
         }
 
+//        Entity {
+//            components: [
+//                slicePlaneMesh,
+//                sliceMaterial,
+//                slicePlaneTransform,
+//                forwardFrameGraph.guideLayer
+//            ]
+//            PlaneMesh {id: slicePlaneMesh; width: 20; height: 20}
+//            ShaderBuilderMaterial {
+//                id: sliceMaterial
+//                fragmentColor: StandardMaterial {
+//                    color: "white"
+//                    lights: visualizer.lights
+//                    ambientIntensity: 10.0
+//                }
+//            }
+//            Transform {
+//                id: slicePlaneTransform
+//                // translation: visualizer.camera.viewCenter
+//            }
+//        }
+
         SystemBox {
             id: systemBox
 
