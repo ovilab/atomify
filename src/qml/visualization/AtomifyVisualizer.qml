@@ -440,7 +440,6 @@ Scene3D {
 
         PeriodicImages {
             id: periodicImages
-            enabled: true
             numberOfCopiesX: 1
             numberOfCopiesY: 1
             numberOfCopiesZ: 1

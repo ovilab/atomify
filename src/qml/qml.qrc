@@ -84,5 +84,6 @@
         <file>events/EventMenuItem.qml</file>
         <file>events/EventCatcher.qml</file>
         <file>desktop/items/ScrollableNumberField.qml</file>
+        <file>desktop/RightBar/PeriodicImagesControl.qml</file>
     </qresource>
 </RCC>

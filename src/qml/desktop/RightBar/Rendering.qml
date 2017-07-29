@@ -27,8 +27,18 @@ Pane {
                 right: parent.right
                 margins: 10
             }
-
             spacing: 10
+
+            SliceControl {
+                id: sliceControl
+                width: parent.width
+                slice: visualizer.sliceModifier
+            }
+            PeriodicImagesControl {
+                id: periodicCopiesControl
+                width: parent.width
+                periodicImages: visualizer.periodicImages
+            }
 
             GroupBox {
                 anchors {
@@ -72,84 +82,6 @@ Pane {
                             target: visualizer
                             property: "systemBoxVisible"
                             value: outlineCheckBox.checked
-                        }
-                    }
-                }
-            }
-
-            SliceControl {
-                id: sliceControl
-                width: parent.width
-                slice: visualizer.sliceModifier
-            }
-            GroupBox {
-                width: parent.width
-                title: "Periodic images"
-                Column {
-                    width: parent.width
-                    Row {
-                        width: parent.width
-                        height: periodicXSlider.height
-                        Label {
-                            width: parent.width*0.4
-                            text: "X: "+periodicXSlider.value
-                        }
-                        QQC1.Slider {
-                            id: periodicXSlider
-                            width: parent.width*0.6
-                            minimumValue: 1
-                            maximumValue: 5.0
-                            stepSize: 1
-                            value: visualizer.periodicImages.numberOfCopiesX
-                            Binding {
-                                target: visualizer.periodicImages
-                                property: "numberOfCopiesX"
-                                value: periodicXSlider.value
-                            }
-                        }
-                    }
-
-                    Row {
-                        width: parent.width
-                        height: periodicYSlider.height
-                        Label {
-                            width: parent.width*0.4
-                            text: "Y: "+periodicYSlider.value
-                        }
-                        QQC1.Slider {
-                            id: periodicYSlider
-                            width: parent.width*0.6
-                            minimumValue: 1
-                            maximumValue: 5.0
-                            stepSize: 1
-                            value: visualizer.periodicImages.numberOfCopiesY
-                            Binding {
-                                target: visualizer.periodicImages
-                                property: "numberOfCopiesY"
-                                value: periodicYSlider.value
-                            }
-                        }
-                    }
-
-                    Row {
-                        width: parent.width
-                        height: periodicZSlider.height
-                        Label {
-                            width: parent.width*0.4
-                            text: "Z: "+periodicZSlider.value
-                        }
-                        QQC1.Slider {
-                            id: periodicZSlider
-                            width: parent.width*0.6
-                            minimumValue: 1
-                            maximumValue: 5.0
-                            stepSize: 1
-                            value: visualizer.periodicImages.numberOfCopiesZ
-                            Binding {
-                                target: visualizer.periodicImages
-                                property: "numberOfCopiesZ"
-                                value: periodicZSlider.value
-                            }
                         }
                     }
                 }

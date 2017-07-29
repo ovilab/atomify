@@ -16,10 +16,10 @@ GroupBox {
         onCheckedChanged: slice.enabled = checked
         text: qsTr("Slice")
     }
-    ColumnLayout {
+    Column {
         id: columnLayout
         width: parent.width
-        visible: slice.enabled
+        visible: sliceRoot.slice.enabled
         spacing: 10
 
         Label {
@@ -94,7 +94,7 @@ GroupBox {
         }
 
         CheckBox {
-            text: "Reversed: "
+            text: "Reversed"
             checked: slice.reversed
             onCheckedChanged: slice.reversed = checked
         }
