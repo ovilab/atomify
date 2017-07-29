@@ -70,13 +70,15 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Welcome to Atomify</h2>
-Atomify is a live LAMMPS editor. Here you can edit, run and analyze your simulations.
+Atomify is a live LAMMPS editor. Here you can edit, run and analyze your simulations in real time.
 <div style=\"margin-top: 5px\">&bull; Edit the current script in the <a href=\"edit\">edit</a> menu. (" + EventCenter.nativeText("mode.edit") + ")</div>
 <div style=\"margin-top: 5px\">&bull; Check out the <a href=\"examples\">other examples</a> (" + EventCenter.nativeText("mode.examples") + ")</div>
 <div style=\"margin-top: 5px\">&bull; Start a <a href=\"newTab\">new script</a> (" + EventCenter.nativeText("editor.new") + ")</div>
 <div style=\"margin-top: 5px\">&bull; Open one of your <a href=\"open\">existing scripts</a> (" + EventCenter.nativeText("editor.open") + ")</div>
 <br>
-Learn more about Atomify at <a href=\"website\">ovilab.net/atomify</a>. We love feedback, bugreports and ideas for new features.
+Learn more about Atomify at <a href=\"website\">ovilab.net/atomify</a>. or checkout our <a href=\"github\">GitHub page</a>.
+<br>
+We love feedback, bugreports and ideas for new features.
 "
 
     color: Qt.rgba(0.1, 0.1, 0.1, 0.7)
@@ -118,7 +120,9 @@ Learn more about Atomify at <a href=\"website\">ovilab.net/atomify</a>. We love 
             } else if(link==="hide") {
                 root.hideClicked()
             } if(link==="website") {
-                Qt.openUrlExternally("http://ovilab.net/atomify")
+                Qt.openUrlExternally("https://ovilab.net/atomify")
+            } if(link==="github") {
+                Qt.openUrlExternally("https://github.com/ovilab/atomify")
             }
         }
 
