@@ -5,6 +5,7 @@ import Atomify 1.0
 import "../items"
 import "../../plotting"
 import "../../visualization"
+import "../../events"
 
 Flickable {
     id: root
@@ -130,8 +131,15 @@ Flickable {
                 Label {
                     text: "Position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
                 }
-                Label {
+                ToolTipLabel {
                     text: "Mode: " + (visualizer.mode === "flymode" ? "Flymode" : "Trackball")
+                    toolTipText: {
+                        if(visualizer.mode==="flymode") {
+                            return "Fly around with WASD. Up/Down with RF."
+                        } else {
+                            return "Rotate around with ADRF. Zoom in/out with WS."
+                        }
+                    }
                 }
             }
         }
