@@ -21,6 +21,7 @@ class Atomify < Formula
 
   def post_install
     ln_sf "#{prefix}/atomify.app/Contents/MacOS/atomify", "#{HOMEBREW_PREFIX}/bin/atomify"
+    ln_sf "#{prefix}/atomify.app/Contents/MacOS/atomify", "#{HOMEBREW_PREFIX}/bin/lmp_atomify"
   end
 
   test do
