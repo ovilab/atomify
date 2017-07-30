@@ -24,9 +24,12 @@ QQC1.ApplicationWindow {
 
     width: 1280
     height: 1024
-
     minimumHeight: 480
     minimumWidth: 640
+    property string scriptToLoad
+    onScriptToLoadChanged: {
+        console.log("Yeah got it in here: ", scriptToLoad)
+    }
 
     menuBar: QQC1.MenuBar {
         QQC1.Menu {

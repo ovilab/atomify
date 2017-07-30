@@ -117,6 +117,7 @@ void showDataDir()
 
 int main(int argc, char *argv[])
 {
+    QVariant scriptToLoad;
     if(argc>1) {
         if(strcmp(argv[1], "--showdatadir")==0) {
             // We need to create Qt app for this, but now we know that the user does not
@@ -125,7 +126,39 @@ int main(int argc, char *argv[])
             printf("2.0.10");
             exit(0);
         } else {
-            return regularLAMMPS(argc, argv);
+            // We might want to run a script with LAMMPS console or Atomify
+            bool gFlag = false;  // -g means GUI enabled
+            bool inFlag = false; // -in flag means script
+            for(int i=0; i<argc; i++) {
+                if(strcmp(argv[i], "-g")==0) gFlag = true;
+                else if(strcmp(argv[i], "-in")==0) inFlag = true;
+                else {
+                    // We only support GUI mode with
+                    // atomify -in file -g
+                    // or other placement of -g. So assuming that anything else is the script.
+                    // If filename has space, we fail :P
+                    QString fileName = QString::fromUtf8(argv[i]);
+
+                    QString fullPath = QDir(QDir::currentPath()).filePath(fileName);
+                    QFileInfo info(fullPath);
+                    if(info.exists()) {
+                        scriptToLoad = QVariant::fromValue<QString>(fullPath);
+                    } else {
+                        QFileInfo info(fileName);
+                        if(!info.exists()) {
+                            qDebug() << "Error, could not find file " << fileName;
+                        } else {
+                            scriptToLoad = QVariant::fromValue<QString>(fileName);
+                        }
+                    }
+                }
+            }
+
+            if(gFlag && inFlag) {
+                qDebug() << "Will load script " << scriptToLoad;
+            } else {
+                return regularLAMMPS(argc, argv);
+            }
         }
     }
 
@@ -195,12 +228,13 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QmlPreviewer previewer(app);
     qpm::init(app, engine);
-    if(argc > 2) {
-        previewer.show();
-    } else {
+    // if(argc > 2) {
+    //     previewer.show();
+    // } else {
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-#ifdef Q_OS_MAC
         QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
+        window->setProperty("scriptToLoad", scriptToLoad);
+#ifdef Q_OS_MAC
 //        window->setIcon(QIcon(":/images/atomify_logo.icns"));
 //        app.setWindowIcon(QIcon(":/images/atomify_logo.icns"));
         window->setIcon(QIcon("../Resources/icon.icns"));
@@ -214,7 +248,7 @@ int main(int argc, char *argv[])
         for(QKeySequence k : QKeySequence::keyBindings(QKeySequence::FullScreen)) {
             qDebug() << "Use " << k.toString() << " to toggle fullscreen.";
         }
-    }
+    // }
 
     return app.exec();
 }
