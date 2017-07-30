@@ -19,6 +19,7 @@ RUN sudo apt-get -qq install libgl1-mesa-dev
 
 # needed by deploy
 RUN sudo apt-get -qq install snapcraft
+RUN sudo snap install core
 
 WORKDIR /app
 
