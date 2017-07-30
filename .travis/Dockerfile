@@ -6,6 +6,7 @@ RUN apt-get -qq update
 RUN apt-get install -qq sudo apt-utils
 
 RUN sudo apt-get install -qq curl p7zip-full git build-essential python snapcraft snapd qt5-default locales
+RUN sudo systemctl status snapd
 RUN sudo snap install core
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
 ENV LC_ALL en_US.UTF-8
