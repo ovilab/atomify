@@ -2,7 +2,7 @@ name: atomify
 version: "2.0.10"
 summary: Atomify LAMMPS
 description: Editor for the molecular dynamics simulator LAMMPS
-confinement: classic
+confinement: strict
 grade: stable
 
 apps:
