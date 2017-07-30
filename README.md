@@ -1,4 +1,4 @@
-# Atomify - a live LAMMPS visualizer #
+# Atomify - a real time LAMMPS visualizer #
 
 [![Build Status](https://travis-ci.org/ovilab/atomify.svg?branch=dev)](https://travis-ci.org/ovilab/atomify)
 [![Join the chat at https://gitter.im/ovilab](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ovilab/atomify?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
