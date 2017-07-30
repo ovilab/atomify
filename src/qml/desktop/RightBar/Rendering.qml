@@ -5,7 +5,7 @@ import QtQuick.Dialogs 1.2
 import Atomify 1.0
 import Qt.labs.settings 1.0
 import "../../visualization"
-
+import "../../events"
 Pane {
     id: root
     property AtomifyVisualizer visualizer
@@ -62,7 +62,7 @@ Pane {
                         hoverEnabled: true
                         ToolTip.visible: hovered
                         ToolTip.delay: 1000
-                        ToolTip.text: "Show/hide coordinate axis guides (G)" // TODO: use menuItem shortcut nativeText or similar
+                        ToolTip.text: "Show/hide coordinate axis guides ("+EventCenter.nativeText("visualizer.showguides")+")"
                         Binding {
                             target: visualizer
                             property: "guidesVisible"
@@ -77,7 +77,7 @@ Pane {
                         focusPolicy: Qt.NoFocus
                         ToolTip.visible: hovered
                         ToolTip.delay: 1000
-                        ToolTip.text: "Show/hide system box defining simulation region (M)" // TODO: use menuItem shortcut nativeText or similar
+                        ToolTip.text: "Show/hide system box defining simulation region ("+EventCenter.nativeText("visualizer.showoutline")+")"
                         Binding {
                             target: visualizer
                             property: "systemBoxVisible"
