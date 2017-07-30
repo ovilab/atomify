@@ -12,6 +12,9 @@ unix:!macx {
 }
 
 macx {
+    #QMAKE_CXX  = /usr/local/bin/clang-omp++
+    #QMAKE_LINK = /usr/local/bin/clang-omp++
+    #QMAKE_LFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
     QMAKE_MAC_SDK = macosx10.9
     ICON = images/icon.icns
     QMAKE_INFO_PLIST = ../macos/macos.plist
