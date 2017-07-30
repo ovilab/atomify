@@ -15,7 +15,7 @@ Alternative 1) Download [the pkg](https://github.com/ovilab/atomify/releases/dow
 Alternative 2) Download [the dmg](https://github.com/ovilab/atomify/releases/download/v2.0.10/Atomify-2.0.10-macos.dmg) (if you don't have administrator access).
 
 Alternative 3 (with OpenMP support)) 
-Install with Homebrew: `brew install bit.ly/atomify-macos`. The installation takes ~10 minutes.
+Install with [Homebrew](https://brew.sh): `brew install https://raw.githubusercontent.com/ovilab/atomify/dev/macos/atomify.rb`. The installation takes ~10 minutes.
 
 Alternative 4) Download from [Mac App Store](https://itunes.apple.com/us/app/atomify/id1192327034?mt=12) (this option has limitations on the file system).
 
