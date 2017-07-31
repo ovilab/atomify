@@ -142,7 +142,7 @@ Rectangle {
                     fontSizeMode: Text.Fit
                     height: 24
 
-                    text: "Atomify 2.0.10"
+                    text: "Atomify<br>2.0.10"
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
