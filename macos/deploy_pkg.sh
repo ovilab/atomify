@@ -5,13 +5,19 @@
 # Create icons with
 # iconutil -c icns icon.iconset
 # sudo installer -store -pkg Atomify.pkg -target /
+
+mkdir build
+cd build
+qmake ../../src DEPLOYPKG=true
+make -j4
+
 mkdir pkg
 rm -rf pkg/*
 cp -r Atomify.app pkg
 cd pkg
 xattr -cr Atomify.app
-~/Qt/5.9/clang_64/bin/macdeployqt Atomify.app -qmldir=/projects/atomify/editor/atomify/src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
+~/Qt/5.9.1/clang_64/bin/macdeployqt Atomify.app -dmg -qmldir=/projects/atomify/editor/atomify/src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
 cd "Atomify.app"
 find . -name *.dSYM | xargs -I $ rm -R $
 cd ..
-productbuild --component Atomify.app /Applications --sign "Developer ID Installer: Anders Hafreager" Atomify-2.0.9-macos.pkg
+productbuild --component Atomify.app /Applications --sign "Developer ID Installer: Anders Hafreager" Atomify-2.0.10-macos.pkg
