@@ -138,7 +138,7 @@ void System::calculateCPURemain(LAMMPS *lammps)
 {
     double value;
     lammps->output->thermo->evaluate_keyword("cpuremain", &value);
-    m_cpuremain = value;
+    setCpuremain(value);
 }
 
 void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
@@ -229,8 +229,8 @@ void System::synchronize(LAMMPSController *lammpsController)
 #endif
 
 //    lammps->output->thermo->compute(1);
-//    calculateTimestepsPerSeconds(lammps);
-//    calculateCPURemain(lammps);
+    calculateTimestepsPerSeconds(lammps);
+    calculateCPURemain(lammps);
 
     m_units->synchronize(lammps);
 }

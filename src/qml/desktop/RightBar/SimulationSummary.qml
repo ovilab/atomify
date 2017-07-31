@@ -236,6 +236,9 @@ Flickable {
                     right: parent.right
                 }
                 Label {
+                    text: "Time left: "+ system.cpuremain.toFixed(1)+" s"
+                }
+                Label {
                     text: "Current timestep: "+system.currentTimestep
                 }
                 Label {
@@ -383,6 +386,9 @@ Flickable {
             Column {
                 Label {
                     text: "FPS: "+ root.visualizer.fps
+                }
+                Label {
+                    text: "Timesteps per second: "+ system.performance.timestepsPerSecond.toFixed(1)
                 }
                 Label {
                     text: "Memory usage LAMMPS: "+ (system.performance.memoryLAMMPS / 1024 / 1024).toFixed(0) +" MB"
