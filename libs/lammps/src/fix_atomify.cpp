@@ -14,9 +14,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "fix_atomify.h"
 #include "atom.h"
 #include "comm.h"
-#include "fix_atomify.h"
+#include "neighbor.h"
+#include "neigh_request.h"
+#include "neigh_list.h"
 #include "memory.h"
 #include "compute.h"
 #include "modify.h"
@@ -24,8 +27,7 @@
 #include "update.h"
 #include "compute_pe_atom.h"
 #include "compute_stress_atom.h"
-#include <iostream>
-using namespace std;
+
 using namespace LAMMPS_NS;
 using namespace FixConst;
 
@@ -57,6 +59,18 @@ void FixAtomify::init()
 {
     if (callback == NULL)
         error->all(FLERR,"Fix atomify callback function not set");
+    error->warning(FLERR,"Asking for neigh list");
+    int irequest = neighbor->request(this,instance_me);
+    neighbor->requests[irequest]->pair = 0;
+    neighbor->requests[irequest]->fix = 1;
+    neighbor->requests[irequest]->occasional = 1;
+    neighbor->requests[irequest]->half = 1;
+    neighbor->requests[irequest]->full = 0;
+}
+
+void FixAtomify::init_list(int id, NeighList *ptr)
+{
+  list = ptr;
 }
 
 void FixAtomify::lost_atoms()
@@ -96,6 +110,7 @@ void FixAtomify::update_computes()
 
 void FixAtomify::end_of_step()
 {
+    neighbor->build_one(list);
     lost_atoms();
     (this->callback)(ptr_caller,END_OF_STEP);
     update_computes();
@@ -105,6 +120,7 @@ void FixAtomify::end_of_step()
 
 void FixAtomify::min_post_force(int vflag)
 {
+    neighbor->build_one(list);
     lost_atoms();
     (this->callback)(ptr_caller,MIN_POST_FORCE);
 }
