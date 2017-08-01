@@ -66,6 +66,8 @@ int regularLAMMPS (int argc, char **argv)
 #endif
   MPI_Barrier(MPI_COMM_WORLD);
   MPI_Finalize();
+
+  return 0;
 }
 
 void copyExamplesToLocalFolder()
