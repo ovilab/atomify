@@ -290,7 +290,7 @@ Item {
             clip: true
 
             onHoveredChanged:  {
-                hoverResize = true
+                hoverResize = true // Prevents override in onWidthChange
                 if(hovered) {
                     oldWidth = fileListRoot.width
                     fileListRoot.minimumWidth = 160
