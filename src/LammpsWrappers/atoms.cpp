@@ -1,5 +1,6 @@
 #include "atoms.h"
 #include <algorithm>
+#include <fix_atomify.h>
 #include <atom.h>
 #include <domain.h>
 #include <neighbor.h>
@@ -158,7 +159,6 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         for(float &radii : m_atomData.radii) radii = 1.0;
     }
 
-    // lammps->
     m_atomData.radiiFromLAMMPS = lammps->atom->radius_flag;
     for(int i=0; i<numberOfAtoms; i++) {
         m_atomData.types[i] = types[i];
@@ -285,57 +285,24 @@ int Atoms::numberOfBonds() const
     return m_numberOfBonds;
 }
 
-bool Atoms::doWeHavefullNeighborList(Neighbor *neighbor) {
-    // We will find the first atom i with at least one non-ghost neighbor. We then check if atom i is in the list of j's neighbors
-    NeighList *list = neighbor->lists[0];
-    const int inum = list->inum;
-    int *numneigh = list->numneigh;
-    int **firstneigh = list->firstneigh;
-    int *ilist = list->ilist;
-
-    for (int ii = 0; ii < inum; ii++) {
-        int i = ilist[ii];
-        int *jlist = firstneigh[i];
-        int jnum = numneigh[i];
-        for (int jj = 0; jj < jnum; jj++) {
-            int j = jlist[jj];
-            j &= NEIGHMASK;
-            if(j<inum) {
-                // We found an atom i with non-ghost neighbor j
-                int *otherlist = firstneigh[j];
-                int othernum = numneigh[j];
-                for (int kk = 0; kk < othernum; kk++) {
-                    // If any of its neighbors is atom i, we have full list
-                    int k = otherlist[kk];
-                    k &= NEIGHMASK;
-                    if(k==i) return true;
-                }
-                // If none of its neighbors is atom i, half list
-                return false;
-            }
-        }
-    }
-}
-
 bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSController *controller)
 {
     if(!m_bonds->active()) {
         return false;
     }
 
-    bool hasNeighborLists = controller->lammps()->neighbor->nlist > 0;
-    if(!hasNeighborLists) {
+    FixAtomify *fixAtomify = dynamic_cast<FixAtomify*>(controller->findFixByIdentifier("atomify"));
+    if(!fixAtomify) {
+        qDebug() << "Error, could not find fix_atomify.";
         return false;
     }
 
-    Neighbor *neighbor = controller->lammps()->neighbor;
-    NeighList *list = neighbor->lists[0];
+    NeighList *list = fixAtomify->list;
     const int inum = list->inum;
     int *numneigh = list->numneigh;
     int **firstneigh = list->firstneigh;
 
     bondsDataRaw.reserve(atomData.positions.size());
-    bool fullNeighborList = doWeHavefullNeighborList(neighbor);
     for(int ii=0; ii<atomData.size(); ii++) {
         if(!atomData.visible[ii]) continue;
         int i = atomData.originalIndex[ii];
@@ -355,7 +322,6 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
         for (int jj = 0; jj < jnum; jj++) {
             int j = jlist[jj];
             j &= NEIGHMASK;
-            if(fullNeighborList && j<i) continue; // Newton's third law applies on full lists. We don't draw 2 bonds per pair.
             if(j >= atomData.size()) continue; // Probably a ghost atom from LAMMPS
             if(!atomData.visible[j]) continue; // Don't show bond if not both atoms are visible.
 

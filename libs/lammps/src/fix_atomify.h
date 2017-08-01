@@ -35,9 +35,12 @@ class FixAtomify : public Fix {
   void min_post_force(int);
   void update_compute(const char computeId[]);
   void update_computes();
-  
+  void init_list(int, class NeighList *);
+
   typedef void (*FnPtr)(void *, int);
   void set_callback(FnPtr, void *);
+  
+  class NeighList *list; // half neighbor list
   FnPtr callback;
   void *ptr_caller;
 };
