@@ -6,10 +6,10 @@ TARGET = atomify
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
 
-#unix:!macx {
+unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
-#}
+}
 
 defined(DEPLOYPKG, var) {
     QMAKE_CXX  = /usr/local/bin/clang-omp++
