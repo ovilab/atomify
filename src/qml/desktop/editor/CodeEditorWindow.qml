@@ -261,11 +261,47 @@ Item {
         }
 
         Flickable {
-            Layout.minimumWidth: 160
+            id: fileListRoot
+            onWidthChanged: {
+                if(hoverResize) return
+                minimumWidth = 50
+                maximumWidth = 160
+            }
+
+            Component.onCompleted: {
+                minimumWidth = 160
+                maximumWidth = minimumWidth
+                // Hack to force initial size. @dragly? :P
+            }
+
+            property real oldWidth
+            property bool hoverResize: false
+            property bool hovered: false
+            property real minimumWidth: 50
+            property real maximumWidth: 160
+            property real preferredWidth: 160
+            Layout.maximumWidth: maximumWidth
+            Layout.minimumWidth: minimumWidth
+            Layout.preferredWidth: preferredWidth
             Layout.fillHeight: true
             ScrollBar.vertical: ScrollBar {}
             ScrollBar.horizontal: ScrollBar {}
             contentHeight: fileColumn.height
+            clip: true
+
+            onHoveredChanged:  {
+                hoverResize = true
+                if(hovered) {
+                    oldWidth = fileListRoot.width
+                    fileListRoot.minimumWidth = 160
+                } else {
+                    fileListRoot.minimumWidth = oldWidth
+                    fileListRoot.maximumWidth = oldWidth
+                    fileListRoot.maximumWidth = 160
+                }
+                hoverResize = false
+            }
+
             Column {
                 id: fileColumn
                 anchors {
@@ -291,6 +327,7 @@ Item {
                         onClicked: {
                             stackLayout.currentIndex = index
                         }
+                        onHoveredChanged: fileListRoot.hovered = hovered
                     }
                 }
 
@@ -303,6 +340,7 @@ Item {
                     height: 32
 
                     Label { }
+                    onHoveredChanged: fileListRoot.hovered = hovered
                 }
 
                 ItemDelegate {
@@ -315,12 +353,13 @@ Item {
 
                     Label {
                         anchors.centerIn: parent
-                        text: "New ("+EventCenter.nativeText("editor.new")+")"
+                        text: parent.width < 80 ? "New" : "New ("+EventCenter.nativeText("editor.new")+")"
                     }
 
                     onClicked: {
                         newTab()
                     }
+                    onHoveredChanged: fileListRoot.hovered = hovered
                 }
 
                 ItemDelegate {
@@ -333,12 +372,13 @@ Item {
 
                     Label {
                         anchors.centerIn: parent
-                        text: "Open ("+EventCenter.nativeText("editor.open")+")"
+                        text: parent.width < 80 ? "Open" : "Open ("+EventCenter.nativeText("editor.open")+")"
                     }
 
                     onClicked: {
                         openTab()
                     }
+                    onHoveredChanged: fileListRoot.hovered = hovered
                 }
 
                 ItemDelegate {
@@ -351,11 +391,33 @@ Item {
 
                     Label {
                         anchors.centerIn: parent
-                        text: "Close ("+EventCenter.nativeText("editor.close")+")"
+                        text: parent.width < 80 ? "Close" : "Close ("+EventCenter.nativeText("editor.close")+")"
                     }
 
                     onClicked: {
                         closeTab()
+                    }
+                    onHoveredChanged: fileListRoot.hovered = hovered
+                }
+
+                ItemDelegate {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    visible: parent.width < 80
+
+                    height: 32
+
+                    Label {
+                        anchors.centerIn: parent
+                        text: ">>"
+                    }
+
+                    onClicked: {
+                        fileListRoot.minimumWidth = 160
+                        fileListRoot.minimumWidth = 50
+                        fileListRoot.maximumWidth = 160
                     }
                 }
             }
