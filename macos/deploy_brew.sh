@@ -1,12 +1,11 @@
 #!/bin/bash
-cd /tmp
-rm -r atomify_build
-mkdir atomify_build
-cd atomify_build
+rm -r build_brew
+mkdir build_brew
+cd build_brew
 git clone --recursive git@github.com:ovilab/atomify
 cd atomify
 rm -rf .git
 cd src/examples
 rm -rf .git
 cd ../../..
-tar -czvf atomify.tar.gz atomify
+tar -czvf atomify-2.0.10-src.tar.gz atomify
