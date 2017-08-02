@@ -1,6 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls.Material 2.0
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.2
 import QtQuick.Controls 1.5 as QQC1
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
@@ -142,7 +142,7 @@ Rectangle {
                     fontSizeMode: Text.Fit
                     height: 24
 
-                    text: "Atomify 2.0"
+                    text: "Atomify<br>2.0.10"
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
@@ -248,12 +248,12 @@ Rectangle {
                 }
                 toolTipText: {
                     if(stopButton.toggled) {
-                        return " Start simulating current script (SHORTCUT)"
+                        return " Start simulating current script ("+EventCenter.nativeText("editorWindow.runScript")+")"
                     } else {
                         if(simulator.states.paused.active) {
-                            return "Resume current simulation (SHORTCUT)"
+                            return "Resume current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
                         } else {
-                            return "Pause current simulation (SHORTCUT)"
+                            return "Pause current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
                         }
                     }
                 }
@@ -279,7 +279,7 @@ Rectangle {
                     simulator.reset()
                 }
                 toolTipText: {
-                    return "Stop current simulation (SHORTCUT)"
+                    return "Stop current simulation"
                 }
             }
             ToggleButton {
@@ -293,7 +293,7 @@ Rectangle {
                     editor.editorWindow.runScript()
                 }
                 toolTipText: {
-                    return "Restart current simulation (SHORTCUT)"
+                    return "Restart current simulation ("+EventCenter.nativeText("editorWindow.runScript")+")"
                 }
             }
         }
@@ -500,7 +500,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
-                    toolTipText: "Reset to origin (o)"
+                    toolTipText: "Reset to origin ("+EventCenter.nativeText("visualizer.resetToSystemCenter")+")"
 
                     onClicked: {
                         if(flymodeState.active) {
@@ -512,7 +512,7 @@ Rectangle {
 
                 IconButton {
                     source: "qrc:/images/switch_camera.png"
-                    toolTipText: "Switch camera (c)"
+                    toolTipText: "Switch camera ("+EventCenter.nativeText("desktop.changeMode")+")"
 
                     onClicked: {
                         changeMode()
@@ -675,9 +675,6 @@ Rectangle {
                     targetState: flymodeState
                     signal: changeMode
                 }
-                onEntered: {
-                    console.log("Trackball entered")
-                }
             }
             DSM.State {
                 id: flymodeState
@@ -686,7 +683,6 @@ Rectangle {
                     signal: changeMode
                 }
                 onEntered: {
-                    console.log("Flymode entered")
                     flymodeOverlay.reset()
                 }
             }
@@ -700,18 +696,12 @@ Rectangle {
                     targetState: focusedState
                     signal: focusViewport
                 }
-                onEntered: {
-                    console.log("UnFocus entered")
-                }
             }
             DSM.State {
                 id: focusedState
                 DSM.SignalTransition {
                     targetState: unfocusedState
                     signal: unfocusViewport
-                }
-                onEntered: {
-                    console.log("Focus entered")
                 }
             }
         }
@@ -732,9 +722,6 @@ Rectangle {
                     targetState: uncapturedState
                     signal: trackballState.entered
                 }
-                onEntered: {
-                    console.log("captured entered")
-                }
             }
             DSM.State {
                 id: uncapturedState
@@ -746,9 +733,6 @@ Rectangle {
                     targetState: capturedState
                     signal: captureCursor
                 }
-                onEntered: {
-                    console.log("unCaptured entered")
-                }
             }
         }
     }
@@ -758,12 +742,11 @@ Rectangle {
         selectExisting : false
         property var callback
         title: "Please choose a location to save"
-
-        nameFilters: [ "Image files (*.jpg *.png)" ]
+        // nameFilters: [ "Image files (*.jpg *.png)" ]
+        nameFilters: [ "Image files (*.png)" ]
 
         onAccepted: {
             if(callback !== undefined) {
-                console.log("Calling back")
                 callback()
                 callback = undefined
             }

@@ -23,6 +23,7 @@ Scene3D {
     signal changedRenderQuality
     property color backgroundColor: "black"
     property alias propertyModifier: propertyModifier
+    property alias sliceModifier: sliceModifier
     property bool guidesVisible
     property bool systemBoxVisible
     property var rootItem
@@ -397,7 +398,8 @@ Scene3D {
                 propertyModifier,
                 groupModifier,
                 regionModifier,
-                periodicImages
+                periodicImages,
+                sliceModifier
             ]
         }
 
@@ -413,18 +415,27 @@ Scene3D {
 
         ColorModifier {
             id: colorModifier
+            enabled: true
         }
 
         GroupModifier {
             id: groupModifier
+            enabled: true
         }
 
         RegionModifier {
             id: regionModifier
+            enabled: true
         }
 
         PropertyModifier {
             id: propertyModifier
+            enabled: true
+        }
+
+        SliceModifier {
+            id: sliceModifier
+            enabled: false
         }
 
         PeriodicImages {
@@ -475,6 +486,7 @@ Scene3D {
             enabled: root.guidesVisible
             color: "red"
             scale3D: Qt.vector3d(0.51, 1000, 0.51)
+            translate: Qt.vector3d(490,0,0)
             rotationZ: 90
             camera: visualizer.camera
             layer: forwardFrameGraph.guideLayer
@@ -484,6 +496,7 @@ Scene3D {
             enabled: root.guidesVisible
             color: "blue"
             scale3D: Qt.vector3d(0.53, 1000, 0.53)
+            translate: Qt.vector3d(0,0,490)
             rotationX: 90
             camera: visualizer.camera
             layer: forwardFrameGraph.guideLayer
@@ -493,6 +506,7 @@ Scene3D {
             enabled: root.guidesVisible
             color: "green"
             scale3D: Qt.vector3d(0.52, 1000, 0.52)
+            translate: Qt.vector3d(0,490,0)
             camera: visualizer.camera
             layer: forwardFrameGraph.guideLayer
         }
@@ -519,6 +533,28 @@ Scene3D {
                 translation: visualizer.camera.viewCenter
             }
         }
+
+//        Entity {
+//            components: [
+//                slicePlaneMesh,
+//                sliceMaterial,
+//                slicePlaneTransform,
+//                forwardFrameGraph.guideLayer
+//            ]
+//            PlaneMesh {id: slicePlaneMesh; width: 20; height: 20}
+//            ShaderBuilderMaterial {
+//                id: sliceMaterial
+//                fragmentColor: StandardMaterial {
+//                    color: "white"
+//                    lights: visualizer.lights
+//                    ambientIntensity: 10.0
+//                }
+//            }
+//            Transform {
+//                id: slicePlaneTransform
+//                // translation: visualizer.camera.viewCenter
+//            }
+//        }
 
         SystemBox {
             id: systemBox

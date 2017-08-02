@@ -1,10 +1,11 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.2
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.2
 import Atomify 1.0
 import "../items"
 import "../../plotting"
 import "../../visualization"
+import "../../events"
 
 Flickable {
     id: root
@@ -130,8 +131,15 @@ Flickable {
                 Label {
                     text: "Position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
                 }
-                Label {
+                ToolTipLabel {
                     text: "Mode: " + (visualizer.mode === "flymode" ? "Flymode" : "Trackball")
+                    toolTipText: {
+                        if(visualizer.mode==="flymode") {
+                            return "Fly around with WASD. Up/Down with RF."
+                        } else {
+                            return "Rotate around with ADRF. Zoom in/out with WS."
+                        }
+                    }
                 }
             }
         }
@@ -226,6 +234,9 @@ Flickable {
                 anchors {
                     left: parent.left
                     right: parent.right
+                }
+                Label {
+                    text: "Time left: "+ system.cpuremain.toFixed(1)+" s"
                 }
                 Label {
                     text: "Current timestep: "+system.currentTimestep
@@ -375,6 +386,9 @@ Flickable {
             Column {
                 Label {
                     text: "FPS: "+ root.visualizer.fps
+                }
+                Label {
+                    text: "Timesteps per second: "+ system.performance.timestepsPerSecond.toFixed(1)
                 }
                 Label {
                     text: "Memory usage LAMMPS: "+ (system.performance.memoryLAMMPS / 1024 / 1024).toFixed(0) +" MB"

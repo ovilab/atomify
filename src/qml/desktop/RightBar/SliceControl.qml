@@ -1,103 +1,64 @@
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.1
 import Atomify 1.0
 import SimVis 1.0
+import "../items"
 
-Item {
+GroupBox {
     id: sliceRoot
-//    property Slice slice
-    width: parent.width
-    height: columnLayout.height
+    property SliceModifier slice
     property real labelWidth: 90
-    ColumnLayout {
+    height: slice.enabled ? undefined : label.height
+    label: CheckBox {
+        id: checkBox
+        checked: false
+        onCheckedChanged: slice.enabled = checked
+        text: qsTr("Slice")
+    }
+    Column {
         id: columnLayout
+        width: parent.width
+        visible: sliceRoot.slice.enabled
         spacing: 10
 
-        Row {
-            spacing: 2
-            Label {
-                width: sliceRoot.labelWidth
-                text: "Distance: "
-            }
-
-            SpinBox {
-                id: distance
-                decimals: 1
-                minimumValue: 0
-                maximumValue: 200
-                stepSize: 1
-                value: slice ? slice.distance : 1
-                onValueChanged: {
-                    slice.distance = value
-                }
-            }
+        Label {
+            width: sliceRoot.labelWidth
+            text: "Distance: "
         }
 
-        Row {
-            spacing: 2
-            Label {
-                width: sliceRoot.labelWidth
-                text: "Origo (x,y,z): "
-            }
-
-            SpinBox {
-                minimumValue: 0
-                stepSize: 1
-                value: slice ? slice.origo.x : 0
-                onValueChanged: {
-                    var x = parseFloat(value)
-                    var y = parseFloat(slice.origo.y)
-                    var z = parseFloat(slice.origo.z)
-                    slice.origo = Qt.vector3d(x,y,z)
-                }
-            }
-            SpinBox {
-                minimumValue: 0
-                stepSize: 1
-                value: slice ? slice.origo.y : 0
-                onValueChanged: {
-                    var x = parseFloat(slice.origo.x)
-                    var y = parseFloat(value)
-                    var z = parseFloat(slice.origo.z)
-                    slice.origo = Qt.vector3d(x,y,z)
-                }
-            }
-            SpinBox {
-                minimumValue: 0
-                stepSize: 1
-                value: slice ? slice.origo.z : 0
-                onValueChanged: {
-                    var x = parseFloat(slice.origo.x)
-                    var y = parseFloat(slice.origo.y)
-                    var z = parseFloat(value)
-                    slice.origo = Qt.vector3d(x,y,z)
-                }
-            }
+        ScrollableNumberField {
+            width: parent.width
+            value: slice.distance
+            onValueChanged: slice.distance = value
         }
 
-        Row {
-            spacing: 2
-            Label {
-                width: sliceRoot.labelWidth
-                text: "Normal (x,y,z): "
-            }
+        Label {
+            width: sliceRoot.labelWidth
+            text: "Normal: "
+        }
 
-            SpinBox {
-                minimumValue: 0
-                stepSize: 1
-                value: slice ? slice.normal.x : 0
+        RowLayout {
+            width: parent.width
+            spacing: 5
+            ScrollableNumberField {
+                value: slice.normal.x
+                Layout.fillWidth: true
                 onValueChanged: {
                     var x = parseFloat(value)
                     var y = parseFloat(slice.normal.y)
                     var z = parseFloat(slice.normal.z)
                     slice.normal = Qt.vector3d(x,y,z)
                 }
+                Component.onCompleted: {
+                    value = 1
+                    slice.normal = Qt.vector3d(1,0,0)
+                }
             }
-            SpinBox {
-                minimumValue: 0
-                stepSize: 1
-                value: slice ? slice.normal.y : 0
+
+            ScrollableNumberField {
+                value: slice.normal.y
+                Layout.fillWidth: true
                 onValueChanged: {
                     var x = parseFloat(slice.normal.x)
                     var y = parseFloat(value)
@@ -105,10 +66,10 @@ Item {
                     slice.normal = Qt.vector3d(x,y,z)
                 }
             }
-            SpinBox {
-                minimumValue: 0
-                stepSize: 1
-                value: slice ? slice.normal.z : 0
+
+            ScrollableNumberField {
+                value: slice.normal.z
+                Layout.fillWidth: true
                 onValueChanged: {
                     var x = parseFloat(slice.normal.x)
                     var y = parseFloat(slice.normal.y)
@@ -118,24 +79,24 @@ Item {
             }
         }
 
-        Row {
-            spacing: 2
-            Label {
-                width: sliceRoot.labelWidth
-                text: "Slice width: "
-            }
+        Label {
+            width: sliceRoot.labelWidth
+            text: "Slice width: "
+        }
 
-            SpinBox {
-                id: sliceWidth
-                decimals: 1
-                minimumValue: 0
-                maximumValue: 200
-                stepSize: 1
-                value: slice ? slice.width : 1
-                onValueChanged: {
-                    slice.width = value
-                }
+        ScrollableNumberField {
+            width: parent.width
+            value: slice.width
+            min: 0
+            onValueChanged: {
+                slice.width = value
             }
+        }
+
+        CheckBox {
+            text: "Reversed"
+            checked: slice.reversed
+            onCheckedChanged: slice.reversed = checked
         }
     }
 }

@@ -121,6 +121,7 @@ Package, Description, Doc page, Example, Library
 "USER-INTEL"_#USER-INTEL, optimized Intel CPU and KNL styles,"Section 5.3.2"_accelerate_intel.html, WWW bench, -
 "USER-LB"_#USER-LB, Lattice Boltzmann fluid,"fix lb/fluid"_fix_lb_fluid.html, USER/lb, -
 "USER-MANIFOLD"_#USER-MANIFOLD, motion on 2d surfaces,"fix manifoldforce"_fix_manifoldforce.html, USER/manifold, -
+"USER-MEAMC"_#USER-MEAMC, modified EAM potential (C++), "pair_style meam/c"_pair_meam.html, meam, -
 "USER-MGPT"_#USER-MGPT, fast MGPT multi-ion potentials, "pair_style mgpt"_pair_mgpt.html, USER/mgpt, -
 "USER-MISC"_#USER-MISC, single-file contributions, USER-MISC/README, USER/misc, -
 "USER-MOLFILE"_#USER-MOLFILE, "VMD"_vmd_home molfile plug-ins,"dump molfile"_dump_molfile.html, -, ext
@@ -368,7 +369,7 @@ suffix in their style name.  "Section 5.3.1"_accelerate_gpu.html gives
 details of what hardware and Cuda software is required on your system,
 and details on how to build and use this package.  Its styles can be
 invoked at run time via the "-sf gpu" or "-suffix gpu" "command-line
-switches"_Section_start.html#start_7.  See also the "KOKKOS"_#KOKKOS
+switches"_Section_start.html#start_6.  See also the "KOKKOS"_#KOKKOS
 package, which has GPU-enabled styles.
 
 [Authors:] Mike Brown (Intel) while at Sandia and ORNL and Trung Nguyen
@@ -426,8 +427,8 @@ src/GPU/README
 lib/gpu/README
 "Section 5.3"_Section_accelerate.html#acc_3
 "Section 5.3.1"_accelerate_gpu.html
-"Section 2.7 -sf gpu"_Section_start.html#start_7
-"Section 2.7 -pk gpu"_Section_start.html#start_7
+"Section 2.6 -sf gpu"_Section_start.html#start_6
+"Section 2.6 -pk gpu"_Section_start.html#start_6
 "package gpu"_package.html
 Pair Styles section of "Section 3.5"_Section_commands.html#cmd_5 for pair styles followed by (g)
 "Benchmarks page"_http://lammps.sandia.gov/bench.html of web site :ul
@@ -491,14 +492,38 @@ Minnesota).
 
 [Install or un-install:]
 
-Using this package requires the KIM library and its models
-(interatomic potentials) to be downloaded and installed on your
-system.  The library can be downloaded and built in lib/kim or
-elsewhere on your system.  Details of the download, build, and install
-process for KIM are given in the lib/kim/README file.
+Before building LAMMPS with this package, you must first download and
+build the KIM library and include the KIM models that you want to
+use. You can do this manually if you prefer; follow the instructions
+in lib/kim/README.  You can also do it in one step from the lammps/src
+dir, using a command like these, which simply invoke the
+lib/kim/Install.py script with the specified args.
 
-Once that process is complete, you can then install/un-install the
-package and build LAMMPS in the usual manner:
+make lib-kim                    # print help message
+make lib-kim args="-b . none"   # install KIM API lib with only example models
+make lib-kim args="-b . Glue_Ercolessi_Adams_Al__MO_324507536345_001"  # ditto plus one model
+make lib-kim args="-b . OpenKIM"   # install KIM API lib with all models
+make lib-kim args="-a EAM_Dynamo_Ackland_W__MO_141627196590_002"       # add one model or model driver :pre
+
+Note that in LAMMPS lingo, a KIM model driver is a pair style
+(e.g. EAM or Tersoff).  A KIM model is a pair style for a particular
+element or alloy and set of parameters, e.g. EAM for Cu with a
+specific EAM potential file.  Also note that installing the KIM API
+library with all its models, may take around 30 min to build.  Of
+course you only need to do that once.
+
+See the list of KIM model drivers here:
+https://openkim.org/kim-items/model-drivers/alphabetical
+
+See the list of all KIM models here:
+https://openkim.org/kim-items/models/by-model-drivers
+
+See the list of example KIM models included by default here:
+https://openkim.org/kim-api in the "What is in the KIM API source
+package?" section
+
+You can then install/un-install the package and build LAMMPS in the
+usual manner:
 
 make yes-kim
 make machine :pre
@@ -528,7 +553,7 @@ style name.  "Section 5.3.3"_accelerate_kokkos.html gives details of
 what hardware and software is required on your system, and how to
 build and use this package.  Its styles can be invoked at run time via
 the "-sf kk" or "-suffix kk" "command-line
-switches"_Section_start.html#start_7.  Also see the "GPU"_#GPU,
+switches"_Section_start.html#start_6.  Also see the "GPU"_#GPU,
 "OPT"_#OPT, "USER-INTEL"_#USER-INTEL, and "USER-OMP"_#USER-OMP
 packages, which have styles optimized for CPUs, KNLs, and GPUs.
 
@@ -585,7 +610,7 @@ do not recommend building with other acceleration packages installed
 
 make yes-kokkos
 make machine :pre
- 
+
 make no-kokkos
 make machine :pre
 
@@ -596,9 +621,9 @@ src/KOKKOS/README
 lib/kokkos/README
 "Section 5.3"_Section_accelerate.html#acc_3
 "Section 5.3.3"_accelerate_kokkos.html
-"Section 2.7 -k on ..."_Section_start.html#start_7
-"Section 2.7 -sf kk"_Section_start.html#start_7
-"Section 2.7 -pk kokkos"_Section_start.html#start_7
+"Section 2.6 -k on ..."_Section_start.html#start_6
+"Section 2.6 -sf kk"_Section_start.html#start_6
+"Section 2.6 -pk kokkos"_Section_start.html#start_6
 "package kokkos"_package.html
 Styles sections of "Section 3.5"_Section_commands.html#cmd_5 for styles followed by (k)
 "Benchmarks page"_http://lammps.sandia.gov/bench.html of web site :ul
@@ -839,13 +864,13 @@ written and read in parallel.
 Note that MPIIO is part of the standard message-passing interface
 (MPI) library, so you should not need any additional compiler or link
 settings, beyond what LAMMPS normally uses for MPI on your system.
- 
+
 make yes-mpiio
 make machine :pre
- 
+
 make no-mpiio
 make machine :pre
- 
+
 [Supporting info:]
 
 src/MPIIO: filenames -> commands
@@ -855,7 +880,7 @@ src/MPIIO: filenames -> commands
 "read_restart"_read_restart.html :ul
 
 :line
- 
+
 MSCG package :link(mscg),h4
 
 [Contents:]
@@ -914,7 +939,7 @@ lib/mscg/README
 examples/mscg :ul
 
 :line
- 
+
 OPT package :link(OPT),h4
 
 [Contents:]
@@ -925,7 +950,7 @@ CHARMM, and Morse potentials.  The styles have an "opt" suffix in
 their style name.  "Section 5.3.5"_accelerate_opt.html gives details
 of how to build and use this package.  Its styles can be invoked at
 run time via the "-sf opt" or "-suffix opt" "command-line
-switches"_Section_start.html#start_7.  See also the "KOKKOS"_#KOKKOS,
+switches"_Section_start.html#start_6.  See also the "KOKKOS"_#KOKKOS,
 "USER-INTEL"_#USER-INTEL, and "USER-OMP"_#USER-OMP packages, which
 have styles optimized for CPU performance.
 
@@ -952,7 +977,7 @@ CCFLAGS: add -restrict :ul
 src/OPT: filenames -> commands
 "Section 5.3"_Section_accelerate.html#acc_3
 "Section 5.3.5"_accelerate_opt.html
-"Section 2.7 -sf opt"_Section_start.html#start_7
+"Section 2.6 -sf opt"_Section_start.html#start_6
 Pair Styles section of "Section 3.5"_Section_commands.html#cmd_5 for pair styles followed by (t)
 "Benchmarks page"_http://lammps.sandia.gov/bench.html of web site :ul
 
@@ -1387,7 +1412,7 @@ atomic information to continuum fields.
 [Authors:] Reese Jones, Jeremy Templeton, Jon Zimmerman (Sandia).
 
 [Install or un-install:]
-  
+
 Before building LAMMPS with this package, you must first build the ATC
 library in lib/atc.  You can do this manually if you prefer; follow
 the instructions in lib/atc/README.  You can also do it in one step
@@ -1420,10 +1445,10 @@ usual manner:
 
 make yes-user-atc
 make machine :pre
- 
+
 make no-user-atc
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-ATC: filenames -> commands
@@ -1446,7 +1471,7 @@ model.
 [Author:] Ilya Valuev (JIHT, Russia).
 
 [Install or un-install:]
-  
+
 Before building LAMMPS with this package, you must first build the
 AWPMD library in lib/awpmd.  You can do this manually if you prefer;
 follow the instructions in lib/awpmd/README.  You can also do it in
@@ -1479,10 +1504,10 @@ usual manner:
 
 make yes-user-awpmd
 make machine :pre
- 
+
 make no-user-awpmd
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-AWPMD: filenames -> commands
@@ -1505,13 +1530,13 @@ stability.
 [Author:] Oliver Henrich (University of Strathclyde, Glasgow).
 
 [Install or un-install:]
-  
+
 make yes-user-cgdna
 make machine :pre
- 
+
 make no-user-cgdna
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-CGDNA: filenames -> commands
@@ -1536,13 +1561,13 @@ acids.
 [Author:] Axel Kohlmeyer (Temple U).
 
 [Install or un-install:]
-  
+
 make yes-user-cgsdk
 make machine :pre
- 
+
 make no-user-cgsdk
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-CGSDK: filenames -> commands
@@ -1570,7 +1595,7 @@ by Giacomo Fiorin (ICMS, Temple University, Philadelphia, PA, USA) and
 Jerome Henin (LISM, CNRS, Marseille, France).
 
 [Install or un-install:]
-  
+
 Before building LAMMPS with this package, you must first build the
 COLVARS library in lib/colvars.  You can do this manually if you
 prefer; follow the instructions in lib/colvars/README.  You can also
@@ -1594,10 +1619,10 @@ usual manner:
 
 make yes-user-colvars
 make machine :pre
- 
+
 make no-user-colvars
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-COLVARS: filenames -> commands
@@ -1619,13 +1644,13 @@ intensities based on kinematic diffraction theory.
 [Author:] Shawn Coleman while at the U Arkansas.
 
 [Install or un-install:]
-  
+
 make yes-user-diffraction
 make machine :pre
- 
+
 make no-user-diffraction
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-DIFFRACTION: filenames -> commands
@@ -1654,13 +1679,13 @@ algorithm.
 Brennan (ARL).
 
 [Install or un-install:]
-  
+
 make yes-user-dpd
 make machine :pre
- 
+
 make no-user-dpd
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-DPD: filenames -> commands
@@ -1696,13 +1721,13 @@ tools/drude.
 Devemy (CNRS), and Agilio Padua (U Blaise Pascal).
 
 [Install or un-install:]
-  
+
 make yes-user-drude
 make machine :pre
- 
+
 make no-user-drude
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-DRUDE: filenames -> commands
@@ -1734,13 +1759,13 @@ tools/eff; see its README file.
 [Author:] Andres Jaramillo-Botero (CalTech).
 
 [Install or un-install:]
-  
+
 make yes-user-eff
 make machine :pre
- 
+
 make no-user-eff
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-EFF: filenames -> commands
@@ -1773,13 +1798,13 @@ for using this package in tools/fep; see its README file.
 [Author:] Agilio Padua (Universite Blaise Pascal Clermont-Ferrand)
 
 [Install or un-install:]
-  
+
 make yes-user-fep
 make machine :pre
- 
+
 make no-user-fep
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-FEP: filenames -> commands
@@ -1836,13 +1861,13 @@ file.
 
 You can then install/un-install the package and build LAMMPS in the
 usual manner:
-  
+
 make yes-user-h5md
 make machine :pre
- 
+
 make no-user-h5md
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-H5MD: filenames -> commands
@@ -1862,7 +1887,7 @@ All of them have an "intel" in their style name.  "Section
 5.3.2"_accelerate_intel.html gives details of what hardware and
 compilers are required on your system, and how to build and use this
 package.  Its styles can be invoked at run time via the "-sf intel" or
-"-suffix intel" "command-line switches"_Section_start.html#start_7.
+"-suffix intel" "command-line switches"_Section_start.html#start_6.
 Also see the "KOKKOS"_#KOKKOS, "OPT"_#OPT, and "USER-OMP"_#USER-OMP
 packages, which have styles optimized for CPUs and KNLs.
 
@@ -1908,7 +1933,7 @@ explained in "Section 5.3.2"_accelerate_intel.html.
 
 make yes-user-intel yes-user-omp
 make machine :pre
- 
+
 make no-user-intel no-user-omp
 make machine :pre
 
@@ -1918,8 +1943,8 @@ src/USER-INTEL: filenames -> commands
 src/USER-INTEL/README
 "Section 5.3"_Section_accelerate.html#acc_3
 "Section 5.3.2"_accelerate_gpu.html
-"Section 2.7 -sf intel"_Section_start.html#start_7
-"Section 2.7 -pk intel"_Section_start.html#start_7
+"Section 2.6 -sf intel"_Section_start.html#start_6
+"Section 2.6 -pk intel"_Section_start.html#start_6
 "package intel"_package.html
 Styles sections of "Section 3.5"_Section_commands.html#cmd_5 for styles followed by (i)
 src/USER-INTEL/TEST
@@ -1938,13 +1963,13 @@ can be used to model MD particles influenced by hydrodynamic forces.
 Ontario).
 
 [Install or un-install:]
-  
+
 make yes-user-lb
 make machine :pre
- 
+
 make no-user-lb
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-LB: filenames -> commands
@@ -1972,13 +1997,13 @@ matrix-MGPT algorithm due to Tomas Oppelstrup at LLNL.
 [Authors:] Tomas Oppelstrup and John Moriarty (LLNL).
 
 [Install or un-install:]
-  
+
 make yes-user-mgpt
 make machine :pre
- 
+
 make no-user-mgpt
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-MGPT: filenames -> commands
@@ -2000,13 +2025,13 @@ dihedral, improper, or command style.
 src/USER-MISC/README file.
 
 [Install or un-install:]
-  
+
 make yes-user-misc
 make machine :pre
- 
+
 make no-user-misc
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-MISC: filenames -> commands
@@ -2031,13 +2056,13 @@ n = grad(g).
 Netherlands; since 2017: Brandeis University, Waltham, MA, USA)
 
 [Install or un-install:]
-  
+
 make yes-user-manifold
 make machine :pre
- 
+
 make no-user-manifold
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-MANIFOLD: filenames -> commands
@@ -2048,6 +2073,37 @@ src/USER-MANIFOLD/README
 "fix nvt/manifold/rattle"_fix_nvt_manifold_rattle.html
 examples/USER/manifold
 http://lammps.sandia.gov/movies.html#manifold :ul
+
+:line
+
+USER-MEAMC package :link(USER-MEAMC),h4
+
+[Contents:]
+
+A pair style for the modified embedded atom (MEAM) potential
+translated from the Fortran version in the "MEAM"_MEAM package
+to plain C++. In contrast to the MEAM package, no library
+needs to be compiled and the pair style can be instantiated
+multiple times.
+
+[Author:] Sebastian Huetter, (Otto-von-Guericke University Magdeburg)
+based on the Fortran version of Greg Wagner (Northwestern U) while at
+Sandia.
+
+[Install or un-install:]
+  
+make yes-user-meamc
+make machine :pre
+ 
+make no-user-meamc
+make machine :pre
+ 
+[Supporting info:]
+
+src/USER-MEAMC: filenames -> commands
+src/USER-MEAMC/README
+"pair meam/c"_pair_meam.html
+examples/meam :ul
 
 :line
 
@@ -2080,7 +2136,7 @@ at
 [Author:] Axel Kohlmeyer (Temple U).
 
 [Install or un-install:]
-  
+
 Note that the lib/molfile/Makefile.lammps file has a setting for a
 dynamic loading library libdl.a that should is typically present on
 all systems, which is required for LAMMPS to link with this package.
@@ -2090,10 +2146,10 @@ lib/molfile/Makefile.lammps for details.
 
 make yes-user-molfile
 make machine :pre
- 
+
 make no-user-molfile
 make machine :pre
- 
+
 [Supporting info:]
 
 src/USER-MOLFILE: filenames -> commands
@@ -2128,7 +2184,7 @@ tools:
 [Author:] Lars Pastewka (Karlsruhe Institute of Technology).
 
 [Install or un-install:]
-   
+
 Note that to follow these steps, you need the standard NetCDF software
 package installed on your system.  The lib/netcdf/Makefile.lammps file
 has settings for NetCDF include and library files that LAMMPS needs to
@@ -2138,7 +2194,7 @@ lib/netcdf/README for details.
 
 make yes-user-netcdf
 make machine :pre
-  
+
 make no-user-netcdf
 make machine :pre
 
@@ -2161,7 +2217,7 @@ via OpenMP directives.  All of them have an "omp" in their style name.
 "Section 5.3.4"_accelerate_omp.html gives details of what hardware and
 compilers are required on your system, and how to build and use this
 package.  Its styles can be invoked at run time via the "-sf omp" or
-"-suffix omp" "command-line switches"_Section_start.html#start_7.
+"-suffix omp" "command-line switches"_Section_start.html#start_6.
 Also see the "KOKKOS"_#KOKKOS, "OPT"_#OPT, and
 "USER-INTEL"_#USER-INTEL packages, which have styles optimized for
 CPUs.
@@ -2178,10 +2234,10 @@ Once you have an appropriate Makefile.machine, you can
 install/un-install the package and build LAMMPS in the usual manner:
 
 [Install or un-install:]
-  
+
 make yes-user-omp
 make machine :pre
- 
+
 make no-user-omp
 make machine :pre
 
@@ -2194,8 +2250,8 @@ src/USER-OMP: filenames -> commands
 src/USER-OMP/README
 "Section 5.3"_Section_accelerate.html#acc_3
 "Section 5.3.4"_accelerate_omp.html
-"Section 2.7 -sf omp"_Section_start.html#start_7
-"Section 2.7 -pk omp"_Section_start.html#start_7
+"Section 2.6 -sf omp"_Section_start.html#start_6
+"Section 2.6 -pk omp"_Section_start.html#start_6
 "package omp"_package.html
 Styles sections of "Section 3.5"_Section_commands.html#cmd_5 for styles followed by (o)
 "Benchmarks page"_http://lammps.sandia.gov/bench.html of web site :ul
@@ -2213,13 +2269,13 @@ relations, directly from molecular dynamics simulations.
 [Author:] Ling-Ti Kong (Shanghai Jiao Tong University).
 
 [Install or un-install:]
-   
+
 make yes-user-phonon
 make machine :pre
-  
+
 make no-user-phonon
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-PHONON: filenames -> commands
@@ -2235,7 +2291,7 @@ USER-QMMM package :link(USER-QMMM),h4
 
 A "fix qmmm"_fix_qmmm.html command which allows LAMMPS to be used in a
 QM/MM simulation, currently only in combination with the "Quantum
-ESPRESSO"_espresso package.  
+ESPRESSO"_espresso package.
 
 :link(espresso,http://www.quantum-espresso.org)
 
@@ -2275,7 +2331,7 @@ usual manner:
 
 make yes-user-qmmm
 make machine :pre
-  
+
 make no-user-qmmm
 make machine :pre
 
@@ -2284,7 +2340,7 @@ for a QM/MM simulation.  You must also build Quantum ESPRESSO and
 create a new executable which links LAMMPS and Quanutm ESPRESSO
 together.  These are steps 3 and 4 described in the lib/qmmm/README
 file.
-  
+
 [Supporting info:]
 
 src/USER-QMMM: filenames -> commands
@@ -2312,13 +2368,13 @@ simulation.
 [Author:] Yuan Shen (Stanford U).
 
 [Install or un-install:]
-   
+
 make yes-user-qtb
 make machine :pre
-  
+
 make no-user-qtb
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-QTB: filenames -> commands
@@ -2362,10 +2418,10 @@ usual manner:
 
 make yes-user-quip
 make machine :pre
-  
+
 make no-user-quip
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-QUIP: filenames -> commands
@@ -2388,13 +2444,13 @@ for monitoring molecules as bonds are created and destroyed.
 [Author:] Hasan Metin Aktulga (MSU) while at Purdue University.
 
 [Install or un-install:]
-   
+
 make yes-user-reaxc
 make machine :pre
-  
+
 make no-user-reaxc
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-REAXC: filenames -> commands
@@ -2451,10 +2507,10 @@ usual manner:
 
 make yes-user-smd
 make machine :pre
-  
+
 make no-user-smd
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-SMD: filenames -> commands
@@ -2477,13 +2533,13 @@ ionocovalent bonds in oxides.
 Tetot (LAAS-CNRS, France).
 
 [Install or un-install:]
-   
+
 make yes-user-smtbq
 make machine :pre
-  
+
 make no-user-smtbq
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-SMTBQ: filenames -> commands
@@ -2516,13 +2572,13 @@ property/atom"_compute_property_atom.html command.
 Dynamics, Ernst Mach Institute, Germany).
 
 [Install or un-install:]
-   
+
 make yes-user-sph
 make machine :pre
-  
+
 make no-user-sph
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-SPH: filenames -> commands
@@ -2544,13 +2600,13 @@ stress, etc) about individual interactions.
 [Author:] Axel Kohlmeyer (Temple U).
 
 [Install or un-install:]
-   
+
 make yes-user-tally
 make machine :pre
-  
+
 make no-user-tally
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-TALLY: filenames -> commands
@@ -2577,7 +2633,7 @@ system.
 [Authors:] Richard Berger (JKU) and Daniel Queteschiner (DCS Computing).
 
 [Install or un-install:]
-   
+
 The lib/vtk/Makefile.lammps file has settings for accessing VTK files
 and its library, which are required for LAMMPS to build and link with
 this package.  If the settings are not valid for your system, check if
@@ -2590,10 +2646,10 @@ usual manner:
 
 make yes-user-vtk
 make machine :pre
-  
+
 make no-user-vtk
 make machine :pre
-  
+
 [Supporting info:]
 
 src/USER-VTK: filenames -> commands

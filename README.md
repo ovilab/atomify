@@ -1,4 +1,4 @@
-# Atomify - a live LAMMPS visualizer #
+# Atomify - a real time LAMMPS visualizer #
 
 [![Build Status](https://travis-ci.org/ovilab/atomify.svg?branch=dev)](https://travis-ci.org/ovilab/atomify)
 [![Join the chat at https://gitter.im/ovilab](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ovilab/atomify?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -10,12 +10,14 @@ The typical workflow when developing scripts for LAMMPS includes working with se
 
 ## How to install ##
 ### MacOS ###
-Alternative 1) Download [the pkg](https://github.com/ovilab/atomify/releases/download/v2.0.9/Atomify-2.0.9-macos.pkg) (preferred).
+Alternative 1) Download [the pkg](https://github.com/ovilab/atomify/releases/download/v2.0.10/Atomify-2.0.10-macos.pkg) (preferred). (You can also try the [.pkg that supports OpenMP](https://github.com/ovilab/atomify/releases/download/v2.0.10/Atomify-2.0.10-macos-omp.pkg), but we're not sure it works yet).
 
-Alternative 2) 
-Install with Homebrew: `brew install https://raw.githubusercontent.com/ovilab/atomify/dev/macos/atomify.rb`.
+Alternative 2) Download [the dmg](https://github.com/ovilab/atomify/releases/download/v2.0.10/Atomify-2.0.10-macos.dmg) (if you don't have administrator access).
 
-Alternative 3) Download from [Mac App Store](https://itunes.apple.com/us/app/atomify/id1192327034?mt=12).
+Alternative 3 (with OpenMP support)) 
+Install with [Homebrew](https://brew.sh): `brew install https://raw.githubusercontent.com/ovilab/atomify/dev/macos/atomify.rb`. The installation takes ~10 minutes.
+
+Alternative 4) Download from [Mac App Store](https://itunes.apple.com/us/app/atomify/id1192327034?mt=12) (this option has limitations on the file system).
 
 ### Linux ###
 `sudo snap install atomify`

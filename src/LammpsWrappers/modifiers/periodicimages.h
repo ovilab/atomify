@@ -21,9 +21,6 @@ class PeriodicImages : public Modifier
 
 public:
     PeriodicImages();
-
-    // Modifier interface
-public:
     virtual void apply(class AtomData &atomData) override;
     int numberOfCopiesX() const;
     int numberOfCopiesY() const;

@@ -20,8 +20,9 @@ public slots:
 
 signals:
     void enabledChanged(bool enabled);
-private:
-    bool m_enabled = true;
+protected:
+
+    bool m_enabled = false;
 };
 
 #endif // MODIFIER_H

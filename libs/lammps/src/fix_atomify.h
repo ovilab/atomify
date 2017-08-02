@@ -38,8 +38,6 @@ class FixAtomify : public Fix {
   
   typedef void (*FnPtr)(void *, int);
   void set_callback(FnPtr, void *);
-
- private:
   FnPtr callback;
   void *ptr_caller;
 };

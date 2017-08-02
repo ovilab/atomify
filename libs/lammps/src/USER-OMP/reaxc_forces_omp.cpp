@@ -1,16 +1,18 @@
 /*----------------------------------------------------------------------
   PuReMD - Purdue ReaxFF Molecular Dynamics Program
-
+  Website: https://www.cs.purdue.edu/puremd
+  
   Copyright (2010) Purdue University
-  Hasan Metin Aktulga, hmaktulga@lbl.gov
-  Joseph Fogarty, jcfogart@mail.usf.edu
-  Sagar Pandit, pandit@usf.edu
-  Ananth Y Grama, ayg@cs.purdue.edu
+  
+  Contributing authors: 
+  H. M. Aktulga, J. Fogarty, S. Pandit, A. Grama
+  Corresponding author: 
+  Hasan Metin Aktulga, Michigan State University, hma@cse.msu.edu
 
   Please cite the related publication:
   H. M. Aktulga, J. C. Fogarty, S. A. Pandit, A. Y. Grama,
   "Parallel Reactive Molecular Dynamics: Numerical Methods and
-  Algorithmic Techniques", Parallel Computing, in press.
+  Algorithmic Techniques", Parallel Computing, 38 (4-5), 245-259
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License as
@@ -265,7 +267,6 @@ void Validate_ListsOMP( reax_system *system, storage *workspace, reax_list **lis
 {
   int i, comp, Hindex;
   reax_list *bonds, *hbonds;
-  reallocate_data *realloc = &(workspace->realloc);
   double saferzone = system->saferzone;
 
 #if defined(_OPENMP)
@@ -335,25 +336,21 @@ void Init_Forces_noQEq_OMP( reax_system *system, control_params *control,
   startTimeBase = MPI_Wtime();
 #endif
 
-  int i, j, pi, pj;
-  int start_i, end_i, start_j, end_j;
+  int i, j, pj;
+  int start_i, end_i;
   int type_i, type_j;
   int ihb, jhb, ihb_top, jhb_top;
-  int local, flag;
-  double r_ij, cutoff;
+  double cutoff;
   single_body_parameters *sbp_i, *sbp_j;
   two_body_parameters *twbp;
   far_neighbor_data *nbr_pj;
   reax_atom *atom_i, *atom_j;
-  bond_data *ibond, *jbond;
   reax_list *far_nbrs = *lists + FAR_NBRS;
   reax_list *bonds = *lists + BONDS;
   reax_list *hbonds = *lists + HBONDS;
   int num_bonds = 0;
   int num_hbonds = 0;
   int btop_i = 0;
-  int btop_j = 0;
-  int renbr = (data->step-data->prev_steps) % control->reneighbor == 0;
 
   // We will use CdDeltaReduction as a temporary (double) buffer to accumulate total_bond_order
   // This is safe because CdDeltaReduction is currently zeroed and its accumulation doesn't start until BondsOMP()
@@ -368,8 +365,8 @@ void Init_Forces_noQEq_OMP( reax_system *system, control_params *control,
 
 #if defined(_OPENMP)
 #pragma omp parallel default(shared) \
-  private(i, atom_i, type_i, pi, start_i, end_i, sbp_i, btop_i, ibond, ihb, ihb_top, \
-          j, atom_j, type_j, pj, start_j, end_j, sbp_j, nbr_pj, jbond, jhb, twbp)
+  private(i, atom_i, type_i, start_i, end_i, sbp_i, btop_i, ihb, ihb_top, \
+          j, atom_j, type_j, pj, sbp_j, nbr_pj, jhb, twbp)
 #endif
   {
 
@@ -417,7 +414,6 @@ void Init_Forces_noQEq_OMP( reax_system *system, control_params *control,
 	// outside of critical section.
 
 	// Start top portion of BOp()
-	int jj = nbr_pj->nbr;
 	double C12, C34, C56;
 	double BO, BO_s, BO_pi, BO_pi2;
 	double bo_cut = control->bo_cut;
@@ -602,7 +598,6 @@ void Compute_ForcesOMP( reax_system *system, control_params *control,
                      reax_list **lists, output_controls *out_control,
                      mpi_datatypes *mpi_data )
 {
-  int qeq_flag;
   MPI_Comm comm = mpi_data->world;
 
   // Init Forces

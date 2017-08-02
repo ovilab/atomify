@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.2
 import QtQuick.Controls 1.4 as QQC1
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
@@ -132,6 +132,7 @@ QQC1.ApplicationWindow {
             title: "Camera"
             EventMenuItem {
                 text: "Switch camera"
+                name: "desktop.changeMode"
                 shortcut: "C"
                 onTriggered: {
                     EventCenter.postEvent("desktop.changeMode")
@@ -140,6 +141,7 @@ QQC1.ApplicationWindow {
             EventMenuItem {
                 text: "Reset to origin"
                 shortcut: "O"
+                name: "visualizer.resetToSystemCenter"
                 onTriggered: {
                     EventCenter.postEvent("visualizer.resetToSystemCenter")
                 }
@@ -150,6 +152,7 @@ QQC1.ApplicationWindow {
             EventMenuItem {
                 text: "Run script"
                 shortcut: "Ctrl+R"
+                name: "editorWindow.runScript"
                 onTriggered: {
                     EventCenter.postEvent("editorWindow.runScript")
                 }
@@ -184,7 +187,6 @@ QQC1.ApplicationWindow {
             title: "Rendering"
             EventMenuItem {
                 text: "Capture screenshot"
-                // shortcut: "Ctrl+R"
                 onTriggered: {
                     mainDesktop.captureScreenshot()
                 }
@@ -239,9 +241,6 @@ QQC1.ApplicationWindow {
         EventShortcut {
             sequence: "Space"
             name: "simulator.togglePause"
-            onActivated: {
-                console.log("Caught space")
-            }
         }
 
         EventShortcut {

@@ -1,16 +1,18 @@
 /*----------------------------------------------------------------------
   PuReMD - Purdue ReaxFF Molecular Dynamics Program
-
+  Website: https://www.cs.purdue.edu/puremd
+  
   Copyright (2010) Purdue University
-  Hasan Metin Aktulga, hmaktulga@lbl.gov
-  Joseph Fogarty, jcfogart@mail.usf.edu
-  Sagar Pandit, pandit@usf.edu
-  Ananth Y Grama, ayg@cs.purdue.edu
+  
+  Contributing authors: 
+  H. M. Aktulga, J. Fogarty, S. Pandit, A. Grama
+  Corresponding author: 
+  Hasan Metin Aktulga, Michigan State University, hma@cse.msu.edu
 
   Please cite the related publication:
   H. M. Aktulga, J. C. Fogarty, S. A. Pandit, A. Y. Grama,
   "Parallel Reactive Molecular Dynamics: Numerical Methods and
-  Algorithmic Techniques", Parallel Computing, in press.
+  Algorithmic Techniques", Parallel Computing, 38 (4-5), 245-259
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License as
@@ -49,14 +51,13 @@ void BondsOMP( reax_system *system, control_params *control,
   startTimeBase = MPI_Wtime();
 #endif
 
-  int natoms = system->n;
-  int nthreads = control->nthreads;
+  const int natoms = system->n;
   reax_list *bonds = (*lists) + BONDS;
-  double gp3 = system->reax_param.gp.l[3];
-  double gp4 = system->reax_param.gp.l[4];
-  double gp7 = system->reax_param.gp.l[7];
-  double gp10 = system->reax_param.gp.l[10];
-  double gp37 = (int) system->reax_param.gp.l[37];
+  const double gp3 = system->reax_param.gp.l[3];
+  const double gp4 = system->reax_param.gp.l[4];
+  const double gp7 = system->reax_param.gp.l[7];
+  const double gp10 = system->reax_param.gp.l[10];
+  const int gp37 = (int) system->reax_param.gp.l[37];
   double total_Ebond = 0.0;
 
 #if defined(_OPENMP)
@@ -66,9 +67,8 @@ void BondsOMP( reax_system *system, control_params *control,
   int  i, j, pj;
   int start_i, end_i;
   int type_i, type_j;
-  double ebond, ebond_thr=0.0, pow_BOs_be2, exp_be12, CEbo;
-  double gp3, gp4, gp7, gp10, gp37;
-  double exphu, exphua1, exphub1, exphuov, hulpov, estriph, estriph_thr=0.0;
+  double ebond, pow_BOs_be2, exp_be12, CEbo;
+  double exphu, exphua1, exphub1, exphuov, hulpov, estriph;
   double decobdbo, decobdboua, decobdboub;
   single_body_parameters *sbp_i, *sbp_j;
   two_body_parameters *twbp;
@@ -86,7 +86,7 @@ void BondsOMP( reax_system *system, control_params *control,
   class ThrData *thr = pair_reax_ptr->getFixOMP()->get_thr(tid);
 
   pair_reax_ptr->ev_setup_thr_proxy(system->pair_ptr->eflag_either,
-				    system->pair_ptr->vflag_either, natoms,
+				    system->pair_ptr->vflag_either, system->N,
 				    system->pair_ptr->eatom, system->pair_ptr->vatom, thr);
 
 #if defined(_OPENMP)
@@ -119,7 +119,8 @@ void BondsOMP( reax_system *system, control_params *control,
       bo_ij = &( bonds->select.bond_list[pj].bo_data );
 
       /* calculate the constants */
-      pow_BOs_be2 = pow( bo_ij->BO_s, twbp->p_be2 );
+      if (bo_ij->BO_s == 0.0) pow_BOs_be2 = 0.0;
+      else pow_BOs_be2 = pow( bo_ij->BO_s, twbp->p_be2 );
       exp_be12 = exp( twbp->p_be1 * ( 1.0 - pow_BOs_be2 ) );
       CEbo = -twbp->De_s * exp_be12 *
 	( 1.0 - twbp->p_be1 * twbp->p_be2 * pow_BOs_be2 );

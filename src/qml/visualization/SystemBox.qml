@@ -20,7 +20,6 @@ Entity {
     property bool showSurfaces: true
     property real outlineAlpha: 0.6
     property real sideAlpha: 0.2
-    property vector3d sizePlus: size.plus(Qt.vector3d(1, 1, 1))
     property var corners
     property var lights: [
         dummy

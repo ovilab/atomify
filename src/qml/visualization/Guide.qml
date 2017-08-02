@@ -17,10 +17,12 @@ import ShaderNodes 1.0
 import "../desktop" // TODO should be separate controllers for desktop and mobile
 
 Entity {
+    id: root
     property var camera
     property var layer
     property alias color: material.fragmentColor
     property alias scale3D: transform.scale3D
+    property vector3d translate
     property alias rotationX: transform.rotationX
     property alias rotationY: transform.rotationY
     property alias rotationZ: transform.rotationZ
@@ -40,6 +42,6 @@ Entity {
     }
     Transform {
         id: transform
-        translation: camera.viewCenter
+        translation: camera.viewCenter.plus(root.translate)
     }
 }

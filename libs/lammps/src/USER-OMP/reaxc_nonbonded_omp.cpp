@@ -1,16 +1,18 @@
 /*----------------------------------------------------------------------
   PuReMD - Purdue ReaxFF Molecular Dynamics Program
-
+  Website: https://www.cs.purdue.edu/puremd
+  
   Copyright (2010) Purdue University
-  Hasan Metin Aktulga, hmaktulga@lbl.gov
-  Joseph Fogarty, jcfogart@mail.usf.edu
-  Sagar Pandit, pandit@usf.edu
-  Ananth Y Grama, ayg@cs.purdue.edu
+  
+  Contributing authors: 
+  H. M. Aktulga, J. Fogarty, S. Pandit, A. Grama
+  Corresponding author: 
+  Hasan Metin Aktulga, Michigan State University, hma@cse.msu.edu
 
   Please cite the related publication:
   H. M. Aktulga, J. C. Fogarty, S. A. Pandit, A. Y. Grama,
   "Parallel Reactive Molecular Dynamics: Numerical Methods and
-  Algorithmic Techniques", Parallel Computing, in press.
+  Algorithmic Techniques", Parallel Computing, 38 (4-5), 245-259
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License as
@@ -48,8 +50,6 @@ void vdW_Coulomb_Energy_OMP( reax_system *system, control_params *control,
 			     reax_list **lists, output_controls *out_control ) {
 
   int natoms = system->n;
-  int nthreads = control->nthreads;
-  long totalReductionSize = system->N * nthreads;
   reax_list *far_nbrs = (*lists) + FAR_NBRS;
   double p_vdW1 = system->reax_param.gp.l[28];
   double p_vdW1i = 1.0 / p_vdW1;
@@ -71,7 +71,8 @@ void vdW_Coulomb_Energy_OMP( reax_system *system, control_params *control,
   double tmp, r_ij, fn13, exp1, exp2;
   double Tap, dTap, dfn13, CEvd, CEclmb, de_core;
   double dr3gamij_1, dr3gamij_3;
-  double e_ele, e_ele_thr, e_vdW, e_vdW_thr, e_core, SMALL = 0.0001;
+  double e_ele, e_vdW, e_core;
+  const double SMALL = 0.0001;
   double e_lg, de_lg, r_ij5, r_ij6, re6;
   rvec temp, ext_press;
   two_body_parameters *twbp;
@@ -86,13 +87,8 @@ void vdW_Coulomb_Energy_OMP( reax_system *system, control_params *control,
   pair_reax_ptr = static_cast<class PairReaxCOMP*>(system->pair_ptr);
   class ThrData *thr = pair_reax_ptr->getFixOMP()->get_thr(tid);
 
-  pair_reax_ptr->ev_setup_thr_proxy(system->pair_ptr->eflag_either,
-				    system->pair_ptr->vflag_either,
-				    natoms, system->pair_ptr->eatom,
-				    system->pair_ptr->vatom, thr);
   e_core = 0;
   e_vdW = 0;
-  e_vdW_thr = 0;
   e_lg = 0;
   de_lg = 0.0;
 
@@ -263,8 +259,6 @@ void Tabulated_vdW_Coulomb_Energy_OMP(reax_system *system,control_params *contro
   double SMALL = 0.0001;
   int  natoms = system->n;
   reax_list *far_nbrs = (*lists) + FAR_NBRS;
-  int  nthreads = control->nthreads;
-  long totalReductionSize = system->N * nthreads;
   double total_EvdW = 0.;
   double total_Eele = 0.;
 
@@ -292,11 +286,6 @@ void Tabulated_vdW_Coulomb_Energy_OMP(reax_system *system,control_params *contro
   class PairReaxCOMP *pair_reax_ptr;
   pair_reax_ptr = static_cast<class PairReaxCOMP*>(system->pair_ptr);
   class ThrData *thr = pair_reax_ptr->getFixOMP()->get_thr(tid);
-
-  pair_reax_ptr->ev_setup_thr_proxy(system->pair_ptr->eflag_either,
-				    system->pair_ptr->vflag_either,
-				    natoms, system->pair_ptr->eatom,
-				    system->pair_ptr->vatom, thr);
 
 #if defined(_OPENMP)
 #pragma omp for schedule(guided)

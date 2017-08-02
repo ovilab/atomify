@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.0
 import Atomify 1.0
 import StandardPaths 1.0
@@ -14,6 +14,7 @@ Pane {
 
     property var tagModel: []
     property var tagMap: {
+        "reaxff": "ReaxFF",
         "diffusion": "Diffusion",
         "water": "Water",
         "lammps": "LAMMPS",
@@ -21,7 +22,7 @@ Pane {
         "silica": "Silica",
         "other": "Other"
     }
-    property var tagList: ["lammps", "silica", "water", "moltemplate", "diffusion", "other"]
+    property var tagList: ["lammps", "silica", "reaxff", "water", "moltemplate", "diffusion", "other"]
 
     property Item screenshotObject
     property string currentScript
