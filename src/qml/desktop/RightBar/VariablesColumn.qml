@@ -52,7 +52,11 @@ Column {
                     if(model.modelData.isPerAtom) return ""
 
                     if(model.modelData.valueHasDecimals) {
-                        ": "+model.modelData.value.toFixed(3)
+                        if (model.modelData.value < 0.0005) {
+                            ": "+model.modelData.value.toLocaleString(Qt.locale("en_US"),'e',3);
+                        } else {
+                            ": "+model.modelData.value.toFixed(3)
+                        }
                     } else {
                         ": "+model.modelData.value.toFixed(0)
                     }
