@@ -60,7 +60,11 @@ Column {
                 color: (computeTitleLabel.numPerAtomValues > 1) ? "steelblue" : "white"
                 text: {
                     if(computeTitleLabel.hasScalarData) {
-                        ": "+model.modelData.scalarValue.toPrecision(4)
+                        if (model.modelData.scalarValue < 0.0005) {
+                            ": "+model.modelData.scalarValue.toLocaleString(Qt.locale("en_US"),'e',3);
+                        } else {
+                            ": "+model.modelData.scalarValue.toPrecision(4)
+                        }
                     } else if(computeTitleLabel.numPerAtomValues > 1) {
                         "   ["+(computeTitleLabel.compute.perAtomIndex+1)+"]"
                     } else ""
