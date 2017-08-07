@@ -55,7 +55,7 @@ Column {
                         if (model.modelData.value < 0.0005) {
                             ": "+model.modelData.value.toLocaleString(Qt.locale("en_US"),'e',3);
                         } else {
-                            ": "+model.modelData.value.toFixed(3)
+                            ": "+model.modelData.value.toPrecision(4) // for consistency with computes. Was toFixed(3)
                         }
                     } else {
                         ": "+model.modelData.value.toFixed(0)
