@@ -175,25 +175,49 @@ Flickable {
                     visible: system.triclinic
                 }
                 Label {
-                    text: "Units: <a href=\"units\">"+system.units.name+"</a>"
+                    text: "<a href=\"units\">Units</a>: "+system.units.name
                     onLinkActivated: {
                         Qt.openUrlExternally("http://lammps.sandia.gov/doc/units.html")
                     }
                 }
-                ToolTipLabel {
-                    toolTipText: "The current simulations is "+system.units.dimensions+"-dimensional."
-                    text: "Dimensions: "+system.units.dimensions
+
+// ====================================
+/*
+                Label {
+                    ToolTipLabel {
+                      toolTipText: "The current simulations is "+system.units.dimensions+"-dimensional."
+                    }
+                  text: "<a href=\"dimensions\">Dimensions</a>: "+system.units.dimensions
+                  onLinkActivated: {
+                    Qt.openUrlExternally("http://lammps.sandia.gov/doc/dimension.html")
+                  }
                 }
+*/
+                ToolTipLabel {
+                    toolTipText: "The current simulation is "+system.units.dimensions+"-dimensional."
+                      text: "<a href=\"dimensions\">Dimensions</a>: "+system.units.dimensions // this doesn't work. tooltip links don't work.
+                      onLinkActivated: {
+                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/dimension.html")
+                      }
+                }
+
+
                 ToolTipLabel {
                     property string explainationP: (system.boundaryStyle.search("p")>-1) ? "p is periodic. " : ""
                     property string explainationF: (system.boundaryStyle.search("f")>-1) ? "f is non-periodic and fixed. " : ""
                     property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
                     property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
                     toolTipText: explainationP+explainationF+explainationS+explainationM
-                    text: "Boundary: "+system.boundaryStyle
+                    text: "<a href=\"boundary\">Boundary</a>: "+system.boundaryStyle   // this link doesn't work right now.
+                    onLinkActivated: {
+                      Qt.openUrlExternally("http://lammps.sandia.gov/doc/boundary.html")
+                    }
                 }
                 Label {
-                    text: "Timestep: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
+                    text: " <a href=\"timestep\">Timestep</a>: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
+                    onLinkActivated: {
+                      Qt.openUrlExternally("http://lammps.sandia.gov/doc/timestep.html")
+                    }
                 }
                 Label {
                     text: "Number of atoms: "+system.numberOfAtoms
@@ -415,3 +439,4 @@ Flickable {
         }
     }
 }
+
