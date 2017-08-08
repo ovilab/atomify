@@ -10,11 +10,11 @@
 #include "units.h"
 #include "../performance.h"
 
+#include <library.h>
 #include <force.h>
 #include <domain.h>
 #include <atom.h>
 #include <output.h>
-#include <thermo.h>
 #include <update.h>
 
 using namespace LAMMPS_NS;
@@ -136,16 +136,14 @@ void System::updateSizeAndOrigin(Domain *domain)
 
 void System::calculateCPURemain(LAMMPS *lammps)
 {
-    double value;
-    lammps->output->thermo->evaluate_keyword("cpuremain", &value);
+    double value = lammps_get_thermo(lammps, "cpuremain");
     setCpuremain(value);
 }
 
 void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
 {
     if(m_currentTimestep % 10 == 0) {
-        double value;
-        lammps->output->thermo->evaluate_keyword("spcpu", &value);
+        double value = lammps_get_thermo(lammps, "spcpu");
         if(value < 0) return;
         double oldValue = m_performance->timestepsPerSecond();
         value = 0.6*oldValue + 0.4*value; // low pass filter
@@ -228,7 +226,6 @@ void System::synchronize(LAMMPSController *lammpsController)
     setMacAppStore(false);
 #endif
 
-//    lammps->output->thermo->compute(1);
     calculateTimestepsPerSeconds(lammps);
     calculateCPURemain(lammps);
 
