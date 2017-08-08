@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  ../Schemas/NeuroML2/NeuroML_v2beta3.xsd"
+    id="NML2_SimpleMorphology">
+
+<!-- Example of a cell morphology in NeuroML 2 -->
+
+<!-- This is a "pure" NeuroML 2 file. It cannot currently used for simulations with
+     jLEMS/jNeuroML however, as jLEMS does not yet support multicompartmental cells -->
+
+    <!-- Note: no <cells> element -->
+
+    <cell id="SimpleCell">
+
+        <morphology id="SimpleCell_Morphology">
+
+            <!-- Note: no <segments> -->
+
+            <segment id ="0" name="Soma">    <!-- name is optional-->
+                <!-- no parent => root segment -->
+                <proximal x="0" y="0" z="0" diameter="10"/>
+                <distal x="10" y="0" z="0" diameter="10"/>
+            </segment>
+
+            <segment id ="1" name="MainDendrite1" >
+                <parent segment="0"/>
+                <!-- Same proximal 3D point as parent but different diameter -->
+                <proximal x="10" y="0" z="0" diameter="3"/>
+                <distal x="20" y="0" z="0" diameter="3"/>
+            </segment>
+
+            <segment id ="2" name="MainDendrite2">
+                <parent segment="1"/>
+                <!-- no proximal => use distal (including diameter) of parent -->
+                <distal x="30" y="0" z="0" diameter="1"/>
+            </segment>
+
+            <segment id ="3" name="Spine" >
+                <!-- Electrically connected to point 0.5 along parent -->
+                <parent segment="2" fractionAlong="0.5"/>
+                <proximal x="25" y="0" z="0" diameter="0.2"/>
+                <distal x="25" y="1" z="0" diameter="0.2"/>
+            </segment>
+
+            <!-- segmentGroups follow -->
+
+            <segmentGroup id="soma_group" neuroLexId="sao1044911821">    <!-- Reserved/special name of a group -->
+                <member segment="0"/>
+            </segmentGroup>
+
+            <segmentGroup id="thick_dendrites">
+                <member segment="1"/>
+                <member segment="2"/>
+            </segmentGroup>
+
+
+            <!-- The NeuroLex reference points to the concept of a spine -->
+            <segmentGroup id="spines" neuroLexId="sao1145756102">
+                <member segment="3"/>
+            </segmentGroup>
+
+
+            <segmentGroup id="dendrite_group" neuroLexId="sao1211023249">     <!-- Reserved/special name of a group -->
+                <include segmentGroup="thick_dendrites"/>
+                <include segmentGroup="spines"/>
+                <!-- <exclude ...> could be present here -->
+            </segmentGroup>
+
+
+            <segmentGroup id="middle">            <!-- group defined between 2 segs -->
+                <path>
+                    <from segment="1"/>
+                    <to segment="2"/>
+                </path>
+            </segmentGroup>
+
+            <segmentGroup id="tip">              <!-- group defined between 2 segs -->
+                <subTree>
+                    <from segment="1"/>
+                </subTree>
+            </segmentGroup>
+
+            <!-- TODO: Allow wildcard on names?-->
+
+        </morphology>
+
+    </cell>
+
+</neuroml>

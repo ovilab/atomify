@@ -1,0 +1,222 @@
+                  --------------------------------
+                     LAMMPS ACCELERATOR LIBRARY
+                  --------------------------------
+                     
+                       W. Michael Brown (ORNL)
+                        Trung Dac Nguyen (ORNL)
+                          Peng Wang (NVIDIA)
+                       Axel Kohlmeyer (Temple)
+                         Steve Plimpton (SNL)
+                        Inderaj Bains (NVIDIA)
+
+-------------------------------------------------------------------
+
+This directory has source files to build a library that LAMMPS
+links against when using the GPU package.
+
+This library must be built with a C++ compiler, before LAMMPS is
+built, so LAMMPS can link against it.
+
+You can type "make lib-gpu" from the src directory to see help on how
+to build this library via make commands, or you can do the same thing
+by typing "python Install.py" from within this directory, or you can
+do it manually by following the instructions below.
+
+Build the library using one of the provided Makefile.* files or create
+your own, specific to your compiler and system.  For example:
+
+make -f Makefile.linux
+
+When you are done building this library, two files should
+exist in this directory:
+
+libgpu.a		the library LAMMPS will link against
+Makefile.lammps		settings the LAMMPS Makefile will import
+
+Makefile.lammps is created by the make command, by copying one of the
+Makefile.lammps.* files.  See the EXTRAMAKE setting at the top of the
+Makefile.* files.
+
+IMPORTANT: You should examine the final Makefile.lammps to insure it is
+correct for your system, else the LAMMPS build can fail.
+
+IMPORTANT: If you re-build the library, e.g. for a different precision
+(see below), you should do a "make clean" first, e.g. make -f
+Makefile.linux clean, to insure all previous derived files are removed
+before the new build is done.
+
+Makefile.lammps has settings for 3 variables:
+
+user-gpu_SYSINC = leave blank for this package
+user-gpu_SYSLIB = CUDA libraries needed by this package
+user-gpu_SYSPATH = path(s) to where those libraries are
+
+Because you have the CUDA compilers on your system, you should have
+the needed libraries.  If the CUDA developement tools were installed
+in the standard manner, the settings in the Makefile.lammps.standard
+file should work.
+
+-------------------------------------------------------------------
+
+                          GENERAL NOTES
+                  --------------------------------
+                          
+This library, libgpu.a, provides routines for GPU acceleration
+of certain LAMMPS styles and neighbor list builds. Compilation of this 
+library requires installing the CUDA GPU driver and CUDA toolkit for
+your operating system. Installation of the CUDA SDK is not necessary.
+In addition to the LAMMPS library, the binary nvc_get_devices will also
+be built. This can be used to query the names and properties of GPU 
+devices on your system. A Makefile for OpenCL compilation is provided,
+but support for OpenCL use is not currently provided by the developers.
+Details of the implementation are provided in:
+
+----
+
+Brown, W.M., Wang, P. Plimpton, S.J., Tharrington, A.N. Implementing 
+Molecular Dynamics on Hybrid High Performance Computers - Short Range 
+Forces. Computer Physics Communications. 2011. 182: p. 898-911. 
+
+and
+
+Brown, W.M., Kohlmeyer, A. Plimpton, S.J., Tharrington, A.N. Implementing 
+Molecular Dynamics on Hybrid High Performance Computers - Particle-Particle 
+Particle-Mesh. Computer Physics Communications. 2012. 183: p. 449-459. 
+
+and
+
+Brown, W.M., Masako, Y. Implementing Molecular Dynamics on Hybrid High 
+Performance Computers - Three-Body Potentials. Computer Physics Communications. 
+2013. 184: p. 2785–2793.
+
+----
+
+NOTE: Installation of the CUDA SDK is not required.
+
+Current styles supporting GPU acceleration:
+
+     1  beck
+     2  born/coul/long
+     3  born/coul/wolf
+     4  born
+     5  buck/coul/cut
+     6  buck/coul/long
+     7  buck
+     8  colloid
+     9  coul/dsf
+    10  coul/long
+    11  eam/alloy
+    12  eam/fs
+    13  eam
+    14  gauss
+    15  gayberne
+    16  lj96/cut
+    17  lj/charmm/coul/long
+    18  lj/class2/coul/long
+    19  lj/class2
+    20  lj/cut/coul/cut
+    21  lj/cut/coul/debye
+    22  lj/cut/coul/dsf
+    23  lj/cut/coul/long
+    24  lj/cut/coul/msm
+    25  lj/cut/dipole/cut
+    26  lj/cut
+    27  lj/expand
+    28  lj/gromacs
+    29  lj/sdk/coul/long
+    30  lj/sdk
+    31  lj/sf/dipole/sf
+    32  mie/cut
+    33  morse
+    34  resquared
+    35  soft
+    36  sw
+    37  table
+    38  yukawa/colloid
+    39  yukawa
+    40  pppm
+
+
+                     MULTIPLE LAMMPS PROCESSES
+                  --------------------------------
+                     
+Multiple LAMMPS MPI processes can share GPUs on the system, but multiple
+GPUs cannot be utilized by a single MPI process. In many cases, the
+best performance will be obtained by running as many MPI processes as
+CPU cores available with the condition that the number of MPI processes
+is an integer multiple of the number of GPUs being used. See the 
+LAMMPS user manual for details on running with GPU acceleration.
+
+
+                    BUILDING AND PRECISION MODES
+                  --------------------------------
+
+To build, edit the CUDA_ARCH, CUDA_PRECISION, CUDA_HOME variables in one of 
+the Makefiles. CUDA_ARCH should be set based on the compute capability of
+your GPU. This can be verified by running the nvc_get_devices executable after
+the build is complete. Additionally, the GPU package must be installed and
+compiled for LAMMPS. This may require editing the gpu_SYSPATH variable in the
+LAMMPS makefile.
+
+Please note that the GPU library accesses the CUDA driver library directly,
+so it needs to be linked not only to the CUDA runtime library (libcudart.so)
+that ships with the CUDA toolkit, but also with the CUDA driver library
+(libcuda.so) that ships with the Nvidia driver. If you are compiling LAMMPS
+on the head node of a GPU cluster, this library may not be installed,
+so you may need to copy it over from one of the compute nodes (best into
+this directory).
+
+The gpu library supports 3 precision modes as determined by 
+the CUDA_PRECISION variable:
+
+  CUDA_PRECISION = -D_SINGLE_SINGLE  # Single precision for all calculations
+  CUDA_PRECISION = -D_DOUBLE_DOUBLE  # Double precision for all calculations
+  CUDA_PRECISION = -D_SINGLE_DOUBLE  # Accumulation of forces, etc. in double
+
+NOTE: PPPM acceleration can only be run on GPUs with compute capability>=1.1.
+      You will get the error "GPU library not compiled for this accelerator."
+      when attempting to run PPPM on a GPU with compute capability 1.0.
+
+NOTE: Double precision is only supported on certain GPUs (with
+      compute capability>=1.3). If you compile the GPU library for
+      a GPU with compute capability 1.1 and 1.2, then only single
+      precision FFTs are supported, i.e. LAMMPS has to be compiled
+      with -DFFT_SINGLE. For details on configuring FFT support in 
+      LAMMPS, see http://lammps.sandia.gov/doc/Section_start.html#2_2_4
+      
+NOTE: For graphics cards with compute capability>=1.3 (e.g. Tesla C1060),
+      make sure that -arch=sm_13 is set on the CUDA_ARCH line.
+
+NOTE: For newer graphics card (a.k.a. "Fermi", e.g. Tesla C2050), make 
+      sure that either -arch=sm_20 or -arch=sm_21 is set on the 
+      CUDA_ARCH line, depending on hardware and CUDA toolkit version.
+
+NOTE: The gayberne/gpu pair style will only be installed if the ASPHERE
+      package has been installed.
+
+NOTE: The cg/cmm/gpu and cg/cmm/coul/long/gpu pair styles will only be
+      installed if the USER-CG-CMM package has been installed.
+
+NOTE: The lj/cut/coul/long/gpu, cg/cmm/coul/long/gpu, coul/long/gpu,
+      lj/charmm/coul/long/gpu and pppm/gpu styles will only be installed
+      if the KSPACE package has been installed.
+
+NOTE: The system-specific setting LAMMPS_SMALLBIG (default), LAMMPS_BIGBIG, 
+      or LAMMPS_SMALLSMALL if specified when building LAMMPS (i.e. in 
+      src/MAKE/Makefile.foo) should be consistent with that specified 
+      when building libgpu.a (i.e. by LMP_INC in the lib/gpu/Makefile.bar).
+
+                      EXAMPLE BUILD PROCESS
+                  --------------------------------
+                    
+cd ~/lammps/lib/gpu
+emacs Makefile.linux
+make -f Makefile.linux
+./nvc_get_devices
+cd ../../src
+emacs ./MAKE/Makefile.linux
+make yes-asphere
+make yes-kspace
+make yes-gpu
+make linux
+

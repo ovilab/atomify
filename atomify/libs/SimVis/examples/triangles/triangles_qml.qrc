@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>cubemap_negativeX.jpg</file>
+        <file>cubemap_negativeY.jpg</file>
+        <file>cubemap_negativeZ.jpg</file>
+        <file>cubemap_positiveX.jpg</file>
+        <file>cubemap_positiveY.jpg</file>
+        <file>cubemap_positiveZ.jpg</file>
+    </qresource>
+</RCC>

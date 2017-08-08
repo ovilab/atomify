@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main_sharedmaterials.qml</file>
+    </qresource>
+</RCC>

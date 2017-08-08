@@ -1,0 +1,21 @@
+{
+  "name": "net.ovilab.ShaderNodes",
+  "description": "",
+  "author": {
+    "name": "Svenn-Arne Dragly",
+    "email": "s@dragly.com"
+  },
+  "repository": {
+    "type": "GITHUB",
+    "url": "git@github.com:ovilab/ShaderNodes.git"
+  },
+  "version": {
+    "label": "0.1.1",
+    "revision": "",
+    "fingerprint": ""
+  },
+  "dependencies": [
+  ],
+  "license": "GPL_3_0",
+  "webpage": ""
+}

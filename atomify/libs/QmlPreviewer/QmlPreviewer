@@ -1,0 +1,30 @@
+#ifndef QMLPREVIEWER_INCLUDE_H
+#define QMLPREVIEWER_INCLUDE_H
+
+#if !defined(Q_OS_IOS) && !defined(Q_OS_ANDROID) && !defined(Q_OS_WINRT)
+
+#include "qmlpreviewer.h"
+
+#else
+#include <QObject>
+#include <QVariant>
+#include <QDebug>
+
+class QmlPreviewer : public QObject
+{
+    Q_OBJECT
+public:
+    explicit QmlPreviewer(QApplication &app);
+
+signals:
+
+public slots:
+    void reload(QString path) {}
+    void show() {
+        qFatal("Preview not supported on Android / iOS");
+    }
+    void handleDialogStart(QVariant qrcPaths, QUrl filePath) {}
+};
+#endif
+
+#endif // QMLPREVIEWER_INCLUDE_H

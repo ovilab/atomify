@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:ovilab/ShaderNodes.git
+	branch = dev
+	commit = 5975426a08d4c1f41fff29ddc5616fbb798d8582
+	parent = 0f9e70815221f3126ca49f89569b7e72c0eef5a9
+	cmdver = 0.3.0

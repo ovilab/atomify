@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>BondScene.qml</file>
+        <file>main_bond.qml</file>
+    </qresource>
+</RCC>
