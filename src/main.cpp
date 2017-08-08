@@ -42,32 +42,31 @@
 #include "keysequence.h"
 #include <mpi.h>
 #include <input.h>
+#include <library.h>
 
 using namespace LAMMPS_NS;
 int regularLAMMPS (int argc, char **argv)
 {
-  MPI_Init(&argc,&argv);
+    MPI_Init(&argc,&argv);
 
-#ifdef LAMMPS_EXCEPTIONS
-  try {
-    LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
-    lammps->input->file();
-    delete lammps;
-  } catch(LAMMPSAbortException & ae) {
-    MPI_Abort(ae.universe, 1);
-  } catch(LAMMPSException & e) {
+    try {
+        void *ptr = nullptr;
+        lammps_open(argc, argv, MPI_COMM_WORLD, &ptr);
+        LAMMPS *lammps = static_cast<LAMMPS*>(ptr);
+                // LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
+        lammps->input->file();
+        delete lammps;
+    } catch(LAMMPSAbortException & ae) {
+        MPI_Abort(ae.universe, 1);
+    } catch(LAMMPSException & e) {
+        MPI_Finalize();
+        exit(1);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
-    exit(1);
-  }
-#else
-  LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
-  lammps->input->file();
-  delete lammps;
-#endif
-  MPI_Barrier(MPI_COMM_WORLD);
-  MPI_Finalize();
 
-  return 0;
+    return 0;
 }
 
 void copyExamplesToLocalFolder()
@@ -203,8 +202,8 @@ int main(int argc, char *argv[])
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 #ifdef Q_OS_MAC
         QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
-//        window->setIcon(QIcon(":/images/atomify_logo.icns"));
-//        app.setWindowIcon(QIcon(":/images/atomify_logo.icns"));
+        //        window->setIcon(QIcon(":/images/atomify_logo.icns"));
+        //        app.setWindowIcon(QIcon(":/images/atomify_logo.icns"));
         window->setIcon(QIcon("../Resources/icon.icns"));
         app.setWindowIcon(QIcon("../Resources/icon.icns"));
 #endif
