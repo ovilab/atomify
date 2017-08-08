@@ -251,14 +251,13 @@ void Atoms::generateSphereData(AtomData &atomData) {
             atomData.positions[visibleAtomCount] = atomData.positions[i];
             atomData.colors[visibleAtomCount] = atomData.colors[i];
             atomData.radii[visibleAtomCount] = atomData.radii[i];
+            atomData.deltaPositions[visibleAtomCount] = atomData.deltaPositions[i];
             if(m_renderingMode == "Stick") atomData.radii[visibleAtomCount] = 0.1*m_bondScale;
             else if(m_renderingMode == "Wireframe") atomData.radii[visibleAtomCount] = 0.1*m_bondScale;
             visibleAtomCount++;
         }
     }
-    atomData.positions.resize(visibleAtomCount);
-    atomData.colors.resize(visibleAtomCount);
-    atomData.radii.resize(visibleAtomCount);
+    atomData.resize(visibleAtomCount);
 
     m_sphereDataRaw.resize(visibleAtomCount * sizeof(SphereVBOData));
     SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(m_sphereDataRaw.data());
