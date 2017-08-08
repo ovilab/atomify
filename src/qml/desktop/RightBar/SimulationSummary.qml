@@ -272,7 +272,7 @@ Flickable {
                         ((system.simulationTime/1000000 < 0.0005) ? 
                             (system.simulationTime/1000000).toLocaleString(Qt.locale("en_US"),'e',3) : 
                             (system.simulationTime/1000000).toFixed(3)
-                            )+" ns"
+                            )+" [ns]"
                 }
                 ToolTipLabel {
                     toolTipText: "1x targets 60 frames per second."
