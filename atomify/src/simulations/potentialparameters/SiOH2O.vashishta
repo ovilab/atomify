@@ -1,0 +1,118 @@
+# DATE: 2015-10-14 CONTRIBUTOR: Aidan Thompson, athomps@sandia.gov CITATION: P. Vashishta, R. K. Kalia, J. P. Rino, and I. Ebbsjo, Phys. Rev. B 41, 12197 (1990).
+#
+# Vashishta potential file for SiO2, P. Vashishta, R. K. Kalia, J. P. Rino, and I. Ebbsjo,
+# Phys. Rev. B 41, 12197 (1990).
+# 
+# These parameters, some inferred indirectly, give a good
+# match to the energy-volume curve for alpha-quartz in Fig. 2 of the paper.
+#
+# These entries are in LAMMPS "metal" units:
+#   H = eV*Angstroms^eta; Zi, Zj = |e| (e = electronic charge); 
+#   lambda1, lambda4, rc, r0, gamma = Angstroms; 
+#   D = eV*Angstroms^4; W = eV*Angstroms^6; B = eV; 
+#   other quantities are unitless
+#
+# element1  element2  element3
+#           H  eta  Zi  Zj  lambda1  D  lambda4
+#           W  rc  B  gamma  r0  C  cos(theta)
+
+#     .--.  _ .-.   _              
+#    : .--':_;: :  :_;             
+#    `. `. .-.: :  .-. .--.  .--.  
+#     _`, :: :: :_ : :'  ..'' .; ; 
+#    `.__.':_;`.__;:_;`.__.'`.__,_;
+# element1  element2  element3
+#           H  eta  Zi  Zj  lambda1  D  lambda4
+#           W  rc  B  gamma  r0  C  cos(theta)
+
+# Provides Si-Si interactions
+Si  Si  Si 1 0.39246  11  1.2  1.2  4.43  0.0  2.5
+             0.0  5.5  0.0  0.0  0.0  0.0  0.0
+# Provides O-O interactions
+O   O   O  1 355.5263  7  -0.6 -0.6 4.43  12.4413912  2.5
+             0.0  5.5  0.0  0.0  0.0  0.0  0.0
+# Provides Si-O-Si and Si-O interactions (2 body must be equal to Si O O)
+O   Si  Si 1 78.3143  9  -0.6  1.2  4.43  24.8827823  2.5
+             0.0  5.5  19.972  1.0  2.60  0.0  -0.777145961
+# Provides O-Si-O and Si-O interactions (2 body must be equal to O Si Si)
+Si  O   O  1 78.3143  9  1.2  -0.6  4.43  24.8827823  2.5
+             0.0  5.5  4.993  1.0  2.60  0.0  -0.333313248
+# These are all zero, not contributing, but must be here
+Si  O   Si 1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+Si  Si  O  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0            
+O   Si  O  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+O   O   Si 1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+
+
+
+#   .-.   .-.       .-.           
+#   : :.-.: :      .' `.          
+#   : :: :: : .--. `. .'.--. .--. 
+#   : `' `' ;' .; ; : :' '_.': ..'
+#    `.,`.,' `.__,_;:_;`.__.':_; 
+# element1  element2  element3
+#           H  eta  Zi  Zj  lambda1  D  lambda4
+#           W  rc  B  gamma  r0  C  cos(theta)
+
+O   O   O  2 1965.88  9  -0.65966  -0.65966  4.43  15.0383876  2.5
+             10.0  5.5  0.0  0.0  0.0  0.0  0.0
+# Provides H-H interactions
+H   H   H  1 0.0  9  0.32983 0.32983 4.43  0  2.5
+             0.0  5.5  0.0  0.0  0.0  0.0  0.0
+# Provides H-O-H and H-O interactions (2 body must be equal to H O O)
+O   H   H  1 0.61437  9  -0.65966  0.32983  4.43  1.87988844607  1.51113
+             0.0  5.5  52.9333  0.75  1.4  0.0  -0.138267391
+# Provides O-H-O and H-O interactions (2 body must be equal to O H H)
+H   O   O  1 0.61437  9  0.32983  -0.65966  4.43  1.87988844607  1.51113
+             0.0  5.5  0.0  0.0  0.0  0.0  1.0
+# These are all zero, not contributing, but must be here
+H   O   H  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+H   H   O  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0            
+O   H   O  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+O   O   H  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+
+#    .-..-. _                .-.
+#    : `' ::_;               : :
+#    : .. :.-..-.,-. .--.  .-' :
+#    : :; :: :`.  .'' '_.'' .; :
+#    :_;:_;:_;:_,._;`.__.'`.__.'
+# element1  element2  element3
+#           H  eta  Zi  Zj  lambda1  D  lambda4
+#           W  rc  B  gamma  r0  C  cos(theta)
+
+# 2 types mixed
+H   Si  Si 1 0  0  0.32983  1.2     4.43  0  0
+             0.0  5.5  0.0  0.0  0.0  0.0  1.0
+Si  H   H  1 0  0  1.2      0.32983 4.43  0  0
+             0.0  5.5  0.0  0.0  0.0  0.0  1.0
+# These are all zero, not contributing
+Si  Si  H  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+Si  H   Si 1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+H   Si  H  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+H   H   Si 1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+
+# 3 types mixed
+O   Si  H  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+O   H   Si 1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+Si  O   H  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+Si  H   O  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+H   Si  O  1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0
+H   O   Si 1 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+             0.0  0.0  0.0  0.0  0.0  0.0  0.0

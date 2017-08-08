@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/simulations/potentialparameters">
+        <file>H2O.vashishta</file>
+        <file>SiOH2O.vashishta</file>
+        <file>SiO2.vashishta</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>potentialparameters/H2O.vashishta</file>
+        <file>potentialparameters/SiOH2O.vashishta</file>
+        <file>potentialparameters/SiO2.vashishta</file>
+    </qresource>
+</RCC>

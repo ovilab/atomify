@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/SimVis">
+        <file>render/shaders/gl3/spheres.frag</file>
+        <file>render/shaders/gl3/spheres.vert</file>
+        <file>render/shaders/gl3/cylinders.frag</file>
+        <file>render/shaders/gl3/cylinders.geom</file>
+        <file>render/shaders/gl3/cylinders.vert</file>
+        <file>render/shaders/es2/spheres.frag</file>
+        <file>render/shaders/es2/spheres.vert</file>
+        <file>render/shaders/es2/cylinders.frag</file>
+        <file>render/shaders/es2/cylinders.geom</file>
+        <file>render/shaders/es2/cylinders.vert</file>
+        <file>render/shaders/gl3/bonds.frag</file>
+        <file>render/shaders/gl3/bonds.vert</file>
+        <file>render/shaders/gl3/spheres-deferred.vert</file>
+        <file>render/shaders/gl3/spheres-deferred.frag</file>
+        <file>render/shaders/gl3/bonds-deferred.vert</file>
+        <file>render/shaders/gl3/bonds-deferred.frag</file>
+    </qresource>
+</RCC>

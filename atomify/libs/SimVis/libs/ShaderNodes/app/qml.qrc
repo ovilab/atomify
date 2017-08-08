@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>PreviewScene.qml</file>
+        <file>Editor.qml</file>
+        <file>Node.qml</file>
+        <file>Edge.qml</file>
+        <file>Handle.qml</file>
+        <file>BezierCurve.qml</file>
+        <file>Plug.qml</file>
+        <file>HandleArray.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>SCurve.qml</file>
+        <file>PropertiesPane.qml</file>
+        <file>images/colorwheel.png</file>
+        <file>widgets/ColorEditor.qml</file>
+        <file>widgets/FloatEditor.qml</file>
+        <file>widgets/Vector3DEditor.qml</file>
+    </qresource>
+</RCC>

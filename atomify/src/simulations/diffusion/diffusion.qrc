@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/simulations/diffusion">
+        <file>simple_diffusion/simple_diffusion.png</file>
+        <file>simple_diffusion/simple_diffusion.qml</file>
+        <file>simple_diffusion/simple_diffusion.in</file>
+        <file>test/test.in</file>
+        <file>test/test.png</file>
+        <file>test/test.qml</file>
+    </qresource>
+</RCC>

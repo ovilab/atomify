@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:ovilab/lammps
+	branch = atomify
+	commit = 66fb27f7fc9ba8e011b1fb7d4cbc822ccbffaacc
+	parent = da44b71b8d15d33a01ae184f29ff59d80ee18ebe
+	cmdver = 0.3.0

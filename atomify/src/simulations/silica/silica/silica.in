@@ -1,0 +1,32 @@
+# test Vashishta potential for quartz
+# package omp 2
+# suffix omp
+
+units		metal
+boundary	p p p
+
+atom_style	atomic
+
+read_data	betacristobalite.data
+
+replicate   4 4 4
+
+pair_style 	vashishta
+pair_coeff	* * ../../potentialparameters/SiO2.vashishta Si O
+mass            1 28.08
+mass            2 15.9994
+
+velocity	all create 300.0 277387 mom yes
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+fix nvt all nvt temp 300 300 1.0
+thermo		10
+timestep	0.001
+
+thermo_style custom step time density temp etotal 
+thermo 10
+#/atom 1 silicon
+#/atom 2 oxygen
+#/bond 1 2 2.6

@@ -1,0 +1,34 @@
+name: atomify
+version: "2.0.10"
+summary: Atomify LAMMPS
+description: Editor for the molecular dynamics simulator LAMMPS
+confinement: strict
+grade: stable
+
+apps:
+  atomify:
+    command: desktop-launch custom-qt-helper atomify
+    plugs: ['unity7', 'x11', 'opengl', 'network', 'network-bind', 'home']
+
+parts:
+  move:
+    plugin: dump
+    source: snapdump
+  conf:
+    plugin: dump
+    source: .snapcontents
+  packages:
+    plugin: nil
+    stage-packages:
+      - libgl1-mesa-dri
+      - libgl1-mesa-glx
+      - xserver-xorg-video-intel 
+      - qt5-default
+  helpers:
+    plugin: nil
+    after:
+      - move # NOTE move and conf must be here due install error for desktop-qt5 otherwise
+      - conf
+      - packages
+      - desktop-qt5
+  

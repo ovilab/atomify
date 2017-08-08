@@ -1,0 +1,74 @@
+This directory contains build settings for the KIM API library which
+is required to use the KIM package and its pair_style kim command in a
+LAMMPS input script.
+
+Information about the KIM project can be found at https://openkim.org.
+The KIM project is lead by Ellad Tadmor and Ryan Elliott (U Minn) and
+James Sethna (Cornell U).  Ryan Elliott is the main developer for the
+KIM API and he also maintains the code that implements the pair_style
+kim command.
+
+To download, build, and install the KIM API on your system, follow
+these steps.  You can use the install.py script to automate these steps.
+
+-----------------
+
+Instructions:
+
+
+1. Configure lammps for use with the kim-api library installed in this directory
+
+$ printf "KIM_INSTALL_DIR=${PWD}\n" > ./Makefile.KIM_DIR
+$ printf "include ${PWD}/lib/kim-api/Makefile.KIM_Config\n" > ./Makefile.KIM_Config
+
+2. Download and unpack the kim-api
+
+# replace X.Y.Z as appropriate here and below
+$ wget http://s3.openkim.org/kim-api/kim-api-vX.Y.Z.tgz
+$ tar zxvf kim-api-vX.Y.Z.tgz
+
+# configure the kim-api
+$ cd kim-api-vX.Y.Z
+$ ./configure --prefix=${PWD}/../
+
+# setup the desired kim item
+$ make add-Pair_Johnson_Fe__MO_857282754307_002
+
+3. Build and install the kim-api and model
+
+$ make
+$ make install
+
+# replace X with the KIM API major version number
+$ make install-set-default-to-vX
+$ cd ../
+
+4. Remove source and build files
+
+$ rm -rf kim-api-vX.Y.Z
+$ rm -rf kim-api-vX.Y.Z.tgz
+
+5. To add additional items do the following (replace the kim item name with your
+   desired value)
+
+$ wget https://openkim.org/download/EAM_Johnson_NearestNeighbor_Cu__MO_887933271505_001.tgz
+$ tar zxvf EAM_Johnson_NearestNeighbor_Cu__MO_887933271505_001.tgz
+$ cd EAM_Johnson_NearestNeighbor_Cu__MO_887933271505_001
+$ make
+$ make install
+$ cd ..
+$ rm -rf EAM_Johnson_NearestNeighbor_Cu__MO_887933271505_001
+$ rm -rf EAM_Johnson_NearestNeighbor_Cu__MO_887933271505_001.tgz
+
+-----------------
+
+When these steps are complete you can build LAMMPS with the KIM
+package installed:
+
+$ cd ../../src
+$ make yes-kim
+$ make g++ (or whatever target you wish)
+
+Note that the Makefile.lammps and Makefile.KIM_DIR files in this directory
+are required to allow the LAMMPS build to find the necessary KIM files.
+You should not normally need to edit this file.
