@@ -1,8 +1,7 @@
 #include "units.h"
 #include <update.h>
 #include <domain.h>
-#include <QDebug>
-
+#include <QDateTime>
 using namespace LAMMPS_NS;
 Units::Units(QObject *parent) : QObject(parent)
 {
@@ -135,6 +134,11 @@ QString Units::length() const
 int Units::dimensions() const
 {
     return m_dimensions;
+}
+
+QString Units::timeToFormattedString(int seconds, QString format)
+{
+    return QDateTime::fromTime_t(seconds).toUTC().toString(format);
 }
 
 void Units::setName(QString name)

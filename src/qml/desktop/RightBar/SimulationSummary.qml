@@ -256,23 +256,32 @@ Flickable {
                     right: parent.right
                 }
                 Label {
-                    text: "Time left: "+ system.cpuremain.toFixed(1)+" s"
-                }
-                Label {
-                    text: "Time left: "+(system.cpuremain/3600).toFixed(2)+" hr"
+                    text: {
+                        var seconds = system.cpuremain.toFixed(0)
+                        if(seconds < 60) {
+                            return "Time left: "+seconds+" s"
+                        } else if(seconds < 3600) {
+                            return "Time left: "+system.units.timeToFormattedString(seconds, "mm:ss")
+                        } else {
+                            return "Time left: "+system.units.timeToFormattedString(seconds, "hh:mm:ss")
+                        }
+                    }
                 }
                 Label {
                     text: "Current timestep: "+system.currentTimestep
                 }
                 Label {
-                    text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
-                }
-                Label {
-                    text: (system.units.time != "fs") ? "" : "Time: "+
-                        ((system.simulationTime/1000000 < 0.0005) ? 
-                            (system.simulationTime/1000000).toLocaleString(Qt.locale("en_US"),'e',3) : 
-                            (system.simulationTime/1000000).toFixed(3)
-                            )+" [ns]"
+                    text: {
+                        if(system.units.time === "") {
+                            return "Time: "+system.simulationTime.toPrecision(3)
+                        } else {
+                            if(system.units.time === "fs" && system.simulationTime > 1000) {
+                                return "Time: "+(system.simulationTime/1000).toPrecision(3)+" [ps]"
+                            } else {
+                                return "Time: "+system.simulationTime.toFixed(3)+ " ["+system.units.time+"]"
+                            }
+                        }
+                    }
                 }
                 ToolTipLabel {
                     toolTipText: "1x targets 60 frames per second."
