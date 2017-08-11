@@ -9,11 +9,10 @@ Label {
         anchors.fill: parent
         propagateComposedEvents: true
         hoverEnabled: true
-        onClicked: {
+        onPressed:  {
             if(url!=="") {
                 Qt.openUrlExternally(url)
             }
-
             mouse.accepted = false
         }
     }

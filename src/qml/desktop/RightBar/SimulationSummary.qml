@@ -183,61 +183,48 @@ Flickable {
                 ToolTipLabel {
                     url: "http://lammps.sandia.gov/doc/dimension.html"
                     toolTipText: "The current simulation is "+system.units.dimensions+"-dimensional."
-                      text: "<a href=\"dimensions\">Dimensions</a>: "+system.units.dimensions
+                    text: "<a href=\"dimensions\">Dimensions</a>: "+system.units.dimensions
                 }
                 ToolTipLabel {
-                    url: "http://lammps.sandia.gov/doc/boundary.html"
                     property string explainationP: (system.boundaryStyle.search("p")>-1) ? "p is periodic. " : ""
                     property string explainationF: (system.boundaryStyle.search("f")>-1) ? "f is non-periodic and fixed. " : ""
                     property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
                     property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
                     toolTipText: explainationP+explainationF+explainationS+explainationM
                     text: "<a href=\"boundary\">Boundary</a>: "+system.boundaryStyle 
+                    url: "http://lammps.sandia.gov/doc/boundary.html"
                 }
-                Label {
+                ToolTipLabel {
                     text: " <a href=\"timestep\">Timestep</a>: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
-                    onLinkActivated: {
-                      Qt.openUrlExternally("http://lammps.sandia.gov/doc/timestep.html")
-                    }
+                    url: "http://lammps.sandia.gov/doc/timestep.html"
                 }
-                Label {
-                    text: "Number of <a href=\"atoms\">atoms</a>: "+system.numberOfAtoms
-                    onLinkActivated: {
-                      Qt.openUrlExternally("http://lammps.sandia.gov/doc/create_atoms.html")
-                    }
+                ToolTipLabel {
+                    text: "<a href=\"atoms\">Number of atoms</a>: "+system.numberOfAtoms
+                    url: "http://lammps.sandia.gov/doc/create_atoms.html"
                 }
                 Label {
                     text: "Number of bonds: "+system.atoms.numberOfBonds
                     visible: system.atoms.numberOfBonds>0
                 }
-                Label {
+                ToolTipLabel {
                     text: "<a href=\"size\">Size</a>: ("+system.size.x.toFixed(3)+", "+system.size.y.toFixed(3)+", "+system.size.z.toFixed(3)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
-                    onLinkActivated: {
-                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/change_box.html")
-                    }
+                    url: "http://lammps.sandia.gov/doc/change_box.html"
                 }
-                Label {
+                ToolTipLabel {
                     text: "<a href=\"center\">Center</a>: ("+system.center.x.toFixed(1)+", "+system.center.y.toFixed(1)+", "+system.center.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
-                    onLinkActivated: {
-                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/lattice.html")
-                    }
+                    url: "http://lammps.sandia.gov/doc/lattice.html"
                 }
-                Label {
-                    textFormat: Qt.RichText
-                    text: "<html><style type=\"text/css\">a:link {color: "+Theme.highlightColor+";}</style><a href=\"volume\">Volume</a>: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")+"</html>"
-                    onLinkActivated: {
-                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/change_box.html")
-                    }
+                ToolTipLabel {
+                    text: "<a href=\"volume\">Volume</a>: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
+                    url: "http://lammps.sandia.gov/doc/change_box.html"
                 }
-                Label {
+                ToolTipLabel {
                     textFormat: Qt.RichText
                     text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
                 }
-                Label {
-                    text: "Number of <a href=\"atomtypes\">atom types</a>: "+system.numberOfAtomTypes
-                    onLinkActivated: {
-                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/atom_style.html")
-                    }
+                ToolTipLabel {
+                    text: "<a href=\"atomtypes\">Number of atom types</a>: "+system.numberOfAtomTypes
+                    url: "http://lammps.sandia.gov/doc/atom_style.html"
                 }
             }
         }
