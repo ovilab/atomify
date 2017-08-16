@@ -53,6 +53,10 @@ AtomifySimulator::AtomifySimulator() :
 {
     m_states->setupStates(*this);
     m_parser.setSimulator(this);
+    if(m_settings.value("machine/uuid").isNull()) {
+        QString uuid = QUuid::createUuid().toString();
+        m_settings.setValue("machine/uuid", uuid);
+    }
 }
 
 AtomifySimulator::~AtomifySimulator() { }
@@ -80,6 +84,11 @@ void AtomifySimulator::decreaseSimulationSpeed()
     if(m_simulationSpeed > 1) {
         setSimulationSpeed(m_simulationSpeed - 1);
     }
+}
+
+QString AtomifySimulator::getUuid()
+{
+    return m_settings.value("machine/uuid").toString();
 }
 
 System *AtomifySimulator::system() const
@@ -203,6 +212,11 @@ QString AtomifySimulator::lastScript() const
 void AtomifySimulator::setLastScript(const QString &lastScript)
 {
     m_lastScript = lastScript;
+}
+
+void AtomifySimulator::lookForUpdates()
+{
+    // TODO: implement
 }
 
 CommandParser &AtomifySimulator::parser()

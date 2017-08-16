@@ -4,6 +4,7 @@
 #include <QElapsedTimer>
 #include <QStateMachine>
 #include <QVector3D>
+#include <QSettings>
 #include "commandparser.h"
 #include "lammpscontroller.h"
 
@@ -51,6 +52,7 @@ public:
     Q_INVOKABLE void togglePause();
     Q_INVOKABLE void increaseSimulationSpeed();
     Q_INVOKABLE void decreaseSimulationSpeed();
+    Q_INVOKABLE QString getUuid();
     class System* system() const;
     class States* states() const;
     QString scriptFilePath() const;
@@ -61,6 +63,7 @@ public:
     bool welcomeSimulationRunning() const;
     QString lastScript() const;
     void setLastScript(const QString &lastScript);
+    void lookForUpdates();
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -104,6 +107,7 @@ private:
     class System* m_system;
     class States* m_states;
     int m_simulationSpeed;
+    QSettings m_settings;
     QString m_scriptFilePath;
     QString m_error;
     QString m_lastScript;
