@@ -122,6 +122,7 @@ class Fix : protected Pointers {
   virtual void pre_force(int) {}
   virtual void pre_reverse(int,int) {}
   virtual void post_force(int) {}
+  virtual void post_command() {}
   virtual void final_integrate() {}
   virtual void end_of_step() {}
   virtual void post_run() {}
@@ -260,6 +261,7 @@ namespace FixConst {
   static const int MIN_POST_FORCE =          1<<20;
   static const int MIN_ENERGY =              1<<21;
   static const int FIX_CONST_LAST =          1<<22;
+  static const int POST_COMMAND =            1<<23;
 }
 
 }

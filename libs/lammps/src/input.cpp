@@ -246,6 +246,7 @@ void Input::file()
       sprintf(str,"Unknown command: %s",line);
       error->all(FLERR,str);
     }
+    modify->post_command();
   }
 }
 
@@ -314,6 +315,7 @@ char *Input::one(const char *single)
     sprintf(str,"Unknown command: %s",line);
     error->all(FLERR,str);
   }
+  modify->post_command();
 
   return command;
 }

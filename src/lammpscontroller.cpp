@@ -57,13 +57,13 @@ void synchronizeLAMMPS_callback(void *caller, int mode)
 
 void LAMMPSController::synchronizeLAMMPS(int mode)
 {
-    if(mode != LAMMPS_NS::FixConst::END_OF_STEP && mode != LAMMPS_NS::FixConst::MIN_POST_FORCE) return;
-    if(!system) {
-        qDebug() << "Error, we dont have system object. Anders or Svenn-Arne did a horrible job here...";
-        exit(1);
-    }
+    if(mode != LAMMPS_NS::FixConst::END_OF_STEP && mode != LAMMPS_NS::FixConst::MIN_POST_FORCE && mode != LAMMPS_NS::FixConst::POST_COMMAND) return;
 
-    system->synchronize(this);
+    bool processModifiers = true;
+    if(mode == LAMMPS_NS::FixConst::POST_COMMAND) processModifiers = false;
+    if(processModifiers) {
+        system->synchronize(this);
+    }
     m_synchronizationCount++;
     if(m_synchronizationCount % 50 == 0) {
         // TODO: Move into system sync
@@ -78,11 +78,16 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
     if(m_lammps->update->ntimestep - m_lastSynchronizationTimestep < simulationSpeed) return;
     m_lastSynchronizationTimestep = m_lammps->update->ntimestep;
 
-    system->atoms()->processModifiers(system);
+    if(processModifiers) {
+        system->atoms()->processModifiers(system);
+    }
+
     system->atoms()->createRenderererData(this);
     worker->m_reprocessRenderingData = false;
 
-    system->updateThreadOnDataObjects(qmlThread);
+    if(processModifiers) {
+        system->updateThreadOnDataObjects(qmlThread);
+    }
 
     worker->setNeedsSynchronization(true);
     while(worker->needsSynchronization()) {
@@ -92,7 +97,9 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
         }
 
         if(worker->m_reprocessRenderingData) {
-            system->atoms()->processModifiers(system);
+            if(processModifiers) {
+                system->atoms()->processModifiers(system);
+            }
             if(worker->m_workerRenderingMutex.tryLock()) {
                 system->atoms()->createRenderererData(this);
                 worker->m_reprocessRenderingData = false;

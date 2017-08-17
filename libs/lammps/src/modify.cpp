@@ -66,7 +66,7 @@ Modify::Modify(LAMMPS *lmp) : Pointers(lmp)
   list_min_energy = NULL;
 
   end_of_step_every = NULL;
-
+  
   list_timeflag = NULL;
 
   nfix_restart_global = 0;
@@ -448,6 +448,20 @@ void Modify::end_of_step()
   for (int i = 0; i < n_end_of_step; i++)
     if (update->ntimestep % end_of_step_every[i] == 0)
       fix[list_end_of_step[i]]->end_of_step();
+}
+
+/* ----------------------------------------------------------------------
+   end-of-command call, only for relevant fixes
+   only call fix->post_command() on timesteps that are multiples of nevery
+------------------------------------------------------------------------- */
+
+void Modify::post_command()
+{
+  for (int i = 0; i < nfix; i++) {
+    if (fmask[i] & POST_COMMAND) {
+      fix[i]->post_command();
+    };
+  }
 }
 
 /* ----------------------------------------------------------------------
@@ -1490,7 +1504,7 @@ void Modify::list_init(int mask, int &n, int *&list)
   n = 0;
   for (int i = 0; i < nfix; i++) if (fmask[i] & mask) n++;
   list = new int[n];
-
+  
   n = 0;
   for (int i = 0; i < nfix; i++) if (fmask[i] & mask) list[n++] = i;
 }

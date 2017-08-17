@@ -64,6 +64,7 @@ class Modify : protected Pointers {
   virtual void post_force(int);
   virtual void final_integrate();
   virtual void end_of_step();
+  virtual void post_command();
   virtual double thermo_energy();
   virtual void thermo_energy_atom(int, double *);
   virtual void post_run();

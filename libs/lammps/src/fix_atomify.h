@@ -32,6 +32,7 @@ class FixAtomify : public Fix {
   int setmask();
   void init();
   void end_of_step();
+  void post_command();
   void min_post_force(int);
   void update_compute(const char computeId[]);
   void update_computes();

@@ -48,6 +48,7 @@ int FixAtomify::setmask()
     int mask = 0;
     mask |= END_OF_STEP;
     mask |= MIN_POST_FORCE;
+    mask |= POST_COMMAND;
     return mask;
 }
 
@@ -99,6 +100,12 @@ void FixAtomify::end_of_step()
     lost_atoms();
     (this->callback)(ptr_caller,END_OF_STEP);
     update_computes();
+}
+
+void FixAtomify::post_command()
+{
+    if(this->callback == NULL) return; // Before first fix atomify command
+    (this->callback)(ptr_caller,POST_COMMAND);
 }
 
 /* ---------------------------------------------------------------------- */
