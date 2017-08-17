@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/extras">
+        <file>atomtypes.json</file>
+    </qresource>
+</RCC>

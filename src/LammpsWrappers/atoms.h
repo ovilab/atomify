@@ -15,9 +15,13 @@
 struct AtomStyle {
     QColor color;
     float radius;
-    AtomStyle(float scale, QColor color) {
+    QString shortName;
+    QString fullName;
+    AtomStyle(QString shortName, QString fullName, float radius, QColor color) {
         this->color = color;
-        this->radius = scale;
+        this->radius = radius;
+        this->shortName = shortName;
+        this->fullName = fullName;
     }
 };
 
@@ -94,12 +98,6 @@ private:
     BondData* m_bondData = nullptr;
     class Bonds* m_bonds = nullptr;
     QVariantList m_modifiers;
-    void generateBondData(AtomData &atomData, LAMMPSController *controller);
-    void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPSController *controller);
-    bool generateBondDataFromNeighborList(AtomData &atomData, class LAMMPSController *controller);
-    bool generateBondDataFromBondList(AtomData &atomData, LAMMPSController *controller);
-    void generateSphereData(AtomData &atomData);
-    bool doWeHavefullNeighborList(class LAMMPS_NS::Neighbor *neighbor);
     bool m_sort = false;
     bool m_dirtyData = false;
     float m_bondScale = 1.0;
@@ -107,6 +105,13 @@ private:
     QString m_renderingMode = "Ball and stick";
     int m_numberOfBonds = 0;
     float m_globalScale = 1.0;
+    void readAtomTypesFromFile();
+    void generateBondData(AtomData &atomData, LAMMPSController *controller);
+    void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPSController *controller);
+    bool generateBondDataFromNeighborList(AtomData &atomData, class LAMMPSController *controller);
+    bool generateBondDataFromBondList(AtomData &atomData, LAMMPSController *controller);
+    void generateSphereData(AtomData &atomData);
+    bool doWeHavefullNeighborList(class LAMMPS_NS::Neighbor *neighbor);
 };
 
 #endif // ATOMS_H

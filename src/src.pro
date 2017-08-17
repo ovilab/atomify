@@ -54,12 +54,8 @@ android {
 }
 RESOURCES += images.qrc \
     qml/qml.qrc \
-    simulations/diffusion/diffusion.qrc \
-    simulations/other/other.qrc \
-    simulations/water/water.qrc \
-    simulations/potentialparameters/potentialparameters.qrc \
-    simulations/silica/silica.qrc \
-    help.qrc
+    help.qrc \
+    extras.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

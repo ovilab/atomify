@@ -69,14 +69,10 @@ int regularLAMMPS (int argc, char **argv)
     return 0;
 }
 
-void copyExamplesToLocalFolder()
-{
-    QString dataDirPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir dataDir(dataDirPath);
+void copyFiles(QDirIterator &iterator, QDir &dataDir) {
     QDir rootQrcFolder(":/");
-    QDirIterator exampleIterator(":/examples", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
-    while(exampleIterator.hasNext()) {
-        const QString &qrcFileName = exampleIterator.next();
+    while(iterator.hasNext()) {
+        const QString &qrcFileName = iterator.next();
         QFileInfo qrcFileInfo(qrcFileName);
         QString qrcDirPath = qrcFileInfo.dir().absolutePath();
         QString relativeDirPath = rootQrcFolder.relativeFilePath(qrcDirPath);
@@ -107,6 +103,18 @@ void copyExamplesToLocalFolder()
         QFile targetFile(targetPath);
         targetFile.setPermissions(targetFile.permissions() | QFile::WriteOwner | QFile::WriteUser);
     }
+}
+
+void copyFilesToLocalFolder()
+{
+    QString dataDirPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dataDir(dataDirPath);
+    QDirIterator exampleIterator(":/examples", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
+    copyFiles(exampleIterator, dataDir);
+    QDirIterator extrasIterator(":/extras", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
+
+    copyFiles(extrasIterator, dataDir);
+
 }
 
 void showDataDir()
@@ -190,7 +198,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    copyExamplesToLocalFolder();
+    copyFilesToLocalFolder();
 
     // Application version
     QQmlApplicationEngine engine;
