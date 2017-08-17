@@ -64,6 +64,7 @@ public:
     QString lastScript() const;
     void setLastScript(const QString &lastScript);
     void lookForUpdates();
+    QVariantMap &globalState();
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -107,6 +108,7 @@ private:
     class System* m_system;
     class States* m_states;
     int m_simulationSpeed;
+    QVariantMap m_globalState;
     QSettings m_settings;
     QString m_scriptFilePath;
     QString m_error;

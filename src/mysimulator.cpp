@@ -204,6 +204,11 @@ MyWorker *AtomifySimulator::createWorker()
     return new MyWorker();
 }
 
+QVariantMap &AtomifySimulator::globalState()
+{
+    return m_globalState;
+}
+
 QString AtomifySimulator::lastScript() const
 {
     return m_lastScript;
