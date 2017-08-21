@@ -23,14 +23,6 @@ void CPCompute::clear()
     }
 }
 
-void CPCompute::save(QString filename)
-{
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        return;
-    }
-}
-
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D();

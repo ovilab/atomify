@@ -55,10 +55,18 @@ Window {
 
         _axisX.min = xMin
         _axisX.max = xMax
-        _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
-        _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
 
-        _axisY.applyNiceNumbers()
+        if(!ylimLock.checked) {
+            _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
+            _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
+            _axisY.applyNiceNumbers()
+        }
+
+        _axisY.tickCount = ticks.value
+        if(roundXAxis.checked) {
+            _axisX.applyNiceNumbers()
+            _axisY.tickCount = ticks.value
+        }
     }
 
     Timer {
@@ -99,7 +107,7 @@ Window {
 
                 ValueAxis {
                     id: _axisX
-                    tickCount: 3
+                    tickCount: ticks.value
                     min: 0
                     max: 100
                     titleText: "Time"
@@ -109,7 +117,7 @@ Window {
 
                 ValueAxis {
                     id: _axisY
-                    tickCount: 3
+                    tickCount: ticks.value
                     min: 0
                     max: 1000
                     titleText: "Value"
@@ -117,13 +125,39 @@ Window {
                     labelsColor: "gray"
                 }
             }
-            Row {
+            Column {
                 Layout.fillWidth: true
                 leftPadding: 12
                 spacing: 5
-                Button {
-                    text: "Clear"
-                    onClicked: root.variable.data.clear()
+                Row {
+                    Button {
+                        text: "Clear"
+                        onClicked: root.variable.clear()
+                    }
+                    CheckBox {
+                        id: roundXAxis
+                        text: "Round x-axis"
+                    }
+                    CheckBox {
+                        id: ylimLock
+                        text: "Lock ylim"
+                    }
+                }
+                Row {
+                    Label {
+                        height: 100
+                        text: "# ticks: "
+                    }
+
+                    Slider {
+                        id: ticks
+                        height: 20
+                        from: 3
+                        to: 9
+                        stepSize: 1
+                        snapMode: Slider.SnapAlways
+                        value: 5
+                    }
                 }
             }
         }

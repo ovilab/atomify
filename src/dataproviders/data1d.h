@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE void updateHistogram(QLineSeries *series);
     Q_INVOKABLE void add(float x, float y, bool silent = true);
     Q_INVOKABLE void clear(bool silent = false);
+    Q_INVOKABLE void saveToFile(QString fileName);
     void createHistogram(const std::vector<double> &points);
     void add(const QPointF &point, bool silent = true);
     float xMin();

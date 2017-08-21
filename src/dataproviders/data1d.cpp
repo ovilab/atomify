@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <cmath>
 #include <QMutexLocker>
+#include <QFile>
 
 Data1D::Data1D(QObject *parent) : QObject(parent)
 {
@@ -159,6 +160,21 @@ void Data1D::clear(bool silent)
     if(!silent && m_xySeries) {
         updateXYSeries(m_xySeries);
     }
+}
+
+void Data1D::saveToFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+        return;
+    }
+
+    QTextStream out(&file);
+    for(const QPointF &point : m_points) {
+        out << point.x() << " " << point.y() << "\n";
+    }
+    file.close();
 }
 
 void Data1D::createHistogram(const std::vector<double> &points)

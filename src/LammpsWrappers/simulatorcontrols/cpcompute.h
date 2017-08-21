@@ -32,7 +32,6 @@ public:
     CPCompute(Qt3DCore::QNode *parent = 0);
     ~CPCompute();
     Q_INVOKABLE void clear();
-    Q_INVOKABLE void save(QString filename);
     void copyData(LAMMPSController *lammpsController);
     bool existsInLammps(LAMMPSController *lammpsController) override;
     void computeInLAMMPS(LAMMPSController *lammpsController);

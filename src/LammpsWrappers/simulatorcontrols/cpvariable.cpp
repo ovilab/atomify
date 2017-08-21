@@ -12,7 +12,11 @@ CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent),
 
 }
 
-
+void CPVariable::clear()
+{
+    m_data->clear();
+    emit m_data->updated();
+}
 
 void CPVariable::updateCommand()
 {
