@@ -585,6 +585,7 @@ Rectangle {
         id: shortcuts
         Shortcut {
             sequence: "Return"
+            enabled: messageOverlay.visible
             onActivated: messageOverlay.hideClicked()
         }
 

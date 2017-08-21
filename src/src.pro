@@ -17,12 +17,12 @@ defined(DEPLOYPKG, var) {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
     QMAKE_LFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
-    QMAKE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
-    QMAKE_CXXFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
-    QMAKE_LFLAGS += -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+    #QMAKE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+    #QMAKE_CXXFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+    #QMAKE_LFLAGS += -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
 
     QMAKE_MAC_SDK = macosx10.9
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.12
 }
 
 macx {
@@ -120,7 +120,8 @@ SOURCES += \
     performance.cpp \
     parsefileuploader.cpp \
     standardpaths.cpp \
-    keysequence.cpp
+    keysequence.cpp \
+    singlecommandhandler.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -165,7 +166,8 @@ HEADERS += \
     performance.h \
     parsefileuploader.h \
     standardpaths.h \
-    keysequence.h
+    keysequence.h \
+    singlecommandhandler.h
 
 # Temporary use of quickcontrols2 without install
 

@@ -22,6 +22,7 @@ public:
     bool m_cancelPending = false;
     bool m_reprocessRenderingData = false;
     QMutex m_workerRenderingMutex; // horrible name
+
 private:
     QElapsedTimer m_elapsed;
     QElapsedTimer m_sinceStart;
@@ -43,6 +44,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(QVector3D cameraPositionRequest READ cameraPositionRequest WRITE setCameraPositionRequest NOTIFY cameraPositionRequestChanged)
     Q_PROPERTY(QVector3D cameraViewCenterRequest READ cameraViewCenterRequest WRITE setCameraViewCenterRequest NOTIFY cameraViewCenterRequestChanged)
     Q_PROPERTY(bool welcomeSimulationRunning READ welcomeSimulationRunning WRITE setWelcomeSimulationRunning NOTIFY welcomeSimulationRunningChanged)
+    Q_PROPERTY(SingleCommandHandler* singleCommandHandler READ singleCommandHandler WRITE setSingleCommandHandler NOTIFY singleCommandHandlerChanged)
 public:
     int syncCount = 0;
     AtomifySimulator();
@@ -65,6 +67,7 @@ public:
     void setLastScript(const QString &lastScript);
     void lookForUpdates();
     QVariantMap &globalState();
+    class SingleCommandHandler* singleCommandHandler() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -75,6 +78,7 @@ public slots:
     void setCameraPositionRequest(QVector3D cameraPositionRequest);
     void setCameraViewCenterRequest(QVector3D cameraViewCenterRequest);
     void setWelcomeSimulationRunning(bool welcomeSimulationRunning);
+    void setSingleCommandHandler(class SingleCommandHandler* singleCommandHandler);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -99,6 +103,7 @@ signals:
     void newViewCenterRequest(QVector3D viewCenter);
     void newCameraPositionAndViewCenterRequest(QVector3D cameraPosition, QVector3D viewCenter);
     void welcomeSimulationRunningChanged(bool welcomeSimulationRunning);
+    void singleCommandHandlerChanged(class SingleCommandHandler* singleCommandHandler);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -107,6 +112,7 @@ private:
     friend class MyWorker;
     class System* m_system;
     class States* m_states;
+    class SingleCommandHandler* m_singleCommandHandler;
     int m_simulationSpeed;
     QVariantMap m_globalState;
     QSettings m_settings;

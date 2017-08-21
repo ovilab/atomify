@@ -58,12 +58,29 @@ void synchronizeLAMMPS_callback(void *caller, int mode)
 void LAMMPSController::synchronizeLAMMPS(int mode)
 {
     if(mode != LAMMPS_NS::FixConst::END_OF_STEP && mode != LAMMPS_NS::FixConst::MIN_POST_FORCE && mode != LAMMPS_NS::FixConst::POST_COMMAND) return;
+    if(mode == LAMMPS_NS::FixConst::POST_COMMAND) {
+        if(m_singleCommandActive) return;
+        char *cmd = new char[1000];
+        m_singleCommandActive = true;
 
+        while(m_singleCommands.size()>0) {
+            QString command = m_singleCommands.front();
+            m_singleCommands.pop_front();
+            QByteArray commandBytes = command.toUtf8();
+            lammps_command(m_lammps, commandBytes.data());
+        }
+        delete cmd;
+        m_singleCommandActive = false;
+    }
+
+    // We don't process modifiers if we're not in a run command
     bool processModifiers = true;
     if(mode == LAMMPS_NS::FixConst::POST_COMMAND) processModifiers = false;
+
     if(processModifiers) {
         system->synchronize(this);
     }
+
     m_synchronizationCount++;
     if(m_synchronizationCount % 50 == 0) {
         // TODO: Move into system sync
@@ -133,6 +150,7 @@ void LAMMPSController::stop()
     crashed = false;
     m_synchronizationCount = 0;
     m_lastSynchronizationTimestep = -1000;
+    m_singleCommands.clear();
 }
 
 int LAMMPSController::findVariableIndex(QString identifier) {

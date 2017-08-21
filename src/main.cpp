@@ -21,6 +21,7 @@
 #include "performance.h"
 #include "vendor.h"
 #include "datasource.h"
+#include "singlecommandhandler.h"
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/system.h"
 #include "LammpsWrappers/groups.h"
@@ -134,7 +135,7 @@ int main(int argc, char *argv[])
             printf("2.1.0");
             exit(0);
         } else {
-            return regularLAMMPS(argc, argv);
+            // return regularLAMMPS(argc, argv);
         }
     }
 
@@ -156,6 +157,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<DataProvider>("Atomify", 1, 0, "DataProvider");
     qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
+    qmlRegisterType<SingleCommandHandler>("Atomify", 1, 0, "SingleCommandHandler");
 
     qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");
     qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");

@@ -47,7 +47,7 @@ ColumnLayout {
 
             Keys.onPressed: {
                 if(singleCommand.text == "") {
-                    simulator.scriptHandler.lastSingleCommandString();
+                    simulator.singleCommandHandler.lastSingleCommandString()
                 }
             }
 
@@ -57,11 +57,11 @@ ColumnLayout {
                 sequence: "Return"
                 onActivated: {
                     if(singleCommand.text != "") {
-                        if(simulator.states.paused.active) {
-                            simulator.togglePause()
-                        }
+//                        if(simulator.states.paused.active) {
+//                            simulator.togglePause()
+//                        }
 
-                        simulator.scriptHandler.runCommand(singleCommand.text, true)
+                        simulator.singleCommandHandler.addCommand(singleCommand.text)
                         consoleOutput.append(singleCommand.text)
                         singleCommand.text = ""
                     }
@@ -72,9 +72,9 @@ ColumnLayout {
                 enabled: singleCommand.activeFocus
                 onActivated: {
                     if(singleCommand.text == "") {
-                        singleCommand.text = simulator.scriptHandler.lastSingleCommandString();
+                        singleCommand.text = simulator.singleCommandHandler.lastSingleCommandString()
                     } else {
-                        singleCommand.text = simulator.scriptHandler.previousSingleCommandString();
+                        singleCommand.text = simulator.singleCommandHandler.previousSingleCommandString()
                     }
                 }
             }
@@ -82,7 +82,7 @@ ColumnLayout {
                 sequence: "Down"
                 enabled: singleCommand.activeFocus
                 onActivated: {
-                    singleCommand.text = simulator.scriptHandler.nextSingleCommandString();
+                    singleCommand.text = simulator.singleCommandHandler.nextSingleCommandString()
                 }
             }
         }

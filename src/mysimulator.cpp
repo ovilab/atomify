@@ -1,3 +1,4 @@
+#include "singlecommandhandler.h"
 #include "mysimulator.h"
 #include "states.h"
 #include "LammpsWrappers/lammpserror.h"
@@ -49,6 +50,7 @@ bool MyWorker::needsSynchronization()
 AtomifySimulator::AtomifySimulator() :
     m_system(new System(this)),
     m_states(new States(this)),
+    m_singleCommandHandler(new SingleCommandHandler(this)),
     m_simulationSpeed(1)
 {
     m_states->setupStates(*this);
@@ -119,8 +121,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.simulationSpeed = atomifySimulator->simulationSpeed();
     m_lammpsController.qmlThread = QThread::currentThread();
 
+    // Move single commands to our list
+
+    m_lammpsController.m_singleCommands.append(atomifySimulator->singleCommandHandler()->singleCommands());
+    atomifySimulator->singleCommandHandler()->singleCommands().clear();
+
     atomifySimulator->syncCount += 1;
     States &states = *atomifySimulator->states();
+
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
     if(states.paused()->active()) {
@@ -207,6 +215,11 @@ MyWorker *AtomifySimulator::createWorker()
 QVariantMap &AtomifySimulator::globalState()
 {
     return m_globalState;
+}
+
+SingleCommandHandler *AtomifySimulator::singleCommandHandler() const
+{
+    return m_singleCommandHandler;
 }
 
 QString AtomifySimulator::lastScript() const
@@ -320,4 +333,13 @@ void AtomifySimulator::setWelcomeSimulationRunning(bool welcomeSimulationRunning
 
     m_welcomeSimulationRunning = welcomeSimulationRunning;
     emit welcomeSimulationRunningChanged(welcomeSimulationRunning);
+}
+
+void AtomifySimulator::setSingleCommandHandler(SingleCommandHandler *singleCommandHandler)
+{
+    if (m_singleCommandHandler == singleCommandHandler)
+        return;
+
+    m_singleCommandHandler = singleCommandHandler;
+    emit singleCommandHandlerChanged(m_singleCommandHandler);
 }

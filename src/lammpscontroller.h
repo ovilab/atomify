@@ -2,6 +2,7 @@
 #define LAMMPSCONTROLLER_H
 #include <memory>
 #include <QVector>
+#include <QList>
 #include <QString>
 #include <QMap>
 #include <mpi.h>
@@ -29,6 +30,7 @@ private:
     QElapsedTimer m_timer;
     unsigned long m_synchronizationCount = 0;
     double m_timePerTimestep = 0;
+    bool m_singleCommandActive = false;
 public:
     class System *system = nullptr;
     unsigned long simulationSpeed = 1;
@@ -43,6 +45,7 @@ public:
     bool didCancel = false;
     bool crashed = false;
     bool doContinue = false;
+    QList<QString> m_singleCommands;
     QString errorMessage;
     LAMMPS_NS::LAMMPS *lammps() const;
     bool run();

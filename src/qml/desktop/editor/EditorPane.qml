@@ -84,13 +84,13 @@ Pane {
 //            }
 //        }
 
-//        Console {
-//            id: consoleItem
-//            Layout.fillHeight: true
-//            Layout.fillWidth: true
-//            Layout.maximumHeight: 200
-//            simulator: editorTabRoot.simulator
-//        }
+        Console {
+            id: consoleItem
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.maximumHeight: 200
+            simulator: editorTabRoot.simulator
+        }
     }
 
 //    Shortcut {
