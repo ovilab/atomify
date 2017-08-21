@@ -152,6 +152,11 @@ bool Data1D::enabled() const
     return m_enabled;
 }
 
+const QList<QPointF> &Data1D::points()
+{
+    return m_points;
+}
+
 void Data1D::clear(bool silent)
 {
     QMutexLocker locker(&m_mutex);
@@ -160,21 +165,6 @@ void Data1D::clear(bool silent)
     if(!silent && m_xySeries) {
         updateXYSeries(m_xySeries);
     }
-}
-
-void Data1D::saveToFile(QString fileName)
-{
-    QFile file(fileName);
-    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
-        return;
-    }
-
-    QTextStream out(&file);
-    for(const QPointF &point : m_points) {
-        out << point.x() << " " << point.y() << "\n";
-    }
-    file.close();
 }
 
 void Data1D::createHistogram(const std::vector<double> &points)

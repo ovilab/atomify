@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Window 2.2
 import Atomify 1.0
 import QtCharts 2.1
+import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.4
 
 Window {
@@ -146,7 +147,10 @@ Window {
                 leftPadding: 12
                 spacing: 5
                 Row {
+                    spacing: 10
                     Button {
+                        id: clearButton
+                        width: exportButton.width
                         text: "Clear"
                         onClicked: root.compute.clear()
                     }
@@ -160,14 +164,41 @@ Window {
                     }
                 }
                 Row {
+                    spacing: 10
+                    Button {
+                        id: exportButton
+                        height: clearButton.height
+                        text: "Export"
+                        onClicked: menu.open()
+                        Menu {
+                            id: menu
+                            y: exportButton.height
+
+                            MenuItem {
+                                text: "Text file"
+                                onClicked: {
+                                    fileDialog.mode = "text"
+                                    fileDialog.open()
+                                }
+                            }
+                            MenuItem {
+                                text: "MATLAB"
+                            }
+                            MenuItem {
+                                text: "Python"
+                            }
+                        }
+                    }
+
                     Label {
-                        height: 100
+                        height: exportButton.height
+                        verticalAlignment: Text.AlignVCenter
                         text: "# ticks: "
                     }
 
                     Slider {
                         id: ticks
-                        height: 20
+                        height: exportButton.height
                         from: 3
                         to: 9
                         stepSize: 1
@@ -183,6 +214,34 @@ Window {
         sequence: StandardKey.Close
         onActivated: {
             root.close()
+        }
+    }
+
+    FileDialog {
+        id: fileDialog
+        selectExisting : false
+        property string mode
+        title: "Please choose a location to save"
+        // nameFilters: [ "Image files (*.jpg *.png)" ]
+        nameFilters: {
+            if(mode==="text") {
+                return [ "Text files (*.txt)" ]
+            } else if(mode==="matlab") {
+                return [ "MATLAB files (*.m)" ]
+            } else if(mode==="python") {
+                return [ "Python files (*.py)" ]
+            }
+        }
+
+        onAccepted: {
+            if(mode==="text") {
+                compute.exportToTextFile(fileDialog.fileUrl)
+
+            } else if(mode==="matlab") {
+                return [ "MATLAB files (*.m)" ]
+            } else if(mode==="python") {
+                return [ "Python files (*.py)" ]
+            }
         }
     }
 }

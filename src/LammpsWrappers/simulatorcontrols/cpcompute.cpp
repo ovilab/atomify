@@ -23,6 +23,42 @@ void CPCompute::clear()
     }
 }
 
+void CPCompute::exportToTextFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
+    }
+
+    QTextStream out(&file);
+
+    QStringList keys = m_data1DRaw.keys();
+
+    // Print header with column names
+    out << "# " << xLabel() << " ";
+    for(QString key : keys) {
+        out << key << " ";
+    }
+    out << "\n";
+
+    int dataCount = m_data1DRaw[keys[0]]->points().size();
+    for(int i=0; i<dataCount; i++) {
+        float x = m_data1DRaw[keys[0]]->points()[i].x();
+        out << x << " ";
+
+        for(QString key : keys) {
+            float y = m_data1DRaw[key]->points()[i].y();
+            out << y << " ";
+        }
+        out << "\n";
+    }
+    file.close();
+}
+
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D();
