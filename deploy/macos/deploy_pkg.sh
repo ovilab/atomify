@@ -6,17 +6,21 @@
 # iconutil -c icns icon.iconset
 # sudo installer -store -pkg Atomify.pkg -target /
 
-mkdir build
-cd build
-qmake ../../src DEPLOYPKG=true
-make -j4
+# Assumes that lammps is built with correct macos version
+# Assumes that clang-omp is installed with `brew install llvm` and symlinked as clang-omp++
+# Assumes that libomp and libstd etc are code signed before linking
+
+mkdir build-pkg
+cd build-pkg
+qmake ../../../src DEPLOYPKG=true
+make -j8
 
 mkdir pkg
 rm -rf pkg/*
 cp -r Atomify.app pkg
 cd pkg
 xattr -cr Atomify.app
-~/Qt/5.9.1/clang_64/bin/macdeployqt Atomify.app -dmg -qmldir=/projects/atomify/editor/atomify/src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
+macdeployqt Atomify.app -dmg -qmldir=../../../../src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
 cd "Atomify.app"
 find . -name *.dSYM | xargs -I $ rm -R $
 cd ..

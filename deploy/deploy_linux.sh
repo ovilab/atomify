@@ -8,7 +8,7 @@ fi
 mkdir build
 cd build
 qmake ../../src DEPLOYLINUX=true
-make -j4
+make -j20
 
 mkdir -p deploy/atomify
 rm -rf deploy/atomify/*
