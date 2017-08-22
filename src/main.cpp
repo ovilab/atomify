@@ -196,6 +196,12 @@ int main(int argc, char *argv[])
         if(strcmp(argv[1], "--showdatadir")==0) {
             showDataDir();
         }
+
+        if(strcmp(argv[1], "--clearcache")==0) {
+            QSettings settings;
+            settings.clear();
+            exit(0);
+        }
     }
 
     copyFilesToLocalFolder();
