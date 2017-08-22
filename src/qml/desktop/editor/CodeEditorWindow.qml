@@ -596,6 +596,27 @@ Item {
                 if(editorCount >= 8) stackLayout.currentIndex = 7
             }
         }
+
+        Shortcut {
+            sequence: StandardKey.ZoomIn
+            onActivated: {
+                for(var i=0; i<stackLayout.count; i++) {
+                    var editor = stackLayout.itemAt(i)
+                    editor.fontSize = editor.fontSize+1
+                }
+            }
+        }
+
+        Shortcut {
+            sequence: StandardKey.ZoomOut
+            onActivated: {
+                for(var i=0; i<stackLayout.count; i++) {
+                    var editor = stackLayout.itemAt(i)
+                    editor.fontSize = editor.fontSize-1
+                }
+            }
+        }
+
 //        Shortcut {
 //            sequence: shortcuts.tabShortcutModifier + "+9"
 //            onActivated: {
