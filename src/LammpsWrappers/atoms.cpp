@@ -574,7 +574,7 @@ void Atoms::setGlobalScale(float globalScale)
 void Atoms::readAtomTypesFromFile()
 {
     QString dataDirPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QString atomDataFileName = QDir(dataDirPath).filePath("extras/atomTypes.json");
+    QString atomDataFileName = QDir(dataDirPath).filePath("extras/atomtypes.json");
     QFile loadFile(atomDataFileName);
     if(!loadFile.open(QIODevice::ReadOnly)) {
         qDebug() << "Could not open atom types file " << atomDataFileName;
