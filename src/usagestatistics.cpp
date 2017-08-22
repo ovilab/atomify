@@ -64,8 +64,15 @@ UsageStatistics::UsageStatistics(QObject *parent) : QObject(parent)
     } else {
         m_sessionID = m_settings.value(m_nextSessionIDKey).toInt();
     }
-    m_currentRun = nullptr;
     m_settings.setValue(m_nextSessionIDKey, (m_sessionID+1) );
+
+    if(m_settings.value(m_nextRunIDKey).isNull()) {
+        m_nextRunId = 0;
+    } else {
+        m_nextRunId = m_settings.value(m_nextRunIDKey).toInt();
+    }
+
+    m_currentRun = nullptr;
     m_sessionRunID = 0;
     load();
     send();
@@ -90,17 +97,14 @@ void UsageStatistics::newRun()
     send();
 
     m_sessionRunID++;
-    int nextRunId = 1;
-    if(!m_settings.value(m_nextRunIDKey).isNull()) {
-        nextRunId = m_settings.value(m_nextRunIDKey).toInt();
-    }
-    m_settings.setValue(m_nextRunIDKey, (nextRunId+1) );
+    m_nextRunId++;
+    m_settings.setValue(m_nextRunIDKey, (m_nextRunId+1) );
 
     QString uuid = m_settings.value("machine/uuid").toString();
-    const QByteArray keyToBeHashed = QString("%1-%2-%3-%4").arg(nextRunId).arg(m_sessionRunID).arg(m_sessionID).arg(uuid).toUtf8();
+    const QByteArray keyToBeHashed = QString("%1-%2-%3-%4").arg(m_nextRunId).arg(m_sessionRunID).arg(m_sessionID).arg(uuid).toUtf8();
     QString hashed = QString(QCryptographicHash::hash(keyToBeHashed,QCryptographicHash::Md5).toHex());
 
-    m_currentRun = new Run(nextRunId,m_sessionRunID,m_sessionID, uuid, hashed);
+    m_currentRun = new Run(m_nextRunId,m_sessionRunID,m_sessionID, uuid, hashed);
 }
 
 Run *UsageStatistics::currentRun()
@@ -112,6 +116,7 @@ void UsageStatistics::onfinish(QNetworkReply *reply)
 {
     if(reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
+        // qDebug() << "Response: " << response;
         QJsonDocument doc(QJsonDocument::fromJson(response));
         if(!doc.isNull()) {
             QJsonObject obj = doc.object();
@@ -176,7 +181,11 @@ QByteArray UsageStatistics::runsAsJSON()
         runs.push_back(run->toJSON());
     }
     QJsonObject data;
+    QString uuid = m_settings.value("machine/uuid").toString();
     data["runs"] = runs;
+    data["uuid"] = uuid;
+    data["sessions"] = m_sessionID;
+    data["runCount"] = m_nextRunId-1;
     QJsonDocument json(data);
     return json.toJson(QJsonDocument::JsonFormat::Compact);
 }

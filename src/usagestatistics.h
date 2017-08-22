@@ -54,6 +54,7 @@ private:
     QString m_nextSessionIDKey;
     QSettings m_settings;
     int m_sessionID;
+    int m_nextRunId;
     int m_sessionRunID;
     AtomifyStatistics::Run *m_currentRun;
     QList<AtomifyStatistics::Run*> m_runs;
