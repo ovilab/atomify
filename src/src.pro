@@ -11,6 +11,10 @@ unix:!macx {
     LIBS += -fopenmp
 }
 
+defined(DEPLOYLINUX, var) {
+    QMAKE_LFLAGS += -static-libstdc++
+}
+
 defined(DEPLOYPKG, var) {
     QMAKE_CXX  = /usr/local/bin/clang-omp++
     QMAKE_LINK = /usr/local/bin/clang-omp++
