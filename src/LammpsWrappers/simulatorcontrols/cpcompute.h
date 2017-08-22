@@ -33,6 +33,7 @@ public:
     ~CPCompute();
     Q_INVOKABLE void clear();
     Q_INVOKABLE void exportToTextFile(QString fileName);
+    Q_INVOKABLE void exportToPythonFile(QString fileName);
     void copyData(LAMMPSController *lammpsController);
     bool existsInLammps(LAMMPSController *lammpsController) override;
     void computeInLAMMPS(LAMMPSController *lammpsController);

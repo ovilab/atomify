@@ -59,6 +59,56 @@ void CPCompute::exportToTextFile(QString fileName)
     file.close();
 }
 
+void CPCompute::exportToPythonFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
+    }
+    qDebug() << "Will export python file to " << file.fileName();
+
+    QTextStream out(&file);
+    out << "import matplotlib.pyplot as plt\n";
+    out << "import numpy as np\n";
+
+    QStringList keys = m_data1DRaw.keys();
+    // Print arrays to variables
+    for(QString key : keys) {
+        const QList<QPointF> &points = m_data1DRaw[key]->points();
+
+        if(key == keys[0]) {
+            out << xLabel().toLower() << " = np.asarray([";
+            for(auto iter = points.begin(); iter != points.end(); iter++) {
+                if (iter != points.begin()) out << ", ";
+                out << (*iter).x();
+            }
+            out << "]) \n";
+        }
+
+        out << key.toLower() << " = np.asarray([";
+        for(auto iter = points.begin(); iter != points.end(); iter++) {
+            if (iter != points.begin()) out << ", ";
+            out << (*iter).y();
+        }
+        out << "]) \n";
+    }
+    out << "\n";
+
+    for(QString key : keys) {
+        out << "plt.plot(" << xLabel().toLower() << ", " << key.toLower() << ", label='" << key << "')\n";
+    }
+    out << "plt.xlabel('" << xLabel() << "')\n"; // TODO: add units
+    out << "plt.ylabel('" << yLabel() << "')\n";
+    out << "plt.legend()\n";
+    out << "plt.show()\n";
+
+    file.close();
+}
+
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D();

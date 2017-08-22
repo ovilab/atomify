@@ -183,9 +183,17 @@ Window {
                             }
                             MenuItem {
                                 text: "MATLAB"
+                                onClicked: {
+                                    fileDialog.mode = "matlab"
+                                    fileDialog.open()
+                                }
                             }
                             MenuItem {
                                 text: "Python"
+                                onClicked: {
+                                    fileDialog.mode = "python"
+                                    fileDialog.open()
+                                }
                             }
                         }
                     }
@@ -236,11 +244,10 @@ Window {
         onAccepted: {
             if(mode==="text") {
                 compute.exportToTextFile(fileDialog.fileUrl)
-
             } else if(mode==="matlab") {
-                return [ "MATLAB files (*.m)" ]
+                compute.exportToMatlabFile(fileDialog.fileUrl)
             } else if(mode==="python") {
-                return [ "Python files (*.py)" ]
+                compute.exportToPythonFile(fileDialog.fileUrl)
             }
         }
     }
