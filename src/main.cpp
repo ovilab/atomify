@@ -182,7 +182,11 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setOrganizationName("Ovilab");
     app.setOrganizationDomain("ovilab");
+#ifdef BREW
+    app.setApplicationName("AtomifyHomebrew");
+#else
     app.setApplicationName("Atomify");
+#endif
     QSurfaceFormat format;
 #ifndef Q_OS_ANDROID
     format.setMajorVersion(3);
