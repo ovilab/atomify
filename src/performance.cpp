@@ -17,6 +17,7 @@ Performance::Performance(QObject *parent) : QObject(parent)
 
 void Performance::reset()
 {
+    setThreads(1);
     setMemoryAtomify(0);
     setMemoryLAMMPS(0);
     setEffectiveSimulationSpeed(1);
@@ -57,6 +58,11 @@ double Performance::timestepsPerSecond() const
     return m_timestepsPerSecond;
 }
 
+int Performance::threads() const
+{
+    return m_threads;
+}
+
 void Performance::setMemoryLAMMPS(long memoryLAMMPS)
 {
     if (m_memoryLAMMPS == memoryLAMMPS)
@@ -91,4 +97,13 @@ void Performance::setTimestepsPerSecond(double timestepsPerSecond)
 
     m_timestepsPerSecond = timestepsPerSecond;
     emit timestepsPerSecondChanged(timestepsPerSecond);
+}
+
+void Performance::setThreads(int threads)
+{
+    if (m_threads == threads)
+        return;
+
+    m_threads = threads;
+    emit threadsChanged(m_threads);
 }

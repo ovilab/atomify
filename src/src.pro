@@ -120,7 +120,8 @@ SOURCES += \
     performance.cpp \
     parsefileuploader.cpp \
     standardpaths.cpp \
-    keysequence.cpp
+    keysequence.cpp \
+    usagestatistics.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -165,7 +166,8 @@ HEADERS += \
     performance.h \
     parsefileuploader.h \
     standardpaths.h \
-    keysequence.h
+    keysequence.h \
+    usagestatistics.h
 
 # Temporary use of quickcontrols2 without install
 

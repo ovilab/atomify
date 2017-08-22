@@ -1,5 +1,7 @@
 #include "mysimulator.h"
 #include "states.h"
+#include "usagestatistics.h"
+#include "performance.h"
 #include "LammpsWrappers/lammpserror.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include <library.h>
@@ -49,6 +51,7 @@ bool MyWorker::needsSynchronization()
 AtomifySimulator::AtomifySimulator() :
     m_system(new System(this)),
     m_states(new States(this)),
+    m_statistics(new UsageStatistics(this)),
     m_simulationSpeed(1)
 {
     m_states->setupStates(*this);
@@ -59,7 +62,11 @@ AtomifySimulator::AtomifySimulator() :
     }
 }
 
-AtomifySimulator::~AtomifySimulator() { }
+AtomifySimulator::~AtomifySimulator() {
+    delete m_statistics;
+    delete m_system;
+    delete m_states;
+}
 
 void AtomifySimulator::togglePause()
 {
@@ -141,6 +148,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If user pressed stop / restart, we should reset
     if(m_lammpsController.crashed) {
+        if(atomifySimulator->m_statistics->currentRun()) atomifySimulator->m_statistics->currentRun()->m_crashed = true;
         m_lammpsController.crashed = false;
         m_lammpsController.finished = true;
         atomifySimulator->setError(m_lammpsController.errorMessage);
@@ -179,6 +187,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
+        atomifySimulator->m_statistics->newRun();
         m_lammpsController.scriptFilePath = atomifySimulator->scriptFilePath();
 
         // Don't move camera if we rerun a simulation
@@ -190,6 +199,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
     atomifySimulator->system()->synchronizeQML(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
+    if(states.parsing()->active()) {
+        atomifySimulator->m_statistics->currentRun()->m_pairStyle = atomifySimulator->system()->pairStyle();
+        atomifySimulator->m_statistics->currentRun()->m_numThreads = atomifySimulator->system()->performance()->threads();
+        atomifySimulator->m_statistics->currentRun()->m_numAtoms = atomifySimulator->system()->numberOfAtoms();
+        atomifySimulator->m_statistics->currentRun()->m_numTimesteps = atomifySimulator->system()->currentTimestep();
+    }
     m_needsSynchronization = false;
 }
 

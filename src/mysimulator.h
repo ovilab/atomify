@@ -7,7 +7,6 @@
 #include <QSettings>
 #include "commandparser.h"
 #include "lammpscontroller.h"
-
 using namespace LAMMPS_NS;
 
 class MyWorker : public SimulatorWorker
@@ -107,6 +106,7 @@ private:
     friend class MyWorker;
     class System* m_system;
     class States* m_states;
+    class UsageStatistics* m_statistics;
     int m_simulationSpeed;
     QVariantMap m_globalState;
     QSettings m_settings;
