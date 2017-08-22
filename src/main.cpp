@@ -130,6 +130,9 @@ int main(int argc, char *argv[])
         if(strcmp(argv[1], "--showdatadir")==0) {
             // We need to create Qt app for this, but now we know that the user does not
             // want to run a regular script.
+        } else if(strcmp(argv[1], "--clearcache")==0) {
+            // We need to create Qt app for this, but now we know that the user does not
+            // want to run a regular script.
         } else if(strcmp(argv[1], "--version")==0) {
             printf("2.1.0");
             exit(0);
