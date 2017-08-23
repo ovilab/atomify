@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.3
+import Qt.labs.settings 1.0
 import Atomify 1.0
 import "../../visualization"
 
@@ -10,7 +11,12 @@ Page {
     property System system
     property AtomifyVisualizer visualizer
     property AtomifySimulator simulator
+    property alias footerText: footerText.text
     focusPolicy: Qt.NoFocus
+
+    Settings {
+        property alias footerText: root.footerText
+    }
 
     function showExamples() {
         tabBar.currentIndex = 2
@@ -69,15 +75,17 @@ Page {
         }
 
         Text {
+            id: footerText
             anchors.left: parent.left
-            anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.top: rect.bottom
+            width: parent.width*0.9
 
             anchors.margins: 10
             textFormat: TextEdit.RichText
             font.family: "DejaVu Sans Mono"
             font.pixelSize: 12
+            wrapMode: Text.WordWrap
             text: "
 <style>
 h2 { text-align: center; }
