@@ -34,6 +34,7 @@
 #include "dataproviders/data2d.h"
 #include "dataproviders/dataprovider.h"
 #include "linenumbers.h"
+#include "usagestatistics.h"
 #include "windowgl2.h"
 #include "codeeditorbackend.h"
 #include "states.h"
@@ -174,6 +175,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<MouseMover>("Atomify", 1, 0, "MouseMover");
     qmlRegisterType<States>("Atomify", 1, 0, "States");
     qmlRegisterType<Performance>("Atomify", 1, 0, "Performance");
+    qmlRegisterType<UsageStatistics>("Atomify", 1, 0, "UsageStatistics");
 
     qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
 

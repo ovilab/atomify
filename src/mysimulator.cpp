@@ -224,6 +224,11 @@ QVariantMap &AtomifySimulator::globalState()
     return m_globalState;
 }
 
+UsageStatistics *AtomifySimulator::usageStatistics() const
+{
+    return m_statistics;
+}
+
 QString AtomifySimulator::lastScript() const
 {
     return m_lastScript;
@@ -336,3 +341,13 @@ void AtomifySimulator::setWelcomeSimulationRunning(bool welcomeSimulationRunning
     m_welcomeSimulationRunning = welcomeSimulationRunning;
     emit welcomeSimulationRunningChanged(welcomeSimulationRunning);
 }
+
+void AtomifySimulator::setUsageStatistics(UsageStatistics *usageStatistics)
+{
+    if (m_statistics == usageStatistics)
+        return;
+
+    m_statistics = usageStatistics;
+    emit usageStatisticsChanged(m_statistics);
+}
+

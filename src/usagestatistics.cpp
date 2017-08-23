@@ -58,17 +58,22 @@ UsageStatistics::UsageStatistics(QObject *parent) : QObject(parent)
     m_runsKey = "statistics/runs";
     m_nextRunIDKey = "statistics/nextRunID";
     m_nextSessionIDKey = "statistics/nextSessionID";
+    m_sendUsageStatisticsKey = "statistics/sendUsageStatistics";
 
-    if(m_settings.value(m_nextSessionIDKey).isNull()) {
-        m_sessionID = 0;
-    } else {
+    m_sendUsageStatistics = true;
+    if(!m_settings.value(m_sendUsageStatisticsKey).isNull()) {
+        m_sendUsageStatistics = m_settings.value(m_sendUsageStatisticsKey).toBool();
+        m_settings.setValue(m_sendUsageStatisticsKey, m_sendUsageStatistics);
+    }
+
+    m_sessionID = 0;
+    if(!m_settings.value(m_nextSessionIDKey).isNull()) {
         m_sessionID = m_settings.value(m_nextSessionIDKey).toInt();
     }
     m_settings.setValue(m_nextSessionIDKey, (m_sessionID+1) );
 
-    if(m_settings.value(m_nextRunIDKey).isNull()) {
-        m_nextRunId = 0;
-    } else {
+    m_nextRunId = 0;
+    if(!m_settings.value(m_nextRunIDKey).isNull()) {
         m_nextRunId = m_settings.value(m_nextRunIDKey).toInt();
     }
 
@@ -107,6 +112,11 @@ void UsageStatistics::newRun()
     m_currentRun = new Run(m_nextRunId,m_sessionRunID,m_sessionID, uuid, hashed);
 }
 
+bool UsageStatistics::sendUsageStatistics() const
+{
+    return m_sendUsageStatistics;
+}
+
 Run *UsageStatistics::currentRun()
 {
     return m_currentRun;
@@ -127,9 +137,19 @@ void UsageStatistics::onfinish(QNetworkReply *reply)
     }
 }
 
+void UsageStatistics::setSendUsageStatistics(bool sendUsageStatistics)
+{
+    if (m_sendUsageStatistics == sendUsageStatistics)
+        return;
+
+    m_sendUsageStatistics = sendUsageStatistics;
+    m_settings.setValue(m_sendUsageStatisticsKey, m_sendUsageStatistics);
+    emit sendUsageStatisticsChanged(m_sendUsageStatistics);
+}
+
 void UsageStatistics::send()
 {
-    if(!m_runs.size()) return;
+    if(!m_sendUsageStatistics || !m_runs.size()) return;
 
     QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
     connect(mgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(onfinish(QNetworkReply*)));

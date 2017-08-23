@@ -34,29 +34,37 @@ public:
 class UsageStatistics : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool sendUsageStatistics READ sendUsageStatistics WRITE setSendUsageStatistics NOTIFY sendUsageStatisticsChanged)
 public:
     explicit UsageStatistics(QObject *parent = nullptr);
     ~UsageStatistics();
-    void newRun();
     AtomifyStatistics::Run *currentRun();
+    QByteArray runsAsJSON();
+    void newRun();
+    bool sendUsageStatistics() const;
+
 signals:
+    void sendUsageStatisticsChanged(bool sendUsageStatistics);
 
 public slots:
     void onfinish(QNetworkReply *reply);
+    void setSendUsageStatistics(bool sendUsageStatistics);
 
 private:
-    QByteArray runsAsJSON();
     void send();
     void load();
     void save();
     QString m_runsKey;
     QString m_nextRunIDKey;
     QString m_nextSessionIDKey;
+    QString m_sendUsageStatisticsKey;
     QSettings m_settings;
     int m_sessionID;
     int m_nextRunId;
     int m_sessionRunID;
     AtomifyStatistics::Run *m_currentRun;
     QList<AtomifyStatistics::Run*> m_runs;
+    bool m_sendUsageStatistics;
 };
+
 #endif // USAGESTATISTICS_H

@@ -42,6 +42,8 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(QVector3D cameraPositionRequest READ cameraPositionRequest WRITE setCameraPositionRequest NOTIFY cameraPositionRequestChanged)
     Q_PROPERTY(QVector3D cameraViewCenterRequest READ cameraViewCenterRequest WRITE setCameraViewCenterRequest NOTIFY cameraViewCenterRequestChanged)
     Q_PROPERTY(bool welcomeSimulationRunning READ welcomeSimulationRunning WRITE setWelcomeSimulationRunning NOTIFY welcomeSimulationRunningChanged)
+    Q_PROPERTY(UsageStatistics* usageStatistics READ usageStatistics WRITE setUsageStatistics NOTIFY usageStatisticsChanged)
+
 public:
     int syncCount = 0;
     AtomifySimulator();
@@ -64,6 +66,7 @@ public:
     void setLastScript(const QString &lastScript);
     void lookForUpdates();
     QVariantMap &globalState();
+    class UsageStatistics* usageStatistics() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -74,6 +77,7 @@ public slots:
     void setCameraPositionRequest(QVector3D cameraPositionRequest);
     void setCameraViewCenterRequest(QVector3D cameraViewCenterRequest);
     void setWelcomeSimulationRunning(bool welcomeSimulationRunning);
+    void setUsageStatistics(class UsageStatistics* usageStatistics);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -98,6 +102,7 @@ signals:
     void newViewCenterRequest(QVector3D viewCenter);
     void newCameraPositionAndViewCenterRequest(QVector3D cameraPosition, QVector3D viewCenter);
     void welcomeSimulationRunningChanged(bool welcomeSimulationRunning);
+    void usageStatisticsChanged(class UsageStatistics* usageStatistics);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -117,6 +122,7 @@ private:
     QVector3D m_cameraPositionRequest;
     QVector3D m_cameraViewCenterRequest;
     bool m_welcomeSimulationRunning = true;
+    class UsageStatistics* m_usageStatistics;
 };
 
 #endif // MYSIMULATOR_H
