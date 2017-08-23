@@ -7,7 +7,7 @@ import QtCharts 2.1
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Dialogs 1.2
 
-Window {
+WindowGL2 {
     id: root
     property var dataSeries
     property Variable variable
@@ -83,8 +83,10 @@ Window {
 
         if (type === "line") {
             dataSeries = chart.createSeries(ChartView.SeriesTypeLine, variable.identifier, _axisX, _axisY);
+            dataSeries.useOpenGL = true
         } else {
             dataSeries = chart.createSeries(ChartView.SeriesTypeScatter, variable.identifier, _axisX, _axisY);
+            dataSeries.useOpenGL = true
         }
     }
 
@@ -220,7 +222,7 @@ Window {
                 return [ "MATLAB files (*.m)" ]
             } else if(mode==="python") {
                 return [ "Python files (*.py)" ]
-            }
+            } else return [""]
         }
 
         onAccepted: {
