@@ -5,6 +5,7 @@
 #include <QStateMachine>
 #include <QVector3D>
 #include <QSettings>
+#include <QNetworkReply>
 #include "commandparser.h"
 #include "lammpscontroller.h"
 using namespace LAMMPS_NS;
@@ -43,6 +44,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(QVector3D cameraViewCenterRequest READ cameraViewCenterRequest WRITE setCameraViewCenterRequest NOTIFY cameraViewCenterRequestChanged)
     Q_PROPERTY(bool welcomeSimulationRunning READ welcomeSimulationRunning WRITE setWelcomeSimulationRunning NOTIFY welcomeSimulationRunningChanged)
     Q_PROPERTY(UsageStatistics* usageStatistics READ usageStatistics WRITE setUsageStatistics NOTIFY usageStatisticsChanged)
+    Q_PROPERTY(QString rightBarFooterText READ rightBarFooterText WRITE setRightBarFooterText NOTIFY rightBarFooterTextChanged)
 
 public:
     int syncCount = 0;
@@ -67,6 +69,7 @@ public:
     void lookForUpdates();
     QVariantMap &globalState();
     class UsageStatistics* usageStatistics() const;
+    QString rightBarFooterText() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -78,6 +81,8 @@ public slots:
     void setCameraViewCenterRequest(QVector3D cameraViewCenterRequest);
     void setWelcomeSimulationRunning(bool welcomeSimulationRunning);
     void setUsageStatistics(class UsageStatistics* usageStatistics);
+    void setRightBarFooterText(QString rightBarFooterText);
+    void onfinish(QNetworkReply *reply);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -103,6 +108,7 @@ signals:
     void newCameraPositionAndViewCenterRequest(QVector3D cameraPosition, QVector3D viewCenter);
     void welcomeSimulationRunningChanged(bool welcomeSimulationRunning);
     void usageStatisticsChanged(class UsageStatistics* usageStatistics);
+    void rightBarFooterTextChanged(QString rightBarFooterText);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -123,6 +129,8 @@ private:
     QVector3D m_cameraViewCenterRequest;
     bool m_welcomeSimulationRunning = true;
     class UsageStatistics* m_usageStatistics;
+    QString m_rightBarFooterText;
+    void requestRightBarFooterText();
 };
 
 #endif // MYSIMULATOR_H

@@ -60,6 +60,7 @@ AtomifySimulator::AtomifySimulator() :
         QString uuid = QUuid::createUuid().toString();
         m_settings.setValue("machine/uuid", uuid);
     }
+    requestRightBarFooterText();
 }
 
 AtomifySimulator::~AtomifySimulator() {
@@ -229,6 +230,11 @@ UsageStatistics *AtomifySimulator::usageStatistics() const
     return m_statistics;
 }
 
+QString AtomifySimulator::rightBarFooterText() const
+{
+    return m_rightBarFooterText;
+}
+
 QString AtomifySimulator::lastScript() const
 {
     return m_lastScript;
@@ -351,3 +357,53 @@ void AtomifySimulator::setUsageStatistics(UsageStatistics *usageStatistics)
     emit usageStatisticsChanged(m_statistics);
 }
 
+void AtomifySimulator::setRightBarFooterText(QString rightBarFooterText)
+{
+    if (m_rightBarFooterText == rightBarFooterText)
+        return;
+
+    m_rightBarFooterText = rightBarFooterText;
+    emit rightBarFooterTextChanged(m_rightBarFooterText);
+}
+
+void AtomifySimulator::onfinish(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError) {
+        QByteArray response = reply->readAll();
+        qDebug() << "Response: " << response;
+        QJsonDocument doc(QJsonDocument::fromJson(response));
+        if(!doc.isNull()) {
+            QJsonObject obj = doc.object();
+            if(!obj["footerText"].isNull()) {
+                QString footerText = obj["footerText"].toString();
+                setRightBarFooterText(footerText);
+            }
+        }
+    }
+}
+
+void AtomifySimulator::requestRightBarFooterText()
+{
+    QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
+    connect(mgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(onfinish(QNetworkReply*)));
+    connect(mgr, SIGNAL(finished(QNetworkReply*)), mgr, SLOT(deleteLater()));
+
+    // Build your JSON string as usual
+    QString version = ATOMIFYVERSION;
+    QByteArray jsonString = QString("{\"version\": \""+version+"\"}").toUtf8();
+
+    // For your "Content-Length" header
+    QByteArray postDataSize = QByteArray::number(jsonString.size());
+
+    // Time for building your request
+    QUrl serviceURL("http://kvakkefly.com/motd.php");
+    QNetworkRequest request(serviceURL);
+
+    // Add the headers specifying their names and their values with the following method : void QNetworkRequest::setRawHeader(const QByteArray & headerName, const QByteArray & headerValue);
+    request.setRawHeader("User-Agent", "Atomify");
+    request.setRawHeader("X-Custom-User-Agent", "Atomify");
+    request.setRawHeader("Content-Type", "application/json");
+    request.setRawHeader("Content-Length", postDataSize);
+
+    mgr->post(request, jsonString);
+}

@@ -11,11 +11,14 @@ Page {
     property System system
     property AtomifyVisualizer visualizer
     property AtomifySimulator simulator
-    property alias footerText: footerText.text
     focusPolicy: Qt.NoFocus
 
-    Settings {
-        property alias footerText: root.footerText
+    onSimulatorChanged: {
+        if(simulator) {
+            simulator.rightBarFooterTextChanged.connect(function() {
+                footerText.text = simulator.rightBarFooterText
+            })
+        }
     }
 
     function showExamples() {
@@ -92,13 +95,16 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 p { color: white; }
 </style>
-<p>Atomify is developed by Anders Hafreager<br>
-and Svenn-Arne Dragly, University of Oslo.</p>
+<p>Atomify is developed by Anders Hafreager and Svenn-Arne Dragly, University of Oslo.</p>
 <p>Please report bugs <a href=\"reportBug\">here</a>.</p>
 "
             onLinkActivated: {
                 if(link==="reportBug") {
                     Qt.openUrlExternally("https://github.com/ovilab/atomify-lammps/issues")
+                }
+
+                if(link==="newVersion") {
+                    Qt.openUrlExternally("https://github.com/ovilab/atomify/releases")
                 }
             }
         }

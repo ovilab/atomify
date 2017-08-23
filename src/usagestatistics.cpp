@@ -12,7 +12,7 @@ Run::Run(int id, int sessionRunId, int sessionId, QString uuid, QString hash) :
     m_id(id), m_sessionId(sessionId), m_sessionRunId(sessionRunId), m_numAtoms(0), m_numThreads(1), m_numTimesteps(0), m_crashed(false), m_uuid(uuid), m_hash(hash)
 {
     m_os = QSysInfo::prettyProductName();
-    m_atomifyVersion = "2.1.0"; // TODO: use global string...
+    m_atomifyVersion = ATOMIFYVERSION;
     m_dateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
 }
 

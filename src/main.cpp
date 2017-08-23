@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
             // We need to create Qt app for this, but now we know that the user does not
             // want to run a regular script.
         } else if(strcmp(argv[1], "--version")==0) {
-            printf("2.1.0");
+            printf(ATOMIFYVERSION);
             exit(0);
         } else {
             return regularLAMMPS(argc, argv);
