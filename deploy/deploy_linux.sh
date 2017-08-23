@@ -5,8 +5,8 @@ if [ ! -f ./linuxdeployqt-continuous-x86_64.AppImage ]; then
 	chmod a+x ./linuxdeployqt-continuous-x86_64.AppImage
 fi
 
-mkdir build
-cd build
+mkdir build-linux
+cd build-linux
 qmake ../../src DEPLOYLINUX=true
 make -j20
 
