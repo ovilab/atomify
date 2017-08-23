@@ -15,6 +15,10 @@ defined(DEPLOYLINUX, var) {
     QMAKE_LFLAGS += -static-libstdc++
 }
 
+defined(DEPLOYMACAPPSTORE, var) {
+    DEFINES += MACAPPSTORE
+}
+
 defined(DEPLOYPKG, var) {
     QMAKE_CXX  = /usr/local/bin/clang-omp++
     QMAKE_LINK = /usr/local/bin/clang-omp++
@@ -34,8 +38,6 @@ macx {
     QMAKE_INFO_PLIST = ../macos/macos.plist
     TARGET = Atomify
 }
-
-# DEFINES += MACAPPSTORE
 
 ios {
     QMAKE_INFO_PLIST = ../ios/ios.plist
