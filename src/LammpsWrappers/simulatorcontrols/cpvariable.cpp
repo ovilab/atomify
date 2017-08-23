@@ -1,6 +1,7 @@
 #include "cpvariable.h"
 #include <variable.h>
 #include <input.h>
+#include <library.h>
 #include "lammpscontroller.h"
 #include "../../dataproviders/data1d.h"
 #include "../system.h"
@@ -157,37 +158,27 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
 {
     LAMMPS *lammps = lammpsController->lammps();
     Variable *variable = lammps->input->variable;
-    Error *error = lammps->error;
 
-    try {
-        QByteArray bytes = identifier().toLocal8Bit();
-        int ivar = variable->find(bytes.data());
-        if (ivar < 0) return; // Didn't find it. Weird! TODO: handle this
-
-        if (variable->equalstyle(ivar)) {
-            double value = variable->compute_equal(ivar);
-            double time = lammpsController->system->simulationTime();
-            m_data->add(time, value, true);
-            setValue(value);
-            setValueHasDecimals(value!=int(value));
-        }
-
-        if (variable->atomstyle(ivar)) {
-            int igroup = 0;
-            m_atomData.resize(lammpsController->system->numberOfAtoms());
-            double *vector = &m_atomData.front();
-            variable->compute_atom(ivar,igroup,vector,1,0);
-            setIsPerAtom(true);
-            m_data->createHistogram(m_atomData);
-        }
-    } catch(LAMMPSAbortException & ae) {
-        qDebug() << "Yeah didn't go so well: " << ae.message.c_str();
-        error->set_last_error(ae.message.c_str(), ERROR_NORMAL);
-    } catch(LAMMPSException & e) { \
-        qDebug() << "Yeah didn't go so well: " << e.message.c_str();
-        error->set_last_error(e.message.c_str(), ERROR_NORMAL);
+    QByteArray bytes = identifier().toLocal8Bit();
+    int ivar = variable->find(bytes.data());
+    if (ivar < 0) return; // Didn't find it. Weird! TODO: handle this
+    if (variable->equalstyle(ivar)) {
+        double value = variable->compute_equal(ivar);
+        double time = lammpsController->system->simulationTime();
+        m_data->add(time, value, true);
+        setValue(value);
+        setValueHasDecimals(value!=int(value));
     }
 
+    if (variable->atomstyle(ivar)) {
+        int igroup = 0;
+
+        m_atomData.resize(lammpsController->system->numberOfAtoms());
+        double *vector = &m_atomData.front();
+        variable->compute_atom(ivar,igroup,vector,1,0);
+        setIsPerAtom(true);
+        m_data->createHistogram(m_atomData);
+    }
 }
 
 Data1D *CPVariable::data() const
