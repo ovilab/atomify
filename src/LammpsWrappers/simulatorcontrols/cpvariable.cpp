@@ -12,6 +12,102 @@ CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent),
 
 }
 
+void CPVariable::exportToTextFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
+    }
+
+    QTextStream out(&file);
+
+    // Print header with column names
+    out << "# Time " << identifier() << "\n";
+    const QList<QPointF> &points = m_data->points();
+    for(const QPointF &point : points) {
+        out << point.x() << " " << point.y() << "\n";
+    }
+    file.close();
+}
+
+void CPVariable::exportToPythonFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
+    }
+
+    QTextStream out(&file);
+    out << "import matplotlib.pyplot as plt\n";
+    out << "import numpy as np\n";
+
+    // Print arrays to variables
+    const QList<QPointF> &points = m_data->points();
+    out << "time = np.asarray([";
+    for(auto iter = points.begin(); iter != points.end(); iter++) {
+        if (iter != points.begin()) out << ", ";
+        out << (*iter).x();
+    }
+    out << "])\n";
+
+    out << identifier() << " = np.asarray([";
+    for(auto iter = points.begin(); iter != points.end(); iter++) {
+        if (iter != points.begin()) out << ", ";
+        out << (*iter).y();
+    }
+    out << "])\n\n";
+
+    out << "plt.plot(time, " << identifier() << ")\n";
+    out << "plt.xlabel('Time')\n"; // TODO: add units
+    out << "plt.ylabel('" << identifier() << "')\n";
+    out << "plt.show()\n";
+
+    file.close();
+}
+
+void CPVariable::exportToMatlabFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
+    }
+
+    QTextStream out(&file);
+    const QList<QPointF> &points = m_data->points();
+    out << "time = [";
+    for(auto iter = points.begin(); iter != points.end(); iter++) {
+        if (iter != points.begin()) out << ", ";
+        out << (*iter).x();
+    }
+    out << "];\n";
+
+    out << identifier() << " = [";
+    for(auto iter = points.begin(); iter != points.end(); iter++) {
+        if (iter != points.begin()) out << ", ";
+        out << (*iter).y();
+    }
+    out << "];\n";
+
+    out << "plot(time, " << identifier() << ", 'LineWidth', 2);\n";
+    out << "set(gca,'fontsize', 16);\n";
+    out << "xlabel('Time');\n"; // TODO: add units
+    out << "ylabel('" << identifier() << "');\n";
+
+    file.close();
+}
+
 void CPVariable::clear()
 {
     m_data->clear();
