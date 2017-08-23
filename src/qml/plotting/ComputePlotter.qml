@@ -177,6 +177,7 @@ Window {
                             MenuItem {
                                 text: "Text file"
                                 onClicked: {
+                                    // TODO: pause simulation
                                     fileDialog.mode = "text"
                                     fileDialog.open()
                                 }
@@ -184,6 +185,7 @@ Window {
                             MenuItem {
                                 text: "MATLAB"
                                 onClicked: {
+                                    // TODO: pause simulation
                                     fileDialog.mode = "matlab"
                                     fileDialog.open()
                                 }
@@ -191,6 +193,7 @@ Window {
                             MenuItem {
                                 text: "Python"
                                 onClicked: {
+                                    // TODO: pause simulation
                                     fileDialog.mode = "python"
                                     fileDialog.open()
                                 }
@@ -230,7 +233,6 @@ Window {
         selectExisting : false
         property string mode
         title: "Please choose a location to save"
-        // nameFilters: [ "Image files (*.jpg *.png)" ]
         nameFilters: {
             if(mode==="text") {
                 return [ "Text files (*.txt)" ]
