@@ -370,7 +370,7 @@ void AtomifySimulator::onfinish(QNetworkReply *reply)
 {
     if(reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
-        qDebug() << "Response: " << response;
+        // qDebug() << "Response: " << response;
         QJsonDocument doc(QJsonDocument::fromJson(response));
         if(!doc.isNull()) {
             QJsonObject obj = doc.object();
