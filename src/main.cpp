@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
             printf(ATOMIFYVERSION);
             exit(0);
         } else {
-            return regularLAMMPS(argc, argv);
+            //return regularLAMMPS(argc, argv);
         }
     }
 
