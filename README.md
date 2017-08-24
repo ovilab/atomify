@@ -21,6 +21,7 @@ Alternative 4) Download from [Mac App Store](https://itunes.apple.com/us/app/ato
 
 ### Linux ###
 Alternative 1) [Download](https://github.com/ovilab/atomify/releases/download/v2.1.0/atomify-2.1.0-linux-x86_64.tar.gz)
+
 Alternative 2) `sudo snap install atomify`
 
 ### Windows ###
