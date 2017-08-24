@@ -1,9 +1,9 @@
 class Atomify < Formula
   desc "Live LAMMPS visualizer"
   homepage "http://ovilab.net/atomify"
-  url "https://github.com/ovilab/atomify/releases/download/v2.0.10/atomify-2.0.10-src.tar.gz"
-  version "v2.0.10"
-  sha256 "faf07966b1bc8b1dd2fddc8f392b48b1ad55c6240e585d41f80f54dc05fff864"
+  url "https://github.com/ovilab/atomify/releases/download/v2.1.0/atomify-2.1.0-src.tar.gz"
+  version "v2.1.0"
+  sha256 "103e03bc82499cb3d499fe88e41f72a2b5c335fbeb7831797e1c328d0ae8ebc3"
   head "https://github.com/ovilab/atomify.git", :using => :git, :branch => :dev
   depends_on "qt"
   depends_on "gcc"
@@ -25,6 +25,6 @@ class Atomify < Formula
   end
 
   test do
-    assert_equal "2.0.10", shell_output("#{prefix}/atomify.app/Contents/MacOS/atomify --version")
+    assert_equal "2.1.0", shell_output("#{prefix}/atomify.app/Contents/MacOS/atomify --version")
   end
 end
