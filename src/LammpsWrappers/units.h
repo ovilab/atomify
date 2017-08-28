@@ -24,6 +24,7 @@ public:
     QString density() const;
     QString length() const;
     int dimensions() const;
+    Q_INVOKABLE QString timeToFormattedString(int seconds, QString format);
 signals:
     void nameChanged(QString name);
     void timeChanged(QString time);

@@ -1,5 +1,7 @@
 #include "mysimulator.h"
 #include "states.h"
+#include "usagestatistics.h"
+#include "performance.h"
 #include "LammpsWrappers/lammpserror.h"
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include <library.h>
@@ -49,13 +51,23 @@ bool MyWorker::needsSynchronization()
 AtomifySimulator::AtomifySimulator() :
     m_system(new System(this)),
     m_states(new States(this)),
+    m_statistics(new UsageStatistics(this)),
     m_simulationSpeed(1)
 {
     m_states->setupStates(*this);
     m_parser.setSimulator(this);
+    if(m_settings.value("machine/uuid").isNull()) {
+        QString uuid = QUuid::createUuid().toString();
+        m_settings.setValue("machine/uuid", uuid);
+    }
+    requestRightBarFooterText();
 }
 
-AtomifySimulator::~AtomifySimulator() { }
+AtomifySimulator::~AtomifySimulator() {
+    delete m_statistics;
+    delete m_system;
+    delete m_states;
+}
 
 void AtomifySimulator::togglePause()
 {
@@ -80,6 +92,11 @@ void AtomifySimulator::decreaseSimulationSpeed()
     if(m_simulationSpeed > 1) {
         setSimulationSpeed(m_simulationSpeed - 1);
     }
+}
+
+QString AtomifySimulator::getUuid()
+{
+    return m_settings.value("machine/uuid").toString();
 }
 
 System *AtomifySimulator::system() const
@@ -132,6 +149,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If user pressed stop / restart, we should reset
     if(m_lammpsController.crashed) {
+        if(atomifySimulator->m_statistics->currentRun()) atomifySimulator->m_statistics->currentRun()->m_crashed = true;
         m_lammpsController.crashed = false;
         m_lammpsController.finished = true;
         atomifySimulator->setError(m_lammpsController.errorMessage);
@@ -170,6 +188,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
+        atomifySimulator->m_statistics->newRun();
         m_lammpsController.scriptFilePath = atomifySimulator->scriptFilePath();
 
         // Don't move camera if we rerun a simulation
@@ -181,6 +200,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     }
     atomifySimulator->system()->synchronizeQML(&m_lammpsController);
     atomifySimulator->system()->atoms()->synchronizeRenderer();
+    if(states.parsing()->active()) {
+        atomifySimulator->m_statistics->currentRun()->m_pairStyle = atomifySimulator->system()->pairStyle();
+        atomifySimulator->m_statistics->currentRun()->m_numThreads = atomifySimulator->system()->performance()->threads();
+        atomifySimulator->m_statistics->currentRun()->m_numAtoms = atomifySimulator->system()->numberOfAtoms();
+        atomifySimulator->m_statistics->currentRun()->m_numTimesteps = atomifySimulator->system()->currentTimestep();
+    }
     m_needsSynchronization = false;
 }
 
@@ -195,6 +220,21 @@ MyWorker *AtomifySimulator::createWorker()
     return new MyWorker();
 }
 
+QVariantMap &AtomifySimulator::globalState()
+{
+    return m_globalState;
+}
+
+UsageStatistics *AtomifySimulator::usageStatistics() const
+{
+    return m_statistics;
+}
+
+QString AtomifySimulator::rightBarFooterText() const
+{
+    return m_rightBarFooterText;
+}
+
 QString AtomifySimulator::lastScript() const
 {
     return m_lastScript;
@@ -203,6 +243,11 @@ QString AtomifySimulator::lastScript() const
 void AtomifySimulator::setLastScript(const QString &lastScript)
 {
     m_lastScript = lastScript;
+}
+
+void AtomifySimulator::lookForUpdates()
+{
+    // TODO: implement
 }
 
 CommandParser &AtomifySimulator::parser()
@@ -301,4 +346,64 @@ void AtomifySimulator::setWelcomeSimulationRunning(bool welcomeSimulationRunning
 
     m_welcomeSimulationRunning = welcomeSimulationRunning;
     emit welcomeSimulationRunningChanged(welcomeSimulationRunning);
+}
+
+void AtomifySimulator::setUsageStatistics(UsageStatistics *usageStatistics)
+{
+    if (m_statistics == usageStatistics)
+        return;
+
+    m_statistics = usageStatistics;
+    emit usageStatisticsChanged(m_statistics);
+}
+
+void AtomifySimulator::setRightBarFooterText(QString rightBarFooterText)
+{
+    if (m_rightBarFooterText == rightBarFooterText)
+        return;
+
+    m_rightBarFooterText = rightBarFooterText;
+    emit rightBarFooterTextChanged(m_rightBarFooterText);
+}
+
+void AtomifySimulator::onfinish(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError) {
+        QByteArray response = reply->readAll();
+        // qDebug() << "Response: " << response;
+        QJsonDocument doc(QJsonDocument::fromJson(response));
+        if(!doc.isNull()) {
+            QJsonObject obj = doc.object();
+            if(!obj["footerText"].isNull()) {
+                QString footerText = obj["footerText"].toString();
+                setRightBarFooterText(footerText);
+            }
+        }
+    }
+}
+
+void AtomifySimulator::requestRightBarFooterText()
+{
+    QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
+    connect(mgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(onfinish(QNetworkReply*)));
+    connect(mgr, SIGNAL(finished(QNetworkReply*)), mgr, SLOT(deleteLater()));
+
+    // Build your JSON string as usual
+    QString version = ATOMIFYVERSION;
+    QByteArray jsonString = QString("{\"version\": \""+version+"\"}").toUtf8();
+
+    // For your "Content-Length" header
+    QByteArray postDataSize = QByteArray::number(jsonString.size());
+
+    // Time for building your request
+    QUrl serviceURL("http://kvakkefly.com/motd.php");
+    QNetworkRequest request(serviceURL);
+
+    // Add the headers specifying their names and their values with the following method : void QNetworkRequest::setRawHeader(const QByteArray & headerName, const QByteArray & headerValue);
+    request.setRawHeader("User-Agent", "Atomify");
+    request.setRawHeader("X-Custom-User-Agent", "Atomify");
+    request.setRawHeader("Content-Type", "application/json");
+    request.setRawHeader("Content-Length", postDataSize);
+
+    mgr->post(request, jsonString);
 }

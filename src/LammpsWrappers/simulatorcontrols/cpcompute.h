@@ -32,7 +32,9 @@ public:
     CPCompute(Qt3DCore::QNode *parent = 0);
     ~CPCompute();
     Q_INVOKABLE void clear();
-    Q_INVOKABLE void save(QString filename);
+    Q_INVOKABLE void exportToTextFile(QString fileName);
+    Q_INVOKABLE void exportToPythonFile(QString fileName);
+    Q_INVOKABLE void exportToMatlabFile(QString fileName);
     void copyData(LAMMPSController *lammpsController);
     bool existsInLammps(LAMMPSController *lammpsController) override;
     void computeInLAMMPS(LAMMPSController *lammpsController);
@@ -53,7 +55,6 @@ public:
     int perAtomIndex() const;
     int numPerAtomValues() const;
     int groupBit() const;
-
 signals:
     void isVectorChanged(bool isVector);
     void groupChanged(QString group);

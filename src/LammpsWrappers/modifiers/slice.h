@@ -11,7 +11,7 @@ class Slice : public Modifier
     Q_PROPERTY(float width READ width WRITE setWidth NOTIFY widthChanged)
     Q_PROPERTY(bool reversed READ reversed WRITE setReversed NOTIFY reversedChanged)
 private:
-    float m_distance = 0;
+    float m_distance = 1;
     QVector3D m_normal;
     QVector3D m_normalizedNormal;
     float m_width = 0;

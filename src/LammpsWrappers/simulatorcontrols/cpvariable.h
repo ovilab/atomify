@@ -12,6 +12,10 @@ class CPVariable : public SimulatorControl
     Q_PROPERTY(bool valueHasDecimals READ valueHasDecimals WRITE setValueHasDecimals NOTIFY valueHasDecimalsChanged)
 public:
     CPVariable(Qt3DCore::QNode *parent = 0);
+    Q_INVOKABLE void clear();
+    Q_INVOKABLE void exportToTextFile(QString fileName);
+    Q_INVOKABLE void exportToPythonFile(QString fileName);
+    Q_INVOKABLE void exportToMatlabFile(QString fileName);
     virtual bool existsInLammps(class LAMMPSController *lammpsController);
     void synchronize(class LAMMPSController *lammpsController);
     class Data1D* data() const;

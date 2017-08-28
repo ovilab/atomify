@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.3
+import Qt.labs.settings 1.0
 import Atomify 1.0
 import "../../visualization"
 
@@ -11,6 +12,14 @@ Page {
     property AtomifyVisualizer visualizer
     property AtomifySimulator simulator
     focusPolicy: Qt.NoFocus
+
+    onSimulatorChanged: {
+        if(simulator) {
+            simulator.rightBarFooterTextChanged.connect(function() {
+                footerText.text = simulator.rightBarFooterText
+            })
+        }
+    }
 
     function showExamples() {
         tabBar.currentIndex = 2
@@ -69,28 +78,33 @@ Page {
         }
 
         Text {
+            id: footerText
             anchors.left: parent.left
-            anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.top: rect.bottom
+            width: parent.width*0.9
 
             anchors.margins: 10
             textFormat: TextEdit.RichText
             font.family: "DejaVu Sans Mono"
             font.pixelSize: 12
+            wrapMode: Text.WordWrap
             text: "
 <style>
 h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 p { color: white; }
 </style>
-<p>Atomify is developed by Anders Hafreager<br>
-and Svenn-Arne Dragly, University of Oslo.</p>
+<p>Atomify is developed by Anders Hafreager and Svenn-Arne Dragly, University of Oslo.</p>
 <p>Please report bugs <a href=\"reportBug\">here</a>.</p>
 "
             onLinkActivated: {
                 if(link==="reportBug") {
                     Qt.openUrlExternally("https://github.com/ovilab/atomify-lammps/issues")
+                }
+
+                if(link==="newVersion") {
+                    Qt.openUrlExternally("https://github.com/ovilab/atomify/releases")
                 }
             }
         }

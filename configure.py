@@ -8,7 +8,7 @@ from os.path import join, abspath
 from sys import platform as _platform
 import glob
 def run_command(cmd):
-    print cmd
+    print(cmd)
     subprocess.call(cmd, shell=True, env=env)
 
 lammps_build_type = "atomify"
@@ -30,15 +30,15 @@ if _platform == "darwin":
         ompSupport = True
         specifiedCompiler = sys.argv[2]
 elif _platform == "win32":
-    print "Windows is not supported yet"
+    print("Windows is not supported yet")
     exit()
 elif len(sys.argv) > 1 and sys.argv[1] == "android":
     lammps_build_type = "android"
     if len(sys.argv) < 4:
-        print "You need to specify the Android NDK path and Android ABI version (for example \"4.9\")"
-        print "python configure.py android <Android NDK path> <Android ABI version>"
-        print "Example:"
-        print "python configure.py android /home/username/apps/android-ndk-r10d 4.9"
+        print("You need to specify the Android NDK path and Android ABI version (for example \"4.9\")")
+        print("python configure.py android <Android NDK path> <Android ABI version>")
+        print("Example:")
+        print("python configure.py android /home/username/apps/android-ndk-r10d 4.9")
         exit()
     env["ANDROID_NDK_PATH"] = sys.argv[2]
     env["ANDROID_ABI"] = sys.argv[3]
@@ -50,11 +50,6 @@ if not os.path.exists("lammps-build"):
     os.makedirs("lammps-build")
 
 lammps_source_dir = join("libs", "lammps")
-#if not os.path.exists("lammps"):
-#    run_command("git clone https://github.com/ovilab/lammps.git")
-#if not os.path.exists("lammps"):
-#    print("Error, could not clone LAMMPS from github. Please make sure you have git installed.")
-#    exit(1)
 os.chdir(root_path)
 
 if os.path.exists("lammps-patch/water"):
@@ -62,7 +57,7 @@ if os.path.exists("lammps-patch/water"):
         shutil.copy(filename, "lammps-build/lammps/src/")
 
 if not os.path.isdir(lammps_source_dir):
-    print "Error, the path '"+lammps_source_dir+"' is not a directory."
+    print("Error, the path '"+lammps_source_dir+"' is not a directory.")
     exit()
 
 lammps_source_dir = abspath(lammps_source_dir)
@@ -83,21 +78,15 @@ else:
     lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
     lammps_pri.close()
     
-#errorCppFile = join(lammps_source_dir_src, "error.cpp")
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
 
-#if not os.path.isfile(errorCppFile):
-#    print "Error, could not find file to patch: "+errorCppFile
-#    print "Make sure you provided the correct LAMMPS folder."
-#    exit()
-
 if not os.path.isfile(fix_ave_timeHFile):
-    print "Error, could not find file to patch: "+fix_ave_timeHFile
-    print "Make sure you provided the correct LAMMPS folder."
+    print("Error, could not find file to patch: "+fix_ave_timeHFile)
+    print("Make sure you provided the correct LAMMPS folder.")
     exit()
 
-print "Attempting to patch lammps source files"
-print "If these are already patched, just press enter (which by default answers 'no' on the questions) twice for each already patched file.\n"
+print("Attempting to patch lammps source files")
+print("If these are already patched, just press enter (which by default answers 'no' on the questions) twice for each already patched file.\n")
 
 for filename in glob.glob(join(patch_path, "*.patch")):
     basename = os.path.basename(filename)
@@ -108,10 +97,10 @@ for filename in glob.glob(join(patch_path, "*.patch")):
 
 shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE", "Makefile.atomify"))
 
-print "\nLAMMPS was (probably) successfully patched."
+print("\nLAMMPS was (probably) successfully patched.")
 
 if lammps_build_type == "android":
-    print "Compiling MPI stubs for Android"
+    print("Compiling MPI stubs for Android")
     shutil.copy(join(patch_path, "Makefile.android"), join(lammps_source_dir_src, "MAKE/MACHINES"))
     shutil.copy(join(patch_path, "STUBS", "Makefile.android"), join(lammps_source_dir_src, "STUBS"))
 
@@ -124,7 +113,7 @@ else:
     run_command("make")
 
         
-print "\nCompiling LAMMPS"
+print("\nCompiling LAMMPS")
 
 os.chdir(lammps_source_dir_src)
 run_command("make yes-rigid yes-manybody yes-mc yes-molecule yes-granular yes-replica yes-kspace yes-shock yes-misc yes-USER-MISC yes-user-reaxc yes-opt yes-qeq yes-snap yes-user-diffraction yes-user-fep yes-user-mgpt yes-user-manifold yes-user-meamc yes-user-phonon yes-user-smtbq")

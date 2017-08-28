@@ -77,6 +77,17 @@ QQC1.ApplicationWindow {
                     EventCenter.postEvent("editor.saveAs")
                 }
             }
+            QQC1.MenuSeparator {
+
+            }
+
+            EventMenuItem {
+                id: anonymousUsageStatistics
+                text: "Send anonymous usage statistics"
+                checkable: true
+                checked: mainDesktop.simulator.usageStatistics.sendUsageStatistics
+                onTriggered: mainDesktop.simulator.usageStatistics.setSendUsageStatistics(checked)
+            }
         }
         QQC1.Menu {
             title: "Edit"

@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 import QtQuick.Dialogs 1.2
+import Qt.labs.settings 1.0
 import Atomify 1.0
 import "../../events"
 
@@ -18,6 +19,11 @@ Item {
     property bool changedSinceLastSave: false
     property int currentLine: -1
     property int errorLine: -1
+    property real fontSize: 20
+
+    Settings {
+        property alias fontSize: root.fontSize
+    }
 
     Component.onCompleted: {
         highlighter.setTextDocument(textArea.textDocument)
@@ -151,11 +157,11 @@ Item {
             selectByMouse: true
             selectByKeyboard: true
             font.family: "DejaVu Sans Mono"
-            font.pixelSize: 12
+            font.pixelSize: root.fontSize
             enabled: root.visible
-
             Component.onCompleted: {
                 flickableItem.contentYChanged.connect(update)
+                root.fontSizeChanged.connect(update)
                 update()
             }
 
@@ -180,7 +186,6 @@ Item {
                 lineNumbers.update()
             }
         }
-
     }
 
     FileDialog {

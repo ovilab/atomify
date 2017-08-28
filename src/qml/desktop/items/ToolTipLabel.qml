@@ -3,12 +3,16 @@ import QtQuick.Controls 2.2
 
 Label {
     property string toolTipText: ""
+    property string url: ""
     MouseArea {
         id: mouseArea
         anchors.fill: parent
         propagateComposedEvents: true
         hoverEnabled: true
-        onClicked: {
+        onPressed:  {
+            if(url!=="") {
+                Qt.openUrlExternally(url)
+            }
             mouse.accepted = false
         }
     }

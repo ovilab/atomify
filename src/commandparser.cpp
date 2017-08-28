@@ -76,7 +76,11 @@ void CommandParser::atomColor(QString command)
     if(!castOk) return;
     QString colorString = match.captured(2);
     QColor color(colorString);
+
     m_simulator->system()->atoms()->setAtomColor(atomType, color);
+
+    QString key = QString("atomcolor.%1").arg(atomType);
+    m_simulator->globalState()[key] = color;
 }
 
 void CommandParser::atomType(QString command)
@@ -88,6 +92,9 @@ void CommandParser::atomType(QString command)
     if(!castOk) return;
     QString atomTypeName = match.captured(2);
     m_simulator->system()->atoms()->setAtomType(atomType, atomTypeName);
+
+    QString key = QString("atomtype.%1").arg(atomType);
+    m_simulator->globalState()[key] = atomTypeName;
 }
 
 void CommandParser::atomSize(QString command)
@@ -100,6 +107,9 @@ void CommandParser::atomSize(QString command)
     float radius = match.captured(2).toFloat(&castOk);
     if(!castOk) return;
     m_simulator->system()->atoms()->setAtomSize(atomType, radius);
+
+    QString key = QString("atomsize.%1").arg(atomType);
+    m_simulator->globalState()[key] = radius;
 }
 
 bool CommandParser::cameraPosition(QString command)

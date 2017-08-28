@@ -56,7 +56,7 @@ Pane {
 
                     CheckBox {
                         id: guidesCheckBox
-                        text: "Show guides"
+                        text: "Show axis guides"
                         checked: visualizer.guidesVisible
                         focusPolicy: Qt.NoFocus
                         hoverEnabled: true
@@ -72,7 +72,7 @@ Pane {
 
                     CheckBox {
                         id: outlineCheckBox
-                        text: "Show outline"
+                        text: "Show box outline"
                         checked: visualizer.systemBoxVisible
                         focusPolicy: Qt.NoFocus
                         ToolTip.visible: hovered

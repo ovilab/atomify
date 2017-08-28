@@ -5,8 +5,9 @@ import QtQuick.Window 2.2
 import Atomify 1.0
 import QtCharts 2.1
 import QtQuick.Controls.Styles 1.4
+import QtQuick.Dialogs 1.2
 
-Window {
+WindowGL2 {
     id: root
     property var dataSeries
     property Variable variable
@@ -55,10 +56,18 @@ Window {
 
         _axisX.min = xMin
         _axisX.max = xMax
-        _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
-        _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
 
-        _axisY.applyNiceNumbers()
+        if(!ylimLock.checked) {
+            _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
+            _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
+            _axisY.applyNiceNumbers()
+        }
+
+        _axisY.tickCount = ticks.value
+        if(roundXAxis.checked) {
+            _axisX.applyNiceNumbers()
+            _axisY.tickCount = ticks.value
+        }
     }
 
     Timer {
@@ -74,8 +83,10 @@ Window {
 
         if (type === "line") {
             dataSeries = chart.createSeries(ChartView.SeriesTypeLine, variable.identifier, _axisX, _axisY);
+            dataSeries.useOpenGL = true
         } else {
             dataSeries = chart.createSeries(ChartView.SeriesTypeScatter, variable.identifier, _axisX, _axisY);
+            dataSeries.useOpenGL = true
         }
     }
 
@@ -99,7 +110,7 @@ Window {
 
                 ValueAxis {
                     id: _axisX
-                    tickCount: 3
+                    tickCount: ticks.value
                     min: 0
                     max: 100
                     titleText: "Time"
@@ -109,7 +120,7 @@ Window {
 
                 ValueAxis {
                     id: _axisY
-                    tickCount: 3
+                    tickCount: ticks.value
                     min: 0
                     max: 1000
                     titleText: "Value"
@@ -117,13 +128,77 @@ Window {
                     labelsColor: "gray"
                 }
             }
-            Row {
+            Column {
                 Layout.fillWidth: true
                 leftPadding: 12
                 spacing: 5
-                Button {
-                    text: "Clear"
-                    onClicked: root.variable.data.clear()
+                Row {
+                    Button {
+                        id: clearButton
+                        text: "Clear"
+                        onClicked: root.variable.clear()
+                    }
+                    CheckBox {
+                        id: roundXAxis
+                        text: "Round x-axis"
+                    }
+                    CheckBox {
+                        id: ylimLock
+                        text: "Lock ylim"
+                    }
+                }
+                Row {
+                    Button {
+                        id: exportButton
+                        height: clearButton.height
+                        text: "Export"
+                        onClicked: menu.open()
+                        Menu {
+                            id: menu
+                            y: exportButton.height
+
+                            MenuItem {
+                                text: "Text file"
+                                onClicked: {
+                                    // TODO: pause simulation
+                                    fileDialog.mode = "text"
+                                    fileDialog.open()
+                                }
+                            }
+                            MenuItem {
+                                text: "MATLAB"
+                                onClicked: {
+                                    // TODO: pause simulation
+                                    fileDialog.mode = "matlab"
+                                    fileDialog.open()
+                                }
+                            }
+                            MenuItem {
+                                text: "Python"
+                                onClicked: {
+                                    // TODO: pause simulation
+                                    fileDialog.mode = "python"
+                                    fileDialog.open()
+                                }
+                            }
+                        }
+                    }
+
+                    Label {
+                        height: exportButton.height
+                        verticalAlignment: Text.AlignVCenter
+                        text: "# ticks: "
+                    }
+
+                    Slider {
+                        id: ticks
+                        height: exportButton.height
+                        from: 3
+                        to: 9
+                        stepSize: 1
+                        snapMode: Slider.SnapAlways
+                        value: 5
+                    }
                 }
             }
         }
@@ -133,6 +208,32 @@ Window {
         sequence: StandardKey.Close
         onActivated: {
             root.close()
+        }
+    }
+
+    FileDialog {
+        id: fileDialog
+        selectExisting : false
+        property string mode
+        title: "Please choose a location to save"
+        nameFilters: {
+            if(mode==="text") {
+                return [ "Text files (*.txt)" ]
+            } else if(mode==="matlab") {
+                return [ "MATLAB files (*.m)" ]
+            } else if(mode==="python") {
+                return [ "Python files (*.py)" ]
+            } else return [""]
+        }
+
+        onAccepted: {
+            if(mode==="text") {
+                variable.exportToTextFile(fileDialog.fileUrl)
+            } else if(mode==="matlab") {
+                variable.exportToMatlabFile(fileDialog.fileUrl)
+            } else if(mode==="python") {
+                variable.exportToPythonFile(fileDialog.fileUrl)
+            }
         }
     }
 }

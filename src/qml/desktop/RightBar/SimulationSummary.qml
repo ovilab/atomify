@@ -175,14 +175,15 @@ Flickable {
                     visible: system.triclinic
                 }
                 Label {
-                    text: "Units: <a href=\"units\">"+system.units.name+"</a>"
+                    text: "<a href=\"units\">Units</a>: "+system.units.name
                     onLinkActivated: {
                         Qt.openUrlExternally("http://lammps.sandia.gov/doc/units.html")
                     }
                 }
                 ToolTipLabel {
-                    toolTipText: "The current simulations is "+system.units.dimensions+"-dimensional."
-                    text: "Dimensions: "+system.units.dimensions
+                    url: "http://lammps.sandia.gov/doc/dimension.html"
+                    toolTipText: "The current simulation is "+system.units.dimensions+"-dimensional."
+                    text: "<a href=\"dimensions\">Dimensions</a>: "+system.units.dimensions
                 }
                 ToolTipLabel {
                     property string explainationP: (system.boundaryStyle.search("p")>-1) ? "p is periodic. " : ""
@@ -190,34 +191,40 @@ Flickable {
                     property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
                     property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
                     toolTipText: explainationP+explainationF+explainationS+explainationM
-                    text: "Boundary: "+system.boundaryStyle
+                    text: "<a href=\"boundary\">Boundary</a>: "+system.boundaryStyle 
+                    url: "http://lammps.sandia.gov/doc/boundary.html"
                 }
-                Label {
-                    text: "Timestep: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
+                ToolTipLabel {
+                    text: " <a href=\"timestep\">Timestep</a>: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
+                    url: "http://lammps.sandia.gov/doc/timestep.html"
                 }
-                Label {
-                    text: "Number of atoms: "+system.numberOfAtoms
+                ToolTipLabel {
+                    text: "<a href=\"atoms\">Number of atoms</a>: "+system.numberOfAtoms
+                    url: "http://lammps.sandia.gov/doc/create_atoms.html"
                 }
                 Label {
                     text: "Number of bonds: "+system.atoms.numberOfBonds
                     visible: system.atoms.numberOfBonds>0
                 }
-                Label {
-                    text: "Size: ("+system.size.x.toFixed(1)+", "+system.size.y.toFixed(1)+", "+system.size.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                ToolTipLabel {
+                    text: "<a href=\"size\">Size</a>: ("+system.size.x.toFixed(3)+", "+system.size.y.toFixed(3)+", "+system.size.z.toFixed(3)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                    url: "http://lammps.sandia.gov/doc/change_box.html"
                 }
-                Label {
-                    text: "Center: ("+system.center.x.toFixed(1)+", "+system.center.y.toFixed(1)+", "+system.center.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                ToolTipLabel {
+                    text: "<a href=\"center\">Center</a>: ("+system.center.x.toFixed(1)+", "+system.center.y.toFixed(1)+", "+system.center.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                    url: "http://lammps.sandia.gov/doc/lattice.html"
                 }
-                Label {
-                    textFormat: Qt.RichText
-                    text: "Volume: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
+                ToolTipLabel {
+                    text: "<a href=\"volume\">Volume</a>: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
+                    url: "http://lammps.sandia.gov/doc/change_box.html"
                 }
-                Label {
+                ToolTipLabel {
                     textFormat: Qt.RichText
                     text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
                 }
-                Label {
-                    text: "Number of atom types: "+system.numberOfAtomTypes
+                ToolTipLabel {
+                    text: "<a href=\"atomtypes\">Number of atom types</a>: "+system.numberOfAtomTypes
+                    url: "http://lammps.sandia.gov/doc/atom_style.html"
                 }
             }
         }
@@ -236,13 +243,32 @@ Flickable {
                     right: parent.right
                 }
                 Label {
-                    text: "Time left: "+ system.cpuremain.toFixed(1)+" s"
+                    text: {
+                        var seconds = system.cpuremain.toFixed(0)
+                        if(seconds < 60) {
+                            return "Time left: "+seconds+" s"
+                        } else if(seconds < 3600) {
+                            return "Time left: "+system.units.timeToFormattedString(seconds, "mm:ss")
+                        } else {
+                            return "Time left: "+system.units.timeToFormattedString(seconds, "hh:mm:ss")
+                        }
+                    }
                 }
                 Label {
                     text: "Current timestep: "+system.currentTimestep
                 }
                 Label {
-                    text: "Time: "+system.simulationTime.toFixed(2)+ (system.units.time === "" ? "" : " ["+system.units.time+"]")
+                    text: {
+                        if(system.units.time === "") {
+                            return "Time: "+system.simulationTime.toPrecision(3)
+                        } else {
+                            if(system.units.time === "fs" && system.simulationTime > 1000) {
+                                return "Time: "+(system.simulationTime/1000).toPrecision(3)+" [ps]"
+                            } else {
+                                return "Time: "+system.simulationTime.toFixed(3)+ " ["+system.units.time+"]"
+                            }
+                        }
+                    }
                 }
                 ToolTipLabel {
                     toolTipText: "1x targets 60 frames per second."
@@ -415,3 +441,4 @@ Flickable {
         }
     }
 }
+

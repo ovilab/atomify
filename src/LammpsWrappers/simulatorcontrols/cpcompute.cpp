@@ -23,12 +23,141 @@ void CPCompute::clear()
     }
 }
 
-void CPCompute::save(QString filename)
+void CPCompute::exportToTextFile(QString fileName)
 {
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        return;
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
     }
+
+    QTextStream out(&file);
+
+    QStringList keys = m_data1DRaw.keys();
+
+    // Print header with column names
+    out << "# " << xLabel() << " ";
+    for(QString key : keys) {
+        out << key << " ";
+    }
+    out << "\n";
+
+    int dataCount = m_data1DRaw[keys[0]]->points().size();
+    for(int i=0; i<dataCount; i++) {
+        float x = m_data1DRaw[keys[0]]->points()[i].x();
+        out << x << " ";
+
+        for(QString key : keys) {
+            float y = m_data1DRaw[key]->points()[i].y();
+            out << y << " ";
+        }
+        out << "\n";
+    }
+    file.close();
+}
+
+void CPCompute::exportToPythonFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
+    }
+
+    QTextStream out(&file);
+    out << "import matplotlib.pyplot as plt\n";
+    out << "import numpy as np\n";
+
+    QStringList keys = m_data1DRaw.keys();
+    // Print arrays to variables
+    for(QString key : keys) {
+        const QList<QPointF> &points = m_data1DRaw[key]->points();
+
+        if(key == keys[0]) {
+            out << xLabel().toLower() << " = np.asarray([";
+            for(auto iter = points.begin(); iter != points.end(); iter++) {
+                if (iter != points.begin()) out << ", ";
+                out << (*iter).x();
+            }
+            out << "])\n";
+        }
+
+        out << key.toLower() << " = np.asarray([";
+        for(auto iter = points.begin(); iter != points.end(); iter++) {
+            if (iter != points.begin()) out << ", ";
+            out << (*iter).y();
+        }
+        out << "])\n";
+    }
+    out << "\n";
+
+    for(QString key : keys) {
+        out << "plt.plot(" << xLabel().toLower() << ", " << key.toLower() << ", label='" << key << "')\n";
+    }
+    out << "plt.xlabel('" << xLabel() << "')\n"; // TODO: add units
+    out << "plt.ylabel('" << yLabel() << "')\n";
+    out << "plt.legend()\n";
+    out << "plt.show()\n";
+
+    file.close();
+}
+
+void CPCompute::exportToMatlabFile(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(file.fileName().replace("file://",""));
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error, could not open file " << fileName;  // TODO: proper error handling
+            return;
+        }
+    }
+
+    QTextStream out(&file);
+
+    QStringList keys = m_data1DRaw.keys();
+    // Print arrays to variables
+    for(QString key : keys) {
+        const QList<QPointF> &points = m_data1DRaw[key]->points();
+
+        if(key == keys[0]) {
+            out << xLabel().toLower() << " = [";
+            for(auto iter = points.begin(); iter != points.end(); iter++) {
+                if (iter != points.begin()) out << ", ";
+                out << (*iter).x();
+            }
+            out << "];\n";
+        }
+
+        out << key.toLower() << " = [";
+        for(auto iter = points.begin(); iter != points.end(); iter++) {
+            if (iter != points.begin()) out << ", ";
+            out << (*iter).y();
+        }
+        out << "];\n";
+    }
+    out << "\n";
+
+    for(QString key : keys) {
+        out << "plot(" << xLabel().toLower() << ", " << key.toLower() << ", 'LineWidth',2);\n";
+    }
+    out << "set(gca,'fontsize', 16);\n";
+    out << "xlabel('" << xLabel() << "');\n"; // TODO: add units
+    out << "ylabel('" << yLabel() << "');\n";
+    out << "legend(";
+    for(auto iter = keys.begin(); iter != keys.end(); iter++) {
+        if (iter != keys.begin()) out << ", ";
+        out << "'" << *iter << "'";
+    }
+    out << ");\n";
+
+    file.close();
 }
 
 Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {

@@ -10,12 +10,13 @@
 #include "units.h"
 #include "../performance.h"
 
+#include <library.h>
 #include <force.h>
 #include <domain.h>
 #include <atom.h>
 #include <output.h>
-#include <thermo.h>
 #include <update.h>
+#include <comm.h>
 
 using namespace LAMMPS_NS;
 
@@ -136,16 +137,14 @@ void System::updateSizeAndOrigin(Domain *domain)
 
 void System::calculateCPURemain(LAMMPS *lammps)
 {
-    double value;
-    lammps->output->thermo->evaluate_keyword("cpuremain", &value);
+    double value = lammps_get_thermo(lammps, "cpuremain");
     setCpuremain(value);
 }
 
 void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
 {
     if(m_currentTimestep % 10 == 0) {
-        double value;
-        lammps->output->thermo->evaluate_keyword("spcpu", &value);
+        double value = lammps_get_thermo(lammps, "spcpu");
         if(value < 0) return;
         double oldValue = m_performance->timestepsPerSecond();
         value = 0.6*oldValue + 0.4*value; // low pass filter
@@ -161,7 +160,6 @@ void System::synchronize(LAMMPSController *lammpsController)
         return;
     }
     setIsValid(true);
-
     m_regions->synchronize(lammpsController);
     m_groups->synchronize(lammpsController);
     m_atoms->synchronize(lammpsController);
@@ -189,12 +187,15 @@ void System::synchronize(LAMMPSController *lammpsController)
     computeCellMatrix(domain);
     updateBoundaryStyle(domain);
     setTriclinic(domain->triclinic);
+    setPairStyle(QString(lammps->force->pair_style));
+    m_performance->setThreads(lammps->comm->nthreads);
     updateCenter(domain);
 
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
         emit numberOfAtomsChanged(m_numberOfAtoms);
     }
+
 
     if(m_numberOfAtomTypes != atom->ntypes) {
         m_numberOfAtomTypes = atom->ntypes;
@@ -228,7 +229,6 @@ void System::synchronize(LAMMPSController *lammpsController)
     setMacAppStore(false);
 #endif
 
-//    lammps->output->thermo->compute(1);
     calculateTimestepsPerSeconds(lammps);
     calculateCPURemain(lammps);
 
@@ -303,6 +303,8 @@ void System::reset()
     m_center = QVector3D();
     m_volume = 0;
     setBoundaryStyle("None");
+    m_pairStyle = "";
+    emit pairStyleChanged(m_pairStyle);
     emit currentTimestepChanged(m_currentTimestep);
     emit simulationTimeChanged(m_simulationTime);
     emit sizeChanged(m_size);
@@ -311,6 +313,7 @@ void System::reset()
     emit numberOfAtomsChanged(m_numberOfAtoms);
     emit numberOfAtomTypesChanged(m_numberOfAtomTypes);
     emit volumeChanged(m_volume);
+    m_performance->reset();
 }
 
 float System::volume() const
@@ -371,6 +374,16 @@ QString System::lammpsVersion() const
 bool System::macAppStore() const
 {
     return m_macAppStore;
+}
+
+QString System::pairStyle() const
+{
+    return m_pairStyle;
+}
+
+int System::numberOfTimesteps() const
+{
+    return m_numberOfTimesteps;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -568,6 +581,24 @@ void System::setMacAppStore(bool macAppStore)
 
     m_macAppStore = macAppStore;
     emit macAppStoreChanged(macAppStore);
+}
+
+void System::setPairStyle(QString pairStyle)
+{
+    if (m_pairStyle == pairStyle)
+        return;
+
+    m_pairStyle = pairStyle;
+    emit pairStyleChanged(m_pairStyle);
+}
+
+void System::setNumberOfTimesteps(int numberOfTimesteps)
+{
+    if (m_numberOfTimesteps == numberOfTimesteps)
+        return;
+
+    m_numberOfTimesteps = numberOfTimesteps;
+    emit numberOfTimestepsChanged(m_numberOfTimesteps);
 }
 
 void System::setVariables(Variables *variables)

@@ -16,7 +16,7 @@ CPFix::~CPFix() { }
 bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsController) {
     enum{BIN1D,BIN2D,BIN3D,BINSPHERE,BINCYLINDER,
          TYPE,MOLECULE,COMPUTE,FIX,VARIABLE};
-
+    return false; // TODO: This fix is broken
     if(!fix) return false;
     int dimension;
     LAMMPS_NS::ComputeChunkAtom *chunk = static_cast<LAMMPS_NS::ComputeChunkAtom*>(fix->extract("cchunk", dimension));
@@ -36,10 +36,9 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
         qDebug() << "Warning, could not get values from ComputeChunkAtom::extract.";
         return true;
     }
-
     if(*which == BIN2D) {
-        setInteractive(true);
 
+        setInteractive(true);
         if(m_dataRaw.size() != *nvalues) {
             m_dataRaw.clear();
             m_data.clear();
@@ -49,6 +48,7 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
                 m_data.push_back(QVariant::fromValue(data));
             }
         }
+
         if(fix->nextvalid() == lammpsController->system->currentTimestep()+1) {
             QStringList labels = {"x", "y", "z"};
 
@@ -82,6 +82,8 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
                 minValues[i] = 1e9;
                 maxValues[i] = -1e9;
             }
+
+
 
             for(int i=0; i<*nchunk; i++) {
                 float x = fix->compute_array(i,0);

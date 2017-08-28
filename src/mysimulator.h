@@ -4,9 +4,10 @@
 #include <QElapsedTimer>
 #include <QStateMachine>
 #include <QVector3D>
+#include <QSettings>
+#include <QNetworkReply>
 #include "commandparser.h"
 #include "lammpscontroller.h"
-
 using namespace LAMMPS_NS;
 
 class MyWorker : public SimulatorWorker
@@ -42,6 +43,9 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(QVector3D cameraPositionRequest READ cameraPositionRequest WRITE setCameraPositionRequest NOTIFY cameraPositionRequestChanged)
     Q_PROPERTY(QVector3D cameraViewCenterRequest READ cameraViewCenterRequest WRITE setCameraViewCenterRequest NOTIFY cameraViewCenterRequestChanged)
     Q_PROPERTY(bool welcomeSimulationRunning READ welcomeSimulationRunning WRITE setWelcomeSimulationRunning NOTIFY welcomeSimulationRunningChanged)
+    Q_PROPERTY(UsageStatistics* usageStatistics READ usageStatistics WRITE setUsageStatistics NOTIFY usageStatisticsChanged)
+    Q_PROPERTY(QString rightBarFooterText READ rightBarFooterText WRITE setRightBarFooterText NOTIFY rightBarFooterTextChanged)
+
 public:
     int syncCount = 0;
     AtomifySimulator();
@@ -51,6 +55,7 @@ public:
     Q_INVOKABLE void togglePause();
     Q_INVOKABLE void increaseSimulationSpeed();
     Q_INVOKABLE void decreaseSimulationSpeed();
+    Q_INVOKABLE QString getUuid();
     class System* system() const;
     class States* states() const;
     QString scriptFilePath() const;
@@ -61,6 +66,10 @@ public:
     bool welcomeSimulationRunning() const;
     QString lastScript() const;
     void setLastScript(const QString &lastScript);
+    void lookForUpdates();
+    QVariantMap &globalState();
+    class UsageStatistics* usageStatistics() const;
+    QString rightBarFooterText() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -71,6 +80,9 @@ public slots:
     void setCameraPositionRequest(QVector3D cameraPositionRequest);
     void setCameraViewCenterRequest(QVector3D cameraViewCenterRequest);
     void setWelcomeSimulationRunning(bool welcomeSimulationRunning);
+    void setUsageStatistics(class UsageStatistics* usageStatistics);
+    void setRightBarFooterText(QString rightBarFooterText);
+    void onfinish(QNetworkReply *reply);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -95,6 +107,8 @@ signals:
     void newViewCenterRequest(QVector3D viewCenter);
     void newCameraPositionAndViewCenterRequest(QVector3D cameraPosition, QVector3D viewCenter);
     void welcomeSimulationRunningChanged(bool welcomeSimulationRunning);
+    void usageStatisticsChanged(class UsageStatistics* usageStatistics);
+    void rightBarFooterTextChanged(QString rightBarFooterText);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -103,7 +117,10 @@ private:
     friend class MyWorker;
     class System* m_system;
     class States* m_states;
+    class UsageStatistics* m_statistics;
     int m_simulationSpeed;
+    QVariantMap m_globalState;
+    QSettings m_settings;
     QString m_scriptFilePath;
     QString m_error;
     QString m_lastScript;
@@ -111,6 +128,9 @@ private:
     QVector3D m_cameraPositionRequest;
     QVector3D m_cameraViewCenterRequest;
     bool m_welcomeSimulationRunning = true;
+    class UsageStatistics* m_usageStatistics;
+    QString m_rightBarFooterText;
+    void requestRightBarFooterText();
 };
 
 #endif // MYSIMULATOR_H

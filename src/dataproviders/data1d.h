@@ -31,6 +31,7 @@ public:
     float yMin();
     float yMax();
     bool enabled() const;
+    const QList<QPointF> &points();
     QXYSeries* xySeries() const;
 
     bool isHistogram() const;

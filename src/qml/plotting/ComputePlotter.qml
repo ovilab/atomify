@@ -4,9 +4,10 @@ import QtQuick.Layouts 1.0
 import QtQuick.Window 2.2
 import Atomify 1.0
 import QtCharts 2.1
+import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.4
 
-Window {
+WindowGL2 {
     id: root
     property var dataSeries: []
     property Compute compute
@@ -92,11 +93,13 @@ Window {
         if (type === "line") {
             for(var key in compute.data1D) {
                 var series = chart.createSeries(ChartView.SeriesTypeLine, key, _axisX, _axisY);
+                series.useOpenGL = true
                 dataSeries[key] = series
             }
         } else {
             for(key in compute.data1D) {
                 series = chart.createSeries(ChartView.SeriesTypeScatter, key, _axisX, _axisY);
+                series.useOpenGL = true
                 dataSeries[key] = series
             }
         }
@@ -146,7 +149,10 @@ Window {
                 leftPadding: 12
                 spacing: 5
                 Row {
+                    spacing: 10
                     Button {
+                        id: clearButton
+                        width: exportButton.width
                         text: "Clear"
                         onClicked: root.compute.clear()
                     }
@@ -160,14 +166,52 @@ Window {
                     }
                 }
                 Row {
+                    spacing: 10
+                    Button {
+                        id: exportButton
+                        height: clearButton.height
+                        text: "Export"
+                        onClicked: menu.open()
+                        Menu {
+                            id: menu
+                            y: exportButton.height
+
+                            MenuItem {
+                                text: "Text file"
+                                onClicked: {
+                                    // TODO: pause simulation
+                                    fileDialog.mode = "text"
+                                    fileDialog.open()
+                                }
+                            }
+                            MenuItem {
+                                text: "MATLAB"
+                                onClicked: {
+                                    // TODO: pause simulation
+                                    fileDialog.mode = "matlab"
+                                    fileDialog.open()
+                                }
+                            }
+                            MenuItem {
+                                text: "Python"
+                                onClicked: {
+                                    // TODO: pause simulation
+                                    fileDialog.mode = "python"
+                                    fileDialog.open()
+                                }
+                            }
+                        }
+                    }
+
                     Label {
-                        height: 100
+                        height: exportButton.height
+                        verticalAlignment: Text.AlignVCenter
                         text: "# ticks: "
                     }
 
                     Slider {
                         id: ticks
-                        height: 20
+                        height: exportButton.height
                         from: 3
                         to: 9
                         stepSize: 1
@@ -183,6 +227,32 @@ Window {
         sequence: StandardKey.Close
         onActivated: {
             root.close()
+        }
+    }
+
+    FileDialog {
+        id: fileDialog
+        selectExisting : false
+        property string mode
+        title: "Please choose a location to save"
+        nameFilters: {
+            if(mode==="text") {
+                return [ "Text files (*.txt)" ]
+            } else if(mode==="matlab") {
+                return [ "MATLAB files (*.m)" ]
+            } else if(mode==="python") {
+                return [ "Python files (*.py)" ]
+            } else return [""]
+        }
+
+        onAccepted: {
+            if(mode==="text") {
+                compute.exportToTextFile(fileDialog.fileUrl)
+            } else if(mode==="matlab") {
+                compute.exportToMatlabFile(fileDialog.fileUrl)
+            } else if(mode==="python") {
+                compute.exportToPythonFile(fileDialog.fileUrl)
+            }
         }
     }
 }

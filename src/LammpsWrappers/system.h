@@ -41,7 +41,9 @@ class System : public QObject
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
     Q_PROPERTY(QString state READ state WRITE setState NOTIFY stateChanged)
     Q_PROPERTY(QString lammpsVersion READ lammpsVersion WRITE setLammpsVersion NOTIFY lammpsVersionChanged)
+    Q_PROPERTY(QString pairStyle READ pairStyle WRITE setPairStyle NOTIFY pairStyleChanged)
     Q_PROPERTY(bool macAppStore READ macAppStore WRITE setMacAppStore NOTIFY macAppStoreChanged)
+    Q_PROPERTY(int numberOfTimesteps READ numberOfTimesteps WRITE setNumberOfTimesteps NOTIFY numberOfTimestepsChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
 
@@ -80,6 +82,10 @@ public:
     QString lammpsVersion() const;
     bool macAppStore() const;
 
+    QString pairStyle() const;
+
+    int numberOfTimesteps() const;
+
 public slots:
     void setAtoms(class Atoms* atoms);
     void setRegions(class Regions* regions);
@@ -99,6 +105,10 @@ public slots:
     void setState(QString state);
     void setLammpsVersion(QString lammpsVersion);
     void setMacAppStore(bool macAppStore);
+
+    void setPairStyle(QString pairStyle);
+
+    void setNumberOfTimesteps(int numberOfTimesteps);
 
 signals:
     void originChanged(QVector3D origin);
@@ -128,6 +138,10 @@ signals:
     void stateChanged(QString state);
     void lammpsVersionChanged(QString lammpsVersion);
     void macAppStoreChanged(bool macAppStore);
+
+    void pairStyleChanged(QString pairStyle);
+
+    void numberOfTimestepsChanged(int numberOfTimesteps);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -164,6 +178,8 @@ private:
     QString m_state;
     QString m_lammpsVersion;
     bool m_macAppStore;
+    QString m_pairStyle;
+    int m_numberOfTimesteps;
 };
 
 #endif // SYSTEM_H

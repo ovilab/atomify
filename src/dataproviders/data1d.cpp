@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <cmath>
 #include <QMutexLocker>
+#include <QFile>
 
 Data1D::Data1D(QObject *parent) : QObject(parent)
 {
@@ -149,6 +150,11 @@ QXYSeries *Data1D::xySeries() const
 bool Data1D::enabled() const
 {
     return m_enabled;
+}
+
+const QList<QPointF> &Data1D::points()
+{
+    return m_points;
 }
 
 void Data1D::clear(bool silent)

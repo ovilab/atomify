@@ -34,6 +34,7 @@
 #include "dataproviders/data2d.h"
 #include "dataproviders/dataprovider.h"
 #include "linenumbers.h"
+#include "usagestatistics.h"
 #include "windowgl2.h"
 #include "codeeditorbackend.h"
 #include "states.h"
@@ -42,42 +43,37 @@
 #include "keysequence.h"
 #include <mpi.h>
 #include <input.h>
+#include <library.h>
 
 using namespace LAMMPS_NS;
 int regularLAMMPS (int argc, char **argv)
 {
-  MPI_Init(&argc,&argv);
+    MPI_Init(&argc,&argv);
 
-#ifdef LAMMPS_EXCEPTIONS
-  try {
-    LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
-    lammps->input->file();
-    delete lammps;
-  } catch(LAMMPSAbortException & ae) {
-    MPI_Abort(ae.universe, 1);
-  } catch(LAMMPSException & e) {
+    try {
+        void *ptr = nullptr;
+        lammps_open(argc, argv, MPI_COMM_WORLD, &ptr);
+        LAMMPS *lammps = static_cast<LAMMPS*>(ptr);
+                // LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
+        lammps->input->file();
+        delete lammps;
+    } catch(LAMMPSAbortException & ae) {
+        MPI_Abort(ae.universe, 1);
+    } catch(LAMMPSException & e) {
+        MPI_Finalize();
+        exit(1);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
-    exit(1);
-  }
-#else
-  LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
-  lammps->input->file();
-  delete lammps;
-#endif
-  MPI_Barrier(MPI_COMM_WORLD);
-  MPI_Finalize();
 
-  return 0;
+    return 0;
 }
 
-void copyExamplesToLocalFolder()
-{
-    QString dataDirPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir dataDir(dataDirPath);
+void copyFiles(QDirIterator &iterator, QDir &dataDir) {
     QDir rootQrcFolder(":/");
-    QDirIterator exampleIterator(":/examples", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
-    while(exampleIterator.hasNext()) {
-        const QString &qrcFileName = exampleIterator.next();
+    while(iterator.hasNext()) {
+        const QString &qrcFileName = iterator.next();
         QFileInfo qrcFileInfo(qrcFileName);
         QString qrcDirPath = qrcFileInfo.dir().absolutePath();
         QString relativeDirPath = rootQrcFolder.relativeFilePath(qrcDirPath);
@@ -110,6 +106,18 @@ void copyExamplesToLocalFolder()
     }
 }
 
+void copyFilesToLocalFolder()
+{
+    QString dataDirPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dataDir(dataDirPath);
+    QDirIterator exampleIterator(":/examples", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
+    copyFiles(exampleIterator, dataDir);
+    QDirIterator extrasIterator(":/extras", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
+
+    copyFiles(extrasIterator, dataDir);
+
+}
+
 void showDataDir()
 {
     QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -123,11 +131,14 @@ int main(int argc, char *argv[])
         if(strcmp(argv[1], "--showdatadir")==0) {
             // We need to create Qt app for this, but now we know that the user does not
             // want to run a regular script.
+        } else if(strcmp(argv[1], "--clearcache")==0) {
+            // We need to create Qt app for this, but now we know that the user does not
+            // want to run a regular script.
         } else if(strcmp(argv[1], "--version")==0) {
-            printf("2.0.10");
+            printf(ATOMIFYVERSION);
             exit(0);
         } else {
-            return regularLAMMPS(argc, argv);
+            //return regularLAMMPS(argc, argv);
         }
     }
 
@@ -164,6 +175,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<MouseMover>("Atomify", 1, 0, "MouseMover");
     qmlRegisterType<States>("Atomify", 1, 0, "States");
     qmlRegisterType<Performance>("Atomify", 1, 0, "Performance");
+    qmlRegisterType<UsageStatistics>("Atomify", 1, 0, "UsageStatistics");
 
     qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
 
@@ -175,7 +187,11 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setOrganizationName("Ovilab");
     app.setOrganizationDomain("ovilab");
+#ifdef BREW
+    app.setApplicationName("AtomifyHomebrew");
+#else
     app.setApplicationName("Atomify");
+#endif
     QSurfaceFormat format;
 #ifndef Q_OS_ANDROID
     format.setMajorVersion(3);
@@ -189,9 +205,15 @@ int main(int argc, char *argv[])
         if(strcmp(argv[1], "--showdatadir")==0) {
             showDataDir();
         }
+
+        if(strcmp(argv[1], "--clearcache")==0) {
+            QSettings settings;
+            settings.clear();
+            exit(0);
+        }
     }
 
-    copyExamplesToLocalFolder();
+    copyFilesToLocalFolder();
 
     // Application version
     QQmlApplicationEngine engine;
@@ -203,8 +225,8 @@ int main(int argc, char *argv[])
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 #ifdef Q_OS_MAC
         QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
-//        window->setIcon(QIcon(":/images/atomify_logo.icns"));
-//        app.setWindowIcon(QIcon(":/images/atomify_logo.icns"));
+        //        window->setIcon(QIcon(":/images/atomify_logo.icns"));
+        //        app.setWindowIcon(QIcon(":/images/atomify_logo.icns"));
         window->setIcon(QIcon("../Resources/icon.icns"));
         app.setWindowIcon(QIcon("../Resources/icon.icns"));
 #endif
