@@ -92,13 +92,22 @@ WindowGL2 {
 
         if (type === "line") {
             for(var key in compute.data1D) {
-                var series = chart.createSeries(ChartView.SeriesTypeLine, key, _axisX, _axisY);
+                var label = key
+                if(compute.data1D[key].label !=="") {
+                    label = compute.data1D[key].label
+                }
+                var series = chart.createSeries(ChartView.SeriesTypeLine, label, _axisX, _axisY);
+
                 series.useOpenGL = true
                 dataSeries[key] = series
             }
         } else {
             for(key in compute.data1D) {
-                series = chart.createSeries(ChartView.SeriesTypeScatter, key, _axisX, _axisY);
+                label = key
+                if(compute.data1D[key].label !=="") {
+                    label = compute.data1D[key].label
+                }
+                series = chart.createSeries(ChartView.SeriesTypeScatter, label, _axisX, _axisY);
                 series.useOpenGL = true
                 dataSeries[key] = series
             }

@@ -71,6 +71,7 @@ void CPCompute::exportToPythonFile(QString fileName)
     }
 
     QTextStream out(&file);
+    out << "# -*- coding: utf-8 -*-\n";
     out << "import matplotlib.pyplot as plt\n";
     out << "import numpy as np\n";
 
@@ -80,6 +81,7 @@ void CPCompute::exportToPythonFile(QString fileName)
         const QList<QPointF> &points = m_data1DRaw[key]->points();
 
         if(key == keys[0]) {
+            qDebug() << "X label: " << xLabel().toLower();
             out << xLabel().toLower() << " = np.asarray([";
             for(auto iter = points.begin(); iter != points.end(); iter++) {
                 if (iter != points.begin()) out << ", ";
@@ -98,7 +100,13 @@ void CPCompute::exportToPythonFile(QString fileName)
     out << "\n";
 
     for(QString key : keys) {
-        out << "plt.plot(" << xLabel().toLower() << ", " << key.toLower() << ", label='" << key << "')\n";
+        QString label = key;
+        if(!m_data1DRaw[key]->label().isEmpty()) {
+            label = m_data1DRaw[key]->label();
+            label.replace("<sup>", "^");
+            label.replace("</sup>", "");
+        }
+        out << "plt.plot(" << xLabel().toLower() << ", " << key.toLower() << ", label=u'" << label << "')\n";
     }
     out << "plt.xlabel('" << xLabel() << "')\n"; // TODO: add units
     out << "plt.ylabel('" << yLabel() << "')\n";
@@ -146,6 +154,9 @@ void CPCompute::exportToMatlabFile(QString fileName)
 
     for(QString key : keys) {
         out << "plot(" << xLabel().toLower() << ", " << key.toLower() << ", 'LineWidth',2);\n";
+        if(key==keys.first()) {
+            out << "hold('on');\n";
+        }
     }
     out << "set(gca,'fontsize', 16);\n";
     out << "xlabel('" << xLabel() << "');\n"; // TODO: add units
@@ -153,7 +164,16 @@ void CPCompute::exportToMatlabFile(QString fileName)
     out << "legend(";
     for(auto iter = keys.begin(); iter != keys.end(); iter++) {
         if (iter != keys.begin()) out << ", ";
-        out << "'" << *iter << "'";
+        QString key = *iter;
+        QString label = key;
+        if(!m_data1DRaw[key]->label().isEmpty()) {
+            label = m_data1DRaw[key]->label();
+            label.replace("<sup>", "^");
+            label.replace("</sup>", "");
+            label.replace("∆", "\\Delta ");
+        }
+
+        out << "'" << label << "'";
     }
     out << ");\n";
 
@@ -208,6 +228,7 @@ void CPCompute::updateData1D()
 }
 
 bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
+    // Handles per atom computes
     if(!compute) return false;
     if(!compute->peratom_flag) return false;
     // if(compute->size_peratom_cols > 0) return false;
@@ -239,56 +260,6 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     return true;
 }
 
-bool CPCompute::copyData(ComputeKEAtom *compute, LAMMPSController *lammpsController) {
-    return false;
-    //    if(!compute) return false;
-    //    ensureExists("histogram", true);
-    //    double *values = compute->vector_atom;
-    //    int numAtoms = lammpsController->system->numberOfAtoms();
-    //    m_atomData = vector<double>(values, values+numAtoms);
-
-    //    Data1D *data = ensureExists("histogram", true);
-    //    data->createHistogram(m_atomData);
-
-    //    setIsPerAtom(true);
-    //    setInteractive(true);
-    //    return true;
-}
-
-bool CPCompute::copyData(ComputeClusterAtom *compute, LAMMPSController *lammpsController) {
-    return false;
-    //    if(!compute) return false;
-
-    //    ensureExists("histogram", true);
-    //    double *values = compute->vector_atom;
-    //    int numAtoms = lammpsController->system->numberOfAtoms();
-    //    m_atomData = vector<double>(values, values+numAtoms);
-
-    //    Data1D *data = ensureExists("histogram", true);
-    //    data->createHistogram(m_atomData);
-
-    //    setIsPerAtom(true);
-    //    setInteractive(true);
-    //    return true;
-}
-
-bool CPCompute::copyData(ComputeCNAAtom *compute, LAMMPSController *lammpsController) {
-    return false;
-    //    if(!compute) return false;
-
-    //    ensureExists("histogram", true);
-    //    double *values = compute->vector_atom;
-    //    int numAtoms = lammpsController->system->numberOfAtoms();
-    //    m_atomData = vector<double>(values, values+numAtoms);
-
-    //    Data1D *data = ensureExists("histogram", true);
-    //    data->createHistogram(m_atomData);
-
-    //    setIsPerAtom(true);
-    //    setInteractive(true);
-    //    return true;
-}
-
 bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
     double value = compute->scalar;
@@ -302,31 +273,14 @@ bool CPCompute::copyData(ComputeTemp *compute, LAMMPSController *lammpsControlle
     return true;
 }
 
-bool CPCompute::copyData(ComputePropertyAtom *compute, LAMMPSController *lammpsController) {
-    return false;
-
-    //    if(!compute) return false;
-    //    if(compute->size_peratom_cols > 0) return true; // We don't support vector quantities yet
-
-    //    double *values = compute->vector_atom;
-    //    int numAtoms = lammpsController->system->numberOfAtoms();
-    //    m_atomData = vector<double>(values, values+numAtoms);
-
-    //    Data1D *data = ensureExists("histogram", true);
-    //    data->createHistogram(m_atomData);
-
-    //    setIsPerAtom(true);
-    //    setInteractive(true);
-    //    return true;
-}
-
 bool CPCompute::copyData(ComputePE *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
     if(lammpsController->lammps()->update->ntimestep != lammpsController->lammps()->update->eflag_global) return true;
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    Data1D *data = ensureExists(QString("Potential energy"), true);
+    Data1D *data = ensureExists(QString("PotentialEnergy"), true);
+    data->setLabel("Potential energy");
     setXLabel("Time");
     setYLabel("Potential Energy");
     data->add(lammpsController->system->simulationTime(), value);
@@ -339,7 +293,8 @@ bool CPCompute::copyData(ComputeKE *compute, LAMMPSController *lammpsController)
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    Data1D *data = ensureExists(QString("Kinetic energy"), true);
+    Data1D *data = ensureExists(QString("KineticEnergy"), true);
+    data->setLabel("Kinetic energy");
     setXLabel("Time");
     setYLabel("Kinetic Energy");
     data->add(lammpsController->system->simulationTime(), value);
@@ -364,13 +319,14 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     // Then compute stress tensor
     // compute->compute_vector();
     // xx, yy, zz, xy, xz, yz
-    QStringList components = {"xx", "yy", "zz", "xy", "xz", "yz"};
+    QStringList components = {"Pxx", "Pyy", "Pzz", "Pxy", "Pxz", "Pyz"};
 
     int numVectorValues = 6;
-    for(int i=1; i<=numVectorValues; i++) {
-        QString key = components[i-1];
+    for(int i=0; i<numVectorValues; i++) {
+        QString key = components[i];
         Data1D *data = ensureExists(key, false);
-        double value = compute->vector[i-1];
+        data->setLabel(components[i]);
+        double value = compute->vector[i];
         data->add(lammpsController->system->simulationTime(), value);
     }
     setInteractive(true);
@@ -386,8 +342,10 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
     int numPairs = (numColumns - 1)/2;
 
     for(int pairId=0; pairId<numPairs; pairId++) {
-        QString key = QString("Pair %1").arg(pairId+1);
+        QString key = QString("Pair_%1").arg(pairId+1);
+        QString label = QString("Pair %1").arg(pairId+1);
         Data1D *data = ensureExists(key, true);
+        data->setLabel(label);
         data->clear(true);
 
         for(int bin=0; bin<numBins; bin++) {
@@ -396,6 +354,8 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
             data->add(r,rdf,true);
         }
     }
+    setXLabel("r");
+    setYLabel("RDF");
     setInteractive(true);
     return true;
 }
@@ -405,15 +365,20 @@ bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController
     // compute->compute_vector();
 
     // http://www.ascii.cl/htmlcodes.htm
-    QStringList components = {"∆x<sup>2</sup>", "∆y<sup>2</sup>", "∆z<sup>2</sup>", "∆r<sup>2</sup>"};
+    // QStringList components = {"∆x<sup>2</sup>", "∆y<sup>2</sup>", "∆z<sup>2</sup>", "∆r<sup>2</sup>"};
+    QStringList components = {"dx2", "dy2", "dz2", "dr2"};
+    QStringList labels = {"∆x<sup>2</sup>", "∆y<sup>2</sup>", "∆z<sup>2</sup>", "∆r<sup>2</sup>"};
 
     int numVectorValues = 4;
-    for(int i=1; i<=numVectorValues; i++) {
-        QString key = components[i-1];
+    for(int i=0; i<numVectorValues; i++) {
+        QString key = components[i];
         Data1D *data = ensureExists(key, false);
-        double value = compute->vector[i-1];
+        data->setLabel(labels[i]);
+        double value = compute->vector[i];
         data->add(lammpsController->system->simulationTime(), value);
     }
+    setXLabel("Time");
+    setYLabel("Mean square displacement");
     setInteractive(true);
     return true;
 }
@@ -423,15 +388,18 @@ bool CPCompute::copyData(ComputeVACF *compute, LAMMPSController *lammpsControlle
     // compute->compute_vector();
 
     // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
-    QStringList components = {"&lt;vx, vx0\&gt;", "&lt;vy, vy0&gt;", "&lt;vz, vz0&gt;", "&lt;v, v0&gt;"};
-
+    QStringList components = {"vx2", "vy2", "vz2", "vr2"};
+    QStringList labels = {"&lt;vx, vx0\&gt;", "&lt;vy, vy0&gt;", "&lt;vz, vz0&gt;", "&lt;v, v0&gt;"};
     int numVectorValues = 4;
-    for(int i=1; i<=numVectorValues; i++) {
-        QString key = components[i-1];
+    for(int i=0; i<numVectorValues; i++) {
+        QString key = components[i];
         Data1D *data = ensureExists(key, false);
-        double value = compute->vector[i-1];
+        data->setLabel(labels[i]);
+        double value = compute->vector[i];
         data->add(lammpsController->system->simulationTime(), value);
     }
+    setXLabel("Time");
+    setYLabel("VACF");
     setInteractive(true);
     return true;
 }
@@ -444,12 +412,15 @@ bool CPCompute::copyData(ComputeCOM *compute, LAMMPSController *lammpsController
     QStringList components = {"x_cm", "y_cm", "z_cm"};
 
     int numVectorValues = 3;
-    for(int i=1; i<=numVectorValues; i++) {
-        QString key = components[i-1];
+    for(int i=0; i<numVectorValues; i++) {
+        QString key = components[i];
         Data1D *data = ensureExists(key, false);
-        double value = compute->vector[i-1];
+        data->setLabel(key);
+        double value = compute->vector[i];
         data->add(lammpsController->system->simulationTime(), value);
     }
+    setXLabel("Time");
+    setYLabel("COM");
     setInteractive(true);
     return true;
 }
@@ -461,23 +432,27 @@ bool CPCompute::copyData(ComputeGyration *compute, LAMMPSController *lammpsContr
     double value = compute->scalar;
     setHasScalarData(true);
     setScalarValue(value);
-    Data1D *data = ensureExists(QString("Radius of gyration"), true);
+    Data1D *data = ensureExists(QString("RadiusOfGyration"), true);
+    data->setLabel("Rg");
     setXLabel("Time");
-    setYLabel("Pressure");
+    setYLabel("Radius of gyration");
     data->add(lammpsController->system->simulationTime(), value);
 
     // compute->compute_vector();
 
     // &lt; because < is used as a html tag. Using HTML names instead: http://www.ascii.cl/htmlcodes.htm
-    QStringList components = {"xx", "yy", "zz", "xy", "xz", "yz"};
+    QStringList components = {"Rxx", "Ryy", "Rzz", "Rxy", "Rxz", "Rcyz"};
 
     int numVectorValues = 6;
-    for(int i=1; i<=numVectorValues; i++) {
-        QString key = components[i-1];
+    for(int i=0; i<numVectorValues; i++) {
+        QString key = components[i];
         Data1D *data = ensureExists(key, false);
-        double value = compute->vector[i-1];
+        data->setLabel(components[i]);
+        double value = compute->vector[i];
         data->add(lammpsController->system->simulationTime(), value);
     }
+    setXLabel("Time");
+    setYLabel("Rg");
     setInteractive(true);
     return true;
 }
@@ -552,10 +527,6 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
         if(copyData(dynamic_cast<ComputeVACF*>(lmp_compute), lammpsController)) return;
         if(copyData(dynamic_cast<ComputeCOM*>(lmp_compute), lammpsController)) return;
         if(copyData(dynamic_cast<ComputeGyration*>(lmp_compute), lammpsController)) return;
-        if(copyData(dynamic_cast<ComputePropertyAtom*>(lmp_compute), lammpsController)) return;
-        if(copyData(dynamic_cast<ComputeKEAtom*>(lmp_compute), lammpsController)) return;
-        if(copyData(dynamic_cast<ComputeClusterAtom*>(lmp_compute), lammpsController)) return;
-        if(copyData(dynamic_cast<ComputeCNAAtom*>(lmp_compute), lammpsController)) return;
 
     } catch (LAMMPSException &exception) {
         qDebug() << "ERROR: LAMMPS threw an exception!";
@@ -569,6 +540,8 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             setScalarValue(value);
             Data1D *data = ensureExists("scalar", true);
             data->add(lammpsController->system->simulationTime(), value, true);
+            setXLabel("Time");
+            setYLabel("Value");
             setInteractive(true);
         } catch (LAMMPSException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
@@ -580,11 +553,13 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
             lmp_compute->compute_vector();
             int numVectorValues = lmp_compute->size_vector;
             for(int i=1; i<=numVectorValues; i++) {
-                QString key = QString("%1").arg(i);
+                QString key = QString("value_%1").arg(i);
                 Data1D *data = ensureExists(key, true);
                 double value = lmp_compute->vector[i-1];
                 data->add(lammpsController->system->simulationTime(), value, true);
             }
+            setXLabel("Time");
+            setYLabel("Value");
         } catch (LAMMPSException &exception) {
             qDebug() << "ERROR: LAMMPS threw an exception!";
             qDebug() << "ERROR: Message:" << QString::fromStdString(exception.message);

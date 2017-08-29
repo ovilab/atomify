@@ -242,6 +242,15 @@ void Data1D::setXySeries(QXYSeries *xySeries)
     emit xySeriesChanged(xySeries);
 }
 
+void Data1D::setLabel(QString label)
+{
+    if (m_label == label)
+            return;
+
+        m_label = label;
+        emit labelChanged(m_label);
+}
+
 bool Data1D::isHistogram() const
 {
     return m_isHistogram;
@@ -250,4 +259,9 @@ bool Data1D::isHistogram() const
 void Data1D::setIsHistogram(bool isHistogram)
 {
     m_isHistogram = isHistogram;
+}
+
+QString Data1D::label() const
+{
+    return m_label;
 }
