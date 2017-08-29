@@ -8,7 +8,7 @@
 
 mkdir build-appstore
 cd build-appstore
-qmake ../../../src DEPLOYMACAPPSTORE=true DEPLOYPKG=true
+qmake ../../../src DEPLOYMACAPPSTORE=true
 make -j8
 
 mkdir pkg

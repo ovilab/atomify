@@ -13,10 +13,12 @@ unix:!macx {
 
 defined(DEPLOYLINUX, var) {
     QMAKE_LFLAGS += -static-libstdc++
+    DEFINES += BUILDVERSION=\\\"LINUX_2.1.0\\\"
 }
 
 defined(DEPLOYMACAPPSTORE, var) {
     DEFINES += MACAPPSTORE
+    DEFINES += BUILDVERSION=\\\"MACAPPSTORE_2.1.0\\\"
 }
 
 defined(DEPLOYPKG, var) {
@@ -31,6 +33,7 @@ defined(DEPLOYPKG, var) {
 
     QMAKE_MAC_SDK = macosx10.9
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+    DEFINES += BUILDVERSION=\\\"MACPKG_2.1.0\\\"
 }
 
 macx {
