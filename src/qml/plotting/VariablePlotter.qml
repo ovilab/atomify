@@ -134,6 +134,7 @@ WindowGL2 {
                 spacing: 5
                 Row {
                     Button {
+                        id: clearButton
                         text: "Clear"
                         onClicked: root.variable.clear()
                     }

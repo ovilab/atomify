@@ -16,6 +16,7 @@ class Data1D : public QObject
     Q_PROPERTY(float yMin READ yMin NOTIFY yMinChanged)
     Q_PROPERTY(float yMax READ yMax NOTIFY yMaxChanged)
     Q_PROPERTY(QXYSeries* xySeries READ xySeries WRITE setXySeries NOTIFY xySeriesChanged)
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY labelChanged)
 
 public:
     explicit Data1D(QObject *parent = 0);
@@ -33,9 +34,9 @@ public:
     bool enabled() const;
     const QList<QPointF> &points();
     QXYSeries* xySeries() const;
-
     bool isHistogram() const;
     void setIsHistogram(bool isHistogram);
+    QString label() const;
 
 signals:
     void xMinChanged(float xMin);
@@ -47,10 +48,12 @@ signals:
     void xySeriesChanged(QXYSeries* xySeries);
     void updated();
     void updatedHistogram(Data1D *data);
+    void labelChanged(QString label);
 
 public slots:
     void setEnabled(bool enabled);
     void setXySeries(QXYSeries* xySeries);
+    void setLabel(QString label);
 
 private:
     QXYSeries* m_xySeries = nullptr;
@@ -66,6 +69,7 @@ private:
     bool m_isHistogram = false;
     void updateMinMaxWithPoint(const QPointF &point);
     QMutex m_mutex;
+    QString m_label;
 };
 
 #endif // DATA1D_H

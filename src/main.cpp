@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
             // want to run a regular script.
         } else if(strcmp(argv[1], "--version")==0) {
             printf(ATOMIFYVERSION);
+            printf("\n");
             exit(0);
         } else {
             //return regularLAMMPS(argc, argv);
