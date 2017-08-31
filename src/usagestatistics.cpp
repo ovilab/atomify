@@ -13,6 +13,7 @@ Run::Run(int id, int sessionRunId, int sessionId, QString uuid, QString hash) :
 {
     m_os = QSysInfo::prettyProductName();
     m_atomifyVersion = QString("%1_%2").arg(ATOMIFYVERSION).arg(BUILDVERSION);
+    qDebug() << "Version: " << m_atomifyVersion;
     m_dateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
 }
 
