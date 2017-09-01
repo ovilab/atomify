@@ -147,6 +147,16 @@ Entity {
     }
 
     SmoothAnimator {
+        id: upAnimator
+        duration: 0.10
+        onStepped: {
+            var upInPlane = d.firstPersonUp
+            upInPlane = upInPlane.normalized()
+            root.camera.translateWorld(upInPlane.times(velocity * dt * 60), Camera.TranslateViewCenter);
+        }
+    }
+
+    SmoothAnimator {
         id: rightAnimator
         duration: 0.10
         onStepped: {
@@ -334,14 +344,16 @@ Entity {
                 var shiftFactor = 1.0
 
 
-                tiltAnimator.set(keyboardTiltAxis.value * shiftFactor * zoomSpeed)
 
                 if(shiftAction.active) {
                     panAnimator.set(rollAxis.value * shiftFactor * panSpeed)
                     forwardAnimator.set(keyboardYAxis.value * shiftFactor * translationSpeed)
                     rightAnimator.set(keyboardXAxis.value * shiftFactor * translationSpeed)
                     zoomAnimator.set(keyboardZoomAxis.value * shiftFactor * zoomSpeed)
+                    upAnimator.set(keyboardTiltAxis.value * shiftFactor * translationSpeed)
                 } else {
+                    tiltAnimator.set(keyboardTiltAxis.value * shiftFactor * zoomSpeed)
+
                     if(Math.abs(keyboardXAxis.value) > 0) {
                         panAnimator.set(keyboardXAxis.value * panSpeed * shiftFactor)
                     }
@@ -356,6 +368,7 @@ Entity {
                 tiltAnimator.step(dt)
                 forwardAnimator.step(dt)
                 rightAnimator.step(dt)
+                upAnimator.step(dt)
 
                 if(rightMouseButtonAction.active) {
                     camera.translate(Qt.vector3d(-mouseXAxis.value * dragSpeed, -mouseYAxis.value * dragSpeed, 0.0))
