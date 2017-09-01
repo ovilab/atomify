@@ -10,9 +10,9 @@ The typical workflow when developing scripts for LAMMPS includes working with se
 
 ## How to install ##
 ### MacOS ###
-Alternative 1a) Download [the dmg](https://github.com/ovilab/atomify/releases/download/v2.1.0/Atomify-2.1.0-macos.dmg) (preferred). Atomify is installed in your Applications folder. 
+Alternative 1a) Download [the dmg](https://github.com/ovilab/atomify/releases/download/v2.1.2/Atomify-2.1.2-macos.dmg) (preferred). Atomify is installed in your Applications folder. 
 
-Alternative 1b) If 1a crashes, download [the simple dmg](https://github.com/ovilab/atomify/releases/download/v2.1.0/Atomify-2.1.0-macos-simple.dmg) (without OpenMP acceleration).
+Alternative 1b) If 1a crashes, download [the simple dmg](https://github.com/ovilab/atomify/releases/download/v2.1.2/Atomify-2.1.2-macos-simple.dmg) (without OpenMP acceleration).
 
 Alternative 2) 
 Install with [Homebrew](https://brew.sh): `brew install https://raw.githubusercontent.com/ovilab/atomify/dev/macos/atomify.rb`. The installation takes ~10 minutes.
@@ -20,7 +20,7 @@ Install with [Homebrew](https://brew.sh): `brew install https://raw.githubuserco
 Alternative 3) Download from [Mac App Store](https://itunes.apple.com/us/app/atomify/id1192327034?mt=12) (this option has limitations on the file system).
 
 ### Linux ###
-Alternative 1) [Download](https://github.com/ovilab/atomify/releases/download/v2.1.0/atomify-2.1.0-linux-x86_64.tar.gz)
+Alternative 1) [Download](https://github.com/ovilab/atomify/releases/download/v2.1.2/atomify-2.1.2-linux-x86_64.tar.gz)
 
 Alternative 2) `sudo snap install atomify`
 
