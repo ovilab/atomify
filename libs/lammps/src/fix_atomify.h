@@ -43,6 +43,7 @@ class FixAtomify : public Fix {
   class NeighList *list; // half neighbor list
   FnPtr callback;
   void *ptr_caller;
+  bool build_neighborlist;
 };
 
 }

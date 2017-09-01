@@ -36,6 +36,7 @@ using namespace FixConst;
 FixAtomify::FixAtomify(LAMMPS *lmp, int narg, char **arg) :
     Fix(lmp, narg, arg)
 {
+    build_neighborlist = false;
     callback = NULL;
 }
 
@@ -110,7 +111,9 @@ void FixAtomify::update_computes()
 
 void FixAtomify::end_of_step()
 {
-    neighbor->build_one(list);
+    if(build_neighborlist) {
+        neighbor->build_one(list);
+    }
     lost_atoms();
     (this->callback)(ptr_caller,END_OF_STEP);
     update_computes();
@@ -120,7 +123,9 @@ void FixAtomify::end_of_step()
 
 void FixAtomify::min_post_force(int vflag)
 {
-    neighbor->build_one(list);
+    if(build_neighborlist) {
+        neighbor->build_one(list);
+    }
     lost_atoms();
     (this->callback)(ptr_caller,MIN_POST_FORCE);
 }

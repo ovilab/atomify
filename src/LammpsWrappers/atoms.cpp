@@ -217,13 +217,14 @@ int Atoms::numberOfBonds() const
 
 bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSController *controller)
 {
-    if(!m_bonds->active()) {
-        return false;
-    }
 
     FixAtomify *fixAtomify = dynamic_cast<FixAtomify*>(controller->findFixByIdentifier("atomify"));
     if(!fixAtomify) {
         qDebug() << "Error, could not find fix_atomify.";
+        return false;
+    }
+    fixAtomify->build_neighborlist = m_bonds->active();
+    if(!m_bonds->active()) {
         return false;
     }
 
@@ -253,6 +254,7 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
             int j = jlist[jj];
             j &= NEIGHMASK;
             if(j >= atomData.size()) continue; // Probably a ghost atom from LAMMPS
+            // j = atomData.originalIndex[j]; TODO: is this more correct?
             if(!atomData.visible[j]) continue; // Don't show bond if not both atoms are visible.
 
             const int &atomType_j = atomData.types[j];
