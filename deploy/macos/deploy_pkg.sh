@@ -37,5 +37,5 @@ macdeployqt Atomify.app -dmg -qmldir=../../../../src/qml -codesign="Developer ID
 cd "Atomify.app"
 find . -name *.dSYM | xargs -I $ rm -R $
 cd ..
-productbuild --component Atomify.app /Applications --sign "Developer ID Installer: Anders Hafreager" Atomify-2.1.0-macos.pkg
-cp Atomify-2.1.0-macos-installer.pkg ../../
+productbuild --component Atomify.app /Applications --sign "Developer ID Installer: Anders Hafreager" Atomify-2.1.2-macos-installer.pkg
+cp Atomify-2.1.2-macos-installer.pkg ../../
