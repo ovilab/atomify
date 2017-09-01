@@ -12,7 +12,7 @@ script:
 after_success:
 - openssl aes-256-cbc -K $encrypted_082f9a3f227a_key -iv $encrypted_082f9a3f227a_iv
   -in .snapcraft/travis_snapcraft.cfg -out .snapcraft/snapcraft.cfg -d
-- tar czfv atomify-2.1.0-x86_64.tar.gz snapdump/*
+- tar czfv atomify-2.1.2-x86_64.tar.gz snapdump/*
 deploy:
   - provider: script
     'on':
@@ -23,6 +23,6 @@ deploy:
   - provider: releases
     api_key:
       secure: Kkj9oAOkEpOIlDATOCMEsHzuqgsES+Qpf6quCQ+v40ti5ShjARQHKxXVNPVHxTq9JR1FBhX8d1vGgwPHZvv3lwtZ0dsJBGyjbKth0Us1TL2N2NvWaX7rc+CsTMduDsKPWfxnckMc9rfx4fHLDy4eYh8tfPVVOUBYPojX8V/mm8s=
-    file: "atomify-2.1.0-x86_64.tar.gz"
+    file: "atomify-2.1.2-x86_64.tar.gz"
     on:
       tags: true
