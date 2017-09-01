@@ -5,7 +5,7 @@ DEFINES += LAMMPS_GZIP
 TARGET = atomify
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
-DEFINES += ATOMIFYVERSION=\\\"2.1.1\\\"
+DEFINES += ATOMIFYVERSION=\\\"2.1.2\\\"
 unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
@@ -35,7 +35,7 @@ defined(DEPLOYPKG, var) {
 
     QMAKE_MAC_SDK = macosx10.9
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
-    DEFINES += BUILDVERSION=\\\"MACPKG_2.1.1\\\"
+    DEFINES += BUILDVERSION=\\\"MACPKG\\\"
     BUILDVERSION = true
 }
 
