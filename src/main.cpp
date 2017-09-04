@@ -115,7 +115,6 @@ void copyFilesToLocalFolder()
     QDirIterator extrasIterator(":/extras", QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
 
     copyFiles(extrasIterator, dataDir);
-
 }
 
 void showDataDir()
@@ -127,6 +126,8 @@ void showDataDir()
 
 int main(int argc, char *argv[])
 {
+    QString initialScriptFilePath;
+
     if(argc>1) {
         if(strcmp(argv[1], "--showdatadir")==0) {
             // We need to create Qt app for this, but now we know that the user does not
@@ -139,7 +140,41 @@ int main(int argc, char *argv[])
             printf("\n");
             exit(0);
         } else {
-            //return regularLAMMPS(argc, argv);
+            bool dashInFound = false;
+            bool dashGFound = false;
+            bool nextIsScript = false;
+            for(int i=1; i<argc; i++) {
+                if(nextIsScript) {
+                    nextIsScript = false;
+
+                    initialScriptFilePath = QString::fromUtf8(argv[i]);
+                    QString fullPathRelativeToCurrentPath = QDir::current().absoluteFilePath(initialScriptFilePath);
+                    QFile file(fullPathRelativeToCurrentPath);
+                    if(file.exists()) {
+                        initialScriptFilePath = QString("file://")+fullPathRelativeToCurrentPath;
+                    } else {
+                        file.setFileName(QString("file://")+initialScriptFilePath);
+                        if(!file.exists()) {
+                            qDebug() << "Warning, file " << initialScriptFilePath << " could not be found.";
+                            initialScriptFilePath.clear();
+                        }
+                    }
+                }
+
+                if(strcmp(argv[i], "-in") == 0) {
+                    dashInFound = true;
+                    nextIsScript = true;
+                }
+
+                if(strcmp(argv[i], "-g") == 0) {
+                    dashGFound = true;
+                }
+            }
+
+            if(dashInFound && !dashGFound) {
+                qDebug() << "Running regular LAMMPS";
+                return regularLAMMPS(argc, argv);
+            }
         }
     }
 
@@ -220,14 +255,13 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QmlPreviewer previewer(app);
     qpm::init(app, engine);
-    if(argc > 2) {
+    if(false && argc > 2) {
         previewer.show();
     } else {
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-#ifdef Q_OS_MAC
         QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
-        //        window->setIcon(QIcon(":/images/atomify_logo.icns"));
-        //        app.setWindowIcon(QIcon(":/images/atomify_logo.icns"));
+        window->setProperty("initialScriptFilePath", initialScriptFilePath);
+#ifdef Q_OS_MAC
         window->setIcon(QIcon("../Resources/icon.icns"));
         app.setWindowIcon(QIcon("../Resources/icon.icns"));
 #endif

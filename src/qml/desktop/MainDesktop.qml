@@ -30,6 +30,7 @@ Rectangle {
     property alias editor: editor
     property string viewMode: "view"
     property string title: "Atomify"
+    property string initialScriptFilePath: ""
 
     signal releaseCursor()
     signal changeMode()
@@ -45,10 +46,16 @@ Rectangle {
         property string examplesDir: Qt.resolvedUrl(dataDir + "/examples")
         interval: 250
         onTriggered: {
-            var initialExampleUrl = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
+            if(initialScriptFilePath) {
+                var initialScriptUrl = root.initialScriptFilePath
+            } else {
+                initialScriptUrl = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
+                messageOverlay.welcome = true
+                messageOverlay.hideClickedAtLeastOnce = false
+            }
             //            visualizer.simulator.scriptFilePath = initialExampleUrl
             //            visualizer.simulator.started()
-            editor.editorWindow.openTab(initialExampleUrl)
+            editor.editorWindow.openTab(initialScriptUrl)
             editor.editorWindow.runScript()
         }
     }
@@ -469,6 +476,7 @@ Rectangle {
 
                 anchors.fill: parent
                 visible: false
+                hideClickedAtLeastOnce: true
 
                 errorMessage: simulator.error
                 welcome: (simulator.states.idle.active || simulator.welcomeSimulationRunning) && !hideClickedAtLeastOnce

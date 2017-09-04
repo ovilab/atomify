@@ -20,7 +20,7 @@ Rectangle {
     }
 
     property bool hideClickedAtLeastOnce: false // TODO: state machinery should be used...
-    property bool welcome: true
+    property bool welcome: false
     property bool finished: false
     property bool crashed: false
     property bool cancelling: false

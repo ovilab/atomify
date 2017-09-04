@@ -19,6 +19,8 @@ import "events"
 
 QQC1.ApplicationWindow {
     id: applicationRoot
+    property string initialScriptFilePath: ""
+
     title: mainDesktop.title
     visible: true
 
@@ -323,6 +325,7 @@ QQC1.ApplicationWindow {
 
     MainDesktop {
         id: mainDesktop
+        initialScriptFilePath: applicationRoot.initialScriptFilePath
         anchors.fill: parent
         mouseMover: MouseMover {
             id: mouseMover
