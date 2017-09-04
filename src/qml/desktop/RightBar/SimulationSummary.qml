@@ -195,6 +195,10 @@ Flickable {
                     url: "http://lammps.sandia.gov/doc/boundary.html"
                 }
                 ToolTipLabel {
+                    text: " <a href=\"pairstyle\">Pair style</a>: "+system.pairStyle
+                    url: "http://lammps.sandia.gov/doc/pair_style.html"
+                }
+                ToolTipLabel {
                     text: " <a href=\"timestep\">Timestep</a>: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
                     url: "http://lammps.sandia.gov/doc/timestep.html"
                 }
