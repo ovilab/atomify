@@ -50,7 +50,6 @@ Rectangle {
                 var initialScriptUrl = root.initialScriptFilePath
             } else {
                 initialScriptUrl = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
-                messageOverlay.welcome = true
                 messageOverlay.hideClickedAtLeastOnce = false
             }
             //            visualizer.simulator.scriptFilePath = initialExampleUrl
