@@ -65,15 +65,6 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
 
     system->synchronize(this);
     m_synchronizationCount++;
-    if(m_synchronizationCount % 50 == 0) {
-        // TODO: Move into system sync
-        long t = m_timer.restart();
-        double timePerTimestep = t / 50.0 / 1000; // Convert to seconds
-        double speed = (1.0 / 60.0) / timePerTimestep;
-        double oldSpeed = system->performance()->effectiveSimulationSpeed();
-        speed = 0.9*oldSpeed + 0.1*speed; // Low pass filter
-        system->performance()->setEffectiveSimulationSpeed(speed);
-    }
 
     if(m_lammps->update->ntimestep - m_lastSynchronizationTimestep < simulationSpeed) return;
     m_lastSynchronizationTimestep = m_lammps->update->ntimestep;

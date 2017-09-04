@@ -20,7 +20,6 @@ void Performance::reset()
     setThreads(1);
     setMemoryAtomify(0);
     setMemoryLAMMPS(0);
-    setEffectiveSimulationSpeed(1);
     setTimestepsPerSecond(0);
 }
 
@@ -46,11 +45,6 @@ long Performance::memoryLAMMPS() const
 long Performance::memoryAtomify() const
 {
     return m_memoryAtomify;
-}
-
-double Performance::effectiveSimulationSpeed() const
-{
-    return m_effectiveSimulationSpeed;
 }
 
 double Performance::timestepsPerSecond() const
@@ -79,15 +73,6 @@ void Performance::setMemoryAtomify(long memoryAtomify)
 
     m_memoryAtomify = memoryAtomify;
     emit memoryAtomifyChanged(memoryAtomify);
-}
-
-void Performance::setEffectiveSimulationSpeed(double effectiveSimulationSpeed)
-{
-    if (m_effectiveSimulationSpeed == effectiveSimulationSpeed)
-        return;
-
-    m_effectiveSimulationSpeed = effectiveSimulationSpeed;
-    emit effectiveSimulationSpeedChanged(effectiveSimulationSpeed);
 }
 
 void Performance::setTimestepsPerSecond(double timestepsPerSecond)
