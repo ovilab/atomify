@@ -143,7 +143,7 @@ void System::calculateCPURemain(LAMMPS *lammps)
 
 void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
 {
-    if(m_currentTimestep % 10 == 0) {
+    if(m_currentTimestep % 10 == 0 && m_currentTimestep>0) {
         double value = lammps_get_thermo(lammps, "spcpu");
         if(value < 0) return;
         double oldValue = m_performance->timestepsPerSecond();
