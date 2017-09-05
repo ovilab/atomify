@@ -44,6 +44,7 @@ class System : public QObject
     Q_PROPERTY(QString pairStyle READ pairStyle WRITE setPairStyle NOTIFY pairStyleChanged)
     Q_PROPERTY(bool macAppStore READ macAppStore WRITE setMacAppStore NOTIFY macAppStoreChanged)
     Q_PROPERTY(int numberOfTimesteps READ numberOfTimesteps WRITE setNumberOfTimesteps NOTIFY numberOfTimestepsChanged)
+    Q_PROPERTY(int numberOfDangerousNeighborlistBuilds READ numberOfDangerousNeighborlistBuilds WRITE setNumberOfDangerousNeighborlistBuilds NOTIFY numberOfDangerousNeighborlistBuildsChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
 
@@ -81,10 +82,9 @@ public:
     QString state() const;
     QString lammpsVersion() const;
     bool macAppStore() const;
-
     QString pairStyle() const;
-
     int numberOfTimesteps() const;
+    int numberOfDangerousNeighborlistBuilds() const;
 
 public slots:
     void setAtoms(class Atoms* atoms);
@@ -105,10 +105,9 @@ public slots:
     void setState(QString state);
     void setLammpsVersion(QString lammpsVersion);
     void setMacAppStore(bool macAppStore);
-
     void setPairStyle(QString pairStyle);
-
     void setNumberOfTimesteps(int numberOfTimesteps);
+    void setNumberOfDangerousNeighborlistBuilds(int numberOfDangerousNeighborlistBuilds);
 
 signals:
     void originChanged(QVector3D origin);
@@ -138,10 +137,9 @@ signals:
     void stateChanged(QString state);
     void lammpsVersionChanged(QString lammpsVersion);
     void macAppStoreChanged(bool macAppStore);
-
     void pairStyleChanged(QString pairStyle);
-
     void numberOfTimestepsChanged(int numberOfTimesteps);
+    void numberOfDangerousNeighborlistBuildsChanged(int numberOfDangerousNeighborlistBuilds);
 
 private:
     class Atoms* m_atoms = nullptr;
@@ -180,6 +178,7 @@ private:
     bool m_macAppStore;
     QString m_pairStyle;
     int m_numberOfTimesteps;
+    int m_numberOfDangerousNeighborlistBuilds;
 };
 
 #endif // SYSTEM_H

@@ -230,6 +230,12 @@ Flickable {
                     text: "<a href=\"atomtypes\">Number of atom types</a>: "+system.numberOfAtomTypes
                     url: "http://lammps.sandia.gov/doc/atom_style.html"
                 }
+                ToolTipLabel {
+                    text: "<a href=\"dangerousBuilds\">Dangerous builds</a>: "+system.numberOfDangerousNeighborlistBuilds
+                    visible: system.numberOfDangerousNeighborlistBuilds>0
+                    color: "red"
+                    url: "http://lammps.sandia.gov/doc/neigh_modify.html"
+                }
             }
         }
 

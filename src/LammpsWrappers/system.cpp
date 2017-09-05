@@ -191,6 +191,8 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_performance->setThreads(lammps->comm->nthreads);
     updateCenter(domain);
 
+    setNumberOfDangerousNeighborlistBuilds(lammps_get_thermo(lammps, "ndanger"));
+
     if(m_numberOfAtoms != atom->natoms) {
         m_numberOfAtoms = atom->natoms;
         emit numberOfAtomsChanged(m_numberOfAtoms);
@@ -294,6 +296,7 @@ void System::reset()
     m_performance->reset();
     setDt(0);
     setCpuremain(0);
+    setNumberOfDangerousNeighborlistBuilds(0);
     m_currentTimestep = 0;
     m_simulationTime = 0;
     m_size = QVector3D();
@@ -384,6 +387,11 @@ QString System::pairStyle() const
 int System::numberOfTimesteps() const
 {
     return m_numberOfTimesteps;
+}
+
+int System::numberOfDangerousNeighborlistBuilds() const
+{
+    return m_numberOfDangerousNeighborlistBuilds;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -599,6 +607,15 @@ void System::setNumberOfTimesteps(int numberOfTimesteps)
 
     m_numberOfTimesteps = numberOfTimesteps;
     emit numberOfTimestepsChanged(m_numberOfTimesteps);
+}
+
+void System::setNumberOfDangerousNeighborlistBuilds(int numberOfDangerousNeighborlistBuilds)
+{
+    if (m_numberOfDangerousNeighborlistBuilds == numberOfDangerousNeighborlistBuilds)
+        return;
+
+    m_numberOfDangerousNeighborlistBuilds = numberOfDangerousNeighborlistBuilds;
+    emit numberOfDangerousNeighborlistBuildsChanged(m_numberOfDangerousNeighborlistBuilds);
 }
 
 void System::setVariables(Variables *variables)
