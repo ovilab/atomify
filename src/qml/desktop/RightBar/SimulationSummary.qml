@@ -232,6 +232,7 @@ Flickable {
                 }
                 ToolTipLabel {
                     text: "<a href=\"dangerousBuilds\">Dangerous builds</a>: "+system.numberOfDangerousNeighborlistBuilds
+                    toolTipText: "Use <i>neigh_modify every 1 delay 0 check yes</i> to avoid this"
                     visible: system.numberOfDangerousNeighborlistBuilds>0
                     color: "red"
                     url: "http://lammps.sandia.gov/doc/neigh_modify.html"
