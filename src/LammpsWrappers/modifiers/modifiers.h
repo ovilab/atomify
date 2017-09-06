@@ -6,5 +6,6 @@
 #include "periodicimages.h"
 #include "groupmodifier.h"
 #include "regionmodifier.h"
+#include "colorallgroupsmodifier.h"
 #include "propertymodifier.h"
 #endif // MODIFIERS_H

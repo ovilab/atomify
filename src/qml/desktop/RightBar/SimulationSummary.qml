@@ -306,6 +306,10 @@ Flickable {
                 right: parent.right
             }
             title: "Groups"
+            hoverEnabled: true
+            onHoveredChanged: {
+                root.visualizer.colorAllGroupsModifier.enabled = hovered
+            }
 
             Column {
                 id: groupsColumn

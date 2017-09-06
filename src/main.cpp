@@ -197,6 +197,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
 
+    qmlRegisterType<ColorAllGroupsModifier>("Atomify", 1, 0, "ColorAllGroupsModifier");
     qmlRegisterType<ColorModifier>("Atomify", 1, 0, "ColorModifier");
     qmlRegisterType<PeriodicImages>("Atomify", 1, 0, "PeriodicImages");
     qmlRegisterType<GroupModifier>("Atomify", 1, 0, "GroupModifier");

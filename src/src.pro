@@ -111,6 +111,10 @@ SOURCES += \
     LammpsWrappers/modifiers/colormodifier.cpp \
     LammpsWrappers/modifiers/slice.cpp \
     LammpsWrappers/modifiers/periodicimages.cpp \
+    LammpsWrappers/modifiers/groupmodifier.cpp \
+    LammpsWrappers/modifiers/regionmodifier.cpp \
+    LammpsWrappers/modifiers/propertymodifier.cpp \
+    LammpsWrappers/modifiers/colorallgroupsmodifier.cpp \
     LammpsWrappers/atomdata.cpp \
     LammpsWrappers/regions.cpp \
     LammpsWrappers/groups.cpp \
@@ -119,11 +123,8 @@ SOURCES += \
     LammpsWrappers/lammpserror.cpp \
     LammpsWrappers/computes.cpp \
     LammpsWrappers/variables.cpp \
-    LammpsWrappers/modifiers/groupmodifier.cpp \
-    LammpsWrappers/modifiers/regionmodifier.cpp \
     LammpsWrappers/units.cpp \
     LammpsWrappers/fixes.cpp \
-    LammpsWrappers/modifiers/propertymodifier.cpp \
     dataproviders/dataprovider.cpp \
     codeeditorbackend.cpp \
     linenumbers.cpp \
@@ -157,6 +158,10 @@ HEADERS += \
     LammpsWrappers/modifiers/modifiers.h \
     LammpsWrappers/modifiers/slice.h \
     LammpsWrappers/modifiers/periodicimages.h \
+    LammpsWrappers/modifiers/groupmodifier.h \
+    LammpsWrappers/modifiers/regionmodifier.h \
+    LammpsWrappers/modifiers/propertymodifier.h \
+    LammpsWrappers/modifiers/colorallgroupsmodifier.h \
     LammpsWrappers/atomdata.h \
     LammpsWrappers/regions.h \
     LammpsWrappers/groups.h \
@@ -165,11 +170,8 @@ HEADERS += \
     LammpsWrappers/lammpserror.h \
     LammpsWrappers/computes.h \
     LammpsWrappers/variables.h \
-    LammpsWrappers/modifiers/groupmodifier.h \
-    LammpsWrappers/modifiers/regionmodifier.h \
     LammpsWrappers/units.h \
     LammpsWrappers/fixes.h \
-    LammpsWrappers/modifiers/propertymodifier.h \
     dataproviders/dataprovider.h \
     codeeditorbackend.h \
     linenumbers.h \
