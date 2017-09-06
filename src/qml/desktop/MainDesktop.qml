@@ -622,6 +622,9 @@ Rectangle {
                 focusViewport()
                 releaseCursor()
                 messageOverlay.visible = false
+                if(visualizer.activeFocus) {
+                    rightbar.footer.height = 0
+                }
                 visualizer.forceActiveFocus()
             }
         }
