@@ -115,6 +115,7 @@ SOURCES += \
     LammpsWrappers/modifiers/regionmodifier.cpp \
     LammpsWrappers/modifiers/propertymodifier.cpp \
     LammpsWrappers/modifiers/colorallgroupsmodifier.cpp \
+    LammpsWrappers/modifiers/colorallregionsmodifier.cpp \
     LammpsWrappers/atomdata.cpp \
     LammpsWrappers/regions.cpp \
     LammpsWrappers/groups.cpp \
@@ -162,6 +163,7 @@ HEADERS += \
     LammpsWrappers/modifiers/regionmodifier.h \
     LammpsWrappers/modifiers/propertymodifier.h \
     LammpsWrappers/modifiers/colorallgroupsmodifier.h \
+    LammpsWrappers/modifiers/colorallregionsmodifier.h \
     LammpsWrappers/atomdata.h \
     LammpsWrappers/regions.h \
     LammpsWrappers/groups.h \

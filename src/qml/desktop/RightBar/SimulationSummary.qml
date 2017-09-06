@@ -305,6 +305,7 @@ Flickable {
                 left: parent.left
                 right: parent.right
             }
+
             title: "Groups"
             hoverEnabled: true
             onHoveredChanged: {
@@ -365,6 +366,10 @@ Flickable {
             }
 
             title: "Regions"
+            hoverEnabled: true
+            onHoveredChanged: {
+                root.visualizer.colorAllRegionsModifier.enabled = hovered
+            }
 
             RegionsColumn {
                 id: regionsColumn

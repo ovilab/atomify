@@ -25,6 +25,7 @@ Scene3D {
     property alias propertyModifier: propertyModifier
     property alias sliceModifier: sliceModifier
     property alias colorAllGroupsModifier: colorAllGroupsModifier
+    property alias colorAllRegionsModifier: colorAllRegionsModifier
     property bool guidesVisible
     property bool systemBoxVisible
     property var rootItem
@@ -397,6 +398,7 @@ Scene3D {
             system.atoms.modifiers: [
                 colorModifier,
                 colorAllGroupsModifier,
+                colorAllRegionsModifier,
                 propertyModifier,
                 groupModifier,
                 regionModifier,
@@ -422,6 +424,11 @@ Scene3D {
 
         ColorAllGroupsModifier {
             id: colorAllGroupsModifier
+            enabled: false
+        }
+
+        ColorAllRegionsModifier {
+            id: colorAllRegionsModifier
             enabled: false
         }
 

@@ -1,9 +1,9 @@
-#include "colorallgroupsmodifier.h"
-#include "../groups.h"
+#include "colorallregionsmodifier.h"
+#include "../regions.h"
 #include "../system.h"
 #include "../atomdata.h"
 
-ColorAllGroupsModifier::ColorAllGroupsModifier()
+ColorAllRegionsModifier::ColorAllRegionsModifier()
 {
     m_colors = { QVector3D(0.90196078 , 0.09803922, 0.29411765),
     QVector3D(0.23529412 , 0.70588235, 0.29411765),
@@ -68,18 +68,18 @@ ColorAllGroupsModifier::ColorAllGroupsModifier()
     QVector3D(0.85098039, 0.00000000, 0.11372549) };
 }
 
-void ColorAllGroupsModifier::apply(AtomData &atomData)
+void ColorAllRegionsModifier::apply(AtomData &atomData)
 {
     if(!enabled()) return;
 
-    QList<CPGroup*> groups = m_system->groups()->groups();
+    QList<CPRegion*> regions = m_system->regions()->regions();
     for(int i=0; i<atomData.size(); i++) {
-        for(int j=0; j<groups.size(); j++) {
-            CPGroup *group = groups[j];
-
-            bool isMemberOfGroup = atomData.bitmask[i] & group->bitmask(); // Each group in LAMMPS is represented as a bit in an int. Bitwise or to check membership.
-            if(isMemberOfGroup) {
-                atomData.colors[i] = m_colors[j];
+        for(int j=0; j<regions.size(); j++) {
+            CPRegion* region = regions[j];
+            bool isInsideRegion = region->containsAtom(i); // Each group in LAMMPS is represented as a bit in an int. Bitwise or to check membership.
+            if(isInsideRegion) {
+                int colorIndex = j % m_colors.size(); // in case users have ridiculously many regions
+                atomData.colors[i] = m_colors[colorIndex];
             }
         }
     }

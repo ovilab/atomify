@@ -8,4 +8,5 @@
 #include "regionmodifier.h"
 #include "colorallgroupsmodifier.h"
 #include "propertymodifier.h"
+#include "colorallregionsmodifier.h"
 #endif // MODIFIERS_H
