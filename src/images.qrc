@@ -1,39 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>images/close.png</file>
-        <file>images/back.png</file>
-        <file>images/button.svg</file>
-        <file>images/button_disabled.png</file>
-        <file>images/button_enabled.png</file>
-        <file>images/dashboard.png</file>
-        <file>images/dashboard.svg</file>
-        <file>images/exit.png</file>
-        <file>images/exit.svg</file>
-        <file>images/pause.png</file>
-        <file>images/pause.svg</file>
-        <file>images/play.png</file>
-        <file>images/play.svg</file>
-        <file>images/poweroff.png</file>
-        <file>images/poweron.png</file>
-        <file>images/poweron.svg</file>
-        <file>images/sphere.png</file>
-        <file>images/systems.png</file>
-        <file>images/systems.svg</file>
-        <file>images/systemsize.png</file>
-        <file>images/systemsize.svg</file>
-        <file>images/thermostat.svg</file>
-        <file>images/thermostat_disabled.png</file>
-        <file>images/thermostat_enabled.png</file>
-        <file>images/tools.png</file>
-        <file>images/tools.svg</file>
-        <file>images/menu.png</file>
-        <file>images/menu.svg</file>
-        <file>images/expand.gif</file>
-        <file>images/collapse.gif</file>
         <file>images/eye-off.png</file>
         <file>images/eye-on.png</file>
-        <file>images/pause2.png</file>
-        <file>images/play2.png</file>
+        <file>images/pause.png</file>
+        <file>images/play.png</file>
         <file>images/camera.png</file>
         <file>images/reset_camera.png</file>
         <file>images/switch_camera.png</file>
