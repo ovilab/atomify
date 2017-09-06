@@ -70,9 +70,17 @@ ColorAllRegionsModifier::ColorAllRegionsModifier()
 
 void ColorAllRegionsModifier::apply(AtomData &atomData)
 {
+    QList<CPRegion*> regions = m_system->regions()->regions();
+    for(CPRegion *region : regions) {
+        region->setDoUpdate(false);
+    }
+
     if(!enabled()) return;
 
-    QList<CPRegion*> regions = m_system->regions()->regions();
+    for(CPRegion *region : regions) {
+        region->setDoUpdate(true);
+    }
+
     for(int i=0; i<atomData.size(); i++) {
         for(int j=0; j<regions.size(); j++) {
             CPRegion* region = regions[j];

@@ -8,6 +8,7 @@
 
 class ColorAllGroupsModifier : public Modifier
 {
+    Q_OBJECT
 public:
     ColorAllGroupsModifier();
     void apply(AtomData &atomData) override;

@@ -8,6 +8,7 @@
 
 class ColorAllRegionsModifier : public Modifier
 {
+    Q_OBJECT
 public:
     ColorAllRegionsModifier();
     void apply(AtomData &atomData) override;

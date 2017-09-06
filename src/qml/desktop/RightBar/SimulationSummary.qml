@@ -191,7 +191,7 @@ Flickable {
                     property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
                     property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
                     toolTipText: explainationP+explainationF+explainationS+explainationM
-                    text: "<a href=\"boundary\">Boundary</a>: "+system.boundaryStyle 
+                    text: "<a href=\"boundary\">Boundary</a>: "+system.boundaryStyle
                     url: "http://lammps.sandia.gov/doc/boundary.html"
                 }
                 ToolTipLabel {
@@ -307,6 +307,16 @@ Flickable {
             }
 
             title: "Groups"
+
+            background: Rectangle {
+                y: parent.topPadding - parent.padding
+                width: parent.width
+                height: parent.height - parent.topPadding + parent.padding
+                color: "transparent"
+                border.color: parent.hovered ? "#fff" : "#6e6e6e"
+                radius: 2
+            }
+
             hoverEnabled: true
             onHoveredChanged: {
                 root.visualizer.colorAllGroupsModifier.enabled = hovered
@@ -360,15 +370,26 @@ Flickable {
         }
 
         GroupBox {
+            id: control
             anchors {
                 left: parent.left
                 right: parent.right
             }
 
             title: "Regions"
+
+            background: Rectangle {
+                y: control.topPadding - control.padding
+                width: parent.width
+                height: parent.height - control.topPadding + control.padding
+                color: "transparent"
+                border.color: control.hovered ? "#fff" : "#6e6e6e"
+                radius: 2
+            }
+
             hoverEnabled: true
             onHoveredChanged: {
-                root.visualizer.colorAllRegionsModifier.enabled = hovered
+                root.visualizer.colorAllGroupsModifier.enabled = hovered
             }
 
             RegionsColumn {

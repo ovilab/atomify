@@ -198,25 +198,20 @@ void CPRegion::update(LAMMPS *lammps)
 
     Region *region = lammps->domain->regions[index];
     // lammps->update->whichflag = 1; // HACK. This tells lammps we're doing dynamics so we can compute values in there.
-    try {
-        setCount(lammps->group->count(0,index));
-        if(hovered() || !visible()) {
-            m_containsAtom.resize(lammps->atom->natoms);
-            for(int atomIndex=0; atomIndex<lammps->atom->natoms; atomIndex++) {
-                double r[3];
-                r[0] = lammps->atom->x[atomIndex][0];
-                r[1] = lammps->atom->x[atomIndex][1];
-                r[2] = lammps->atom->x[atomIndex][2];
-                lammps->domain->remap(r);
+    setCount(lammps->group->count(0,index));
+    if(doUpdate() || hovered() || !visible()) {
+        m_containsAtom.resize(lammps->atom->natoms);
+        for(int atomIndex=0; atomIndex<lammps->atom->natoms; atomIndex++) {
+            double r[3];
+            r[0] = lammps->atom->x[atomIndex][0];
+            r[1] = lammps->atom->x[atomIndex][1];
+            r[2] = lammps->atom->x[atomIndex][2];
+            lammps->domain->remap(r);
 
-                bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
-                m_containsAtom[atomIndex] = isInsideRegion;
-            }
-            // lammps->update->whichflag = 0;
+            bool isInsideRegion = !region->inside(r[0], r[1], r[2])^region->interior;
+            m_containsAtom[atomIndex] = isInsideRegion;
         }
-    } catch( LAMMPS_NS::LAMMPSException(&e) ) {
-        // TODO: use this to report to user that something was wrong
-
+        // lammps->update->whichflag = 0;
     }
 }
 
@@ -260,4 +255,14 @@ void CPRegion::setHovered(bool hovered)
 
     m_hovered = hovered;
     emit hoveredChanged(hovered);
+}
+
+bool CPRegion::doUpdate() const
+{
+    return m_doUpdate;
+}
+
+void CPRegion::setDoUpdate(bool doUpdate)
+{
+    m_doUpdate = doUpdate;
 }

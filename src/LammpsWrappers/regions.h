@@ -22,6 +22,9 @@ public:
     bool hovered() const;
     void update(LAMMPS_NS::LAMMPS *lammps);
     bool containsAtom(int atomIndex);
+    bool doUpdate() const;
+    void setDoUpdate(bool doUpdate);
+
 public slots:
     void setCount(int count);
     void setIdentifier(QString identifier);
@@ -39,6 +42,7 @@ private:
     QString m_identifier;
     bool m_visible = true;
     bool m_hovered = false;
+    bool m_doUpdate = false;
     QVector<int> m_containsAtom;
 };
 
@@ -53,10 +57,12 @@ public:
     void synchronize(class LAMMPSController *lammpsController);
     void synchronizeQML(class LAMMPSController *lammpsController);
     QVariant model() const;
+    QList<CPRegion*> regions();
     int count() const;
     bool active() const;
     void reset();
-    QList<CPRegion*> regions();
+    bool doUpdate() const;
+    void setDoUpdate(bool doUpdate);
 
 public slots:
     void setModel(QVariant model);
