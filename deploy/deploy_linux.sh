@@ -16,8 +16,8 @@ cp -r atomify deploy/atomify/
 cd deploy/atomify/
 
 # Must do twice due to a bug (reported on github)
-../../../linuxdeployqt-continuous-x86_64.AppImage ./atomify -qmldir=../../../../src/qml/
-../../../linuxdeployqt-continuous-x86_64.AppImage ./atomify -qmldir=../../../../src/qml/
+../../../linuxdeployqt-continuous-x86_64.AppImage ./atomify -qmldir=../../../../src/qml/ 
+../../../linuxdeployqt-continuous-x86_64.AppImage ./atomify -qmldir=../../../../src/qml/ -appimage
 cp -r ~/Qt/5.9.1/gcc_64/qml/QtQuick/Controls/* qml/QtQuick/Controls/
 
 cd ..
