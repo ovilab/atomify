@@ -612,19 +612,18 @@ Item {
         }
 
         Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+Left"
+            sequence: shortcuts.tabShortcutModifier + "+Shift+Tab"
             onActivated: {
                 if(stackLayout.currentIndex > 0) stackLayout.currentIndex -= 1
                 else stackLayout.currentIndex = editorCount-1
             }
         }
         Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+Right"
+            sequence: shortcuts.tabShortcutModifier + "+Tab"
             onActivated: {
                 if(stackLayout.currentIndex < editorCount-1) stackLayout.currentIndex += 1
                 else stackLayout.currentIndex = 0
             }
         }
     }
-
 }
