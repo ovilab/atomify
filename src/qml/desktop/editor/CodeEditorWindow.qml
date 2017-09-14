@@ -590,12 +590,6 @@ Item {
                 if(editorCount >= 7) stackLayout.currentIndex = 6
             }
         }
-        Shortcut {
-            sequence: shortcuts.tabShortcutModifier + "+8"
-            onActivated: {
-                if(editorCount >= 8) stackLayout.currentIndex = 7
-            }
-        }
 
         Shortcut {
             sequence: StandardKey.ZoomIn
@@ -617,18 +611,6 @@ Item {
             }
         }
 
-//        Shortcut {
-//            sequence: shortcuts.tabShortcutModifier + "+9"
-//            onActivated: {
-//                if(editorCount >= 9) stackLayout.currentIndex = 8
-//            }
-//        }
-//        Shortcut {
-//            sequence: shortcuts.tabShortcutModifier + "+0"
-//            onActivated: {
-//                if(editorCount >= 10) stackLayout.currentIndex = 9
-//            }
-//        }
         Shortcut {
             sequence: shortcuts.tabShortcutModifier + "+Left"
             onActivated: {
