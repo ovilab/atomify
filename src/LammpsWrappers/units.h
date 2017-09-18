@@ -16,6 +16,8 @@ class Units : public QObject
 public:
     enum Type { LJ, Real, Metal, SI, CGS, Electron, Micro, Nano };
     explicit Units(QObject *parent = 0);
+    ~Units();
+
     void synchronize(LAMMPS_NS::LAMMPS *lammps);
     void reset();
     QString name() const;

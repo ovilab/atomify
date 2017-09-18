@@ -8,6 +8,11 @@ Units::Units(QObject *parent) : QObject(parent)
     setName("None");
 }
 
+Units::~Units()
+{
+    delete [] unit_style; // TODO consider using QByteArray instead of char*
+}
+
 void Units::synchronize(LAMMPS *lammps)
 {
     bool doUpdate = false;
