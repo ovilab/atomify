@@ -136,6 +136,7 @@ signals:
     void numberOfDangerousNeighborlistBuildsChanged(int numberOfDangerousNeighborlistBuilds);
 
 private:
+    // TODO these are never changed, consider having them as non-pointer members
     std::unique_ptr<class Atoms> m_atoms;
     std::unique_ptr<class Regions> m_regions;
     std::unique_ptr<class Groups> m_groups;
