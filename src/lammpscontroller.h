@@ -32,6 +32,8 @@ private:
 public:
     class System *system = nullptr;
     unsigned long simulationSpeed = 1;
+    char **argv;
+    int nargs = 0;
 
     LAMMPSController();
     ~LAMMPSController();

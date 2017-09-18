@@ -47,6 +47,12 @@ LAMMPSController::LAMMPSController() :
 LAMMPSController::~LAMMPSController()
 {
     stop();
+
+    for (int i = 0; i < nargs; i++) {
+        delete argv[i];
+    }
+
+    delete [] argv;
 }
 
 void synchronizeLAMMPS_callback(void *caller, int mode)
@@ -219,7 +225,7 @@ void LAMMPSController::start() {
         stop();
     }
 
-    int nargs = 1;
+    nargs = 1;
     char **argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];
