@@ -175,10 +175,10 @@ private:
     double m_dt = 0;
     QString m_state;
     QString m_lammpsVersion;
-    bool m_macAppStore;
+    bool m_macAppStore = false;
     QString m_pairStyle;
-    int m_numberOfTimesteps;
-    int m_numberOfDangerousNeighborlistBuilds;
+    int m_numberOfTimesteps = 0;
+    int m_numberOfDangerousNeighborlistBuilds = 0;
 };
 
 #endif // SYSTEM_H
