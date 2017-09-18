@@ -262,6 +262,10 @@ int main(int argc, char *argv[])
     } else {
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
         QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
+        if (!window) {
+            qDebug() << "ERROR: Could not load window";
+            return 1;
+        }
         window->setProperty("initialScriptFilePath", initialScriptFilePath);
 #ifdef Q_OS_MAC
         window->setIcon(QIcon("../Resources/icon.icns"));
