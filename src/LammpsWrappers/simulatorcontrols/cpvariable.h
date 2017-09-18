@@ -48,12 +48,12 @@ protected:
     QString createCommandPrefix();
 
 private:
-    class Data1D* m_data;
+    class Data1D* m_data = nullptr;
     std::vector<double> m_atomData;
-    double m_value;
-    bool m_valueHasDecimals;
-    bool m_isPerAtom;
-    bool m_hovered;
+    double m_value = 0.0;
+    bool m_valueHasDecimals = false;
+    bool m_isPerAtom = false;
+    bool m_hovered = false;
 };
 
 #endif // CPVARIABLE_H
