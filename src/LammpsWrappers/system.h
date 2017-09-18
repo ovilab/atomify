@@ -11,6 +11,7 @@
 #include <QMatrix4x4>
 #include <QMatrix3x3>
 #include <version.h>
+#include <memory>
 
 class System : public QObject
 {
@@ -30,14 +31,14 @@ class System : public QObject
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
     Q_PROPERTY(double dt READ dt WRITE setDt NOTIFY dtChanged)
     Q_PROPERTY(int currentTimestep READ currentTimestep NOTIFY currentTimestepChanged)
-    Q_PROPERTY(Performance *performance READ performance WRITE setPerformance NOTIFY performanceChanged)
-    Q_PROPERTY(Atoms* atoms READ atoms WRITE setAtoms NOTIFY atomsChanged)
-    Q_PROPERTY(Regions* regions READ regions WRITE setRegions NOTIFY regionsChanged)
-    Q_PROPERTY(Groups* groups READ groups WRITE setGroups NOTIFY groupsChanged)
-    Q_PROPERTY(Computes* computes READ computes WRITE setComputes NOTIFY computesChanged)
-    Q_PROPERTY(Variables* variables READ variables WRITE setVariables NOTIFY variablesChanged)
-    Q_PROPERTY(Fixes* fixes READ fixes WRITE setFixes NOTIFY fixesChanged)
-    Q_PROPERTY(Units* units READ units WRITE setUnits NOTIFY unitsChanged)
+    Q_PROPERTY(Performance *performance READ performance NOTIFY performanceChanged)
+    Q_PROPERTY(Atoms* atoms READ atoms NOTIFY atomsChanged)
+    Q_PROPERTY(Regions* regions READ regions NOTIFY regionsChanged)
+    Q_PROPERTY(Groups* groups READ groups NOTIFY groupsChanged)
+    Q_PROPERTY(Computes* computes READ computes NOTIFY computesChanged)
+    Q_PROPERTY(Variables* variables READ variables NOTIFY variablesChanged)
+    Q_PROPERTY(Fixes* fixes READ fixes NOTIFY fixesChanged)
+    Q_PROPERTY(Units* units READ units NOTIFY unitsChanged)
     Q_PROPERTY(bool isValid READ isValid WRITE setIsValid NOTIFY isValidChanged)
     Q_PROPERTY(QString state READ state WRITE setState NOTIFY stateChanged)
     Q_PROPERTY(QString lammpsVersion READ lammpsVersion WRITE setLammpsVersion NOTIFY lammpsVersionChanged)
@@ -47,6 +48,7 @@ class System : public QObject
     Q_PROPERTY(int numberOfDangerousNeighborlistBuilds READ numberOfDangerousNeighborlistBuilds WRITE setNumberOfDangerousNeighborlistBuilds NOTIFY numberOfDangerousNeighborlistBuildsChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
+    ~System();
 
     // Properties
     class Atoms* atoms() const;
@@ -87,19 +89,11 @@ public:
     int numberOfDangerousNeighborlistBuilds() const;
 
 public slots:
-    void setAtoms(class Atoms* atoms);
-    void setRegions(class Regions* regions);
-    void setGroups(class Groups* groups);
     void setIsValid(bool isValid);
-    void setComputes(class Computes* computes);
-    void setVariables(class Variables* variables);
     void setCameraPosition(QVector3D cameraPosition);
-    void setUnits(class Units* units);
-    void setFixes(class Fixes* fixes);
     void setCellMatrix(QMatrix3x3 cellMatrix);
     void setBoundaryStyle(QString boundaryStyle);
     void setTriclinic(bool triclinic);
-    void setPerformance(class Performance * performance);
     void setCpuremain(double cpuremain);
     void setDt(double dt);
     void setState(QString state);
@@ -142,14 +136,14 @@ signals:
     void numberOfDangerousNeighborlistBuildsChanged(int numberOfDangerousNeighborlistBuilds);
 
 private:
-    class Atoms* m_atoms = nullptr;
-    class Regions* m_regions = nullptr;
-    class Groups* m_groups = nullptr;
-    class Computes* m_computes = nullptr;
-    class Units* m_units = nullptr;
-    class Fixes* m_fixes = nullptr;
-    class Variables* m_variables = nullptr;
-    class Performance* m_performance = nullptr;
+    std::unique_ptr<class Atoms> m_atoms;
+    std::unique_ptr<class Regions> m_regions;
+    std::unique_ptr<class Groups> m_groups;
+    std::unique_ptr<class Computes> m_computes;
+    std::unique_ptr<class Units> m_units;
+    std::unique_ptr<class Fixes> m_fixes;
+    std::unique_ptr<class Variables> m_variables;
+    std::unique_ptr<class Performance> m_performance;
     QVector3D m_origin;
     QVector3D m_size;
     QVector3D m_cameraPosition;

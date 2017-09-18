@@ -21,16 +21,20 @@
 using namespace LAMMPS_NS;
 
 System::System(AtomifySimulator *simulator)
+    : m_atoms(std::make_unique<Atoms>(simulator))
+    , m_regions(std::make_unique<Regions>(simulator))
+    , m_groups(std::make_unique<Groups>(simulator))
+    , m_computes(std::make_unique<Computes>(simulator))
+    , m_units(std::make_unique<Units>(simulator))
+    , m_fixes(std::make_unique<Fixes>(simulator))
+    , m_variables(std::make_unique<Variables>(simulator))
+    , m_performance(std::make_unique<Performance>(simulator))
 {
-    setAtoms(new Atoms(simulator));
-    setGroups(new Groups(simulator));
-    setRegions(new Regions(simulator));
-    setComputes(new Computes(simulator));
-    setUnits(new Units(simulator));
-    setFixes(new Fixes(simulator));
-    setVariables(new Variables(simulator));
-    setPerformance(new Performance(simulator));
     m_transformationMatrix.setToIdentity();
+}
+
+System::~System()
+{
 }
 
 void System::computeCellMatrix(Domain *domain) {
@@ -264,22 +268,51 @@ int System::currentTimestep() const
 
 Atoms *System::atoms() const
 {
-    return m_atoms;
+    return m_atoms.get();
 }
 
 Regions *System::regions() const
 {
-    return m_regions;
+    return m_regions.get();
 }
 
 Groups *System::groups() const
 {
-    return m_groups;
+    return m_groups.get();
+}
+
+Computes *System::computes() const
+{
+    return m_computes.get();
+}
+
+Units *System::units() const
+{
+    return m_units.get();
+}
+
+Fixes *System::fixes() const
+{
+    return m_fixes.get();
+}
+
+Variables *System::variables() const
+{
+    return m_variables.get();
 }
 
 int System::numberOfAtomTypes() const
 {
     return m_numberOfAtomTypes;
+}
+
+void System::setCameraPosition(QVector3D cameraPosition)
+{
+    if (m_cameraPosition == cameraPosition)
+        return;
+
+    m_cameraPosition = cameraPosition;
+    emit cameraPositionChanged(cameraPosition);
 }
 
 void System::reset()
@@ -351,7 +384,7 @@ bool System::triclinic() const
 
 Performance *System::performance() const
 {
-    return m_performance;
+    return m_performance.get();
 }
 
 double System::cpuremain() const
@@ -418,53 +451,6 @@ QVector3D System::center() const
     return m_center;
 }
 
-Variables *System::variables() const
-{
-    return m_variables;
-}
-
-Units *System::units() const
-{
-    return m_units;
-}
-
-Fixes *System::fixes() const
-{
-    return m_fixes;
-}
-
-Computes *System::computes() const
-{
-    return m_computes;
-}
-
-void System::setAtoms(Atoms *atoms)
-{
-    if (m_atoms == atoms)
-        return;
-
-    m_atoms = atoms;
-    emit atomsChanged(atoms);
-}
-
-void System::setRegions(Regions *regions)
-{
-    if (m_regions == regions)
-        return;
-
-    m_regions = regions;
-    emit regionsChanged(regions);
-}
-
-void System::setGroups(Groups *groups)
-{
-    if (m_groups == groups)
-        return;
-
-    m_groups = groups;
-    emit groupsChanged(groups);
-}
-
 void System::setIsValid(bool isValid)
 {
     if (m_isValid == isValid)
@@ -472,42 +458,6 @@ void System::setIsValid(bool isValid)
 
     m_isValid = isValid;
     emit isValidChanged(isValid);
-}
-
-void System::setComputes(Computes *computes)
-{
-    if (m_computes == computes)
-        return;
-
-    m_computes = computes;
-    emit computesChanged(computes);
-}
-
-void System::setCameraPosition(QVector3D cameraPosition)
-{
-    if (m_cameraPosition == cameraPosition)
-        return;
-
-    m_cameraPosition = cameraPosition;
-    emit cameraPositionChanged(cameraPosition);
-}
-
-void System::setUnits(Units *units)
-{
-    if (m_units == units)
-        return;
-
-    m_units = units;
-    emit unitsChanged(units);
-}
-
-void System::setFixes(Fixes *fixes)
-{
-    if (m_fixes == fixes)
-        return;
-
-    m_fixes = fixes;
-    emit fixesChanged(fixes);
 }
 
 void System::setCellMatrix(QMatrix3x3 cellMatrix)
@@ -535,15 +485,6 @@ void System::setTriclinic(bool triclinic)
 
     m_triclinic = triclinic;
     emit triclinicChanged(triclinic);
-}
-
-void System::setPerformance(Performance *performance)
-{
-    if (m_performance == performance)
-        return;
-
-    m_performance = performance;
-    emit performanceChanged(performance);
 }
 
 void System::setCpuremain(double cpuremain)
@@ -616,13 +557,4 @@ void System::setNumberOfDangerousNeighborlistBuilds(int numberOfDangerousNeighbo
 
     m_numberOfDangerousNeighborlistBuilds = numberOfDangerousNeighborlistBuilds;
     emit numberOfDangerousNeighborlistBuildsChanged(m_numberOfDangerousNeighborlistBuilds);
-}
-
-void System::setVariables(Variables *variables)
-{
-    if (m_variables == variables)
-        return;
-
-    m_variables = variables;
-    emit variablesChanged(variables);
 }

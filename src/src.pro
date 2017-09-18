@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += c++11
+CONFIG += c++14
 CONFIG += appstore
 DEFINES += LAMMPS_GZIP
 TARGET = atomify
