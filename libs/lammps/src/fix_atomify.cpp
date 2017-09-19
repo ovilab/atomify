@@ -33,11 +33,13 @@ using namespace FixConst;
 
 /* ---------------------------------------------------------------------- */
 
-FixAtomify::FixAtomify(LAMMPS *lmp, int narg, char **arg) :
-    Fix(lmp, narg, arg)
+FixAtomify::FixAtomify(LAMMPS *lmp, int narg, char **arg)
+    : Fix(lmp, narg, arg)
+    , list(NULL)
+    , callback(NULL)
+    , ptr_caller(NULL)
+    , build_neighborlist(false)
 {
-    build_neighborlist = false;
-    callback = NULL;
 }
 
 /* ---------------------------------------------------------------------- */
