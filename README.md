@@ -10,7 +10,7 @@ The typical workflow when developing scripts for LAMMPS includes working with se
 
 ## How to install ##
 ### MacOS ###
-Alternative 1a) Download [the dmg](https://github.com/ovilab/atomify/releases/download/v2.1.2/Atomify-2.1.2-macos.dmg) (preferred). Atomify is installed in your Applications folder. 
+Alternative 1a) Download [the dmg](https://github.com/ovilab/atomify/releases/download/v2.1.2/Atomify-2.1.2-macos.dmg) (preferred). 
 
 Alternative 1b) If 1a crashes, download [the simple dmg](https://github.com/ovilab/atomify/releases/download/v2.1.2/Atomify-2.1.2-macos-simple.dmg) (without OpenMP acceleration).
 
