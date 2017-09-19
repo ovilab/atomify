@@ -226,7 +226,7 @@ void LAMMPSController::start() {
     }
 
     nargs = 1;
-    char **argv = new char*[nargs];
+    argv = new char*[nargs];
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];
     }
