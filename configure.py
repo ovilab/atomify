@@ -78,26 +78,7 @@ else:
     lammps_pri.write("LIBS += -L$$PWD/" + lammps_source_dir_src_relative + "/STUBS -lmpi_stubs" + "\n")
     lammps_pri.close()
     
-fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
-
-if not os.path.isfile(fix_ave_timeHFile):
-    print("Error, could not find file to patch: "+fix_ave_timeHFile)
-    print("Make sure you provided the correct LAMMPS folder.")
-    exit()
-
-print("Attempting to patch lammps source files")
-print("If these are already patched, just press enter (which by default answers 'no' on the questions) twice for each already patched file.\n")
-
-for filename in glob.glob(join(patch_path, "*.patch")):
-    basename = os.path.basename(filename)
-    print("Patching", basename)
-    patch_file = join(patch_path, basename)
-    original_file = join(lammps_source_dir_src, basename.replace(".patch", ""))
-    run_command("patch %s < %s" % (original_file, patch_file)) 
-
 shutil.copy(join(patch_path, "Makefile.atomify"), join(lammps_source_dir_src, "MAKE", "Makefile.atomify"))
-
-print("\nLAMMPS was (probably) successfully patched.")
 
 if lammps_build_type == "android":
     print("Compiling MPI stubs for Android")
