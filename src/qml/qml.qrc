@@ -85,5 +85,6 @@
         <file>events/EventCatcher.qml</file>
         <file>desktop/items/ScrollableNumberField.qml</file>
         <file>desktop/RightBar/PeriodicImagesControl.qml</file>
+        <file>desktop/RightBar/GroupsColumn.qml</file>
     </qresource>
 </RCC>
