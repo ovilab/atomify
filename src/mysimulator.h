@@ -88,6 +88,7 @@ signals:
     void simulationSpeedChanged(int arg);
     void systemChanged(class System* system);
     void statesChanged(class States* states);
+    void command(QString cmd);
 
     // State changes
     void reset();

@@ -14,6 +14,7 @@ public:
     virtual void apply(class AtomData &atomData) = 0;
     bool enabled() const;
     void setSystem(class System *system);
+    Q_INVOKABLE virtual void parseCommand(QString cmd) {}
 
 public slots:
     void setEnabled(bool enabled);

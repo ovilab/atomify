@@ -61,6 +61,18 @@ AtomifySimulator::AtomifySimulator() :
         m_settings.setValue("machine/uuid", uuid);
     }
     requestRightBarFooterText();
+
+    // We use a signal for commands from command parser so QML objects can
+    // see them too.
+    connect(
+        this, &AtomifySimulator::command,
+        [&]( const QString cmd ) {
+            for(QVariant &variant : m_system->atoms()->modifiers()) {
+                Modifier *modifier = variant.value<Modifier*>();
+                modifier->parseCommand(cmd);
+            }
+        }
+    );
 }
 
 AtomifySimulator::~AtomifySimulator() {
