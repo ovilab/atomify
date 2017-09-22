@@ -62,6 +62,7 @@ void CommandParser::parseCommand(QString command)
     atomColorAndSize(command);
     atomSize(command);
     periodic(command);
+    scale(command);
 
     // TODO: make this much better :P
     moveCameraPosition |= cameraPosition(command);
@@ -112,6 +113,21 @@ void CommandParser::periodic(QString command)
 
     // Emit signal
     QString cmd = QString("periodic %1 %2").arg(dimension).arg(count);
+    simulator()->command(cmd);
+}
+
+void CommandParser::scale(QString command)
+{
+    QRegularExpression regex( QString("^(?:scale)(?:%1)([A-Za-z]+)(?:%1)(%2)$").arg(regexTabOrSpace).arg(regexFloat) );
+    QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return;
+    QString type = match.captured(1);
+    bool castOk;
+    float value = match.captured(2).toFloat(&castOk);
+    if(!castOk) return;
+
+    // Emit signal
+    QString cmd = QString("scale %1 %2").arg(type).arg(value);
     simulator()->command(cmd);
 }
 

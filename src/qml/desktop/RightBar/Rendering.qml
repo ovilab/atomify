@@ -9,6 +9,25 @@ import "../../events"
 Pane {
     id: root
     property AtomifyVisualizer visualizer
+    onVisualizerChanged: {
+        if(visualizer) {
+            visualizer.simulator.command.connect(function(cmd) {
+                var words = cmd.split(" ")
+                if(words[0]==="scale") {
+                    var type = words[1]
+                    var value = parseFloat(words[2])
+                    if(type==="spheres" || type==="sphere") {
+                        sphereScaleSlider.value = Math.log(value)
+                    } else if(type==="global") {
+                        globalScaleSlider.value = value
+                    } else if(type==="bonds" || type==="bond")  {
+                        bondScaleSlider.value = value
+                    }
+                }
+            })
+        }
+    }
+
     Settings {
         property alias showGuides: guidesCheckBox.checked
         property alias showOutline: outlineCheckBox.checked

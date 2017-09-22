@@ -23,6 +23,7 @@ private:
     bool moveCameraViewCenter= false;
 
     void parseCommand(QString command);
+    void scale(QString command);
     void atomColorAndSize(QString command);
     void atomColor(QString command);
     void atomType(QString command);
