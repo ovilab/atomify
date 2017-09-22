@@ -12,7 +12,6 @@ Column {
         var qmlFile = compute.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/ComputePlotter.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
-            console.log("Rectangle root: ", root)
             var computePlotter = component.createObject(root);
             computePlotter.x = point.x - computePlotter.width*0.5
             computePlotter.y = point.y - computePlotter.height*0.5
