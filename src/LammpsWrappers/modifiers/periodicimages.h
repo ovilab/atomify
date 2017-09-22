@@ -44,6 +44,10 @@ signals:
     void showImagesXChanged(bool showImagesX);
     void showImagesYChanged(bool showImagesY);
     void showImagesZChanged(bool showImagesZ);
+
+    // Modifier interface
+public:
+    virtual void parseCommand(QString cmd) override;
 };
 
 #endif // PERIODICIMAGES_H

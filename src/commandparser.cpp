@@ -61,6 +61,7 @@ void CommandParser::parseCommand(QString command)
     bond(command);
     atomColorAndSize(command);
     atomSize(command);
+    periodic(command);
 
     // TODO: make this much better :P
     moveCameraPosition |= cameraPosition(command);
@@ -71,6 +72,7 @@ void CommandParser::atomColor(QString command)
 {
     QRegularExpression regex ("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(?:color)(?:\\s*|\\t*)(#\\w*?|\\w*)$");
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return;
     bool castOk;
     int atomType = match.captured(1).toInt(&castOk);
     if(!castOk) return;
@@ -87,6 +89,7 @@ void CommandParser::atomType(QString command)
 {
     QRegularExpression regex("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\w*)$");
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return;
     bool castOk;
     int atomType = match.captured(1).toInt(&castOk);
     if(!castOk) return;
@@ -97,10 +100,26 @@ void CommandParser::atomType(QString command)
     m_simulator->globalState()[key] = atomTypeName;
 }
 
+void CommandParser::periodic(QString command)
+{
+    QRegularExpression regex( QString("^(?:periodic)(?:%1)([xyz])(?:%1)(\\d)$").arg(regexTabOrSpace));
+    QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return;
+    QString dimension = match.captured(1);
+    bool castOk;
+    int count = match.captured(2).toInt(&castOk);
+    if(!castOk) return;
+
+    // Emit signal
+    QString cmd = QString("periodic %1 %2").arg(dimension).arg(count);
+    simulator()->command(cmd);
+}
+
 void CommandParser::atomSize(QString command)
 {
     QRegularExpression regex("^(?:atom)(?:\\s*|\\t*)(\\d*)(?:\\s*|\\t*)(\\d*.\\d|\\d*)$");
     QRegularExpressionMatch match = regex.match(command);
+    if(!match.hasMatch()) return;
     bool castOk;
     int atomType = match.captured(1).toInt(&castOk);
     if(!castOk) return;

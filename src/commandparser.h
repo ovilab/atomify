@@ -26,6 +26,7 @@ private:
     void atomColorAndSize(QString command);
     void atomColor(QString command);
     void atomType(QString command);
+    void periodic(QString command);
     void bond(QString command);
     void atomSize(QString command);
     bool cameraPosition(QString command);

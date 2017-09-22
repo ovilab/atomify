@@ -12,9 +12,14 @@ GroupBox {
     height: periodicImages.enabled ? undefined : label.height
     label: CheckBox {
         id: checkBox
-        checked: false
+        checked: periodicImages.enabled
         onCheckedChanged: periodicImages.enabled = checked
         text: qsTr("Periodic images")
+        Binding {
+            target: periodicImages
+            property: "enabled"
+            value: checkBox.checked
+        }
     }
     Column {
         width: parent.width

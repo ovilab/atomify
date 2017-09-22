@@ -142,3 +142,22 @@ void PeriodicImages::setShowImagesZ(bool showImagesZ)
     m_showImagesZ = showImagesZ;
     emit showImagesZChanged(showImagesZ);
 }
+
+
+void PeriodicImages::parseCommand(QString cmd)
+{
+    if(!cmd.startsWith("periodic")) return;
+    QStringList words = cmd.split(" ");
+    if(words.size() != 3) return;
+    QString dimension = words[1];
+
+    bool ok;
+    int copies = words[2].toInt(&ok);
+    if(!ok) return;
+    if(copies <= 0 || copies > 5) return;
+
+    setEnabled(true);
+    if(dimension=="x") setNumberOfCopiesX(copies);
+    else if(dimension=="y") setNumberOfCopiesY(copies);
+    else if(dimension=="z") setNumberOfCopiesZ(copies);
+}
