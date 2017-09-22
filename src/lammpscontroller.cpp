@@ -273,7 +273,6 @@ bool LAMMPSController::run()
         if(doContinue) {
             QString command = "run 1000000000";
 
-            qDebug() << "Will do continue in LAMMPS";
             lammps_command(m_lammps, command.toUtf8().data());
         } else {            
             QByteArray ba = scriptFilePath.toUtf8();
