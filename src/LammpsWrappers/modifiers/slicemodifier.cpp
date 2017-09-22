@@ -1,4 +1,4 @@
-#include "slice.h"
+#include "slicemodifier.h"
 #include "../system.h"
 #include "../atomdata.h"
 

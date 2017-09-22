@@ -2,8 +2,8 @@
 #define MODIFIERS_H
 #include "modifier.h"
 #include "colormodifier.h"
-#include "slice.h"
-#include "periodicimages.h"
+#include "slicemodifier.h"
+#include "periodicimagesmodifier.h"
 #include "groupmodifier.h"
 #include "regionmodifier.h"
 #include "colorallgroupsmodifier.h"

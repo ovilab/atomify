@@ -1,4 +1,4 @@
-#include "periodicimages.h"
+#include "periodicimagesmodifier.h"
 #include "../system.h"
 #include "../atomdata.h"
 PeriodicImages::PeriodicImages()

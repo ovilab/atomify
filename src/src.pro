@@ -109,8 +109,6 @@ SOURCES += \
     LammpsWrappers/system.cpp \
     LammpsWrappers/modifiers/modifier.cpp \
     LammpsWrappers/modifiers/colormodifier.cpp \
-    LammpsWrappers/modifiers/slice.cpp \
-    LammpsWrappers/modifiers/periodicimages.cpp \
     LammpsWrappers/modifiers/groupmodifier.cpp \
     LammpsWrappers/modifiers/regionmodifier.cpp \
     LammpsWrappers/modifiers/propertymodifier.cpp \
@@ -139,7 +137,9 @@ SOURCES += \
     parsefileuploader.cpp \
     standardpaths.cpp \
     keysequence.cpp \
-    usagestatistics.cpp
+    usagestatistics.cpp \
+    LammpsWrappers/modifiers/periodicimagesmodifier.cpp \
+    LammpsWrappers/modifiers/slicemodifier.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -157,8 +157,6 @@ HEADERS += \
     LammpsWrappers/modifiers/modifier.h \
     LammpsWrappers/modifiers/colormodifier.h \
     LammpsWrappers/modifiers/modifiers.h \
-    LammpsWrappers/modifiers/slice.h \
-    LammpsWrappers/modifiers/periodicimages.h \
     LammpsWrappers/modifiers/groupmodifier.h \
     LammpsWrappers/modifiers/regionmodifier.h \
     LammpsWrappers/modifiers/propertymodifier.h \
@@ -187,7 +185,9 @@ HEADERS += \
     parsefileuploader.h \
     standardpaths.h \
     keysequence.h \
-    usagestatistics.h
+    usagestatistics.h \
+    LammpsWrappers/modifiers/periodicimagesmodifier.h \
+    LammpsWrappers/modifiers/slicemodifier.h
 
 # Temporary use of quickcontrols2 without install
 
