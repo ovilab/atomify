@@ -35,6 +35,7 @@ class Input : protected Pointers {
   void file(const char *);       // process an input script
   char *one(const char *);       // process a single command
   void substitute(char *&, char *&, int &, int &, int);
+  char *lastLine();
                                  // substitute for variables in a string
   int expand_args(int, char **, int, char **&);  // expand args due to wildcard
 
