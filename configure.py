@@ -59,7 +59,7 @@ if os.path.exists("lammps-patch/water"):
 if not os.path.isdir(lammps_source_dir):
     print("Error, the path '"+lammps_source_dir+"' is not a directory.")
     exit()
-
+lammps_source_dir_src_relative = join(lammps_source_dir, "src")
 lammps_source_dir = abspath(lammps_source_dir)
 lammps_source_dir_src = join(lammps_source_dir, "src")
 
@@ -72,10 +72,10 @@ if lammps_build_type == "android":
     lammps_android_pri.close()
 else:
     lammps_pri = open("lammps.pri", "w")
-    lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "\n")
-    lammps_pri.write("INCLUDEPATH += " + lammps_source_dir_src + "/STUBS" + "\n")
-    lammps_pri.write("LIBS += -L" + lammps_source_dir_src + " -llammps_atomify" + "\n")
-    lammps_pri.write("LIBS += -L" + lammps_source_dir_src + "/STUBS -lmpi_stubs" + "\n")
+    lammps_pri.write("INCLUDEPATH += $$PWD/" + lammps_source_dir_src_relative + "\n")
+    lammps_pri.write("INCLUDEPATH += $$PWD/" + lammps_source_dir_src_relative + "/STUBS" + "\n")
+    lammps_pri.write("LIBS += -L$$PWD/" + lammps_source_dir_src_relative + " -llammps_atomify" + "\n")
+    lammps_pri.write("LIBS += -L$$PWD/" + lammps_source_dir_src_relative + "/STUBS -lmpi_stubs" + "\n")
     lammps_pri.close()
     
 fix_ave_timeHFile = join(lammps_source_dir_src, "fix_ave_time.h")
