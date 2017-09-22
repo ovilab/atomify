@@ -507,6 +507,15 @@ Rectangle {
                 spacing: anchors.margins / 2
 
                 IconButton {
+                    source: "qrc:/images/ic_fast_forward_white_48dp.png"
+                    toolTipText: "Step one timestep ("+EventCenter.nativeText("simulator.stepOnce")+")"
+                    visible: simulator.states.paused.active
+                    onClicked: {
+                        simulator.stepOnce = true
+                    }
+                }
+
+                IconButton {
                     source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
                     toolTipText: "Reset to origin ("+EventCenter.nativeText("visualizer.resetToSystemCenter")+")"
 
@@ -596,6 +605,11 @@ Rectangle {
             onActivated: messageOverlay.hideClicked()
         }
 
+        Shortcut {
+            sequence: "Right"
+            onActivated: simulator.stepOnce = true
+        }
+
         EventCatcher {
             name: "simulator.togglePause"
             onTriggered: simulator.togglePause()
@@ -605,7 +619,6 @@ Rectangle {
         EventCatcher {
             name: "editor.cantwrite"
             onTriggered: {
-                console.log("Mac app store: ", simulator.system.macAppStore)
                 if(simulator.system.macAppStore) {
                     messageOverlay.cantWrite = true
                 }

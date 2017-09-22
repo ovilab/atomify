@@ -171,6 +171,16 @@ QQC1.ApplicationWindow {
                 }
             }
             EventMenuItem {
+                text: "Step once"
+                enabled: mainDesktop.simulator.states.paused.active
+                shortcut: "Alt+Right"
+                name: "simulator.stepOnce"
+                onTriggered: {
+                    EventCenter.postEvent("simulator.stepOnce")
+                    mainDesktop.simulator.stepOnce = true
+                }
+            }
+            EventMenuItem {
                 text: mainDesktop.simulator.states.paused.active ? "Unpause" : "Pause"
                 enabled: mainDesktop.simulator.states.parsing.active || mainDesktop.simulator.states.continued.active || mainDesktop.simulator.states.paused.active
                 shortcut: StandardKey.Print
