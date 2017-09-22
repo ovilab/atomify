@@ -21,6 +21,7 @@ public:
     long m_workCount = 0;
     bool m_cancelPending = false;
     bool m_reprocessRenderingData = false;
+    bool m_stepOnce = false;
     QMutex m_workerRenderingMutex; // horrible name
 private:
     QElapsedTimer m_elapsed;
@@ -45,7 +46,7 @@ class AtomifySimulator : public Simulator
     Q_PROPERTY(bool welcomeSimulationRunning READ welcomeSimulationRunning WRITE setWelcomeSimulationRunning NOTIFY welcomeSimulationRunningChanged)
     Q_PROPERTY(UsageStatistics* usageStatistics READ usageStatistics WRITE setUsageStatistics NOTIFY usageStatisticsChanged)
     Q_PROPERTY(QString rightBarFooterText READ rightBarFooterText WRITE setRightBarFooterText NOTIFY rightBarFooterTextChanged)
-
+    Q_PROPERTY(bool stepOnce READ stepOnce WRITE setStepOnce NOTIFY stepOnceChanged)
 public:
     int syncCount = 0;
     AtomifySimulator();
@@ -70,6 +71,7 @@ public:
     QVariantMap &globalState();
     class UsageStatistics* usageStatistics() const;
     QString rightBarFooterText() const;
+    bool stepOnce() const;
 
 public slots:
     void setSimulationSpeed(int arg);
@@ -83,6 +85,7 @@ public slots:
     void setUsageStatistics(class UsageStatistics* usageStatistics);
     void setRightBarFooterText(QString rightBarFooterText);
     void onfinish(QNetworkReply *reply);
+    void setStepOnce(bool stepOnce);
 
 signals:
     void simulationSpeedChanged(int arg);
@@ -110,6 +113,7 @@ signals:
     void welcomeSimulationRunningChanged(bool welcomeSimulationRunning);
     void usageStatisticsChanged(class UsageStatistics* usageStatistics);
     void rightBarFooterTextChanged(QString rightBarFooterText);
+    void stepOnceChanged(bool stepOnce);
 
 protected:
     virtual MyWorker *createWorker() override;
@@ -132,6 +136,7 @@ private:
     class UsageStatistics* m_usageStatistics;
     QString m_rightBarFooterText;
     void requestRightBarFooterText();
+    bool m_stepOnce = false;
 };
 
 #endif // MYSIMULATOR_H

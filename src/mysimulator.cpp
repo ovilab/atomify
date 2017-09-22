@@ -139,11 +139,14 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     m_lammpsController.simulationSpeed = atomifySimulator->simulationSpeed();
     m_lammpsController.qmlThread = QThread::currentThread();
 
+    m_stepOnce = atomifySimulator->stepOnce();
+    atomifySimulator->setStepOnce(false);
+
     atomifySimulator->syncCount += 1;
     States &states = *atomifySimulator->states();
     // Sync properties from lammps controller and back
     m_lammpsController.system = atomifySimulator->system();
-    if(states.paused()->active()) {
+    if(states.paused()->active() && !m_stepOnce) {
         if(m_workerRenderingMutex.tryLock()) {
             atomifySimulator->system()->atoms()->synchronizeRenderer();
             m_workerRenderingMutex.unlock();
@@ -151,6 +154,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         }
         return;
     }
+    m_stepOnce = false;
 
     if(states.continued()->active()) {
         m_lammpsController.doContinue = true;
@@ -245,6 +249,11 @@ UsageStatistics *AtomifySimulator::usageStatistics() const
 QString AtomifySimulator::rightBarFooterText() const
 {
     return m_rightBarFooterText;
+}
+
+bool AtomifySimulator::stepOnce() const
+{
+    return m_stepOnce;
 }
 
 QString AtomifySimulator::lastScript() const
@@ -392,6 +401,15 @@ void AtomifySimulator::onfinish(QNetworkReply *reply)
             }
         }
     }
+}
+
+void AtomifySimulator::setStepOnce(bool stepOnce)
+{
+    if (m_stepOnce == stepOnce)
+        return;
+
+    m_stepOnce = stepOnce;
+    emit stepOnceChanged(m_stepOnce);
 }
 
 void AtomifySimulator::requestRightBarFooterText()
