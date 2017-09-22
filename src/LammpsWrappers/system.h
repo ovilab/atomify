@@ -46,6 +46,7 @@ class System : public QObject
     Q_PROPERTY(bool macAppStore READ macAppStore WRITE setMacAppStore NOTIFY macAppStoreChanged)
     Q_PROPERTY(int numberOfTimesteps READ numberOfTimesteps WRITE setNumberOfTimesteps NOTIFY numberOfTimestepsChanged)
     Q_PROPERTY(int numberOfDangerousNeighborlistBuilds READ numberOfDangerousNeighborlistBuilds WRITE setNumberOfDangerousNeighborlistBuilds NOTIFY numberOfDangerousNeighborlistBuildsChanged)
+    Q_PROPERTY(QString lastCommand READ lastCommand WRITE setLastCommand NOTIFY lastCommandChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
     ~System();
@@ -87,6 +88,7 @@ public:
     QString pairStyle() const;
     int numberOfTimesteps() const;
     int numberOfDangerousNeighborlistBuilds() const;
+    QString lastCommand() const;
 
 public slots:
     void setIsValid(bool isValid);
@@ -102,6 +104,7 @@ public slots:
     void setPairStyle(QString pairStyle);
     void setNumberOfTimesteps(int numberOfTimesteps);
     void setNumberOfDangerousNeighborlistBuilds(int numberOfDangerousNeighborlistBuilds);
+    void setLastCommand(QString lastCommand);
 
 signals:
     void originChanged(QVector3D origin);
@@ -134,6 +137,7 @@ signals:
     void pairStyleChanged(QString pairStyle);
     void numberOfTimestepsChanged(int numberOfTimesteps);
     void numberOfDangerousNeighborlistBuildsChanged(int numberOfDangerousNeighborlistBuilds);
+    void lastCommandChanged(QString lastCommand);
 
 private:
     // TODO these are never changed, consider having them as non-pointer members
@@ -174,6 +178,7 @@ private:
     QString m_pairStyle;
     int m_numberOfTimesteps = 0;
     int m_numberOfDangerousNeighborlistBuilds = 0;
+    QString m_lastCommand;
 };
 
 #endif // SYSTEM_H

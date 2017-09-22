@@ -11,6 +11,7 @@
 #include "../performance.h"
 
 #include <library.h>
+#include <input.h>
 #include <force.h>
 #include <domain.h>
 #include <atom.h>
@@ -171,6 +172,9 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_variables->synchronize(lammpsController);
     m_fixes->synchronize(lammpsController);
     m_performance->synchronize(lammpsController);
+    if(lammps->input->lastLine()) {
+        setLastCommand(QString::fromUtf8(lammps->input->lastLine()));
+    }
 
     // 0 for unset, 1 for dynamics, 2 for min
     if(lammps->update->whichflag==0) {
@@ -209,6 +213,11 @@ void System::synchronize(LAMMPSController *lammpsController)
     }
 
     float currentTime = update->atime + update->dt*(update->ntimestep - update->atimestep);
+    if(m_lastCommand.trimmed().startsWith("rerun")) {
+        // Rerun command does have time, so we should probably use timestep value as time then?
+        currentTime = update->ntimestep;
+    }
+
     if(m_simulationTime != currentTime) {
         m_simulationTime = currentTime;
         emit simulationTimeChanged(m_simulationTime);
@@ -340,6 +349,7 @@ void System::reset()
     m_volume = 0;
     setBoundaryStyle("None");
     m_pairStyle = "";
+    setLastCommand("");
     emit pairStyleChanged(m_pairStyle);
     emit currentTimestepChanged(m_currentTimestep);
     emit simulationTimeChanged(m_simulationTime);
@@ -425,6 +435,11 @@ int System::numberOfTimesteps() const
 int System::numberOfDangerousNeighborlistBuilds() const
 {
     return m_numberOfDangerousNeighborlistBuilds;
+}
+
+QString System::lastCommand() const
+{
+    return m_lastCommand;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -557,4 +572,13 @@ void System::setNumberOfDangerousNeighborlistBuilds(int numberOfDangerousNeighbo
 
     m_numberOfDangerousNeighborlistBuilds = numberOfDangerousNeighborlistBuilds;
     emit numberOfDangerousNeighborlistBuildsChanged(m_numberOfDangerousNeighborlistBuilds);
+}
+
+void System::setLastCommand(QString lastCommand)
+{
+    if (m_lastCommand == lastCommand)
+        return;
+
+    m_lastCommand = lastCommand;
+    emit lastCommandChanged(m_lastCommand);
 }
