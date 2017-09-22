@@ -62,7 +62,6 @@ void FixAtomify::init()
 {
     if (callback == NULL)
         error->all(FLERR,"Fix atomify callback function not set");
-    error->warning(FLERR,"Asking for neigh list");
     int irequest = neighbor->request(this,instance_me);
     neighbor->requests[irequest]->pair = 0;
     neighbor->requests[irequest]->fix = 1;
