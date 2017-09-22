@@ -478,6 +478,7 @@ Rectangle {
                 hideClickedAtLeastOnce: true
 
                 errorMessage: simulator.error
+                lastCommand: simulator.system.lastCommand
                 welcome: (simulator.states.idle.active || simulator.welcomeSimulationRunning) && !hideClickedAtLeastOnce
                 finished: simulator.states.finished.active
                 crashed: simulator.states.crashed.active

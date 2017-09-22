@@ -54,6 +54,7 @@ a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 <p>You can continue simulating by pressing the <a href=\"continue\">play button</a> (Space).</p>
 "
     property string errorMessage: ""
+    property string lastCommand: ""
     property string crashedText:
         "
 <style>
@@ -61,7 +62,10 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Simulation crashed</h2>
-" + errorMessage
+" + errorMessage + "<br>
+<br>
+Last command: <b>" + lastCommand + "</b>"
+
 
     property string welcomeText:
         "

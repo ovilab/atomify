@@ -230,18 +230,7 @@ void LAMMPSController::start() {
     for(int i=0; i<nargs; i++) {
         argv[i] = new char[100];
     }
-    if(nargs>0) {
-        sprintf(argv[0], "myprogram");
-    }
-    if(nargs>1) {
-        sprintf(argv[1], "-sf");
-    }
-    if(nargs>2) {
-        sprintf(argv[2], "gpu");
-    }
-    //    sprintf(argv[3], "-pk");
-    //    sprintf(argv[4], "gpu");
-    //    sprintf(argv[5], "1");
+
     lammps_open_no_mpi(nargs, argv, (void**)&m_lammps); // This creates a new LAMMPS object
     // m_lammps->screen = NULL;
     finished = false;
@@ -288,10 +277,10 @@ bool LAMMPSController::run()
         if(hasError) {
             // Handle error
             errorMessage = QString::fromUtf8(m_lammps->error->get_last_error());
+            // Show last error so user understands where the error occured
+            system->setLastCommand(QString::fromUtf8(m_lammps->input->lastLine()));
 
             crashed = true;
-            // error = new LammpsError();
-            // error->create(message, commandObject);
             return true;
         } else {
             finished = true;
