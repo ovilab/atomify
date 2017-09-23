@@ -182,25 +182,25 @@ Rectangle {
 
                 model: [
                     {
-                        image: "qrc:/images/ic_image_white_48dp.png",
+                        image: "qrc:/images/buttons/ic_image_white_48dp.png",
                         name: "View",
                         mode: "view",
                         tooltip: "Show only visualization (" + EventCenter.nativeText("mode.view") + ")"
                     },
                     {
-                        image: "qrc:/images/ic_timeline_white_48dp.png",
+                        image: "qrc:/images/buttons/ic_timeline_white_48dp.png",
                         name: "Analyse",
                         mode: "analyse",
                         tooltip: "Show analysis (" + EventCenter.nativeText("mode.analyse") + ")"
                     },
                     {
-                        image: "qrc:/images/ic_mode_edit_white_48dp.png",
+                        image: "qrc:/images/buttons/ic_mode_edit_white_48dp.png",
                         name: "Edit",
                         mode: "edit",
                         tooltip: "Show both editor and analysis  (" + EventCenter.nativeText("mode.edit") + ")"
                     },
                     {
-                        image: "qrc:/images/ic_view_quilt_white_48dp.png",
+                        image: "qrc:/images/buttons/ic_view_quilt_white_48dp.png",
                         name: "Examples",
                         mode: "examples",
                         tooltip: "Explore examples  (" + EventCenter.nativeText("mode.examples") + ")"
@@ -235,9 +235,9 @@ Rectangle {
                 Layout.maximumHeight: modeMenuContainer.width
                 source: {
                     if(simulator.states.paused.active || stopButton.toggled) {
-                        return "qrc:/images/ic_play_arrow_white_48dp.png"
+                        return "qrc:/images/buttons/ic_play_arrow_white_48dp.png"
                     } else {
-                        return "qrc:/images/ic_pause_white_48dp.png"
+                        return "qrc:/images/buttons/ic_pause_white_48dp.png"
                     }
                 }
                 toggled: !stopButton.toggled
@@ -278,7 +278,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.minimumHeight: 48
                 Layout.maximumHeight: modeMenuContainer.width
-                source: "qrc:/images/ic_stop_white_48dp.png"
+                source: "qrc:/images/buttons/ic_stop_white_48dp.png"
                 toggled: simulator.states.finished.active || simulator.states.idle.active
                 text: toggled ? "Stopped" : "Stop"
                 onClicked: {
@@ -293,7 +293,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.minimumHeight: 48
                 Layout.maximumHeight: modeMenuContainer.width
-                source: "qrc:/images/ic_refresh_white_48dp.png"
+                source: "qrc:/images/buttons/ic_refresh_white_48dp.png"
                 text: "Restart"
                 onClicked: {
                     editor.editorWindow.runScript()
@@ -507,7 +507,7 @@ Rectangle {
                 spacing: anchors.margins / 2
 
                 IconButton {
-                    source: "qrc:/images/ic_fast_forward_white_48dp.png"
+                    source: "qrc:/images/buttons/ic_fast_forward_white_48dp.png"
                     toolTipText: "Step one timestep ("+EventCenter.nativeText("simulator.stepOnce")+")"
                     visible: simulator.states.paused.active
                     onClicked: {
@@ -516,7 +516,7 @@ Rectangle {
                 }
 
                 IconButton {
-                    source: "qrc:/images/ic_center_focus_strong_white_36dp.png"
+                    source: "qrc:/images/buttons/ic_center_focus_strong_white_36dp.png"
                     toolTipText: "Reset to origin ("+EventCenter.nativeText("visualizer.resetToSystemCenter")+")"
 
                     onClicked: {

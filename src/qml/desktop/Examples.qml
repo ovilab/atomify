@@ -267,7 +267,7 @@ Pane {
                                             height: width
 
                                             opacity: exampleMouseArea.containsMouse ? 1.0 : 0.0
-                                            source: downloaded ? "qrc:/images/ic_play_circle_outline_white_48dp.png" : "qrc:/images/ic_file_download_white_48dp.png"
+                                            source: downloaded ? "qrc:/images/buttons/ic_play_circle_outline_white_48dp.png" : "qrc:/images/buttons/ic_file_download_white_48dp.png"
 
                                             Behavior on opacity {
                                                 NumberAnimation {

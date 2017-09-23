@@ -8,46 +8,46 @@
         <file>images/camera.png</file>
         <file>images/reset_camera.png</file>
         <file>images/switch_camera.png</file>
-        <file>images/ic_blur_on_white_36dp.png</file>
-        <file>images/ic_blur_on_white_48dp.png</file>
-        <file>images/ic_brush_white_36dp.png</file>
-        <file>images/ic_brush_white_48dp.png</file>
-        <file>images/ic_camera_white_36dp.png</file>
-        <file>images/ic_camera_white_48dp.png</file>
-        <file>images/ic_create_white_36dp.png</file>
-        <file>images/ic_create_white_48dp.png</file>
-        <file>images/ic_device_hub_white_36dp.png</file>
-        <file>images/ic_device_hub_white_48dp.png</file>
-        <file>images/ic_help_white_36dp.png</file>
-        <file>images/ic_help_white_48dp.png</file>
-        <file>images/ic_image_white_36dp.png</file>
-        <file>images/ic_image_white_48dp.png</file>
-        <file>images/ic_play_arrow_white_48dp.png</file>
-        <file>images/ic_refresh_white_36dp.png</file>
-        <file>images/ic_refresh_white_48dp.png</file>
-        <file>images/ic_timeline_white_36dp.png</file>
-        <file>images/ic_timeline_white_48dp.png</file>
-        <file>images/ic_visibility_white_36dp.png</file>
-        <file>images/ic_visibility_white_48dp.png</file>
-        <file>images/ic_wb_sunny_white_36dp.png</file>
-        <file>images/ic_wb_sunny_white_48dp.png</file>
-        <file>images/ic_mode_edit_white_36dp.png</file>
-        <file>images/ic_mode_edit_white_48dp.png</file>
-        <file>images/ic_view_quilt_white_36dp.png</file>
-        <file>images/ic_view_quilt_white_48dp.png</file>
-        <file>images/ic_pause_white_36dp.png</file>
-        <file>images/ic_pause_white_48dp.png</file>
-        <file>images/ic_stop_white_36dp.png</file>
-        <file>images/ic_stop_white_48dp.png</file>
-        <file>images/ic_center_focus_strong_white_36dp.png</file>
-        <file>images/ic_center_focus_strong_white_48dp.png</file>
-        <file>images/ic_play_circle_outline_white_48dp.png</file>
-        <file>images/ic_play_circle_outline_white_36dp.png</file>
-        <file>images/ic_file_download_white_36dp.png</file>
-        <file>images/ic_file_download_white_48dp.png</file>
+        <file>images/buttons/ic_blur_on_white_36dp.png</file>
+        <file>images/buttons/ic_blur_on_white_48dp.png</file>
+        <file>images/buttons/ic_brush_white_36dp.png</file>
+        <file>images/buttons/ic_brush_white_48dp.png</file>
+        <file>images/buttons/ic_camera_white_36dp.png</file>
+        <file>images/buttons/ic_camera_white_48dp.png</file>
+        <file>images/buttons/ic_create_white_36dp.png</file>
+        <file>images/buttons/ic_create_white_48dp.png</file>
+        <file>images/buttons/ic_device_hub_white_36dp.png</file>
+        <file>images/buttons/ic_device_hub_white_48dp.png</file>
+        <file>images/buttons/ic_help_white_36dp.png</file>
+        <file>images/buttons/ic_help_white_48dp.png</file>
+        <file>images/buttons/ic_image_white_36dp.png</file>
+        <file>images/buttons/ic_image_white_48dp.png</file>
+        <file>images/buttons/ic_play_arrow_white_48dp.png</file>
+        <file>images/buttons/ic_refresh_white_36dp.png</file>
+        <file>images/buttons/ic_refresh_white_48dp.png</file>
+        <file>images/buttons/ic_timeline_white_36dp.png</file>
+        <file>images/buttons/ic_timeline_white_48dp.png</file>
+        <file>images/buttons/ic_visibility_white_36dp.png</file>
+        <file>images/buttons/ic_visibility_white_48dp.png</file>
+        <file>images/buttons/ic_wb_sunny_white_36dp.png</file>
+        <file>images/buttons/ic_wb_sunny_white_48dp.png</file>
+        <file>images/buttons/ic_mode_edit_white_36dp.png</file>
+        <file>images/buttons/ic_mode_edit_white_48dp.png</file>
+        <file>images/buttons/ic_view_quilt_white_36dp.png</file>
+        <file>images/buttons/ic_view_quilt_white_48dp.png</file>
+        <file>images/buttons/ic_pause_white_36dp.png</file>
+        <file>images/buttons/ic_pause_white_48dp.png</file>
+        <file>images/buttons/ic_stop_white_36dp.png</file>
+        <file>images/buttons/ic_stop_white_48dp.png</file>
+        <file>images/buttons/ic_center_focus_strong_white_36dp.png</file>
+        <file>images/buttons/ic_center_focus_strong_white_48dp.png</file>
+        <file>images/buttons/ic_play_circle_outline_white_48dp.png</file>
+        <file>images/buttons/ic_play_circle_outline_white_36dp.png</file>
+        <file>images/buttons/ic_file_download_white_36dp.png</file>
+        <file>images/buttons/ic_file_download_white_48dp.png</file>
         <file>images/atomify_logo.png</file>
         <file>images/atomify_logo_inapp.png</file>
         <file>images/close_white.png</file>
-        <file>images/ic_fast_forward_white_48dp.png</file>
+        <file>images/buttons/ic_fast_forward_white_48dp.png</file>
     </qresource>
 </RCC>
