@@ -528,7 +528,7 @@ Rectangle {
                 }
 
                 IconButton {
-                    source: "qrc:/images/switch_camera.png"
+                    source: "qrc:/images/buttons/switch_camera.png"
                     toolTipText: "Switch camera ("+EventCenter.nativeText("desktop.changeMode")+")"
 
                     onClicked: {

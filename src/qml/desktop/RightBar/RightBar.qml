@@ -112,7 +112,7 @@ p { color: white; }
         Image {
             anchors.top: parent.top
             anchors.right: parent.right
-            source: "qrc:/images/close_white.png"
+            source: "qrc:/images/buttons/close_white.png"
             width: parent.width*0.1
             height: width
 

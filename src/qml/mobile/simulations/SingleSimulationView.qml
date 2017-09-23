@@ -62,7 +62,7 @@ Rectangle {
                     width: Style.touchableSize * 2
                     height: width
 
-                    source: "qrc:/images/play.png"
+                    source: "qrc:/images/buttons/play.png"
                     smooth: true
                     antialiasing: true
 

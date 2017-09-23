@@ -270,7 +270,7 @@ Item {
 
             width: Style.touchableSize
             height: width
-            source: dashboardRoot.running ? "qrc:/images/pause.png" : "qrc:/images/play.png"
+            source: dashboardRoot.running ? "qrc:/images/buttons/pause.png" : "qrc:/images/buttons/play.png"
 
             opacity: othersPressed ? hiddenOpacity : 1.0
 

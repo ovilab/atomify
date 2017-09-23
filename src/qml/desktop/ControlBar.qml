@@ -97,7 +97,7 @@ Rectangle {
                 fileDialogSave.visible = true
             })
         }
-        iconSource: "qrc:/images/camera.png"
+        iconSource: "qrc:/images/buttons/camera.png"
     }
 
     Settings {
