@@ -312,8 +312,8 @@ Scene3D {
 
         ForwardFrameGraph {
             id: forwardFrameGraph
-            //            surface: deferredFrameGraph.surface
             camera: visualizer.camera
+
             atomLayer: atomLayer
             guideLayer: guideLayer
             outlineLayer: outlineLayer
@@ -325,7 +325,6 @@ Scene3D {
             camera: visualizer.camera
             width: Math.max(10, root.width, root.height)
             height: width
-            surface: forwardFrameGraph.surface
             atomLayer: atomLayer
             guideLayer: guideLayer
             outlineLayer: outlineLayer
