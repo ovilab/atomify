@@ -102,8 +102,8 @@ void Computes::synchronizeQML(LAMMPSController *lammpsController)
     }
 
     for(QObject *obj : m_data) {
-        CPCompute *compute = qobject_cast<CPCompute*>(obj);
-        compute->updateData1D();
+        SimulatorControl *control = qobject_cast<SimulatorControl*>(obj);
+        control->updateData1D();
     }
 }
 

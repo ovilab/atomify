@@ -95,7 +95,6 @@ void Fixes::synchronize(LAMMPSController *lammpsController)
 {
     if(!lammpsController->lammps()) return;
 
-
     for(QObject *object : m_data) {
         CPFix *fix = qobject_cast<CPFix*>(object);
         fix->copyData(lammpsController);
@@ -104,8 +103,8 @@ void Fixes::synchronize(LAMMPSController *lammpsController)
 
 void Fixes::updateThreadOnDataObjects(QThread *thread) {
     for(QObject *obj : m_data) {
-        CPFix *fix = qobject_cast<CPFix*>(obj);
-        for(QVariant &variant : fix->data1D()) {
+        SimulatorControl *control = qobject_cast<SimulatorControl*>(obj);
+        for(QVariant &variant : control->data1D()) {
             Data1D *data = variant.value<Data1D *>();
             if(data->thread() != thread) {
                 data->moveToThread(thread);
