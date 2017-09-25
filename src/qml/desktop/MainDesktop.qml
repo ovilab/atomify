@@ -167,7 +167,7 @@ Rectangle {
 
                 onCurrentIndexChanged: {
                     root.viewMode = model[currentIndex].mode
-                    if(root.viewMode === "edit") messageOverlay.hideClickedAtLeastOnce = true
+                    if(root.viewMode === "edit" || root.viewMode === "analyse") messageOverlay.hideClickedAtLeastOnce = true
                 }
 
                 Connections {
