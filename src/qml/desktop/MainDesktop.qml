@@ -127,8 +127,10 @@ Rectangle {
                         hoverEnabled: true
                         onHoveredChanged: {
                             if(containsMouse) {
+                                logoLabel.text = "Atomify<br>2.1.2"
                                 root.title = "Caffeinify"
                             } else {
+                                logoLabel.text = "Atomify<br>2.1.2"
                                 root.title = "Atomify"
                             }
                         }
