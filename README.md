@@ -29,21 +29,19 @@ Coming soon.
 
 
 ## How to build ##
-If you have Homebrew (macOS), you can install with `brew install https://raw.githubusercontent.com/ovilab/atomify/dev/macos/atomify.rb`.
-
 Step 1)
 You will need Qt 5.9. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download-open-source/](https://www.qt.io/download-open-source/) and install it from there. When you run the installer, you can just press skip when it asks you for the account. If you are using Mac, you can also uncheck the ~10GB iOS package unless you want that.
 
 **If you are on Ubuntu, you will also need OpenGL libraries. You can achieve this by running `sudo apt install libgl1-mesa-dev`.**
 
 Step 2)
-Clone the repository `git clone --recursive https://github.com/ovilab/atomify.git`
+Clone the Atomify repository `git clone --recursive https://github.com/ovilab/atomify.git`
 
 Step 3)
 Open the atomify directory and run `python configure.py` which will configure and compile LAMMPS. 
 
 Step 4)
-Open atomify.pro in Qt Creator and build/run (remember to choose Release mode for better performance).
+Open atomify.pro in Qt Creator and build/run (remember to choose Release mode for maximum performance).
 
 ## How to add/remove LAMMPS packages ##
 If you compiled Atomify yourself, you can easily modify the LAMMPS installation (packages and your own code).
