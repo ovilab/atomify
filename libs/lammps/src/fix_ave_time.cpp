@@ -1152,11 +1152,19 @@ bigint FixAveTime::nextvalid()
 }
 
 void *FixAveTime::extract(const char *str, int &dim) {
-  dim = 1;
+  dim = 0;
   if (strcmp(str,"nrows") == 0) return (void *) &nrows;
   if (strcmp(str,"nvalid") == 0) return (void *) &nvalid;
   if (strcmp(str,"nvalues") == 0) return (void *) &nvalues;
   if (strcmp(str,"mode") == 0) return (void *) &mode;
+  if (strcmp(str,"which") == 0) {
+    dim = 1;
+    return (void *) &which;
+  }
+  if (strcmp(str, "ids") == 0) {
+    dim = 2;
+    return (void*)ids;
+  }
   
   return NULL;
 }
