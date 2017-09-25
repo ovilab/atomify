@@ -1159,7 +1159,7 @@ void *FixAveTime::extract(const char *str, int &dim) {
   if (strcmp(str,"mode") == 0) return (void *) &mode;
   if (strcmp(str,"which") == 0) {
     dim = 1;
-    return (void *) &which;
+    return (void *)which;
   }
   if (strcmp(str, "ids") == 0) {
     dim = 2;
