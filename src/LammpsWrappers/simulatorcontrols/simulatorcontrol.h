@@ -68,6 +68,10 @@ public:
     static int getNextId();
     ~SimulatorControl();
     bool enabled() const;
+    Q_INVOKABLE void exportToMatlabFile(QString fileName);
+    Q_INVOKABLE void exportToPythonFile(QString fileName);
+    Q_INVOKABLE void exportToTextFile(QString fileName);
+    Q_INVOKABLE void clear();
     QString identifier() const;
     QString command() const;
     QVariantList dependencies() const;
@@ -92,7 +96,6 @@ public:
     int groupBit() const;
     void updateData1D();
     const std::vector<double> &atomData() const;
-
     QString type() const;
 
 signals:
@@ -114,7 +117,6 @@ signals:
     void yLabelChanged(QString yLabel);
     void interactiveChanged(bool interactive);
     void hoveredChanged(bool hovered);
-
     void typeChanged(QString type);
 
 public slots:
