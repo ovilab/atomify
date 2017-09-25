@@ -9,6 +9,7 @@ import QtQuick.Controls.Styles 1.4
 Window {
     id: root
     property Compute compute
+    property Fix fix
     property Variable variable
     width: 500
     height: 500
@@ -17,6 +18,17 @@ Window {
         compute.data1D["histogram"].xySeries = series
         compute.willBeDestroyed.connect(function() {
             compute = null
+            timer.stop()
+            root.close()
+        })
+    }
+
+    onFixChanged: {
+        if(!fix) return
+        fix.histogram.xySeries = series
+        fix.willBeDestroyed.connect(function() {
+            compute = null
+            fix = null
             timer.stop()
             root.close()
         })
@@ -36,6 +48,7 @@ Window {
         if(!visible) {
             if(compute) compute.data1D["histogram"].updatedHistogram.disconnect(updateGraph)
             if(variable) variable.data.updatedHistogram.disconnect(updateGraph)
+            if(fix) fix.histogram.updatedHistogram.disconnect(updateGraph)
         }
     }
 
@@ -56,6 +69,7 @@ Window {
         onTriggered: {
             if(compute) updateGraph(compute.data1D["histogram"])
             if(variable) updateGraph(variable.data)
+            if(fix) updateGraph(fix.histogram)
         }
     }
 
@@ -78,6 +92,7 @@ Window {
                 title: {
                     if(compute) return compute.identifier
                     if(variable) return variable.identifier
+                    if(fix) return fix.identifier
                     return ""
                 }
 

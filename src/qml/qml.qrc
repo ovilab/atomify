@@ -86,5 +86,6 @@
         <file>desktop/items/ScrollableNumberField.qml</file>
         <file>desktop/RightBar/PeriodicImagesControl.qml</file>
         <file>desktop/RightBar/GroupsColumn.qml</file>
+        <file>plotting/Plot1D.qml</file>
     </qresource>
 </RCC>

@@ -13,6 +13,7 @@
 #include "mousemover.h"
 #include "mysimulator.h"
 #include "highlighter.h"
+#include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 #include "LammpsWrappers/simulatorcontrols/cpcompute.h"
 #include "LammpsWrappers/simulatorcontrols/cpfix.h"
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
@@ -180,6 +181,8 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
     qmlRegisterType<CPCompute>("Atomify", 1, 0, "Compute");
+    qmlRegisterUncreatableType<SimulatorControl>("Atomify", 1, 0, "SimulatorControl",
+                                              "Cannot create abstract type SimulatorControl. This must be subclassed.");
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
     qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
