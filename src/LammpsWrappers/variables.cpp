@@ -76,8 +76,8 @@ void Variables::synchronizeQML(LAMMPSController *lammpsController)
     }
 
     for(QObject *obj : m_data) {
-        CPVariable *variable = qobject_cast<CPVariable*>(obj);
-        variable->updateData1D();
+        SimulatorControl *control = qobject_cast<SimulatorControl*>(obj);
+        control->updateData1D();
     }
 }
 
@@ -170,4 +170,16 @@ void Variables::reset()
     data.clear();
     setModel(QVariant::fromValue(m_data));
     setCount(0);
+}
+
+void Variables::updateThreadOnDataObjects(QThread *thread) {
+    for(QObject *obj : m_data) {
+        SimulatorControl *control = qobject_cast<SimulatorControl *>(obj);
+        for(QVariant &variant : control->data1D()) {
+            Data1D *data = variant.value<Data1D *>();
+            if(data->thread() != thread) {
+                data->moveToThread(thread);
+            }
+        }
+    }
 }

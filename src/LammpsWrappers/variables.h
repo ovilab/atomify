@@ -13,12 +13,12 @@ class Variables : public QObject
 public:
     explicit Variables(QObject *parent = 0);
     void synchronize(class LAMMPSController *lammpsController);
+    void synchronizeQML(LAMMPSController *lammpsController);
+    void updateThreadOnDataObjects(QThread *thread);
     int count() const;
     void reset();
     QVariant model() const;
     QVector<class CPVariable*> variables();
-
-    void synchronizeQML(LAMMPSController *lammpsController);
 signals:
     void countChanged(int count);
     void modelChanged(QVariant model);
@@ -28,12 +28,12 @@ public slots:
     void setModel(QVariant model);
 
 private:
-    void add(QString identifier, class LAMMPSController *lammpsController);
-    void remove(QString identifier);
-    int m_count = 0;
     QList<QObject*> m_data;
     QMap<QString, QObject*> m_dataMap;
     QVariant m_model;
+    int m_count = 0;
+    void add(QString identifier, class LAMMPSController *lammpsController);
+    void remove(QString identifier);
     bool isSupported(class LAMMPSController *lammpsController, int ivar);
     void copyData(LAMMPSController *lammpsController);
     bool addOrRemove(LAMMPSController *lammpsController);
