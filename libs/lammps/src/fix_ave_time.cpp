@@ -45,7 +45,7 @@ FixAveTime::FixAveTime(LAMMPS *lmp, int narg, char **arg) :
   Fix(lmp, narg, arg),
   nvalues(0), which(NULL), argindex(NULL), value2index(NULL), 
   offcol(NULL), varlen(NULL), ids(NULL),
-  fp(NULL), offlist(NULL), format(NULL), format_user(NULL), 
+  fp(NULL), nrows(0), offlist(NULL), format(NULL), format_user(NULL), 
   vector(NULL), vector_total(NULL), vector_list(NULL),
   column(NULL), array(NULL), array_total(NULL), array_list(NULL)
 {
@@ -1149,4 +1149,13 @@ bigint FixAveTime::nextvalid()
     nvalid -= (nrepeat-1)*nevery;
   if (nvalid < update->ntimestep) nvalid += nfreq;
   return nvalid;
+}
+
+void *FixAveTime::extract(const char *str, int &dim) {
+  dim = 1;
+  if (strcmp(str,"nrows") == 0) return (void *) &nrows;
+  if (strcmp(str,"nvalues") == 0) return (void *) &nvalues;
+  if (strcmp(str,"mode") == 0) return (void *) &mode;
+  
+  return NULL;
 }

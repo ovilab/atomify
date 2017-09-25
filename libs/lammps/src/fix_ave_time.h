@@ -36,7 +36,7 @@ class FixAveTime : public Fix {
   double compute_scalar();
   double compute_vector(int);
   double compute_array(int,int);
-
+  void *extract(const char *, int &);
  private:
   int me,nvalues;
   int nrepeat,nfreq,irepeat;
