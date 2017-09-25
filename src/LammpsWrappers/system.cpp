@@ -454,6 +454,7 @@ void System::synchronizeQML(LAMMPSController *lammpsController)
 void System::updateThreadOnDataObjects(QThread *thread)
 {
     m_computes->updateThreadOnDataObjects(thread);
+    m_fixes->updateThreadOnDataObjects(thread);
 }
 
 QVector3D System::cameraPosition() const
