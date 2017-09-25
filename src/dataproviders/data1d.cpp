@@ -116,7 +116,6 @@ void Data1D::updateHistogram(QLineSeries *series)
         int bin = (p-min) / dx;
         if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
         counts[bin]++;
-        qDebug() << "Value: " << p << " in bin " << bin;
     }
 
     // Todo: store this value on object instead?
