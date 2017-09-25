@@ -97,6 +97,18 @@ void Fixes::synchronize(LAMMPSController *lammpsController)
     }
 }
 
+void Fixes::updateThreadOnDataObjects(QThread *thread) {
+    for(QObject *obj : m_data) {
+        CPFix *fix = qobject_cast<CPFix*>(obj);
+        for(QVariant &variant : fix->data1D()) {
+            Data1D *data = variant.value<Data1D *>();
+            if(data->thread() != thread) {
+                data->moveToThread(thread);
+            }
+        }
+    }
+}
+
 int Fixes::count() const
 {
     return m_count;

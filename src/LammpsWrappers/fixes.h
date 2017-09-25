@@ -19,6 +19,7 @@ public:
     int count() const;
 
     void synchronizeQML(LAMMPSController *lammpsController);
+    void updateThreadOnDataObjects(QThread *thread);
 signals:
     void modelChanged(QVariant model);
     void countChanged(int count);
