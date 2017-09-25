@@ -19,7 +19,6 @@ protected:
     virtual void updateCommand() override;
     virtual QList<QString> resetCommands() override;
     QString createCommandPrefix() override;
-    long lastUpdate = -1;
 
 public:
     CPFix(Qt3DCore::QNode *parent = 0);

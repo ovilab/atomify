@@ -227,9 +227,6 @@ bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsContro
 
 void CPFix::copyData(LAMMPSController *lammpsController)
 {
-    // if(lammpsController->system->timesteps() % m_frequency != 0) return;
-    if(lastUpdate != -1 && (lammpsController->system->currentTimestep()-lastUpdate) < m_frequency) return;
-    // if(lammpsController->system->timesteps() % m_frequency != 0) return;
     LAMMPS_NS::Fix *lmp_fix = lammpsController->findFixByIdentifier(identifier());
     if(lmp_fix == nullptr) return;
     if(copyData(dynamic_cast<LAMMPS_NS::FixAveChunk*>(lmp_fix), lammpsController)) return;
