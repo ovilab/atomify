@@ -6,7 +6,6 @@
 #include <error.h>
 #include <update.h>
 #include <atom.h>
-using std::vector;
 
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
@@ -180,43 +179,6 @@ void CPCompute::exportToMatlabFile(QString fileName)
     file.close();
 }
 
-int CPCompute::groupBit() const
-{
-    return m_groupBit;
-}
-
-const vector<double> &CPCompute::atomData() const
-{
-    return m_atomData;
-}
-
-int CPCompute::perAtomIndex() const
-{
-    return m_perAtomIndex;
-}
-
-int CPCompute::numPerAtomValues() const
-{
-    return m_numPerAtomValues;
-}
-
-bool CPCompute::hovered() const
-{
-    return m_hovered;
-}
-
-void CPCompute::updateData1D()
-{
-    for(QVariant &variant : data1D()) {
-        Data1D *data = variant.value<Data1D *>();
-        if(data->isHistogram()) {
-            emit data->updatedHistogram(data);
-        } else {
-            emit data->updated();
-        }
-    }
-}
-
 bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     // Handles per atom computes
     if(!compute) return false;
@@ -228,7 +190,7 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     if(numCols == 0) {
         setNumPerAtomValues(1);
         double *values = compute->vector_atom;
-        m_atomData = vector<double>(values, values+numAtoms);
+        m_atomData = std::vector<double>(values, values+numAtoms);
     } else {
         double **values = compute->array_atom;
         setNumPerAtomValues(numCols);
@@ -326,7 +288,6 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
 bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController) {
     Q_UNUSED(lammpsController);
     if(!compute) return false;
-    // compute->compute_array();
     int numBins = compute->size_array_rows;         // rows in global array
     int numColumns = compute->size_array_cols;      // columns in global array
     int numPairs = (numColumns - 1)/2;
@@ -576,159 +537,6 @@ bool CPCompute::existsInLammps(LAMMPSController *lammpsController)
 {
     Compute *compute = lammpsController->findComputeByIdentifier(identifier());
     return compute!=nullptr;
-}
-
-bool CPCompute::isVector() const
-{
-    return m_isVector;
-}
-
-QString CPCompute::group() const
-{
-    return m_group;
-}
-
-int CPCompute::frequency() const
-{
-    return m_frequency;
-}
-
-bool CPCompute::hasScalarData() const
-{
-    return m_hasScalarData;
-}
-
-float CPCompute::scalarValue() const
-{
-    return m_scalarValue;
-}
-
-QString CPCompute::xLabel() const
-{
-    return m_xLabel;
-}
-
-QString CPCompute::yLabel() const
-{
-    return m_yLabel;
-}
-
-bool CPCompute::interactive() const
-{
-    return m_interactive;
-}
-
-bool CPCompute::isPerAtom() const
-{
-    return m_isPerAtom;
-}
-
-void CPCompute::setIsVector(bool isVector)
-{
-    if (m_isVector == isVector)
-        return;
-
-    m_isVector = isVector;
-    emit isVectorChanged(isVector);
-}
-
-void CPCompute::setGroup(QString group)
-{
-    if (m_group == group)
-        return;
-
-    m_group = group;
-    emit groupChanged(group);
-}
-
-void CPCompute::setFrequency(int frequency)
-{
-    if (m_frequency == frequency)
-        return;
-
-    m_frequency = frequency;
-    emit frequencyChanged(frequency);
-}
-
-void CPCompute::setHasScalarData(bool hasScalarData)
-{
-    if (m_hasScalarData == hasScalarData)
-        return;
-
-    m_hasScalarData = hasScalarData;
-    emit hasScalarDataChanged(hasScalarData);
-}
-
-void CPCompute::setScalarValue(float scalarValue)
-{
-    if (m_scalarValue == scalarValue)
-        return;
-
-    m_scalarValue = scalarValue;
-    emit scalarValueChanged(scalarValue);
-}
-
-void CPCompute::setXLabel(QString xLabel)
-{
-    if (m_xLabel == xLabel)
-        return;
-
-    m_xLabel = xLabel;
-    emit xLabelChanged(xLabel);
-}
-
-void CPCompute::setYLabel(QString yLabel)
-{
-    if (m_yLabel == yLabel)
-        return;
-
-    m_yLabel = yLabel;
-    emit yLabelChanged(yLabel);
-}
-
-void CPCompute::setInteractive(bool interactive)
-{
-    if (m_interactive == interactive)
-        return;
-
-    m_interactive = interactive;
-    emit interactiveChanged(interactive);
-}
-
-void CPCompute::setIsPerAtom(bool isPerAtom)
-{
-    if (m_isPerAtom == isPerAtom)
-        return;
-
-    m_isPerAtom = isPerAtom;
-    emit isPerAtomChanged(isPerAtom);
-}
-
-void CPCompute::setHovered(bool hovered)
-{
-    if (m_hovered == hovered)
-        return;
-
-    m_hovered = hovered;
-    emit hoveredChanged(hovered);
-}
-
-void CPCompute::setPerAtomIndex(int perAtomIndex)
-{
-    if (m_perAtomIndex == perAtomIndex)
-        return;
-
-    m_perAtomIndex = perAtomIndex;
-    emit perAtomIndexChanged(perAtomIndex);
-}
-
-void CPCompute::setNumPerAtomValues(int numPerAtomValues)
-{
-    if (m_numPerAtomValues == numPerAtomValues)
-        return;
-
-    m_numPerAtomValues = numPerAtomValues;
-    emit numPerAtomValuesChanged(numPerAtomValues);
 }
 
 QList<QString> CPCompute::resetCommands()
