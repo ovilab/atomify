@@ -2,10 +2,11 @@
 #include "lammpscontroller.h"
 #include "../system.h"
 #include "../../dataproviders/data2d.h"
-#include <iostream>
-#include <compute_chunk_atom.h>
 #include "../../dataproviders/data1d.h"
+#include <iostream>
 #include <lmptype.h>
+
+#include <style_compute.h>
 
 CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
     m_histogram(new Data1D(this))
@@ -109,6 +110,22 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
     }
 }
 
+QString CPFix::getType(LAMMPSController *lammpsController, int which, QString identifier)
+{
+    enum{COMPUTE,FIX,VARIABLE};
+
+    if(which == COMPUTE) {
+        LAMMPS_NS::Compute *compute = lammpsController->findComputeByIdentifier(identifier);
+        if(compute) {
+            LAMMPS_NS::ComputeRDF *compute_rdf = dynamic_cast<LAMMPS_NS::ComputeRDF *>(compute);
+            if(compute_rdf) {
+                return QString("Compute RDF");
+            }
+        }
+    }
+    return QString("");
+}
+
 bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsController) {
     if(!fix) return false;
     if(m_nextValidTimestep > lammpsController->system->currentTimestep()) {
@@ -130,6 +147,7 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
         if(mode == SCALAR) {
             // Time dependent solution with 1 or more values
             if(nvalues == 1) {
+                // A single value
                 double value = fix->compute_scalar();
                 setHasScalarData(true);
                 setScalarValue(value);
@@ -137,6 +155,7 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
                 data->setLabel(identifier());
                 data->add(lammpsController->system->simulationTime(), value);
             } else {
+                // Multiple values
                 for(int i=0; i<nvalues; i++) {
                     double value = fix->compute_vector(i);
                     QString key = QString("Value %1").arg(i+1);
@@ -150,7 +169,28 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
             setInteractive(true);
             return true;
         } else {
-            // qDebug() << identifier() << " is spatial dependent with  num rows: " << nrows << " and nvalues: " << nvalues;
+            char **ids = reinterpret_cast<char**>(fix->extract("ids", dim));
+            int *which = reinterpret_cast<int*>(fix->extract("which", dim));
+
+            for(int i=0; i<nvalues; i++) {
+                QString type = getType(lammpsController, which[i], ids[i]);
+
+                QString key = QString("Value %1").arg(i+1);
+                Data1D *data = ensureExists(key, true);
+                data->setLabel(key);
+                data->clear(true);
+                for(int j=0; j<nrows; j++) {
+                    double value = fix->compute_array(j, i);
+                    if(type=="ComputeRDF") {
+                        LAMMPS_NS::ComputeRDF *compute_rdf = dynamic_cast<LAMMPS_NS::ComputeRDF *>(lammpsController->findComputeByIdentifier(QString::fromUtf8(ids[i])));
+                        double binCenter = compute_rdf->array[j][0];
+                        data->add(binCenter, value);
+                    } else {
+                        data->add(j, value);
+                    }
+                }
+            }
+            setInteractive(true);
         }
     }
 
