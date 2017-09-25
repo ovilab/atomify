@@ -103,9 +103,6 @@ bool CPCompute::copyData(ComputePressure *compute, LAMMPSController *lammpsContr
     setYLabel("Pressure");
     data->add(lammpsController->system->simulationTime(), value);
 
-    // Then compute stress tensor
-    // compute->compute_vector();
-    // xx, yy, zz, xy, xz, yz
     QStringList components = {"Pxx", "Pyy", "Pzz", "Pxy", "Pxz", "Pyz"};
 
     int numVectorValues = 6;
@@ -148,7 +145,6 @@ bool CPCompute::copyData(ComputeRDF *compute, LAMMPSController *lammpsController
 
 bool CPCompute::copyData(ComputeMSD *compute, LAMMPSController *lammpsController) {
     if(!compute) return false;
-    // compute->compute_vector();
 
     // http://www.ascii.cl/htmlcodes.htm
     // QStringList components = {"∆x<sup>2</sup>", "∆y<sup>2</sup>", "∆z<sup>2</sup>", "∆r<sup>2</sup>"};
