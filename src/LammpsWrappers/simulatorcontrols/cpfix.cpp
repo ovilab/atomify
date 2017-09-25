@@ -143,7 +143,8 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
     mode = *value;
 
     LAMMPS_NS::bigint *nextValidTimestep = reinterpret_cast<LAMMPS_NS::bigint*>(fix->extract("nvalid", dim));
-    if(m_nextValidTimestep == lammpsController->system->currentTimestep()) {
+    if(m_nextValidTimestep+1 == lammpsController->system->currentTimestep()) {
+        // +1 because fix_atomify is invoked before all other fixes, so we need the next timestep
         if(mode == SCALAR) {
             // Time dependent solution with 1 or more values
             if(nvalues == 1) {
@@ -174,14 +175,13 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
 
             for(int i=0; i<nvalues; i++) {
                 QString type = getType(lammpsController, which[i], ids[i]);
-
                 QString key = QString("Value %1").arg(i+1);
                 Data1D *data = ensureExists(key, true);
                 data->setLabel(key);
                 data->clear(true);
                 for(int j=0; j<nrows; j++) {
                     double value = fix->compute_array(j, i);
-                    if(type=="ComputeRDF") {
+                    if(type=="Compute RDF") {
                         LAMMPS_NS::ComputeRDF *compute_rdf = dynamic_cast<LAMMPS_NS::ComputeRDF *>(lammpsController->findComputeByIdentifier(QString::fromUtf8(ids[i])));
                         double binCenter = compute_rdf->array[j][0];
                         data->add(binCenter, value);
