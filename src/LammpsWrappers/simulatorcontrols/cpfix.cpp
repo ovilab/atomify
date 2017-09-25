@@ -16,7 +16,7 @@ CPFix::~CPFix() { }
 bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsController) {
     enum{BIN1D,BIN2D,BIN3D,BINSPHERE,BINCYLINDER,
          TYPE,MOLECULE,COMPUTE,FIX,VARIABLE};
-    return false; // TODO: This fix is broken
+    // return false; // TODO: This fix is broken
     if(!fix) return false;
     int dimension;
     LAMMPS_NS::ComputeChunkAtom *chunk = static_cast<LAMMPS_NS::ComputeChunkAtom*>(fix->extract("cchunk", dimension));
@@ -113,17 +113,25 @@ bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsContro
     if(!fix) return false;
     int nbins;
     fix->extract("nbins", nbins);
+    qDebug() << "We have " << nbins << " bins.";
+    if(nbins>10000) return false;
+
     m_histogram->setEnabled(true);
 
 //    for(int i=0; i<nbins; i++) {
 //        double binCenter = fix->compute_array(i, 0);
 //        double binContent = fix->compute_array(i, 2);
+//        m_histogram->clear(true);
+//        m_histogram->add(QPointF(binCenter, binContent), true);
 //    }
-//    std::vector<histogramValues> values;
-//    values.reserve(nbins);
-//    for(int i=0; i<nbins; i++) {
-//        values.push_back(lmp_fix->compute_array(i,2));
-//    }
+    std::vector<double> values;
+    values.reserve(nbins);
+    for(int i=0; i<nbins; i++) {
+        values.push_back(fix->compute_array(i,2));
+    }
+    m_histogram->setBins(nbins);
+    m_histogram->createHistogram(values);
+    setInteractive(true);
 }
 
 void CPFix::copyData(LAMMPSController *lammpsController)
@@ -134,6 +142,7 @@ void CPFix::copyData(LAMMPSController *lammpsController)
     LAMMPS_NS::Fix *lmp_fix = lammpsController->findFixByIdentifier(identifier());
     if(lmp_fix == nullptr) return;
     if(copyData(dynamic_cast<LAMMPS_NS::FixAveChunk*>(lmp_fix), lammpsController)) return;
+    if(copyData(dynamic_cast<LAMMPS_NS::FixAveHisto*>(lmp_fix), lammpsController)) return;
 }
 
 bool CPFix::interactive() const
