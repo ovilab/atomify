@@ -112,6 +112,11 @@ bool SimulatorControl::isMirror() const
     return m_isMirror;
 }
 
+QVariantMap SimulatorControl::data1D() const
+{
+    return m_data1D;
+}
+
 bool SimulatorControl::enabled() const
 {
     return m_enabled;
@@ -180,4 +185,23 @@ void SimulatorControl::setIsMirror(bool isMirror)
         m_identifierPrefix = "atomify_";
     }
     emit isMirrorChanged(isMirror);
+}
+
+void SimulatorControl::setData1D(QVariantMap data1D)
+{
+    if (m_data1D == data1D)
+        return;
+
+    m_data1D = data1D;
+    emit data1DChanged(m_data1D);
+}
+
+Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
+    if(!m_data1DRaw.contains(key)) {
+        Data1D *data = new Data1D();
+        data->setEnabled(enabledByDefault);
+        m_data1DRaw.insert(key, data);
+        m_data1D.insert(key, QVariant::fromValue<Data1D*>(data));
+    }
+    return m_data1DRaw[key];
 }

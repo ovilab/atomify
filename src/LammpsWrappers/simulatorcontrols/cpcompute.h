@@ -23,8 +23,6 @@ class CPCompute : public SimulatorControl
     Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
     Q_PROPERTY(bool hasScalarData READ hasScalarData WRITE setHasScalarData NOTIFY hasScalarDataChanged)
     Q_PROPERTY(float scalarValue READ scalarValue WRITE setScalarValue NOTIFY scalarValueChanged)
-    Q_PROPERTY(int num1DData READ num1DData WRITE setNum1DData NOTIFY num1DDataChanged)
-    Q_PROPERTY(QVariantMap data1D READ data1D WRITE setData1D NOTIFY data1DChanged)
     Q_PROPERTY(QString xLabel READ xLabel WRITE setXLabel NOTIFY xLabelChanged)
     Q_PROPERTY(QString yLabel READ yLabel WRITE setYLabel NOTIFY yLabelChanged)
 
@@ -43,8 +41,6 @@ public:
     int frequency() const;
     bool hasScalarData() const;
     float scalarValue() const;
-    int num1DData() const;
-    QVariantMap data1D() const;
     QString xLabel() const;
     QString yLabel() const;
     bool interactive() const;
@@ -61,8 +57,6 @@ signals:
     void frequencyChanged(int frequency);
     void hasScalarDataChanged(bool hasScalarData);
     void scalarValueChanged(float scalarValue);
-    void num1DDataChanged(int num1DData);
-    void data1DChanged(QVariantMap data1D);
     void xLabelChanged(QString xLabel);
     void yLabelChanged(QString yLabel);
     void interactiveChanged(bool interactive);
@@ -77,8 +71,6 @@ public slots:
     void setFrequency(int frequency);
     void setHasScalarData(bool hasScalarData);
     void setScalarValue(float scalarValue);
-    void setNum1DData(int num1DData);
-    void setData1D(QVariantMap data1D);
     void setXLabel(QString xLabel);
     void setYLabel(QString yLabel);
     void setInteractive(bool interactive);
@@ -102,7 +94,6 @@ private:
     bool copyData(ComputeClusterAtom *compute, LAMMPSController *lammpsController);
     bool copyData(ComputeCNAAtom *compute, LAMMPSController *lammpsController);
     bool copyData(Compute *compute, LAMMPSController *lammpsController);
-    class Data1D *ensureExists(QString key, bool enabledByDefault);
 
     bool m_isVector = false;
     double m_time = 0;
@@ -110,10 +101,7 @@ private:
     int m_frequency = 10;
     bool m_hasScalarData = false;
     float m_scalarValue = 0.0;
-    int m_num1DData = 0;
-    QVariantMap m_data1D;
     std::vector<double> m_atomData;
-    QMap<QString, class Data1D*> m_data1DRaw;
     QString m_xLabel;
     QString m_yLabel;
     bool m_interactive = false;

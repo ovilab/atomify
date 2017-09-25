@@ -180,16 +180,6 @@ void CPCompute::exportToMatlabFile(QString fileName)
     file.close();
 }
 
-Data1D *CPCompute::ensureExists(QString key, bool enabledByDefault) {
-    if(!m_data1DRaw.contains(key)) {
-        Data1D *data = new Data1D();
-        data->setEnabled(enabledByDefault);
-        m_data1DRaw.insert(key, data);
-        m_data1D.insert(key, QVariant::fromValue<Data1D*>(data));
-    }
-    return m_data1DRaw[key];
-}
-
 int CPCompute::groupBit() const
 {
     return m_groupBit;
@@ -613,16 +603,6 @@ float CPCompute::scalarValue() const
     return m_scalarValue;
 }
 
-int CPCompute::num1DData() const
-{
-    return m_num1DData;
-}
-
-QVariantMap CPCompute::data1D() const
-{
-    return m_data1D;
-}
-
 QString CPCompute::xLabel() const
 {
     return m_xLabel;
@@ -686,24 +666,6 @@ void CPCompute::setScalarValue(float scalarValue)
 
     m_scalarValue = scalarValue;
     emit scalarValueChanged(scalarValue);
-}
-
-void CPCompute::setNum1DData(int num1DData)
-{
-    if (m_num1DData == num1DData)
-        return;
-
-    m_num1DData = num1DData;
-    emit num1DDataChanged(num1DData);
-}
-
-void CPCompute::setData1D(QVariantMap data1D)
-{
-    if (m_data1D == data1D)
-        return;
-
-    m_data1D = data1D;
-    emit data1DChanged(data1D);
 }
 
 void CPCompute::setXLabel(QString xLabel)
