@@ -11,22 +11,22 @@ Data1D::Data1D(QObject *parent) : QObject(parent)
 
 }
 
-float Data1D::xMin()
+qreal Data1D::xMin()
 {
     return m_xMin;
 }
 
-float Data1D::xMax()
+qreal Data1D::xMax()
 {
     return m_xMax;
 }
 
-float Data1D::yMin()
+qreal Data1D::yMin()
 {
     return m_yMin;
 }
 
-float Data1D::yMax()
+qreal Data1D::yMax()
 {
     return m_yMax;
 }
@@ -47,33 +47,34 @@ void Data1D::updateLimits()
     qreal yMax = m_points.first().y();
     qreal yMin = m_points.first().y();
 
-    for(QPointF &p : m_points) {
+    for(const QPointF &p : m_points) {
         xMax = std::max(p.x(), xMax);
         xMin = std::min(p.x(), xMin);
         yMax = std::max(p.y(), yMax);
         yMin = std::min(p.y(), yMin);
     }
     m_minMaxValuesDirty = false; // in case signals below trigger new calculation
+
     bool anyChanges = false;
-    if(xMax != m_xMax) {
+    if(!qFuzzyCompare(xMax,m_xMax)) {
         m_xMax = xMax;
         emit xMaxChanged(m_xMax);
         anyChanges = true;
     }
 
-    if(xMin != m_xMin) {
+    if(!qFuzzyCompare(xMin, m_xMin)) {
         m_xMin = xMin;
         emit xMinChanged(m_xMin);
         anyChanges = true;
     }
 
-    if(yMax != m_yMax) {
+    if(!qFuzzyCompare(yMax, m_yMax)) {
         m_yMax = yMax;
         emit yMaxChanged(m_yMax);
         anyChanges = true;
     }
 
-    if(yMin != m_yMin) {
+    if(!qFuzzyCompare(yMin, m_yMin)) {
         m_yMin = yMin;
         emit yMinChanged(m_yMin);
         anyChanges = true;
@@ -105,21 +106,25 @@ void Data1D::updateHistogram(QLineSeries *series)
     double min = *std::min_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
     double max = *std::max_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
 
-    int bins = 20; // TODO: be clever choosing this or allow user
-    double dx = (max-min) / 20;
-    std::vector<int> counts(bins, 0);
+    if(max == min) {
+        // Ensure dx is not zero
+        max = min+1;
+    }
+    double dx = (max-min) / m_bins;
+    std::vector<int> counts(m_bins, 0);
     for(double p : m_cleanHistogramPoints) {
-
         int bin = (p-min) / dx;
-        if(bin >= bins) bin = bins-1; // The very last number is exactly on the edge, put it in last bin
+        if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
         counts[bin]++;
+        qDebug() << "Value: " << p << " in bin " << bin;
     }
 
+    // Todo: store this value on object instead?
     QVector<QPointF> histogram;
-    histogram.reserve(3*bins+1);
+    histogram.reserve(3*m_bins+1);
     histogram.append(QPointF(min, 0));
     double maxCount = 0;
-    for(int bin = 0; bin<bins; bin++) {
+    for(int bin = 0; bin<m_bins; bin++) {
         double binMin = min + bin*dx;
         double binMax = min + (bin+1)*dx;
         double value = counts[bin];
@@ -162,6 +167,7 @@ void Data1D::clear(bool silent)
     QMutexLocker locker(&m_mutex);
     m_minMaxValuesDirty = true;
     m_points.clear();
+    m_histogramPoints.clear();
     if(!silent && m_xySeries) {
         updateXYSeries(m_xySeries);
     }
@@ -251,6 +257,15 @@ void Data1D::setLabel(QString label)
         emit labelChanged(m_label);
 }
 
+void Data1D::setBins(int bins)
+{
+    if (m_bins == bins)
+            return;
+
+        m_bins = bins;
+        emit binsChanged(m_bins);
+}
+
 bool Data1D::isHistogram() const
 {
     return m_isHistogram;
@@ -264,4 +279,9 @@ void Data1D::setIsHistogram(bool isHistogram)
 QString Data1D::label() const
 {
     return m_label;
+}
+
+int Data1D::bins() const
+{
+    return m_bins;
 }
