@@ -52,6 +52,7 @@ public slots:
 private:
     QString m_group = "all";
     int m_frequency = 10;
+    long m_nextValidTimestep = -1;
     bool m_interactive = false;
     bool copyData(LAMMPS_NS::FixAveChunk *fix, class LAMMPSController *lammpsController);
     bool copyData(LAMMPS_NS::FixAveHisto *fix, class LAMMPSController *lammpsController);

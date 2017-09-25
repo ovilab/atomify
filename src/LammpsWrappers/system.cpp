@@ -165,13 +165,7 @@ void System::synchronize(LAMMPSController *lammpsController)
         return;
     }
     setIsValid(true);
-    m_regions->synchronize(lammpsController);
-    m_groups->synchronize(lammpsController);
-    m_atoms->synchronize(lammpsController);
-    m_computes->synchronize(lammpsController);
-    m_variables->synchronize(lammpsController);
-    m_fixes->synchronize(lammpsController);
-    m_performance->synchronize(lammpsController);
+
     if(lammps->input->lastLine()) {
         setLastCommand(QString::fromUtf8(lammps->input->lastLine()));
     }
@@ -247,6 +241,13 @@ void System::synchronize(LAMMPSController *lammpsController)
     calculateTimestepsPerSeconds(lammps);
     calculateCPURemain(lammps);
 
+    m_regions->synchronize(lammpsController);
+    m_groups->synchronize(lammpsController);
+    m_atoms->synchronize(lammpsController);
+    m_computes->synchronize(lammpsController);
+    m_variables->synchronize(lammpsController);
+    m_fixes->synchronize(lammpsController);
+    m_performance->synchronize(lammpsController);
     m_units->synchronize(lammps);
 }
 

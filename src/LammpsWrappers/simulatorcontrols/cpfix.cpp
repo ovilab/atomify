@@ -5,6 +5,7 @@
 #include <iostream>
 #include <compute_chunk_atom.h>
 #include "../../dataproviders/data1d.h"
+#include <lmptype.h>
 
 CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
     m_histogram(new Data1D(this))
@@ -110,6 +111,11 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
 
 bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsController) {
     if(!fix) return false;
+    if(m_nextValidTimestep > lammpsController->system->currentTimestep()) {
+        // Not ready to measure yet
+        return true;
+    }
+
     enum{SCALAR,VECTOR};
     int nrows, nvalues, dim, mode;
     int *value = reinterpret_cast<int*>(fix->extract("nrows", dim));
@@ -119,24 +125,38 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
     value = reinterpret_cast<int*>(fix->extract("mode", dim));
     mode = *value;
 
-    if(mode == SCALAR) {
-        // Time dependent solution
-        double value = fix->compute_scalar();
-        // qDebug() << identifier() << " is time dependent with num rows: " << nrows << " and nvalues: " << nvalues;
-        setHasScalarData(true);
-        setScalarValue(value);
-        Data1D *data = ensureExists(QString("scalar"), true);
-        data->setLabel(identifier());
-        setXLabel("Time");
-        setYLabel("Value");
-        data->add(lammpsController->system->simulationTime(), value);
-        setInteractive(true);
-        return true;
-    } else {
-        // qDebug() << identifier() << " is spatial dependent with  num rows: " << nrows << " and nvalues: " << nvalues;
+    LAMMPS_NS::bigint *nextValidTimestep = reinterpret_cast<LAMMPS_NS::bigint*>(fix->extract("nvalid", dim));
+    if(m_nextValidTimestep == lammpsController->system->currentTimestep()) {
+        if(mode == SCALAR) {
+            // Time dependent solution with 1 or more values
+            if(nvalues == 1) {
+                double value = fix->compute_scalar();
+                setHasScalarData(true);
+                setScalarValue(value);
+                Data1D *data = ensureExists(QString("scalar"), true);
+                data->setLabel(identifier());
+                data->add(lammpsController->system->simulationTime(), value);
+            } else {
+                for(int i=0; i<nvalues; i++) {
+                    double value = fix->compute_vector(i);
+                    QString key = QString("Value %1").arg(i+1);
+                    qDebug() << "Value " << i << ": " << value;
+                    Data1D *data = ensureExists(key, true);
+                    data->setLabel(key);
+                    data->add(lammpsController->system->simulationTime(), value);
+                }
+            }
+            setXLabel("Time");
+            setYLabel("Value");
+            setInteractive(true);
+            return true;
+        } else {
+            // qDebug() << identifier() << " is spatial dependent with  num rows: " << nrows << " and nvalues: " << nvalues;
+        }
     }
 
-    return false;
+    m_nextValidTimestep = *nextValidTimestep;
+    return true;
 }
 
 bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsController) {
