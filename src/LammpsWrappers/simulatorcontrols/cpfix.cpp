@@ -140,7 +140,6 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
                 for(int i=0; i<nvalues; i++) {
                     double value = fix->compute_vector(i);
                     QString key = QString("Value %1").arg(i+1);
-                    qDebug() << "Value " << i << ": " << value;
                     Data1D *data = ensureExists(key, true);
                     data->setLabel(key);
                     data->add(lammpsController->system->simulationTime(), value);
