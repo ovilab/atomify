@@ -4,24 +4,27 @@ import QtQuick.Layouts 1.0
 import QtQuick.Window 2.2
 import Atomify 1.0
 import QtCharts 2.1
-import QtQuick.Controls.Styles 1.4
 import QtQuick.Dialogs 1.2
+import QtQuick.Controls.Styles 1.4
 
 WindowGL2 {
     id: root
-    property var dataSeries
-    property Variable variable
+    property var dataSeries: []
+    property SimulatorControl control
     width: 500
     height: 500
-    onVariableChanged: {
-        if(!variable) return
+    onControlChanged: {
+        if(!control) return
         updateSeries("line")
-        variable.data.updated.connect(updateGraph)
-        variable.data.xySeries = dataSeries
-        variable.data.updateXYSeries(dataSeries)
-        title = "Variable '"+variable.identifier+"'"
-        variable.willBeDestroyed.connect(function() {
-            variable = null
+        for(var key in control.data1D) {
+            var data = control.data1D[key]
+            data.updated.connect(updateGraphs(key))
+            data.updateXYSeries(dataSeries[key])
+            data.xySeries = dataSeries[key]
+        }
+        title = control.type+" '"+control.identifier+"'"
+        control.willBeDestroyed.connect(function() {
+            control = null
             timer.stop()
             root.close()
         })
@@ -29,34 +32,38 @@ WindowGL2 {
 
     onVisibleChanged: {
         if(!visible) {
-            if(!variable) return
-            variable.data.updated.disconnect(updateGraph)
+            if(!control) return
+            for(var key in control.data1D) {
+                control.data1D[key].updated.disconnect(updateGraphs(key))
+            }
         } else {
             updateLimits()
         }
     }
 
-    function updateGraph() {
-        if(!root.visible) return;
-        variable.data.updateXYSeries(dataSeries)
+    function updateGraphs(key) {
+        return function() {
+            if(!root.visible) return;
+            control.data1D[key].updateXYSeries(dataSeries[key])
+        }
     }
 
     function updateLimits() {
+        if(!root.control) return
         var xMin = 1e9
         var xMax = -1e9
         var yMin = 1e9
         var yMax = -1e9
-
-        var data = variable.data1D["scalar"]
-        data.updateLimits()
-        xMin = Math.min(xMin, data.xMin)
-        xMax = Math.max(xMax, data.xMax)
-        yMin = Math.min(yMin, data.yMin)
-        yMax = Math.max(yMax, data.yMax)
-
+        for(var key in control.data1D) {
+            var data = control.data1D[key]
+            data.updateLimits()
+            xMin = Math.min(xMin, data.xMin)
+            xMax = Math.max(xMax, data.xMax)
+            yMin = Math.min(yMin, data.yMin)
+            yMax = Math.max(yMax, data.yMax)
+        }
         _axisX.min = xMin
         _axisX.max = xMax
-
         if(!ylimLock.checked) {
             _axisY.min = (yMin>0) ? 0.95*yMin : 1.05*yMin
             _axisY.max = (yMax<0) ? 0.95*yMax : 1.05*yMax
@@ -72,7 +79,7 @@ WindowGL2 {
 
     Timer {
         id: timer
-        interval: 50
+        interval: 100
         repeat: true
         running: root.visible
         onTriggered: updateLimits()
@@ -80,13 +87,29 @@ WindowGL2 {
 
     function updateSeries(type) {
         chart.removeAllSeries();
+        dataSeries = []
 
         if (type === "line") {
-            dataSeries = chart.createSeries(ChartView.SeriesTypeLine, variable.identifier, _axisX, _axisY);
-            dataSeries.useOpenGL = true
+            for(var key in control.data1D) {
+                var label = key
+                if(control.data1D[key].label !=="") {
+                    label = control.data1D[key].label
+                }
+                var series = chart.createSeries(ChartView.SeriesTypeLine, label, _axisX, _axisY);
+
+                series.useOpenGL = true
+                dataSeries[key] = series
+            }
         } else {
-            dataSeries = chart.createSeries(ChartView.SeriesTypeScatter, variable.identifier, _axisX, _axisY);
-            dataSeries.useOpenGL = true
+            for(key in control.data1D) {
+                label = key
+                if(control.data1D[key].label !=="") {
+                    label = control.data1D[key].label
+                }
+                series = chart.createSeries(ChartView.SeriesTypeScatter, label, _axisX, _axisY);
+                series.useOpenGL = true
+                dataSeries[key] = series
+            }
         }
     }
 
@@ -106,24 +129,25 @@ WindowGL2 {
                 antialiasing: true
                 legend.visible: true
                 titleColor: "black"
-                title: variable ? variable.identifier : ""
+                title: control ? control.identifier : ""
 
                 ValueAxis {
                     id: _axisX
                     tickCount: ticks.value
+
                     min: 0
                     max: 100
-                    titleText: "Time"
+                    titleText: control ? control.xLabel : ""
                     color: "white"
                     labelsColor: "gray"
                 }
 
                 ValueAxis {
                     id: _axisY
-                    tickCount: ticks.value
+                    tickCount: 8
                     min: 0
                     max: 1000
-                    titleText: "Value"
+                    titleText: control ? control.yLabel : ""
                     color: "white"
                     labelsColor: "gray"
                 }
@@ -133,10 +157,12 @@ WindowGL2 {
                 leftPadding: 12
                 spacing: 5
                 Row {
+                    spacing: 10
                     Button {
                         id: clearButton
+                        width: exportButton.width
                         text: "Clear"
-                        onClicked: root.variable.clear()
+                        onClicked: root.control.clear()
                     }
                     CheckBox {
                         id: roundXAxis
@@ -148,6 +174,7 @@ WindowGL2 {
                     }
                 }
                 Row {
+                    spacing: 10
                     Button {
                         id: exportButton
                         height: clearButton.height
@@ -228,11 +255,11 @@ WindowGL2 {
 
         onAccepted: {
             if(mode==="text") {
-                variable.exportToTextFile(fileDialog.fileUrl)
+                control.exportToTextFile(fileDialog.fileUrl)
             } else if(mode==="matlab") {
-                variable.exportToMatlabFile(fileDialog.fileUrl)
+                control.exportToMatlabFile(fileDialog.fileUrl)
             } else if(mode==="python") {
-                variable.exportToPythonFile(fileDialog.fileUrl)
+                control.exportToPythonFile(fileDialog.fileUrl)
             }
         }
     }

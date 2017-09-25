@@ -8,14 +8,14 @@ Column {
     property var system
 
     function createPlotWindow(variable, point) {
-        var qmlFile = variable.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/VariablePlotter.qml"
+        var qmlFile = variable.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/Plot1D.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
-            var computePlotter = component.createObject(root);
-            computePlotter.x = point.x - computePlotter.width*0.5
-            computePlotter.y = point.y - computePlotter.height*0.5
-            computePlotter.variable = variable
-            computePlotter.show()
+            var plotter = component.createObject(root);
+            plotter.x = point.x - plotter.width*0.5
+            plotter.y = point.y - plotter.height*0.5
+            plotter.control = variable
+            plotter.show()
         }
     }
 
@@ -50,15 +50,16 @@ Column {
             Label {
                 text: {
                     if(model.modelData.isPerAtom) return ""
-
-                    if(model.modelData.valueHasDecimals) {
-                        if (model.modelData.value < 0.0005) {
-                            ": "+model.modelData.value.toLocaleString(Qt.locale("en_US"),'e',3);
+                    var value = model.modelData.scalarValue
+                    var valueHasDecimals = value !== Math.round(value, 0)
+                    if(valueHasDecimals) {
+                        if (value < 0.0005) {
+                            ": "+value.toLocaleString(Qt.locale("en_US"),'e',3);
                         } else {
-                            ": "+model.modelData.value.toPrecision(4) // for consistency with computes. Was toFixed(3)
+                            ": "+value.toPrecision(4)
                         }
                     } else {
-                        ": "+model.modelData.value.toFixed(0)
+                        ": "+value.toFixed(0)
                     }
                 }
             }
