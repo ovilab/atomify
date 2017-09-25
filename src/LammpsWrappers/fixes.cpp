@@ -84,6 +84,11 @@ void Fixes::synchronizeQML(LAMMPSController *lammpsController)
         setCount(m_data.count());
     }
 
+    for(QObject *obj : m_data) {
+        SimulatorControl *control = qobject_cast<SimulatorControl*>(obj);
+        control->updateData1D();
+    }
+
 }
 
 void Fixes::synchronize(LAMMPSController *lammpsController)

@@ -9,7 +9,7 @@
 
 CPCompute::CPCompute(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
-
+    setType("Compute");
 }
 
 CPCompute::~CPCompute() { }

@@ -9,6 +9,7 @@
 CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
     m_histogram(new Data1D(this))
 {
+    setType("Fix");
 }
 
 CPFix::~CPFix() { }
@@ -107,6 +108,37 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
     }
 }
 
+bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsController) {
+    if(!fix) return false;
+    enum{SCALAR,VECTOR};
+    int nrows, nvalues, dim, mode;
+    int *value = reinterpret_cast<int*>(fix->extract("nrows", dim));
+    nrows = *value;
+    value = reinterpret_cast<int*>(fix->extract("nvalues", dim));
+    nvalues = *value;
+    value = reinterpret_cast<int*>(fix->extract("mode", dim));
+    mode = *value;
+
+    if(mode == SCALAR) {
+        // Time dependent solution
+        double value = fix->compute_scalar();
+        // qDebug() << identifier() << " is time dependent with num rows: " << nrows << " and nvalues: " << nvalues;
+        setHasScalarData(true);
+        setScalarValue(value);
+        Data1D *data = ensureExists(QString("scalar"), true);
+        data->setLabel(identifier());
+        setXLabel("Time");
+        setYLabel("Value");
+        data->add(lammpsController->system->simulationTime(), value);
+        setInteractive(true);
+        return true;
+    } else {
+        // qDebug() << identifier() << " is spatial dependent with  num rows: " << nrows << " and nvalues: " << nvalues;
+    }
+
+    return false;
+}
+
 bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsController) {
     // TODO Implement this
     return false;
@@ -143,6 +175,7 @@ void CPFix::copyData(LAMMPSController *lammpsController)
     if(lmp_fix == nullptr) return;
     if(copyData(dynamic_cast<LAMMPS_NS::FixAveChunk*>(lmp_fix), lammpsController)) return;
     if(copyData(dynamic_cast<LAMMPS_NS::FixAveHisto*>(lmp_fix), lammpsController)) return;
+    if(copyData(dynamic_cast<LAMMPS_NS::FixAveTime*>(lmp_fix), lammpsController)) return;
 }
 
 bool CPFix::interactive() const

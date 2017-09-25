@@ -10,6 +10,7 @@ class AtomifySimulator;
 class SimulatorControl : public Qt3DCore::QNode
 {
     Q_OBJECT
+    Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool isMirror READ isMirror WRITE setIsMirror NOTIFY isMirrorChanged)
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
@@ -29,6 +30,7 @@ class SimulatorControl : public Qt3DCore::QNode
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
 
 protected:
+    QString m_type;
     long m_lastUpdate = -1;
     std::vector<double> m_atomData;
     float m_scalarValue = 10;
@@ -91,6 +93,8 @@ public:
     void updateData1D();
     const std::vector<double> &atomData() const;
 
+    QString type() const;
+
 signals:
     void enabledChanged(bool enabled);
     void identifierChanged(QString identifier);
@@ -111,6 +115,8 @@ signals:
     void interactiveChanged(bool interactive);
     void hoveredChanged(bool hovered);
 
+    void typeChanged(QString type);
+
 public slots:
     void setEnabled(bool enabled);
     void setIdentifier(QString identifier);
@@ -129,6 +135,7 @@ public slots:
     void setYLabel(QString yLabel);
     void setInteractive(bool interactive);
     void setHovered(bool hovered);
+    void setType(QString type);
 };
 
 #endif // SIMULATORCONTROL_H

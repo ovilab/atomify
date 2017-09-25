@@ -10,7 +10,7 @@ using namespace LAMMPS_NS;
 CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent),
     m_data(new Data1D(this)), m_value(0), m_isPerAtom(false), m_hovered(false)
 {
-
+    setType("Variable");
 }
 
 void CPVariable::exportToTextFile(QString fileName)

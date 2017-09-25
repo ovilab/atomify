@@ -262,7 +262,6 @@ void SimulatorControl::setHasScalarData(bool hasScalarData)
 
 void SimulatorControl::setScalarValue(float scalarValue)
 {
-    qWarning("Floating point comparison needs context sanity check");
     if (qFuzzyCompare(m_scalarValue, scalarValue))
         return;
 
@@ -351,6 +350,15 @@ void SimulatorControl::setHovered(bool hovered)
     emit hoveredChanged(m_hovered);
 }
 
+void SimulatorControl::setType(QString type)
+{
+    if (m_type == type)
+            return;
+
+        m_type = type;
+        emit typeChanged(m_type);
+}
+
 Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D();
@@ -376,6 +384,11 @@ void SimulatorControl::updateData1D()
 const std::vector<double> &SimulatorControl::atomData() const
 {
     return m_atomData;
+}
+
+QString SimulatorControl::type() const
+{
+    return m_type;
 }
 
 int SimulatorControl::groupBit() const
