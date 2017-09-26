@@ -7,7 +7,7 @@ class CPVariable : public SimulatorControl
     Q_OBJECT
 public:
     CPVariable(Qt3DCore::QNode *parent = 0);
-    virtual bool existsInLammps(class LAMMPSController *lammpsController);
+    virtual bool existsInLammps(class LAMMPSController *lammpsController) override;
     void synchronize(class LAMMPSController *lammpsController);
 
 public slots:
@@ -16,10 +16,10 @@ signals:
 
 protected:
     virtual void updateCommand();
-    virtual QList<QString> enabledCommands();
-    virtual QList<QString> disableCommands();
-    virtual QList<QString> resetCommands();
-    QString createCommandPrefix();
+    virtual QList<QString> enabledCommands() override;
+    virtual QList<QString> disableCommands() override;
+    virtual QList<QString> resetCommands() override;
+    virtual QString createCommandPrefix() override;
 
 private:
 

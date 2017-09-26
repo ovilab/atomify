@@ -1,6 +1,8 @@
 #ifndef CPFIX_H
 #define CPFIX_H
 #include "simulatorcontrol.h"
+#include "dataproviders/data2d.h"
+
 struct _reax_list; // fix for compilation issues on linux
 #include <style_fix.h>
 
@@ -12,21 +14,22 @@ class CPFix : public SimulatorControl
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(QVariantList data READ data WRITE setData NOTIFY dataChanged)
     Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
+
 protected:
-    QList<QString> enabledCommands() override;
-    QList<QString> disableCommands() override;
+    virtual QList<QString> enabledCommands() override;
+    virtual QList<QString> disableCommands() override;
     virtual void updateCommand() override;
     virtual QList<QString> resetCommands() override;
-    QString createCommandPrefix() override;
+    virtual QString createCommandPrefix() override;
 
 public:
     CPFix(Qt3DCore::QNode *parent = 0);
     ~CPFix();
-    void update(class LAMMPSController *lammpsController) override;
+    virtual void update(class LAMMPSController *lammpsController) override;
     virtual bool existsInLammps(class LAMMPSController *lammpsController);
     QString group() const;
     int frequency() const;
-    void copyData(class LAMMPSController *lammpsController);
+    virtual void copyData(class LAMMPSController *lammpsController);
     bool interactive() const;
     QVariantList data() const;
     QVariant model() const;

@@ -18,7 +18,7 @@ public:
     CPCompute(Qt3DCore::QNode *parent = 0);
     ~CPCompute();
     void copyData(LAMMPSController *lammpsController);
-    bool existsInLammps(LAMMPSController *lammpsController) override;
+    virtual bool existsInLammps(LAMMPSController *lammpsController) override;
     void computeInLAMMPS(LAMMPSController *lammpsController);
 
 signals:
@@ -43,10 +43,10 @@ private:
     bool validateStatus(Compute *compute, LAMMPS *lammps);
 protected:
     virtual void updateCommand() override;
-    QList<QString> enabledCommands() override;
-    QList<QString> disableCommands() override;
+    virtual QList<QString> enabledCommands() override;
+    virtual QList<QString> disableCommands() override;
     virtual QList<QString> resetCommands() override;
-    QString createCommandPrefix() override;
+    virtual QString createCommandPrefix() override;
 };
 
 #endif // COMPUTE_H
