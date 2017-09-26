@@ -39,6 +39,7 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
         return true;
     }
     if(*which == BIN2D) {
+        return false;
 
         setInteractive(true);
         if(m_dataRaw.size() != *nvalues) {
@@ -106,6 +107,23 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
                 m_dataRaw[i]->update();
             }
         }
+    } else if(*which == BIN1D) {
+        setInteractive(true);
+        LAMMPS_NS::bigint *nextValidTimestep = reinterpret_cast<LAMMPS_NS::bigint*>(fix->extract("nvalid", dimension));
+        if(m_nextValidTimestep+1 == lammpsController->system->currentTimestep()) {
+            for(int i=0; i<*nvalues; i++) {
+                Data1D *data = ensureExists( QString("Value %1").arg(i+1), true);
+                data->clear(true);
+                for(int j=0; j<*nchunk; j++) {
+                    float x = fix->compute_array(j,0);
+                    int valueIndex = *colextra+1+i;
+                    float y = fix->compute_array(j, valueIndex);
+                    data->add(x,y);
+                }
+            }
+        }
+
+        m_nextValidTimestep = *nextValidTimestep;
     }
 }
 
