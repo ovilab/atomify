@@ -8,7 +8,7 @@ Column {
     property var system
 
     function createPlotWindow(variable, point) {
-        var qmlFile = variable.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/Plot1D.qml"
+        var qmlFile = "../../plotting/Plot1D.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
             var plotter = component.createObject(root);
