@@ -49,7 +49,7 @@ Column {
             }
             Label {
                 text: {
-                    if(model.modelData.isPerAtom) return ""
+                    if(!model.modelData.hasScalarData) return ""
                     var value = model.modelData.scalarValue
                     var valueHasDecimals = value !== Math.round(value, 0)
                     if(valueHasDecimals) {
