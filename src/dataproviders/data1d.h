@@ -23,7 +23,6 @@ public:
     explicit Data1D(QObject *parent = 0);
     Q_INVOKABLE void updateLimits();
     Q_INVOKABLE void updateXYSeries(QAbstractSeries *series);
-    Q_INVOKABLE void updateHistogram(QLineSeries *series);
     Q_INVOKABLE void add(float x, float y, bool silent = true);
     Q_INVOKABLE void clear(bool silent = false);
     void createHistogram(const std::vector<double> &points);
@@ -60,7 +59,6 @@ public slots:
 private:
     QXYSeries* m_xySeries = nullptr;
     QVector<QPointF> m_points;
-    std::vector<double> m_histogramPoints;
     std::vector<double> m_cleanHistogramPoints; // without inf and NaN
     qreal m_xMin = 0;
     qreal m_xMax = 0;

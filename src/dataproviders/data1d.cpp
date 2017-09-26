@@ -126,62 +126,6 @@ void Data1D::copyHistogram(const QVector<QPointF> &points)
     m_yMax = maxValue*1.1;
 }
 
-void Data1D::updateHistogram(QLineSeries *series)
-{
-    return;
-    if(m_histogramPoints.size()) {
-        // If we have anything here, it means we need to generate histogram. TODO: improve the data flow
-        m_cleanHistogramPoints.clear();
-        m_cleanHistogramPoints.reserve(m_histogramPoints.size());
-        for(double p : m_histogramPoints) {
-            if(std::isnan(p) || std::isinf(p)) continue;
-            m_cleanHistogramPoints.push_back(p);
-        }
-
-        double min = *std::min_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
-        double max = *std::max_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
-
-        if(max == min) {
-            // Ensure dx is not zero
-            max = min+1;
-        }
-        double dx = (max-min) / m_bins;
-        std::vector<int> counts(m_bins, 0);
-        for(double p : m_cleanHistogramPoints) {
-            int bin = (p-min) / dx;
-            if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
-            counts[bin]++;
-        }
-
-        m_points.clear();
-        m_points.reserve(3*m_bins+1);
-        m_points.append(QPointF(min, 0));
-        double maxCount = 0;
-        for(int bin = 0; bin<m_bins; bin++) {
-            double binMin = min + bin*dx;
-            double binMax = min + (bin+1)*dx;
-            double value = counts[bin];
-            maxCount = std::max(maxCount, value);
-
-            m_points.append(QPointF(binMin, value));
-            m_points.append(QPointF(binMax, value));
-            m_points.append(QPointF(binMax, 0));
-        }
-        counts.clear();
-        m_xMin = min;
-        m_xMax = max;
-        m_yMin = 0;
-        m_yMax = maxCount*1.1;
-    }
-    series->replace(m_points);
-    m_points.clear();
-
-    emit xMinChanged(m_xMin);
-    emit xMaxChanged(m_xMax);
-    emit yMinChanged(m_yMin);
-    emit yMaxChanged(m_yMax);
-}
-
 QXYSeries *Data1D::xySeries() const
 {
     return m_xySeries;
@@ -202,7 +146,7 @@ void Data1D::clear(bool silent)
     QMutexLocker locker(&m_mutex);
     m_minMaxValuesDirty = true;
     m_points.clear();
-    m_histogramPoints.clear();
+    m_cleanHistogramPoints.clear();
     if(!silent && m_xySeries) {
         updateXYSeries(m_xySeries);
     }
@@ -211,8 +155,48 @@ void Data1D::clear(bool silent)
 void Data1D::createHistogram(const std::vector<double> &points)
 {
     QMutexLocker locker(&m_mutex);
-    m_histogramPoints = points;
-    qDebug() << "Data1D::createHistogram not implemented";
+
+    m_cleanHistogramPoints.clear();
+    m_cleanHistogramPoints.reserve(points.size());
+    for(double p : points) {
+        if(std::isnan(p) || std::isinf(p)) continue;
+        m_cleanHistogramPoints.push_back(p);
+    }
+
+    double min = *std::min_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
+    double max = *std::max_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
+
+    if(max == min) {
+        // Ensure dx is not zero
+        max = min+1;
+    }
+    double dx = (max-min) / m_bins;
+    std::vector<int> counts(m_bins, 0);
+    for(double p : m_cleanHistogramPoints) {
+        int bin = (p-min) / dx;
+        if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
+        counts[bin]++;
+    }
+
+    m_points.clear();
+    m_points.reserve(3*m_bins+1);
+    m_points.append(QPointF(min, 0));
+    double maxCount = 0;
+    for(int bin = 0; bin<m_bins; bin++) {
+        double binMin = min + bin*dx;
+        double binMax = min + (bin+1)*dx;
+        double value = counts[bin];
+        maxCount = std::max(maxCount, value);
+
+        m_points.append(QPointF(binMin, value));
+        m_points.append(QPointF(binMax, value));
+        m_points.append(QPointF(binMax, 0));
+    }
+    counts.clear();
+    m_xMin = min;
+    m_xMax = max;
+    m_yMin = 0;
+    m_yMax = maxCount*1.1;
 }
 
 void Data1D::add(float x, float y, bool silent)
