@@ -9,8 +9,6 @@ Column {
     property var system
     
     function createPlotWindow(fix, point) {
-        // var qmlFile = fix.isPerAtom ? "../../plotting/HistogramPlotter.qml" : "../../plotting/ComputePlotter.qml"
-        // var qmlFile = "../../plotting/HistogramPlotter.qml" // TODO: pick
         var qmlFile = "../../plotting/Plot1D.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
