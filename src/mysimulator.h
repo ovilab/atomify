@@ -20,7 +20,6 @@ public:
     bool needsSynchronization();
     long m_workCount = 0;
     bool m_cancelPending = false;
-    bool m_paused = false;
     bool m_reprocessRenderingData = false;
     bool m_stepOnce = false;
     QMutex m_workerRenderingMutex; // horrible name

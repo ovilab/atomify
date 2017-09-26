@@ -6,6 +6,8 @@
 
 class AtomData {
 public:
+    bool dirty = false;
+    bool paused = false;
     bool radiiFromLAMMPS = false;
     QVector<QVector3D> positions;
     QVector<QVector3D> deltaPositions; // For periodic copies

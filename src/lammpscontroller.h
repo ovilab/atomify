@@ -34,6 +34,7 @@ public:
     unsigned long simulationSpeed = 1;
     char **argv;
     int nargs = 0;
+    bool m_paused = false;
 
     LAMMPSController();
     ~LAMMPSController();

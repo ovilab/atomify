@@ -138,7 +138,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
     AtomifySimulator *atomifySimulator = qobject_cast<AtomifySimulator*>(simulator);
     m_lammpsController.simulationSpeed = atomifySimulator->simulationSpeed();
     m_lammpsController.qmlThread = QThread::currentThread();
-    m_paused = atomifySimulator->states()->paused()->active();
+    m_lammpsController.paused = atomifySimulator->states()->paused()->active();
     m_stepOnce = atomifySimulator->stepOnce();
     atomifySimulator->setStepOnce(false);
 

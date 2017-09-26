@@ -14,6 +14,8 @@ PropertyModifier::PropertyModifier()
 }
 
 void PropertyModifier::applyColors(AtomData &atomData, const std::vector<double> &values, int groupBit) {
+    if(m_previousHovered && atomData.paused) return; // No change
+
     QVector<double> limits = {0, 0.15, 0.35, 0.65, 0.85, 1.0};
     QVector<double> red = {0, 0, 0, 255./255, 255./255, 255./255};
     QVector<double> green = {0, 50./255, 255./255, 255./255, 30./255, 0};

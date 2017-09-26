@@ -97,7 +97,7 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
             }
         }
 
-        if(worker->m_paused) {
+        if(m_paused) {
             QThread::currentThread()->msleep(100); // Check fairly slow
         } else {
             QThread::currentThread()->msleep(1); // As fast as possible
