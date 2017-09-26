@@ -60,12 +60,15 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
     }
 
     if (variable->atomstyle(ivar)) {
-//        int igroup = 0;
+        setHasHistogram(true);
+        setInteractive(true);
+        setIsPerAtom(true);
+        Data1D *data = ensureExists("histogram", true);
 
-//        m_atomData.resize(lammpsController->system->numberOfAtoms());
-//        double *vector = &m_atomData.front();
-//        variable->compute_atom(ivar,igroup,vector,1,0);
-//        setIsPerAtom(true);
-        // m_data->createHistogram(m_atomData);
+        if(!windowVisible()) return;
+        m_atomData.resize(lammpsController->system->numberOfAtoms());
+        double *vector = &m_atomData.front();
+        variable->compute_atom(ivar,0 /* group index for all */,vector,1,0);
+        data->createHistogram(m_atomData);
     }
 }
