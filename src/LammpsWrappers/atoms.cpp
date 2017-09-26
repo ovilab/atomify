@@ -97,6 +97,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     }
 
     m_atomData.radiiFromLAMMPS = lammps->atom->radius_flag;
+
     for(int i=0; i<numberOfAtoms; i++) {
         m_atomData.types[i] = types[i];
         m_atomData.originalIndex[i] = i;
@@ -119,7 +120,6 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
     }
     m_atomData.dirty = true;
     m_atomData.paused = false;
-    // if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
 }
 
 void Atoms::processModifiers(System *system)
@@ -267,7 +267,6 @@ bool Atoms::generateBondDataFromNeighborList(AtomData &atomData, LAMMPSControlle
             int j = jlist[jj];
             j &= NEIGHMASK;
             if(j >= atomData.size()) continue; // Probably a ghost atom from LAMMPS
-            // j = atomData.originalIndex[j]; TODO: is this more correct?
             if(!atomData.visible[j]) continue; // Don't show bond if not both atoms are visible.
 
             const int &atomType_j = atomData.types[j];
