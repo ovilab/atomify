@@ -44,7 +44,6 @@
         <file>RDFItem.qml</file>
         <file>CPLineSeries.qml</file>
         <file>TemperatureItem.qml</file>
-        <file>plotting/ComputePlotter.qml</file>
         <file>plotting/LabelButton.qml</file>
         <file>visualization/DeferredFrameGraph.qml</file>
         <file>visualization/ForwardFrameGraph.qml</file>
@@ -64,8 +63,6 @@
         <file>desktop/RightBar/RegionsColumn.qml</file>
         <file>desktop/RightBar/FixesColumn.qml</file>
         <file>desktop/RightBar/VariablesColumn.qml</file>
-        <file>plotting/VariablePlotter.qml</file>
-        <file>plotting/HistogramPlotter.qml</file>
         <file>plotting/ColorLegend.qml</file>
         <file>visualization/Guide.qml</file>
         <file>desktop/TrackballController.qml</file>
