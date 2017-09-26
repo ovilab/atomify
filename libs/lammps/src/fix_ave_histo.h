@@ -35,6 +35,7 @@ class FixAveHisto : public Fix {
   virtual void end_of_step();
   double compute_vector(int);
   double compute_array(int,int);
+  void *extract(const char *, int &);
 
  protected:
   int me,nvalues;

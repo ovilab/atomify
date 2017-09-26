@@ -1018,3 +1018,15 @@ bigint FixAveHisto::nextvalid()
   if (nvalid < update->ntimestep) nvalid += nfreq;
   return nvalid;
 }
+
+void *FixAveHisto::extract(const char *str, int &dim) {
+  dim = 0;
+  if (strcmp(str,"nbins") == 0) return (void *) &nbins;
+  if (strcmp(str, "mode") == 0) return (void *) &mode;
+  if (strcmp(str, "coord") == 0) {
+    dim = 1;
+    return (void *) coord;
+  }
+  
+  return NULL;
+}
