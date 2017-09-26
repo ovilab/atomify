@@ -1145,6 +1145,7 @@ void *FixAveChunk::extract(const char *str, int &dim) {
   if (strcmp(str,"nvalues") == 0) return (void *) &nvalues;
   if (strcmp(str,"nchunk") == 0) return (void *) &nchunk;
   if (strcmp(str,"colextra") == 0) return (void *) &colextra;
+  if (strcmp(str,"nvalid") == 0) return (void *) &nvalid;
   return NULL;
 }
 
