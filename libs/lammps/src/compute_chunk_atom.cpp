@@ -1989,10 +1989,11 @@ void ComputeChunkAtom::set_arrays(int i)
 }
 
 void *ComputeChunkAtom::extract(const char *str, int &dimension) {
-  dimension = 1;
+  dimension = 0;
   if (strcmp(str,"which") == 0) return (void *) &which;
-  dimension = 3;
   if (strcmp(str,"dim") == 0) return (void *) dim;
+
+  dimension = 1;
   if (strcmp(str,"nlayers") == 0) return (void *) nlayers;
   return NULL;
 }
