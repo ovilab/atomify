@@ -54,6 +54,12 @@ Atoms::Atoms(AtomifySimulator *simulator)
 
 void Atoms::synchronize(LAMMPSController *lammpsController)
 {
+    if(lammpsController->m_paused) {
+        // No new data from LAMMPS when paused
+        m_atomData.dirty = false;
+        m_atomData.paused = true;
+        return;
+    }
     LAMMPS *lammps = lammpsController->lammps();
     if(!lammps) { return; }
 
@@ -111,7 +117,8 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         m_atomData.visible[i] = true;
         m_atomData.deltaPositions[i] = QVector3D();
     }
-
+    m_atomData.dirty = true;
+    m_atomData.paused = false;
     // if(m_bonds->enabled()) m_atomData.neighborList.synchronize(lammps);
 }
 
@@ -168,13 +175,18 @@ QString Atoms::renderingMode() const
 }
 
 void Atoms::synchronizeRenderer() {
+    if(!dirtyData()) return;
+
     int numSpheres = m_sphereDataRaw.size() / sizeof(SphereVBOData);
     m_sphereData->setData(m_sphereDataRaw, numSpheres);
 
     int numBonds = m_bondsDataRaw.size() / sizeof(BondVBOData);
     m_bondData->setData(m_bondsDataRaw, numBonds);
+    setDirtyData(false);
 }
+
 void Atoms::generateSphereData(AtomData &atomData) {
+    if(!atomData.dirty) return;
     int visibleAtomCount = 0;
 
     for(int i = 0; i<atomData.size(); i++) {
@@ -198,6 +210,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
         vbo.color = atomData.colors[i];
         vbo.radius = atomData.radii[i]*m_sphereScale;
     }
+    setDirtyData(true);
 }
 
 bool Atoms::dirtyData() const
@@ -334,6 +347,7 @@ bool Atoms::generateBondDataFromBondList(AtomData &atomData, LAMMPSController *c
 }
 
 void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
+    if(!atomData.dirty) return;
     bondsDataRaw.resize(0);
 
     bool didCreateFromNeighborList = generateBondDataFromNeighborList(atomData, controller);
@@ -351,6 +365,7 @@ void Atoms::generateBondData(AtomData &atomData, LAMMPSController *controller) {
     for(const BondVBOData &pos : bondsDataRaw) {
         *posData++ = pos;
     }
+    setDirtyData(true);
 }
 
 SphereData *Atoms::sphereData() const
