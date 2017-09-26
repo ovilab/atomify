@@ -37,7 +37,7 @@ class FixIndent : public Fix {
   void min_post_force(int);
   double compute_scalar();
   double compute_vector(int);
-
+  void *extract(const char *, int &);
  private:
   int istyle,scaleflag,side;
   double k,k3;

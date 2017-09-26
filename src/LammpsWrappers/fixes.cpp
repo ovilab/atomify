@@ -1,6 +1,7 @@
 #include "fixes.h"
 #include "../lammpscontroller.h"
 #include "simulatorcontrols/cpfix.h"
+#include "simulatorcontrols/cpfixindent.h"
 
 Fixes::Fixes(QObject *parent) : QObject(parent)
 {
@@ -13,7 +14,13 @@ void Fixes::add(QString identifier, LAMMPSController *lammpsController) {
         m_data.push_back(fix);
         m_dataMap.insert(identifier, fix);
     } else {
-        CPFix *fix = new CPFix();
+        LAMMPS_NS::FixIndent *lmp_fix = dynamic_cast<LAMMPS_NS::FixIndent*>(lammpsController->findFixByIdentifier(identifier));
+        CPFix *fix;
+        if(lmp_fix) {
+            fix = new CPFixIndent();
+        } else {
+            fix = new CPFix();
+        }
         fix->setIsMirror(true);
         fix->setIdentifier(identifier);
         m_data.push_back(fix);

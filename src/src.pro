@@ -139,7 +139,8 @@ SOURCES += \
     keysequence.cpp \
     usagestatistics.cpp \
     LammpsWrappers/modifiers/periodicimagesmodifier.cpp \
-    LammpsWrappers/modifiers/slicemodifier.cpp
+    LammpsWrappers/modifiers/slicemodifier.cpp \
+    LammpsWrappers/simulatorcontrols/cpfixindent.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -187,7 +188,8 @@ HEADERS += \
     keysequence.h \
     usagestatistics.h \
     LammpsWrappers/modifiers/periodicimagesmodifier.h \
-    LammpsWrappers/modifiers/slicemodifier.h
+    LammpsWrappers/modifiers/slicemodifier.h \
+    LammpsWrappers/simulatorcontrols/cpfixindent.h
 
 # Temporary use of quickcontrols2 without install
 

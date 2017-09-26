@@ -527,3 +527,28 @@ void FixIndent::options(int narg, char **arg)
     } else error->all(FLERR,"Illegal fix indent command");
   }
 }
+
+void *FixIndent::extract(const char *str, int &dim) {
+  dim = 1;
+  if (strcmp(str,"istyle") == 0) return (void *) &istyle;
+  if (strcmp(str,"cdim") == 0) return (void *) &cdim;
+  if (strcmp(str,"xstr") == 0) return (void *) xstr;
+  if (strcmp(str,"ystr") == 0) return (void *) ystr;
+  if (strcmp(str,"zstr") == 0) return (void *) zstr;
+  if (strcmp(str,"rstr") == 0) return (void *) rstr;
+  if (strcmp(str,"pstr") == 0) return (void *) pstr;
+
+  if (strcmp(str,"xvar") == 0) return (void *) &xvar;
+  if (strcmp(str,"yvar") == 0) return (void *) &yvar;
+  if (strcmp(str,"zvar") == 0) return (void *) &zvar;
+  if (strcmp(str,"rvar") == 0) return (void *) &rvar;
+  if (strcmp(str,"pvar") == 0) return (void *) &pvar;
+  
+  if (strcmp(str,"xvalue") == 0) return (void *) &xvalue;
+  if (strcmp(str,"yvalue") == 0) return (void *) &yvalue;
+  if (strcmp(str,"zvalue") == 0) return (void *) &zvalue;
+  if (strcmp(str,"rvalue") == 0) return (void *) &rvalue;
+  if (strcmp(str,"pvalue") == 0) return (void *) &pvalue;
+  
+  return NULL;
+}
