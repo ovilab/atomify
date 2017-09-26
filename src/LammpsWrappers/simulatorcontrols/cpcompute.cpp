@@ -18,6 +18,7 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     // Handles per atom computes
     if(!compute || !compute->peratom_flag) return false;
 
+    Data1D *data = ensureExists("histogram", true);
     setIsPerAtom(true);
     setInteractive(true);
     int numAtoms = lammpsController->system->numberOfAtoms();
@@ -25,13 +26,13 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
 
     if(numCols == 0) {
         setNumPerAtomValues(1);
-        if(!windowVisible() && !hovered()) return true;
+        if(!windowVisible() && !hovered()) return true; // Skip copying data unless we need them
 
         double *values = compute->vector_atom;
         m_atomData = std::vector<double>(values, values+numAtoms);
     } else {
         setNumPerAtomValues(numCols);
-        if(!windowVisible() && !hovered()) return true;
+        if(!windowVisible() && !hovered()) return true; // Skip copying data unless we need them
 
         double **values = compute->array_atom;
         m_atomData.resize(numAtoms);
@@ -44,8 +45,10 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
             }
         }
     }
-    Data1D *data = ensureExists("histogram", true);
-    data->createHistogram(m_atomData);
+
+    if(windowVisible()) {
+        data->createHistogram(m_atomData);
+    }
 
     return true;
 }
