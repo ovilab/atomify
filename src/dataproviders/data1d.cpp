@@ -96,90 +96,86 @@ void Data1D::updateXYSeries(QAbstractSeries *series)
 
 void Data1D::copyHistogram(const QVector<QPointF> &points)
 {
-//    if(points.size()<2) return;
+    if(points.size()<2) return;
 
-//    double dx = points[1].x() - points[0].x();
-//    td::vector<int> counts(points.size(), 0);
-//    for(double p : m_cleanHistogramPoints) {
-//        int bin = (p-min) / dx;
-//        if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
-//        counts[bin]++;
-//    }
+    float dx = points[1].x() - points[0].x();
+    setBins(points.size());
+    float maxValue = points.first().y();
+    float xMin = points.first().x()-0.5*dx;
+    float xMax = points.last().x()+0.5*dx;
 
-//    // Todo: store this value on object instead?
-//    QVector<QPointF> histogram;
-//    histogram.reserve(3*m_bins+1);
-//    histogram.append(QPointF(min, 0));
-//    double maxCount = 0;
-//    for(int bin = 0; bin<m_bins; bin++) {
-//        double binMin = min + bin*dx;
-//        double binMax = min + (bin+1)*dx;
-//        double value = counts[bin];
-//        maxCount = std::max(maxCount, value);
+    m_points.clear();
+    for(int bin = 0; bin<m_bins; bin++) {
+        float binMin = points.first().x() + (bin-0.5)*dx;
+        float binMax = points.first().x() + (bin+0.5)*dx;
+        float value = points.at(bin).y();
+        maxValue = std::max(maxValue, value);
 
-//        histogram.append(QPointF(binMin, value));
-//        histogram.append(QPointF(binMax, value));
-//        histogram.append(QPointF(binMax, 0));
-//    }
-//    counts.clear();
-//    series->replace(histogram);
-//    histogram.clear();
-//    m_xMin = min;
-//    m_xMax = max;
-//    m_yMin = 0;
-//    m_yMax = maxCount*1.1;
-//    emit xMinChanged(m_xMin);
-//    emit xMaxChanged(m_xMax);
-//    emit yMinChanged(m_yMin);
-//    emit yMaxChanged(m_yMax);
+        if(bin==0) {
+            m_points.append(QPointF(binMin, 0));
+        }
+
+        m_points.append(QPointF(binMin, value));
+        m_points.append(QPointF(binMax, value));
+        m_points.append(QPointF(binMax, 0));
+    }
+
+    m_xMin = xMin;
+    m_xMax = xMax;
+    m_yMin = 0;
+    m_yMax = maxValue*1.1;
 }
 
 void Data1D::updateHistogram(QLineSeries *series)
 {
-    m_cleanHistogramPoints.clear();
-    m_cleanHistogramPoints.reserve(m_histogramPoints.size());
-    for(double p : m_histogramPoints) {
-        if(std::isnan(p) || std::isinf(p)) continue;
-        m_cleanHistogramPoints.push_back(p);
-    }
+    return;
+    if(m_histogramPoints.size()) {
+        // If we have anything here, it means we need to generate histogram. TODO: improve the data flow
+        m_cleanHistogramPoints.clear();
+        m_cleanHistogramPoints.reserve(m_histogramPoints.size());
+        for(double p : m_histogramPoints) {
+            if(std::isnan(p) || std::isinf(p)) continue;
+            m_cleanHistogramPoints.push_back(p);
+        }
 
-    double min = *std::min_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
-    double max = *std::max_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
+        double min = *std::min_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
+        double max = *std::max_element(std::begin(m_cleanHistogramPoints), std::end(m_cleanHistogramPoints));
 
-    if(max == min) {
-        // Ensure dx is not zero
-        max = min+1;
-    }
-    double dx = (max-min) / m_bins;
-    std::vector<int> counts(m_bins, 0);
-    for(double p : m_cleanHistogramPoints) {
-        int bin = (p-min) / dx;
-        if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
-        counts[bin]++;
-    }
+        if(max == min) {
+            // Ensure dx is not zero
+            max = min+1;
+        }
+        double dx = (max-min) / m_bins;
+        std::vector<int> counts(m_bins, 0);
+        for(double p : m_cleanHistogramPoints) {
+            int bin = (p-min) / dx;
+            if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
+            counts[bin]++;
+        }
 
-    // Todo: store this value on object instead?
-    QVector<QPointF> histogram;
-    histogram.reserve(3*m_bins+1);
-    histogram.append(QPointF(min, 0));
-    double maxCount = 0;
-    for(int bin = 0; bin<m_bins; bin++) {
-        double binMin = min + bin*dx;
-        double binMax = min + (bin+1)*dx;
-        double value = counts[bin];
-        maxCount = std::max(maxCount, value);
+        m_points.clear();
+        m_points.reserve(3*m_bins+1);
+        m_points.append(QPointF(min, 0));
+        double maxCount = 0;
+        for(int bin = 0; bin<m_bins; bin++) {
+            double binMin = min + bin*dx;
+            double binMax = min + (bin+1)*dx;
+            double value = counts[bin];
+            maxCount = std::max(maxCount, value);
 
-        histogram.append(QPointF(binMin, value));
-        histogram.append(QPointF(binMax, value));
-        histogram.append(QPointF(binMax, 0));
+            m_points.append(QPointF(binMin, value));
+            m_points.append(QPointF(binMax, value));
+            m_points.append(QPointF(binMax, 0));
+        }
+        counts.clear();
+        m_xMin = min;
+        m_xMax = max;
+        m_yMin = 0;
+        m_yMax = maxCount*1.1;
     }
-    counts.clear();
-    series->replace(histogram);
-    histogram.clear();
-    m_xMin = min;
-    m_xMax = max;
-    m_yMin = 0;
-    m_yMax = maxCount*1.1;
+    series->replace(m_points);
+    m_points.clear();
+
     emit xMinChanged(m_xMin);
     emit xMaxChanged(m_xMax);
     emit yMinChanged(m_yMin);
@@ -196,7 +192,7 @@ bool Data1D::enabled() const
     return m_enabled;
 }
 
-const QList<QPointF> &Data1D::points()
+const QVector<QPointF> &Data1D::points()
 {
     return m_points;
 }
@@ -216,7 +212,7 @@ void Data1D::createHistogram(const std::vector<double> &points)
 {
     QMutexLocker locker(&m_mutex);
     m_histogramPoints = points;
-    setIsHistogram(true);
+    qDebug() << "Data1D::createHistogram not implemented";
 }
 
 void Data1D::add(float x, float y, bool silent)
@@ -303,16 +299,6 @@ void Data1D::setBins(int bins)
 
         m_bins = bins;
         emit binsChanged(m_bins);
-}
-
-bool Data1D::isHistogram() const
-{
-    return m_isHistogram;
-}
-
-void Data1D::setIsHistogram(bool isHistogram)
-{
-    m_isHistogram = isHistogram;
 }
 
 QString Data1D::label() const

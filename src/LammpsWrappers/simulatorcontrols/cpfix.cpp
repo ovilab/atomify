@@ -8,8 +8,7 @@
 
 #include <style_compute.h>
 
-CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent),
-    m_histogram(new Data1D(this))
+CPFix::CPFix(Qt3DCore::QNode *parent) : SimulatorControl(parent)
 {
     setType("Fix");
 }
@@ -200,31 +199,26 @@ bool CPFix::copyData(LAMMPS_NS::FixAveTime *fix, LAMMPSController *lammpsControl
 
 bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsController) {
     // TODO Implement this
-    return false;
     if(!fix) return false;
-    int nbins, dim;
-    int *value;
 
-    value = reinterpret_cast<int*>(fix->extract("nbins", dim));
-    nbins = *value;
-    double *coord = reinterpret_cast<double*>(fix->extract("coord", dim));
+    int dim;
+    int *value = reinterpret_cast<int*>(fix->extract("nbins", dim));
+    int nbins = *value;
 
-    m_histogram->setEnabled(true);
-
-//    for(int i=0; i<nbins; i++) {
-//        double binCenter = fix->compute_array(i, 0);
-//        double binContent = fix->compute_array(i, 2);
-//        m_histogram->clear(true);
-//        m_histogram->add(QPointF(binCenter, binContent), true);
-//    }
-    std::vector<double> values;
-    values.reserve(nbins);
+    setHasHistogram(true);
+    QVector<QPointF> histogramPoints;
+    histogramPoints.reserve(nbins);
     for(int i=0; i<nbins; i++) {
-        values.push_back(fix->compute_array(i,2));
+        // TODO: add normalized choice
+        double binCenter = fix->compute_array(i, 0);
+        double binContent = fix->compute_array(i, 2);
+        histogramPoints.push_back(QPointF(binCenter, binContent));
     }
-    m_histogram->setBins(nbins);
-    m_histogram->createHistogram(values);
+    Data1D *data = ensureExists(QString("histogram"), true);
+    data->copyHistogram(histogramPoints);
+
     setInteractive(true);
+    return true;
 }
 
 void CPFix::copyData(LAMMPSController *lammpsController)
@@ -249,11 +243,6 @@ QVariantList CPFix::data() const
 QVariant CPFix::model() const
 {
     return m_model;
-}
-
-Data1D *CPFix::histogram() const
-{
-    return m_histogram;
 }
 
 void CPFix::update(LAMMPSController *lammpsController)
@@ -334,15 +323,6 @@ void CPFix::setModel(QVariant model)
 
     m_model = model;
     emit modelChanged(model);
-}
-
-void CPFix::setHistogram(Data1D *histogram)
-{
-    if (m_histogram == histogram)
-        return;
-
-    m_histogram = histogram;
-    emit histogramChanged(histogram);
 }
 
 QList<QString> CPFix::resetCommands()

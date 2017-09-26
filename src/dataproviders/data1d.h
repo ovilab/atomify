@@ -33,11 +33,9 @@ public:
     qreal yMin();
     qreal yMax();
     bool enabled() const;
-    const QList<QPointF> &points();
+    const QVector<QPointF> &points();
     QXYSeries* xySeries() const;
     void copyHistogram(const QVector<QPointF> &points);
-    bool isHistogram() const;
-    void setIsHistogram(bool isHistogram);
     QString label() const;
     int bins() const;
 signals:
@@ -61,7 +59,7 @@ public slots:
 
 private:
     QXYSeries* m_xySeries = nullptr;
-    QList<QPointF> m_points;
+    QVector<QPointF> m_points;
     std::vector<double> m_histogramPoints;
     std::vector<double> m_cleanHistogramPoints; // without inf and NaN
     qreal m_xMin = 0;
@@ -70,7 +68,6 @@ private:
     qreal m_yMax = 0;
     bool m_minMaxValuesDirty = false;
     bool m_enabled = false;
-    bool m_isHistogram = false;
     void updateMinMaxWithPoint(const QPointF &point);
     QMutex m_mutex;
     QString m_label;

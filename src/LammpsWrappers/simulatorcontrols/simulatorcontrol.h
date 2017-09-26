@@ -28,8 +28,10 @@ class SimulatorControl : public Qt3DCore::QNode
     Q_PROPERTY(QString yLabel READ yLabel WRITE setYLabel NOTIFY yLabelChanged)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
+    Q_PROPERTY(bool hasHistogram READ hasHistogram WRITE setHasHistogram NOTIFY hasHistogramChanged)
 
 protected:
+    bool m_hasHistogram = false;
     QString m_type;
     long m_lastUpdate = -1;
     std::vector<double> m_atomData;
@@ -97,6 +99,7 @@ public:
     void updateData1D();
     const std::vector<double> &atomData() const;
     QString type() const;
+    bool hasHistogram() const;
 
 signals:
     void enabledChanged(bool enabled);
@@ -118,6 +121,7 @@ signals:
     void interactiveChanged(bool interactive);
     void hoveredChanged(bool hovered);
     void typeChanged(QString type);
+    void hasHistogramChanged(bool hasHistogram);
 
 public slots:
     void setEnabled(bool enabled);
@@ -138,6 +142,7 @@ public slots:
     void setInteractive(bool interactive);
     void setHovered(bool hovered);
     void setType(QString type);
+    void setHasHistogram(bool hasHistogram);
 };
 
 #endif // SIMULATORCONTROL_H

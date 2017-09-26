@@ -359,6 +359,15 @@ void SimulatorControl::setType(QString type)
         emit typeChanged(m_type);
 }
 
+void SimulatorControl::setHasHistogram(bool hasHistogram)
+{
+    if (m_hasHistogram == hasHistogram)
+            return;
+
+        m_hasHistogram = hasHistogram;
+        emit hasHistogramChanged(m_hasHistogram);
+}
+
 Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D();
@@ -371,13 +380,8 @@ Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
 
 void SimulatorControl::updateData1D()
 {
-
     for(Data1D *data : m_data1DRaw) {
-        if(data->isHistogram()) {
-            emit data->updatedHistogram(data);
-        } else {
-            emit data->updated();
-        }
+        emit data->updated();
     }
 }
 
@@ -389,6 +393,11 @@ const std::vector<double> &SimulatorControl::atomData() const
 QString SimulatorControl::type() const
 {
     return m_type;
+}
+
+bool SimulatorControl::hasHistogram() const
+{
+    return m_hasHistogram;
 }
 
 int SimulatorControl::groupBit() const
@@ -451,7 +460,7 @@ void SimulatorControl::exportToPythonFile(QString fileName)
     QStringList keys = m_data1DRaw.keys();
     // Print arrays to variables
     for(QString key : keys) {
-        const QList<QPointF> &points = m_data1DRaw[key]->points();
+        const QVector<QPointF> &points = m_data1DRaw[key]->points();
 
         if(key == keys[0]) {
             qDebug() << "X label: " << xLabel().toLower();
@@ -505,7 +514,7 @@ void SimulatorControl::exportToMatlabFile(QString fileName)
     QStringList keys = m_data1DRaw.keys();
     // Print arrays to variables
     for(QString key : keys) {
-        const QList<QPointF> &points = m_data1DRaw[key]->points();
+        const QVector<QPointF> &points = m_data1DRaw[key]->points();
 
         if(key == keys[0]) {
             out << xLabel().toLower() << " = [";
