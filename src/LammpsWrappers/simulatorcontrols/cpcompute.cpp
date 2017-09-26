@@ -16,19 +16,24 @@ CPCompute::~CPCompute() { }
 
 bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     // Handles per atom computes
-    if(!compute) return false;
-    if(!compute->peratom_flag) return false;
-    // if(compute->size_peratom_cols > 0) return false;
+    if(!compute || !compute->peratom_flag) return false;
+
+    setIsPerAtom(true);
+    setInteractive(true);
     int numAtoms = lammpsController->system->numberOfAtoms();
     int numCols = compute->size_peratom_cols;
 
     if(numCols == 0) {
         setNumPerAtomValues(1);
+        if(!windowVisible() && !hovered()) return true;
+
         double *values = compute->vector_atom;
         m_atomData = std::vector<double>(values, values+numAtoms);
     } else {
-        double **values = compute->array_atom;
         setNumPerAtomValues(numCols);
+        if(!windowVisible() && !hovered()) return true;
+
+        double **values = compute->array_atom;
         m_atomData.resize(numAtoms);
         for(int atomIndex=0; atomIndex<numAtoms; atomIndex++) {
             int atomGroupBit = lammpsController->lammps()->atom->mask[atomIndex];
@@ -42,8 +47,6 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
     Data1D *data = ensureExists("histogram", true);
     data->createHistogram(m_atomData);
 
-    setIsPerAtom(true);
-    setInteractive(true);
     return true;
 }
 
@@ -249,43 +252,25 @@ void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     Compute *compute = lammpsController->findComputeByIdentifier(identifier());
     if(compute->scalar_flag == 1) {
         if(validateStatus(compute, lammpsController->lammps())) {
-            try {
-                compute->compute_scalar();
-            } catch (LAMMPSException &exception) {
-                // TODO: handle this better than just ignoring exception.
-            }
+            compute->compute_scalar();
         }
     }
 
     if(compute->vector_flag == 1) {
         if(validateStatus(compute, lammpsController->lammps())) {
-            try {
-                compute->compute_vector();
-            } catch (LAMMPSException &exception) {
-                // TODO: handle this better than just ignoring exception.
-            }
+            compute->compute_vector();
         }
     }
 
     if(compute->array_flag == 1) {
         if(validateStatus(compute, lammpsController->lammps())) {
-            try {
-                compute->compute_array();
-            } catch (LAMMPSException &exception) {
-                // TODO: handle this better than just ignoring exception.
-            }
+            compute->compute_array();
         }
     }
 
     if(compute->peratom_flag == 1) {
         if(validateStatus(compute, lammpsController->lammps())) {
-            try {
-                compute->compute_peratom();
-            }  catch(LAMMPSAbortException & ae) {
-                qDebug() << "Yeah didn't go so well: " << ae.message.c_str();
-            } catch(LAMMPSException & e) { \
-                qDebug() << "Yeah didn't go so well: " << e.message.c_str();
-            }
+            compute->compute_peratom();
         }
     }
 }
@@ -316,36 +301,26 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
         return;
     }
     if(lmp_compute->scalar_flag == 1) {
-        try {
-            double value = lmp_compute->compute_scalar();
-            setHasScalarData(true);
-            setScalarValue(value);
-            Data1D *data = ensureExists("scalar", true);
-            data->add(lammpsController->system->simulationTime(), value, true);
-            setXLabel("Time");
-            setYLabel("Value");
-            setInteractive(true);
-        } catch (LAMMPSException &exception) {
-            qDebug() << "ERROR: LAMMPS threw an exception!";
-            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.message);
-        }
+        double value = lmp_compute->compute_scalar();
+        setHasScalarData(true);
+        setScalarValue(value);
+        Data1D *data = ensureExists("scalar", true);
+        data->add(lammpsController->system->simulationTime(), value, true);
+        setXLabel("Time");
+        setYLabel("Value");
+        setInteractive(true);
     }
     if(lmp_compute->vector_flag == 1) {
-        try {
-            lmp_compute->compute_vector();
-            int numVectorValues = lmp_compute->size_vector;
-            for(int i=1; i<=numVectorValues; i++) {
-                QString key = QString("value_%1").arg(i);
-                Data1D *data = ensureExists(key, true);
-                double value = lmp_compute->vector[i-1];
-                data->add(lammpsController->system->simulationTime(), value, true);
-            }
-            setXLabel("Time");
-            setYLabel("Value");
-        } catch (LAMMPSException &exception) {
-            qDebug() << "ERROR: LAMMPS threw an exception!";
-            qDebug() << "ERROR: Message:" << QString::fromStdString(exception.message);
+        lmp_compute->compute_vector();
+        int numVectorValues = lmp_compute->size_vector;
+        for(int i=1; i<=numVectorValues; i++) {
+            QString key = QString("value_%1").arg(i);
+            Data1D *data = ensureExists(key, true);
+            double value = lmp_compute->vector[i-1];
+            data->add(lammpsController->system->simulationTime(), value, true);
         }
+        setXLabel("Time");
+        setYLabel("Value");
     }
 }
 
