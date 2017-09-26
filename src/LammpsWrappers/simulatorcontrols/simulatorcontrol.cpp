@@ -368,6 +368,15 @@ void SimulatorControl::setHasHistogram(bool hasHistogram)
         emit hasHistogramChanged(m_hasHistogram);
 }
 
+void SimulatorControl::setWindowVisible(bool windowVisible)
+{
+    if (m_windowVisible == windowVisible)
+            return;
+
+        m_windowVisible = windowVisible;
+        emit windowVisibleChanged(m_windowVisible);
+}
+
 Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D();
@@ -398,6 +407,11 @@ QString SimulatorControl::type() const
 bool SimulatorControl::hasHistogram() const
 {
     return m_hasHistogram;
+}
+
+bool SimulatorControl::windowVisible() const
+{
+    return m_windowVisible;
 }
 
 int SimulatorControl::groupBit() const
