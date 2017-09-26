@@ -56,7 +56,7 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
 {
     if(lammpsController->m_paused) {
         // No new data from LAMMPS when paused
-        m_atomData.dirty = false;
+        m_atomData.dirty = true;
         m_atomData.paused = true;
         return;
     }
