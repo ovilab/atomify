@@ -29,7 +29,6 @@
 #include "LammpsWrappers/computes.h"
 #include "LammpsWrappers/fixes.h"
 #include "LammpsWrappers/bonds.h"
-
 using namespace std;
 
 MyWorker::MyWorker() {
@@ -155,6 +154,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
     m_stepOnce = false;
+    // qDebug() << "Current state: " << states.currentStateString().toStdString() << endl;
 
     if(states.continued()->active()) {
         m_lammpsController.doContinue = true;
@@ -168,6 +168,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         if(atomifySimulator->m_statistics->currentRun()) atomifySimulator->m_statistics->currentRun()->m_crashed = true;
         m_lammpsController.crashed = false;
         m_lammpsController.finished = true;
+
         atomifySimulator->setError(m_lammpsController.errorMessage);
         emit atomifySimulator->crashed();
         return;
@@ -175,8 +176,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 
     if(states.reset()->active() && !m_cancelPending) {
         m_cancelPending = true;
+
         return;
     }
+
 
     if(states.reset()->active() && m_lammpsController.finished) {
         m_lammpsController.stop();
@@ -202,6 +205,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         return;
     }
 
+
     // If we don't have a LAMMPS object, but we have a new script (aka in parsing state), create LAMMPS object
     if(!m_lammpsController.lammps() && states.parsing()->active()) {
         atomifySimulator->m_statistics->newRun();
@@ -214,8 +218,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         m_lammpsController.start();
         return;
     }
-    atomifySimulator->system()->synchronizeQML(&m_lammpsController);
-    atomifySimulator->system()->atoms()->synchronizeRenderer();
+
+    if(!states.crashed()->active()) {
+        atomifySimulator->system()->synchronizeQML(&m_lammpsController);
+        atomifySimulator->system()->atoms()->synchronizeRenderer();
+    }
+
     if(states.parsing()->active()) {
         atomifySimulator->m_statistics->currentRun()->m_pairStyle = atomifySimulator->system()->pairStyle();
         atomifySimulator->m_statistics->currentRun()->m_numThreads = atomifySimulator->system()->performance()->threads();
