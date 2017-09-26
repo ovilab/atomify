@@ -68,7 +68,7 @@ Column {
                             ": "+model.modelData.scalarValue.toPrecision(4) // 4 to be consistent with variables section.
                         }
                     } else if(titleLabel.numPerAtomValues > 1) {
-                        "   ["+(titleLabel.compute.perAtomIndex+1)+"]"
+                        "   ["+(titleLabel.fix.perAtomIndex+1)+"]"
                     } else ""
 
                 }
@@ -88,7 +88,7 @@ Column {
                             MenuItem {
                                 text: model.index+1
                                 onClicked: {
-                                    titleLabel.compute.perAtomIndex = (parseInt(text)-1)
+                                    titleLabel.fix.perAtomIndex = (parseInt(text)-1)
                                     menu.close()
                                 }
                             }
@@ -97,33 +97,5 @@ Column {
                 }
             }
         }
-
-
-//        Row {
-//            visible: list.visible
-//            Label {
-//                id: fixesTitleLabel
-//                font.underline: model.modelData.interactive
-//                color: model.modelData.interactive ? "steelblue" : "white"
-//                text: {
-//                    model.modelData.identifier
-//                }
-//                MouseArea {
-//                    anchors.fill: parent
-//                    cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
-//                    onClicked: {
-//                        if(model.modelData.interactive) {
-//                            var point = Qt.point(mouseX, mouseY)
-//                            point = getGlobalPosition(point, fixesTitleLabel)
-//                            create2DPlotWindow(model.modelData, point)
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
-//    Plot1D
-//    {
-//        visible: true
-//    }
 }

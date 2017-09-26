@@ -39,8 +39,6 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
         return true;
     }
     if(*which == BIN2D) {
-        return false;
-
         setInteractive(true);
         if(m_dataRaw.size() != *nvalues) {
             m_dataRaw.clear();
@@ -86,8 +84,6 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
                 maxValues[i] = -1e9;
             }
 
-
-
             for(int i=0; i<*nchunk; i++) {
                 float x = fix->compute_array(i,0);
                 float z = fix->compute_array(i,1);
@@ -113,6 +109,8 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
 
         LAMMPS_NS::bigint *nextValidTimestep = reinterpret_cast<LAMMPS_NS::bigint*>(fix->extract("nvalid", dimension));
         if(m_nextValidTimestep+1 == lammpsController->system->currentTimestep()) {
+            setNumPerAtomValues(*nvalues);
+
             for(int i=0; i<*nvalues; i++) {
                 Data1D *data = ensureExists( QString("Value %1").arg(i+1), true);
                 if( !windowVisible() && !hovered()) continue;
@@ -134,9 +132,8 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
             m_atomData.resize(numAtoms);
             for(int i=0; i<numAtoms; i++) {
                 int chunkID = chunk->ichunk[i];
-                int j = 0; // TODO: support multiple values
 
-                int valueIndex = *colextra+1+0; // 0 means first value with index 0
+                int valueIndex = *colextra+1+m_perAtomIndex;
                 float value = fix->compute_array(chunkID-1, valueIndex);
                 m_atomData[i] = value;
             }
