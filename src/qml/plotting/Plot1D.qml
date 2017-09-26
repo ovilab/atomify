@@ -11,8 +11,8 @@ WindowGL2 {
     id: root
     property var dataSeries: []
     property SimulatorControl control
-    width: 500
-    height: 500
+    width: Screen.width/3
+    height: width
     onControlChanged: {
         if(!control) return
         updateSeries("line")
