@@ -70,6 +70,34 @@ void States::setupStates(AtomifySimulator &simulator)
     m_machine->start();
 }
 
+QString States::currentStateString()
+{
+    if(m_parsing->active()) {
+        return "parsing";
+    }
+    if(m_crashed->active()) {
+        return "crashed";
+    }
+    if(m_idle->active()) {
+        return "idle";
+    }
+    if(m_finished->active()) {
+        return "finished";
+    }
+    if(m_continued->active()) {
+        return "continued";
+    }
+    if(m_paused->active()) {
+        return "paused";
+    }
+    if(m_reset->active()) {
+        return "reset";
+    }
+    if(m_unPaused->active()) {
+        return "unPaused";
+    }
+}
+
 QState *States::reset() const
 {
     return m_reset;

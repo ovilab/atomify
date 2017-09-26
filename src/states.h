@@ -33,6 +33,7 @@ public:
     QHistoryState* unPaused() const;
     QStateMachine* machine() const;
     void setupStates(class AtomifySimulator &simulator);
+    QString currentStateString();
 
 signals:
     void crashedChanged(QState* crashed);
