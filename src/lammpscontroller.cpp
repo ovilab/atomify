@@ -97,7 +97,11 @@ void LAMMPSController::synchronizeLAMMPS(int mode)
             }
         }
 
-        QThread::currentThread()->msleep(1); // Sleep 1/60th of a second
+        if(worker->m_paused) {
+            QThread::currentThread()->msleep(100); // Check fairly slow
+        } else {
+            QThread::currentThread()->msleep(1); // As fast as possible
+        }
     }
 
     if(worker->m_cancelPending) {
