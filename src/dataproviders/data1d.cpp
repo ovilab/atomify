@@ -94,6 +94,46 @@ void Data1D::updateXYSeries(QAbstractSeries *series)
     }
 }
 
+void Data1D::copyHistogram(const QVector<QPointF> &points)
+{
+//    if(points.size()<2) return;
+
+//    double dx = points[1].x() - points[0].x();
+//    td::vector<int> counts(points.size(), 0);
+//    for(double p : m_cleanHistogramPoints) {
+//        int bin = (p-min) / dx;
+//        if(bin >= m_bins) bin = m_bins-1; // The very last number is exactly on the edge, put it in last bin
+//        counts[bin]++;
+//    }
+
+//    // Todo: store this value on object instead?
+//    QVector<QPointF> histogram;
+//    histogram.reserve(3*m_bins+1);
+//    histogram.append(QPointF(min, 0));
+//    double maxCount = 0;
+//    for(int bin = 0; bin<m_bins; bin++) {
+//        double binMin = min + bin*dx;
+//        double binMax = min + (bin+1)*dx;
+//        double value = counts[bin];
+//        maxCount = std::max(maxCount, value);
+
+//        histogram.append(QPointF(binMin, value));
+//        histogram.append(QPointF(binMax, value));
+//        histogram.append(QPointF(binMax, 0));
+//    }
+//    counts.clear();
+//    series->replace(histogram);
+//    histogram.clear();
+//    m_xMin = min;
+//    m_xMax = max;
+//    m_yMin = 0;
+//    m_yMax = maxCount*1.1;
+//    emit xMinChanged(m_xMin);
+//    emit xMaxChanged(m_xMax);
+//    emit yMinChanged(m_yMin);
+//    emit yMaxChanged(m_yMax);
+}
+
 void Data1D::updateHistogram(QLineSeries *series)
 {
     m_cleanHistogramPoints.clear();

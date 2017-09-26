@@ -35,11 +35,11 @@ public:
     bool enabled() const;
     const QList<QPointF> &points();
     QXYSeries* xySeries() const;
+    void copyHistogram(const QVector<QPointF> &points);
     bool isHistogram() const;
     void setIsHistogram(bool isHistogram);
     QString label() const;
     int bins() const;
-
 signals:
     void xMinChanged(qreal xMin);
     void xMaxChanged(qreal xMax);
