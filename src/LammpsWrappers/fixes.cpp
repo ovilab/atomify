@@ -94,6 +94,16 @@ void Fixes::synchronizeQML(LAMMPSController *lammpsController)
     for(QObject *obj : m_data) {
         SimulatorControl *control = qobject_cast<SimulatorControl*>(obj);
         control->updateData1D();
+        CPFixIndent *fixIndent = qobject_cast<CPFixIndent*>(obj);
+        if(fixIndent) {
+            if(fixIndent->hovered()) {
+                setActiveFixIndent(fixIndent);
+            }
+        }
+    }
+
+    if(m_activeFixIndent && !m_activeFixIndent->hovered()) {
+        setActiveFixIndent(nullptr);
     }
 
 }
@@ -118,6 +128,11 @@ void Fixes::updateThreadOnDataObjects(QThread *thread) {
             }
         }
     }
+}
+
+CPFixIndent *Fixes::activeFixIndent() const
+{
+    return m_activeFixIndent;
 }
 
 QVector<SimulatorControl *> Fixes::simulatorControls()
@@ -156,4 +171,13 @@ void Fixes::setCount(int count)
 
     m_count = count;
     emit countChanged(count);
+}
+
+void Fixes::setActiveFixIndent(CPFixIndent *activeFixIndent)
+{
+    if (m_activeFixIndent == activeFixIndent)
+        return;
+
+    m_activeFixIndent = activeFixIndent;
+    emit activeFixIndentChanged(m_activeFixIndent);
 }

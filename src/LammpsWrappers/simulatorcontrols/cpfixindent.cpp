@@ -6,7 +6,7 @@
 
 CPFixIndent::CPFixIndent(Qt3DCore::QNode *parent) : CPFix(parent)
 {
-
+    setInteractive(true);
 }
 
 CPFixIndent::~CPFixIndent()
@@ -17,6 +17,7 @@ CPFixIndent::~CPFixIndent()
 
 void CPFixIndent::copyData(LAMMPSController *lammpsController)
 {
+    enum{NONE,SPHERE,CYLINDER,PLANE};
     LAMMPS_NS::FixIndent *lmp_fix = dynamic_cast<LAMMPS_NS::FixIndent *>(lammpsController->findFixByIdentifier(identifier()));
     if(lmp_fix == nullptr) return;
     int dim;
@@ -38,6 +39,7 @@ void CPFixIndent::copyData(LAMMPSController *lammpsController)
     char   *rstr   = static_cast<char*>(lmp_fix->extract("rstr", dim));
     char   *pstr   = static_cast<char*>(lmp_fix->extract("pstr", dim));
     if (*istyle == SPHERE) {
+        setType("sphere");
         // ctr = current indenter center
         // remap into periodic box
 
@@ -52,8 +54,10 @@ void CPFixIndent::copyData(LAMMPSController *lammpsController)
         double radius;
         if (rstr) radius = lammpsController->lammps()->input->variable->compute_equal(*rvar);
         else radius = *rvalue;
-        qDebug() << "Found sphere with (x,y,z,r)=(" << ctr[0] << ", " << ctr[1] << ", " << ctr[2] << ", " << radius << ")";
+        setPosition(QVector3D(ctr[0], ctr[1], ctr[2]));
+        setRadius(radius);
     } else if (*istyle == CYLINDER) {
+        setType("cylinder");
         // ctr = current indenter axis
         // remap into periodic box
         // 3rd coord is just near box for remap(), since isn't used
@@ -83,13 +87,79 @@ void CPFixIndent::copyData(LAMMPSController *lammpsController)
         double radius;
         if (rstr) radius = lammpsController->lammps()->input->variable->compute_equal(*rvar);
         else radius = *rvalue;
+        setPosition(QVector3D(ctr[0], ctr[1], ctr[2]));
+        setRadius(radius);
+        setDimension(*cdim);
+
         qDebug() << "Found cylinder along " << *cdim << " at (x,y,r)=(" << ctr[0] << ", " << ctr[1] << ", " << radius << ")";
     } else if (*istyle == PLANE) {
+        setType("plane");
         // plane = current plane position
 
         double plane;
         if (pstr) plane = lammpsController->lammps()->input->variable->compute_equal(*pvar);
         else plane = *pvalue;
+        setDimension(*cdim);
+        setPosition(QVector3D(plane, plane, plane));
         qDebug() << "Found plane along " << *cdim << " at (p)=(" << plane;
+    } else {
+        setType("none");
     }
+}
+
+QString CPFixIndent::type() const
+{
+    return m_type;
+}
+
+QVector3D CPFixIndent::position() const
+{
+    return m_position;
+}
+
+int CPFixIndent::dimension() const
+{
+    return m_dimension;
+}
+
+qreal CPFixIndent::radius() const
+{
+    return m_radius;
+}
+
+void CPFixIndent::setType(QString type)
+{
+    if (m_type == type)
+        return;
+
+    m_type = type;
+    emit typeChanged(m_type);
+}
+
+void CPFixIndent::setPosition(QVector3D position)
+{
+    if (m_position == position)
+        return;
+
+    m_position = position;
+    emit positionChanged(m_position);
+}
+
+void CPFixIndent::setDimension(int dimension)
+{
+    if (m_dimension == dimension)
+        return;
+
+    m_dimension = dimension;
+    emit dimensionChanged(m_dimension);
+}
+
+void CPFixIndent::setRadius(qreal radius)
+{
+    qWarning("Floating point comparison needs context sanity check");
+    if (qFuzzyCompare(m_radius, radius))
+        return;
+
+    m_radius = radius;
+    emit radiusChanged(m_radius);
 }

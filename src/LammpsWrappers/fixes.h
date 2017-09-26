@@ -9,7 +9,7 @@ class Fixes : public QObject
     Q_OBJECT
     Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
-
+    Q_PROPERTY(CPFixIndent* activeFixIndent READ activeFixIndent WRITE setActiveFixIndent NOTIFY activeFixIndentChanged)
 public:
     explicit Fixes(QObject *parent = 0);
 
@@ -21,22 +21,27 @@ public:
 
     void synchronizeQML(LAMMPSController *lammpsController);
     void updateThreadOnDataObjects(QThread *thread);
+    class CPFixIndent* activeFixIndent() const;
+
 signals:
     void modelChanged(QVariant model);
     void countChanged(int count);
+    void activeFixIndentChanged(class CPFixIndent* activeFixIndent);
 
 public slots:
     void setModel(QVariant model);
     void setCount(int count);
+    void setActiveFixIndent(class CPFixIndent* activeFixIndent);
 
 private:
     QVariant m_model;
     QList<QObject *> m_data;
     QMap<QString, QObject *> m_dataMap;
+    class CPFixIndent* m_activeFixIndent = nullptr;
+    int m_count = 0;
 
     void add(QString identifier, class LAMMPSController *lammpsController);
     void remove(QString identifier);
-    int m_count = 0;
     bool addOrRemove(LAMMPSController *lammpsController);
 };
 

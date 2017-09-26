@@ -84,5 +84,6 @@
         <file>desktop/RightBar/PeriodicImagesControl.qml</file>
         <file>desktop/RightBar/GroupsColumn.qml</file>
         <file>plotting/Plot1D.qml</file>
+        <file>visualization/FixIndentVisualizer.qml</file>
     </qresource>
 </RCC>

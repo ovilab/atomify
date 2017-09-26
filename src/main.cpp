@@ -266,6 +266,10 @@ int main(int argc, char *argv[])
         previewer.show();
     } else {
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+        if(engine.rootObjects().size() == 0) {
+            qDebug() << "ERROR: Could not load QML";
+            return 1;
+        }
         QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
         if (!window) {
             qDebug() << "ERROR: Could not load window";

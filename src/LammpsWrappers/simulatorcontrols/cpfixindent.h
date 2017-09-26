@@ -6,23 +6,38 @@
 class CPFixIndent : public CPFix
 {
     Q_OBJECT
+    Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(QVector3D position READ position WRITE setPosition NOTIFY positionChanged)
+    Q_PROPERTY(int dimension READ dimension WRITE setDimension NOTIFY dimensionChanged)
+    Q_PROPERTY(qreal radius READ radius WRITE setRadius NOTIFY radiusChanged)
 public:
     explicit CPFixIndent(Qt3DCore::QNode *parent = 0);
     ~CPFixIndent();
-    enum IdentType
-    {
-        NONE,
-        SPHERE,
-        CYLINDER,
-        PLANE
-    };
-    Q_ENUMS(IdentType)
 
 private:
+    QString m_type;
+    QVector3D m_position;
+    int m_dimension = 0;
+    qreal m_radius = 1;
 
-    // CPFix interface
 public:
     virtual void copyData(class LAMMPSController *lammpsController) override;
+    QString type() const;
+    QVector3D position() const;
+    int dimension() const;
+    qreal radius() const;
+
+public slots:
+    void setType(QString type);
+    void setPosition(QVector3D position);
+    void setDimension(int dimension);
+    void setRadius(qreal radius);
+
+signals:
+    void typeChanged(QString type);
+    void positionChanged(QVector3D position);
+    void dimensionChanged(int dimension);
+    void radiusChanged(qreal radius);
 };
 
 #endif // CPFIXINDENT_H

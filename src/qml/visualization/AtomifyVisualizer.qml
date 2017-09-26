@@ -547,6 +547,11 @@ Scene3D {
             }
         }
 
+        FixIndentVisualizer {
+            id: fixIndentVisualizer
+            fixIndent: simulator.system.fixes.activeFixIndent
+        }
+
 //        Entity {
 //            components: [
 //                slicePlaneMesh,
