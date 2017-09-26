@@ -18,6 +18,7 @@
 #include <output.h>
 #include <update.h>
 #include <comm.h>
+#include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
 
 using namespace LAMMPS_NS;
 
@@ -441,6 +442,15 @@ int System::numberOfDangerousNeighborlistBuilds() const
 QString System::lastCommand() const
 {
     return m_lastCommand;
+}
+
+QVector<SimulatorControl *> System::simulatorControls() const
+{
+    QVector<SimulatorControl*> controls = computes()->simulatorControls();
+    controls.append(fixes()->simulatorControls());
+    controls.append(variables()->simulatorControls());
+
+    return controls;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)

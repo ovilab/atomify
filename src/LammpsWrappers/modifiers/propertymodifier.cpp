@@ -2,7 +2,9 @@
 #include "../atomdata.h"
 #include "../system.h"
 #include "../computes.h"
+#include "../fixes.h"
 #include "../simulatorcontrols/cpcompute.h"
+#include "../simulatorcontrols/cpfix.h"
 #include "../variables.h"
 #include "../simulatorcontrols/cpvariable.h"
 
@@ -81,35 +83,25 @@ void PropertyModifier::apply(AtomData &atomData)
         m_previousHovered = nullptr;
         return;
     }
-    QVector<CPCompute*> computes = m_system->computes()->computes();
-    for(CPCompute *compute : computes) {
-        if(compute->hovered() && compute->isPerAtom()) {
+    QVector<SimulatorControl*> simulatorControls = m_system->simulatorControls();
+
+    for(SimulatorControl *control : simulatorControls) {
+
+        if(control->hovered() && control->isPerAtom()) {
+
             setActive(true);
-            const std::vector<double> &values = compute->atomData();
+            const std::vector<double> &values = control->atomData();
             if(values.size() == atomData.size()) {
-                applyColors(atomData, values, compute->groupBit());
-                if(compute != m_previousHovered) {
-                    m_previousHovered = compute;
+                // If we just hovered, the atomData array might not have been updated with values yet
+                applyColors(atomData, values, control->groupBit());
+                if(control != m_previousHovered) {
+                    m_previousHovered = control;
                 }
                 return;
             }
         }
     }
 
-    QVector<CPVariable*> variables = m_system->variables()->variables();
-    for(CPVariable *variable : variables) {
-        if(variable->hovered() && variable->isPerAtom()) {
-            setActive(true);
-            const std::vector<double> &values = variable->atomData();
-            if(values.size() == atomData.size()) {
-                applyColors(atomData, values, 1); // groupBit = 1 will be true for all bitwise (i.e. all groups)
-                if(variable != m_previousHovered) {
-                    m_previousHovered = variable;
-                }
-                return;
-            }
-        }
-    }
     setActive(false);
     m_previousHovered = nullptr;
 }

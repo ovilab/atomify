@@ -109,10 +109,14 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
         }
     } else if(*which == BIN1D) {
         setInteractive(true);
+        setIsPerAtom(true);
+
         LAMMPS_NS::bigint *nextValidTimestep = reinterpret_cast<LAMMPS_NS::bigint*>(fix->extract("nvalid", dimension));
         if(m_nextValidTimestep+1 == lammpsController->system->currentTimestep()) {
             for(int i=0; i<*nvalues; i++) {
                 Data1D *data = ensureExists( QString("Value %1").arg(i+1), true);
+                if( !windowVisible() && !hovered()) continue;
+
                 data->clear(true);
                 for(int j=0; j<*nchunk; j++) {
                     float x = fix->compute_array(j,0);
@@ -120,6 +124,21 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
                     float y = fix->compute_array(j, valueIndex);
                     data->add(x,y);
                 }
+            }
+        }
+
+        if(hovered()) {
+            // Even though we haven't updated contents for a while, atoms might have
+            // reorganized in memory, so we need to copy the new data if hovered
+            int numAtoms = lammpsController->system->numberOfAtoms();
+            m_atomData.resize(numAtoms);
+            for(int i=0; i<numAtoms; i++) {
+                int chunkID = chunk->ichunk[i];
+                int j = 0; // TODO: support multiple values
+
+                int valueIndex = *colextra+1+0; // 0 means first value with index 0
+                float value = fix->compute_array(chunkID-1, valueIndex);
+                m_atomData[i] = value;
             }
         }
 

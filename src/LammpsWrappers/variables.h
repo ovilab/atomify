@@ -16,9 +16,9 @@ public:
     void synchronizeQML(LAMMPSController *lammpsController);
     void updateThreadOnDataObjects(QThread *thread);
     int count() const;
+    QVector<class SimulatorControl *> simulatorControls();
     void reset();
     QVariant model() const;
-    QVector<class CPVariable*> variables();
 signals:
     void countChanged(int count);
     void modelChanged(QVariant model);

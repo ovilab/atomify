@@ -104,14 +104,14 @@ QVariant Variables::model() const
     return m_model;
 }
 
-QVector<CPVariable *> Variables::variables()
+QVector<SimulatorControl *> Variables::simulatorControls()
 {
-    QVector<CPVariable *> variables;
+    QVector<SimulatorControl*> controls;
     for(QObject *object : m_data) {
-        CPVariable *variable = qobject_cast<CPVariable*>(object);
-        variables.append(variable);
+        SimulatorControl *control = qobject_cast<SimulatorControl*>(object);
+        controls.append(control);
     }
-    return variables;
+    return controls;
 }
 
 void Variables::setCount(int count)

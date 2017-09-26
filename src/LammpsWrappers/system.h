@@ -89,6 +89,7 @@ public:
     int numberOfTimesteps() const;
     int numberOfDangerousNeighborlistBuilds() const;
     QString lastCommand() const;
+    QVector<class SimulatorControl*> simulatorControls() const;
 
 public slots:
     void setIsValid(bool isValid);

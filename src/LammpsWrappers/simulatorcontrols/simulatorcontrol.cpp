@@ -4,7 +4,7 @@
 
 SimulatorControl::SimulatorControl(Qt3DCore::QNode *parent) : Qt3DCore::QNode(parent)
 {
-
+    m_groupBit = 1;
 }
 
 int SimulatorControl::getNextId()

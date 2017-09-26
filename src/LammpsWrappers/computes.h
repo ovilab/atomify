@@ -23,7 +23,7 @@ public:
     void reset();
     int count() const;
     QVariant model() const;
-    QVector<class CPCompute*> computes();
+    QVector<class SimulatorControl*> simulatorControls();
 
 signals:
     void countChanged(int count);

@@ -140,14 +140,14 @@ QVariant Computes::model() const
     return m_model;
 }
 
-QVector<CPCompute *> Computes::computes()
+QVector<SimulatorControl*> Computes::simulatorControls()
 {
-    QVector<CPCompute*> computes;
+    QVector<SimulatorControl*> controls;
     for(QObject *object : m_data) {
-        CPCompute *compute = qobject_cast<CPCompute*>(object);
-        computes.append(compute);
+        SimulatorControl *control = qobject_cast<SimulatorControl*>(object);
+        controls.append(control);
     }
-    return computes;
+    return controls;
 }
 
 void Computes::setCount(int count)

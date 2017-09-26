@@ -113,6 +113,16 @@ void Fixes::updateThreadOnDataObjects(QThread *thread) {
     }
 }
 
+QVector<SimulatorControl *> Fixes::simulatorControls()
+{
+    QVector<SimulatorControl*> controls;
+    for(QObject *object : m_data) {
+        SimulatorControl *control = qobject_cast<SimulatorControl*>(object);
+        controls.append(control);
+    }
+    return controls;
+}
+
 int Fixes::count() const
 {
     return m_count;
