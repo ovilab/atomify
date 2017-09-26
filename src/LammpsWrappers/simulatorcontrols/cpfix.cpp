@@ -202,10 +202,12 @@ bool CPFix::copyData(LAMMPS_NS::FixAveHisto *fix, LAMMPSController *lammpsContro
     // TODO Implement this
     return false;
     if(!fix) return false;
-    int nbins;
-    fix->extract("nbins", nbins);
-    qDebug() << "We have " << nbins << " bins.";
-    if(nbins>10000) return false;
+    int nbins, dim;
+    int *value;
+
+    value = reinterpret_cast<int*>(fix->extract("nbins", dim));
+    nbins = *value;
+    double *coord = reinterpret_cast<double*>(fix->extract("coord", dim));
 
     m_histogram->setEnabled(true);
 
