@@ -1,10 +1,8 @@
 import Atomify 1.0
 
 import Qt3D.Core 2.0
-// import Qt3D.Render 2.0
-// import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
-// import Qt3D.Logic 2.0
+import Qt3D.Render 2.0
 
 import SimVis 1.0
 import ShaderNodes 1.0
@@ -12,27 +10,39 @@ import ShaderNodes 1.0
 Entity {
     id: root
     property FixIndent fixIndent
-    enabled: fixIndent ? fixIndent.hovered && (fixIndent.type==="sphere" || fixIndent.type==="cylinder") : false
+    enabled: fixIndent ? fixIndent.hovered && fixIndent.type!=="none" : false
+    property string type: fixIndent ? fixIndent.type : "none"
 
-    property string type: {
-        if(!fixIndent) return "none"
-        if(fixIndent.type==="sphere") return "sphere"
-        if(fixIndent.type==="cylinder") return "cylinder"
-        if(fixIndent.type==="plane") return "plane"
+    Entity {
+        components: [
+            sphereMesh,
+            whiteMaterial,
+            viewCenterTransform,
+            forwardFrameGraph.guideLayer
+        ]
     }
 
-    components: [
-        sphereMesh,
-        cylinderMesh,
-        whiteMaterial,
-        viewCenterTransform,
-        forwardFrameGraph.guideLayer
-    ]
+    Entity {
+        components: [
+            cylinderMesh,
+            whiteMaterial,
+            viewCenterTransform,
+            forwardFrameGraph.guideLayer
+        ]
+    }
+
     SphereMesh {
         id: sphereMesh
-        enabled: root.type==="sphere"
         radius: fixIndent ? fixIndent.radius : 1.0
     }
+
+    PlaneMesh {
+        id: planeMesh
+        enabled: root.type==="plane"
+        height: 100
+        width: 100
+    }
+
     CylinderMesh {
         id: cylinderMesh
         enabled: root.type==="cylinder"
@@ -56,11 +66,10 @@ Entity {
         id: viewCenterTransform
         translation: {
             if(!fixIndent) return Qt.vector3d(0,0,0);
+            var position = root.fixIndent.position
             if(fixIndent.type === "sphere") {
-                return root.fixIndent.position
+                return position
             } else if(fixIndent.type === "cylinder") {
-                var position = root.fixIndent.position
-                // return position
                 if(fixIndent.dimension===0) {
                     return position.plus(Qt.vector3d(simulator.system.size.x*0.5, 0, 0))
                 } else if(fixIndent.dimension===1) {
@@ -74,25 +83,7 @@ Entity {
         }
         rotation: {
             if(!fixIndent) return Qt.quaternion(0,0,0,0)
-            if(root.type==="cylinder") {
-                if(fixIndent.dimension===0) {
-                    return fromAxisAndAngle(Qt.vector3d(0, 0, 1), 90)
-                } else if(fixIndent.dimension===1) {
-                    return Qt.quaternion(0,0,0,0)
-                } else if(fixIndent.dimension===2) {
-                    return fromAxisAndAngle(Qt.vector3d(1, 0, 0), -90)
-                }
-            }
-
-            return Qt.quaternion(0,0,0,0)
+            return fixIndent.rotation;
         }
-
-//        scale: {
-//            if(!fixIndent) return 1;
-//            if(fixIndent.type === "sphere") {
-//                return root.fixIndent.radius
-//            }
-//            return 1.0
-//        }
     }
 }

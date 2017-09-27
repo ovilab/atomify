@@ -56,6 +56,7 @@ void CPFixIndent::copyData(LAMMPSController *lammpsController)
         else radius = *rvalue;
         setPosition(QVector3D(ctr[0], ctr[1], ctr[2]));
         setRadius(radius);
+        setRotation(QQuaternion(0,0,0,0));
     } else if (*istyle == CYLINDER) {
         setType("cylinder");
         // ctr = current indenter axis
@@ -97,18 +98,30 @@ void CPFixIndent::copyData(LAMMPSController *lammpsController)
         setRadius(radius);
         setDimension(*cdim);
 
-        if(m_dimension==2) {
-            setRotation(QQuaternion::fromDirection(QVector3D(0,0,1), QVector3D(0,0,1)));
+        if(*cdim==0) {
+            setRotation(QQuaternion::fromAxisAndAngle(QVector3D(0,0,1), 90));
+        } else if(*cdim==1) {
+            setRotation(QQuaternion(0,0,0,0));
+        } else {
+            setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1,0,0), -90));
         }
+
     } else if (*istyle == PLANE) {
         setType("plane");
         // plane = current plane position
-
         double plane;
         if (pstr) plane = lammpsController->lammps()->input->variable->compute_equal(*pvar);
         else plane = *pvalue;
         setDimension(*cdim);
         setPosition(QVector3D(plane, plane, plane));
+
+        if(*cdim==0) {
+            setRotation(QQuaternion::fromAxisAndAngle(QVector3D(0,0,1), 90));
+        } else if(*cdim==1) {
+            setRotation(QQuaternion(0,0,0,0));
+        } else {
+            setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1,0,0), -90));
+        }
     } else {
         setType("none");
     }
