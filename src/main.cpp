@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // QGuiApplication app(argc, argv);
+    registerQML();
     QApplication app(argc, argv);
     app.setOrganizationName("Ovilab");
     app.setOrganizationDomain("ovilab");
