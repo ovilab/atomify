@@ -87,11 +87,19 @@ void CPFixIndent::copyData(LAMMPSController *lammpsController)
         double radius;
         if (rstr) radius = lammpsController->lammps()->input->variable->compute_equal(*rvar);
         else radius = *rvalue;
-        setPosition(QVector3D(ctr[0], ctr[1], ctr[2]));
+        if (*cdim == 0) {
+            setPosition(QVector3D(0, ctr[1], ctr[2]));
+        } else if (*cdim == 1) {
+            setPosition(QVector3D(ctr[0], 0, ctr[2]));
+        } else {
+            setPosition(QVector3D(ctr[0], ctr[1], 0));
+        }
         setRadius(radius);
         setDimension(*cdim);
 
-        qDebug() << "Found cylinder along " << *cdim << " at (x,y,r)=(" << ctr[0] << ", " << ctr[1] << ", " << radius << ")";
+        if(m_dimension==2) {
+            setRotation(QQuaternion::fromDirection(QVector3D(0,0,1), QVector3D(0,0,1)));
+        }
     } else if (*istyle == PLANE) {
         setType("plane");
         // plane = current plane position
@@ -101,7 +109,6 @@ void CPFixIndent::copyData(LAMMPSController *lammpsController)
         else plane = *pvalue;
         setDimension(*cdim);
         setPosition(QVector3D(plane, plane, plane));
-        qDebug() << "Found plane along " << *cdim << " at (p)=(" << plane;
     } else {
         setType("none");
     }
@@ -125,6 +132,11 @@ int CPFixIndent::dimension() const
 qreal CPFixIndent::radius() const
 {
     return m_radius;
+}
+
+QQuaternion CPFixIndent::rotation() const
+{
+    return m_rotation;
 }
 
 void CPFixIndent::setType(QString type)
@@ -156,10 +168,18 @@ void CPFixIndent::setDimension(int dimension)
 
 void CPFixIndent::setRadius(qreal radius)
 {
-    qWarning("Floating point comparison needs context sanity check");
     if (qFuzzyCompare(m_radius, radius))
         return;
 
     m_radius = radius;
     emit radiusChanged(m_radius);
+}
+
+void CPFixIndent::setRotation(QQuaternion rotation)
+{
+    if (m_rotation == rotation)
+        return;
+
+    m_rotation = rotation;
+    emit rotationChanged(m_rotation);
 }
