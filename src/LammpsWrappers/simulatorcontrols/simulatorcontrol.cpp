@@ -2,7 +2,7 @@
 #include "lammpscontroller.h"
 #include "mysimulator.h"
 
-SimulatorControl::SimulatorControl(Qt3DCore::QNode *parent) : Qt3DCore::QNode(parent)
+SimulatorControl::SimulatorControl(QQuickItem *parent) : QQuickItem(parent)
 {
     m_groupBit = 1;
 }

@@ -6,7 +6,7 @@ class CPVariable : public SimulatorControl
 {
     Q_OBJECT
 public:
-    CPVariable(Qt3DCore::QNode *parent = 0);
+    CPVariable(QQuickItem *parent = 0);
     virtual bool existsInLammps(class LAMMPSController *lammpsController) override;
     void synchronize(class LAMMPSController *lammpsController);
 

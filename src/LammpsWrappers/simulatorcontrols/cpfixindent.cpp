@@ -4,7 +4,7 @@
 #include <domain.h>
 #include <fix_indent.h>
 
-CPFixIndent::CPFixIndent(Qt3DCore::QNode *parent) : CPFix(parent)
+CPFixIndent::CPFixIndent(QQuickItem *parent) : CPFix(parent)
 {
     setInteractive(true);
 }

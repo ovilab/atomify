@@ -7,7 +7,7 @@
 
 class LAMMPSController;
 class AtomifySimulator;
-class SimulatorControl : public Qt3DCore::QNode
+class SimulatorControl : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
@@ -68,7 +68,7 @@ protected:
     class Data1D *ensureExists(QString key, bool enabledByDefault);
 
 public:
-    explicit SimulatorControl(Qt3DCore::QNode *parent = 0);
+    explicit SimulatorControl(QQuickItem *parent = 0);
     static int getNextId();
     ~SimulatorControl();
     bool enabled() const;

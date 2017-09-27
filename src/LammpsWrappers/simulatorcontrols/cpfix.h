@@ -23,7 +23,7 @@ protected:
     virtual QString createCommandPrefix() override;
 
 public:
-    CPFix(Qt3DCore::QNode *parent = 0);
+    CPFix(QQuickItem *parent = 0);
     ~CPFix();
     virtual void update(class LAMMPSController *lammpsController) override;
     virtual bool existsInLammps(class LAMMPSController *lammpsController);

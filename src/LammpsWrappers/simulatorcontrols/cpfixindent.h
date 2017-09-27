@@ -13,7 +13,7 @@ class CPFixIndent : public CPFix
     Q_PROPERTY(QQuaternion rotation READ rotation WRITE setRotation NOTIFY rotationChanged)
 
 public:
-    explicit CPFixIndent(Qt3DCore::QNode *parent = 0);
+    explicit CPFixIndent(QQuickItem *parent = 0);
     ~CPFixIndent();
 
 private:

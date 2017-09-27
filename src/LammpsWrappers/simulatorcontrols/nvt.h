@@ -14,7 +14,7 @@ private:
     double m_temperatureDampening = 1.0;
 
 public:
-    NVT(Qt3DCore::QNode *parent = 0);
+    NVT(QQuickItem *parent = 0);
     ~NVT() { }
     double targetTemperature() const;
     double temperatureDampening() const;

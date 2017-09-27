@@ -7,7 +7,7 @@
 #include "../system.h"
 using namespace LAMMPS_NS;
 
-CPVariable::CPVariable(Qt3DCore::QNode *parent) : SimulatorControl(parent)
+CPVariable::CPVariable(QQuickItem *parent) : SimulatorControl(parent)
 {
     setType("Variable");
 }
