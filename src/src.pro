@@ -140,7 +140,8 @@ SOURCES += \
     usagestatistics.cpp \
     LammpsWrappers/modifiers/periodicimagesmodifier.cpp \
     LammpsWrappers/modifiers/slicemodifier.cpp \
-    LammpsWrappers/simulatorcontrols/cpfixindent.cpp
+    LammpsWrappers/simulatorcontrols/cpfixindent.cpp \
+    registerqml.cpp
 
 HEADERS += \
     mysimulator.h \
