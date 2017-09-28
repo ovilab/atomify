@@ -16,105 +16,6 @@ int SimulatorControl::getNextId()
 SimulatorControl::~SimulatorControl()
 {
     emit willBeDestroyed();
-    m_dependencies.clear();
-}
-
-bool SimulatorControl::addToLammps(LAMMPSController *lammpsController) {
-//    for(const QVariant &variant : m_dependencies) {
-//        SimulatorControl *dependency = qvariant_cast<SimulatorControl*>(variant);
-//        if(dependency && !dependency->existsInLammps(lammpsController)) {
-//            // We found one dependency that is not added to LAMMPS, abort this mission
-//            return false;
-//        }
-//    }
-
-    return true;
-}
-
-void SimulatorControl::addDependency(SimulatorControl *control)
-{
-    bool found = false;
-    for(QVariant &variant : m_dependencies) {
-        SimulatorControl *thisControl = variant.value<SimulatorControl*>();
-        if(thisControl==control) {
-            found = true;
-            break;
-        }
-    }
-
-    if(!found) {
-        m_dependencies.push_back(QVariant::fromValue(control));
-    }
-}
-
-void SimulatorControl::removeDependency(SimulatorControl *control)
-{
-    for(QVariant &variant : m_dependencies) {
-        SimulatorControl *thisControl = variant.value<SimulatorControl*>();
-        if(thisControl==control) {
-            m_dependencies.removeOne(variant);
-            break;
-        }
-    }
-}
-
-bool SimulatorControl::dependenciesValid(LAMMPSController *lammpsController)
-{
-    bool valid = true;
-    for(const QVariant &variant : m_dependencies) {
-        SimulatorControl *dependency = qvariant_cast<SimulatorControl*>(variant);
-        if(dependency) {
-            // Check if the dependency is not in lammps or one of its dependencies are not in lammps
-            if(!dependency->existsInLammps(lammpsController) || !dependency->dependenciesValid(lammpsController)) {
-                valid = false;
-            }
-        }
-    }
-
-    return valid;
-}
-
-void SimulatorControl::update(LAMMPSController *lammpsController)
-{
-    if(m_isMirror) return; // If this object is only a mirror object, we shouldn't mess with adding or removing things from LAMMPS.
-
-//    bool exists = existsInLammps(lammpsController);
-//    if(!exists && m_enabled) {
-//        // We should exist, so let's try to add.
-//        // Whatever happens, just return. We aren't ready to compute any values yet anyway.
-//        addToLammps(lammpsController);
-//        return;
-//    }
-
-//    if(exists && !m_enabled || !dependenciesValid(lammpsController)) {
-//        // We should not exist, but we do. Now remove from lammps
-//        lammpsController->scriptHandler()->addCommandsToTop(disableCommands(), ScriptCommand::Type::SingleCommand);
-//    }
-
-//    if(exists) {
-//        QString currentCommand = command();
-//        updateCommand();
-//        if(currentCommand!=command()) {
-//            lammpsController->scriptHandler()->addCommandsToTop(resetCommands(), ScriptCommand::Type::SingleCommand);
-//        }
-//    }
-}
-
-void SimulatorControl::handleCommand(QString command) { /* TODO */ }
-
-QString SimulatorControl::fullCommand()
-{
-    return QString("%1 %2").arg(createCommandPrefix()).arg(command());
-}
-
-bool SimulatorControl::isMirror() const
-{
-    return m_isMirror;
-}
-
-QVariantMap SimulatorControl::data1D() const
-{
-    return m_data1D;
 }
 
 bool SimulatorControl::hasScalarData() const
@@ -172,74 +73,18 @@ bool SimulatorControl::hovered() const
     return m_hovered;
 }
 
-bool SimulatorControl::enabled() const
-{
-    return m_enabled;
-}
-
 QString SimulatorControl::identifier() const
 {
-    return m_identifierPrefix+m_identifier;
-}
-
-QString SimulatorControl::command() const
-{
-    return m_command;
-}
-
-QVariantList SimulatorControl::dependencies() const
-{
-    return m_dependencies;
-}
-
-void SimulatorControl::setEnabled(bool enabled)
-{
-    if (m_enabled == enabled)
-        return;
-    m_enabled = enabled;
-    emit enabledChanged(enabled);
+    return m_identifier;
 }
 
 void SimulatorControl::setIdentifier(QString identifier)
 {
-    if(!isMirror()) identifier = identifier+QString("%1").arg(SimulatorControl::getNextId());
     if (m_identifier == identifier)
         return;
 
     m_identifier = identifier;
     emit identifierChanged(identifier);
-}
-
-void SimulatorControl::setCommand(QString command)
-{
-    if (m_command == command)
-        return;
-
-    m_command = command;
-    emit commandChanged(command);
-}
-
-void SimulatorControl::setDependencies(QVariantList dependencies)
-{
-    if (m_dependencies == dependencies)
-        return;
-
-    m_dependencies = dependencies;
-    emit dependenciesChanged(dependencies);
-}
-
-void SimulatorControl::setIsMirror(bool isMirror)
-{
-    if (m_isMirror == isMirror)
-        return;
-
-    m_isMirror = isMirror;
-    if(m_isMirror) {
-        m_identifierPrefix = "";
-    } else {
-        m_identifierPrefix = "atomify_";
-    }
-    emit isMirrorChanged(isMirror);
 }
 
 void SimulatorControl::setData1D(QVariantMap data1D)
@@ -248,7 +93,7 @@ void SimulatorControl::setData1D(QVariantMap data1D)
         return;
 
     m_data1D = data1D;
-    emit data1DChanged(m_data1D);
+    emit data1DChanged(data1D);
 }
 
 void SimulatorControl::setHasScalarData(bool hasScalarData)
@@ -359,15 +204,6 @@ void SimulatorControl::setType(QString type)
         emit typeChanged(m_type);
 }
 
-void SimulatorControl::setHasHistogram(bool hasHistogram)
-{
-    if (m_hasHistogram == hasHistogram)
-            return;
-
-        m_hasHistogram = hasHistogram;
-        emit hasHistogramChanged(m_hasHistogram);
-}
-
 void SimulatorControl::setWindowVisible(bool windowVisible)
 {
     if (m_windowVisible == windowVisible)
@@ -396,13 +232,6 @@ Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
     return m_data1DRaw[key];
 }
 
-void SimulatorControl::updateData1D()
-{
-    for(Data1D *data : m_data1DRaw) {
-        emit data->updated();
-    }
-}
-
 const std::vector<double> &SimulatorControl::atomData() const
 {
     return m_atomData;
@@ -413,9 +242,9 @@ QString SimulatorControl::type() const
     return m_type;
 }
 
-bool SimulatorControl::hasHistogram() const
+QVariantMap SimulatorControl::data1D() const
 {
-    return m_hasHistogram;
+    return m_data1D;
 }
 
 bool SimulatorControl::windowVisible() const
@@ -594,6 +423,13 @@ void SimulatorControl::clear()
 {
     for(Data1D *data : m_data1DRaw) {
         data->clear();
+        emit data->updated();
+    }
+}
+
+void SimulatorControl::updateData1D()
+{
+    for(Data1D *data : m_data1DRaw) {
         emit data->updated();
     }
 }

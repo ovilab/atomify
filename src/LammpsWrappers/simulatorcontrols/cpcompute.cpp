@@ -327,33 +327,8 @@ void CPCompute::copyData(LAMMPSController *lammpsController)
     }
 }
 
-void CPCompute::updateCommand()
-{
-    // For standard computes, command doesn't change
-}
-
-QList<QString> CPCompute::enabledCommands()
-{
-    return { fullCommand() };
-}
-
-QList<QString> CPCompute::disableCommands()
-{
-    return {QString("uncompute %1").arg(identifier())};
-}
-
 bool CPCompute::existsInLammps(LAMMPSController *lammpsController)
 {
     Compute *compute = lammpsController->findComputeByIdentifier(identifier());
     return compute!=nullptr;
-}
-
-QList<QString> CPCompute::resetCommands()
-{
-    return { QString("uncompute %1").arg(identifier()), fullCommand() };
-}
-
-QString CPCompute::createCommandPrefix()
-{
-    return QString("compute %1 %2 ").arg(identifier()).arg(group());
 }

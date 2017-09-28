@@ -140,7 +140,6 @@ void Variables::add(QString identifier, LAMMPSController *lammpsController)
         m_dataMap.insert(identifier, variable);
     } else {
         CPVariable *variable = new CPVariable();
-        variable->setIsMirror(true);
         variable->setIdentifier(identifier);
         m_data.push_back(variable);
         m_dataMap.insert(identifier, variable);
@@ -150,14 +149,10 @@ void Variables::add(QString identifier, LAMMPSController *lammpsController)
 void Variables::remove(QString identifier)
 {
     CPVariable *variable = qobject_cast<CPVariable*>(m_dataMap[identifier]);
-    if(variable->isMirror()) {
-        m_data.removeOne(variable);
-        m_dataMap.remove(identifier);
-        delete variable;
-    } else {
-        m_data.removeOne(variable);
-        m_dataMap.remove(identifier);
-    }
+
+    m_data.removeOne(variable);
+    m_dataMap.remove(identifier);
+    delete variable;
 }
 
 void Variables::reset()

@@ -21,7 +21,6 @@ void Fixes::add(QString identifier, LAMMPSController *lammpsController) {
         } else {
             fix = new CPFix();
         }
-        fix->setIsMirror(true);
         fix->setIdentifier(identifier);
         m_data.push_back(fix);
         m_dataMap.insert(identifier, fix);
@@ -30,14 +29,9 @@ void Fixes::add(QString identifier, LAMMPSController *lammpsController) {
 
 void Fixes::remove(QString identifier) {
     CPFix *fix = qobject_cast<CPFix*>(m_dataMap[identifier]);
-    if(fix->isMirror()) {
-        m_data.removeOne(fix);
-        m_dataMap.remove(identifier);
-        delete fix;
-    } else {
-        m_data.removeOne(fix);
-        m_dataMap.remove(identifier);
-    }
+    m_data.removeOne(fix);
+    m_dataMap.remove(identifier);
+    delete fix;
 }
 
 void Fixes::reset() {

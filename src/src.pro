@@ -99,12 +99,10 @@ SOURCES += \
     lammpscontroller.cpp \
     highlighter.cpp \
     datasource.cpp \
-    LammpsWrappers/simulatorcontrols/nvt.cpp \
     LammpsWrappers/simulatorcontrols/simulatorcontrol.cpp \
     LammpsWrappers/simulatorcontrols/cpfix.cpp \
     LammpsWrappers/simulatorcontrols/cpcompute.cpp \
     LammpsWrappers/simulatorcontrols/cpvariable.cpp \
-    LammpsWrappers/simulatorcontrols/rdf.cpp \
     LammpsWrappers/atoms.cpp \
     LammpsWrappers/system.cpp \
     LammpsWrappers/modifiers/modifier.cpp \
@@ -148,12 +146,10 @@ HEADERS += \
     lammpscontroller.h \
     highlighter.h \
     datasource.h \
-    LammpsWrappers/simulatorcontrols/nvt.h \
     LammpsWrappers/simulatorcontrols/simulatorcontrol.h \
     LammpsWrappers/simulatorcontrols/cpfix.h \
     LammpsWrappers/simulatorcontrols/cpcompute.h \
     LammpsWrappers/simulatorcontrols/cpvariable.h \
-    LammpsWrappers/simulatorcontrols/rdf.h \
     LammpsWrappers/atoms.h \
     LammpsWrappers/system.h \
     LammpsWrappers/modifiers/modifier.h \

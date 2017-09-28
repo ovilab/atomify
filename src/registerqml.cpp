@@ -6,8 +6,6 @@
 #include "LammpsWrappers/simulatorcontrols/cpfix.h"
 #include "LammpsWrappers/simulatorcontrols/cpfixindent.h"
 #include "LammpsWrappers/simulatorcontrols/cpvariable.h"
-#include "LammpsWrappers/simulatorcontrols/nvt.h"
-#include "LammpsWrappers/simulatorcontrols/rdf.h"
 #include "performance.h"
 #include "datasource.h"
 #include "LammpsWrappers/atoms.h"
@@ -39,8 +37,6 @@ void registerQML() {
     qmlRegisterType<CPFix>("Atomify", 1, 0, "Fix");
     qmlRegisterType<CPFixIndent>("Atomify", 1, 0, "FixIndent");
     qmlRegisterType<CPVariable>("Atomify", 1, 0, "Variable");
-    qmlRegisterType<NVT>("Atomify", 1, 0, "NVT");
-    // qmlRegisterType<RDF>("Atomify", 1, 0, "RDF");
     qmlRegisterType<DataSource>("Atomify", 1, 0, "DataSource");
     qmlRegisterType<Atoms>("Atomify", 1, 0, "Atoms");
     qmlRegisterType<System>("Atomify", 1, 0, "System");

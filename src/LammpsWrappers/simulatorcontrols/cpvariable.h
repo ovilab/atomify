@@ -14,13 +14,6 @@ public slots:
 
 signals:
 
-protected:
-    virtual void updateCommand();
-    virtual QList<QString> enabledCommands() override;
-    virtual QList<QString> disableCommands() override;
-    virtual QList<QString> resetCommands() override;
-    virtual QString createCommandPrefix() override;
-
 private:
 
 };

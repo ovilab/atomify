@@ -13,30 +13,6 @@ CPVariable::CPVariable(QQuickItem *parent) : SimulatorControl(parent)
     setQmlFileName( QUrl("SimulatorControlItems/VariableItem.qml") );
 }
 
-void CPVariable::updateCommand()
-{
-}
-
-QList<QString> CPVariable::enabledCommands()
-{
-    return { fullCommand() };
-}
-
-QList<QString> CPVariable::disableCommands()
-{
-    return {QString("variable %1 delete").arg(identifier())};
-}
-
-QList<QString> CPVariable::resetCommands()
-{
-    return { QString("variable %1 delete").arg(identifier()), QString("variable %1 %2").arg(identifier()).arg(command()) };
-}
-
-QString CPVariable::createCommandPrefix()
-{
-    return QString("variable %1 ").arg(identifier());
-}
-
 bool CPVariable::existsInLammps(LAMMPSController *lammpsController)
 {
     return lammpsController->findVariableIndex(identifier())>=0;
@@ -61,7 +37,6 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
     }
 
     if (variable->atomstyle(ivar)) {
-        setHasHistogram(true);
         setInteractive(true);
         setIsPerAtom(true);
         Data1D *data = ensureExists("histogram", true);

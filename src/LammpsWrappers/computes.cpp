@@ -16,7 +16,6 @@ void Computes::addCompute(QString identifier, LAMMPSController *lammpsController
         m_dataMap.insert(identifier, compute);
     } else {
         CPCompute *compute = new CPCompute();
-        compute->setIsMirror(true);
         compute->setIdentifier(identifier);
         m_data.push_back(compute);
         m_dataMap.insert(identifier, compute);
@@ -25,14 +24,9 @@ void Computes::addCompute(QString identifier, LAMMPSController *lammpsController
 
 void Computes::removeCompute(QString identifier) {
     CPCompute *compute = qobject_cast<CPCompute*>(m_dataMap[identifier]);
-    if(compute->isMirror()) {
-        m_data.removeOne(compute);
-        m_dataMap.remove(identifier);
-        delete compute;
-    } else {
-        m_data.removeOne(compute);
-        m_dataMap.remove(identifier);
-    }
+    m_data.removeOne(compute);
+    m_dataMap.remove(identifier);
+    delete compute;
 }
 
 void Computes::reset() {

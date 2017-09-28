@@ -41,12 +41,6 @@ private:
     bool copyData(ComputeCNAAtom *compute, LAMMPSController *lammpsController);
     bool copyData(Compute *compute, LAMMPSController *lammpsController);
     bool validateStatus(Compute *compute, LAMMPS *lammps);
-protected:
-    virtual void updateCommand() override;
-    virtual QList<QString> enabledCommands() override;
-    virtual QList<QString> disableCommands() override;
-    virtual QList<QString> resetCommands() override;
-    virtual QString createCommandPrefix() override;
 };
 
 #endif // COMPUTE_H
