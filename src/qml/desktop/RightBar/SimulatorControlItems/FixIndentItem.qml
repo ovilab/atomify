@@ -10,7 +10,6 @@ Row {
         text: simulatorControl.identifier
         MouseArea {
             anchors.fill: parent
-            cursorShape: simulatorControl.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
             hoverEnabled: true
             onEntered: simulatorControl.hovered = true
             onExited: simulatorControl.hovered = false

@@ -6,15 +6,17 @@ Row {
     property SimulatorControl simulatorControl
     property int numPerAtomValues: simulatorControl ? simulatorControl.numPerAtomValues : 0
     property bool hasScalarData: simulatorControl ? simulatorControl.hasScalarData : false
+    property bool interactive: simulatorControl ? simulatorControl.interactive : false
+    property string identifier: simulatorControl ? simulatorControl.identifier : ""
 
     Label {
         id: titleLabel
-        font.underline: simulatorControl.interactive
-        color: simulatorControl.interactive ? "steelblue" : "white"
-        text: simulatorControl.identifier
+        font.underline: interactive
+        color: interactive ? "steelblue" : "white"
+        text: identifier
         MouseArea {
             anchors.fill: parent
-            cursorShape: simulatorControl.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
+            cursorShape: interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
             hoverEnabled: true
             onClicked: {
                 if(simulatorControl.interactive) {
