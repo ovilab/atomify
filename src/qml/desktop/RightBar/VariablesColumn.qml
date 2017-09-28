@@ -18,6 +18,8 @@ Column {
             plotter.y = point.y - plotter.height*0.5
             plotter.control = variable
             plotter.show()
+        } else {
+            console.log("QML Error, could not load Plot1D for variable ", variable.identifier)
         }
     }
 

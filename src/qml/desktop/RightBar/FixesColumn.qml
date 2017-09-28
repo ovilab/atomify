@@ -20,7 +20,7 @@ Column {
             plotter.control = fix
             plotter.show()
         } else {
-            console.log("Error :(")
+            console.log("QML Error, could not load Plot1D for fix ", fix.identifier)
         }
     }
 

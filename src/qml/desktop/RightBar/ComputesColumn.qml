@@ -19,6 +19,8 @@ Column {
             computePlotter.y = point.y - computePlotter.height*0.5
             computePlotter.control = compute
             computePlotter.show()
+        } else {
+            console.log("QML Error, could not load Plot1D for compute ", compute.identifier)
         }
     }
 
