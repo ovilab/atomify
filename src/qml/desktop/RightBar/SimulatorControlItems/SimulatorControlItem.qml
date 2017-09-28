@@ -20,7 +20,7 @@ Row {
                 if(simulatorControl.interactive) {
                     var point = Qt.point(mouseX, mouseY)
                     point = getGlobalPosition(point, titleLabel)
-                    createComputeWindow(simulatorControl, point)
+                    createPlotWindow(simulatorControl, point)
                 }
             }
             onEntered: simulatorControl.hovered = true
@@ -35,12 +35,11 @@ Row {
                 if (simulatorControl.scalarValue < 0.0005) {
                     ": "+simulatorControl.scalarValue.toLocaleString(Qt.locale("en_US"),'e',3);
                 } else {
-                    ": "+simulatorControl.scalarValue.toPrecision(4) // 4 to be consistent with variables section.
+                    ": "+simulatorControl.scalarValue.toPrecision(4)
                 }
             } else if(numPerAtomValues > 1) {
                 "   ["+(simulatorControl.perAtomIndex+1)+"]"
             } else ""
-
         }
 
         MouseArea {

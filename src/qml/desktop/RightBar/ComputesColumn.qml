@@ -10,14 +10,14 @@ Column {
     id: root
     property var system
 
-    function createComputeWindow(compute, point) {
+    function createPlotWindow(control, point) {
         var qmlFile = "../../plotting/Plot1D.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
             var computePlotter = component.createObject(root);
             computePlotter.x = point.x - computePlotter.width*0.5
             computePlotter.y = point.y - computePlotter.height*0.5
-            computePlotter.control = compute
+            computePlotter.control = control
             computePlotter.show()
         } else {
             console.log("QML Error, could not load Plot1D for compute ", compute.identifier)

@@ -9,14 +9,14 @@ Column {
     id: root
     property var system
 
-    function createPlotWindow(variable, point) {
+    function createPlotWindow(control, point) {
         var qmlFile = "../../plotting/Plot1D.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
             var plotter = component.createObject(root);
             plotter.x = point.x - plotter.width*0.5
             plotter.y = point.y - plotter.height*0.5
-            plotter.control = variable
+            plotter.control = control
             plotter.show()
         } else {
             console.log("QML Error, could not load Plot1D for variable ", variable.identifier)
