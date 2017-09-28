@@ -30,8 +30,10 @@ class SimulatorControl : public QQuickItem
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     Q_PROPERTY(bool hasHistogram READ hasHistogram WRITE setHasHistogram NOTIFY hasHistogramChanged)
     Q_PROPERTY(bool windowVisible READ windowVisible WRITE setWindowVisible NOTIFY windowVisibleChanged)
+    Q_PROPERTY(QUrl qmlFileName READ qmlFileName WRITE setQmlFileName NOTIFY qmlFileNameChanged)
 
 protected:
+    QUrl m_qmlFileName;
     bool m_windowVisible = false;
     bool m_hasHistogram = false;
     QString m_type;
@@ -103,6 +105,7 @@ public:
     QString type() const;
     bool hasHistogram() const;
     bool windowVisible() const;
+    QUrl qmlFileName() const;
 
 signals:
     void enabledChanged(bool enabled);
@@ -126,6 +129,7 @@ signals:
     void typeChanged(QString type);
     void hasHistogramChanged(bool hasHistogram);
     void windowVisibleChanged(bool windowVisible);
+    void qmlFileNameChanged(QUrl qmlFileName);
 
 public slots:
     void setEnabled(bool enabled);
@@ -148,6 +152,7 @@ public slots:
     void setType(QString type);
     void setHasHistogram(bool hasHistogram);
     void setWindowVisible(bool windowVisible);
+    void setQmlFileName(QUrl qmlFileName);
 };
 
 #endif // SIMULATORCONTROL_H

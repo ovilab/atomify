@@ -10,6 +10,7 @@ using namespace LAMMPS_NS;
 CPVariable::CPVariable(QQuickItem *parent) : SimulatorControl(parent)
 {
     setType("Variable");
+    setQmlFileName( QUrl("SimulatorControlItems/VariableItem.qml") );
 }
 
 void CPVariable::updateCommand()

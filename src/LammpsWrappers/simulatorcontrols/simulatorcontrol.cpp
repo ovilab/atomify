@@ -1,10 +1,10 @@
 #include "simulatorcontrol.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
-
-SimulatorControl::SimulatorControl(QQuickItem *parent) : QQuickItem(parent)
+SimulatorControl::SimulatorControl(QQuickItem *parent) : QQuickItem(parent),
+    m_qmlFileName("SimulatorControlItems/SimulatorControlItem.qml"),
+    m_groupBit(1) // 1 is group all
 {
-    m_groupBit = 1;
 }
 
 int SimulatorControl::getNextId()
@@ -377,6 +377,15 @@ void SimulatorControl::setWindowVisible(bool windowVisible)
         emit windowVisibleChanged(m_windowVisible);
 }
 
+void SimulatorControl::setQmlFileName(QUrl qmlFileName)
+{
+    if (m_qmlFileName == qmlFileName)
+            return;
+
+        m_qmlFileName = qmlFileName;
+        emit qmlFileNameChanged(m_qmlFileName);
+}
+
 Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
     if(!m_data1DRaw.contains(key)) {
         Data1D *data = new Data1D();
@@ -412,6 +421,11 @@ bool SimulatorControl::hasHistogram() const
 bool SimulatorControl::windowVisible() const
 {
     return m_windowVisible;
+}
+
+QUrl SimulatorControl::qmlFileName() const
+{
+    return m_qmlFileName;
 }
 
 int SimulatorControl::groupBit() const

@@ -4,9 +4,8 @@ import Atomify 1.0
 Row {
     id: root
     property SimulatorControl simulatorControl
-    property Compute compute: model.modelData
-    property int numPerAtomValues: compute ? compute.numPerAtomValues : 0
-    property bool hasScalarData: compute ? compute.hasScalarData : false
+    property int numPerAtomValues: simulatorControl.numPerAtomValues
+    property bool hasScalarData: simulatorControl.hasScalarData
 
     Label {
         id: titleLabel

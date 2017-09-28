@@ -29,9 +29,13 @@ Column {
     Repeater {
         id: list
         model: system ? system.variables.model : null
-        delegate: VariableItem {
-            simulatorControl: model.modelData
-            visible: list.visible
+        delegate: Loader {
+            source: model.modelData.qmlFileName
+
+            onLoaded: {
+                item.simulatorControl = model.modelData
+                item.height = 20
+            }
         }
     }
 }
