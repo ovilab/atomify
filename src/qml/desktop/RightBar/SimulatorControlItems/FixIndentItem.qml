@@ -6,7 +6,6 @@ Row {
     property SimulatorControl simulatorControl
 
     Label {
-        font.underline: true
         color: "steelblue"
         text: simulatorControl.identifier
         MouseArea {
