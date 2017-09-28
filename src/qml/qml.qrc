@@ -86,7 +86,6 @@
         <file>plotting/Plot1D.qml</file>
         <file>visualization/FixIndentVisualizer.qml</file>
         <file>desktop/RightBar/SimulatorControlItems/SimulatorControlItem.qml</file>
-        <file>desktop/RightBar/SimulatorControlItems/VariableItem.qml</file>
         <file>desktop/RightBar/SimulatorControlItems/FixIndentItem.qml</file>
     </qresource>
 </RCC>
