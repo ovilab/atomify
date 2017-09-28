@@ -3,7 +3,7 @@
         <file>main.qml</file>
         <file>desktop/MainDesktop.qml</file>
         <file>desktop/ControlBar.qml</file>
-        <file>desktop/DisableMessage.qml</file>
+        <file>desktop/SimpleMessage.qml</file>
         <file>desktop/editor/CodeEditor.qml</file>
         <file>desktop/editor/CodeEditorTabButton.qml</file>
         <file>desktop/editor/CodeEditorWindow.qml</file>

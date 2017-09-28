@@ -356,6 +356,21 @@ Rectangle {
                 captureCursor: capturedState.active
             }
 
+            SimpleMessage {
+                id: simpleMessage
+                property bool shouldShowFlymodeMessage: visualizer.mode == "flymode" && visualizer.captureCursor
+                y: 35
+                anchors.horizontalCenter: parent.horizontalCenter
+                onShouldShowFlymodeMessageChanged: {
+                    if(shouldShowFlymodeMessage) {
+                        text = "Press ESC to show mouse cursor"
+                        state = "visible"
+                    } else {
+                        state = "hidden"
+                    }
+                }
+            }
+
             MouseArea {
                 id: flymodeOverlay
                 anchors.fill: visualizer
@@ -679,12 +694,6 @@ Rectangle {
             name: "simulator.speed.faster"
             onTriggered: simulator.simulationSpeed = 30
         }
-    }
-
-    DisableMessage {
-        id: tabDisable
-        x: parent.width*0.5 - 0.5*width
-        y: 10
     }
 
     DSM.StateMachine {
