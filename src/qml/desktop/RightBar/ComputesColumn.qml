@@ -4,6 +4,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Controls 1.4 as QQC1
 import Atomify 1.0
 import "../../plotting"
+import "SimulatorControlItems"
+
 Column {
     id: root
     property var system
@@ -28,71 +30,10 @@ Column {
     Repeater {
         id: list
         model: system ? system.computes.model : null
-        delegate: Row {
+        delegate: SimulatorControlItem {
+            simulatorControl: model.modelData
             visible: list.visible
             height: 20
-            Label {
-                id: computeTitleLabel
-                property Compute compute: model.modelData
-                property int numPerAtomValues: compute ? compute.numPerAtomValues : 0
-                property bool hasScalarData: compute ? compute.hasScalarData : false
-                font.underline: model.modelData.interactive
-                color: model.modelData.interactive ? "steelblue" : "white"
-                text: model.modelData ? model.modelData.identifier : ""
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: model.modelData.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
-                    hoverEnabled: true
-                    onClicked: {
-                        if(model.modelData.interactive) {
-                            var point = Qt.point(mouseX, mouseY)
-                            point = getGlobalPosition(point, computeTitleLabel)
-                            createComputeWindow(model.modelData, point)
-                        }
-                    }
-                    onEntered: model.modelData.hovered = true
-                    onExited: model.modelData.hovered = false
-                }
-            }
-            Label {
-                visible: computeTitleLabel.hasScalarData || computeTitleLabel.numPerAtomValues > 1
-                color: (computeTitleLabel.numPerAtomValues > 1) ? "steelblue" : "white"
-                text: {
-                    if(computeTitleLabel.hasScalarData) {
-                        if (model.modelData.scalarValue < 0.0005) {
-                            ": "+model.modelData.scalarValue.toLocaleString(Qt.locale("en_US"),'e',3);
-                        } else {
-                            ": "+model.modelData.scalarValue.toPrecision(4) // 4 to be consistent with variables section.
-                        }
-                    } else if(computeTitleLabel.numPerAtomValues > 1) {
-                        "   ["+(computeTitleLabel.compute.perAtomIndex+1)+"]"
-                    } else ""
-
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    enabled: computeTitleLabel.numPerAtomValues > 1
-                    onClicked: menu.open()
-                }
-
-                Menu {
-                    id: menu
-
-                    Column {
-                        Repeater {
-                            model: computeTitleLabel.numPerAtomValues
-                            MenuItem {
-                                text: model.index+1
-                                onClicked: {
-                                    computeTitleLabel.compute.perAtomIndex = (parseInt(text)-1)
-                                    menu.close()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }
