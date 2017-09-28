@@ -7,6 +7,7 @@
 CPFixIndent::CPFixIndent(QQuickItem *parent) : CPFix(parent)
 {
     setInteractive(true);
+    setQmlFileName( QUrl("SimulatorControlItems/FixIndentItem.qml") );
 }
 
 CPFixIndent::~CPFixIndent()
