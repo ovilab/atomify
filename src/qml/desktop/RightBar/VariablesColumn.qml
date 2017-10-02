@@ -19,7 +19,7 @@ Column {
             plotter.control = control
             plotter.show()
         } else {
-            console.log("QML Error, could not load Plot1D for variable ", variable.identifier)
+            console.log("QML Error, could not load Plot1D for variable ", control.identifier)
         }
     }
 

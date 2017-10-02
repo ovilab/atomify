@@ -14,13 +14,13 @@ Column {
         var qmlFile = "../../plotting/Plot1D.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
-            var computePlotter = component.createObject(root);
-            computePlotter.x = point.x - computePlotter.width*0.5
-            computePlotter.y = point.y - computePlotter.height*0.5
-            computePlotter.control = control
-            computePlotter.show()
+            var plotter = component.createObject(root);
+            plotter.x = point.x - plotter.width*0.5
+            plotter.y = point.y - plotter.height*0.5
+            plotter.control = control
+            plotter.show()
         } else {
-            console.log("QML Error, could not load Plot1D for compute ", compute.identifier)
+            console.log("QML Error, could not load Plot1D for compute ", control.identifier)
         }
     }
 
