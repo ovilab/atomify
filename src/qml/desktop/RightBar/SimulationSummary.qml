@@ -81,33 +81,6 @@ Flickable {
         return Qt.point(globalX, globalY)
     }
 
-    function updateGroups() {
-        groupsList.visible = system.groups.active
-        if(system.groups.active) {
-            collapseGroups.source = "qrc:/images/collapse.gif"
-        } else {
-            collapseGroups.source = "qrc:/images/expand.gif"
-        }
-    }
-
-    function updateRegions() {
-        regionsList.visible = system.regions.active
-        if(system.regions.active) {
-            collapseRegions.source = "qrc:/images/collapse.gif"
-        } else {
-            collapseRegions.source = "qrc:/images/expand.gif"
-        }
-    }
-
-    function updateComputes() {
-        computesList.visible = system.computes.active
-        if(system.computes.active) {
-            collapseComputes.source = "qrc:/images/collapse.gif"
-        } else {
-            collapseComputes.source = "qrc:/images/expand.gif"
-        }
-    }
-
     Column {
         id: column
         anchors {
