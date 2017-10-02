@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QVariantList>
 #include "dataproviders/data1d.h"
+#include "../../windowgl2.h"
 
 class LAMMPSController;
 class AtomifySimulator;
@@ -15,7 +16,6 @@ class SimulatorControl : public QObject
     Q_PROPERTY(bool isPerAtom READ isPerAtom WRITE setIsPerAtom NOTIFY isPerAtomChanged)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
-    Q_PROPERTY(bool windowVisible READ windowVisible WRITE setWindowVisible NOTIFY windowVisibleChanged)
     Q_PROPERTY(int perAtomIndex READ perAtomIndex WRITE setPerAtomIndex NOTIFY perAtomIndexChanged)
     Q_PROPERTY(int numPerAtomValues READ numPerAtomValues WRITE setNumPerAtomValues NOTIFY numPerAtomValuesChanged)
     Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
@@ -26,6 +26,7 @@ class SimulatorControl : public QObject
     Q_PROPERTY(QString xLabel READ xLabel WRITE setXLabel NOTIFY xLabelChanged)
     Q_PROPERTY(QString yLabel READ yLabel WRITE setYLabel NOTIFY yLabelChanged)
     Q_PROPERTY(QUrl qmlFileName READ qmlFileName WRITE setQmlFileName NOTIFY qmlFileNameChanged)
+    Q_PROPERTY(QQuickWindow* window READ window WRITE setWindow NOTIFY windowChanged)
 
 protected:
     QString m_type;
@@ -35,7 +36,6 @@ protected:
     bool m_isPerAtom = false;
     bool m_interactive = false;
     bool m_hovered = false;
-    bool m_windowVisible = false;
     long m_lastUpdate = -1;
     int m_perAtomIndex = 0;
     int m_numPerAtomValues = 0;
@@ -50,7 +50,7 @@ protected:
     QString m_identifier;
     QVariantMap m_data1D;
     QMap<QString, class Data1D*> m_data1DRaw;
-
+    QQuickWindow* m_window = nullptr;
     class Data1D *ensureExists(QString key, bool enabledByDefault);
 
 public:
@@ -79,8 +79,8 @@ public:
     void updateData1D();
     const std::vector<double> &atomData() const;
     QString type() const;
-    bool windowVisible() const;
     QUrl qmlFileName() const;
+    QQuickWindow* window() const;
 
 signals:
     void willBeDestroyed();
@@ -97,9 +97,9 @@ signals:
     void interactiveChanged(bool interactive);
     void hoveredChanged(bool hovered);
     void typeChanged(QString type);
-    void windowVisibleChanged(bool windowVisible);
     void qmlFileNameChanged(QUrl qmlFileName);
     void data1DChanged(QVariantMap data1D);
+    void windowChanged(QQuickWindow* window);
 
 public slots:
     void setIdentifier(QString identifier);
@@ -116,8 +116,8 @@ public slots:
     void setInteractive(bool interactive);
     void setHovered(bool hovered);
     void setType(QString type);
-    void setWindowVisible(bool windowVisible);
     void setQmlFileName(QUrl qmlFileName);
+    void setWindow(QQuickWindow* window);
 };
 
 #endif // SIMULATORCONTROL_H

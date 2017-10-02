@@ -41,11 +41,11 @@ void CPVariable::synchronize(LAMMPSController *lammpsController)
         setIsPerAtom(true);
         Data1D *data = ensureExists("histogram", true);
 
-        if(!windowVisible() && !hovered()) return;
+        if(!window() && !hovered()) return;
         m_atomData.resize(lammpsController->system->numberOfAtoms());
         double *vector = &m_atomData.front();
         variable->compute_atom(ivar,0 /* group index for all */,vector,1,0);
-        if(windowVisible()) {
+        if(window()) {
             data->createHistogram(m_atomData);
         }
     }

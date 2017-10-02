@@ -36,8 +36,10 @@ WindowGL2 {
             for(var key in control.data1D) {
                 control.data1D[key].updated.disconnect(updateGraphs(key))
             }
+            control.window = null
             control.windowVisible = false
         } else {
+            control.window = root
             control.windowVisible = true
             updateLimits()
         }

@@ -198,28 +198,27 @@ void SimulatorControl::setHovered(bool hovered)
 void SimulatorControl::setType(QString type)
 {
     if (m_type == type)
-            return;
+        return;
 
-        m_type = type;
-        emit typeChanged(m_type);
-}
-
-void SimulatorControl::setWindowVisible(bool windowVisible)
-{
-    if (m_windowVisible == windowVisible)
-            return;
-
-        m_windowVisible = windowVisible;
-        emit windowVisibleChanged(m_windowVisible);
+    m_type = type;
+    emit typeChanged(m_type);
 }
 
 void SimulatorControl::setQmlFileName(QUrl qmlFileName)
 {
     if (m_qmlFileName == qmlFileName)
-            return;
+        return;
 
-        m_qmlFileName = qmlFileName;
-        emit qmlFileNameChanged(m_qmlFileName);
+    m_qmlFileName = qmlFileName;
+    emit qmlFileNameChanged(m_qmlFileName);
+}
+
+void SimulatorControl::setWindow(QQuickWindow *window)
+{
+    if (m_window == window)
+        return;
+    m_window = window;
+    emit windowChanged(m_window);
 }
 
 Data1D *SimulatorControl::ensureExists(QString key, bool enabledByDefault) {
@@ -247,14 +246,14 @@ QVariantMap SimulatorControl::data1D() const
     return m_data1D;
 }
 
-bool SimulatorControl::windowVisible() const
-{
-    return m_windowVisible;
-}
-
 QUrl SimulatorControl::qmlFileName() const
 {
     return m_qmlFileName;
+}
+
+QQuickWindow *SimulatorControl::window() const
+{
+    return m_window;
 }
 
 int SimulatorControl::groupBit() const

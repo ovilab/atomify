@@ -133,7 +133,7 @@ bool CPFix::copyData(LAMMPS_NS::FixAveChunk *fix, LAMMPSController *lammpsContro
 
             for(int i=0; i<*nvalues; i++) {
                 Data1D *data = ensureExists( QString("Value %1").arg(i+1), true);
-                if( !windowVisible() && !hovered()) continue;
+                if( !window() && !hovered()) continue;
 
                 data->clear(true);
                 for(int j=0; j<*nchunk; j++) {

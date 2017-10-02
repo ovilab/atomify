@@ -26,13 +26,13 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
 
     if(numCols == 0) {
         setNumPerAtomValues(1);
-        if(!windowVisible() && !hovered()) return true; // Skip copying data unless we need them
+        if(!window() && !hovered()) return true; // Skip copying data unless we need them
 
         double *values = compute->vector_atom;
         m_atomData = std::vector<double>(values, values+numAtoms);
     } else {
         setNumPerAtomValues(numCols);
-        if(!windowVisible() && !hovered()) return true; // Skip copying data unless we need them
+        if(!window() && !hovered()) return true; // Skip copying data unless we need them
 
         double **values = compute->array_atom;
         m_atomData.resize(numAtoms);
@@ -46,7 +46,7 @@ bool CPCompute::copyData(Compute *compute, LAMMPSController *lammpsController) {
         }
     }
 
-    if(windowVisible()) {
+    if(window()) {
         data->createHistogram(m_atomData);
     }
 
