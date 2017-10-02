@@ -37,10 +37,8 @@ WindowGL2 {
                 control.data1D[key].updated.disconnect(updateGraphs(key))
             }
             control.window = null
-            control.windowVisible = false
         } else {
             control.window = root
-            control.windowVisible = true
             updateLimits()
         }
     }
