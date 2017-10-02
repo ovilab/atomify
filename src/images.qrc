@@ -46,7 +46,6 @@
         <file>images/buttons/ic_file_download_white_48dp.png</file>
         <file>images/buttons/ic_fast_forward_white_48dp.png</file>
         <file>images/buttons/close_white.png</file>
-        <file>images/atomify_logo.png</file>
         <file>images/atomify_logo_inapp.png</file>
     </qresource>
 </RCC>
