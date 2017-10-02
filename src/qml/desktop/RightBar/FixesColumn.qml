@@ -10,6 +10,13 @@ Column {
     property var system
     
     function createPlotWindow(control, point) {
+        if(control.window) {
+            // Put window on top and give it focus to receive keyboard events
+            control.window.raise()
+            control.window.requestActivate()
+            return
+        }
+
         var qmlFile = "../../plotting/Plot1D.qml"
         var component = Qt.createComponent(qmlFile);
         if (component.status === Component.Ready) {
