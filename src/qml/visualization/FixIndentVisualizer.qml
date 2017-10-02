@@ -34,6 +34,8 @@ Entity {
     SphereMesh {
         id: sphereMesh
         radius: fixIndent ? fixIndent.radius : 1.0
+        slices: 40
+        rings: 40
     }
 
     PlaneMesh {
@@ -47,6 +49,8 @@ Entity {
         id: cylinderMesh
         enabled: root.type==="cylinder"
         radius: fixIndent ? fixIndent.radius : 1.0
+        slices: 40
+        rings: 40
         length: {
             if(!fixIndent) return 1.0
             if(fixIndent.dimension==0) return simulator.system.size.x
