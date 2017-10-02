@@ -23,6 +23,8 @@
 #include <memory>
 #include <QFileInfo>
 #include <QStandardPaths>
+#include <QUuid>
+#include <QJsonDocument>
 #include "LammpsWrappers/atoms.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "LammpsWrappers/system.h"

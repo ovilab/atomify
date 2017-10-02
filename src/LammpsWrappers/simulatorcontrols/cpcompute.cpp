@@ -7,7 +7,7 @@
 #include <update.h>
 #include <atom.h>
 
-CPCompute::CPCompute(QQuickItem *parent) : SimulatorControl(parent)
+CPCompute::CPCompute(QObject *parent) : SimulatorControl(parent)
 {
     setType("Compute");
 }

@@ -8,7 +8,7 @@
 
 #include <style_compute.h>
 
-CPFix::CPFix(QQuickItem *parent) : SimulatorControl(parent)
+CPFix::CPFix(QObject *parent) : SimulatorControl(parent)
 {
     setType("Fix");
 }

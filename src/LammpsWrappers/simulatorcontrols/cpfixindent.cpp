@@ -4,7 +4,7 @@
 #include <domain.h>
 #include <fix_indent.h>
 
-CPFixIndent::CPFixIndent(QQuickItem *parent) : CPFix(parent)
+CPFixIndent::CPFixIndent(QObject *parent) : CPFix(parent)
 {
     setInteractive(true);
     setQmlFileName( QUrl("SimulatorControlItems/FixIndentItem.qml") );

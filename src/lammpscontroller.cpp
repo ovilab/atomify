@@ -27,6 +27,7 @@
 #include <iostream>
 #include <sstream>
 #include <functional>
+#include <QFileInfo>
 #include "LammpsWrappers/computes.h"
 #include "parser/scriptcommand.h"
 #include "mysimulator.h"
@@ -34,6 +35,7 @@
 #include "LammpsWrappers/system.h"
 #include "LammpsWrappers/atoms.h"
 #include "performance.h"
+#include <QDir>
 
 using namespace std;
 using namespace LAMMPS_NS;

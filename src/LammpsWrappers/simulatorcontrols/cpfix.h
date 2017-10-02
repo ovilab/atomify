@@ -10,7 +10,7 @@ class CPFix : public SimulatorControl
 {
     Q_OBJECT
 public:
-    CPFix(QQuickItem *parent = 0);
+    CPFix(QObject *parent = 0);
     ~CPFix();
     virtual bool existsInLammps(class LAMMPSController *lammpsController);
     virtual void copyData(class LAMMPSController *lammpsController);

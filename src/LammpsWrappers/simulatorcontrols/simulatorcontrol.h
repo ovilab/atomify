@@ -1,13 +1,13 @@
 #ifndef SIMULATORCONTROL_H
 #define SIMULATORCONTROL_H
-#include <Qt3DCore>
-#include <QQuickItem>
+#include <QObject>
+#include <QUrl>
 #include <QVariantList>
 #include "dataproviders/data1d.h"
 
 class LAMMPSController;
 class AtomifySimulator;
-class SimulatorControl : public QQuickItem
+class SimulatorControl : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
@@ -54,7 +54,7 @@ protected:
     class Data1D *ensureExists(QString key, bool enabledByDefault);
 
 public:
-    explicit SimulatorControl(QQuickItem *parent = 0);
+    explicit SimulatorControl(QObject *parent = 0);
     ~SimulatorControl();
     static int getNextId();
     Q_INVOKABLE void exportToMatlabFile(QString fileName);

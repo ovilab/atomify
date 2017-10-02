@@ -2,6 +2,7 @@
 #define CPFIXINDENT_H
 
 #include "cpfix.h"
+#include <QQuaternion>
 
 class CPFixIndent : public CPFix
 {
@@ -13,7 +14,7 @@ class CPFixIndent : public CPFix
     Q_PROPERTY(QQuaternion rotation READ rotation WRITE setRotation NOTIFY rotationChanged)
 
 public:
-    explicit CPFixIndent(QQuickItem *parent = 0);
+    explicit CPFixIndent(QObject *parent = 0);
     ~CPFixIndent();
 
 private:

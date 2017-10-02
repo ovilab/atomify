@@ -1,7 +1,7 @@
 #include "simulatorcontrol.h"
 #include "lammpscontroller.h"
 #include "mysimulator.h"
-SimulatorControl::SimulatorControl(QQuickItem *parent) : QQuickItem(parent),
+SimulatorControl::SimulatorControl(QObject *parent) : QObject(parent),
     m_qmlFileName("SimulatorControlItems/SimulatorControlItem.qml"),
     m_groupBit(1) // 1 is group all
 {

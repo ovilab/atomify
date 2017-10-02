@@ -7,7 +7,7 @@
 #include "../system.h"
 using namespace LAMMPS_NS;
 
-CPVariable::CPVariable(QQuickItem *parent) : SimulatorControl(parent)
+CPVariable::CPVariable(QObject *parent) : SimulatorControl(parent)
 {
     setType("Variable");
     setQmlFileName( QUrl("SimulatorControlItems/SimulatorControlItem.qml") );

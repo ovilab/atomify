@@ -15,7 +15,7 @@ class CPCompute : public SimulatorControl
     Q_OBJECT
 
 public:
-    CPCompute(QQuickItem *parent = 0);
+    CPCompute(QObject *parent = 0);
     ~CPCompute();
     void copyData(LAMMPSController *lammpsController);
     virtual bool existsInLammps(LAMMPSController *lammpsController) override;
