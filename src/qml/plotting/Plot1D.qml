@@ -236,8 +236,14 @@ WindowGL2 {
     Shortcut {
         sequence: StandardKey.Close
         onActivated: {
-            root.close()
+            closeTimer.start()
         }
+    }
+
+    Timer {
+        id: closeTimer
+        interval: 100
+        onTriggered: root.close()
     }
 
     FileDialog {
