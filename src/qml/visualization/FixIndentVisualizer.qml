@@ -10,7 +10,10 @@ import ShaderNodes 1.0
 Entity {
     id: root
     property FixIndent fixIndent
-    enabled: fixIndent ? fixIndent.hovered && (fixIndent.type==="sphere" || fixIndent.type==="cylinder") : false
+
+    onFixIndentChanged: console.log("Fix indent: ", fixIndent)
+    // enabled: fixIndent ? fixIndent.hovered && (fixIndent.type==="sphere" || fixIndent.type==="cylinder") : false
+    enabled: true
     property string type: fixIndent ? fixIndent.type : "none"
 
     Entity {

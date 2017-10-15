@@ -55,19 +55,19 @@ Scene3D {
     multisample: true
     aspects: ["render", "input", "logic"]
 
-//    onFocusModeChanged: {
-//        if(focusMode) {
-//            root.mode = "flymode"
-//        } else {
-//            root.mode = "trackball"
-//        }
-//    }
+    //    onFocusModeChanged: {
+    //        if(focusMode) {
+    //            root.mode = "flymode"
+    //        } else {
+    //            root.mode = "trackball"
+    //        }
+    //    }
 
     onRenderQualityChanged: {
-//        if(mainCompleted) {
-//            dialog.open()
-//            return
-//        }
+        //        if(mainCompleted) {
+        //            dialog.open()
+        //            return
+        //        }
 
         if(renderQuality === "low") {
             renderMode = "forward"
@@ -323,8 +323,10 @@ Scene3D {
         DeferredFrameGraph {
             id: deferredFrameGraph
             camera: visualizer.camera
-            width: Math.max(10, root.width, root.height)
-            height: width
+            width: root.width
+            height: root.height
+            //            width: Math.max(10, root.width, root.height)
+            //            height: width
             atomLayer: atomLayer
             guideLayer: guideLayer
             outlineLayer: outlineLayer
@@ -547,32 +549,60 @@ Scene3D {
             }
         }
 
-        FixIndentVisualizer {
-            id: fixIndentVisualizer
-            fixIndent: simulator.system.fixes.activeFixIndent
-        }
+//        FixIndentVisualizer {
+//            id: fixIndentVisualizer
+//            fixIndent: simulator.system.fixes.activeFixIndent
+//        }
 
-//        Entity {
-//            components: [
-//                slicePlaneMesh,
-//                sliceMaterial,
-//                slicePlaneTransform,
-//                forwardFrameGraph.guideLayer
-//            ]
-//            PlaneMesh {id: slicePlaneMesh; width: 20; height: 20}
-//            ShaderBuilderMaterial {
-//                id: sliceMaterial
-//                fragmentColor: StandardMaterial {
-//                    color: "white"
-//                    lights: visualizer.lights
-//                    ambientIntensity: 10.0
+//        NodeInstantiator {
+//            model: simulator.system ? simulator.system.fixes.numFixIndents : 0
+//            onModelChanged: console.log("New model: ", model)
+
+//            delegate: FixIndentVisualizer {
+//                fixIndent: {
+//                    console.log("Model: ", model)
+//                    console.log("Simulator: ", simulator)
+//                    console.log("Simulator.system: ", simulator.system)
+//                    console.log("Simulator.system.fixes: ", simulator.system.fixes)
+//                    console.log("Simulator.system.fixes.numFixIndents: ", simulator.system.fixes.numFixIndents)
+//                    console.log("Simulator.system.fixes.fixIndents: ", simulator.system.fixes.fixIndents)
+//                    console.log("Got with index = ", index)
+//                    console.log("Number of things: ", simulator.system.fixes.fixIndents.size)
+//                    if(index<0 || index>=simulator.system.fixes.fixIndents.size) return null
+
+//                    simulator.system.fixes.fixIndents[index]
 //                }
-//            }
-//            Transform {
-//                id: slicePlaneTransform
-//                // translation: visualizer.camera.viewCenter
+//// {
+////                    console.log("Size: ", simulator.system.fixes.fixIndents.size)
+////                    console.log("Key: ", simulator.system.fixes.fixIndents.keys[index])
+////                    console.log("Setting fix indent with index ", index)
+////                    console.log("Fix indent: ", simulator.system.fixes.fixIndents [index])
+////                    return simulator.system.fixes.fixIndents[index]
+////                }
 //            }
 //        }
+
+        //        Entity {
+        //            components: [
+        //                slicePlaneMesh,
+        //                sliceMaterial,
+        //                slicePlaneTransform,
+        //                forwardFrameGraph.guideLayer
+        //            ]
+        //            PlaneMesh {id: slicePlaneMesh; width: 20; height: 20}
+        //            ShaderBuilderMaterial {
+        //                id: sliceMaterial
+        //                fragmentColor: StandardMaterial {
+        //                    color: "white"
+        //                    lights: visualizer.lights
+        //                    ambientIntensity: 10.0
+        //                }
+        //            }
+        //            Transform {
+        //                id: slicePlaneTransform
+        //                // translation: visualizer.camera.viewCenter
+        //            }
+        //        }
 
         SystemBox {
             id: systemBox

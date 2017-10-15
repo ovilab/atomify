@@ -9,6 +9,12 @@ Row {
     property bool interactive: simulatorControl ? simulatorControl.interactive : false
     property string identifier: simulatorControl ? simulatorControl.identifier : ""
 
+    Image {
+        source: "qrc:///images/eye-on.png"
+        height: titleLabel.height
+        width: height
+    }
+
     Label {
         id: titleLabel
         font.underline: interactive

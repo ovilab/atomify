@@ -28,11 +28,6 @@ float SimulatorControl::scalarValue() const
     return m_scalarValue;
 }
 
-QString SimulatorControl::group() const
-{
-    return m_group;
-}
-
 bool SimulatorControl::isPerAtom() const
 {
     return m_isPerAtom;
@@ -61,11 +56,6 @@ QString SimulatorControl::xLabel() const
 QString SimulatorControl::yLabel() const
 {
     return m_yLabel;
-}
-
-bool SimulatorControl::interactive() const
-{
-    return m_interactive;
 }
 
 bool SimulatorControl::hovered() const
@@ -112,15 +102,6 @@ void SimulatorControl::setScalarValue(float scalarValue)
 
     m_scalarValue = scalarValue;
     emit scalarValueChanged(m_scalarValue);
-}
-
-void SimulatorControl::setGroup(QString group)
-{
-    if (m_group == group)
-        return;
-
-    m_group = group;
-    emit groupChanged(m_group);
 }
 
 void SimulatorControl::setIsPerAtom(bool isPerAtom)
@@ -175,15 +156,6 @@ void SimulatorControl::setYLabel(QString yLabel)
 
     m_yLabel = yLabel;
     emit yLabelChanged(m_yLabel);
-}
-
-void SimulatorControl::setInteractive(bool interactive)
-{
-    if (m_interactive == interactive)
-        return;
-
-    m_interactive = interactive;
-    emit interactiveChanged(m_interactive);
 }
 
 void SimulatorControl::setHovered(bool hovered)

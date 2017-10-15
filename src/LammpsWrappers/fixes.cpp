@@ -18,6 +18,11 @@ void Fixes::add(QString identifier, LAMMPSController *lammpsController) {
         CPFix *fix;
         if(lmp_fix) {
             fix = new CPFixIndent();
+            m_fixIndents.push_back(QVariant::fromValue(fix));
+            // m_fixIndents.insert(identifier, QVariant::fromValue(fix));
+            qDebug() << "Added fix indent in cpp, current size: " << m_fixIndents.size();
+            emit fixIndentsChanged(m_fixIndents);
+            setNumFixIndents(m_fixIndents.size());
         } else {
             fix = new CPFix();
         }
@@ -29,6 +34,12 @@ void Fixes::add(QString identifier, LAMMPSController *lammpsController) {
 
 void Fixes::remove(QString identifier) {
     CPFix *fix = qobject_cast<CPFix*>(m_dataMap[identifier]);
+    CPFixIndent *fixIndent = qobject_cast<CPFixIndent*>(fix);
+    if(fixIndent) {
+        m_fixIndents.removeOne(QVariant::fromValue(fixIndent));
+        emit fixIndentsChanged(m_fixIndents);
+        setNumFixIndents(m_fixIndents.size());
+    }
     m_data.removeOne(fix);
     m_dataMap.remove(identifier);
     delete fix;
@@ -91,13 +102,13 @@ void Fixes::synchronizeQML(LAMMPSController *lammpsController)
         CPFixIndent *fixIndent = qobject_cast<CPFixIndent*>(obj);
         if(fixIndent) {
             if(fixIndent->hovered()) {
-                setActiveFixIndent(fixIndent);
+                // setActiveFixIndent(fixIndent);
             }
         }
     }
 
     if(m_activeFixIndent && !m_activeFixIndent->hovered()) {
-        setActiveFixIndent(nullptr);
+        // setActiveFixIndent(nullptr);
     }
 
 }
@@ -127,6 +138,11 @@ void Fixes::updateThreadOnDataObjects(QThread *thread) {
 CPFixIndent *Fixes::activeFixIndent() const
 {
     return m_activeFixIndent;
+}
+
+QVariantList Fixes::fixIndents() const
+{
+    return m_fixIndents;
 }
 
 QVector<SimulatorControl *> Fixes::simulatorControls()
@@ -174,4 +190,13 @@ void Fixes::setActiveFixIndent(CPFixIndent *activeFixIndent)
 
     m_activeFixIndent = activeFixIndent;
     emit activeFixIndentChanged(m_activeFixIndent);
+}
+
+void Fixes::setFixIndents(QVariantList fixIndents)
+{
+    if (m_fixIndents == fixIndents)
+        return;
+
+    m_fixIndents = fixIndents;
+    emit fixIndentsChanged(m_fixIndents);
 }
