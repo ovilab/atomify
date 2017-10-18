@@ -253,6 +253,7 @@ bool CPCompute::validateStatus(Compute *compute, LAMMPS *lammps) {
 
 void CPCompute::computeInLAMMPS(LAMMPSController *lammpsController) {
     Compute *compute = lammpsController->findComputeByIdentifier(identifier());
+    if(!compute) return;
     if(compute->scalar_flag == 1) {
         if(validateStatus(compute, lammpsController->lammps())) {
             compute->compute_scalar();
