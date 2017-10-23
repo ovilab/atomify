@@ -97,7 +97,7 @@ else:
 print("\nCompiling LAMMPS")
 
 os.chdir(lammps_source_dir_src)
-run_command("make yes-rigid yes-manybody yes-mc yes-molecule yes-granular yes-replica yes-kspace yes-shock yes-misc yes-USER-MISC yes-user-reaxc yes-opt yes-qeq yes-snap yes-user-diffraction yes-user-fep yes-user-mgpt yes-user-manifold yes-user-meamc yes-user-phonon yes-user-smtbq")
+run_command("make yes-rigid yes-class2 yes-manybody yes-mc yes-molecule yes-granular yes-replica yes-kspace yes-shock yes-misc yes-USER-MISC yes-user-reaxc yes-opt yes-qeq yes-snap yes-user-diffraction yes-user-fep yes-user-mgpt yes-user-manifold yes-user-meamc yes-user-phonon yes-user-smtbq")
 if ompSupport:
     run_command("make yes-user-omp")
 

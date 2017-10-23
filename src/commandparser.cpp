@@ -24,8 +24,8 @@ void CommandParser::parseFile(QString fileName, bool moveCamera)
     QTextStream in(&file);
     while (!in.atEnd())
     {
-        QString line = in.readLine();
-        if(line.trimmed().startsWith("#/")) {
+        QString line = in.readLine().trimmed();
+        if(line.startsWith("#/")) {
             line.remove(0,2);
             parseCommand(line);
         }

@@ -201,6 +201,14 @@ void Data1D::createHistogram(const std::vector<double> &points)
 
 void Data1D::add(float x, float y, bool silent)
 {
+    // If we jump back in time, reset plot
+    // This happens for instance if we minimize first, then
+    // start computing dynamics. During minimization, we use a different
+    // time measure, so it will append time values starting from zero again.
+    // TODO: rethink this.
+    if(m_points.size() && x < m_points.last().x()) {
+        clear(true);
+    }
     add(QPointF(x,y), silent);
 }
 
