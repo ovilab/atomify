@@ -189,14 +189,18 @@ void Atoms::generateSphereData(AtomData &atomData) {
     if(!atomData.dirty) return;
     int visibleAtomCount = 0;
 
+    float radius = 0.2f * m_bondScale;
+    if (m_renderingMode == "Sticks" || m_renderingMode == "Wireframe") {
+        radius = 0.1f * m_bondScale;
+    }
+
     for(int i = 0; i<atomData.size(); i++) {
         if(atomData.visible[i]) {
             atomData.positions[visibleAtomCount] = atomData.positions[i];
             atomData.colors[visibleAtomCount] = atomData.colors[i];
             atomData.radii[visibleAtomCount] = atomData.radii[i];
             atomData.deltaPositions[visibleAtomCount] = atomData.deltaPositions[i];
-            if(m_renderingMode == "Stick") atomData.radii[visibleAtomCount] = 0.1*m_bondScale;
-            else if(m_renderingMode == "Wireframe") atomData.radii[visibleAtomCount] = 0.1*m_bondScale;
+            atomData.radii[visibleAtomCount] = radius;
             visibleAtomCount++;
         }
     }
