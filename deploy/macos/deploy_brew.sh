@@ -8,5 +8,5 @@ rm -rf .git
 cd src/examples
 rm -rf .git
 cd ../../..
-tar -czvf atomify-2.1.2-src.tar.gz atomify
-cp atomify-2.1.2-src.tar.gz ..
+tar -czvf atomify-2.2a-src.tar.gz atomify
+cp atomify-2.2a-src.tar.gz ..

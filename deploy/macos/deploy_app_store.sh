@@ -16,13 +16,13 @@ rm -rf pkg/*
 cp -r Atomify.app pkg
 cd pkg
 xattr -cr Atomify.app
-macdeployqt Atomify.app -dmg -qmldir=../../../../src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
+macdeployqt Atomify.app -dmg -qmldir=../../../../src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager (4XKET6P69R)" -appstore-compliant
 cd "Atomify.app"
 find . -name *.dSYM | xargs -I $ rm -R $
 cd ..
 cp ../Atomify.app/Contents/MacOS/atomify Atomify.app/Contents/MacOS/
 
-codesign -s "3rd Party Mac Developer Application: Anders Hafreager" --entitlements ../../../../macos/entitlements.plist Atomify.app
-productbuild --component Atomify.app /Applications --sign "3rd Party Mac Developer Installer: Anders Hafreager" Atomify.pkg
-macdeployqt Atomify.app -qmldir=../../../../src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager" -appstore-compliant
-productbuild --component Atomify.app /Applications --sign "3rd Party Mac Developer Installer: Anders Hafreager" Atomify.pkg
+codesign -s "3rd Party Mac Developer Application: Anders Hafreager (4XKET6P69R)" --entitlements ../../../../macos/entitlements.plist Atomify.app
+productbuild --component Atomify.app /Applications --sign "3rd Party Mac Developer Installer: Anders Hafreager (4XKET6P69R)" Atomify.pkg
+macdeployqt Atomify.app -qmldir=../../../../src/qml -codesign="3rd Party Mac Developer Application: Anders Hafreager (4XKET6P69R)" -appstore-compliant
+productbuild --component Atomify.app /Applications --sign "3rd Party Mac Developer Installer: Anders Hafreager (4XKET6P69R)" Atomify.pkg

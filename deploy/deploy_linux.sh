@@ -21,4 +21,4 @@ cd deploy/atomify/
 cp -r ~/Qt/5.9.1/gcc_64/qml/QtQuick/Controls/* qml/QtQuick/Controls/
 
 cd ..
-tar -cvzf ../../atomify-2.1.2-linux-x86_64.tar.gz atomify
+tar -cvzf ../../atomify-2.2a-linux-x86_64.tar.gz atomify
