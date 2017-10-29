@@ -7,5 +7,5 @@
 	remote = git@github.com:ovilab/lammps
 	branch = atomify
 	commit = 29e6e0885b3d4f6e93004ee2ab296561171ca90d
-	parent = c8c2962c2d5d1a8dc0de95e1b06e4d87f210d621
+	parent = f09377f15c74ddfcde4151c6d54eedfea4d3366b
 	cmdver = 0.3.1
