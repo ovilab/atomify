@@ -7,7 +7,7 @@ Row {
 
     Label {
         color: "steelblue"
-        text: simulatorControl.identifier
+        text: simulatorControl ? simulatorControl.identifier : ""
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
