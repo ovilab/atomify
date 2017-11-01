@@ -28,6 +28,7 @@ class System : public QObject
     Q_PROPERTY(int numberOfAtoms READ numberOfAtoms NOTIFY numberOfAtomsChanged)
     Q_PROPERTY(int numberOfAtomTypes READ numberOfAtomTypes NOTIFY numberOfAtomTypesChanged)
     Q_PROPERTY(float volume READ volume NOTIFY volumeChanged)
+    Q_PROPERTY(float density READ density WRITE setDensity NOTIFY densityChanged)
     Q_PROPERTY(float simulationTime READ simulationTime NOTIFY simulationTimeChanged)
     Q_PROPERTY(double dt READ dt WRITE setDt NOTIFY dtChanged)
     Q_PROPERTY(int currentTimestep READ currentTimestep NOTIFY currentTimestepChanged)
@@ -89,7 +90,9 @@ public:
     int numberOfTimesteps() const;
     int numberOfDangerousNeighborlistBuilds() const;
     QString lastCommand() const;
+    float density() const;
     QVector<class SimulatorControl*> simulatorControls() const;
+
 
 public slots:
     void setIsValid(bool isValid);
@@ -106,6 +109,7 @@ public slots:
     void setNumberOfTimesteps(int numberOfTimesteps);
     void setNumberOfDangerousNeighborlistBuilds(int numberOfDangerousNeighborlistBuilds);
     void setLastCommand(QString lastCommand);
+    void setDensity(float density);
 
 signals:
     void originChanged(QVector3D origin);
@@ -139,6 +143,7 @@ signals:
     void numberOfTimestepsChanged(int numberOfTimesteps);
     void numberOfDangerousNeighborlistBuildsChanged(int numberOfDangerousNeighborlistBuilds);
     void lastCommandChanged(QString lastCommand);
+    void densityChanged(float density);
 
 private:
     // TODO these are never changed, consider having them as non-pointer members
@@ -180,6 +185,7 @@ private:
     int m_numberOfTimesteps = 0;
     int m_numberOfDangerousNeighborlistBuilds = 0;
     QString m_lastCommand;
+    float m_density = 0;
 };
 
 #endif // SYSTEM_H

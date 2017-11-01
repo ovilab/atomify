@@ -193,6 +193,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     setPairStyle(QString(lammps->force->pair_style));
     m_performance->setThreads(lammps->comm->nthreads);
     updateCenter(domain);
+    setDensity(lammps_get_thermo(lammps, "density"));
 
     setNumberOfDangerousNeighborlistBuilds(lammps_get_thermo(lammps, "ndanger"));
 
@@ -339,6 +340,7 @@ void System::reset()
     m_units->reset();
     m_performance->reset();
     setDt(0);
+    setDensity(0);
     setCpuremain(0);
     setNumberOfDangerousNeighborlistBuilds(0);
     m_currentTimestep = 0;
@@ -451,6 +453,11 @@ QVector<SimulatorControl *> System::simulatorControls() const
     controls.append(variables()->simulatorControls());
 
     return controls;
+}
+
+float System::density() const
+{
+    return m_density;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -594,4 +601,14 @@ void System::setLastCommand(QString lastCommand)
 
     m_lastCommand = lastCommand;
     emit lastCommandChanged(m_lastCommand);
+}
+
+void System::setDensity(float density)
+{
+    qWarning("Floating point comparison needs context sanity check");
+    if (qFuzzyCompare(m_density, density))
+        return;
+
+    m_density = density;
+    emit densityChanged(m_density);
 }
