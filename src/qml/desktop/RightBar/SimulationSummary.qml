@@ -197,7 +197,9 @@ Flickable {
                 }
                 ToolTipLabel {
                     textFormat: Qt.RichText
-                    text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
+                    // text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
+                    text: "Average density: "+system.density.toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
+                    // text: "Average number density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)
                 }
                 ToolTipLabel {
                     text: "<a href=\"atomtypes\">Number of atom types</a>: "+system.numberOfAtomTypes
