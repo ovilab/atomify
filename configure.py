@@ -19,6 +19,10 @@ run_command("git submodule update --init --recursive")
 os.chdir(os.path.join("src","examples"))
 run_command("python generateExamples.py")
 os.chdir(currentPath)
+# Package update
+os.chdir(os.path.join("libs/lammps/src"))
+run_command("make pu")
+os.chdir(currentPath)
 # Set up LAMMPS
 ompSupport = True
 specifiedCompiler = None
