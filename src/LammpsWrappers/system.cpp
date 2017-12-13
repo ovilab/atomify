@@ -605,7 +605,6 @@ void System::setLastCommand(QString lastCommand)
 
 void System::setDensity(float density)
 {
-    qWarning("Floating point comparison needs context sanity check");
     if (qFuzzyCompare(m_density, density))
         return;
 
