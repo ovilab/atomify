@@ -389,7 +389,10 @@ Flickable {
                     text: "FPS: "+ root.visualizer.fps
                 }
                 Label {
-                    text: "Timesteps per second: "+ system.performance.timestepsPerSecond.toFixed(1)
+                    text: "Atom timesteps / second: "+ (system.performance.atomTimestepsPerSecond*1e-3).toFixed(2)+" k"
+                }
+                Label {
+                    text: "Timesteps / second: "+ system.performance.timestepsPerSecond.toFixed(1)
                 }
                 Label {
                     text: "Memory usage LAMMPS: "+ (system.performance.memoryLAMMPS / 1024 / 1024).toFixed(0) +" MB"

@@ -155,6 +155,9 @@ void System::calculateTimestepsPerSeconds(LAMMPS *lammps)
         double oldValue = m_performance->timestepsPerSecond();
         value = 0.6*oldValue + 0.4*value; // low pass filter
         performance()->setTimestepsPerSecond(value);
+        int natoms = lammps->atom->natoms;
+        value *= natoms; // atom timesteps / second
+        performance()->setAtomTimestepsPerSecond(value);
     }
 }
 

@@ -21,6 +21,7 @@ void Performance::reset()
     setMemoryAtomify(0);
     setMemoryLAMMPS(0);
     setTimestepsPerSecond(0);
+    setAtomTimestepsPerSecond(0);
 }
 
 void Performance::synchronize(LAMMPSController *controller)
@@ -57,10 +58,15 @@ int Performance::threads() const
     return m_threads;
 }
 
+double Performance::atomTimestepsPerSecond() const
+{
+  return m_atomTimestepsPerSecond;
+}
+
 void Performance::setMemoryLAMMPS(long memoryLAMMPS)
 {
-    if (m_memoryLAMMPS == memoryLAMMPS)
-        return;
+  if (m_memoryLAMMPS == memoryLAMMPS)
+    return;
 
     m_memoryLAMMPS = memoryLAMMPS;
     emit memoryLAMMPSChanged(memoryLAMMPS);
@@ -91,4 +97,13 @@ void Performance::setThreads(int threads)
 
     m_threads = threads;
     emit threadsChanged(m_threads);
+}
+
+void Performance::setAtomTimestepsPerSecond(double atomTimestepsPerSecond)
+{
+  if (qFuzzyCompare(m_atomTimestepsPerSecond, atomTimestepsPerSecond))
+    return;
+
+  m_atomTimestepsPerSecond = atomTimestepsPerSecond;
+  emit atomTimestepsPerSecondChanged(m_atomTimestepsPerSecond);
 }
