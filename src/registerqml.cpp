@@ -28,6 +28,7 @@
 #include "parsefileuploader.h"
 #include "standardpaths.h"
 #include "keysequence.h"
+#include "helpers/clipboard.h"
 
 void registerQML() {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -67,6 +68,7 @@ void registerQML() {
     qmlRegisterType<States>("Atomify", 1, 0, "States");
     qmlRegisterType<Performance>("Atomify", 1, 0, "Performance");
     qmlRegisterType<UsageStatistics>("Atomify", 1, 0, "UsageStatistics");
+    qmlRegisterType<Clipboard>("Atomify", 1, 0, "Clipboard");
 
     qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
 

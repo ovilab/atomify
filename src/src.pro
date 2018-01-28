@@ -139,7 +139,8 @@ SOURCES += \
     LammpsWrappers/modifiers/periodicimagesmodifier.cpp \
     LammpsWrappers/modifiers/slicemodifier.cpp \
     LammpsWrappers/simulatorcontrols/cpfixindent.cpp \
-    registerqml.cpp
+    registerqml.cpp \
+    helpers/clipboard.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -186,7 +187,8 @@ HEADERS += \
     usagestatistics.h \
     LammpsWrappers/modifiers/periodicimagesmodifier.h \
     LammpsWrappers/modifiers/slicemodifier.h \
-    LammpsWrappers/simulatorcontrols/cpfixindent.h
+    LammpsWrappers/simulatorcontrols/cpfixindent.h \
+    helpers/clipboard.h
 
 # Temporary use of quickcontrols2 without install
 

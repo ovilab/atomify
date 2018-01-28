@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 
 import ".."
 import "../events"
+import Atomify 1.0
 
 Rectangle {
     id: root
@@ -62,9 +63,10 @@ h2 { text-align: center; }
 a { font-weight: bold; color: #56b1b4; text-decoration: none; }
 </style>
 <h2>Simulation crashed</h2>
-" + errorMessage + "<br>
+" + errorMessage + " (<a href=\"copyError\">copy message</a/>)<br>
 <br>
-Last command: <b>" + lastCommand + "</b>"
+Last command: <b>" + lastCommand + "</b><br><br>
+Visit <a href=\"errorLink\">http://lammps.sandia.gov/doc/Section_errors.html</a> to debug your script."
 
 
     property string welcomeText:
@@ -126,6 +128,10 @@ We love feedback, bugreports and ideas for new features.
                 root.openClicked()
             } else if(link==="hide") {
                 root.hideClicked()
+            } else if(link==="copyError") {
+                clipboard.setText(errorMessage)
+            } else if(link==="errorLink") {
+                Qt.openUrlExternally("http://lammps.sandia.gov/doc/Section_errors.html")
             } if(link==="website") {
                 Qt.openUrlExternally("https://ovilab.net/atomify")
             } if(link==="github") {
@@ -139,6 +145,10 @@ We love feedback, bugreports and ideas for new features.
             propagateComposedEvents: true
             cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : undefined
         }
+    }
+
+    Clipboard {
+        id: clipboard
     }
 
     Button {
