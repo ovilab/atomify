@@ -324,7 +324,7 @@ Flickable {
 
             hoverEnabled: true
             onHoveredChanged: {
-                root.visualizer.colorAllGroupsModifier.enabled = hovered
+                root.visualizer.colorAllRegionsModifier.enabled = hovered
             }
 
             RegionsColumn {
