@@ -192,6 +192,7 @@ Flickable {
                     url: "http://lammps.sandia.gov/doc/lattice.html"
                 }
                 ToolTipLabel {
+                    textFormat: Qt.RichText
                     text: "<a href=\"volume\">Volume</a>: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
                     url: "http://lammps.sandia.gov/doc/change_box.html"
                 }
