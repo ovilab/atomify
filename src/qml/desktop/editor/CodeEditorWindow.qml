@@ -263,7 +263,6 @@ Item {
         Flickable {
             id: fileListRoot
             onWidthChanged: {
-                if(hoverResize) return
                 minimumWidth = 50
                 maximumWidth = 160
             }
@@ -275,7 +274,6 @@ Item {
             }
 
             property real oldWidth
-            property bool hoverResize: false
             property bool hovered: false
             property real minimumWidth: 50
             property real maximumWidth: 160
@@ -288,19 +286,6 @@ Item {
             ScrollBar.horizontal: ScrollBar {}
             contentHeight: fileColumn.height
             clip: true
-
-            onHoveredChanged:  {
-                hoverResize = true // Prevents override in onWidthChange
-                if(hovered) {
-                    oldWidth = fileListRoot.width
-                    fileListRoot.minimumWidth = 160
-                } else {
-                    fileListRoot.minimumWidth = oldWidth
-                    fileListRoot.maximumWidth = oldWidth
-                    fileListRoot.maximumWidth = 160
-                }
-                hoverResize = false
-            }
 
             Column {
                 id: fileColumn
@@ -398,27 +383,6 @@ Item {
                         closeTab()
                     }
                     onHoveredChanged: fileListRoot.hovered = hovered
-                }
-
-                ItemDelegate {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    visible: parent.width < 80
-
-                    height: 32
-
-                    Label {
-                        anchors.centerIn: parent
-                        text: ">>"
-                    }
-
-                    onClicked: {
-                        fileListRoot.minimumWidth = 160
-                        fileListRoot.minimumWidth = 50
-                        fileListRoot.maximumWidth = 160
-                    }
                 }
             }
         }
