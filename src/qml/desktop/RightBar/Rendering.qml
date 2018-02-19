@@ -319,7 +319,6 @@ Pane {
             GroupBox {
                 width: parent.width
                 title: "Rendering quality"
-                visible: false
 
                 Binding {
                     target: visualizer
