@@ -308,7 +308,16 @@ Item {
 
                         highlighted: index === stackLayout.currentIndex
                         height: 32
-                        text: codeEditor.title
+
+                        Label {
+                            anchors {
+                                fill: parent
+                                margins: 8
+                            }
+                            verticalAlignment: Text.AlignVCenter
+                            text: codeEditor.title
+                            elide: Text.ElideRight
+                        }
                         onClicked: {
                             stackLayout.currentIndex = index
                         }
