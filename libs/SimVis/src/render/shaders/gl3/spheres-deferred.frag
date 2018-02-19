@@ -6,10 +6,13 @@ in vec3 modelSpherePosition;
 in vec3 color;
 in vec2 planePosition;
 in float radius;
+in float vs_particleId;
+in float vs_flags;
 
 out vec4 normalOut;
 out vec4 positionOut;
 out vec4 colorOut;
+out float particleIdOut;
 
 uniform mat4 mvp;
 uniform mat4 viewMatrix;
@@ -61,4 +64,9 @@ void main(void) {
 
     positionOut = vec4((position-eyePosition-posMin) / deltaMaxMin, 1.0); // TODO fix with actual system size
     colorOut = vec4(color, 1.0);
+    if (vs_flags > 0.5) {
+        colorOut = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+    particleIdOut = vs_particleId;
+//    particleIdOut = 1.0;
 }

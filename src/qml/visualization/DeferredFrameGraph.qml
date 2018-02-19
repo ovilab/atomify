@@ -3,7 +3,7 @@ import QtQuick.Controls 1.4
 import Atomify 1.0
 
 import Qt3D.Core 2.0
-import Qt3D.Render 2.0
+import Qt3D.Render 2.1
 import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
 
@@ -26,7 +26,8 @@ Viewport {
     property alias depthTexture: depthTexture
     property alias ssaoTexture: ssaoTexture
     property alias positionTexture: positionTexture
-    property alias surface: surfaceSelector.surface
+    property alias particleIdTexture: particleIdTexture
+    property alias renderCapture: renderCapture
     property Camera camera: Camera {}
     property Layer atomLayer
     property Layer guideLayer
@@ -37,7 +38,6 @@ Viewport {
     TechniqueFilter {
         matchAll: FilterKey { name: "renderingStyle"; value: "deferred" }
         RenderSurfaceSelector {
-            id: surfaceSelector
             RenderPassFilter {
                 id : geometryPass
                 matchAny : FilterKey { name : "pass"; value : "geometry" }
@@ -86,6 +86,23 @@ Viewport {
                                     width : root.width
                                     height : root.height
                                     format : Texture.RGBA32F
+                                    generateMipMaps : false
+                                    magnificationFilter : Texture.Nearest
+                                    minificationFilter : Texture.Nearest
+                                    wrapMode {
+                                        x: WrapMode.ClampToEdge
+                                        y: WrapMode.ClampToEdge
+                                    }
+                                }
+                            },
+                            RenderTargetOutput {
+                                objectName: "particleIdOut"
+                                attachmentPoint : RenderTargetOutput.Color3
+                                texture: Texture2D {
+                                    id: particleIdTexture
+                                    width : root.width
+                                    height : root.height
+                                    format : Texture.R32F
                                     generateMipMaps : false
                                     magnificationFilter : Texture.Nearest
                                     minificationFilter : Texture.Nearest
@@ -195,6 +212,19 @@ Viewport {
                     ClearBuffers {
                         clearColor: "#000"
                         buffers: ClearBuffers.ColorDepthBuffer
+                        CameraSelector {
+                            camera: root.camera
+                        }
+                    }
+                }
+            }
+            RenderPassFilter {
+                matchAny: FilterKey { name: "pass"; value: "picking" }
+                ClearBuffers {
+                    clearColor: "#000"
+                    buffers: ClearBuffers.ColorDepthBuffer
+                    RenderCapture {
+                        id: renderCapture
                         CameraSelector {
                             camera: root.camera
                         }

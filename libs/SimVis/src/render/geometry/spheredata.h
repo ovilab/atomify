@@ -9,7 +9,9 @@ struct SphereVBOData
 {
     QVector3D position;
     QVector3D color;
-    float radius;
+    float radius = 0.0;
+    float particleId = 0.0;
+    float flags = 0.0;
 };
 
 class SphereData : public Qt3DCore::QNode

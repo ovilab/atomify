@@ -7,7 +7,8 @@ bool AtomData::isValid()
             radii.size() == types.size() &&
             types.size() == originalIndex.size() &&
             originalIndex.size() == bitmask.size() &&
-            bitmask.size() == visible.size();
+            bitmask.size() == visible.size() &&
+            visible.size() == lammpsParticleId.size();
 }
 
 void AtomData::resize(int size)
@@ -20,6 +21,7 @@ void AtomData::resize(int size)
     originalIndex.resize(size);
     bitmask.resize(size);
     visible.resize(size);
+    lammpsParticleId.resize(size);
 }
 
 int AtomData::size()
@@ -37,13 +39,14 @@ void AtomData::reset()
     originalIndex.clear();
     bitmask.clear();
     visible.clear();
+    lammpsParticleId.clear();
 }
 
 long AtomData::memoryUsage()
 {
     return (positions.capacity() + deltaPositions.capacity() + colors.capacity())*sizeof(QVector3D)
             +(radii.capacity())*sizeof(float)
-            +(originalIndex.capacity() + types.capacity() + bitmask.capacity())*sizeof(int)
+            +(originalIndex.capacity() + types.capacity() + bitmask.capacity() + lammpsParticleId.capacity())*sizeof(int)
             +visible.capacity()*sizeof(bool);
 }
 

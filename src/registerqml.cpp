@@ -28,6 +28,7 @@
 #include "parsefileuploader.h"
 #include "standardpaths.h"
 #include "keysequence.h"
+#include "rendercapturehelper.h"
 #include "helpers/clipboard.h"
 
 void registerQML() {
@@ -75,4 +76,6 @@ void registerQML() {
     qmlRegisterSingletonType<StandardPaths>("StandardPaths", 1, 0, "StandardPaths", &StandardPaths::qmlInstance);
 
     qmlRegisterSingletonType<KeySequence>("KeySequence", 1, 0, "KeySequence", &KeySequence::qmlInstance);
+
+    qmlRegisterSingletonType<RenderCaptureHelper>("Atomify", 1, 0, "RenderCaptureHelper", &RenderCaptureHelper::qmlInstance);
 }

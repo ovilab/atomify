@@ -33,6 +33,7 @@ Entity {
             Parameter { name: "normalTexture"; value : deferredFrameGraph.normalTexture },
             Parameter { name: "positionTexture"; value : deferredFrameGraph.positionTexture },
             Parameter { name: "colorTexture"; value : deferredFrameGraph.colorTexture },
+            Parameter { name: "particleIdTexture"; value : deferredFrameGraph.particleIdTexture },
             Parameter { name: "depthTexture"; value : deferredFrameGraph.depthTexture },
             Parameter { name: "winSize"; value : Qt.size(root.width, root.height) },
             Parameter { name: "posMin"; value: spheres.posMin },
@@ -204,6 +205,7 @@ uniform highp sampler2D ssaoTexture;
 uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
 uniform highp sampler2D colorTexture;
+uniform highp sampler2D particleIdTexture;
 uniform highp sampler2D depthTexture;
 uniform highp vec2 winSize;
 uniform float posMin;
@@ -247,6 +249,7 @@ void main()
 #endif
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;
         highp vec3 blur = texture(blurTexture, texCoord).rgb;
+        highp float particleId = texture(particleIdTexture, texCoord).r;
 
     if(depth > 1.0 - 1e-5) {
         discard;

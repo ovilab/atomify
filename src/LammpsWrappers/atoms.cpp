@@ -95,12 +95,22 @@ void Atoms::synchronize(LAMMPSController *lammpsController)
         m_atomData.radii.resize(numberOfAtoms);
         for(float &radii : m_atomData.radii) radii = 1.0;
     }
-
+    if(m_atomData.lammpsParticleId.size() != numberOfAtoms) {
+        m_atomData.lammpsParticleId.resize(numberOfAtoms);
+        for(int &id : m_atomData.lammpsParticleId) id = 0;
+    }
     m_atomData.radiiFromLAMMPS = lammps->atom->radius_flag;
 
     for(int i=0; i<numberOfAtoms; i++) {
         m_atomData.types[i] = types[i];
         m_atomData.originalIndex[i] = i;
+        if (lammps->atom->tag_enable) {
+            tagint tag = lammps->atom->tag[i];
+            m_atomData.lammpsParticleId[i] = tag;
+        } else {
+            // TODO this might not be the right way to do it, consider giving error message
+            m_atomData.lammpsParticleId[i] = i + 1;
+        }
 
         double position[3];
         position[0] = atom->x[i][0];
@@ -159,6 +169,11 @@ float Atoms::globalScale() const
     return m_globalScale;
 }
 
+void Atoms::setSelectedParticles(QVector<int> particleIds)
+{
+    m_selectedParticles = particleIds;
+}
+
 float Atoms::bondScale() const
 {
     return m_bondScale;
@@ -201,6 +216,7 @@ void Atoms::generateSphereData(AtomData &atomData) {
             atomData.radii[visibleAtomCount] = atomData.radii[i];
             atomData.deltaPositions[visibleAtomCount] = atomData.deltaPositions[i];
             atomData.radii[visibleAtomCount] = radius;
+            atomData.lammpsParticleId[visibleAtomCount] = atomData.lammpsParticleId[i];
             visibleAtomCount++;
         }
     }
@@ -209,10 +225,13 @@ void Atoms::generateSphereData(AtomData &atomData) {
     m_sphereDataRaw.resize(visibleAtomCount * sizeof(SphereVBOData));
     SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(m_sphereDataRaw.data());
     for(int i=0; i<visibleAtomCount; i++) {
+        const int particleId = atomData.lammpsParticleId[i];
         SphereVBOData &vbo = vboData[i];
         vbo.position = atomData.positions[i] + atomData.deltaPositions[i];
         vbo.color = atomData.colors[i];
         vbo.radius = atomData.radii[i]*m_sphereScale;
+        vbo.particleId = particleId;
+        vbo.flags = m_selectedParticles.contains(particleId) ? Selected : 0;
     }
     setDirtyData(true);
 }

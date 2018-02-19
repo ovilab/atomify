@@ -87,5 +87,6 @@
         <file>visualization/FixIndentVisualizer.qml</file>
         <file>desktop/RightBar/SimulatorControlItems/SimulatorControlItem.qml</file>
         <file>desktop/RightBar/SimulatorControlItems/FixIndentItem.qml</file>
+        <file>visualization/PickingQuadEntity.qml</file>
     </qresource>
 </RCC>

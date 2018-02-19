@@ -50,6 +50,7 @@ Scene3D {
         text: "Render quality will be changed when the application is restarted."
     }
     property string mode: "trackball"
+    property var selectedParticles: []
 
     hoverEnabled: root.mode === "flymode"
     multisample: true
@@ -184,6 +185,38 @@ Scene3D {
             visualizer.updateNearestPoint()
         }
 
+        components: [
+            RenderSettings {
+                id: renderSettings
+                activeFrameGraph: root.renderMode == "deferred" ? deferredFrameGraph : forwardFrameGraph
+            },
+            InputSettings {
+                id: inputSettings
+            }
+        ]
+
+        ForwardFrameGraph {
+            id: forwardFrameGraph
+            camera: visualizer.camera
+
+            atomLayer: atomLayer
+            guideLayer: guideLayer
+            outlineLayer: outlineLayer
+            clearColor: root.backgroundColor
+        }
+
+        DeferredFrameGraph {
+            id: deferredFrameGraph
+            camera: visualizer.camera
+            width: Math.max(10, root.width, root.height)
+            height: width
+            atomLayer: atomLayer
+            guideLayer: guideLayer
+            outlineLayer: outlineLayer
+            clearColor: root.backgroundColor
+        }
+
+
         ParallelAnimation {
             id: animateCamera
             property int duration: 1000
@@ -266,10 +299,33 @@ Scene3D {
             attenuation: 5.0
         }
 
+        MouseHandler {
+            sourceDevice: MouseDevice {
+                sensitivity: 0.001
+            }
+
+            onPressed: {
+                var data = deferredFrameGraph.renderCapture.requestCapture()
+                data.completed.connect(function() {
+                    var selected = []
+                    selected.push(RenderCaptureHelper.particleAtPoint(data, Qt.point(mouse.x, mouse.y)))
+                    root.selectedParticles = selected
+
+                    console.log("Selected", selected)
+
+                    simulator.system.atoms.setSelectedParticles(selected)
+                })
+                root.focus = true
+            }
+
+        }
+
         TrackballController {
             id: trackballController
             camera: trackballCamera
-            onPressed: root.focus = true
+            onPressed: {
+                root.focus = true
+            }
             enabled: root.mode == "trackball"
         }
 
@@ -310,36 +366,6 @@ Scene3D {
             }
         }
 
-        ForwardFrameGraph {
-            id: forwardFrameGraph
-            camera: visualizer.camera
-
-            atomLayer: atomLayer
-            guideLayer: guideLayer
-            outlineLayer: outlineLayer
-            clearColor: root.backgroundColor
-        }
-
-        DeferredFrameGraph {
-            id: deferredFrameGraph
-            camera: visualizer.camera
-            width: Math.max(10, root.width, root.height)
-            height: width
-            atomLayer: atomLayer
-            guideLayer: guideLayer
-            outlineLayer: outlineLayer
-            clearColor: root.backgroundColor
-        }
-        components: [
-            RenderSettings {
-                id: renderSettings
-                activeFrameGraph: root.renderMode == "deferred" ? deferredFrameGraph : forwardFrameGraph
-            },
-            InputSettings {
-                id: inputSettings
-            }
-        ]
-
         PlaneMesh {
             id: quadMesh
             width: 2.0
@@ -366,6 +392,14 @@ Scene3D {
             nearPlane: visualizer.camera.nearPlane
             width: root.width
             height: root.height
+        }
+
+        PickingQuadEntity {
+            id: pickingQuadEntity
+            deferredFrameGraph: deferredFrameGraph
+            height: root.height
+            spheres: spheres
+            width: root.width
         }
 
         FinalQuadEntity {

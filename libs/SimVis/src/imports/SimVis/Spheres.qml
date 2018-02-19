@@ -130,6 +130,8 @@ Entity {
         instanceCount: sphereData.count
 
         geometry: SpheresPointGeometry {
+            id: geometry
+            property int byteStride: (3 + 3 + 1 + 1 + 1) * 4
             attributes: [
                 Attribute {
                     name: "pos"
@@ -137,7 +139,7 @@ Entity {
                     vertexBaseType: Attribute.Float
                     vertexSize: 3
                     byteOffset: 0
-                    byteStride: (3 + 3 + 1) * 4
+                    byteStride: geometry.byteStride
                     divisor: 1
                     buffer: sphereData ? sphereData.buffer : null
                 },
@@ -147,7 +149,7 @@ Entity {
                     vertexBaseType: Attribute.Float
                     vertexSize: 3
                     byteOffset: 3*4
-                    byteStride: (3 + 3 + 1) * 4
+                    byteStride: geometry.byteStride
                     divisor: 1
                     buffer: sphereData ? sphereData.buffer : null
                 },
@@ -157,7 +159,27 @@ Entity {
                     vertexBaseType: Attribute.Float
                     vertexSize: 1
                     byteOffset: (3+3)*4
-                    byteStride: (3 + 3 + 1) * 4
+                    byteStride: geometry.byteStride
+                    divisor: 1
+                    buffer: sphereData ? sphereData.buffer : null
+                },
+                Attribute {
+                    name: "particleId"
+                    attributeType: Attribute.VertexAttribute
+                    vertexBaseType: Attribute.Float
+                    vertexSize: 1
+                    byteOffset: (3+3+1)*4
+                    byteStride: geometry.byteStride
+                    divisor: 1
+                    buffer: sphereData ? sphereData.buffer : null
+                },
+                Attribute {
+                    name: "flags"
+                    attributeType: Attribute.VertexAttribute
+                    vertexBaseType: Attribute.Float
+                    vertexSize: 1
+                    byteOffset: (3+3+1+1)*4
+                    byteStride: geometry.byteStride
                     divisor: 1
                     buffer: sphereData ? sphereData.buffer : null
                 }

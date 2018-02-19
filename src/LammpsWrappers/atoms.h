@@ -38,7 +38,14 @@ class Atoms : public QObject
     Q_PROPERTY(QString renderingMode READ renderingMode WRITE setRenderingMode NOTIFY renderingModeChanged)
     Q_PROPERTY(int numberOfBonds READ numberOfBonds WRITE setNumberOfBonds NOTIFY numberOfBondsChanged)
     Q_PROPERTY(float globalScale READ globalScale WRITE setGlobalScale NOTIFY globalScaleChanged)
+
 public:
+    enum AtomFlag {
+        NoFlags = 0,
+        Selected = 1 << 0
+    };
+    Q_DECLARE_FLAGS(AtomFlags, AtomFlag)
+
     Atoms(class AtomifySimulator *simulator = nullptr);
     void synchronize(class LAMMPSController *lammpsController);
     void processModifiers(class System *system);
@@ -64,6 +71,8 @@ public:
     void setAtomSize(int atomType, float radius);
     long memoryUsage();
     float globalScale() const;
+
+    Q_INVOKABLE void setSelectedParticles(QVector<int> particleIds);
 
 public slots:
     void setModifiers(QVariantList modifiers);
@@ -112,6 +121,7 @@ private:
     bool generateBondDataFromBondList(AtomData &atomData, LAMMPSController *controller);
     void generateSphereData(AtomData &atomData);
     bool doWeHavefullNeighborList(class LAMMPS_NS::Neighbor *neighbor);
+    QVector<int> m_selectedParticles;
 };
 
 #endif // ATOMS_H
