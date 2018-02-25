@@ -109,6 +109,12 @@ Entity {
                     renderPasses: RenderPass {
                         filterKeys: FilterKey { name: "pass"; value: "geometry" }
                         shaderProgram: ShaderProgram {
+                            fragmentOutputs: [
+                                FragmentOutput { name: "normalOut"; attachmentPoint: RenderTargetOutput.Color0 },
+                                FragmentOutput { name: "positionOut"; attachmentPoint: RenderTargetOutput.Color1 },
+                                FragmentOutput { name: "colorOut"; attachmentPoint: RenderTargetOutput.Color2 }
+                            ]
+
                             vertexShaderCode: loadSource("qrc:/SimVis/render/shaders/gl3/bonds.vert")
                             fragmentShaderCode: loadSource("qrc:/SimVis/render/shaders/gl3/bonds-deferred.frag")
                         }

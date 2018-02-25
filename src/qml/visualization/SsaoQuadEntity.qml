@@ -97,7 +97,7 @@ void main()
             source: "
 #version 330
 "
-            +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
+            +(Qt.platform.os=="osxxx" ? "#define MACOSX" : "")+"
 uniform highp sampler2D normalTexture;
 uniform highp sampler2D positionTexture;
 uniform highp sampler2D colorTexture;

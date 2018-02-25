@@ -48,8 +48,13 @@ Entity {
                     renderPasses: RenderPass {
                         id: builderRenderPass
                         shaderProgram: ShaderProgram {
+                            fragmentOutputs: [
+                                FragmentOutput { name: "colorOut"; attachmentPoint: RenderTargetOutput.Color0 },
+                                FragmentOutput { name: "particleIdOut"; attachmentPoint: RenderTargetOutput.Color1 }
+                            ]
                             vertexShaderCode: loadSource(vertexShaderSourceFile)
                             fragmentShaderCode: _fragmentBuilder.finalShader
+                            onFragmentShaderCodeChanged: console.log("Fragment shader: ", fragmentShaderCode)
                         }
                         ShaderBuilder {
                             id: _fragmentBuilder
@@ -95,7 +100,7 @@ Entity {
                                 ShaderOutput {
                                     id: _fragmentColor
                                     type: "vec4"
-                                    name: "fragColor"
+                                    name: "colorOut"
                                     value: StandardMaterial {
                                         color: _fragmentBuilder.color
                                     }
@@ -115,6 +120,13 @@ Entity {
                     renderPasses: RenderPass {
                         filterKeys: FilterKey { name: "pass"; value: "geometry" }
                         shaderProgram: ShaderProgram {
+                            fragmentOutputs: [
+                                FragmentOutput { name: "normalOut"; attachmentPoint: RenderTargetOutput.Color0 },
+                                FragmentOutput { name: "positionOut"; attachmentPoint: RenderTargetOutput.Color1 },
+                                FragmentOutput { name: "colorOut"; attachmentPoint: RenderTargetOutput.Color2 },
+                                FragmentOutput { name: "particleIdOut"; attachmentPoint: RenderTargetOutput.Color3 }
+                            ]
+
                             vertexShaderCode: loadSource("qrc:/SimVis/render/shaders/gl3/spheres-deferred.vert")
                             fragmentShaderCode: loadSource("qrc:/SimVis/render/shaders/gl3/spheres-deferred.frag")
                         }
@@ -185,7 +197,6 @@ Entity {
                 }
             ]
         }
-
     }
 
     components: [

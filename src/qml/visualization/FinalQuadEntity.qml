@@ -198,7 +198,7 @@ void main()
             source: "
 #version 330
 "
-            +(Qt.platform.os=="osx" ? "#define MACOSX" : "")+"
+            +(Qt.platform.os=="osxxx" ? "#define MACOSX" : "")+"
 
 uniform highp sampler2D blurTexture;
 uniform highp sampler2D ssaoTexture;

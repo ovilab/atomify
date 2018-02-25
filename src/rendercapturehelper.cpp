@@ -11,6 +11,7 @@ int RenderCaptureHelper::particleAtPoint(Qt3DRender::QRenderCaptureReply *captur
 {
     qDebug() << "Image" << captureReply->image();
     const QColor color = captureReply->image().pixelColor(point.toPoint());
+    qDebug() << "Mouse: " << point;
     qDebug() << "Color" << color << color.redF() << color.greenF() << color.blueF() <<  color.red() << color.green() << color.blue();
     float number = 255.0 * (color.redF() * 255 * 255 + color.greenF() * 255 + color.blueF());
     qDebug() << "Number" << number;

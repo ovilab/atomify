@@ -5,9 +5,12 @@ in vec3 modelPosition;
 in vec3 modelSpherePosition;
 in vec3 color;
 in vec2 planePosition;
+in float vs_particleId;
+in float vs_flags;
 in float radius;
 
-out vec4 fragColor;
+out float particleIdOut;
+out vec4 colorOut;
 
 uniform mat4 modelView;
 uniform mat4 inverseModelView;
@@ -57,4 +60,9 @@ void main(void) {
     vec3 position = modelSpherePosition + sphereIntersection;
 
 #pragma shadernodes body
+
+    if (vs_flags > 0.5) {
+        colorOut = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+    particleIdOut = vs_particleId;
 }

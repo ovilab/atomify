@@ -5,6 +5,8 @@ in float vertexId;
 in vec3 pos;
 in vec3 col;
 in float scale;
+in float particleId;
+in float flags;
 
 uniform vec3 eyePosition = vec3(0.0, 0.0, 0.0);
 
@@ -16,6 +18,9 @@ out vec3 modelPosition;
 out vec3 color;
 out vec2 planePosition;
 out float radius;
+out float vs_particleId;
+out float vs_flags;
+
 vec3 makePerpendicular(vec3 v) {
     if(v.x == 0.0 && v.y == 0.0) {
         if(v.z == 0.0) {
@@ -49,6 +54,9 @@ void main() {
 
     vec4 modelPositionTmp = modelMatrix * vec4(position, 1.0);
     modelPosition = modelPositionTmp.xyz;
+
+    vs_particleId = particleId;
+    vs_flags = flags;
 
     gl_Position = mvp*vec4(position, 1.0);
 }

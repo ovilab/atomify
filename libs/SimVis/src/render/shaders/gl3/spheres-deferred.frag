@@ -68,5 +68,4 @@ void main(void) {
         colorOut = vec4(1.0, 0.0, 0.0, 1.0);
     }
     particleIdOut = vs_particleId;
-//    particleIdOut = 1.0;
 }

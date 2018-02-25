@@ -19,26 +19,22 @@ import "../desktop" // TODO should be separate controllers for desktop and mobil
 Entity {
     id : root
 
-    property var deferredFrameGraph
-    property var spheres
+    property var particleIdTexture
     property real width
     property real height
 
     Material {
         id: finalMaterial
         parameters : [
-            Parameter { name: "particleIdTexture"; value : deferredFrameGraph.particleIdTexture },
-            Parameter { name: "winSize"; value : Qt.size(root.width, root.height) },
-            Parameter { name: "posMin"; value: spheres.posMin },
-            Parameter { name: "posMax"; value: spheres.posMax }
+            Parameter { name: "particleIdTexture"; value : root.particleIdTexture }
         ]
         effect: Effect {
             techniques : [
                 Technique {
-                    filterKeys: FilterKey {
-                        name: "renderingStyle"
-                        value: "deferred"
-                    }
+                    filterKeys: [
+                        FilterKey { name: "renderingStyle"; value: "forward" },
+                        FilterKey { name: "renderingStyle"; value: "deferred" }
+                    ]
                     graphicsApiFilter {
                         api: GraphicsApiFilter.OpenGL
                         profile: GraphicsApiFilter.CoreProfile

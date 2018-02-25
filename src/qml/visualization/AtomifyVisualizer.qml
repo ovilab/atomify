@@ -12,6 +12,8 @@ import Qt3D.Logic 2.0
 
 import QtQuick.Scene3D 2.0
 
+import QtQuick.Window 2.2
+
 import SimVis 1.0
 import ShaderNodes 1.0
 
@@ -51,7 +53,6 @@ Scene3D {
     }
     property string mode: "trackball"
     property var selectedParticles: []
-
     hoverEnabled: root.mode === "flymode"
     multisample: true
     aspects: ["render", "input", "logic"]
@@ -198,7 +199,8 @@ Scene3D {
         ForwardFrameGraph {
             id: forwardFrameGraph
             camera: visualizer.camera
-
+            width: Math.max(10, root.width, root.height)
+            height: width
             atomLayer: atomLayer
             guideLayer: guideLayer
             outlineLayer: outlineLayer
@@ -215,7 +217,6 @@ Scene3D {
             outlineLayer: outlineLayer
             clearColor: root.backgroundColor
         }
-
 
         ParallelAnimation {
             id: animateCamera
@@ -305,10 +306,12 @@ Scene3D {
             }
 
             onPressed: {
-                var data = deferredFrameGraph.renderCapture.requestCapture()
+                var data = renderSettings.activeFrameGraph.renderCapture.requestCapture()
+
                 data.completed.connect(function() {
+                    // data.saveImage("/tmp/test.png")
                     var selected = []
-                    selected.push(RenderCaptureHelper.particleAtPoint(data, Qt.point(mouse.x, mouse.y)))
+                    selected.push(RenderCaptureHelper.particleAtPoint(data, Qt.point(mouse.x * Screen.devicePixelRatio, mouse.y * Screen.devicePixelRatio)))
                     root.selectedParticles = selected
 
                     console.log("Selected", selected)
@@ -396,15 +399,22 @@ Scene3D {
 
         PickingQuadEntity {
             id: pickingQuadEntity
-            deferredFrameGraph: deferredFrameGraph
+            particleIdTexture: renderSettings.activeFrameGraph.particleIdTexture
             height: root.height
-            spheres: spheres
             width: root.width
         }
 
         FinalQuadEntity {
             id: finalQuadEntity
             deferredFrameGraph: deferredFrameGraph
+            spheres: spheres
+            width: root.width
+            height: root.height
+        }
+
+        SimpleFinalQuadEntity {
+            id: simpleFinalQuadEntity
+            colorTexture: forwardFrameGraph.colorTexture
             spheres: spheres
             width: root.width
             height: root.height
