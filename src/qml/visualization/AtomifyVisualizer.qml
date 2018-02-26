@@ -30,7 +30,7 @@ Scene3D {
     property alias sliceModifier: sliceModifier
     property alias colorAllGroupsModifier: colorAllGroupsModifier
     property alias colorAllRegionsModifier: colorAllRegionsModifier
-    property bool guidesVisible
+    property bool guidesVisible: true
     property bool systemBoxVisible
     property var rootItem
     property MouseMover mouseMover
@@ -558,35 +558,6 @@ Scene3D {
             fragmentColor: bondsMediumQuality
         }
 
-        Guide {
-            enabled: root.guidesVisible
-            color: "red"
-            scale3D: Qt.vector3d(0.51, 1000, 0.51)
-            translate: Qt.vector3d(490,0,0)
-            rotationZ: 90
-            camera: visualizer.camera
-            layer: forwardFrameGraph.guideLayer
-        }
-
-        Guide {
-            enabled: root.guidesVisible
-            color: "blue"
-            scale3D: Qt.vector3d(0.53, 1000, 0.53)
-            translate: Qt.vector3d(0,0,490)
-            rotationX: 90
-            camera: visualizer.camera
-            layer: forwardFrameGraph.guideLayer
-        }
-
-        Guide {
-            enabled: root.guidesVisible
-            color: "green"
-            scale3D: Qt.vector3d(0.52, 1000, 0.52)
-            translate: Qt.vector3d(0,490,0)
-            camera: visualizer.camera
-            layer: forwardFrameGraph.guideLayer
-        }
-
         Entity {
             enabled: trackballController.dragging || trackballController.translationActive
             components: [
@@ -611,6 +582,7 @@ Scene3D {
         }
 
         Axes {
+            enabled: root.guidesVisible
             layer: forwardFrameGraph.guideLayer
             lights: visualizer.lights
             scale3D: Qt.vector3d(0.05, 0.05, 0.05)
