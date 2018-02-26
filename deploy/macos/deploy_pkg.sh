@@ -13,19 +13,42 @@
 # Assumes that clang-omp is installed with `brew install llvm` and symlinked as clang-omp++
 # Assumes that libomp and libstd etc are code signed before linking
 
+# If qmake is not in path, specify it here
+export PATH=$PATH:/Users/anderhaf/Qt/5.10.1/clang_64/bin/
+
+# Verify that 10.9 SDK exists
+if [ ! -d "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk" ]; then
+  echo "Could not find 10.9 SDK at /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+  echo "Please download SDK from https://github.com/phracker/MacOSX-SDKs"
+  exit 1
+fi
+
 mkdir build-pkg
 cd build-pkg
 qmake ../../../src DEPLOYPKG=true
+# Force using 10.9 SDK even if current OS is newer. Not sure how to fix this in qmake call
+sed -i "" 's/MacOSX10.10.sdk/MacOSX10.9.sdk/g' Makefile
+sed -i "" 's/MacOSX10.11.sdk/MacOSX10.9.sdk/g' Makefile
+sed -i "" 's/MacOSX10.12.sdk/MacOSX10.9.sdk/g' Makefile
+sed -i "" 's/MacOSX10.13.sdk/MacOSX10.9.sdk/g' Makefile
 make -j8
 
 # First create folder to create dmg
 mkdir Atomify
 cp -r Atomify.app Atomify
 cd Atomify
+ln -s /Applications Applications
 xattr -cr Atomify.app
 macdeployqt Atomify.app -qmldir=../../../../src/qml -codesign="Developer ID Application: Anders Hafreager (4XKET6P69R)" -appstore-compliant
 cd ..
 
+
+# Create dmg with shortcut to Applications
+mkdir dmg
+cd dmg
+hdiutil create Atomify.dmg -volname "Atomify" -srcfolder ../Atomify/
+cp Atomify.dmg ../../Atomify-v2.2-macos.dmg
+cd ..
 
 # Now create folder for pkg
 mkdir pkg
@@ -37,5 +60,5 @@ macdeployqt Atomify.app -dmg -qmldir=../../../../src/qml -codesign="Developer ID
 cd "Atomify.app"
 find . -name *.dSYM | xargs -I $ rm -R $
 cd ..
-productbuild --component Atomify.app /Applications --sign "Developer ID Installer: Anders Hafreager" Atomify-2.2a-macos-installer.pkg
-cp Atomify-2.2a-macos-installer.pkg ../../
+productbuild --component Atomify.app /Applications --sign "Developer ID Installer: Anders Hafreager" Atomify-v2.2-macos-installer.pkg
+cp Atomify-v2.2-macos-installer.pkg ../../
