@@ -46,7 +46,6 @@
         <file>TemperatureItem.qml</file>
         <file>plotting/LabelButton.qml</file>
         <file>visualization/DeferredFrameGraph.qml</file>
-        <file>visualization/SimpleDeferredFrameGraph.qml</file>
         <file>visualization/ForwardFrameGraph.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>plotting/Plot2D.qml</file>
