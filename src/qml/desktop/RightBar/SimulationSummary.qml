@@ -98,191 +98,6 @@ Flickable {
                 right: parent.right
             }
 
-            title: "Camera"
-
-            Column {
-                Label {
-                    text: "Position: ("+system.cameraPosition.x.toFixed(1)+", "+system.cameraPosition.y.toFixed(1)+", "+system.cameraPosition.z.toFixed(1)+")"
-                }
-                ToolTipLabel {
-                    text: "Mode: " + (visualizer.mode === "flymode" ? "Flymode" : "Trackball")
-                    toolTipText: {
-                        if(visualizer.mode==="flymode") {
-                            return "Fly around with WASD. Up/Down with RF."
-                        } else {
-                            return "Rotate around with ADRF. Zoom in/out with WS."
-                        }
-                    }
-                }
-            }
-        }
-
-        GroupBox {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-
-            title: "System"
-
-            Column {
-                Label {
-                    text: {
-                        var state = ""
-                        if(simulator.states.paused.active) {
-                            state = "Paused"
-                        } else if(simulator.states.finished.active) {
-                            state = "Finished"
-                        } else {
-                            state = system.state
-                        }
-
-                        return "State: "+state
-                    }
-
-                    visible: system.state!==""
-                }
-
-                Label {
-                    text: "Triclinic"
-                    visible: system.triclinic
-                }
-                Label {
-                    text: "<a href=\"units\">Units</a>: "+system.units.name
-                    onLinkActivated: {
-                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/units.html")
-                    }
-                }
-                ToolTipLabel {
-                    url: "http://lammps.sandia.gov/doc/dimension.html"
-                    toolTipText: "The current simulation is "+system.units.dimensions+"-dimensional."
-                    text: "<a href=\"dimensions\">Dimensions</a>: "+system.units.dimensions
-                }
-                ToolTipLabel {
-                    property string explainationP: (system.boundaryStyle.search("p")>-1) ? "p is periodic. " : ""
-                    property string explainationF: (system.boundaryStyle.search("f")>-1) ? "f is non-periodic and fixed. " : ""
-                    property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
-                    property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
-                    toolTipText: explainationP+explainationF+explainationS+explainationM
-                    text: "<a href=\"boundary\">Boundary</a>: "+system.boundaryStyle
-                    url: "http://lammps.sandia.gov/doc/boundary.html"
-                }
-                ToolTipLabel {
-                    text: " <a href=\"pairstyle\">Pair style</a>: "+system.pairStyle
-                    url: "http://lammps.sandia.gov/doc/pair_style.html"
-                }
-                ToolTipLabel {
-                    text: " <a href=\"timestep\">Timestep</a>: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
-                    url: "http://lammps.sandia.gov/doc/timestep.html"
-                }
-                ToolTipLabel {
-                    text: "<a href=\"atoms\">Number of atoms</a>: "+system.numberOfAtoms
-                    url: "http://lammps.sandia.gov/doc/create_atoms.html"
-                }
-                Label {
-                    text: "Number of bonds: "+system.atoms.numberOfBonds
-                    visible: system.atoms.numberOfBonds>0
-                }
-                ToolTipLabel {
-                    text: "<a href=\"size\">Size</a>: ("+system.size.x.toFixed(3)+", "+system.size.y.toFixed(3)+", "+system.size.z.toFixed(3)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
-                    url: "http://lammps.sandia.gov/doc/change_box.html"
-                }
-                ToolTipLabel {
-                    text: "<a href=\"center\">Center</a>: ("+system.center.x.toFixed(1)+", "+system.center.y.toFixed(1)+", "+system.center.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
-                    url: "http://lammps.sandia.gov/doc/lattice.html"
-                }
-                ToolTipLabel {
-                    textFormat: Qt.RichText
-                    text: "<a href=\"volume\">Volume</a>: "+system.volume.toPrecision(2)+(system.units.volume==="" ? "" : " ["+system.units.volume+"]")
-                    url: "http://lammps.sandia.gov/doc/change_box.html"
-                }
-                ToolTipLabel {
-                    textFormat: Qt.RichText
-                    // text: "Average density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
-                    text: "Average density: "+system.density.toPrecision(2)+(system.units.density==="" ? "" : " ["+system.units.density+"]")
-                    // text: "Average number density: "+(system.numberOfAtoms/(system.volume===0 ? 1 : system.volume) ).toPrecision(2)
-                }
-                ToolTipLabel {
-                    text: "<a href=\"atomtypes\">Number of atom types</a>: "+system.numberOfAtomTypes
-                    url: "http://lammps.sandia.gov/doc/atom_style.html"
-                }
-                ToolTipLabel {
-                    text: "<a href=\"dangerousBuilds\">Dangerous builds</a>: "+system.numberOfDangerousNeighborlistBuilds
-                    toolTipText: "Use <i>neigh_modify every 1 delay 0 check yes</i> to avoid this"
-                    visible: system.numberOfDangerousNeighborlistBuilds>0
-                    color: "red"
-                    url: "http://lammps.sandia.gov/doc/neigh_modify.html"
-                }
-            }
-        }
-
-        GroupBox {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-
-            title: "Time"
-
-            Column {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                Label {
-                    text: {
-                        var seconds = system.cpuremain.toFixed(0)
-                        if(seconds < 60) {
-                            return "Time left: "+seconds+" s"
-                        } else if(seconds < 3600) {
-                            return "Time left: "+system.units.timeToFormattedString(seconds, "mm:ss")
-                        } else {
-                            return "Time left: "+system.units.timeToFormattedString(seconds, "hh:mm:ss")
-                        }
-                    }
-                }
-                Label {
-                    text: "Current timestep: "+system.currentTimestep
-                }
-                Label {
-                    text: {
-                        if(system.units.time === "") {
-                            return "Time: "+system.simulationTime.toPrecision(3)
-                        } else {
-                            if(system.units.time === "fs" && system.simulationTime > 1000) {
-                                return "Time: "+(system.simulationTime/1000).toPrecision(3)+" [ps]"
-                            } else {
-                                return "Time: "+system.simulationTime.toFixed(3)+ " ["+system.units.time+"]"
-                            }
-                        }
-                    }
-                }
-                ToolTipLabel {
-                    toolTipText: "1x targets 60 frames per second."
-                    text: "Target speed: "+speedSlider.value.toFixed(0)+"x"
-                }
-                Slider {
-                    id: speedSlider
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    from: 1
-                    to: 100
-                    stepSize: 1
-                    snapMode: Slider.SnapAlways
-                    value: simulator ? simulator.simulationSpeed : 1
-                    onValueChanged: if(simulator !== undefined) { simulator.simulationSpeed = value }
-                }
-            }
-        }
-
-        GroupBox {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-
             title: "Groups"
 
             background: Rectangle {
@@ -373,6 +188,125 @@ Flickable {
             FixesColumn {
                 id: fixesColumn
                 system: root.system
+            }
+        }
+
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "System"
+
+            Column {
+                Label {
+                    text: "<a href=\"units\">Units</a>: "+system.units.name
+                    onLinkActivated: {
+                        Qt.openUrlExternally("http://lammps.sandia.gov/doc/units.html")
+                    }
+                }
+
+                ToolTipLabel {
+                    property string explainationP: (system.boundaryStyle.search("p")>-1) ? "p is periodic. " : ""
+                    property string explainationF: (system.boundaryStyle.search("f")>-1) ? "f is non-periodic and fixed. " : ""
+                    property string explainationS: (system.boundaryStyle.search("s")>-1) ? "s is non-periodic and shrink-wrapped. " : ""
+                    property string explainationM: (system.boundaryStyle.search("m")>-1) ? "m is non-periodic and shrink-wrapped with a minimum value. " : ""
+                    toolTipText: explainationP+explainationF+explainationS+explainationM
+                    text: "<a href=\"boundary\">Boundary</a>: "+system.boundaryStyle
+                    url: "http://lammps.sandia.gov/doc/boundary.html"
+                }
+
+                ToolTipLabel {
+                    text: " <a href=\"timestep\">Timestep</a>: "+system.dt+(system.units.time==="" ? "" : " ["+system.units.time+"]")
+                    url: "http://lammps.sandia.gov/doc/timestep.html"
+                }
+
+                ToolTipLabel {
+                    text: "<a href=\"atoms\">Number of atoms</a>: "+system.numberOfAtoms
+                    url: "http://lammps.sandia.gov/doc/create_atoms.html"
+                }
+
+                ToolTipLabel {
+                    text: "<a href=\"size\">Size</a>: ("+system.size.x.toFixed(3)+", "+system.size.y.toFixed(3)+", "+system.size.z.toFixed(3)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                    url: "http://lammps.sandia.gov/doc/change_box.html"
+                }
+
+
+                ToolTipLabel {
+                    text: "<a href=\"atomtypes\">Number of atom types</a>: "+system.numberOfAtomTypes
+                    url: "http://lammps.sandia.gov/doc/atom_style.html"
+                }
+
+                ToolTipLabel {
+                    text: "<a href=\"dangerousBuilds\">Dangerous builds</a>: "+system.numberOfDangerousNeighborlistBuilds
+                    toolTipText: "Use <i>neigh_modify every 1 delay 0 check yes</i> to avoid this"
+                    visible: system.numberOfDangerousNeighborlistBuilds>0
+                    color: "red"
+                    url: "http://lammps.sandia.gov/doc/neigh_modify.html"
+                }
+            }
+        }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            title: "Time"
+
+            Column {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                Label {
+                    text: {
+                        var seconds = system.cpuremain.toFixed(0)
+                        if(seconds < 60) {
+                            return "Time left: "+seconds+" s"
+                        } else if(seconds < 3600) {
+                            return "Time left: "+system.units.timeToFormattedString(seconds, "mm:ss")
+                        } else {
+                            return "Time left: "+system.units.timeToFormattedString(seconds, "hh:mm:ss")
+                        }
+                    }
+                }
+                Label {
+                    text: "Current timestep: "+system.currentTimestep
+                }
+                Label {
+                    text: {
+                        if(system.units.time === "") {
+                            return "Time: "+system.simulationTime.toPrecision(3)
+                        } else {
+                            if(system.units.time === "fs" && system.simulationTime > 1000) {
+                                return "Time: "+(system.simulationTime/1000).toPrecision(3)+" [ps]"
+                            } else {
+                                return "Time: "+system.simulationTime.toFixed(3)+ " ["+system.units.time+"]"
+                            }
+                        }
+                    }
+                }
+                ToolTipLabel {
+                    toolTipText: "1x targets 60 frames per second."
+                    text: "Target speed: "+speedSlider.value.toFixed(0)+"x"
+                }
+                Slider {
+                    id: speedSlider
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    from: 1
+                    to: 100
+                    stepSize: 1
+                    snapMode: Slider.SnapAlways
+                    value: simulator ? simulator.simulationSpeed : 1
+                    onValueChanged: if(simulator !== undefined) { simulator.simulationSpeed = value }
+                }
             }
         }
 
