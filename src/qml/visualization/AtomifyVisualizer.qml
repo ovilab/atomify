@@ -100,7 +100,7 @@ Scene3D {
         // var right = camera.viewVector.normalized().cross(camera.upVector.normalized())
         var sizeY = Math.max(5.0, simulator.system.size.y)
         var center = simulator.system.center
-        var cameraPos = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
+        var cameraPos = simulator.system.center.plus(Qt.vector3d(0, -2*sizeY, 0))
 
         center = center.times(simulator.system.atoms.globalScale)
         visualizer.camera.viewCenter = center
