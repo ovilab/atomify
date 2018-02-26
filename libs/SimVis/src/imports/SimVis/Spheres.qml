@@ -54,7 +54,6 @@ Entity {
                             ]
                             vertexShaderCode: loadSource(vertexShaderSourceFile)
                             fragmentShaderCode: _fragmentBuilder.finalShader
-                            onFragmentShaderCodeChanged: console.log("Fragment shader: ", fragmentShaderCode)
                         }
                         ShaderBuilder {
                             id: _fragmentBuilder
