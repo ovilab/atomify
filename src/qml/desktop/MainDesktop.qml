@@ -412,6 +412,7 @@ Rectangle {
                 }
 
                 onPositionChanged: {
+                    visualizer.mouseMoved(mouse.x, mouse.y)
                     if(visualizer.mode !== "flymode" || !visualizer.captureCursor) {
                         return
                     }

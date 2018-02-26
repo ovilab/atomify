@@ -23,6 +23,7 @@ import "../events"
 Scene3D {
     id: root
     signal changedRenderQuality
+    signal mouseMoved(real x, real y)
     property color backgroundColor: "black"
     property alias propertyModifier: propertyModifier
     property alias sliceModifier: sliceModifier
@@ -53,6 +54,7 @@ Scene3D {
     }
     property string mode: "trackball"
     property var selectedParticles: []
+
     hoverEnabled: root.mode === "flymode"
     multisample: true
     aspects: ["render", "input", "logic"]
@@ -309,15 +311,25 @@ Scene3D {
                 var data = renderSettings.activeFrameGraph.renderCapture.requestCapture()
 
                 data.completed.connect(function() {
-                    // data.saveImage("/tmp/test.png")
-                    var selected = []
-                    selected.push(RenderCaptureHelper.particleAtPoint(data, Qt.point(mouse.x * Screen.devicePixelRatio, mouse.y * Screen.devicePixelRatio)))
-                    root.selectedParticles = selected
+                    var selectedParticle = RenderCaptureHelper.particleAtPoint(data, Qt.point(mouse.x * Screen.devicePixelRatio, mouse.y * Screen.devicePixelRatio))
 
-                    console.log("Selected", selected)
+                    var selectedParticles = []
+                    if (mouse.modifiers & Qt.ControlModifier || mouse.modifiers & Qt.ShiftModifier) {
+                        selectedParticles = root.selectedParticles
+                    }
 
-                    simulator.system.atoms.setSelectedParticles(selected)
+                    var index = selectedParticles.indexOf(selectedParticle)
+
+                    if (index >= 0) {
+                        selectedParticles.splice(index, 1)
+                    } else {
+                        selectedParticles.push(selectedParticle)
+                    }
+
+                    root.selectedParticles = selectedParticles
+                    simulator.system.atoms.setSelectedParticles(root.selectedParticles)
                 })
+
                 root.focus = true
             }
 
