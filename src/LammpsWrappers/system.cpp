@@ -9,6 +9,7 @@
 #include "modifiers/modifier.h"
 #include "units.h"
 #include "../performance.h"
+#include "../atomselection.h"
 
 #include <library.h>
 #include <input.h>
@@ -19,6 +20,8 @@
 #include <update.h>
 #include <comm.h>
 #include "LammpsWrappers/simulatorcontrols/simulatorcontrol.h"
+
+#include <QPair>
 
 using namespace LAMMPS_NS;
 
@@ -254,6 +257,7 @@ void System::synchronize(LAMMPSController *lammpsController)
     m_fixes->synchronize(lammpsController);
     m_performance->synchronize(lammpsController);
     m_units->synchronize(lammps);
+    updateSelectionData(lammps);
 }
 
 QVector3D System::origin() const
@@ -458,9 +462,24 @@ QVector<SimulatorControl *> System::simulatorControls() const
     return controls;
 }
 
+void System::setSelection(const QVector<AtomSelection *> &selection)
+{
+    QList<QObject*> asQObject;
+    for (AtomSelection *atomSelection : selection) {
+        QObject *ptr = qobject_cast<QObject*>(atomSelection);
+        asQObject.push_back(ptr);
+    }
+    m_selection = QVariant::fromValue(asQObject);
+}
+
+QVariant System::selection() const
+{
+  return m_selection;
+}
+
 float System::density() const
 {
-    return m_density;
+  return m_density;
 }
 
 void System::synchronizeQML(LAMMPSController *lammpsController)
@@ -470,6 +489,7 @@ void System::synchronizeQML(LAMMPSController *lammpsController)
     m_fixes->synchronizeQML(lammpsController);
     m_regions->synchronizeQML(lammpsController);
     m_groups->synchronizeQML(lammpsController);
+    emit selectionChanged(m_selection);
 }
 
 void System::updateThreadOnDataObjects(QThread *thread)
@@ -477,6 +497,13 @@ void System::updateThreadOnDataObjects(QThread *thread)
     m_computes->updateThreadOnDataObjects(thread);
     m_fixes->updateThreadOnDataObjects(thread);
     m_variables->updateThreadOnDataObjects(thread);
+    QList<QObject*> selection = m_selection.value<QList<QObject*>>();
+    for (QObject *sel : selection) {
+        AtomSelection *atomSelection = qobject_cast<AtomSelection*>(sel);
+        if(atomSelection->thread() != thread) {
+            atomSelection->moveToThread(thread);
+        }
+    }
 }
 
 QVector3D System::cameraPosition() const
@@ -613,4 +640,83 @@ void System::setDensity(float density)
 
     m_density = density;
     emit densityChanged(m_density);
+}
+
+bool System::makeSureLAMMPSHasMap(LAMMPS_NS::LAMMPS *lammps)
+{
+    if (!lammps->atom->tag_enable)
+        return false;
+
+    if (lammps->atom->map_style == 0) {
+        lammps->atom->map_init(true);
+        lammps->atom->map_set();
+    }
+
+    return true;
+}
+
+void System::updateSelectionData(LAMMPS_NS::LAMMPS *lammps)
+{
+    // Also containes bool to mark to be removed
+    QMap<int, QPair<AtomSelection*, bool>> previousSelection;
+    QList<QObject*> selectionList = m_selection.value<QList<QObject*>>();
+
+    for (QObject *obj : selectionList) {
+        AtomSelection *atomSelection = qobject_cast<AtomSelection*>(obj);
+        previousSelection[atomSelection->id()] = qMakePair(atomSelection, true);
+    }
+
+    QVector<AtomSelection*> selection;
+
+    auto selectedParticles = m_atoms->selectedParticles();
+    if (selectedParticles.size()) {
+        makeSureLAMMPSHasMap(lammps);
+    }
+
+    for (int id : selectedParticles) {
+        if (previousSelection.count(id) > 0) {
+            previousSelection[id].second = false;  // Should not remove
+            selection.push_back(previousSelection[id].first);
+        } else {
+            selection.push_back(new AtomSelection());
+        }
+        AtomSelection *atomSelection = selection.back();
+        QVariantMap props;
+
+        if (lammps->atom->tag_enable) {
+            int index = lammps->atom->map(id);
+            if (index >= 0) {
+              // Set default properties
+              atomSelection->setPosition(QVector3D(
+                                      static_cast<float>(lammps->atom->x[index][0]),
+                                      static_cast<float>(lammps->atom->x[index][1]),
+                                      static_cast<float>(lammps->atom->x[index][2])
+                                  ));
+              atomSelection->setVelocity(QVector3D(
+                                      static_cast<float>(lammps->atom->v[index][0]),
+                                      static_cast<float>(lammps->atom->v[index][1]),
+                                      static_cast<float>(lammps->atom->v[index][2])
+                                  ));
+              atomSelection->setForce(QVector3D(
+                                      static_cast<float>(lammps->atom->f[index][0]),
+                                      static_cast<float>(lammps->atom->f[index][1]),
+                                      static_cast<float>(lammps->atom->f[index][2])
+                                  ));
+            }
+
+            // TODO(anders.hafreager) See if this has per-atom quantities
+        }
+
+        atomSelection->setId(id);
+        atomSelection->setProperties(props);
+    }
+
+    foreach(auto pair, previousSelection) {
+        bool shouldBeDeleted = pair.second;
+        if (shouldBeDeleted) {
+            AtomSelection *atomSelection = pair.first;
+            delete atomSelection;
+        }
+    }
+    setSelection(selection);
 }

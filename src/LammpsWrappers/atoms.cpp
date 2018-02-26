@@ -169,9 +169,18 @@ float Atoms::globalScale() const
     return m_globalScale;
 }
 
-void Atoms::setSelectedParticles(QVector<int> particleIds)
+QVector<int> Atoms::selectedParticles() const
 {
-    m_selectedParticles = particleIds;
+    return m_selectedParticles;
+}
+
+void Atoms::setSelectedParticles(QVector<int> selectedParticles)
+{
+    if (selectedParticles == m_selectedParticles)
+        return;
+
+    m_selectedParticles = selectedParticles;
+    emit selectedParticlesChanged(selectedParticles);
 }
 
 float Atoms::bondScale() const

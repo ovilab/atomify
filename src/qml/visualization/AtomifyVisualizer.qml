@@ -316,21 +316,33 @@ Scene3D {
                 data.completed.connect(function() {
                     var selectedParticle = RenderCaptureHelper.particleAtPoint(data, Qt.point(mouse.x * Screen.devicePixelRatio, mouse.y * Screen.devicePixelRatio))
 
-                    var selectedParticles = []
-                    if (mouse.modifiers & Qt.ControlModifier || mouse.modifiers & Qt.ShiftModifier) {
-                        selectedParticles = root.selectedParticles
+                    // If we clicked on zero particles, reset selection
+                    if (selectedParticle === 0) {
+                        root.selectedParticles = []
+                        simulator.system.atoms.selectedParticles = root.selectedParticles
+                        return
                     }
 
+                    var selectedParticles = root.selectedParticles
                     var index = selectedParticles.indexOf(selectedParticle)
 
                     if (index >= 0) {
                         selectedParticles.splice(index, 1)
                     } else {
-                        selectedParticles.push(selectedParticle)
+                        if (selectedParticles.length == 0) {
+                            // Add if none is selected
+                            selectedParticles.push(selectedParticle)
+                        } else if (mouse.modifiers & Qt.ControlModifier || mouse.modifiers & Qt.ShiftModifier) {
+                            // Add if we have selection and hold shift or ctrl
+                            selectedParticles.push(selectedParticle)
+                        } else {
+                            // Replace list with this particle
+                            selectedParticles = [selectedParticle]
+                        }
                     }
 
                     root.selectedParticles = selectedParticles
-                    simulator.system.atoms.setSelectedParticles(root.selectedParticles)
+                    simulator.system.atoms.selectedParticles = root.selectedParticles
                 })
 
                 root.focus = true

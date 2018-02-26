@@ -98,6 +98,20 @@ Flickable {
                 right: parent.right
             }
 
+            title: "Selection"
+
+            SelectionColumn {
+                id: selectionColumn
+                system: root.system
+            }
+        }
+
+        GroupBox {
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
             title: "Groups"
 
             background: Rectangle {

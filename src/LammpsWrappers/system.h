@@ -48,6 +48,7 @@ class System : public QObject
     Q_PROPERTY(int numberOfTimesteps READ numberOfTimesteps WRITE setNumberOfTimesteps NOTIFY numberOfTimestepsChanged)
     Q_PROPERTY(int numberOfDangerousNeighborlistBuilds READ numberOfDangerousNeighborlistBuilds WRITE setNumberOfDangerousNeighborlistBuilds NOTIFY numberOfDangerousNeighborlistBuildsChanged)
     Q_PROPERTY(QString lastCommand READ lastCommand WRITE setLastCommand NOTIFY lastCommandChanged)
+    Q_PROPERTY(QVariant selection READ selection NOTIFY selectionChanged)
 public:
     System(class AtomifySimulator *simulator = nullptr);
     ~System();
@@ -92,7 +93,8 @@ public:
     QString lastCommand() const;
     float density() const;
     QVector<class SimulatorControl*> simulatorControls() const;
-
+    void setSelection(const QVector<class AtomSelection*> &selection);
+    QVariant selection() const;
 
 public slots:
     void setIsValid(bool isValid);
@@ -144,8 +146,11 @@ signals:
     void numberOfDangerousNeighborlistBuildsChanged(int numberOfDangerousNeighborlistBuilds);
     void lastCommandChanged(QString lastCommand);
     void densityChanged(float density);
+    void selectionChanged(QVariant selection);
 
 private:
+    void updateSelectionData(LAMMPS_NS::LAMMPS *lammps);
+    bool makeSureLAMMPSHasMap(LAMMPS_NS::LAMMPS *lammps);
     // TODO these are never changed, consider having them as non-pointer members
     std::unique_ptr<class Atoms> m_atoms;
     std::unique_ptr<class Regions> m_regions;
@@ -186,6 +191,7 @@ private:
     int m_numberOfDangerousNeighborlistBuilds = 0;
     QString m_lastCommand;
     float m_density = 0;
+    QVariant m_selection;
 };
 
 #endif // SYSTEM_H

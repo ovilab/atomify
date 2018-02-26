@@ -38,6 +38,7 @@ class Atoms : public QObject
     Q_PROPERTY(QString renderingMode READ renderingMode WRITE setRenderingMode NOTIFY renderingModeChanged)
     Q_PROPERTY(int numberOfBonds READ numberOfBonds WRITE setNumberOfBonds NOTIFY numberOfBondsChanged)
     Q_PROPERTY(float globalScale READ globalScale WRITE setGlobalScale NOTIFY globalScaleChanged)
+    Q_PROPERTY(QVector<int> selectedParticles READ selectedParticles WRITE setSelectedParticles NOTIFY selectedParticlesChanged)
 
 public:
     enum AtomFlag {
@@ -71,8 +72,7 @@ public:
     void setAtomSize(int atomType, float radius);
     long memoryUsage();
     float globalScale() const;
-
-    Q_INVOKABLE void setSelectedParticles(QVector<int> particleIds);
+    QVector<int> selectedParticles() const;
 
 public slots:
     void setModifiers(QVariantList modifiers);
@@ -82,6 +82,7 @@ public slots:
     void setRenderingMode(QString renderingMode);
     void setNumberOfBonds(int numberOfBonds);
     void setGlobalScale(float globalScale);
+    void setSelectedParticles(QVector<int> particleIds);
 
 signals:
     void sphereDataChanged(SphereData* sphereData);
@@ -94,6 +95,7 @@ signals:
     void renderingModeChanged(QString renderingMode);
     void numberOfBondsChanged(int numberOfBonds);
     void globalScaleChanged(float globalScale);
+    void selectedParticlesChanged(QVector<int> selectedParticles);
 
 private:
     AtomData m_atomData;
