@@ -92,5 +92,6 @@
         <file>visualization/ColorList.qml</file>
         <file>visualization/objects/Arrow.qml</file>
         <file>visualization/objects/Axes.qml</file>
+        <file>visualization/objects/Text3D.qml</file>
     </qresource>
 </RCC>
