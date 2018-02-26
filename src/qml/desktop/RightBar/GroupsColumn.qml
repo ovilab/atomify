@@ -40,6 +40,7 @@ Column {
                     onHoveredChanged: {
                         model.modelData.hovered = containsMouse
                     }
+                    cursorShape: Qt.PointingHandCursor
                 }
             }
         }
