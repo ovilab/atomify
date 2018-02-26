@@ -52,6 +52,7 @@ Column {
                     PropertyChanges { target: model.modelData; marked: false }
                     PropertyChanges { target: colorRect; color: colorList.dampedColorForIndex(index) }
                     PropertyChanges { target: colorRect; border.width: 0 }
+                    PropertyChanges { target: toolTip; text: "Hidden" }
                 },
                 State {
                     name: "Always"
@@ -59,6 +60,7 @@ Column {
                     PropertyChanges { target: model.modelData; marked: true }
                     PropertyChanges { target: colorRect; color: colorList.colorForIndex(index) }
                     PropertyChanges { target: colorRect; border.width: 1 }
+                    PropertyChanges { target: toolTip; text: "Always highlighted" }
                 }
             ]
 
@@ -68,7 +70,14 @@ Column {
                 height: 15
                 border.color: "white"
 
+                ToolTip {
+                    id: toolTip
+                    text: ""
+                    visible: regionsRow.state !== "Normal" && (mouseArea1.containsMouse || mouseArea2.containsMouse)
+                }
+
                 MouseArea {
+                    id: mouseArea1
                     anchors.fill: parent
                     hoverEnabled: true
                     onHoveredChanged: regionsRow.hovered(containsMouse)
@@ -81,6 +90,7 @@ Column {
                 visible: list.visible
                 text: model.modelData.identifier+": "+model.modelData.count+" atoms"
                 MouseArea {
+                    id: mouseArea2
                     anchors.fill: parent
                     hoverEnabled: true
                     onHoveredChanged: regionsRow.hovered(containsMouse)
