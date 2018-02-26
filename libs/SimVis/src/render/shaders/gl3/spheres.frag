@@ -44,7 +44,21 @@ void main(void) {
     // discriminant of sphere equation
     // float d = b*b - 4.0*a*c;
     float d = bHalf*bHalf - a*c; // Factor 4 is cancelled because of bHalf and /(2.0*a) later.
-    if(d < 0.0) {
+    bool selected = vs_flags > 0.5;
+
+    if (selected && d < 0) {
+        // If particle is selected, color some extra pixels outside the particles
+        // within r2' = r2*1.18
+        float selectedRingThreshold = a*r2*0.18;
+        float dPrime = d + selectedRingThreshold;
+        d += selectedRingThreshold;
+        if (d >= 0) {
+            colorOut = vec4(0.9, 0.1, 0.08, 1.0);
+            return;
+        }
+    }
+
+    if ( d < 0.0 ) {
         discard;
     }
 
@@ -61,7 +75,7 @@ void main(void) {
 
 #pragma shadernodes body
 
-    if (vs_flags > 0.5) {
+    if (selected) {
         colorOut.r *= 2;
     }
     particleIdOut = vs_particleId;
