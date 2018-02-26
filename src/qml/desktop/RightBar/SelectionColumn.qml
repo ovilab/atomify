@@ -31,6 +31,13 @@ Column {
             Row {
                 Label {
                     text: {
+                        "Type: "+model.modelData.type
+                    }
+                }
+            }
+            Row {
+                Label {
+                    text: {
                         var pos = model.modelData.position
                         "Position: ("+pos.x.toPrecision(4)+", "+pos.y.toPrecision(4)+", "+pos.z.toPrecision(4)+")"
                     }
