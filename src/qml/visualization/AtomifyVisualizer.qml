@@ -19,6 +19,7 @@ import ShaderNodes 1.0
 
 import "../desktop" // TODO should be separate controllers for desktop and mobile
 import "../events"
+import "objects"
 
 Scene3D {
     id: root
@@ -607,6 +608,20 @@ Scene3D {
                 id: viewCenterTransform
                 translation: visualizer.camera.viewCenter
             }
+        }
+
+        Axes {
+            layer: forwardFrameGraph.guideLayer
+            lights: visualizer.lights
+            scale3D: Qt.vector3d(0.05, 0.05, 0.05)
+            translation: {
+                var screenSpacePosition = Qt.vector3d(-0.9, -0.8, 0.1)
+                var vpMatrixInverted = visualizer.camera.projectionMatrix.times(visualizer.camera.viewMatrix).inverted()
+                var worldSpacePosition = vpMatrixInverted.times(screenSpacePosition)
+
+                return worldSpacePosition
+            }
+
         }
 
         FixIndentVisualizer {
