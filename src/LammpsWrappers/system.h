@@ -93,7 +93,7 @@ public:
     QString lastCommand() const;
     float density() const;
     QVector<class SimulatorControl*> simulatorControls() const;
-    void setSelection(const QVector<class AtomSelection*> &selection);
+    void setSelection(const QVector<class AtomSelectionData*> &selection);
     QVariant selection() const;
 
 public slots:

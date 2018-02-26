@@ -9,7 +9,7 @@
 #include "modifiers/modifier.h"
 #include "units.h"
 #include "../performance.h"
-#include "../atomselection.h"
+#include "../atomselectiondata.h"
 
 #include <library.h>
 #include <input.h>
@@ -462,10 +462,10 @@ QVector<SimulatorControl *> System::simulatorControls() const
     return controls;
 }
 
-void System::setSelection(const QVector<AtomSelection *> &selection)
+void System::setSelection(const QVector<AtomSelectionData *> &selection)
 {
     QList<QObject*> asQObject;
-    for (AtomSelection *atomSelection : selection) {
+    for (AtomSelectionData *atomSelection : selection) {
         QObject *ptr = qobject_cast<QObject*>(atomSelection);
         asQObject.push_back(ptr);
     }
@@ -499,7 +499,7 @@ void System::updateThreadOnDataObjects(QThread *thread)
     m_variables->updateThreadOnDataObjects(thread);
     QList<QObject*> selection = m_selection.value<QList<QObject*>>();
     for (QObject *sel : selection) {
-        AtomSelection *atomSelection = qobject_cast<AtomSelection*>(sel);
+        AtomSelectionData *atomSelection = qobject_cast<AtomSelectionData*>(sel);
         if(atomSelection->thread() != thread) {
             atomSelection->moveToThread(thread);
         }
@@ -658,15 +658,15 @@ bool System::makeSureLAMMPSHasMap(LAMMPS_NS::LAMMPS *lammps)
 void System::updateSelectionData(LAMMPS_NS::LAMMPS *lammps)
 {
     // Also containes bool to mark to be removed
-    QMap<int, QPair<AtomSelection*, bool>> previousSelection;
+    QMap<int, QPair<AtomSelectionData*, bool>> previousSelection;
     QList<QObject*> selectionList = m_selection.value<QList<QObject*>>();
 
     for (QObject *obj : selectionList) {
-        AtomSelection *atomSelection = qobject_cast<AtomSelection*>(obj);
+        AtomSelectionData *atomSelection = qobject_cast<AtomSelectionData*>(obj);
         previousSelection[atomSelection->id()] = qMakePair(atomSelection, true);
     }
 
-    QVector<AtomSelection*> selection;
+    QVector<AtomSelectionData*> selection;
 
     auto selectedParticles = m_atoms->selectedParticles();
     if (selectedParticles.size()) {
@@ -678,9 +678,9 @@ void System::updateSelectionData(LAMMPS_NS::LAMMPS *lammps)
             previousSelection[id].second = false;  // Should not remove
             selection.push_back(previousSelection[id].first);
         } else {
-            selection.push_back(new AtomSelection());
+            selection.push_back(new AtomSelectionData());
         }
-        AtomSelection *atomSelection = selection.back();
+        AtomSelectionData *atomSelection = selection.back();
         QVariantMap props;
 
         if (lammps->atom->tag_enable) {
@@ -703,6 +703,7 @@ void System::updateSelectionData(LAMMPS_NS::LAMMPS *lammps)
                                       static_cast<float>(lammps->atom->f[index][2])
                                   ));
             }
+            atomSelection->setType(lammps->atom->type[index]);
 
             // TODO(anders.hafreager) See if this has per-atom quantities
         }
@@ -714,7 +715,7 @@ void System::updateSelectionData(LAMMPS_NS::LAMMPS *lammps)
     foreach(auto pair, previousSelection) {
         bool shouldBeDeleted = pair.second;
         if (shouldBeDeleted) {
-            AtomSelection *atomSelection = pair.first;
+            AtomSelectionData *atomSelection = pair.first;
             delete atomSelection;
         }
     }
