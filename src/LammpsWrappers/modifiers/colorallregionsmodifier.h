@@ -14,7 +14,6 @@ public:
     void apply(AtomData &atomData) override;
 
 private:
-    QVector<QVector3D> m_colors;
 };
 
 #endif // COLORALLREGIONSMODIFIER_H

@@ -5,16 +5,17 @@
 
 #include <QVector>
 #include <QVector3D>
+#include <QList>
+#include <QColor>
+#include <QVariantList>
 
 class ColorAllGroupsModifier : public Modifier
 {
     Q_OBJECT
+
 public:
     ColorAllGroupsModifier();
     void apply(AtomData &atomData) override;
-
-private:
-    QVector<QVector3D> m_colors;
 };
 
 #endif // COLORALLGROUPSMODIFIER_H

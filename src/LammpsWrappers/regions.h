@@ -12,6 +12,7 @@ class CPRegion : public QObject
     Q_OBJECT
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
     Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
+  Q_PROPERTY(bool marked READ marked WRITE setMarked NOTIFY markedChanged)
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
 public:
@@ -24,24 +25,28 @@ public:
     bool containsAtom(int atomIndex);
     bool doUpdate() const;
     void setDoUpdate(bool doUpdate);
+    bool marked() const;
 
 public slots:
     void setCount(int count);
     void setIdentifier(QString identifier);
     void setVisible(bool visible);
     void setHovered(bool hovered);
+    void setMarked(bool marked);
 
 signals:
     void countChanged(int count);
     void identifierChanged(QString identifier);
     void visibleChanged(bool visible);
     void hoveredChanged(bool hovered);
+    void markedChanged(bool marked);
 
 private:
     int m_count = 0;
     QString m_identifier;
     bool m_visible = true;
     bool m_hovered = false;
+    bool m_marked = false;
     bool m_doUpdate = false;
     QVector<int> m_containsAtom;
 };

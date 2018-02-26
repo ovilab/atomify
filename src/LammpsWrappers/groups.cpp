@@ -150,9 +150,9 @@ int CPGroup::bitmask() const
     return m_bitmask;
 }
 
-bool CPGroup::hovered() const
+bool CPGroup::marked() const
 {
-    return m_hovered;
+    return m_marked;
 }
 
 bool CPGroup::visible() const
@@ -160,9 +160,14 @@ bool CPGroup::visible() const
     return m_visible;
 }
 
+bool CPGroup::hovered() const
+{
+  return m_hovered;
+}
+
 QString CPGroup::identifier() const
 {
-    return m_identifier;
+  return m_identifier;
 }
 
 void CPGroup::setCount(int count)
@@ -183,13 +188,13 @@ void CPGroup::setBitmask(int bitmask)
     emit bitmaskChanged(bitmask);
 }
 
-void CPGroup::setHovered(bool hovered)
+void CPGroup::setMarked(bool marked)
 {
-    if (m_hovered == hovered)
+    if (m_marked == marked)
         return;
 
-    m_hovered = hovered;
-    emit hoveredChanged(hovered);
+    m_marked = marked;
+    emit markedChanged(marked);
 }
 
 void CPGroup::setVisible(bool visible)
@@ -210,11 +215,20 @@ void CPGroup::setIdentifier(QString identifier)
     emit identifierChanged(identifier);
 }
 
+void CPGroup::setHovered(bool hovered)
+{
+  if (m_hovered == hovered)
+    return;
+
+  m_hovered = hovered;
+  emit hoveredChanged(m_hovered);
+}
+
 void CPGroup::update(LAMMPS *lammps)
 {
-    Group *group = lammps->group;
-    QByteArray identifierBytes = m_identifier.toUtf8();
-    int index = group->find(identifierBytes.constData());
+  Group *group = lammps->group;
+  QByteArray identifierBytes = m_identifier.toUtf8();
+  int index = group->find(identifierBytes.constData());
     setBitmask(group->bitmask[index]);
     setCount(group->count(index));
 }

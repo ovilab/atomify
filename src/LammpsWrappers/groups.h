@@ -13,6 +13,7 @@ class CPGroup : public QObject
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(int bitmask READ bitmask WRITE setBitmask NOTIFY bitmaskChanged)
+    Q_PROPERTY(bool marked READ marked WRITE setMarked NOTIFY markedChanged)
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
 public:
@@ -21,24 +22,28 @@ public:
     QString identifier() const;
     int count() const;
     int bitmask() const;
-    bool hovered() const;
+    bool marked() const;
     bool visible() const;
+    bool hovered() const;
 
 public slots:
     void setCount(int count);
     void setBitmask(int bitmask);
-    void setHovered(bool hovered);
+    void setMarked(bool marked);
     void setVisible(bool visible);
     void setIdentifier(QString identifier);
+    void setHovered(bool hovered);
 
 signals:
     void countChanged(int count);
     void bitmaskChanged(int bitmask);
-    void hoveredChanged(bool hovered);
+    void markedChanged(bool marked);
     void visibleChanged(bool visible);
     void identifierChanged(QString identifier);
+    void hoveredChanged(bool hovered);
 
 private:
+    bool m_marked = false;
     bool m_hovered = false;
     bool m_visible = true;
     int m_count = 0;

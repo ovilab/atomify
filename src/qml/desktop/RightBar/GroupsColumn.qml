@@ -1,7 +1,10 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import "../../visualization"
 
 Column {
+    ColorList { id: colorList }
+
     Label {
         text: "No groups"
         visible: groupsList.count==0
@@ -10,22 +13,60 @@ Column {
     Repeater {
         id: groupsList
         model: system ? system.groups.model : undefined
-        height: visible ? count*26 : 0
         delegate: Row {
+            id: groupRow
             spacing: 5
-            Image {
-                id: groupVisible
+            state: "Normal"
+
+            function hovered(containsMouse) {
+                model.modelData.hovered = containsMouse;
+            }
+
+            function clicked() {
+                if (groupRow.state === "Normal") {
+                    groupRow.state = "Always"
+                } else if (groupRow.state === "Always") {
+                    groupRow.state = "Hide"
+                } else if (groupRow.state === "Hide") {
+                    groupRow.state = "Normal"
+                }
+            }
+
+            states: [
+                State {
+                    name: "Normal"
+                    PropertyChanges { target: model.modelData; visible: true }
+                    PropertyChanges { target: model.modelData; marked: false }
+                    PropertyChanges { target: colorRect; color: colorList.colorForIndex(index) }
+                    PropertyChanges { target: colorRect; border.width: 0 }
+                },
+                State {
+                    name: "Hide"
+                    PropertyChanges { target: model.modelData; visible: false }
+                    PropertyChanges { target: model.modelData; marked: false }
+                    PropertyChanges { target: colorRect; color: colorList.dampedColorForIndex(index) }
+                    PropertyChanges { target: colorRect; border.width: 0 }
+                },
+                State {
+                    name: "Always"
+                    PropertyChanges { target: model.modelData; visible: true }
+                    PropertyChanges { target: model.modelData; marked: true }
+                    PropertyChanges { target: colorRect; color: colorList.colorForIndex(index) }
+                    PropertyChanges { target: colorRect; border.width: 1 }
+                }
+            ]
+
+            Rectangle {
+                id: colorRect
                 width: 15
                 height: 15
-                y: 1
-                source: model.modelData.visible ? "qrc:/images/eye-on.png" : "qrc:/images/eye-off.png"
+                border.color: "white"
+
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onHoveredChanged: {
-                        model.modelData.hovered = containsMouse
-                    }
-                    onClicked: model.modelData.visible = !model.modelData.visible
+                    onHoveredChanged: groupRow.hovered(containsMouse)
+                    onClicked: groupRow.clicked()
                     cursorShape: Qt.PointingHandCursor
                 }
             }
@@ -36,10 +77,8 @@ Column {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onClicked: model.modelData.visible = !model.modelData.visible
-                    onHoveredChanged: {
-                        model.modelData.hovered = containsMouse
-                    }
+                    onHoveredChanged: groupRow.hovered(containsMouse)
+                    onClicked: groupRow.clicked()
                     cursorShape: Qt.PointingHandCursor
                 }
             }

@@ -198,6 +198,8 @@ Scene3D {
             }
         ]
 
+        ColorList { id: colorList }
+
         ForwardFrameGraph {
             id: forwardFrameGraph
             camera: visualizer.camera
@@ -479,21 +481,25 @@ Scene3D {
 
         ColorAllGroupsModifier {
             id: colorAllGroupsModifier
+            colorList: colorList.colors
             enabled: false
         }
 
         ColorAllRegionsModifier {
             id: colorAllRegionsModifier
+            colorList: colorList.colors
             enabled: false
         }
 
         GroupModifier {
             id: groupModifier
+            colorList: colorList.colors
             enabled: true
         }
 
         RegionModifier {
             id: regionModifier
+            colorList: colorList.colors
             enabled: true
         }
 

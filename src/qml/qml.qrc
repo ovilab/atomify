@@ -89,5 +89,6 @@
         <file>desktop/RightBar/SimulatorControlItems/SimulatorControlItem.qml</file>
         <file>desktop/RightBar/SimulatorControlItems/FixIndentItem.qml</file>
         <file>visualization/PickingQuadEntity.qml</file>
+        <file>visualization/ColorList.qml</file>
     </qresource>
 </RCC>

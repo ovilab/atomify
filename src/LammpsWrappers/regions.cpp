@@ -257,12 +257,26 @@ void CPRegion::setHovered(bool hovered)
     emit hoveredChanged(hovered);
 }
 
+void CPRegion::setMarked(bool marked)
+{
+  if (m_marked == marked)
+        return;
+
+      m_marked = marked;
+      emit markedChanged(m_marked);
+}
+
 bool CPRegion::doUpdate() const
 {
-    return m_doUpdate;
+  return m_doUpdate;
 }
 
 void CPRegion::setDoUpdate(bool doUpdate)
 {
-    m_doUpdate = doUpdate;
+  m_doUpdate = doUpdate;
+}
+
+bool CPRegion::marked() const
+{
+  return m_marked;
 }
