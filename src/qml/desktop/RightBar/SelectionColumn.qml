@@ -54,7 +54,7 @@ Column {
             Row {
                 Label {
                     text: {
-                        var force = model.modelData.velocity
+                        var force = model.modelData.force
                         "Force: ("+force.x.toPrecision(4)+", "+force.y.toPrecision(4)+", "+force.z.toPrecision(4)+")"
                     }
                 }
