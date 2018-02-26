@@ -72,6 +72,7 @@ Column {
 
                 ToolTip {
                     id: toolTip
+                    delay: 250
                     text: ""
                     visible: regionsRow.state !== "Normal" && (mouseArea1.containsMouse || mouseArea2.containsMouse)
                 }
