@@ -62,7 +62,7 @@ void main(void) {
 #pragma shadernodes body
 
     if (vs_flags > 0.5) {
-        colorOut = vec4(1.0, 0.0, 0.0, 1.0);
+        colorOut.r *= 2;
     }
     particleIdOut = vs_particleId;
 }
