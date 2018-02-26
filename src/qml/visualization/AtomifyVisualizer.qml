@@ -615,10 +615,14 @@ Scene3D {
             lights: visualizer.lights
             scale3D: Qt.vector3d(0.05, 0.05, 0.05)
             translation: {
-                var screenSpacePosition = Qt.vector3d(-0.9, -0.8, 0.1)
+                var x = 100 / root.width // In range (0,1)
+                var y = 100 / root.height // In range (0,1)
+                x = 2*x - 1 // In range (-1,1), screen space
+                y = 2*y - 1 // In range (-1,1), screen space
+                var screenSpacePosition = Qt.vector3d(x, y, 0.1)
+                // Transform from screen space to world space by inverting P*V (projection*view)
                 var vpMatrixInverted = visualizer.camera.projectionMatrix.times(visualizer.camera.viewMatrix).inverted()
                 var worldSpacePosition = vpMatrixInverted.times(screenSpacePosition)
-
                 return worldSpacePosition
             }
 
