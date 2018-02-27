@@ -127,10 +127,10 @@ Rectangle {
                         hoverEnabled: true
                         onHoveredChanged: {
                             if(containsMouse) {
-                                logoLabel.text = "Atomify<br>2.2a"
+                                logoLabel.text = "Atomify<br>2.2"
                                 root.title = "Caffeinify"
                             } else {
-                                logoLabel.text = "Atomify<br>2.2a"
+                                logoLabel.text = "Atomify<br>2.2"
                                 root.title = "Atomify"
                             }
                         }
@@ -150,7 +150,7 @@ Rectangle {
                     fontSizeMode: Text.Fit
                     height: 24
 
-                    text: "Atomify<br>2.2a"
+                    text: "Atomify<br>2.2"
                     horizontalAlignment: Text.AlignHCenter
                 }
             }

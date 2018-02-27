@@ -5,7 +5,7 @@ DEFINES += LAMMPS_GZIP
 TARGET = atomify
 
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
-DEFINES += ATOMIFYVERSION=\\\"2.2a\\\"
+DEFINES += ATOMIFYVERSION=\\\"2.2\\\"
 unix:!macx {
     QMAKE_CXXFLAGS += -fopenmp
     LIBS += -fopenmp
