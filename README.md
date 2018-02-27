@@ -30,7 +30,7 @@ Coming soon.
 
 ## How to build ##
 Step 1)
-You will need Qt 5.9. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download-open-source/](https://www.qt.io/download-open-source/) and install it from there. When you run the installer, you can just press skip when it asks you for the account. If you are using Mac, you can also uncheck the ~10GB iOS package unless you want that.
+You will need Qt 5.10. The easiest way to achieve this is to download Qt Creator from [https://www.qt.io/download-open-source/](https://www.qt.io/download-open-source/) and install it from there. When you run the installer, you can just press skip when it asks you for the account. If you are using Mac, you can also uncheck the ~10GB iOS package unless you want that.
 
 **If you are on Ubuntu, you will also need OpenGL libraries. You can achieve this by running `sudo apt install libgl1-mesa-dev`.**
 
