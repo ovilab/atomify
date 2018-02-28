@@ -247,6 +247,10 @@ Flickable {
                     url: "http://lammps.sandia.gov/doc/change_box.html"
                 }
 
+                ToolTipLabel {
+                    text: "<a href=\"center\">Center</a>: ("+system.center.x.toFixed(1)+", "+system.center.y.toFixed(1)+", "+system.center.z.toFixed(1)+")"+(system.units.length==="" ? "" : " ["+system.units.length+"]")
+                    url: "http://lammps.sandia.gov/doc/lattice.html"
+                }
 
                 ToolTipLabel {
                     text: "<a href=\"atomtypes\">Number of atom types</a>: "+system.numberOfAtomTypes
