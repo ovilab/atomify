@@ -11,6 +11,7 @@
 /*_intel.h
 /*_intel.cpp
 /*_kokkos.h
+/*_kokkos_impl.h
 /*_kokkos.cpp
 /*_omp.h
 /*_omp.cpp
@@ -25,6 +26,7 @@
 /kokkos.h
 /kokkos_type.h
 /kokkos_few.h
+/kokkos_base.h
 
 /manifold*.cpp
 /manifold*.h
@@ -546,6 +548,7 @@
 /fix_shake.h
 /fix_shardlow.cpp
 /fix_shardlow.h
+/random_external_state.h
 /fix_smd.cpp
 /fix_smd.h
 /fix_species.cpp
@@ -908,8 +911,10 @@
 /python_impl.cpp
 /python_impl.h
 /python_compat.h
-/fix_python.cpp
-/fix_python.h
+/fix_python_move.cpp
+/fix_python_move.h
+/fix_python_invoke.cpp
+/fix_python_invoke.h
 /pair_python.cpp
 /pair_python.h
 /reader_molfile.cpp
@@ -1083,10 +1088,16 @@
 /pair_born_coul_long_cs.h
 /pair_born_coul_dsf_cs.cpp
 /pair_born_coul_dsf_cs.h
+/pair_born_coul_wolf_cs.cpp
+/pair_born_coul_wolf_cs.h
 /pair_buck_coul_long_cs.cpp
 /pair_buck_coul_long_cs.h
 /pair_coul_long_cs.cpp
 /pair_coul_long_cs.h
+/pair_coul_wolf_cs.cpp
+/pair_coul_wolf_cs.h
+/pair_extep.cpp
+/pair_extep.h
 /pair_lj_cut_thole_long.cpp
 /pair_lj_cut_thole_long.h
 /pair_plum_hb.cpp
