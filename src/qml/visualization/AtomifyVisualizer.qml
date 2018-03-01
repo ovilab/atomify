@@ -306,15 +306,53 @@ Scene3D {
         }
 
         MouseHandler {
+            id: mouseHandler
+            property vector2d mousePositionOnClick
+            property var mouseModifiersOnClick
+            property int selected: -1
+
             sourceDevice: MouseDevice {
                 sensitivity: 0.001
             }
 
             onPressed: {
+                root.focus = true
+                // Store current position for atom selection if not cancelled
+                mousePositionOnClick = Qt.vector2d(mouse.x, mouse.y)
+                mouseModifiersOnClick = mouse.modifiers
+                atomSelectTimer.start()
+            }
+
+            onReleased: {
+                // If we released before timer fires, we want to select atoms
+                if (atomSelectTimer.running) {
+                    atomSelectTimer.stop()
+                    doSelect()
+                }
+            }
+
+            onPositionChanged: {
+                // Check if we moved mouse, cancel atom selection if we
+                // moved too far
+                var dx = mouse.x - mousePositionOnClick.x
+                var dy = mouse.y - mousePositionOnClick.y
+                var dr2 = dx*dx+dy*dy
+                if (dr2 > 4) {
+                    atomSelectTimer.stop()
+                }
+            }
+
+            Timer {
+                id: atomSelectTimer
+                onTriggered: mouseHandler.doSelect()
+                interval: 200
+            }
+
+            function doSelect() {
                 var data = renderSettings.activeFrameGraph.renderCapture.requestCapture()
 
                 data.completed.connect(function() {
-                    var selectedParticle = RenderCaptureHelper.particleAtPoint(data, Qt.point(mouse.x * Screen.devicePixelRatio, mouse.y * Screen.devicePixelRatio))
+                    var selectedParticle = RenderCaptureHelper.particleAtPoint(data, Qt.point(mousePositionOnClick.x * Screen.devicePixelRatio, mousePositionOnClick.y * Screen.devicePixelRatio))
 
                     // If we clicked on zero particles, reset selection
                     if (selectedParticle === 0) {
@@ -324,19 +362,22 @@ Scene3D {
                     }
 
                     var selectedParticles = root.selectedParticles
+                    // Check if the selected atom was in the list
                     var index = selectedParticles.indexOf(selectedParticle)
 
                     if (index >= 0) {
+                        // It was there. Toggle selection by removing it
                         selectedParticles.splice(index, 1)
                     } else {
+                        // Not in the list. What happens now depends on shift/cmd/ctrl is pressed (multi selection)
                         if (selectedParticles.length == 0) {
-                            // Add if none is selected
+                            // No atoms are currently selected, add this one
                             selectedParticles.push(selectedParticle)
-                        } else if (mouse.modifiers & Qt.ControlModifier || mouse.modifiers & Qt.ShiftModifier) {
-                            // Add if we have selection and hold shift or ctrl
+                        } else if (mouseModifiersOnClick & Qt.ControlModifier || mouseModifiersOnClick & Qt.ShiftModifier) {
+                            // Add if we have selection and hold shift or cmd/ctrl
                             selectedParticles.push(selectedParticle)
                         } else {
-                            // Replace list with this particle
+                            // We have a selection, but don't want multi selection. Replace list with this particle
                             selectedParticles = [selectedParticle]
                         }
                     }
@@ -344,8 +385,6 @@ Scene3D {
                     root.selectedParticles = selectedParticles
                     simulator.system.atoms.selectedParticles = root.selectedParticles
                 })
-
-                root.focus = true
             }
 
         }
