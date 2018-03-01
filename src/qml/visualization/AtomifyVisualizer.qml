@@ -55,6 +55,13 @@ Scene3D {
     }
     property string mode: "trackball"
     property var selectedParticles: []
+// TODO(anders.hafreager) make this work nicely!
+//    onMouseMoved: {
+//        x = x * Screen.devicePixelRatio
+//        y = (root.height - y) * Screen.devicePixelRatio
+//        mouseHandler.doSelect(Math.round(x), Math.round(y))
+//    }
+//    hoverEnabled: true
 
     hoverEnabled: root.mode === "flymode"
     multisample: true
@@ -310,6 +317,7 @@ Scene3D {
             property vector2d mousePositionOnClick
             property var mouseModifiersOnClick
             property int selected: -1
+            property real lastCapture: -1
 
             sourceDevice: MouseDevice {
                 sensitivity: 0.001
@@ -348,11 +356,23 @@ Scene3D {
                 interval: 200
             }
 
-            function doSelect() {
-                var data = renderSettings.activeFrameGraph.renderCapture.requestCapture()
+            function doSelect(x,y) {
+                if (Date.now() - lastCapture < 16) {
+                    return;
+                }
+
+                lastCapture = Date.now()
+
+                if (x === undefined || y === undefined) {
+                    x = mousePositionOnClick.x*Screen.devicePixelRatio
+                    y = (root.height - mousePositionOnClick.y)*Screen.devicePixelRatio
+                }
+
+                var captureRect = Qt.rect(x, y, 1, 1)
+                var data = renderSettings.activeFrameGraph.renderCapture.requestCapture(captureRect)
 
                 data.completed.connect(function() {
-                    var selectedParticle = RenderCaptureHelper.particleAtPoint(data, Qt.point(mousePositionOnClick.x * Screen.devicePixelRatio, mousePositionOnClick.y * Screen.devicePixelRatio))
+                    var selectedParticle = RenderCaptureHelper.particleAtPoint(data)
 
                     // If we clicked on zero particles, reset selection
                     if (selectedParticle === 0) {

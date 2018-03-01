@@ -12,7 +12,7 @@ class RenderCaptureHelper : public QObject
 public:
     explicit RenderCaptureHelper(QObject *parent = nullptr);
 
-    Q_INVOKABLE int particleAtPoint(Qt3DRender::QRenderCaptureReply *captureReply, const QPointF &point);
+    Q_INVOKABLE int particleAtPoint(Qt3DRender::QRenderCaptureReply *captureReply);
 
     static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
 signals:
