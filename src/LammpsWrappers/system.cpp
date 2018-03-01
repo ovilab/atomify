@@ -358,6 +358,7 @@ void System::reset()
     m_numberOfAtomTypes = 0;
     m_center = QVector3D();
     m_volume = 0;
+    m_selection.clear();
     setBoundaryStyle("None");
     m_pairStyle = "";
     setLastCommand("");
@@ -685,6 +686,11 @@ void System::updateSelectionData(LAMMPS_NS::LAMMPS *lammps)
 
         if (lammps->atom->tag_enable) {
             int index = lammps->atom->map(id);
+            if (index < 0) {
+                // Either this atom does not exist anymore or LAMMPS map problem
+                selection.pop_back(); // Remove it again
+                continue;
+            }
             if (index >= 0) {
               // Set default properties
               atomSelection->setPosition(QVector3D(

@@ -450,6 +450,11 @@ Scene3D {
         AtomifySimulator {
             id: simulator
             simulationSpeed: 1
+            onReset: {
+                EventCenter.postEvent("simulator.reset")
+                root.selectedParticles = []
+            }
+
             system.onSizeChanged: { visualizer.updateNearestPoint() }
             system.onOriginChanged: { visualizer.updateNearestPoint() }
             onNewCameraPositionRequest: {
