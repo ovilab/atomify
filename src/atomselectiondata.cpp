@@ -1,7 +1,7 @@
 #include "atomselectiondata.h"
 #include <QVariant>
 AtomSelectionData::AtomSelectionData(QObject *parent) : QObject(parent),
-  m_id(-1), m_type(-1)
+  m_id(-1), m_type(-1), m_marked(false), m_hovered(false)
 {
 
 }
@@ -69,10 +69,20 @@ int AtomSelectionData::type() const
   return m_type;
 }
 
+bool AtomSelectionData::hovered() const
+{
+    return m_hovered;
+}
+
+bool AtomSelectionData::marked() const
+{
+    return m_marked;
+}
+
 void AtomSelectionData::setId(int id)
 {
-  if (m_id == id)
-    return;
+    if (m_id == id)
+        return;
 
     m_id = id;
     emit idChanged(m_id);
@@ -85,4 +95,21 @@ void AtomSelectionData::setType(int type)
 
   m_type = type;
   emit typeChanged(m_type);
+}
+
+void AtomSelectionData::setHovered(bool hovered)
+{
+    if (m_hovered == hovered)
+        return;
+    m_hovered = hovered;
+    emit hoveredChanged(m_hovered);
+}
+
+void AtomSelectionData::setMarked(bool marked)
+{
+    if (m_marked == marked)
+        return;
+
+    m_marked = marked;
+    emit markedChanged(m_marked);
 }

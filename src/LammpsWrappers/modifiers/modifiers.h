@@ -9,4 +9,5 @@
 #include "colorallgroupsmodifier.h"
 #include "propertymodifier.h"
 #include "colorallregionsmodifier.h"
+#include "selectionmodifier.h"
 #endif // MODIFIERS_H

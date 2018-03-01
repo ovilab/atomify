@@ -478,7 +478,8 @@ Scene3D {
                 groupModifier,
                 regionModifier,
                 periodicImages,
-                sliceModifier
+                sliceModifier,
+                selectionModifier
             ]
         }
 
@@ -529,6 +530,11 @@ Scene3D {
         SliceModifier {
             id: sliceModifier
             enabled: false
+        }
+
+        SelectionModifier {
+            id: selectionModifier
+            enabled: true
         }
 
         PeriodicImages {

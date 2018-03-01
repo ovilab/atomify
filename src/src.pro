@@ -142,7 +142,8 @@ SOURCES += \
     registerqml.cpp \
     helpers/clipboard.cpp \
     rendercapturehelper.cpp \
-    atomselectiondata.cpp
+    atomselectiondata.cpp \
+    LammpsWrappers/modifiers/selectionmodifier.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -192,7 +193,8 @@ HEADERS += \
     LammpsWrappers/simulatorcontrols/cpfixindent.h \
     helpers/clipboard.h \
     rendercapturehelper.h \
-    atomselectiondata.h
+    atomselectiondata.h \
+    LammpsWrappers/modifiers/selectionmodifier.h
 
 # Temporary use of quickcontrols2 without install
 

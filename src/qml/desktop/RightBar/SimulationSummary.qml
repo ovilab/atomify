@@ -92,17 +92,12 @@ Flickable {
 
         spacing: 10
 
-        GroupBox {
+        SelectionColumn {
+            id: selectionColumn
+            system: root.system
             anchors {
                 left: parent.left
                 right: parent.right
-            }
-
-            title: "Selection"
-
-            SelectionColumn {
-                id: selectionColumn
-                system: root.system
             }
         }
 

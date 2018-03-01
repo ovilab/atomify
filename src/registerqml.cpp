@@ -60,6 +60,7 @@ void registerQML() {
     qmlRegisterType<RegionModifier>("Atomify", 1, 0, "RegionModifier");
     qmlRegisterType<PropertyModifier>("Atomify", 1, 0, "PropertyModifier");
     qmlRegisterType<Slice>("Atomify", 1, 0, "SliceModifier");
+    qmlRegisterType<SelectionModifier>("Atomify", 1, 0, "SelectionModifier");
 
     qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");
     qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
