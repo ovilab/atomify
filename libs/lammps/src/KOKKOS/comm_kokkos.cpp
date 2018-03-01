@@ -20,7 +20,7 @@
 #include "domain.h"
 #include "atom_masks.h"
 #include "error.h"
-#include "memory.h"
+#include "memory_kokkos.h"
 #include "force.h"
 #include "pair.h"
 #include "fix.h"
@@ -28,6 +28,7 @@
 #include "dump.h"
 #include "output.h"
 #include "modify.h"
+#include "kokkos_base.h"
 
 using namespace LAMMPS_NS;
 
@@ -71,7 +72,7 @@ CommKokkos::CommKokkos(LAMMPS *lmp) : CommBrick(lmp)
   for (int i = 0; i < maxswap; i++) {
     maxsendlist[i] = BUFMIN;
   }
-  memory->create_kokkos(k_sendlist,sendlist,maxswap,BUFMIN,"comm:sendlist");
+  memoryKK->create_kokkos(k_sendlist,sendlist,maxswap,BUFMIN,"comm:sendlist");
 
   max_buf_pair = 0;
   k_buf_send_pair = DAT::tdual_xfloat_1d("comm:k_buf_send_pair",1);
@@ -82,11 +83,11 @@ CommKokkos::CommKokkos(LAMMPS *lmp) : CommBrick(lmp)
 
 CommKokkos::~CommKokkos()
 {
-  memory->destroy_kokkos(k_sendlist,sendlist);
+  memoryKK->destroy_kokkos(k_sendlist,sendlist);
   sendlist = NULL;
-  memory->destroy_kokkos(k_buf_send,buf_send);
+  memoryKK->destroy_kokkos(k_buf_send,buf_send);
   buf_send = NULL;
-  memory->destroy_kokkos(k_buf_recv,buf_recv);
+  memoryKK->destroy_kokkos(k_buf_recv,buf_recv);
   buf_recv = NULL;
 }
 
@@ -199,6 +200,7 @@ void CommKokkos::forward_comm_device(int dummy)
         }
         n = avec->pack_comm_kokkos(sendnum[iswap],k_sendlist,
                                    iswap,k_buf_send,pbc_flag[iswap],pbc[iswap]);
+        DeviceType::fence();
         if (n) {
           MPI_Send(k_buf_send.view<DeviceType>().ptr_on_device(),
                    n,MPI_DOUBLE,sendproc[iswap],0,world);
@@ -228,11 +230,13 @@ void CommKokkos::forward_comm_device(int dummy)
                     recvproc[iswap],0,world,&request);
         n = avec->pack_comm_kokkos(sendnum[iswap],k_sendlist,iswap,
                                    k_buf_send,pbc_flag[iswap],pbc[iswap]);
+        DeviceType::fence();
         if (n)
           MPI_Send(k_buf_send.view<DeviceType>().ptr_on_device(),n,
                    MPI_DOUBLE,sendproc[iswap],0,world);
         if (size_forward_recv[iswap]) MPI_Wait(&request,MPI_STATUS_IGNORE);
         avec->unpack_comm_kokkos(recvnum[iswap],firstrecv[iswap],k_buf_recv);
+        DeviceType::fence();
       }
 
     } else {
@@ -320,6 +324,7 @@ void CommKokkos::reverse_comm_device()
                     size_reverse_recv[iswap],MPI_DOUBLE,
                     sendproc[iswap],0,world,&request);
         n = avec->pack_reverse_kokkos(recvnum[iswap],firstrecv[iswap],k_buf_send);
+        DeviceType::fence();
         if (n)
           MPI_Send(k_buf_send.view<DeviceType>().ptr_on_device(),n,
                    MPI_DOUBLE,recvproc[iswap],0,world);
@@ -327,6 +332,7 @@ void CommKokkos::reverse_comm_device()
       }
       avec->unpack_reverse_kokkos(sendnum[iswap],k_sendlist,iswap,
                                 k_buf_recv);
+      DeviceType::fence();
     } else {
       if (sendnum[iswap])
         n = avec->unpack_reverse_self(sendnum[iswap],k_sendlist,iswap,
@@ -379,6 +385,7 @@ void CommKokkos::forward_comm_pair_device(Pair *pair)
   MPI_Request request;
 
   int nsize = pair->comm_forward;
+  KokkosBase* pairKKBase = dynamic_cast<KokkosBase*>(pair);
 
   for (iswap = 0; iswap < nswap; iswap++) {
     int n = MAX(max_buf_pair,nsize*sendnum[iswap]);
@@ -391,8 +398,9 @@ void CommKokkos::forward_comm_pair_device(Pair *pair)
 
     // pack buffer
 
-    n = pair->pack_forward_comm_kokkos(sendnum[iswap],k_sendlist,
+    n = pairKKBase->pack_forward_comm_kokkos(sendnum[iswap],k_sendlist,
                                        iswap,k_buf_send_pair,pbc_flag[iswap],pbc[iswap]);
+    DeviceType::fence();
 
     // exchange with another proc
     // if self, set recv buffer to send buffer
@@ -408,7 +416,8 @@ void CommKokkos::forward_comm_pair_device(Pair *pair)
 
     // unpack buffer
 
-    pair->unpack_forward_comm_kokkos(recvnum[iswap],firstrecv[iswap],k_buf_recv_pair);
+    pairKKBase->unpack_forward_comm_kokkos(recvnum[iswap],firstrecv[iswap],k_buf_recv_pair);
+    DeviceType::fence();
   }
 }
 
@@ -608,6 +617,7 @@ void CommKokkos::exchange_device()
                                    k_exchange_sendlist,k_exchange_copylist,
                                    ExecutionSpaceFromDevice<DeviceType>::
                                    space,dim,lo,hi);
+      DeviceType::fence();
 
     } else {
       while (i < nlocal) {
@@ -632,6 +642,7 @@ void CommKokkos::exchange_device()
         atom->nlocal=avec->
           unpack_exchange_kokkos(k_buf_send,nrecv,atom->nlocal,dim,lo,hi,
                                  ExecutionSpaceFromDevice<DeviceType>::space);
+        DeviceType::fence();
       }
     } else {
       MPI_Sendrecv(&nsend,1,MPI_INT,procneigh[dim][0],0,
@@ -664,6 +675,7 @@ void CommKokkos::exchange_device()
         atom->nlocal = avec->
           unpack_exchange_kokkos(k_buf_recv,nrecv,atom->nlocal,dim,lo,hi,
                                  ExecutionSpaceFromDevice<DeviceType>::space);
+        DeviceType::fence();
       }
     }
 
@@ -924,10 +936,12 @@ void CommKokkos::borders_device() {
         n = avec->pack_border_vel(nsend,sendlist[iswap],buf_send,
                                   pbc_flag[iswap],pbc[iswap]);
       }
-      else
+      else {
         n = avec->
           pack_border_kokkos(nsend,k_sendlist,k_buf_send,iswap,
                              pbc_flag[iswap],pbc[iswap],exec_space);
+        DeviceType::fence();
+      }
 
       // swap atoms with other proc
       // no MPI calls except SendRecv if nsend/nrecv = 0
@@ -958,12 +972,15 @@ void CommKokkos::borders_device() {
         avec->unpack_border_vel(nrecv,atom->nlocal+atom->nghost,buf);
       }
       else
-        if (sendproc[iswap] != me)
+        if (sendproc[iswap] != me) {
           avec->unpack_border_kokkos(nrecv,atom->nlocal+atom->nghost,
                                      k_buf_recv,exec_space);
-        else
+          DeviceType::fence();
+        } else {
           avec->unpack_border_kokkos(nrecv,atom->nlocal+atom->nghost,
                                      k_buf_send,exec_space);
+          DeviceType::fence();
+        }
 
       // set all pointers & counters
 
@@ -1067,7 +1084,7 @@ void CommKokkos::grow_list(int iswap, int n)
     k_sendlist.modify<LMPHostType>();
   }
 
-  memory->grow_kokkos(k_sendlist,sendlist,maxswap,size,"comm:sendlist");
+  memoryKK->grow_kokkos(k_sendlist,sendlist,maxswap,size,"comm:sendlist");
 
   for(int i=0;i<maxswap;i++) {
     maxsendlist[i]=size; sendlist[i]=&k_sendlist.view<LMPHostType>()(i,0);
@@ -1095,7 +1112,7 @@ void CommKokkos::grow_swap(int n)
     k_sendlist.modify<LMPHostType>();
   }
 
-  memory->grow_kokkos(k_sendlist,sendlist,maxswap,size,"comm:sendlist");
+  memoryKK->grow_kokkos(k_sendlist,sendlist,maxswap,size,"comm:sendlist");
 
   memory->grow(maxsendlist,n,"comm:maxsendlist");
   for (int i=0;i<maxswap;i++) maxsendlist[i]=size;
