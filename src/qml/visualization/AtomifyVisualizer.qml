@@ -512,6 +512,7 @@ Scene3D {
             onReset: {
                 EventCenter.postEvent("simulator.reset")
                 root.selectedParticles = []
+                simulator.system.atoms.selectedParticles = root.selectedParticles
             }
 
             system.onSizeChanged: { visualizer.updateNearestPoint() }
