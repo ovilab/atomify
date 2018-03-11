@@ -223,7 +223,8 @@ void main(void) {
 
     // calculate texture coordinate
     float deltaMaxMin = posMax - posMin;
-    positionOut = vec4((cylPointWorld - eyePosition - posMin) / deltaMaxMin, 1.0); // TODO fix with actual system size
+    // positionOut = vec4((cylPointWorld - eyePosition - posMin) / deltaMaxMin, 1.0); // TODO fix with actual system size
+    positionOut = vec4(cylPointWorld, 1.0);
     colorOut = vec4(1.0, 1.0, 1.0, 1.0);
     normalOut = vec4((normal + 1.0) / 2.0, 1.0);
 

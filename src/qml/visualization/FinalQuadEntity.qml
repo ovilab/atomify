@@ -244,7 +244,8 @@ void main()
     vec3 position = eyePosition + posMin + texture(colorTexture, texCoord).xyz * deltaMaxMin;
     vec4 color = texture(positionTexture, texCoord);
 #else
-    vec3 position = eyePosition + posMin + texture(positionTexture, texCoord).xyz * deltaMaxMin;
+    // vec3 position = eyePosition + posMin + texture(positionTexture, texCoord).xyz * deltaMaxMin;
+    vec3 position = texture(positionTexture, texCoord).xyz;
     vec4 color = texture(colorTexture, texCoord);
 #endif
         highp vec3 ssao = texture(ssaoTexture, texCoord).rgb;

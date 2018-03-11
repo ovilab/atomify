@@ -62,7 +62,8 @@ void main(void) {
 //    vec4 pv_pos = projectionMatrix * viewMatrix * vec4(position, 1.0);
 //    float depthValue = pv_pos.z / pv_pos.w; // Maybe send this as alpha in position?
 
-    positionOut = vec4((position-eyePosition-posMin) / deltaMaxMin, 1.0); // TODO fix with actual system size
+    // positionOut = vec4((position-eyePosition-posMin) / deltaMaxMin, 1.0); // TODO fix with actual system size
+    positionOut = vec4(position, 1.0);
     colorOut = vec4(color, 1.0);
     if (vs_flags > 0.5) {
         colorOut = vec4(1.0, 0.0, 0.0, 1.0);
