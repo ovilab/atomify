@@ -8,7 +8,16 @@ namespace atomify {
 BackendLAMMPSController::BackendLAMMPSController()
     : m_thread(new LAMMPSThread())
 {
-    qDebug() << "OOOOOH YEAH!!!";
+    qDebug() << "OOOOOH YEAH!!! Starting LAMMPS.";
+    m_thread->start();
+}
+
+void BackendLAMMPSController::synchronize()
+{
+    if (m_thread->dataDirty()) {
+        auto data = m_thread->data();
+        qDebug() << "Did sync data: " << data.timestep;
+    }
 }
 
 void BackendLAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr &e)
@@ -22,7 +31,6 @@ void BackendLAMMPSController::initializeFromPeer(const Qt3DCore::QNodeCreatedCha
 }
 
 LAMMPSControllerMapper::LAMMPSControllerMapper(LAMMPSAspect *aspect)
-    : m_aspect(aspect)
 {
 
 }
@@ -43,6 +51,11 @@ void LAMMPSControllerMapper::destroy(Qt3DCore::QNodeId id) const
 {
     auto controller = m_controllers.take(id);
     delete controller;
+}
+
+QList<BackendLAMMPSController *> LAMMPSControllerMapper::controllers()
+{
+    return m_controllers.values();
 }
 
 }

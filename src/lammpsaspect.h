@@ -14,6 +14,7 @@ public:
 
 protected:
     QVector<Qt3DCore::QAspectJobPtr> jobsToExecute(qint64 time) override;
+    QSharedPointer<class LAMMPSControllerMapper> m_mapper;
 };
 }  // namespace atomify
 
