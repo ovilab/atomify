@@ -10,7 +10,8 @@
 namespace atomify {
 
 BackendLAMMPSController::BackendLAMMPSController()
-    : m_thread(new LAMMPSThread())
+    : Qt3DCore::QBackendNode(Qt3DCore::QBackendNode::ReadWrite)
+    , m_thread(new LAMMPSThread())
 {
     qDebug() << "OOOOOH YEAH!!! Starting LAMMPS.";
     m_thread->start();
