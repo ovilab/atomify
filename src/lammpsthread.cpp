@@ -16,7 +16,7 @@ void LAMMPSThread::run()
 {
     while (true) {
         TMPLAMMPS lammps;
-        lammps.setCallback([&](TMPLAMMPS *lmp) {
+        lammps.setCallback([this](TMPLAMMPS *lmp) {
             callback(lmp);
         });
         lammps.run();
