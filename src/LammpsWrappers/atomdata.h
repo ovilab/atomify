@@ -20,7 +20,7 @@ public:
     QVector<bool> visible;
     bool isValid();
     void resize(int size);
-    int size();
+    int size() const;
     void reset();
     void sort(QVector3D cameraPosition);
     ~AtomData();

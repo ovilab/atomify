@@ -24,7 +24,7 @@ void AtomData::resize(int size)
     lammpsParticleId.resize(size);
 }
 
-int AtomData::size()
+int AtomData::size() const
 {
     return positions.size();
 }
