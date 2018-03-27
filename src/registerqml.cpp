@@ -30,6 +30,9 @@
 #include "keysequence.h"
 #include "rendercapturehelper.h"
 #include "helpers/clipboard.h"
+#include "lammpscontroller2.h"
+
+using namespace atomify;
 
 void registerQML() {
     qmlRegisterType<AtomifySimulator>("Atomify", 1, 0, "AtomifySimulator");
@@ -78,4 +81,6 @@ void registerQML() {
     qmlRegisterSingletonType<KeySequence>("KeySequence", 1, 0, "KeySequence", &KeySequence::qmlInstance);
 
     qmlRegisterSingletonType<RenderCaptureHelper>("Atomify", 1, 0, "RenderCaptureHelper", &RenderCaptureHelper::qmlInstance);
+
+    qmlRegisterType<LAMMPSController2>("Atomify", 1, 0, "LAMMPSController");
 }

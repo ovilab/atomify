@@ -141,7 +141,12 @@ SOURCES += \
     LammpsWrappers/simulatorcontrols/cpfixindent.cpp \
     registerqml.cpp \
     helpers/clipboard.cpp \
-    rendercapturehelper.cpp
+    rendercapturehelper.cpp \
+    lammpsaspect.cpp \
+    lammpsthread.cpp \
+    lammpscontroller2.cpp \
+    tmplammps.cpp \
+    backendlammpscontroller.cpp
 
 HEADERS += \
     mysimulator.h \
@@ -190,7 +195,12 @@ HEADERS += \
     LammpsWrappers/modifiers/slicemodifier.h \
     LammpsWrappers/simulatorcontrols/cpfixindent.h \
     helpers/clipboard.h \
-    rendercapturehelper.h
+    rendercapturehelper.h \
+    lammpsaspect.h \
+    lammpsthread.h \
+    lammpscontroller2.h \
+    tmplammps.h \
+    backendlammpscontroller.h
 
 # Temporary use of quickcontrols2 without install
 

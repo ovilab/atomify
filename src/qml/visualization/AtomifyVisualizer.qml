@@ -54,7 +54,7 @@ Scene3D {
 
     hoverEnabled: root.mode === "flymode"
     multisample: true
-    aspects: ["render", "input", "logic"]
+    aspects: ["render", "input", "logic", "lammps"]
 
 //    onFocusModeChanged: {
 //        if(focusMode) {
@@ -194,6 +194,10 @@ Scene3D {
                 id: inputSettings
             }
         ]
+
+        LAMMPSController {
+            id: controller
+        }
 
         ForwardFrameGraph {
             id: forwardFrameGraph
