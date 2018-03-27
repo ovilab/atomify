@@ -1,5 +1,7 @@
 #include "lammpscontroller2.h"
+
 #include <QDebug>
+#include <Qt3DCore/QPropertyUpdatedChangePtr>
 
 namespace atomify {
 
@@ -13,6 +15,24 @@ LAMMPSController2::LAMMPSController2(Qt3DCore::QNode *parent)
 Qt3DRender::QBuffer *LAMMPSController2::spheresBuffer() const
 {
     return m_spheresBuffer.data();
+}
+
+int LAMMPSController2::visibleAtomCount() const
+{
+    return m_visibleAtomCount;
+}
+
+void LAMMPSController2::sceneChangeEvent(const Qt3DCore::QSceneChangePtr &e)
+{
+    const auto change = qSharedPointerCast<Qt3DCore::QPropertyUpdatedChange>(e);
+    if (change->propertyName() == QByteArrayLiteral("visibleAtomCount")) {
+        const int visibleAtoms = change->value().value<int>();
+        if (m_visibleAtomCount != visibleAtoms) {
+            m_visibleAtomCount = visibleAtoms;
+            qDebug() << "Got atoms" << m_visibleAtomCount;
+            emit visibleAtomCountChanged();
+        }
+    }
 }
 
 Qt3DCore::QNodeCreatedChangeBasePtr LAMMPSController2::createNodeCreationChange() const

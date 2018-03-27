@@ -1,6 +1,8 @@
 #ifndef LAMMPSTHREAD_H
 #define LAMMPSTHREAD_H
 
+#include "LammpsWrappers/atomdata.h"
+
 #include <QThread>
 #include <QMutex>
 #include <QVector3D>
@@ -12,7 +14,10 @@ class LAMMPS;
 
 namespace atomify {
 
+class Cancelled : public std::exception { };
+
 struct LAMMPSData {
+    AtomData atomData;
     QVector<QVector3D> positions;
     int timestep = 0;
 };
@@ -27,7 +32,7 @@ public:
 
 protected:
     void run() override;
-    void callback(LAMMPS_NS::LAMMPS *lmp, int stepType);
+    void callback(LAMMPS_NS::LAMMPS *lmp, int mode);
 private:
     mutable QMutex m_mutex;
     LAMMPSData m_data;

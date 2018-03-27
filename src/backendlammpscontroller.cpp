@@ -19,28 +19,50 @@ BackendLAMMPSController::BackendLAMMPSController()
 
 void BackendLAMMPSController::synchronize()
 {
-    if (m_thread->dataDirty()) {
-        auto data = m_thread->data();
-        QByteArray spheresBufferData;
-//        spheresBufferData.resize(data.positions.size() * sizeof(SphereVBOData));
-        spheresBufferData.resize(10 * sizeof(SphereVBOData));
-        SphereVBOData *posData = reinterpret_cast<SphereVBOData*>(spheresBufferData.data());
-        // TODO can we just set the address here? Instead of copying.
-        for(auto &pos : data.positions) {
-            SphereVBOData d;
-            d.color[0] = 1.0;
-            d.radius = 1.0;
-            d.position = pos;
+    // TODO remove dummy variables
+    float m_sphereScale = 1.0;
+    // END TODO
 
-            *posData++ = d;
-        }
+    if (!m_thread->dataDirty()) {
+        return;
+    }
 
+    const auto data = m_thread->data();
+    const AtomData &atomData = data.atomData;
+    const int visibleAtomCount = atomData.size();
+
+    QByteArray sphereBufferData;
+    sphereBufferData.resize(visibleAtomCount * sizeof(SphereVBOData));
+    SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(sphereBufferData.data());
+    for(int i=0; i<visibleAtomCount; i++) {
+        const int particleId = atomData.lammpsParticleId[i];
+        SphereVBOData &vbo = vboData[i];
+        vbo.position = atomData.positions[i] + atomData.deltaPositions[i];
+        vbo.color = atomData.colors[i];
+        vbo.radius = atomData.radii[i]*m_sphereScale;
+        vbo.particleId = particleId;
+        vbo.flags = 0; // TODO add back
+//        vbo.flags = m_selectedParticles.contains(particleId) ? Selected : 0;
+    }
+
+    {
         auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresBufferId);
         change->setPropertyName("data");
-        change->setValue(QVariant::fromValue(spheresBufferData));
+        change->setValue(QVariant::fromValue(sphereBufferData));
         notifyObservers(change);
-        qDebug() << "Did sync data: " << data.timestep;
     }
+
+    {
+        qDebug() << "Sending visible atom count" << visibleAtomCount;
+        auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(peerId());
+        change->setPropertyName("visibleAtomCount");
+        change->setValue(visibleAtomCount);
+        change->setDeliveryFlags(Qt3DCore::QSceneChange::Nodes);
+        notifyObservers(change);
+    }
+
+
+    qDebug() << "Did sync data: " << data.timestep;
 }
 
 void BackendLAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr &e)

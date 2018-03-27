@@ -197,6 +197,7 @@ Scene3D {
 
         LAMMPSController {
             id: controller
+            onVisibleAtomCountChanged: console.log(visibleAtomCount)
         }
 
         ForwardFrameGraph {
@@ -517,6 +518,7 @@ Scene3D {
             layer: forwardFrameGraph.atomLayer
             camera: visualizer.camera
             spheresBuffer: controller.spheresBuffer
+            sphereCount: controller.visibleAtomCount
 //            sphereData: simulator.system.atoms.sphereData
             // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
             posMin: -100

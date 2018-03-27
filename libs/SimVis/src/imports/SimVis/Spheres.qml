@@ -23,6 +23,7 @@ Entity {
     property alias posMax: posMax.value
     property var spheresBuffer
     property SphereData sphereData
+    property int sphereCount: 0
     property Camera camera
 
     onSpheresBufferChanged: {
@@ -132,8 +133,8 @@ Entity {
         interval: 2000
         running: true
         onTriggered: {
-            console.log("Buffer: ", spheresRoot.spheresBuffer.size)
-            spheresMeshInstanced.instanceCount = 10
+            console.log("Buffer: ", spheresRoot.spheresBuffer)
+//            spheresMeshInstanced.instanceCount = 10
         }
     }
 
@@ -142,7 +143,7 @@ Entity {
         primitiveType: GeometryRenderer.TriangleStrip
         enabled: instanceCount != 0
 //        instanceCount: sphereData.count
-        instanceCount: 0
+        instanceCount: sphereCount
 
         geometry: SpheresPointGeometry {
             id: geometry
