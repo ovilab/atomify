@@ -3,10 +3,13 @@
 
 #include <QThread>
 #include <QMutex>
+#include <QVector3D>
+#include <QVector>
 
 namespace atomify {
 
 struct LAMMPSData {
+    QVector<QVector3D> positions;
     int timestep = 0;
 };
 

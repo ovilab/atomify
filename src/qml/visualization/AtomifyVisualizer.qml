@@ -516,7 +516,8 @@ Scene3D {
             id: spheres
             layer: forwardFrameGraph.atomLayer
             camera: visualizer.camera
-            sphereData: simulator.system.atoms.sphereData
+            spheresBuffer: controller.spheresBuffer
+//            sphereData: simulator.system.atoms.sphereData
             // TODO: Is posMin/posMax +-100 ok? We don't need system size anymore since all positions are relative to camera
             posMin: -100
             posMax:  100

@@ -21,9 +21,13 @@ Entity {
     property alias position: _fragmentBuilder.position
     property alias posMin: posMin.value
     property alias posMax: posMax.value
-
+    property var spheresBuffer
     property SphereData sphereData
     property Camera camera
+
+    onSpheresBufferChanged: {
+        spheresBuffer.parent = spheresRoot
+    }
 
     onSphereDataChanged: {
         sphereData.parent = spheresRoot
@@ -123,11 +127,22 @@ Entity {
             ]
         }
     }
+
+    QQ2.Timer {
+        interval: 2000
+        running: true
+        onTriggered: {
+            console.log("Buffer: ", spheresRoot.spheresBuffer.size)
+            spheresMeshInstanced.instanceCount = 10
+        }
+    }
+
     GeometryRenderer {
         id: spheresMeshInstanced
         primitiveType: GeometryRenderer.TriangleStrip
         enabled: instanceCount != 0
-        instanceCount: sphereData.count
+//        instanceCount: sphereData.count
+        instanceCount: 0
 
         geometry: SpheresPointGeometry {
             id: geometry
@@ -141,7 +156,7 @@ Entity {
                     byteOffset: 0
                     byteStride: geometry.byteStride
                     divisor: 1
-                    buffer: sphereData ? sphereData.buffer : null
+                    buffer: spheresBuffer
                 },
                 Attribute {
                     name: "col"
@@ -151,7 +166,7 @@ Entity {
                     byteOffset: 3*4
                     byteStride: geometry.byteStride
                     divisor: 1
-                    buffer: sphereData ? sphereData.buffer : null
+                    buffer: spheresBuffer
                 },
                 Attribute {
                     name: "scale"
@@ -161,7 +176,7 @@ Entity {
                     byteOffset: (3+3)*4
                     byteStride: geometry.byteStride
                     divisor: 1
-                    buffer: sphereData ? sphereData.buffer : null
+                    buffer: spheresBuffer
                 },
                 Attribute {
                     name: "particleId"
@@ -171,7 +186,7 @@ Entity {
                     byteOffset: (3+3+1)*4
                     byteStride: geometry.byteStride
                     divisor: 1
-                    buffer: sphereData ? sphereData.buffer : null
+                    buffer: spheresBuffer
                 },
                 Attribute {
                     name: "flags"
@@ -181,7 +196,7 @@ Entity {
                     byteOffset: (3+3+1+1)*4
                     byteStride: geometry.byteStride
                     divisor: 1
-                    buffer: sphereData ? sphereData.buffer : null
+                    buffer: spheresBuffer
                 }
             ]
         }

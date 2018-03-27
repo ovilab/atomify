@@ -18,6 +18,7 @@ protected:
 private:
     void initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr &change) override;
     QScopedPointer<class LAMMPSThread> m_thread;
+    Qt3DCore::QNodeId m_spheresBufferId;
 };
 
 class LAMMPSControllerMapper : public Qt3DCore::QBackendNodeMapper

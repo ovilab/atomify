@@ -28,6 +28,7 @@ void LAMMPSThread::callback(TMPLAMMPS *lmp)
     {
         QMutexLocker locker(&m_mutex);
         m_data.timestep = lmp->timestep;
+        m_data.positions = lmp->positions;
         m_dataDirty = true;
         qDebug() << "Did callback with ts = " << m_data.timestep;
     }
