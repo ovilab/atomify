@@ -254,7 +254,7 @@ void LAMMPSController::start() {
         throw std::runtime_error("Could not find fix with name atomify. Did you run ./configure.py?");
     }
     FixAtomify *fix = dynamic_cast<FixAtomify*>(originalFix);
-    fix->set_callback(&synchronizeLAMMPS_callback, this);
+//    fix->set_callback(&synchronizeLAMMPS_callback, this);
     changeWorkingDirectoryToScriptLocation();
 }
 

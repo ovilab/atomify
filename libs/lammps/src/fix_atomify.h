@@ -21,6 +21,7 @@ FixStyle(atomify,FixAtomify)
 #define LMP_FIX_ATOMIFY_H
 
 #include "fix.h"
+#include <functional>
 
 namespace LAMMPS_NS {
 
@@ -37,12 +38,11 @@ class FixAtomify : public Fix {
   void update_computes();
   void init_list(int, class NeighList *);
 
-  typedef void (*FnPtr)(void *, int);
-  void set_callback(FnPtr, void *);
-  
+  void set_callback(std::function<void(int)> callback);
+
   class NeighList *list; // half neighbor list
+  using FnPtr = std::function<void(int)>;
   FnPtr callback;
-  void *ptr_caller;
   bool build_neighborlist;
 };
 

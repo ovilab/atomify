@@ -880,14 +880,12 @@ void Input::clear()
   if (narg > 0) error->all(FLERR,"Illegal clear command");
   int fix_atomify_idx = lmp->modify->find_fix("atomify");
   FixAtomify::FnPtr callback = NULL;
-  void *ptr_caller = NULL;
   bool atomifyMode = fix_atomify_idx >= 0;
   // If atomify mode is activated, we need to readd the fix after clearing.
   // Store the pointer to LammpsController and the callback
   if(atomifyMode) {
     FixAtomify *fix = dynamic_cast<FixAtomify *>(lmp->modify->fix[fix_atomify_idx]);
     callback = fix->callback;
-    ptr_caller = fix->ptr_caller;
   }
 
   lmp->destroy();
@@ -899,11 +897,11 @@ void Input::clear()
     fix_atomify_idx = lmp->modify->find_fix("atomify");
     if(fix_atomify_idx >= 0) {
       FixAtomify *fix = dynamic_cast<FixAtomify *>(lmp->modify->fix[fix_atomify_idx]);
-      fix->set_callback(callback, ptr_caller);
+      fix->set_callback(callback);
     } else {
       error->all(FLERR,"Could not readd fix atomify during clear.");
     }
-  } 
+  }
 }
 
 /* ---------------------------------------------------------------------- */

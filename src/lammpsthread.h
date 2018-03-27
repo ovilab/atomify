@@ -6,6 +6,10 @@
 #include <QVector3D>
 #include <QVector>
 
+namespace LAMMPS_NS {
+class LAMMPS;
+}
+
 namespace atomify {
 
 struct LAMMPSData {
@@ -23,7 +27,7 @@ public:
 
 protected:
     void run() override;
-    void callback(class TMPLAMMPS *lmp);
+    void callback(LAMMPS_NS::LAMMPS *lmp, int stepType);
 private:
     mutable QMutex m_mutex;
     LAMMPSData m_data;

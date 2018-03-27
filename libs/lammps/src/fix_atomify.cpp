@@ -36,8 +36,6 @@ using namespace FixConst;
 FixAtomify::FixAtomify(LAMMPS *lmp, int narg, char **arg)
     : Fix(lmp, narg, arg)
     , list(NULL)
-    , callback(NULL)
-    , ptr_caller(NULL)
     , build_neighborlist(false)
 {
 }
@@ -60,8 +58,8 @@ int FixAtomify::setmask()
 
 void FixAtomify::init()
 {
-    if (callback == NULL)
-        error->all(FLERR,"Fix atomify callback function not set");
+    if (!callback)
+        error->all(FLERR, "Fix atomify callback function not set");
     int irequest = neighbor->request(this,instance_me);
     neighbor->requests[irequest]->pair = 0;
     neighbor->requests[irequest]->fix = 1;
@@ -116,7 +114,7 @@ void FixAtomify::end_of_step()
         neighbor->build_one(list);
     }
     lost_atoms();
-    (this->callback)(ptr_caller,END_OF_STEP);
+    callback(END_OF_STEP);
     update_computes();
 }
 
@@ -128,13 +126,12 @@ void FixAtomify::min_post_force(int vflag)
         neighbor->build_one(list);
     }
     lost_atoms();
-    (this->callback)(ptr_caller,MIN_POST_FORCE);
+    callback(MIN_POST_FORCE);
 }
 
 /* ---------------------------------------------------------------------- */
 
-void FixAtomify::set_callback(FnPtr caller_callback, void *caller_ptr)
+void FixAtomify::set_callback(std::function<void(int)> cb)
 {
-    callback = caller_callback;
-    ptr_caller = caller_ptr;
+    callback = cb;
 }
