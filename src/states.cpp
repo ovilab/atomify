@@ -34,40 +34,40 @@ void States::setupStates(AtomifySimulator &simulator)
     m_machine->addState(m_reset);
     m_machine->addState(m_unPaused);
 
-    m_idle->addTransition(&simulator, SIGNAL(started()), m_parsing);
+//    m_idle->addTransition(&simulator, SIGNAL(started()), m_parsing);
 
-    m_parsing->addTransition(&simulator, SIGNAL(crashed()), m_crashed);
-    m_parsing->addTransition(&simulator, SIGNAL(finished()), m_finished);
-    m_parsing->addTransition(&simulator, SIGNAL(paused()), m_paused);
-    m_parsing->addTransition(&simulator, SIGNAL(reset()), m_reset);
+//    m_parsing->addTransition(&simulator, SIGNAL(crashed()), m_crashed);
+//    m_parsing->addTransition(&simulator, SIGNAL(finished()), m_finished);
+//    m_parsing->addTransition(&simulator, SIGNAL(paused()), m_paused);
+//    m_parsing->addTransition(&simulator, SIGNAL(reset()), m_reset);
 
-    m_crashed->addTransition(&simulator, SIGNAL(reset()), m_reset);
+//    m_crashed->addTransition(&simulator, SIGNAL(reset()), m_reset);
 
-    m_finished->addTransition(&simulator, SIGNAL(continued()), m_continued);
-    m_finished->addTransition(&simulator, SIGNAL(reset()), m_reset);
-    m_finished->addTransition(&simulator, SIGNAL(parsing()), m_parsing);
+//    m_finished->addTransition(&simulator, SIGNAL(continued()), m_continued);
+//    m_finished->addTransition(&simulator, SIGNAL(reset()), m_reset);
+//    m_finished->addTransition(&simulator, SIGNAL(parsing()), m_parsing);
 
-    m_continued->addTransition(&simulator, SIGNAL(reset()), m_reset);
-    m_continued->addTransition(&simulator, SIGNAL(paused()), m_paused);
-    m_continued->addTransition(&simulator, SIGNAL(parsing()), m_parsing);
+//    m_continued->addTransition(&simulator, SIGNAL(reset()), m_reset);
+//    m_continued->addTransition(&simulator, SIGNAL(paused()), m_paused);
+//    m_continued->addTransition(&simulator, SIGNAL(parsing()), m_parsing);
 
-    m_paused->addTransition(&simulator, SIGNAL(unPaused()), m_unPaused);
-    m_paused->addTransition(&simulator, SIGNAL(reset()), m_reset);
+//    m_paused->addTransition(&simulator, SIGNAL(unPaused()), m_unPaused);
+//    m_paused->addTransition(&simulator, SIGNAL(reset()), m_reset);
 
-    m_reset->addTransition(&simulator, SIGNAL(didReset()), m_idle);
-    m_continued->addTransition(&simulator, SIGNAL(crashed()), m_crashed);
+//    m_reset->addTransition(&simulator, SIGNAL(didReset()), m_idle);
+//    m_continued->addTransition(&simulator, SIGNAL(crashed()), m_crashed);
 
-    m_machine->setInitialState(m_idle);
+//    m_machine->setInitialState(m_idle);
 
-    connect(&simulator, &AtomifySimulator::paused, this, [&]() {
-        if(m_parsing->active()) {
-            m_unPaused->setDefaultState(m_parsing);
-        } else if(m_continued->active()) {
-            m_unPaused->setDefaultState(m_continued);
-        }
-    });
+//    connect(&simulator, &AtomifySimulator::paused, this, [&]() {
+//        if(m_parsing->active()) {
+//            m_unPaused->setDefaultState(m_parsing);
+//        } else if(m_continued->active()) {
+//            m_unPaused->setDefaultState(m_continued);
+//        }
+//    });
 
-    m_machine->start();
+//    m_machine->start();
 }
 
 QString States::currentStateString()

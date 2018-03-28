@@ -9,7 +9,7 @@ Pane {
     id: editorTabRoot
     // property TextArea consoleOutput: consoleItem.output
     property alias editorWindow: editorWindow
-    property AtomifySimulator simulator
+//    property AtomifySimulator simulator
     property AtomifyVisualizer visualizer
 //    onConsoleOutputChanged: {
 //        consoleOutput.onLinkActivated.connect(function(link){
@@ -44,7 +44,7 @@ Pane {
 
         CodeEditorWindow {
             id: editorWindow
-            simulator: editorTabRoot.simulator
+//            simulator: editorTabRoot.simulator
             Layout.fillHeight: true
             Layout.fillWidth: true
             onClearConsole: consoleItem.clear()

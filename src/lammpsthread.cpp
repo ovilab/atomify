@@ -102,7 +102,8 @@ void LAMMPSThread::run()
 
             // TODO synchronize with frontend
             bool doContinue = false;
-            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/diffusion/simple_diffusion/simple_diffusion.in";
+//            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/diffusion/simple_diffusion/simple_diffusion.in";
+            const QString scriptFilePath = "/Users/anderhaf/Desktop/lj.in";
 
             if(finished || didCancel || crashed)
                 break;

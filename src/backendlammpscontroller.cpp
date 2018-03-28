@@ -1,7 +1,7 @@
 #include "backendlammpscontroller.h"
 #include "lammpsthread.h"
 #include "lammpsaspect.h"
-#include "lammpscontroller2.h"
+#include "lammpscontroller.h"
 
 #include <QDebug>
 #include <QPropertyUpdatedChange>

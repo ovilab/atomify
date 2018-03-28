@@ -22,10 +22,6 @@ Scene3D {
     id: root
     signal changedRenderQuality
     property color backgroundColor: "black"
-    property alias propertyModifier: propertyModifier
-    property alias sliceModifier: sliceModifier
-    property alias colorAllGroupsModifier: colorAllGroupsModifier
-    property alias colorAllRegionsModifier: colorAllRegionsModifier
     property bool guidesVisible
     property bool systemBoxVisible
     property var rootItem
@@ -33,7 +29,6 @@ Scene3D {
     property bool focusMode
     property alias visualizer: visualizer
     property alias controller: trackballController
-    property alias simulator: simulator
     property alias light1: light1
     property alias light2: light2
     property real scale: 0.23
@@ -41,7 +36,6 @@ Scene3D {
     property int frames: 0
     property alias ambientOcclusion: ssaoQuadEntity.ambientOcclusion
     property alias finalShaderBuilder: finalQuadEntity.shaderBuilder
-    property alias periodicImages: periodicImages
     property string renderMode: "forward"
     property string renderQuality: "low"
     property bool mainCompleted: false
@@ -93,18 +87,17 @@ Scene3D {
     }
 
     function resetToSystemCenter() {
-        // var right = camera.viewVector.normalized().cross(camera.upVector.normalized())
-        var sizeY = Math.max(5.0, simulator.system.size.y)
-        var center = simulator.system.center
-        var cameraPos = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
+//        var sizeY = Math.max(5.0, simulator.system.size.y)
+//        var center = simulator.system.center
+//        var cameraPos = simulator.system.center.plus(Qt.vector3d(0, 2*sizeY, 0))
 
-        center = center.times(simulator.system.atoms.globalScale)
-        visualizer.camera.viewCenter = center
+//        center = center.times(simulator.system.atoms.globalScale)
+//        visualizer.camera.viewCenter = center
 
-        cameraPos = cameraPos.times(simulator.system.atoms.globalScale)
+//        cameraPos = cameraPos.times(simulator.system.atoms.globalScale)
 
-        visualizer.camera.position = cameraPos
-        visualizer.camera.upVector = Qt.vector3d(0, 0, 1)
+//        visualizer.camera.position = cameraPos
+//        visualizer.camera.upVector = Qt.vector3d(0, 0, 1)
     }
 
     function flymodePanTilt(pan, tilt) {
@@ -141,36 +134,36 @@ Scene3D {
             var z = camera.position.z
 
 
-            var imageLowX = Math.floor( (periodicImages.numberOfCopiesX - 1)/2)
-            var imageLowY = Math.floor( (periodicImages.numberOfCopiesY - 1)/2)
-            var imageLowZ = Math.floor( (periodicImages.numberOfCopiesZ - 1)/2)
+//            var imageLowX = Math.floor( (periodicImages.numberOfCopiesX - 1)/2)
+//            var imageLowY = Math.floor( (periodicImages.numberOfCopiesY - 1)/2)
+//            var imageLowZ = Math.floor( (periodicImages.numberOfCopiesZ - 1)/2)
 
-            var x0 = simulator.system.origin.x - simulator.system.size.x*imageLowX
-            var y0 = simulator.system.origin.y - simulator.system.size.y*imageLowY
-            var z0 = simulator.system.origin.z - simulator.system.size.z*imageLowZ
+//            var x0 = simulator.system.origin.x - simulator.system.size.x*imageLowX
+//            var y0 = simulator.system.origin.y - simulator.system.size.y*imageLowY
+//            var z0 = simulator.system.origin.z - simulator.system.size.z*imageLowZ
 
-            var x1 = x0 + simulator.system.size.x*periodicImages.numberOfCopiesX
-            var y1 = y0 + simulator.system.size.y*periodicImages.numberOfCopiesY
-            var z1 = z0 + simulator.system.size.z*periodicImages.numberOfCopiesZ
-            var scale = simulator.system.atoms.globalScale
+//            var x1 = x0 + simulator.system.size.x*periodicImages.numberOfCopiesX
+//            var y1 = y0 + simulator.system.size.y*periodicImages.numberOfCopiesY
+//            var z1 = z0 + simulator.system.size.z*periodicImages.numberOfCopiesZ
+//            var scale = simulator.system.atoms.globalScale
 
-            x0 = x0*scale
-            x1 = x1*scale
-            y0 = y0*scale
-            y1 = y1*scale
-            z0 = z0*scale
-            z1 = z1*scale
+//            x0 = x0*scale
+//            x1 = x1*scale
+//            y0 = y0*scale
+//            y1 = y1*scale
+//            z0 = z0*scale
+//            z1 = z1*scale
 
-            var xp = x
-            var yp = y
-            var zp = z
-            if(x < x0) xp = x0
-            if(x > x1) xp = x1
-            if(y < y0) yp = y0
-            if(y > y1) yp = y1
-            if(z < z0) zp = z0
-            if(z > z1) zp = z1
-            nearestPoint = Qt.vector3d(xp, yp, zp)
+//            var xp = x
+//            var yp = y
+//            var zp = z
+//            if(x < x0) xp = x0
+//            if(x > x1) xp = x1
+//            if(y < y0) yp = y0
+//            if(y > y1) yp = y1
+//            if(z < z0) zp = z0
+//            if(z > z1) zp = z1
+//            nearestPoint = Qt.vector3d(xp, yp, zp)
         }
 
         property var nearestPoint
@@ -179,9 +172,9 @@ Scene3D {
         property Camera camera: root.mode === "flymode" ? flymodeCamera : trackballCamera
 
         onCameraPositionChanged: {
-            if(simulator != undefined) {
-                simulator.system.cameraPosition = cameraPosition
-            }
+//            if(simulator != undefined) {
+//                simulator.system.cameraPosition = cameraPosition
+//            }
             visualizer.updateNearestPoint()
         }
 
@@ -415,35 +408,35 @@ Scene3D {
             height: root.height
         }
 
-        AtomifySimulator {
-            id: simulator
-            simulationSpeed: 1
-            system.onSizeChanged: { visualizer.updateNearestPoint() }
-            system.onOriginChanged: { visualizer.updateNearestPoint() }
-            onNewCameraPositionRequest: {
-                animateCameraTo(cameraPositionRequest, Qt.vector3d(0, 0, 1), Qt.vector3d(0,0,0), 500)
-            }
-            onNewCameraPositionAndViewCenterRequest: {
-                var viewVector = cameraViewCenterRequest.minus(cameraPositionRequest).normalized()
-                var rightVector = viewVector.crossProduct(Qt.vector3d(0, 0, 1)).normalized()
-                var upVector = rightVector.crossProduct(viewVector).normalized()
-                animateCameraTo(cameraPositionRequest, upVector, cameraViewCenterRequest, 500)
-            }
-            onNewViewCenterRequest: {
-                animateCameraTo(visualizer.camera.position, Qt.vector3d(0, 0, 1), cameraViewCenterRequest, 500)
-            }
+//        AtomifySimulator {
+//            id: simulator
+//            simulationSpeed: 1
+//            system.onSizeChanged: { visualizer.updateNearestPoint() }
+//            system.onOriginChanged: { visualizer.updateNearestPoint() }
+//            onNewCameraPositionRequest: {
+//                animateCameraTo(cameraPositionRequest, Qt.vector3d(0, 0, 1), Qt.vector3d(0,0,0), 500)
+//            }
+//            onNewCameraPositionAndViewCenterRequest: {
+//                var viewVector = cameraViewCenterRequest.minus(cameraPositionRequest).normalized()
+//                var rightVector = viewVector.crossProduct(Qt.vector3d(0, 0, 1)).normalized()
+//                var upVector = rightVector.crossProduct(viewVector).normalized()
+//                animateCameraTo(cameraPositionRequest, upVector, cameraViewCenterRequest, 500)
+//            }
+//            onNewViewCenterRequest: {
+//                animateCameraTo(visualizer.camera.position, Qt.vector3d(0, 0, 1), cameraViewCenterRequest, 500)
+//            }
 
-            system.atoms.modifiers: [
-                colorModifier,
-                colorAllGroupsModifier,
-                colorAllRegionsModifier,
-                propertyModifier,
-                groupModifier,
-                regionModifier,
-                periodicImages,
-                sliceModifier
-            ]
-        }
+//            system.atoms.modifiers: [
+//                colorModifier,
+//                colorAllGroupsModifier,
+//                colorAllRegionsModifier,
+//                propertyModifier,
+//                groupModifier,
+//                regionModifier,
+//                periodicImages,
+//                sliceModifier
+//            ]
+//        }
 
         EventCatcher {
             name: "simulator.increaseSimulationSpeed"
@@ -455,50 +448,50 @@ Scene3D {
             onTriggered: simulator.decreaseSimulationSpeed()
         }
 
-        ColorModifier {
-            id: colorModifier
-            enabled: true
-        }
+//        ColorModifier {
+//            id: colorModifier
+//            enabled: true
+//        }
 
-        ColorAllGroupsModifier {
-            id: colorAllGroupsModifier
-            enabled: false
-        }
+//        ColorAllGroupsModifier {
+//            id: colorAllGroupsModifier
+//            enabled: false
+//        }
 
-        ColorAllRegionsModifier {
-            id: colorAllRegionsModifier
-            enabled: false
-        }
+//        ColorAllRegionsModifier {
+//            id: colorAllRegionsModifier
+//            enabled: false
+//        }
 
-        GroupModifier {
-            id: groupModifier
-            enabled: true
-        }
+//        GroupModifier {
+//            id: groupModifier
+//            enabled: true
+//        }
 
-        RegionModifier {
-            id: regionModifier
-            enabled: true
-        }
+//        RegionModifier {
+//            id: regionModifier
+//            enabled: true
+//        }
 
-        PropertyModifier {
-            id: propertyModifier
-            enabled: true
-        }
+//        PropertyModifier {
+//            id: propertyModifier
+//            enabled: true
+//        }
 
-        SliceModifier {
-            id: sliceModifier
-            enabled: false
-        }
+//        SliceModifier {
+//            id: sliceModifier
+//            enabled: false
+//        }
 
-        PeriodicImages {
-            id: periodicImages
-            numberOfCopiesX: 1
-            numberOfCopiesY: 1
-            numberOfCopiesZ: 1
-            onNumberOfCopiesXChanged: visualizer.updateNearestPoint()
-            onNumberOfCopiesYChanged: visualizer.updateNearestPoint()
-            onNumberOfCopiesZChanged: visualizer.updateNearestPoint()
-        }
+//        PeriodicImages {
+//            id: periodicImages
+//            numberOfCopiesX: 1
+//            numberOfCopiesY: 1
+//            numberOfCopiesZ: 1
+//            onNumberOfCopiesXChanged: visualizer.updateNearestPoint()
+//            onNumberOfCopiesYChanged: visualizer.updateNearestPoint()
+//            onNumberOfCopiesZChanged: visualizer.updateNearestPoint()
+//        }
 
         StandardMaterial {
             id: spheresMediumQuality
@@ -588,10 +581,10 @@ Scene3D {
             }
         }
 
-        FixIndentVisualizer {
-            id: fixIndentVisualizer
-            fixIndent: simulator.system.fixes.activeFixIndent
-        }
+//        FixIndentVisualizer {
+//            id: fixIndentVisualizer
+//            fixIndent: simulator.system.fixes.activeFixIndent
+//        }
 
 //        Entity {
 //            components: [

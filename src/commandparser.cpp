@@ -14,45 +14,45 @@ CommandParser::CommandParser()
 
 void CommandParser::parseFile(QString fileName, bool moveCamera)
 {
-    moveCameraPosition = false;
-    moveCameraViewCenter = false;
+//    moveCameraPosition = false;
+//    moveCameraViewCenter = false;
 
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+//    QFile file(fileName);
+//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+//        return;
 
-    QTextStream in(&file);
-    while (!in.atEnd())
-    {
-        QString line = in.readLine().trimmed();
-        if(line.startsWith("#/")) {
-            line.remove(0,2);
-            parseCommand(line);
-        }
-    }
+//    QTextStream in(&file);
+//    while (!in.atEnd())
+//    {
+//        QString line = in.readLine().trimmed();
+//        if(line.startsWith("#/")) {
+//            line.remove(0,2);
+//            parseCommand(line);
+//        }
+//    }
 
-    file.close();
+//    file.close();
 
-    if(!moveCamera) return;
+//    if(!moveCamera) return;
 
-    if(moveCameraPosition && moveCameraViewCenter) {
-        emit m_simulator->newCameraPositionAndViewCenterRequest(m_simulator->cameraPositionRequest(), m_simulator->cameraViewCenterRequest());
-    } else if(moveCameraPosition) {
-        emit m_simulator->newCameraPositionRequest(m_simulator->cameraPositionRequest());
-    } else if(moveCameraViewCenter) {
-        emit m_simulator->newViewCenterRequest(m_simulator->cameraViewCenterRequest());
-    }
+//    if(moveCameraPosition && moveCameraViewCenter) {
+//        emit m_simulator->newCameraPositionAndViewCenterRequest(m_simulator->cameraPositionRequest(), m_simulator->cameraViewCenterRequest());
+//    } else if(moveCameraPosition) {
+//        emit m_simulator->newCameraPositionRequest(m_simulator->cameraPositionRequest());
+//    } else if(moveCameraViewCenter) {
+//        emit m_simulator->newViewCenterRequest(m_simulator->cameraViewCenterRequest());
+//    }
 }
 
-AtomifySimulator *CommandParser::simulator() const
-{
-    return m_simulator;
-}
+//AtomifySimulator *CommandParser::simulator() const
+//{
+//    return m_simulator;
+//}
 
-void CommandParser::setSimulator(AtomifySimulator *simulator)
-{
-    m_simulator = simulator;
-}
+//void CommandParser::setSimulator(AtomifySimulator *simulator)
+//{
+//    m_simulator = simulator;
+//}
 
 void CommandParser::parseCommand(QString command)
 {

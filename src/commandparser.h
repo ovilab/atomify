@@ -9,11 +9,11 @@ class CommandParser
 public:
     CommandParser();
     void parseFile(QString fileName, bool moveCamera);
-    class AtomifySimulator *simulator() const;
-    void setSimulator(class AtomifySimulator *simulator);
+//    class AtomifySimulator *simulator() const;
+//    void setSimulator(class AtomifySimulator *simulator);
 
 private:
-    class AtomifySimulator *m_simulator = nullptr;
+//    class AtomifySimulator *m_simulator = nullptr;
     QString regexFloat = QString("\\d*.\\d*");
     QString regexInt = QString("\\d*");
     QString regexColor = QString("#[0-9a-fA-F]{6,6}");

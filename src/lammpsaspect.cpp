@@ -1,6 +1,6 @@
 #include "lammpsaspect.h"
 #include "backendlammpscontroller.h"
-#include "lammpscontroller2.h"
+#include "lammpscontroller.h"
 #include <QAbstractAspect>
 #include <QAspectJob>
 namespace atomify {
@@ -10,7 +10,7 @@ LAMMPSAspect::LAMMPSAspect(QObject *parent)
 {
     // Register the mapper to handle creation, lookup, and destruction of backend nodes
     m_mapper = QSharedPointer<LAMMPSControllerMapper>::create(this);
-    registerBackendType<LAMMPSController2>(m_mapper);
+    registerBackendType<LAMMPSController>(m_mapper);
 }
 
 QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)

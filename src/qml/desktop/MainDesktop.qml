@@ -22,7 +22,6 @@ import ".."
 Rectangle {
     id: root
 
-    property AtomifySimulator simulator: visualizer.simulator
     property alias visualizer: visualizer
     property alias renderQuality: visualizer.renderQuality
     property alias backgroundColor: visualizer.backgroundColor
@@ -52,8 +51,6 @@ Rectangle {
                 initialScriptUrl = Qt.resolvedUrl(examplesDir + "/diffusion/diffusion/simple_diffusion.in")
                 messageOverlay.hideClickedAtLeastOnce = false
             }
-            //            visualizer.simulator.scriptFilePath = initialExampleUrl
-            //            visualizer.simulator.started()
             editor.editorWindow.openTab(initialScriptUrl)
             editor.editorWindow.runScript()
         }
@@ -235,43 +232,43 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.minimumHeight: 48
                 Layout.maximumHeight: modeMenuContainer.width
-                source: {
-                    if(simulator.states.paused.active || stopButton.toggled) {
-                        return "qrc:/images/buttons/ic_play_arrow_white_48dp.png"
-                    } else {
-                        return "qrc:/images/buttons/ic_pause_white_48dp.png"
-                    }
-                }
+//                source: {
+//                    if(simulator.states.paused.active || stopButton.toggled) {
+//                        return "qrc:/images/buttons/ic_play_arrow_white_48dp.png"
+//                    } else {
+//                        return "qrc:/images/buttons/ic_pause_white_48dp.png"
+//                    }
+//                }
                 toggled: !stopButton.toggled
                 text: {
                     if(stopButton.toggled) {
                         return "Simulate"
                     } else {
-                        if(simulator.states.paused.active) {
-                            return "Paused"
-                        } else {
-                            return "Running"
-                        }
+//                        if(simulator.states.paused.active) {
+//                            return "Paused"
+//                        } else {
+//                            return "Running"
+//                        }
                     }
                 }
                 toolTipText: {
                     if(stopButton.toggled) {
                         return " Start simulating current script ("+EventCenter.nativeText("editorWindow.runScript")+")"
                     } else {
-                        if(simulator.states.paused.active) {
-                            return "Resume current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
-                        } else {
-                            return "Pause current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
-                        }
+//                        if(simulator.states.paused.active) {
+//                            return "Resume current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
+//                        } else {
+//                            return "Pause current simulation ("+EventCenter.nativeText("simulator.togglePause")+")"
+//                        }
                     }
                 }
 
                 onClicked: {
-                    if(simulator.states.idle.active) {
-                        editor.editorWindow.runScript()
-                    } else {
-                        simulator.togglePause()
-                    }
+//                    if(simulator.states.idle.active) {
+//                        editor.editorWindow.runScript()
+//                    } else {
+////                        simulator.togglePause()
+//                    }
                 }
             }
             ToggleButton {
@@ -281,10 +278,10 @@ Rectangle {
                 Layout.minimumHeight: 48
                 Layout.maximumHeight: modeMenuContainer.width
                 source: "qrc:/images/buttons/ic_stop_white_48dp.png"
-                toggled: simulator.states.finished.active || simulator.states.idle.active
+//                toggled: simulator.states.finished.active || simulator.states.idle.active
                 text: toggled ? "Stopped" : "Stop"
                 onClicked: {
-                    simulator.reset()
+//                    simulator.reset()
                 }
                 toolTipText: {
                     return "Stop current simulation"
@@ -320,7 +317,7 @@ Rectangle {
 
         Settings {
             property alias editorWidth: editor.width
-            property alias rightbardWidth: rightbar.width
+//            property alias rightbardWidth: rightbar.width
         }
 
         EditorPane {
@@ -329,7 +326,7 @@ Rectangle {
             Layout.fillHeight: true
             Layout.minimumWidth: 200
             width: 600
-            simulator: root.simulator
+//            simulator: root.simulator
             visualizer: root.visualizer
 
             visible: root.viewMode === "edit"
@@ -569,16 +566,16 @@ Rectangle {
             }
         }
 
-        RightBar {
-            id: rightbar
-            Layout.fillHeight: true
-            Layout.minimumWidth: 200
-            visible: root.viewMode === "edit" || root.viewMode == "analyse"
-            width: 300
-            system: root.simulator.system
-            visualizer: root.visualizer
-            simulator: root.simulator
-        }
+//        RightBar {
+//            id: rightbar
+//            Layout.fillHeight: true
+//            Layout.minimumWidth: 200
+//            visible: root.viewMode === "edit" || root.viewMode == "analyse"
+//            width: 300
+//            system: root.simulator.system
+//            visualizer: root.visualizer
+//            simulator: root.simulator
+//        }
     }
 
     Examples {

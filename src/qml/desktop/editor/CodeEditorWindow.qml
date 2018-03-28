@@ -18,7 +18,6 @@ Item {
     signal didRun()
 
     property alias dummyEditor: dummyEditor
-    property AtomifySimulator simulator
     property CodeEditor currentEditor: (editorCount===0) ? null : stackLayout.itemAt(stackLayout.currentIndex)
     property CodeEditor activeEditor
     property alias editorCount: stackLayout.count
@@ -47,11 +46,11 @@ Item {
         }
     }
 
-    onSimulatorChanged: {
-        simulator.reset.connect(function() {
-            editorWindow.clear()
-        })
-    }
+//    onSimulatorChanged: {
+//        simulator.reset.connect(function() {
+//            editorWindow.clear()
+//        })
+//    }
 
     function runScript() {
         if(currentEditor.changedSinceLastSave) {
