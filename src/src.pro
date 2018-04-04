@@ -95,33 +95,10 @@ RESOURCES += examples/examples.qrc
 
 SOURCES += \
     main.cpp \
-    #mysimulator.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
     datasource.cpp \
-#    LammpsWrappers/simulatorcontrols/simulatorcontrol.cpp \
-#    LammpsWrappers/simulatorcontrols/cpfix.cpp \
-#    LammpsWrappers/simulatorcontrols/cpcompute.cpp \
-#    LammpsWrappers/simulatorcontrols/cpvariable.cpp \
-#    LammpsWrappers/atoms.cpp \
-#    LammpsWrappers/system.cpp \
-#    LammpsWrappers/modifiers/modifier.cpp \
-#    LammpsWrappers/modifiers/colormodifier.cpp \
-#    LammpsWrappers/modifiers/groupmodifier.cpp \
-#    LammpsWrappers/modifiers/regionmodifier.cpp \
-#    LammpsWrappers/modifiers/propertymodifier.cpp \
-#    LammpsWrappers/modifiers/colorallgroupsmodifier.cpp \
-#    LammpsWrappers/modifiers/colorallregionsmodifier.cpp \
     LammpsWrappers/atomdata.cpp \
-#    LammpsWrappers/regions.cpp \
-#    LammpsWrappers/groups.cpp \
-#    LammpsWrappers/neighborlist.cpp \
-#    LammpsWrappers/bonds.cpp \
-#    LammpsWrappers/lammpserror.cpp \
-#    LammpsWrappers/computes.cpp \
-#    LammpsWrappers/variables.cpp \
-#    LammpsWrappers/units.cpp \
-#    LammpsWrappers/fixes.cpp \
     dataproviders/dataprovider.cpp \
     codeeditorbackend.cpp \
     linenumbers.cpp \
@@ -130,53 +107,23 @@ SOURCES += \
     mousemover.cpp \
     states.cpp \
     dataproviders/data1d.cpp \
-#    commandparser.cpp \
-#    performance.cpp \
     parsefileuploader.cpp \
     standardpaths.cpp \
     keysequence.cpp \
     usagestatistics.cpp \
-#    LammpsWrappers/modifiers/periodicimagesmodifier.cpp \
-#    LammpsWrappers/modifiers/slicemodifier.cpp \
-#    LammpsWrappers/simulatorcontrols/cpfixindent.cpp \
     registerqml.cpp \
     helpers/clipboard.cpp \
     rendercapturehelper.cpp \
     lammpsaspect.cpp \
     lammpsthread.cpp \
-    #lammpscontroller2.cpp \
     tmplammps.cpp \
     backendlammpscontroller.cpp
 
 HEADERS += \
-    #mysimulator.h \
     lammpscontroller.h \
     highlighter.h \
     datasource.h \
-#    LammpsWrappers/simulatorcontrols/simulatorcontrol.h \
-#    LammpsWrappers/simulatorcontrols/cpfix.h \
-#    LammpsWrappers/simulatorcontrols/cpcompute.h \
-#    LammpsWrappers/simulatorcontrols/cpvariable.h \
-#    LammpsWrappers/atoms.h \
-#    LammpsWrappers/system.h \
-#    LammpsWrappers/modifiers/modifier.h \
-#    LammpsWrappers/modifiers/colormodifier.h \
-#    LammpsWrappers/modifiers/modifiers.h \
-#    LammpsWrappers/modifiers/groupmodifier.h \
-#    LammpsWrappers/modifiers/regionmodifier.h \
-#    LammpsWrappers/modifiers/propertymodifier.h \
-#    LammpsWrappers/modifiers/colorallgroupsmodifier.h \
-#    LammpsWrappers/modifiers/colorallregionsmodifier.h \
     LammpsWrappers/atomdata.h \
-#    LammpsWrappers/regions.h \
-#    LammpsWrappers/groups.h \
-#    LammpsWrappers/neighborlist.h \
-#    LammpsWrappers/bonds.h \
-#    LammpsWrappers/lammpserror.h \
-#    LammpsWrappers/computes.h \
-#    LammpsWrappers/variables.h \
-#    LammpsWrappers/units.h \
-#    LammpsWrappers/fixes.h \
     dataproviders/dataprovider.h \
     codeeditorbackend.h \
     linenumbers.h \
@@ -185,20 +132,14 @@ HEADERS += \
     mousemover.h \
     states.h \
     dataproviders/data1d.h \
-#    commandparser.h \
-#    performance.h \
     parsefileuploader.h \
     standardpaths.h \
     keysequence.h \
     usagestatistics.h \
-#    LammpsWrappers/modifiers/periodicimagesmodifier.h \
-#    LammpsWrappers/modifiers/slicemodifier.h \
-#    LammpsWrappers/simulatorcontrols/cpfixindent.h \
     helpers/clipboard.h \
     rendercapturehelper.h \
     lammpsaspect.h \
     lammpsthread.h \
-    #lammpscontroller2.h \
     tmplammps.h \
     backendlammpscontroller.h
 
