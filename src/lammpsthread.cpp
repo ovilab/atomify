@@ -182,7 +182,7 @@ LAMMPSData LAMMPSThread::data()
         std::swap(data, m_data);
         m_dataDirty = false;
     }
-
+    data.empty = false;
     return data;
 }
 

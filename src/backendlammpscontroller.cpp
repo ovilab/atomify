@@ -2,7 +2,6 @@
 #include "lammpsthread.h"
 #include "lammpsaspect.h"
 #include "lammpscontroller.h"
-
 #include <QDebug>
 #include <QPropertyUpdatedChange>
 #include <SimVis/SphereData>
@@ -17,54 +16,14 @@ BackendLAMMPSController::BackendLAMMPSController()
     m_thread->start();
 }
 
-void BackendLAMMPSController::synchronize()
+LAMMPSData BackendLAMMPSController::synchronize()
 {
     if (!m_thread->dataDirty()) {
-        return;
+        return LAMMPSData();
     }
 
     const auto data = m_thread->data();
-
-    const auto &atomData = data.atomData;
-    uint64_t visibleAtomCount = atomData.size;
-
-    QByteArray sphereBufferData;
-    sphereBufferData.resize(visibleAtomCount * sizeof(SphereVBOData));
-    SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(sphereBufferData.data());
-    for(size_t i=0; i<visibleAtomCount; i++) {
-        SphereVBOData &vbo = vboData[i];
-
-        const int id = atomData.id[i];
-        vbo.position[0] = atomData.x[3*i + 0];
-        vbo.position[1] = atomData.x[3*i + 1];
-        vbo.position[2] = atomData.x[3*i + 2];
-        vbo.color[0] = 1.0;
-        vbo.color[1] = 0.0;
-        vbo.color[2] = 0.0;
-        vbo.radius = 0.3;
-        vbo.particleId = id;
-        vbo.flags = 0; // TODO add back
-//        vbo.flags = m_selectedParticles.contains(particleId) ? Selected : 0;
-    }
-
-    {
-        auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresBufferId);
-        change->setPropertyName("data");
-        change->setValue(QVariant::fromValue(sphereBufferData));
-        notifyObservers(change);
-    }
-
-    {
-        qDebug() << "Sending visible atom count" << visibleAtomCount;
-        auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(peerId());
-        change->setPropertyName("visibleAtomCount");
-        change->setValue(visibleAtomCount);
-        change->setDeliveryFlags(Qt3DCore::QSceneChange::Nodes);
-        notifyObservers(change);
-    }
-
-
-    qDebug() << "Did sync data: " << data.systemData.ntimestep;
+    return data;
 }
 
 void BackendLAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr &e)
@@ -77,6 +36,11 @@ void BackendLAMMPSController::initializeFromPeer(const Qt3DCore::QNodeCreatedCha
     const auto typedChange = qSharedPointerCast<Qt3DCore::QNodeCreatedChange<LAMMPSControllerData>>(change);
     const auto &data = typedChange->data;
     m_spheresBufferId = data.spheresBufferId;
+}
+
+Qt3DCore::QNodeId BackendLAMMPSController::spheresBufferId() const
+{
+    return m_spheresBufferId;
 }
 
 LAMMPSControllerMapper::LAMMPSControllerMapper(LAMMPSAspect *aspect)

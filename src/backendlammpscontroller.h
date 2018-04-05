@@ -1,6 +1,9 @@
 #ifndef BACKENDLAMMPSCONTROLLER_H
 #define BACKENDLAMMPSCONTROLLER_H
 
+#include "core/data/particledata.h"
+#include "core/data/lammps/lammpsdata.h"
+
 #include <QBackendNode>
 #include <QHash>
 
@@ -10,8 +13,9 @@ class BackendLAMMPSController : public Qt3DCore::QBackendNode
 {
 public:
     BackendLAMMPSController();
-    void synchronize();
-    // QBackendNode interface
+    LAMMPSData synchronize();
+    Qt3DCore::QNodeId spheresBufferId() const;
+
 protected:
     void sceneChangeEvent(const Qt3DCore::QSceneChangePtr &e) override;
 

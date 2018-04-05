@@ -119,7 +119,8 @@ SOURCES += \
     tmplammps.cpp \
     backendlammpscontroller.cpp \
     core/data/lammps/lammpsatomdata.cpp \
-    core/data/lammps/lammpssystemdata.cpp
+    core/data/lammps/lammpssystemdata.cpp \
+    core/data/particledata.cpp
 
 HEADERS += \
     lammpscontroller.h \
@@ -146,7 +147,8 @@ HEADERS += \
     backendlammpscontroller.h \
     core/data/lammps/lammpsatomdata.h \
     core/data/lammps/lammpssystemdata.h \
-    core/data/lammps/lammpsdata.h
+    core/data/lammps/lammpsdata.h \
+    core/data/particledata.h
 
 # Temporary use of quickcontrols2 without install
 
