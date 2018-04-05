@@ -57,4 +57,4 @@ void copy(LAMMPSSystemData *data, void *lammps)
 
 }
 
-}
+}  // namespace atomify

@@ -1,5 +1,5 @@
-#ifndef LAMMPSSYSTEMDATA_H
-#define LAMMPSSYSTEMDATA_H
+#ifndef CORE_DATA_LAMMPS_LAMMPSSYSTEMDATA_H
+#define CORE_DATA_LAMMPS_LAMMPSSYSTEMDATA_H
 #include <array>
 #include <string>
 
@@ -21,6 +21,6 @@ struct LAMMPSSystemData
 
 void copy(LAMMPSSystemData *data, void *lammps);
 
-}
+}  // namespace atomify
 
-#endif // LAMMPSSYSTEMDATA_H
+#endif // CORE_DATA_LAMMPS_LAMMPSSYSTEMDATA_H
