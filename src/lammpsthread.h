@@ -2,8 +2,7 @@
 #define LAMMPSTHREAD_H
 
 #include "LammpsWrappers/atomdata.h"
-#include "core/data/lammps/lammpsatomdata.h"
-#include "core/data/lammps/lammpssystemdata.h"
+#include "core/data/lammps/lammpsdata.h"
 
 #include <QThread>
 #include <QMutex>
@@ -17,11 +16,6 @@ class LAMMPS;
 namespace atomify {
 
 class Cancelled : public std::exception { };
-
-struct LAMMPSData {
-    LAMMPSSystemData systemData;
-    LAMMPSAtomData atomData;
-};
 
 class LAMMPSThread : public QThread
 {

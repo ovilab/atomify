@@ -145,7 +145,8 @@ HEADERS += \
     tmplammps.h \
     backendlammpscontroller.h \
     core/data/lammps/lammpsatomdata.h \
-    core/data/lammps/lammpssystemdata.h
+    core/data/lammps/lammpssystemdata.h \
+    core/data/lammps/lammpsdata.h
 
 # Temporary use of quickcontrols2 without install
 

@@ -3,6 +3,8 @@
 
 #include <QAbstractAspect>
 #include <QThread>
+#include <QVector>
+#include "core/data/lammps/lammpsdata.h"
 
 namespace atomify {
 
