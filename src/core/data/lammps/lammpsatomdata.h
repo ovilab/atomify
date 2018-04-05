@@ -2,6 +2,7 @@
 #define CORE_DATA_LAMMPS_LAMMPSATOMDATA_H
 
 #include <stddef.h>
+#include <stdint.h>
 #include <vector>
 
 namespace atomify {
