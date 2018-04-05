@@ -36,7 +36,9 @@ static void convertData(const QList<class BackendLAMMPSController*> &controllers
             const auto &atomData = data.atomData;
             particleData.resize(atomData.size);
             particleData.timestep = data.systemData.ntimestep;
-
+#ifdef __GNUC__
+#pragma GCC ivdep
+#endif
             for (int i = 0; i < atomData.size; i++) {
                 particleData.positions[i][0] = static_cast<float>(atomData.x[3*i+0]);
                 particleData.positions[i][1] = static_cast<float>(atomData.x[3*i+1]);
