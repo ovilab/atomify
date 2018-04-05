@@ -56,7 +56,7 @@ void BackendLAMMPSController::setSphereBufferData(const QByteArray &buffer, uint
         qDebug() << "Sending visible atom count" << sphereCount;
         auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(peerId());
         change->setPropertyName("visibleAtomCount");
-        change->setValue(sphereCount);
+        change->setValue(static_cast<int>(sphereCount)); // Cast for linux compilation
         change->setDeliveryFlags(Qt3DCore::QSceneChange::Nodes);
         notifyObservers(change);
     }
