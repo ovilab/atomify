@@ -16,10 +16,10 @@ struct ParticleData
     QVector<int> bitmask; // For detecting group membership
     QVector<int> types;
     QVector<bool> visible;
-    void resize(int size);
-    void reset();
-    void sort(QVector3D cameraPosition);
+    int size;
 };
+
+void resize(ParticleData *data, size_t size);
 
 }  // namespace atomify
 

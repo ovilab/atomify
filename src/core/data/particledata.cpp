@@ -2,20 +2,16 @@
 
 namespace atomify {
 
-void ParticleData::resize(int size)
+void resize(ParticleData *data, size_t size)
 {
-    positions.resize(size);
-    colors.resize(size);
-    radii.resize(size);
-    ids.resize(size);
-    bitmask.resize(size);
-    types.resize(size);
-    visible.resize(size);
-}
-
-void ParticleData::reset()
-{
-    resize(0);
+    data->positions.resize(size);
+    data->colors.resize(size);
+    data->radii.resize(size);
+    data->ids.resize(size);
+    data->bitmask.resize(size);
+    data->types.resize(size);
+    data->visible.resize(size);
+    data->size = size;
 }
 
 }  // namespace atomify

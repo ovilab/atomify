@@ -43,6 +43,25 @@ Qt3DCore::QNodeId BackendLAMMPSController::spheresBufferId() const
     return m_spheresBufferId;
 }
 
+void BackendLAMMPSController::setSphereBufferData(const QByteArray &buffer, uint64_t sphereCount)
+{
+    {
+        auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresBufferId);
+        change->setPropertyName("data");
+        change->setValue(QVariant::fromValue(buffer));
+        notifyObservers(change);
+    }
+
+    {
+        qDebug() << "Sending visible atom count" << sphereCount;
+        auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(peerId());
+        change->setPropertyName("visibleAtomCount");
+        change->setValue(sphereCount);
+        change->setDeliveryFlags(Qt3DCore::QSceneChange::Nodes);
+        notifyObservers(change);
+    }
+}
+
 LAMMPSControllerMapper::LAMMPSControllerMapper(LAMMPSAspect *aspect)
 {
 
