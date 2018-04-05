@@ -28,7 +28,7 @@ static void copyDataFromLAMMPS(const QList<class BackendLAMMPSController*> &cont
             pendingRawData[controller->peerId()] = { true, LAMMPSData() };
         }
 
-        pendingRawData[controller->peerId()].first = !data.empty;
+        pendingRawData[controller->peerId()].first = true;
         pendingRawData[controller->peerId()].second = std::move(data);
     }
 }
