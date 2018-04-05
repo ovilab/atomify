@@ -1,6 +1,7 @@
 #include "lammpsatomdata.h"
 #include <library.h>
 #include <iostream>
+#include <cstring>
 
 namespace atomify {
 
@@ -27,10 +28,10 @@ void copy(LAMMPSAtomData *data, void *lammps)
     // x[0], x[1] points to a one-dimensional allocated array laid out like
     // x1, y1, z1, x2, y2, z2, ..., xn, yn, zn. We can then safely copy 3n*sizeof(double) from x[0]
 
-    memcpy(data->x.data(), x[0], natoms*3*sizeof(double));
-    memcpy(data->type.data(), type, natoms*sizeof(int));
-    memcpy(data->id.data(), id, natoms*sizeof(int));
-    memcpy(data->mask.data(), mask, natoms*sizeof(int));
+    std::memcpy(data->x.data(), x[0], natoms*3*sizeof(double));
+    std::memcpy(data->type.data(), type, natoms*sizeof(int));
+    std::memcpy(data->id.data(), id, natoms*sizeof(int));
+    std::memcpy(data->mask.data(), mask, natoms*sizeof(int));
 }
 
 }  // namespace atomify

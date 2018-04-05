@@ -1,7 +1,7 @@
 #ifndef CORE_DATA_LAMMPS_LAMMPSATOMDATA_H
 #define CORE_DATA_LAMMPS_LAMMPSATOMDATA_H
 
-#include <cstdlib>
+#include <cstdint>
 #include <vector>
 
 namespace atomify {
