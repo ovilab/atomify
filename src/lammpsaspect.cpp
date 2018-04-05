@@ -100,6 +100,17 @@ static void createSphereBufferData(const QMap<Qt3DCore::QNodeId, QPair<bool, Par
     }
 }
 
+static void setSphereBufferOnControllers(QMap<Qt3DCore::QNodeId, QPair<bool, QByteArray>> &sphereBufferData, const LAMMPSControllerMapper &mapper) {
+    for (const auto &nodeId : sphereBufferData.keys()) {
+        if (!sphereBufferData[nodeId].first) {
+            continue;
+        }
+        const auto controller = dynamic_cast<BackendLAMMPSController*>(mapper.get(nodeId));
+        uint64_t sphereCount = sphereBufferData[nodeId].second.size() / sizeof(SphereVBOData);
+        controller->setSphereBufferData(sphereBufferData[nodeId].second, sphereCount);
+    }
+}
+
 QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
 {
     class LambdaJob : public Qt3DCore::QAspectJob {
@@ -127,14 +138,7 @@ QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
     });
 
     auto job4 = LambdaJobPtr::create([&]() {
-        for (const auto &nodeId : m_sphereBufferData.keys()) {
-            if (!m_sphereBufferData[nodeId].first) {
-                continue;
-            }
-            const auto controller = dynamic_cast<BackendLAMMPSController*>(m_mapper->get(nodeId));
-            uint64_t sphereCount = m_sphereBufferData[nodeId].second.size() / sizeof(SphereVBOData);
-            controller->setSphereBufferData(m_sphereBufferData[nodeId].second, sphereCount);
-        }
+        setSphereBufferOnControllers(m_sphereBufferData, *m_mapper);
     });
 
     auto job5 = LambdaJobPtr::create([&]() {
