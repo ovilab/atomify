@@ -123,7 +123,6 @@ QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
     };
 
     using LambdaJobPtr = QSharedPointer<LambdaJob>;
-    QVector<Qt3DCore::QAspectJobPtr> jobs;
 
     auto job1 = LambdaJobPtr::create([&]() {
         copyDataFromLAMMPS(m_mapper->controllers(), m_pendingRawData);
@@ -158,13 +157,7 @@ QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
     job4->addDependency(job3);
     job5->addDependency(job4);
 
-    jobs.append(job1);
-    jobs.append(job2);
-    jobs.append(job3);
-    jobs.append(job4);
-    jobs.append(job5);
-
-    return jobs;
+    return {job1, job2, job3, job4, job5};
 }
 
 }
