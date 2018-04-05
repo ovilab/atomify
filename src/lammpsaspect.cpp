@@ -33,17 +33,17 @@ static void copyDataFromLAMMPS(const QList<class BackendLAMMPSController*> &cont
     }
 }
 
-static void convertData(const QList<class BackendLAMMPSController*> &controllers, const QMap<Qt3DCore::QNodeId, QPair<bool, LAMMPSData>> &pendingRawData, QMap<Qt3DCore::QNodeId, QPair<bool, ParticleData>> &pendingParticleData) {
-    for (const auto &controller : controllers) {
-        if (pendingRawData.contains(controller->peerId()) && pendingRawData[controller->peerId()].first) {
-            if (!pendingParticleData.contains(controller->peerId())) {
-                pendingParticleData[controller->peerId()] = { true, ParticleData() };
+static void convertData(const QMap<Qt3DCore::QNodeId, QPair<bool, LAMMPSData>> &pendingRawData, QMap<Qt3DCore::QNodeId, QPair<bool, ParticleData>> &pendingParticleData) {
+    for (auto nodeId : pendingRawData.keys()) {
+        if (pendingRawData.contains(nodeId) && pendingRawData[nodeId].first) {
+            if (!pendingParticleData.contains(nodeId)) {
+                pendingParticleData[nodeId] = { true, ParticleData() };
             }
 
-            pendingParticleData[controller->peerId()].first = true;
-            auto &particleData = pendingParticleData[controller->peerId()].second;
+            pendingParticleData[nodeId].first = true;
+            auto &particleData = pendingParticleData[nodeId].second;
 
-            auto data = pendingRawData[controller->peerId()];
+            auto data = pendingRawData[nodeId];
             const auto &atomData = data.second.atomData;
             resize(&particleData, atomData.size);
             particleData.timestep = data.second.systemData.ntimestep;
@@ -66,16 +66,16 @@ static void convertData(const QList<class BackendLAMMPSController*> &controllers
     }
 }
 
-static void createSphereBufferData(const QList<class BackendLAMMPSController*> &controllers, const QMap<Qt3DCore::QNodeId, QPair<bool, ParticleData>> &pendingParticleData, QMap<Qt3DCore::QNodeId, QPair<bool, QByteArray>> &sphereBufferData) {
-    for (const auto &controller : controllers) {
-        if (pendingParticleData.contains(controller->peerId()) && pendingParticleData[controller->peerId()].first) {
-            const ParticleData &particleData = pendingParticleData[controller->peerId()].second;
-            if (!sphereBufferData.contains(controller->peerId())) {
-                sphereBufferData[controller->peerId()] = {true, QByteArray()};
+static void createSphereBufferData(const QMap<Qt3DCore::QNodeId, QPair<bool, ParticleData>> &pendingParticleData, QMap<Qt3DCore::QNodeId, QPair<bool, QByteArray>> &sphereBufferData) {
+    for (auto nodeId : pendingParticleData.keys()) {
+        if (pendingParticleData.contains(nodeId) && pendingParticleData[nodeId].first) {
+            const ParticleData &particleData = pendingParticleData[nodeId].second;
+            if (!sphereBufferData.contains(nodeId)) {
+                sphereBufferData[nodeId] = {true, QByteArray()};
             }
 
-            sphereBufferData[controller->peerId()].first = true;
-            QByteArray &data = sphereBufferData[controller->peerId()].second;
+            sphereBufferData[nodeId].first = true;
+            QByteArray &data = sphereBufferData[nodeId].second;
             data.resize(particleData.size * sizeof(SphereVBOData));
 
             SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(data.data());
@@ -119,11 +119,11 @@ QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
     });
 
     auto job2 = LambdaJobPtr::create([&]() {
-        convertData(m_mapper->controllers(), m_pendingRawData, m_pendingParticleData);
+        convertData(m_pendingRawData, m_pendingParticleData);
     });
 
     auto job3 = LambdaJobPtr::create([&]() {
-        createSphereBufferData(m_mapper->controllers(), m_pendingParticleData, m_sphereBufferData);
+        createSphereBufferData(m_pendingParticleData, m_sphereBufferData);
     });
 
     auto job4 = LambdaJobPtr::create([&]() {
