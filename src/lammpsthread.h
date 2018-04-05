@@ -2,6 +2,8 @@
 #define LAMMPSTHREAD_H
 
 #include "LammpsWrappers/atomdata.h"
+#include "core/data/lammps/lammpsatomdata.h"
+#include "core/data/lammps/lammpssystemdata.h"
 
 #include <QThread>
 #include <QMutex>
@@ -17,9 +19,8 @@ namespace atomify {
 class Cancelled : public std::exception { };
 
 struct LAMMPSData {
-    AtomData atomData;
-    QVector<QVector3D> positions;
-    int timestep = 0;
+    LAMMPSSystemData systemData;
+    LAMMPSAtomData atomData;
 };
 
 class LAMMPSThread : public QThread

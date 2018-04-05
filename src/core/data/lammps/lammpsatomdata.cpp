@@ -1,14 +1,16 @@
 #include "lammpsatomdata.h"
 #include <library.h>
+#include <iostream>
 
 namespace atomify {
 
 void resize(LAMMPSAtomData *data, size_t size)
 {
-    data->x.resize(size);
+    data->x.resize(3*size);
     data->type.resize(size);
     data->mask.resize(size);
     data->id.resize(size);
+    data->size = size;
 }
 
 void copy(LAMMPSAtomData *data, void *lammps)

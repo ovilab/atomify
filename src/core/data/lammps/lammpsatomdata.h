@@ -12,6 +12,7 @@ struct LAMMPSAtomData
     std::vector<int> type;
     std::vector<int> mask;
     std::vector<int> id;
+    uint64_t size;
 };
 
 void resize(LAMMPSAtomData *data, size_t size);

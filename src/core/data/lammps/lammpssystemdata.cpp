@@ -13,18 +13,21 @@ T extract_global(void *lammps, const char *name) {
 
 void copy(LAMMPSSystemData *data, void *lammps)
 {
+    // Copy timestep and time
     double atime;
     uint64_t atimestep;
     data->dt = extract_global<double>(lammps, "dt");
-    data->ntimestep = extract_global<uint64_t>(lammps, "dt");
+    data->ntimestep = extract_global<uint64_t>(lammps, "ntimestep");
     atime = extract_global<double>(lammps, "atime");
     atimestep = extract_global<uint64_t>(lammps, "atimestep");
     data->time = atime + data->dt*(data->ntimestep - atimestep);
 
+    // Copy triclinic status and atom count
     data->triclinic = extract_global<bool>(lammps, "triclinic");
     data->natoms = extract_global<uint64_t>(lammps, "natoms");
     data->ntypes = extract_global<int>(lammps, "ntypes");
-
+    return;
+    // Copy box size etc. TODO(anders.hafreager) create new library interface for this
     LAMMPS_NS::LAMMPS *lmp = static_cast<LAMMPS_NS::LAMMPS*>(lammps);
     auto c = lmp->domain->corners;
 

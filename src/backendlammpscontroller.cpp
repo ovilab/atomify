@@ -19,28 +19,27 @@ BackendLAMMPSController::BackendLAMMPSController()
 
 void BackendLAMMPSController::synchronize()
 {
-    // TODO remove dummy variables
-    float m_sphereScale = 1.0;
-    // END TODO
-
     if (!m_thread->dataDirty()) {
         return;
     }
 
     const auto data = m_thread->data();
-    const AtomData &atomData = data.atomData;
-    const int visibleAtomCount = atomData.size();
+    const auto &atomData = data.atomData;
+    uint64_t visibleAtomCount = atomData.size;
 
     QByteArray sphereBufferData;
     sphereBufferData.resize(visibleAtomCount * sizeof(SphereVBOData));
     SphereVBOData *vboData = reinterpret_cast<SphereVBOData *>(sphereBufferData.data());
-    for(int i=0; i<visibleAtomCount; i++) {
-        const int particleId = atomData.lammpsParticleId[i];
+    for(size_t i=0; i<visibleAtomCount; i++) {
         SphereVBOData &vbo = vboData[i];
-        vbo.position = atomData.positions[i] + atomData.deltaPositions[i];
-        vbo.color = atomData.colors[i];
-        vbo.radius = atomData.radii[i]*m_sphereScale;
-        vbo.particleId = particleId;
+
+        const int id = atomData.id[i];
+        vbo.position[0] = atomData.x[3*i + 0];
+        vbo.position[1] = atomData.x[3*i + 1];
+        vbo.position[2] = atomData.x[3*i + 2];
+        vbo.color[0] = 1.0;
+        vbo.radius = 0.3;
+        vbo.particleId = id;
         vbo.flags = 0; // TODO add back
 //        vbo.flags = m_selectedParticles.contains(particleId) ? Selected : 0;
     }
@@ -62,7 +61,7 @@ void BackendLAMMPSController::synchronize()
     }
 
 
-    qDebug() << "Did sync data: " << data.timestep;
+    qDebug() << "Did sync data: " << data.systemData.ntimestep;
 }
 
 void BackendLAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr &e)
