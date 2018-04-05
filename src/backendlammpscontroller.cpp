@@ -24,6 +24,7 @@ void BackendLAMMPSController::synchronize()
     }
 
     const auto data = m_thread->data();
+
     const auto &atomData = data.atomData;
     uint64_t visibleAtomCount = atomData.size;
 
@@ -38,6 +39,8 @@ void BackendLAMMPSController::synchronize()
         vbo.position[1] = atomData.x[3*i + 1];
         vbo.position[2] = atomData.x[3*i + 2];
         vbo.color[0] = 1.0;
+        vbo.color[1] = 0.0;
+        vbo.color[2] = 0.0;
         vbo.radius = 0.3;
         vbo.particleId = id;
         vbo.flags = 0; // TODO add back
@@ -74,7 +77,6 @@ void BackendLAMMPSController::initializeFromPeer(const Qt3DCore::QNodeCreatedCha
     const auto typedChange = qSharedPointerCast<Qt3DCore::QNodeCreatedChange<LAMMPSControllerData>>(change);
     const auto &data = typedChange->data;
     m_spheresBufferId = data.spheresBufferId;
-    qDebug() <<" Got id: " << m_spheresBufferId;
 }
 
 LAMMPSControllerMapper::LAMMPSControllerMapper(LAMMPSAspect *aspect)
