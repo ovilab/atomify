@@ -18,10 +18,7 @@ public:
 protected:
     QVector<Qt3DCore::QAspectJobPtr> jobsToExecute(qint64 time) override;
     QSharedPointer<class LAMMPSControllerMapper> m_mapper;
-    QMap<Qt3DCore::QNodeId, LAMMPSData> m_rawData;
-    //    LAMMPSData m_rawData;
-    QMap<Qt3DCore::QNodeId, ParticleData> m_particleData;
-    QMap<Qt3DCore::QNodeId, QByteArray> m_sphereBufferData;
+    QMap<Qt3DCore::QNodeId, QSharedPointer<struct LAMMPSSynchronizationJob>> m_jobs;
 };
 } // namespace atomify
 

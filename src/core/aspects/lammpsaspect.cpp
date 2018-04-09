@@ -76,38 +76,40 @@ static void setSphereBufferOnControllers(QMap<Qt3DCore::QNodeId, QPair<bool, QBy
     }
 }
 
+struct LAMMPSSynchronizationJob : public Qt3DCore::QAspectJob {
+    BackendLAMMPSController* controller = nullptr;
+    LAMMPSData m_rawData;
+    ParticleData m_particleData;
+    QByteArray m_sphereBufferData;
+
+    void run() override
+    {
+        m_rawData = controller->synchronize(std::move(m_rawData));
+        if (m_rawData.empty)
+            return;
+        convertData(m_rawData, m_particleData);
+        createSphereBufferData(m_particleData, m_sphereBufferData);
+
+        uint64_t sphereCount = m_sphereBufferData.size() / sizeof(SphereVBOData);
+        controller->setSphereBufferData(m_sphereBufferData, sphereCount);
+    }
+};
+
+using LAMMPSSynchronizationJobPtr = QSharedPointer<LAMMPSSynchronizationJob>;
+
 QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
 {
-    class LambdaJob : public Qt3DCore::QAspectJob {
-    public:
-        LambdaJob(std::function<void()> callable)
-            : m_callable(callable)
-        {
-        }
-
-    private:
-        const std::function<void()> m_callable;
-        void run() override { m_callable(); }
-    };
-
-    using LambdaJobPtr = QSharedPointer<LambdaJob>;
     QVector<Qt3DCore::QAspectJobPtr> jobs;
 
     for (auto* controller : m_mapper->controllers()) {
         auto nodeId = controller->peerId();
 
-        auto job = LambdaJobPtr::create([this, controller, nodeId]() {
-            m_rawData[nodeId] = controller->synchronize(std::move(m_rawData[nodeId]));
-            if (m_rawData[nodeId].empty)
-                return;
-            convertData(m_rawData[nodeId], m_particleData[nodeId]);
-            createSphereBufferData(m_particleData[nodeId], m_sphereBufferData[nodeId]);
+        if (!m_jobs.contains(nodeId)) {
+            m_jobs[nodeId] = LAMMPSSynchronizationJobPtr::create();
+            m_jobs[nodeId]->controller = controller;
+        }
 
-            uint64_t sphereCount = m_sphereBufferData[nodeId].size() / sizeof(SphereVBOData);
-            controller->setSphereBufferData(m_sphereBufferData[nodeId], sphereCount);
-        });
-
-        jobs.append(job);
+        jobs.append(m_jobs[nodeId]);
     }
     return jobs;
 }
