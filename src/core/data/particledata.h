@@ -1,13 +1,12 @@
 #ifndef CORE_DATA_PARTICLEDATA_H
 #define CORE_DATA_PARTICLEDATA_H
 
-#include <QVector>
 #include <QVector3D>
+#include <QVector>
 
 namespace atomify {
 
-struct ParticleData
-{
+struct ParticleData {
     uint64_t timestep;
     QVector<QVector3D> positions;
     QVector<QVector3D> colors;
@@ -19,8 +18,8 @@ struct ParticleData
     int size;
 };
 
-void resize(ParticleData *data, size_t size);
+void resize(ParticleData* data, size_t size);
 
-}  // namespace atomify
+} // namespace atomify
 
 #endif // CORE_DATA_PARTICLEDATA_H

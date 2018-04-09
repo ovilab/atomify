@@ -1,8 +1,9 @@
 #ifndef CORE_DATA_LAMMPS_LAMMPSDATA_H
 #define CORE_DATA_LAMMPS_LAMMPSDATA_H
 
-#include "./lammpssystemdata.h"
 #include "./lammpsatomdata.h"
+#include "./lammpssystemdata.h"
+
 namespace atomify {
 
 struct LAMMPSData {
@@ -11,6 +12,6 @@ struct LAMMPSData {
     bool empty = true;
 };
 
-}  // namespace atomify
+} // namespace atomify
 
 #endif // CORE_DATA_LAMMPS_LAMMPSDATA_H

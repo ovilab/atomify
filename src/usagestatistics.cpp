@@ -1,22 +1,30 @@
 #include "usagestatistics.h"
 
+#include <QDebug>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <QDebug>
 #include <QNetworkAccessManager>
 #include <QSysInfo>
 
 using namespace AtomifyStatistics;
 
-Run::Run(int id, int sessionRunId, int sessionId, QString uuid, QString hash) :
-    m_id(id), m_sessionId(sessionId), m_sessionRunId(sessionRunId), m_numAtoms(0), m_numThreads(1), m_numTimesteps(0), m_crashed(false), m_uuid(uuid), m_hash(hash)
+Run::Run(int id, int sessionRunId, int sessionId, QString uuid, QString hash)
+    : m_id(id)
+    , m_sessionId(sessionId)
+    , m_sessionRunId(sessionRunId)
+    , m_numAtoms(0)
+    , m_numThreads(1)
+    , m_numTimesteps(0)
+    , m_crashed(false)
+    , m_uuid(uuid)
+    , m_hash(hash)
 {
     m_os = QSysInfo::prettyProductName();
     m_atomifyVersion = QString("%1_%2").arg(ATOMIFYVERSION).arg(BUILDVERSION);
     m_dateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
 }
 
-void Run::fromJSON(const QJsonObject &json)
+void Run::fromJSON(const QJsonObject& json)
 {
     m_id = json["id"].toInt();
     m_crashed = json["crashed"].toBool();
@@ -53,7 +61,8 @@ QJsonObject Run::toJSON()
     return json;
 }
 
-UsageStatistics::UsageStatistics(QObject *parent) : QObject(parent)
+UsageStatistics::UsageStatistics(QObject* parent)
+    : QObject(parent)
 {
     m_runsKey = "statistics/runs";
     m_nextRunIDKey = "statistics/nextRunID";
@@ -61,19 +70,19 @@ UsageStatistics::UsageStatistics(QObject *parent) : QObject(parent)
     m_sendUsageStatisticsKey = "statistics/sendUsageStatistics";
 
     m_sendUsageStatistics = true;
-    if(!m_settings.value(m_sendUsageStatisticsKey).isNull()) {
+    if (!m_settings.value(m_sendUsageStatisticsKey).isNull()) {
         m_sendUsageStatistics = m_settings.value(m_sendUsageStatisticsKey).toBool();
         m_settings.setValue(m_sendUsageStatisticsKey, m_sendUsageStatistics);
     }
 
     m_sessionID = 0;
-    if(!m_settings.value(m_nextSessionIDKey).isNull()) {
+    if (!m_settings.value(m_nextSessionIDKey).isNull()) {
         m_sessionID = m_settings.value(m_nextSessionIDKey).toInt();
     }
-    m_settings.setValue(m_nextSessionIDKey, (m_sessionID+1) );
+    m_settings.setValue(m_nextSessionIDKey, (m_sessionID + 1));
 
     m_nextRunId = 0;
-    if(!m_settings.value(m_nextRunIDKey).isNull()) {
+    if (!m_settings.value(m_nextRunIDKey).isNull()) {
         m_nextRunId = m_settings.value(m_nextRunIDKey).toInt();
     }
 
@@ -85,7 +94,7 @@ UsageStatistics::UsageStatistics(QObject *parent) : QObject(parent)
 
 UsageStatistics::~UsageStatistics()
 {
-    if(m_currentRun) {
+    if (m_currentRun) {
         m_runs.push_back(m_currentRun);
 
         m_currentRun = nullptr;
@@ -95,7 +104,7 @@ UsageStatistics::~UsageStatistics()
 
 void UsageStatistics::newRun()
 {
-    if(m_currentRun) {
+    if (m_currentRun) {
         m_runs.push_back(m_currentRun);
         m_currentRun = nullptr;
     }
@@ -103,13 +112,13 @@ void UsageStatistics::newRun()
 
     m_sessionRunID++;
     m_nextRunId++;
-    m_settings.setValue(m_nextRunIDKey, (m_nextRunId+1) );
+    m_settings.setValue(m_nextRunIDKey, (m_nextRunId + 1));
 
     QString uuid = m_settings.value("machine/uuid").toString();
     const QByteArray keyToBeHashed = QString("%1-%2-%3-%4").arg(m_nextRunId).arg(m_sessionRunID).arg(m_sessionID).arg(uuid).toUtf8();
-    QString hashed = QString(QCryptographicHash::hash(keyToBeHashed,QCryptographicHash::Md5).toHex());
+    QString hashed = QString(QCryptographicHash::hash(keyToBeHashed, QCryptographicHash::Md5).toHex());
 
-    m_currentRun = new Run(m_nextRunId,m_sessionRunID,m_sessionID, uuid, hashed);
+    m_currentRun = new Run(m_nextRunId, m_sessionRunID, m_sessionID, uuid, hashed);
 }
 
 bool UsageStatistics::sendUsageStatistics() const
@@ -117,20 +126,20 @@ bool UsageStatistics::sendUsageStatistics() const
     return m_sendUsageStatistics;
 }
 
-Run *UsageStatistics::currentRun()
+Run* UsageStatistics::currentRun()
 {
     return m_currentRun;
 }
 
-void UsageStatistics::onfinish(QNetworkReply *reply)
+void UsageStatistics::onfinish(QNetworkReply* reply)
 {
-    if(reply->error() == QNetworkReply::NoError) {
+    if (reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
         // qDebug() << "Response: " << response;
         QJsonDocument doc(QJsonDocument::fromJson(response));
-        if(!doc.isNull()) {
+        if (!doc.isNull()) {
             QJsonObject obj = doc.object();
-            if(obj["status"].toBool() == true) {
+            if (obj["status"].toBool() == true) {
                 m_runs.clear();
             }
         }
@@ -149,9 +158,10 @@ void UsageStatistics::setSendUsageStatistics(bool sendUsageStatistics)
 
 void UsageStatistics::send()
 {
-    if(!m_sendUsageStatistics || !m_runs.size()) return;
+    if (!m_sendUsageStatistics || !m_runs.size())
+        return;
 
-    QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
+    QNetworkAccessManager* mgr = new QNetworkAccessManager(this);
     connect(mgr, SIGNAL(finished(QNetworkReply*)), this, SLOT(onfinish(QNetworkReply*)));
     connect(mgr, SIGNAL(finished(QNetworkReply*)), mgr, SLOT(deleteLater()));
 
@@ -176,19 +186,20 @@ void UsageStatistics::send()
 
 void UsageStatistics::load()
 {
-    if(m_settings.value(m_runsKey).isNull()) return;
+    if (m_settings.value(m_runsKey).isNull())
+        return;
     QByteArray runsData = m_settings.value(m_runsKey).toByteArray();
     QJsonDocument loadDoc(QJsonDocument::fromJson(runsData));
     QJsonObject runsObject = loadDoc.object();
     QJsonArray runs = runsObject["runs"].toArray();
-    for(auto iter=runs.begin(); iter!=runs.end(); iter++) {
+    for (auto iter = runs.begin(); iter != runs.end(); iter++) {
         QJsonObject runObject = (*iter).toObject();
-        Run *run = new Run();
+        Run* run = new Run();
         run->fromJSON(runObject);
         m_runs.push_back(run);
     }
     // Cap stored runs to 100
-    while(m_runs.size()>100) {
+    while (m_runs.size() > 100) {
         m_runs.pop_front();
     }
 }
@@ -197,7 +208,7 @@ QByteArray UsageStatistics::runsAsJSON()
 {
     QJsonArray runs;
 
-    for(Run *run : m_runs) {
+    for (Run* run : m_runs) {
         runs.push_back(run->toJSON());
     }
     QJsonObject data;
@@ -205,7 +216,7 @@ QByteArray UsageStatistics::runsAsJSON()
     data["runs"] = runs;
     data["uuid"] = uuid;
     data["sessions"] = m_sessionID;
-    data["runCount"] = m_nextRunId-1;
+    data["runCount"] = m_nextRunId - 1;
     QJsonDocument json(data);
     return json.toJson(QJsonDocument::JsonFormat::Compact);
 }

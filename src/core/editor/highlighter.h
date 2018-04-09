@@ -41,28 +41,26 @@
 #ifndef HIGHLIGHTER_H
 #define HIGHLIGHTER_H
 
+#include <QQuickTextDocument>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
-#include <QQuickTextDocument>
 
 QT_BEGIN_NAMESPACE
 class QTextDocument;
 QT_END_NAMESPACE
 
 //! [0]
-class Highlighter : public QSyntaxHighlighter
-{
+class Highlighter : public QSyntaxHighlighter {
     Q_OBJECT
 
 public:
-    Highlighter(QTextDocument *parent = 0);
+    Highlighter(QTextDocument* parent = 0);
 
 protected:
-    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
+    void highlightBlock(const QString& text) Q_DECL_OVERRIDE;
 
 private:
-    struct HighlightingRule
-    {
+    struct HighlightingRule {
         QRegExp pattern;
         QTextCharFormat format;
     };
@@ -83,13 +81,13 @@ private:
 class HighlighterWrapper : public QObject {
     Q_OBJECT
 public:
-    ~HighlighterWrapper() { }
+    ~HighlighterWrapper() {}
+
 private:
-    Highlighter *m_highlighter;
+    Highlighter* m_highlighter;
 
 public slots:
-    void setTextDocument(QQuickTextDocument *textDocument);
-
+    void setTextDocument(QQuickTextDocument* textDocument);
 };
 
 #endif // HIGHLIGHTER_H

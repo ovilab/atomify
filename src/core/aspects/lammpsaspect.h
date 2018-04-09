@@ -1,8 +1,8 @@
 #ifndef LAMMPSASPECT_H
 #define LAMMPSASPECT_H
 
-#include "core/data/particledata.h"
 #include "core/data/lammps/lammpsdata.h"
+#include "core/data/particledata.h"
 
 #include <QAbstractAspect>
 #include <QThread>
@@ -10,11 +10,10 @@
 
 namespace atomify {
 
-class LAMMPSAspect : public Qt3DCore::QAbstractAspect
-{
+class LAMMPSAspect : public Qt3DCore::QAbstractAspect {
     Q_OBJECT
 public:
-    explicit LAMMPSAspect(QObject *parent = nullptr);
+    explicit LAMMPSAspect(QObject* parent = nullptr);
 
 protected:
     QVector<Qt3DCore::QAspectJobPtr> jobsToExecute(qint64 time) override;
@@ -23,6 +22,6 @@ protected:
     QMap<Qt3DCore::QNodeId, QPair<bool, ParticleData>> m_pendingParticleData;
     QMap<Qt3DCore::QNodeId, QPair<bool, QByteArray>> m_sphereBufferData;
 };
-}  // namespace atomify
+} // namespace atomify
 
 #endif // LAMMPSASPECT_H

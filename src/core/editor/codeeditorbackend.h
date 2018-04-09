@@ -4,8 +4,7 @@
 #include <QQuickItem>
 #include <QVariantMap>
 
-class CodeEditorBackend : public QQuickItem
-{
+class CodeEditorBackend : public QQuickItem {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(QUrl fileUrl READ fileUrl WRITE setFileUrl NOTIFY fileUrlChanged)
@@ -39,7 +38,7 @@ private:
     QString m_text;
     QString m_lastCheckedFileContents;
     QUrl m_fileUrl;
-    QString readFile(bool *ok);
+    QString readFile(bool* ok);
 };
 
 #endif // CODEEDITORBACKEND_H

@@ -3,9 +3,10 @@
 #include <QPainter>
 #include <algorithm>
 #include <cmath>
-LineNumbers::LineNumbers(QQuickPaintedItem *parent) : QQuickPaintedItem(parent)
-{
 
+LineNumbers::LineNumbers(QQuickPaintedItem* parent)
+    : QQuickPaintedItem(parent)
+{
 }
 
 int LineNumbers::lineCount() const
@@ -39,148 +40,147 @@ void LineNumbers::setScrollY(int scrollY)
 void LineNumbers::setLineHeight(float lineHeight)
 {
     if (m_lineHeight == lineHeight)
-            return;
+        return;
 
-        m_lineHeight = lineHeight;
-        emit lineHeightChanged(lineHeight);
+    m_lineHeight = lineHeight;
+    emit lineHeightChanged(lineHeight);
 }
 
 void LineNumbers::setText(QString text)
 {
     if (m_text == text)
-            return;
+        return;
 
-        m_text = text;
-        emit textChanged(text);
+    m_text = text;
+    emit textChanged(text);
 }
 
 void LineNumbers::setCursorPosition(int cursorPosition)
 {
     if (m_cursorPosition == cursorPosition)
-            return;
+        return;
 
-        m_cursorPosition = cursorPosition;
-        emit cursorPositionChanged(cursorPosition);
+    m_cursorPosition = cursorPosition;
+    emit cursorPositionChanged(cursorPosition);
 }
 
 void LineNumbers::setSelectionStart(int selectionStart)
 {
     if (m_selectionStart == selectionStart)
-            return;
+        return;
 
-        m_selectionStart = selectionStart;
-        emit selectionStartChanged(selectionStart);
+    m_selectionStart = selectionStart;
+    emit selectionStartChanged(selectionStart);
 }
 
 void LineNumbers::setSelectionEnd(int selectionEnd)
 {
     if (m_selectionEnd == selectionEnd)
-            return;
+        return;
 
-        m_selectionEnd = selectionEnd;
-        emit selectionEndChanged(selectionEnd);
+    m_selectionEnd = selectionEnd;
+    emit selectionEndChanged(selectionEnd);
 }
 
 void LineNumbers::setCurrentLine(int currentLine)
 {
     if (m_currentLine == currentLine)
-            return;
+        return;
 
-        m_currentLine = currentLine;
-        emit currentLineChanged(currentLine);
+    m_currentLine = currentLine;
+    emit currentLineChanged(currentLine);
 }
 
 void LineNumbers::setErrorLine(int errorLine)
 {
     if (m_errorLine == errorLine)
-            return;
+        return;
 
-        m_errorLine = errorLine;
-        emit errorLineChanged(errorLine);
+    m_errorLine = errorLine;
+    emit errorLineChanged(errorLine);
 }
 
 void LineNumbers::setColor(QColor color)
 {
     if (m_color == color)
-            return;
+        return;
 
-        m_color = color;
-        emit colorChanged(color);
+    m_color = color;
+    emit colorChanged(color);
 }
 
 void LineNumbers::setSelectedColor(QColor selectedColor)
 {
     if (m_selectedColor == selectedColor)
-            return;
+        return;
 
-        m_selectedColor = selectedColor;
-        emit selectedColorChanged(selectedColor);
+    m_selectedColor = selectedColor;
+    emit selectedColorChanged(selectedColor);
 }
 
 void LineNumbers::setErrorColor(QColor errorColor)
 {
     if (m_errorColor == errorColor)
-            return;
+        return;
 
-        m_errorColor = errorColor;
-        emit errorColorChanged(errorColor);
+    m_errorColor = errorColor;
+    emit errorColorChanged(errorColor);
 }
 
 void LineNumbers::setActiveColor(QColor activeColor)
 {
     if (m_activeColor == activeColor)
-            return;
+        return;
 
-        m_activeColor = activeColor;
-        emit activeColorChanged(activeColor);
+    m_activeColor = activeColor;
+    emit activeColorChanged(activeColor);
 }
 
 void LineNumbers::setFont(QFont font)
 {
     if (m_font == font)
-            return;
+        return;
 
-        m_font = font;
-        emit fontChanged(font);
+    m_font = font;
+    emit fontChanged(font);
 }
 
-
-void LineNumbers::paint(QPainter *painter)
+void LineNumbers::paint(QPainter* painter)
 {
     // Find current line
     QString untilSelectedText = m_text.mid(0, selectionStart());
-    int selectedTextStartLine = untilSelectedText.count(QRegExp("[\r\n]"))+1;
+    int selectedTextStartLine = untilSelectedText.count(QRegExp("[\r\n]")) + 1;
 
     QString selectedText = m_text.mid(selectionStart(), (selectionEnd() - selectionStart()));
-    int numLinesSelected = selectedText.count(QRegExp("[\r\n]"))+1;
+    int numLinesSelected = selectedText.count(QRegExp("[\r\n]")) + 1;
 
     QString textUntilCursorPosition = m_text.mid(0, m_cursorPosition);
-    int cursorLine = textUntilCursorPosition.count(QRegExp("[\r\n]"))+1;
+    int cursorLine = textUntilCursorPosition.count(QRegExp("[\r\n]")) + 1;
 
     int firstLineVisible = m_scrollY / m_lineHeight;
     int lineHeight = int(round(m_lineHeight));
-    int rest = (m_scrollY>0) ? (m_scrollY % lineHeight) : 0;
+    int rest = (m_scrollY > 0) ? (m_scrollY % lineHeight) : 0;
     // The last visible line is either the last line in the textfield or if we have scrolled as far as we get with current size
-    int lastLineVisible = std::min(firstLineVisible+int(height() / m_lineHeight)+1, m_lineCount);
+    int lastLineVisible = std::min(firstLineVisible + int(height() / m_lineHeight) + 1, m_lineCount);
     int numLines = lastLineVisible - firstLineVisible;
-    for(int i=0; i<numLines; i++) {
-        int lineNumber = i+firstLineVisible+1;
+    for (int i = 0; i < numLines; i++) {
+        int lineNumber = i + firstLineVisible + 1;
         QString text = QString("%1").arg(lineNumber);
-        float y = i*m_lineHeight - rest;
-        QRectF textRect(0,y,width(),m_lineHeight);
+        float y = i * m_lineHeight - rest;
+        QRectF textRect(0, y, width(), m_lineHeight);
 
         painter->setFont(m_font);
         painter->setPen(m_color);
-        if(lineNumber >= selectedTextStartLine && lineNumber < selectedTextStartLine+numLinesSelected) {
+        if (lineNumber >= selectedTextStartLine && lineNumber < selectedTextStartLine + numLinesSelected) {
             painter->setPen(m_selectedColor);
         }
-        if(lineNumber == cursorLine) {
+        if (lineNumber == cursorLine) {
             painter->setPen(m_selectedColor);
         }
-        if(lineNumber == m_currentLine) {
+        if (lineNumber == m_currentLine) {
             painter->setPen(m_activeColor);
         }
-        if(lineNumber == m_errorLine) {
+        if (lineNumber == m_errorLine) {
             painter->setPen(m_errorColor);
         }
         QTextOption options;

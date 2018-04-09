@@ -3,10 +3,9 @@
 
 #include <QQuickWindow>
 
-class WindowGL2 : public QQuickWindow
-{
+class WindowGL2 : public QQuickWindow {
 public:
-    explicit WindowGL2(QQuickWindow *parent = 0);
+    explicit WindowGL2(QQuickWindow* parent = 0);
 };
 
 #endif // WINDOWGL2_H

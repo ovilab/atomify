@@ -7,8 +7,7 @@
 
 namespace atomify {
 
-struct LAMMPSAtomData
-{
+struct LAMMPSAtomData {
     std::vector<double> x;
     std::vector<int> type;
     std::vector<int> mask;
@@ -16,9 +15,9 @@ struct LAMMPSAtomData
     uint64_t size;
 };
 
-void resize(LAMMPSAtomData *data, size_t size);
-void copy(LAMMPSAtomData *data, void *lammps);
+void resize(LAMMPSAtomData* data, size_t size);
+void copy(LAMMPSAtomData* data, void* lammps);
 
-}  // namespace atomify
+} // namespace atomify
 
 #endif // CORE_DATA_LAMMPS_LAMMPSATOMDATA_H

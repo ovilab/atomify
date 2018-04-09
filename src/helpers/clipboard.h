@@ -3,12 +3,11 @@
 
 #include <QObject>
 
-class Clipboard : public QObject
-{
-  Q_OBJECT
+class Clipboard : public QObject {
+    Q_OBJECT
 public:
-  explicit Clipboard(QObject *parent = nullptr);
-  Q_INVOKABLE void setText(QString text);
+    explicit Clipboard(QObject* parent = nullptr);
+    Q_INVOKABLE void setText(QString text);
 signals:
 
 public slots:

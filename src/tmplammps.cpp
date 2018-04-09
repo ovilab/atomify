@@ -10,9 +10,9 @@ TMPLAMMPS::TMPLAMMPS()
 
 void TMPLAMMPS::run()
 {
-    for (int i=0; i<10; i++) {
+    for (int i = 0; i < 10; i++) {
         timestep++;
-        for (auto &v : positions) {
+        for (auto& v : positions) {
             v[0] += 1;
         }
 
@@ -23,9 +23,8 @@ void TMPLAMMPS::run()
     }
 }
 
-void TMPLAMMPS::setCallback(const std::function<void (TMPLAMMPS *)> &callback)
+void TMPLAMMPS::setCallback(const std::function<void(TMPLAMMPS*)>& callback)
 {
     m_callback = callback;
 }
-
 }

@@ -1,15 +1,15 @@
 #include "clipboard.h"
 
-#include <QGuiApplication>
 #include <QClipboard>
+#include <QGuiApplication>
 
-Clipboard::Clipboard(QObject *parent) : QObject(parent)
+Clipboard::Clipboard(QObject* parent)
+    : QObject(parent)
 {
-
 }
 
 void Clipboard::setText(QString text)
 {
-  QClipboard *clipboard = QGuiApplication::clipboard();
-  clipboard->setText(text);
+    QClipboard* clipboard = QGuiApplication::clipboard();
+    clipboard->setText(text);
 }

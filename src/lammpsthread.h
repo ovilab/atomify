@@ -3,8 +3,8 @@
 
 #include "core/data/lammps/lammpsdata.h"
 
-#include <QThread>
 #include <QMutex>
+#include <QThread>
 #include <QVector3D>
 #include <QVector>
 
@@ -14,24 +14,24 @@ class LAMMPS;
 
 namespace atomify {
 
-class Cancelled : public std::exception { };
+class Cancelled : public std::exception {
+};
 
-class LAMMPSThread : public QThread
-{
+class LAMMPSThread : public QThread {
     Q_OBJECT
 public:
-    explicit LAMMPSThread(QObject *parent = nullptr);
+    explicit LAMMPSThread(QObject* parent = nullptr);
     LAMMPSData data();
     bool dataDirty() const;
 
 protected:
     void run() override;
-    void callback(LAMMPS_NS::LAMMPS *lmp, int mode);
+    void callback(LAMMPS_NS::LAMMPS* lmp, int mode);
+
 private:
     mutable QMutex m_mutex;
     LAMMPSData m_data;
     bool m_dataDirty;
 };
-
 }
 #endif // LAMMPSTHREAD_H

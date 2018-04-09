@@ -3,8 +3,7 @@
 
 #include <QQuickPaintedItem>
 
-class LineNumbers : public QQuickPaintedItem
-{
+class LineNumbers : public QQuickPaintedItem {
     Q_OBJECT
     Q_PROPERTY(int lineCount READ lineCount WRITE setLineCount NOTIFY lineCountChanged)
     Q_PROPERTY(int scrollY READ scrollY WRITE setScrollY NOTIFY scrollYChanged)
@@ -22,11 +21,11 @@ class LineNumbers : public QQuickPaintedItem
     Q_PROPERTY(QFont font READ font WRITE setFont NOTIFY fontChanged)
 
 public:
-    explicit LineNumbers(QQuickPaintedItem *parent = nullptr);
+    explicit LineNumbers(QQuickPaintedItem* parent = nullptr);
     int lineCount() const;
     int scrollY() const;
     float lineHeight() const;
-    virtual void paint(QPainter *painter) override;
+    virtual void paint(QPainter* painter) override;
     QString text() const;
     int cursorPosition() const;
     int selectionStart() const;

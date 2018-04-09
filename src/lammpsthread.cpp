@@ -6,47 +6,49 @@
 
 // Qt
 #include <QDebug>
-#include <QFileInfo>
 #include <QDir>
+#include <QFileInfo>
 
 // SimVis
 #include <SimVis/SphereData>
 
 // LAMMPS
+#include <atom.h>
+#include <domain.h>
+#include <error.h>
 #include <fix.h>
 #include <fix_atomify.h>
+#include <input.h>
 #include <lammps.h>
 #include <library.h>
 #include <modify.h>
-#include <error.h>
-#include <input.h>
-#include <atom.h>
-#include <domain.h>
 
 using namespace LAMMPS_NS;
 
 namespace atomify {
 
-LAMMPSThread::LAMMPSThread(QObject *parent)
+LAMMPSThread::LAMMPSThread(QObject* parent)
     : QThread(parent)
     , m_dataDirty(false)
 {
-
 }
 
-int findFixIndex(LAMMPS_NS::LAMMPS *lammps, QString identifier) {
+int findFixIndex(LAMMPS_NS::LAMMPS* lammps, QString identifier)
+{
     Q_ASSERT(lammps);
     QByteArray identifierBytes = identifier.toUtf8();
     return lammps->modify->find_fix(identifierBytes.constData());
 }
 
-bool fixExists(LAMMPS_NS::LAMMPS *lammps, QString identifier) {
+bool fixExists(LAMMPS_NS::LAMMPS* lammps, QString identifier)
+{
     return findFixIndex(lammps, identifier) >= 0;
 }
 
-void changeWorkingDirectoryToScriptLocation(QString scriptFilePath) {
+void changeWorkingDirectoryToScriptLocation(QString scriptFilePath)
+{
     QFileInfo fileInfo(scriptFilePath);
-    if(!fileInfo.exists()) {
+    if (!fileInfo.exists()) {
         qDebug() << "File " << scriptFilePath << " does not exist";
         return;
     }
@@ -56,9 +58,10 @@ void changeWorkingDirectoryToScriptLocation(QString scriptFilePath) {
     chdir(currentDirBytes.constData());
 }
 
-LAMMPS_NS::Fix* findFixByIdentifier(LAMMPS_NS::LAMMPS *lammps, QString identifier) {
+LAMMPS_NS::Fix* findFixByIdentifier(LAMMPS_NS::LAMMPS* lammps, QString identifier)
+{
     const int fixId = findFixIndex(lammps, identifier);
-    if(fixId < 0) {
+    if (fixId < 0) {
         return nullptr;
     }
     return lammps->modify->fix[fixId];
@@ -67,28 +70,28 @@ LAMMPS_NS::Fix* findFixByIdentifier(LAMMPS_NS::LAMMPS *lammps, QString identifie
 void LAMMPSThread::run()
 {
     while (true) {
-        LAMMPS_NS::LAMMPS *lammps = nullptr;
+        LAMMPS_NS::LAMMPS* lammps = nullptr;
 
         int nargs = 1;
-        char **argv = new char*[nargs];
-        for(int i=0; i<nargs; i++) {
+        char** argv = new char*[nargs];
+        for (int i = 0; i < nargs; i++) {
             argv[i] = new char[100];
         }
 
         lammps_open_no_mpi(nargs, argv, (void**)&lammps); // This creates a new LAMMPS object
         // m_lammps->screen = NULL;
         lammps_command(lammps, "fix atomify all atomify");
-        if(!fixExists(lammps, "atomify")) {
+        if (!fixExists(lammps, "atomify")) {
             qDebug() << "Damn, could not create the fix... :/";
             exit(1);
         }
 
-        LAMMPS_NS::Fix *originalFix = findFixByIdentifier(lammps, QString("atomify"));
+        LAMMPS_NS::Fix* originalFix = findFixByIdentifier(lammps, QString("atomify"));
         if (!originalFix) {
             throw std::runtime_error("Could not find fix with name atomify. Did you run ./configure.py?");
         }
-        LAMMPS_NS::FixAtomify *fix = dynamic_cast<LAMMPS_NS::FixAtomify*>(originalFix);
-        fix->set_callback([this, lammps](int stepType){
+        LAMMPS_NS::FixAtomify* fix = dynamic_cast<LAMMPS_NS::FixAtomify*>(originalFix);
+        fix->set_callback([this, lammps](int stepType) {
             callback(lammps, stepType);
         });
 
@@ -101,14 +104,14 @@ void LAMMPSThread::run()
 
             // TODO synchronize with frontend
             bool doContinue = false;
-//            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/diffusion/simple_diffusion/simple_diffusion.in";
+            //            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/diffusion/simple_diffusion/simple_diffusion.in";
             const QString scriptFilePath = "/Users/anderhaf/Desktop/lj.in";
 
-            if(finished || didCancel || crashed)
+            if (finished || didCancel || crashed)
                 break;
 
             try {
-                if(doContinue) {
+                if (doContinue) {
                     QString command = "run 1000000000";
 
                     lammps_command(lammps, command.toUtf8().data());
@@ -126,21 +129,21 @@ void LAMMPSThread::run()
                     // Handle error
                     QString errorMessage = QString::fromUtf8(lammps->error->get_last_error());
                     // Show last error so user understands where the error occured
-//                    system->setLastCommand(QString::fromUtf8(lammps->input->lastLine()));
+                    //                    system->setLastCommand(QString::fromUtf8(lammps->input->lastLine()));
 
                     crashed = true;
                     break;
                 } else {
                     finished = true;
                 }
-            } catch(Cancelled cancelled) {
+            } catch (Cancelled cancelled) {
                 Q_UNUSED(cancelled)
                 didCancel = true;
                 break;
             }
             // TODO synchronize changes from frontend (script name, etc.)
             // TODO setup script
-//        changeWorkingDirectoryToScriptLocation("");
+            //        changeWorkingDirectoryToScriptLocation("");
             // TODO run LAMMPS
             // TODO break free when done
         }
@@ -150,10 +153,10 @@ void LAMMPSThread::run()
     }
 }
 
-void LAMMPSThread::callback(LAMMPS_NS::LAMMPS *lammps, int mode)
+void LAMMPSThread::callback(LAMMPS_NS::LAMMPS* lammps, int mode)
 {
     // TODO move these dummy variables
-    if(mode != LAMMPS_NS::FixConst::END_OF_STEP && mode != LAMMPS_NS::FixConst::MIN_POST_FORCE) {
+    if (mode != LAMMPS_NS::FixConst::END_OF_STEP && mode != LAMMPS_NS::FixConst::MIN_POST_FORCE) {
         return;
     }
 
@@ -184,5 +187,4 @@ LAMMPSData LAMMPSThread::data()
     data.empty = false;
     return data;
 }
-
 }

@@ -5,8 +5,7 @@
 
 namespace atomify {
 
-struct LAMMPSSystemData
-{
+struct LAMMPSSystemData {
     std::array<double, 3> size;
     std::array<double, 3> origin;
     std::array<double, 3> center;
@@ -19,8 +18,8 @@ struct LAMMPSSystemData
     double dt;
 };
 
-void copy(LAMMPSSystemData *data, void *lammps);
+void copy(LAMMPSSystemData* data, void* lammps);
 
-}  // namespace atomify
+} // namespace atomify
 
 #endif // CORE_DATA_LAMMPS_LAMMPSSYSTEMDATA_H

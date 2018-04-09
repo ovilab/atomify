@@ -4,8 +4,7 @@
 #include <QHeightMapSurfaceDataProxy>
 using namespace QtDataVisualization;
 
-class Data2D : public QSurfaceDataProxy
-{
+class Data2D : public QSurfaceDataProxy {
     Q_OBJECT
     Q_PROPERTY(QSize size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(float xMin READ xMin WRITE setXMin NOTIFY xMinChanged)
@@ -19,7 +18,7 @@ class Data2D : public QSurfaceDataProxy
     Q_PROPERTY(QString zLabel READ zLabel WRITE setZLabel NOTIFY zLabelChanged)
 
 public:
-    explicit Data2D(QObject *parent = 0);
+    explicit Data2D(QObject* parent = 0);
     QSize size() const;
     void setValue(float x, float y, float z);
     void update();
@@ -57,8 +56,9 @@ signals:
     void yLabelChanged(QString yLabel);
     void zLabelChanged(QString zLabel);
     void updated();
+
 private:
-    QSurfaceDataArray *m_dataArray = nullptr;
+    QSurfaceDataArray* m_dataArray = nullptr;
     QSize m_size;
     float m_xMin = 0;
     float m_xMax = 0;

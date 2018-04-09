@@ -1,12 +1,11 @@
 #include "codeeditorbackend.h"
 
-#include <QFileInfo>
 #include <QDir>
+#include <QFileInfo>
 #include <QUrlQuery>
 
 CodeEditorBackend::CodeEditorBackend()
 {
-
 }
 
 QString CodeEditorBackend::text() const
@@ -21,7 +20,7 @@ QUrl CodeEditorBackend::fileUrl() const
 
 QString CodeEditorBackend::fileName() const
 {
-    if(m_fileUrl.toString().isEmpty()) {
+    if (m_fileUrl.toString().isEmpty()) {
         return QString("untitled");
     }
     return m_fileUrl.fileName();
@@ -67,7 +66,8 @@ bool CodeEditorBackend::anyChangesOnDisk()
 {
     bool ok;
     QString text = readFile(&ok);
-    if(!ok) return false; // TODO: handle errors on file reading
+    if (!ok)
+        return false; // TODO: handle errors on file reading
     bool anyChanges = m_lastCheckedFileContents != text;
     // Store the current contents of the file. If the user does not want to refresh file, don't
     // spam every time the editor gets focus until there is a new change on disk.
@@ -94,7 +94,7 @@ bool CodeEditorBackend::filePathIsWritable(QString filePath)
     QDir dir = QFileInfo(filePath).absoluteDir();
     QString tmpFile = QDir::cleanPath(dir.absolutePath() + QDir::separator() + "tmp1337");
     QFile f(tmpFile);
-    if(!f.open(QIODevice::WriteOnly)) {
+    if (!f.open(QIODevice::WriteOnly)) {
         return false;
     }
     f.close();
@@ -104,7 +104,7 @@ bool CodeEditorBackend::filePathIsWritable(QString filePath)
 
 QString CodeEditorBackend::cleanPath(QString path)
 {
-    return "file://"+QUrl(path).toLocalFile();
+    return "file://" + QUrl(path).toLocalFile();
 }
 
 QVariantMap CodeEditorBackend::getParameters(QUrl path)
@@ -113,13 +113,13 @@ QVariantMap CodeEditorBackend::getParameters(QUrl path)
 
     QUrlQuery query(path);
     auto items = query.queryItems();
-    for(auto item : items) {
+    for (auto item : items) {
         map[item.first] = item.second;
     }
     return map;
 }
 
-QString CodeEditorBackend::readFile(bool *ok)
+QString CodeEditorBackend::readFile(bool* ok)
 {
     QString filePath = m_fileUrl.toLocalFile();
     QFile file(filePath);

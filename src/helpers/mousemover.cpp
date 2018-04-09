@@ -1,13 +1,13 @@
 #include "mousemover.h"
 
-#include <QCursor>
 #include <QApplication>
+#include <QCursor>
 #include <QQuickItem>
 #include <QQuickWindow>
 
-MouseMover::MouseMover(QObject *parent) :
-    QObject(parent),
-    m_window(0)
+MouseMover::MouseMover(QObject* parent)
+    : QObject(parent)
+    , m_window(0)
 {
 }
 
@@ -20,18 +20,18 @@ bool MouseMover::showCursor() const
     return m_showCursor;
 }
 
-QWindow *MouseMover::window() const
+QWindow* MouseMover::window() const
 {
     return m_window;
 }
 
 void MouseMover::move(int x, int y)
 {
-    if(!m_window) {
+    if (!m_window) {
         qWarning() << "Warning: Haven't set window on MouseMover";
         return;
     } else {
-        QPoint globalPoint = m_window->mapToGlobal(QPoint(x,y));
+        QPoint globalPoint = m_window->mapToGlobal(QPoint(x, y));
         QCursor::setPos(globalPoint);
     }
 }
@@ -40,7 +40,7 @@ void MouseMover::setShowCursor(bool arg)
 {
     if (m_showCursor != arg) {
         m_showCursor = arg;
-        if(m_showCursor) {
+        if (m_showCursor) {
             QApplication::setOverrideCursor(QCursor());
             QApplication::changeOverrideCursor(QCursor());
         } else {
@@ -51,7 +51,7 @@ void MouseMover::setShowCursor(bool arg)
     }
 }
 
-void MouseMover::setWindow(QWindow *window)
+void MouseMover::setWindow(QWindow* window)
 {
     if (m_window == window)
         return;

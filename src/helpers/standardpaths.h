@@ -2,11 +2,10 @@
 #define STANDARDPATHS_H
 
 #include <QObject>
-#include <QStandardPaths>
 #include <QQmlEngine>
+#include <QStandardPaths>
 
-class StandardPaths : public QObject
-{
+class StandardPaths : public QObject {
     Q_OBJECT
     Q_ENUMS(StandardLocation)
 public:
@@ -34,13 +33,13 @@ public:
         AppLocalDataLocation = DataLocation
     };
 
-    explicit StandardPaths(QObject *parent = nullptr);
-    Q_INVOKABLE static QUrl writableLocation(StandardLocation location, const QString &filename);
-    Q_INVOKABLE static QUrl locate(StandardLocation location, const QString &filename);
+    explicit StandardPaths(QObject* parent = nullptr);
+    Q_INVOKABLE static QUrl writableLocation(StandardLocation location, const QString& filename);
+    Q_INVOKABLE static QUrl locate(StandardLocation location, const QString& filename);
     Q_INVOKABLE static QString toLocalFile(QUrl url);
     Q_INVOKABLE static QUrl originalSimulationLocation(QUrl fileUrl);
 
-    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
+    static QObject* qmlInstance(QQmlEngine* engine, QJSEngine* scriptEngine);
 };
 
 #endif // STANDARDPATHS_H

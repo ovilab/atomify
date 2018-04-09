@@ -2,7 +2,7 @@
 
 namespace atomify {
 
-void resize(ParticleData *data, size_t size)
+void resize(ParticleData* data, size_t size)
 {
     data->positions.resize(size);
     data->colors.resize(size);
@@ -14,4 +14,4 @@ void resize(ParticleData *data, size_t size)
     data->size = size;
 }
 
-}  // namespace atomify
+} // namespace atomify

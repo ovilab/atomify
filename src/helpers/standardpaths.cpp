@@ -3,22 +3,21 @@
 #include <QDebug>
 #include <QQmlFile>
 
-StandardPaths::StandardPaths(QObject *parent)
+StandardPaths::StandardPaths(QObject* parent)
     : QObject(parent)
 {
-
 }
 
-QUrl StandardPaths::writableLocation(StandardLocation location, const QString &filename)
+QUrl StandardPaths::writableLocation(StandardLocation location, const QString& filename)
 {
     QString path = QStandardPaths::writableLocation((QStandardPaths::StandardLocation)location);
-    if(!filename.isEmpty()) {
+    if (!filename.isEmpty()) {
         path += "/" + filename;
     }
     return QUrl::fromLocalFile(path);
 }
 
-QUrl StandardPaths::locate(StandardLocation location, const QString &filename)
+QUrl StandardPaths::locate(StandardLocation location, const QString& filename)
 {
     return QUrl::fromLocalFile(QStandardPaths::locate((QStandardPaths::StandardLocation)location, filename));
 }
@@ -28,7 +27,7 @@ QString StandardPaths::toLocalFile(QUrl url)
     return url.toLocalFile();
 }
 
-QObject* StandardPaths::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine)
+QObject* StandardPaths::qmlInstance(QQmlEngine* engine, QJSEngine* scriptEngine)
 {
     Q_UNUSED(engine);
     Q_UNUSED(scriptEngine);
@@ -42,7 +41,8 @@ QObject* StandardPaths::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine)
  * \param fileUrl
  * \return
  */
-QUrl StandardPaths::originalSimulationLocation(QUrl fileUrl) {
+QUrl StandardPaths::originalSimulationLocation(QUrl fileUrl)
+{
     QString fileName = QQmlFile::urlToLocalFileOrQrc(fileUrl);
     fileName.replace(":/", "/");
     return QUrl::fromLocalFile("/home/svenni/Sync/projects/neuronify/neuronify" + fileName);

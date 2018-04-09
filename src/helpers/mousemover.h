@@ -3,13 +3,12 @@
 
 #include <QWindow>
 
-class MouseMover : public QObject
-{
+class MouseMover : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool showCursor READ showCursor WRITE setShowCursor NOTIFY showCursorChanged)
     Q_PROPERTY(QWindow* window READ window WRITE setWindow NOTIFY windowChanged)
 public:
-    explicit MouseMover(QObject *parent = 0);
+    explicit MouseMover(QObject* parent = 0);
     virtual ~MouseMover();
     bool showCursor() const;
     QWindow* window() const;

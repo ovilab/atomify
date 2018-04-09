@@ -1,7 +1,7 @@
 #include "backendlammpscontroller.h"
-#include "lammpsthread.h"
 #include "core/aspects/lammpsaspect.h"
 #include "lammpscontroller.h"
+#include "lammpsthread.h"
 #include <QDebug>
 #include <QPropertyUpdatedChange>
 #include <SimVis/SphereData>
@@ -26,15 +26,14 @@ LAMMPSData BackendLAMMPSController::synchronize()
     return data;
 }
 
-void BackendLAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr &e)
+void BackendLAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e)
 {
-
 }
 
-void BackendLAMMPSController::initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr &change)
+void BackendLAMMPSController::initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr& change)
 {
     const auto typedChange = qSharedPointerCast<Qt3DCore::QNodeCreatedChange<LAMMPSControllerData>>(change);
-    const auto &data = typedChange->data;
+    const auto& data = typedChange->data;
     m_spheresBufferId = data.spheresBufferId;
 }
 
@@ -43,7 +42,7 @@ Qt3DCore::QNodeId BackendLAMMPSController::spheresBufferId() const
     return m_spheresBufferId;
 }
 
-void BackendLAMMPSController::setSphereBufferData(const QByteArray &buffer, uint64_t sphereCount)
+void BackendLAMMPSController::setSphereBufferData(const QByteArray& buffer, uint64_t sphereCount)
 {
     {
         auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresBufferId);
@@ -62,19 +61,18 @@ void BackendLAMMPSController::setSphereBufferData(const QByteArray &buffer, uint
     }
 }
 
-LAMMPSControllerMapper::LAMMPSControllerMapper(LAMMPSAspect *aspect)
+LAMMPSControllerMapper::LAMMPSControllerMapper(LAMMPSAspect* aspect)
 {
-
 }
 
-Qt3DCore::QBackendNode *LAMMPSControllerMapper::create(const Qt3DCore::QNodeCreatedChangeBasePtr &change) const
+Qt3DCore::QBackendNode* LAMMPSControllerMapper::create(const Qt3DCore::QNodeCreatedChangeBasePtr& change) const
 {
     auto controller = new BackendLAMMPSController;
     m_controllers[change->subjectId()] = controller;
     return controller;
 }
 
-Qt3DCore::QBackendNode *LAMMPSControllerMapper::get(Qt3DCore::QNodeId id) const
+Qt3DCore::QBackendNode* LAMMPSControllerMapper::get(Qt3DCore::QNodeId id) const
 {
     return m_controllers[id];
 }
@@ -85,9 +83,8 @@ void LAMMPSControllerMapper::destroy(Qt3DCore::QNodeId id) const
     delete controller;
 }
 
-QList<BackendLAMMPSController *> LAMMPSControllerMapper::controllers()
+QList<BackendLAMMPSController*> LAMMPSControllerMapper::controllers()
 {
     return m_controllers.values();
 }
-
 }

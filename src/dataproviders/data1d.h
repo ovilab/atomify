@@ -1,14 +1,14 @@
 #ifndef DATA1D_H
 #define DATA1D_H
-#include <limits>
-#include <QObject>
-#include <QXYSeries>
 #include <QLineSeries>
 #include <QMutex>
+#include <QObject>
+#include <QXYSeries>
+#include <limits>
 
 using namespace QtCharts;
-class Data1D : public QObject
-{
+
+class Data1D : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(qreal xMin READ xMin NOTIFY xMinChanged)
@@ -20,21 +20,21 @@ class Data1D : public QObject
     Q_PROPERTY(int bins READ bins WRITE setBins NOTIFY binsChanged)
 
 public:
-    explicit Data1D(QObject *parent = 0);
+    explicit Data1D(QObject* parent = 0);
     Q_INVOKABLE void updateLimits();
-    Q_INVOKABLE void updateXYSeries(QAbstractSeries *series);
+    Q_INVOKABLE void updateXYSeries(QAbstractSeries* series);
     Q_INVOKABLE void add(float x, float y, bool silent = true);
     Q_INVOKABLE void clear(bool silent = false);
-    void createHistogram(const std::vector<double> &points);
-    void add(const QPointF &point, bool silent = true);
+    void createHistogram(const std::vector<double>& points);
+    void add(const QPointF& point, bool silent = true);
     qreal xMin();
     qreal xMax();
     qreal yMin();
     qreal yMax();
     bool enabled() const;
-    const QVector<QPointF> &points();
+    const QVector<QPointF>& points();
     QXYSeries* xySeries() const;
-    void copyHistogram(const QVector<QPointF> &points);
+    void copyHistogram(const QVector<QPointF>& points);
     QString label() const;
     int bins() const;
 signals:
@@ -46,7 +46,7 @@ signals:
     void enabledChanged(bool enabled);
     void xySeriesChanged(QXYSeries* xySeries);
     void updated();
-    void updatedHistogram(Data1D *data);
+    void updatedHistogram(Data1D* data);
     void labelChanged(QString label);
     void binsChanged(int bins);
 
@@ -66,7 +66,7 @@ private:
     qreal m_yMax = 0;
     bool m_minMaxValuesDirty = false;
     bool m_enabled = false;
-    void updateMinMaxWithPoint(const QPointF &point);
+    void updateMinMaxWithPoint(const QPointF& point);
     QMutex m_mutex;
     QString m_label;
     int m_bins = 20;
