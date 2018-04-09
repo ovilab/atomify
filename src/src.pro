@@ -97,24 +97,24 @@ SOURCES += \
     main.cpp \
     lammpscontroller.cpp \
     highlighter.cpp \
+    helpers/windowgl2.cpp \
+    helpers/mousemover.cpp \
+    helpers/standardpaths.cpp \
+    helpers/keysequence.cpp \
+    helpers/clipboard.cpp \
+    helpers/rendercapturehelper.cpp \
     datasource.cpp \
     LammpsWrappers/atomdata.cpp \
     dataproviders/dataprovider.cpp \
     codeeditorbackend.cpp \
     linenumbers.cpp \
     dataproviders/data2d.cpp \
-    windowgl2.cpp \
-    mousemover.cpp \
     states.cpp \
     dataproviders/data1d.cpp \
     parsefileuploader.cpp \
-    standardpaths.cpp \
-    keysequence.cpp \
     usagestatistics.cpp \
     registerqml.cpp \
-    helpers/clipboard.cpp \
-    rendercapturehelper.cpp \
-    lammpsaspect.cpp \
+    core/aspects/lammpsaspect.cpp \
     lammpsthread.cpp \
     tmplammps.cpp \
     backendlammpscontroller.cpp \
@@ -125,23 +125,23 @@ SOURCES += \
 HEADERS += \
     lammpscontroller.h \
     highlighter.h \
+    helpers/windowgl2.h \
+    helpers/mousemover.h \
+    helpers/standardpaths.h \
+    helpers/keysequence.h \
+    helpers/clipboard.h \
+    helpers/rendercapturehelper.h \
     datasource.h \
     LammpsWrappers/atomdata.h \
     dataproviders/dataprovider.h \
     codeeditorbackend.h \
     linenumbers.h \
     dataproviders/data2d.h \
-    windowgl2.h \
-    mousemover.h \
     states.h \
     dataproviders/data1d.h \
     parsefileuploader.h \
-    standardpaths.h \
-    keysequence.h \
     usagestatistics.h \
-    helpers/clipboard.h \
-    rendercapturehelper.h \
-    lammpsaspect.h \
+    core/aspects/lammpsaspect.h \
     lammpsthread.h \
     tmplammps.h \
     backendlammpscontroller.h \
