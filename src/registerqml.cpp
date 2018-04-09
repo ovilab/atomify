@@ -3,17 +3,16 @@
 #include "helpers/standardpaths.h"
 #include "helpers/keysequence.h"
 #include "helpers/rendercapturehelper.h"
-#include "highlighter.h"
+#include "core/editor/highlighter.h"
+#include "core/editor/linenumbers.h"
+#include "core/editor/codeeditorbackend.h"
 #include "datasource.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "dataproviders/data1d.h"
 #include "dataproviders/data2d.h"
 #include "dataproviders/dataprovider.h"
-#include "linenumbers.h"
 #include "usagestatistics.h"
-#include "codeeditorbackend.h"
 #include "states.h"
-#include "parsefileuploader.h"
 #include "helpers/clipboard.h"
 #include "lammpscontroller.h"
 
@@ -33,8 +32,6 @@ void registerQML() {
     qmlRegisterType<States>("Atomify", 1, 0, "States");
     qmlRegisterType<UsageStatistics>("Atomify", 1, 0, "UsageStatistics");
     qmlRegisterType<Clipboard>("Atomify", 1, 0, "Clipboard");
-
-    qmlRegisterType<ParseFileUploader>("Atomify", 1, 0, "ParseFileUploader");
 
     qmlRegisterSingletonType<StandardPaths>("StandardPaths", 1, 0, "StandardPaths", &StandardPaths::qmlInstance);
 

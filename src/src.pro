@@ -96,7 +96,9 @@ RESOURCES += examples/examples.qrc
 SOURCES += \
     main.cpp \
     lammpscontroller.cpp \
-    highlighter.cpp \
+    core/editor/highlighter.cpp \
+    core/editor/codeeditorbackend.cpp \
+    core/editor/linenumbers.cpp \
     helpers/windowgl2.cpp \
     helpers/mousemover.cpp \
     helpers/standardpaths.cpp \
@@ -106,12 +108,9 @@ SOURCES += \
     datasource.cpp \
     LammpsWrappers/atomdata.cpp \
     dataproviders/dataprovider.cpp \
-    codeeditorbackend.cpp \
-    linenumbers.cpp \
     dataproviders/data2d.cpp \
     states.cpp \
     dataproviders/data1d.cpp \
-    parsefileuploader.cpp \
     usagestatistics.cpp \
     registerqml.cpp \
     core/aspects/lammpsaspect.cpp \
@@ -124,7 +123,9 @@ SOURCES += \
 
 HEADERS += \
     lammpscontroller.h \
-    highlighter.h \
+    core/editor/highlighter.h \
+    core/editor/codeeditorbackend.h \
+    core/editor/linenumbers.h \
     helpers/windowgl2.h \
     helpers/mousemover.h \
     helpers/standardpaths.h \
@@ -134,12 +135,9 @@ HEADERS += \
     datasource.h \
     LammpsWrappers/atomdata.h \
     dataproviders/dataprovider.h \
-    codeeditorbackend.h \
-    linenumbers.h \
     dataproviders/data2d.h \
     states.h \
     dataproviders/data1d.h \
-    parsefileuploader.h \
     usagestatistics.h \
     core/aspects/lammpsaspect.h \
     lammpsthread.h \
