@@ -16,13 +16,16 @@ BackendLAMMPSController::BackendLAMMPSController()
     m_thread->start();
 }
 
-std::experimental::optional<LAMMPSData> BackendLAMMPSController::synchronize()
+LAMMPSData BackendLAMMPSController::synchronize(LAMMPSData data)
 {
     if (!m_thread->dataDirty()) {
-        return {};
+        data.empty = true;
+        return data;
     }
 
-    return m_thread->data();
+    LAMMPSData newData = m_thread->data(std::move(data));
+    newData.empty = false;
+    return newData;
 }
 
 void BackendLAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e)

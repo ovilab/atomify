@@ -175,13 +175,13 @@ bool LAMMPSThread::dataDirty() const
     return m_dataDirty;
 }
 
-LAMMPSData LAMMPSThread::data()
+LAMMPSData LAMMPSThread::data(LAMMPSData data)
 {
     {
         QMutexLocker locker(&m_mutex);
-        std::swap(m_cachedData, m_data);
+        std::swap(data, m_data);
         m_dataDirty = false;
     }
-    return m_cachedData;
+    return data;
 }
-}
+} // namespace atomify

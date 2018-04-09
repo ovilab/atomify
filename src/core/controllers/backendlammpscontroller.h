@@ -13,7 +13,7 @@ namespace atomify {
 class BackendLAMMPSController : public Qt3DCore::QBackendNode {
 public:
     BackendLAMMPSController();
-    std::experimental::optional<LAMMPSData> synchronize();
+    LAMMPSData synchronize(LAMMPSData data);
     Qt3DCore::QNodeId spheresBufferId() const;
     void setSphereBufferData(const QByteArray& buffer, uint64_t sphereCount);
 

@@ -21,7 +21,7 @@ class LAMMPSThread : public QThread {
     Q_OBJECT
 public:
     explicit LAMMPSThread(QObject* parent = nullptr);
-    LAMMPSData data();
+    LAMMPSData data(LAMMPSData data);
     bool dataDirty() const;
 
 protected:
@@ -31,7 +31,6 @@ protected:
 private:
     mutable QMutex m_mutex;
     LAMMPSData m_data;
-    LAMMPSData m_cachedData;
     bool m_dataDirty;
 };
 }
