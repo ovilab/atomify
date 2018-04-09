@@ -1,6 +1,6 @@
 #include "lammpsaspect.h"
-#include "backendlammpscontroller.h"
-#include "lammpscontroller.h"
+#include "core/controllers/backendlammpscontroller.h"
+#include "core/controllers/lammpscontroller.h"
 #include <SimVis/SphereData>
 
 #include <QPair>

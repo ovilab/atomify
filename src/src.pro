@@ -95,7 +95,8 @@ RESOURCES += examples/examples.qrc
 
 SOURCES += \
     main.cpp \
-    lammpscontroller.cpp \
+    core/controllers/lammpscontroller.cpp \
+    core/controllers/backendlammpscontroller.cpp \
     core/editor/highlighter.cpp \
     core/editor/codeeditorbackend.cpp \
     core/editor/linenumbers.cpp \
@@ -105,8 +106,6 @@ SOURCES += \
     helpers/keysequence.cpp \
     helpers/clipboard.cpp \
     helpers/rendercapturehelper.cpp \
-    LammpsWrappers/atomdata.cpp \
-    dataproviders/dataprovider.cpp \
     dataproviders/data2d.cpp \
     states.cpp \
     dataproviders/data1d.cpp \
@@ -115,13 +114,13 @@ SOURCES += \
     core/aspects/lammpsaspect.cpp \
     lammpsthread.cpp \
     tmplammps.cpp \
-    backendlammpscontroller.cpp \
     core/data/lammps/lammpsatomdata.cpp \
     core/data/lammps/lammpssystemdata.cpp \
     core/data/particledata.cpp
 
 HEADERS += \
-    lammpscontroller.h \
+    core/controllers/lammpscontroller.h \
+    core/controllers/backendlammpscontroller.h \
     core/editor/highlighter.h \
     core/editor/codeeditorbackend.h \
     core/editor/linenumbers.h \
@@ -131,8 +130,6 @@ HEADERS += \
     helpers/keysequence.h \
     helpers/clipboard.h \
     helpers/rendercapturehelper.h \
-    LammpsWrappers/atomdata.h \
-    dataproviders/dataprovider.h \
     dataproviders/data2d.h \
     states.h \
     dataproviders/data1d.h \
@@ -140,7 +137,6 @@ HEADERS += \
     core/aspects/lammpsaspect.h \
     lammpsthread.h \
     tmplammps.h \
-    backendlammpscontroller.h \
     core/data/lammps/lammpsatomdata.h \
     core/data/lammps/lammpssystemdata.h \
     core/data/lammps/lammpsdata.h \

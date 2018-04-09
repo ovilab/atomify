@@ -1,7 +1,6 @@
 #ifndef LAMMPSTHREAD_H
 #define LAMMPSTHREAD_H
 
-#include "LammpsWrappers/atomdata.h"
 #include "core/data/lammps/lammpsdata.h"
 
 #include <QThread>

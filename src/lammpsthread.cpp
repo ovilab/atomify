@@ -1,6 +1,5 @@
 #include "lammpsthread.h"
 #include "tmplammps.h"
-#include "LammpsWrappers/atomdata.h"
 
 // std
 #include <unistd.h>

@@ -1,22 +1,23 @@
-#include "helpers/mousemover.h"
-#include "helpers/windowgl2.h"
-#include "helpers/standardpaths.h"
-#include "helpers/keysequence.h"
-#include "helpers/rendercapturehelper.h"
+#include "LammpsWrappers/modifiers/modifiers.h"
+#include "core/controllers/lammpscontroller.h"
+#include "core/editor/codeeditorbackend.h"
 #include "core/editor/highlighter.h"
 #include "core/editor/linenumbers.h"
-#include "core/editor/codeeditorbackend.h"
-#include "LammpsWrappers/modifiers/modifiers.h"
 #include "dataproviders/data1d.h"
 #include "dataproviders/data2d.h"
-#include "usagestatistics.h"
-#include "states.h"
 #include "helpers/clipboard.h"
-#include "lammpscontroller.h"
+#include "helpers/keysequence.h"
+#include "helpers/mousemover.h"
+#include "helpers/rendercapturehelper.h"
+#include "helpers/standardpaths.h"
+#include "helpers/windowgl2.h"
+#include "states.h"
+#include "usagestatistics.h"
 
 using namespace atomify;
 
-void registerQML() {
+void registerQML()
+{
     qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
 
