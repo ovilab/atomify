@@ -177,14 +177,11 @@ bool LAMMPSThread::dataDirty() const
 
 LAMMPSData LAMMPSThread::data()
 {
-    LAMMPSData data;
-
     {
         QMutexLocker locker(&m_mutex);
-        std::swap(data, m_data);
+        std::swap(m_cachedData, m_data);
         m_dataDirty = false;
     }
-    data.empty = false;
-    return data;
+    return m_cachedData;
 }
 }

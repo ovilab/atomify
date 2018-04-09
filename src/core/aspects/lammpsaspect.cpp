@@ -18,88 +18,54 @@ LAMMPSAspect::LAMMPSAspect(QObject* parent)
     registerBackendType<LAMMPSController>(m_mapper);
 }
 
-static void copyDataFromLAMMPS(const QList<class BackendLAMMPSController*>& controllers, QMap<Qt3DCore::QNodeId, QPair<bool, LAMMPSData>>& pendingRawData)
+static std::experimental::optional<LAMMPSData> copyDataFromLAMMPS(BackendLAMMPSController& controller)
 {
-    for (const auto& controller : controllers) {
-        auto data = controller->synchronize();
-        if (data.empty)
-            return;
+    return controller.synchronize();
+}
 
-        if (!pendingRawData.contains(controller->peerId())) {
-            pendingRawData[controller->peerId()] = { true, LAMMPSData() };
-        }
-
-        pendingRawData[controller->peerId()].first = true;
-        pendingRawData[controller->peerId()].second = std::move(data);
+static void convertData(const LAMMPSData& pendingRawData, ParticleData& particleData)
+{
+    const auto& atomData = pendingRawData.atomData;
+    resize(&particleData, atomData.size);
+    particleData.timestep = pendingRawData.systemData.ntimestep;
+    //#ifdef __GNUC__
+    //#pragma GCC ivdep
+    //#endif
+#pragma omp simd
+    for (int i = 0; i < atomData.size; i++) {
+        particleData.positions[i][0] = static_cast<float>(atomData.x[3 * i + 0]);
+        particleData.positions[i][1] = static_cast<float>(atomData.x[3 * i + 1]);
+        particleData.positions[i][2] = static_cast<float>(atomData.x[3 * i + 2]);
+        particleData.bitmask[i] = atomData.mask[i];
+        particleData.types[i] = atomData.type[i];
+        particleData.ids[i] = atomData.id[i];
+        particleData.visible[i] = true;
+        particleData.colors[i] = QVector3D(1.0, 0.0, 0.0);
+        particleData.radii[i] = 0.3;
     }
 }
 
-static void convertData(const QMap<Qt3DCore::QNodeId, QPair<bool, LAMMPSData>>& pendingRawData, QMap<Qt3DCore::QNodeId, QPair<bool, ParticleData>>& pendingParticleData)
+static void createSphereBufferData(const ParticleData& particleData, QByteArray& sphereBufferData)
 {
-    for (auto nodeId : pendingRawData.keys()) {
-        if (pendingRawData.contains(nodeId) && pendingRawData[nodeId].first) {
-            if (!pendingParticleData.contains(nodeId)) {
-                pendingParticleData[nodeId] = { true, ParticleData() };
-            }
+    sphereBufferData.resize(particleData.size * sizeof(SphereVBOData));
 
-            pendingParticleData[nodeId].first = true;
-            auto& particleData = pendingParticleData[nodeId].second;
-
-            auto data = pendingRawData[nodeId];
-            const auto& atomData = data.second.atomData;
-            resize(&particleData, atomData.size);
-            particleData.timestep = data.second.systemData.ntimestep;
-            //#ifdef __GNUC__
-            //#pragma GCC ivdep
-            //#endif
+    SphereVBOData* vboData = reinterpret_cast<SphereVBOData*>(sphereBufferData.data());
+    //#ifdef __GNUC__
+    //#pragma GCC ivdep
+    //#endif
 #pragma omp simd
-            for (int i = 0; i < atomData.size; i++) {
-                particleData.positions[i][0] = static_cast<float>(atomData.x[3 * i + 0]);
-                particleData.positions[i][1] = static_cast<float>(atomData.x[3 * i + 1]);
-                particleData.positions[i][2] = static_cast<float>(atomData.x[3 * i + 2]);
-                particleData.bitmask[i] = atomData.mask[i];
-                particleData.types[i] = atomData.type[i];
-                particleData.ids[i] = atomData.id[i];
-                particleData.visible[i] = true;
-                particleData.colors[i] = QVector3D(1.0, 0.0, 0.0);
-                particleData.radii[i] = 0.3;
-            }
-        }
-    }
-}
+    for (size_t i = 0; i < particleData.size; i++) {
+        SphereVBOData& vbo = vboData[i];
 
-static void createSphereBufferData(const QMap<Qt3DCore::QNodeId, QPair<bool, ParticleData>>& pendingParticleData, QMap<Qt3DCore::QNodeId, QPair<bool, QByteArray>>& sphereBufferData)
-{
-    for (auto nodeId : pendingParticleData.keys()) {
-        if (pendingParticleData.contains(nodeId) && pendingParticleData[nodeId].first) {
-            const ParticleData& particleData = pendingParticleData[nodeId].second;
-            if (!sphereBufferData.contains(nodeId)) {
-                sphereBufferData[nodeId] = { true, QByteArray() };
-            }
-
-            sphereBufferData[nodeId].first = true;
-            QByteArray& data = sphereBufferData[nodeId].second;
-            data.resize(particleData.size * sizeof(SphereVBOData));
-
-            SphereVBOData* vboData = reinterpret_cast<SphereVBOData*>(data.data());
-            //#ifdef __GNUC__
-            //#pragma GCC ivdep
-            //#endif
-#pragma omp simd
-            for (size_t i = 0; i < particleData.size; i++) {
-                SphereVBOData& vbo = vboData[i];
-
-                const int id = particleData.ids[i];
-                vbo.position = particleData.positions[i];
-                vbo.color[0] = 1.0;
-                vbo.color[1] = 0.0;
-                vbo.color[2] = 0.0;
-                vbo.radius = 0.3;
-                vbo.particleId = id;
-                vbo.flags = 0; // TODO add back
-                //        vbo.flags = m_selectedParticles.contains(particleId) ? Selected : 0;
-            }
-        }
+        const int id = particleData.ids[i];
+        vbo.position = particleData.positions[i];
+        vbo.color[0] = 1.0;
+        vbo.color[1] = 0.0;
+        vbo.color[2] = 0.0;
+        vbo.radius = 0.3;
+        vbo.particleId = id;
+        vbo.flags = 0; // TODO add back
+        //        vbo.flags = m_selectedParticles.contains(particleId) ? Selected : 0;
     }
 }
 
@@ -130,42 +96,28 @@ QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
     };
 
     using LambdaJobPtr = QSharedPointer<LambdaJob>;
+    QVector<Qt3DCore::QAspectJobPtr> jobs;
 
-    auto job1 = LambdaJobPtr::create([&]() {
-        copyDataFromLAMMPS(m_mapper->controllers(), m_pendingRawData);
-    });
+    for (auto* controller : m_mapper->controllers()) {
+        auto nodeId = controller->peerId();
 
-    auto job2 = LambdaJobPtr::create([&]() {
-        convertData(m_pendingRawData, m_pendingParticleData);
-    });
+        auto job = LambdaJobPtr::create([=]() {
+            const auto& rawData = copyDataFromLAMMPS(*controller);
+            if (!rawData)
+                return;
 
-    auto job3 = LambdaJobPtr::create([&]() {
-        createSphereBufferData(m_pendingParticleData, m_sphereBufferData);
-    });
+            convertData(*rawData, m_particleData[nodeId]);
+            createSphereBufferData(m_particleData[nodeId], m_sphereBufferData[nodeId]);
 
-    auto job4 = LambdaJobPtr::create([&]() {
-        setSphereBufferOnControllers(m_sphereBufferData, *m_mapper);
-    });
+            uint64_t sphereCount = m_sphereBufferData[nodeId].size() / sizeof(SphereVBOData);
+            controller->setSphereBufferData(m_sphereBufferData[nodeId], sphereCount);
+        });
 
-    auto job5 = LambdaJobPtr::create([&]() {
-        for (auto& e : m_pendingParticleData) {
-            e.first = false;
-        }
-        for (auto& e : m_pendingRawData) {
-            e.first = false;
-        }
-        for (auto& e : m_sphereBufferData) {
-            e.first = false;
-        }
-    });
-
-    job2->addDependency(job1);
-    job3->addDependency(job2);
-    job4->addDependency(job3);
-    job5->addDependency(job4);
-
-    return { job1, job2, job3, job4, job5 };
+        jobs.append(job);
+    }
+    return jobs;
 }
-}
+
+} // namespace atomify
 
 QT3D_REGISTER_NAMESPACED_ASPECT("lammps", QT_PREPEND_NAMESPACE(atomify), LAMMPSAspect)

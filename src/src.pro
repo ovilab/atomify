@@ -1,9 +1,12 @@
 TEMPLATE = app
-CONFIG += c++14
+#CONFIG += c++14
+CONFIG += c++1z
 CONFIG += appstore
 DEFINES += LAMMPS_GZIP
 TARGET = atomify
 
+#QMAKE_CXXFLAGS -= -std=gnu++11
+#QMAKE_CXXFLAGS += -std=c++17
 QT += qml quick widgets opengl openglextensions svg charts datavisualization
 DEFINES += ATOMIFYVERSION=\\\"2.2a\\\"
 unix:!macx {

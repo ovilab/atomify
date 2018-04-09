@@ -6,13 +6,14 @@
 
 #include <QBackendNode>
 #include <QHash>
+#include <experimental/optional>
 
 namespace atomify {
 
 class BackendLAMMPSController : public Qt3DCore::QBackendNode {
 public:
     BackendLAMMPSController();
-    LAMMPSData synchronize();
+    std::experimental::optional<LAMMPSData> synchronize();
     Qt3DCore::QNodeId spheresBufferId() const;
     void setSphereBufferData(const QByteArray& buffer, uint64_t sphereCount);
 

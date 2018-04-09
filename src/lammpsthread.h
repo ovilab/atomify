@@ -31,6 +31,7 @@ protected:
 private:
     mutable QMutex m_mutex;
     LAMMPSData m_data;
+    LAMMPSData m_cachedData;
     bool m_dataDirty;
 };
 }
