@@ -101,13 +101,6 @@ QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
             if (m_rawData[nodeId].empty)
                 return;
             convertData(m_rawData[nodeId], m_particleData[nodeId]);
-
-            //            m_rawData = controller->synchronize(std::move(m_rawData));
-            //            std::cout << "Empty: " << m_rawData.empty << std::endl;
-            //            return;
-            //            if (m_rawData.empty)
-            //                return;
-            //            convertData(m_rawData, m_particleData[nodeId]);
             createSphereBufferData(m_particleData[nodeId], m_sphereBufferData[nodeId]);
 
             uint64_t sphereCount = m_sphereBufferData[nodeId].size() / sizeof(SphereVBOData);
