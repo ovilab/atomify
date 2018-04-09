@@ -1,37 +1,38 @@
 #include <QApplication>
-#include <QQmlApplicationEngine>
-#include <QtQml>
-#include <QSurfaceFormat>
 #include <QOpenGLContext>
-#include <QQuickWindow>
+#include <QQmlApplicationEngine>
 #include <QQuickView>
+#include <QQuickWindow>
+#include <QSurfaceFormat>
 #include <QmlPreviewer>
+#include <QtQml>
 #include <mpi.h>
-#include <library.h>
-#include <lammps.h>
-#include <input.h>
-#include <exceptions.h>
+
 #include "vendor.h"
+#include <exceptions.h>
+#include <input.h>
+#include <lammps.h>
+#include <library.h>
 #ifdef Q_OS_LINUX
 #include <locale>
 #endif
 
 void registerQML();
 
-int regularLAMMPS (int argc, char **argv)
+int regularLAMMPS(int argc, char** argv)
 {
-    MPI_Init(&argc,&argv);
+    MPI_Init(&argc, &argv);
 
     try {
-        void *ptr = nullptr;
+        void* ptr = nullptr;
         lammps_open(argc, argv, MPI_COMM_WORLD, &ptr);
-        LAMMPS_NS::LAMMPS *lammps = static_cast<LAMMPS_NS::LAMMPS*>(ptr);
-                // LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
+        LAMMPS_NS::LAMMPS* lammps = static_cast<LAMMPS_NS::LAMMPS*>(ptr);
+        // LAMMPS *lammps = new LAMMPS(argc,argv,MPI_COMM_WORLD);
         lammps->input->file();
         delete lammps;
-    } catch(LAMMPS_NS::LAMMPSAbortException & ae) {
+    } catch (LAMMPS_NS::LAMMPSAbortException& ae) {
         MPI_Abort(ae.universe, 1);
-    } catch(LAMMPS_NS::LAMMPSException & e) {
+    } catch (LAMMPS_NS::LAMMPSException& e) {
         MPI_Finalize();
         exit(1);
     }
@@ -42,10 +43,11 @@ int regularLAMMPS (int argc, char **argv)
     return 0;
 }
 
-void copyFiles(QDirIterator &iterator, QDir &dataDir) {
+void copyFiles(QDirIterator& iterator, QDir& dataDir)
+{
     QDir rootQrcFolder(":/");
-    while(iterator.hasNext()) {
-        const QString &qrcFileName = iterator.next();
+    while (iterator.hasNext()) {
+        const QString& qrcFileName = iterator.next();
         QFileInfo qrcFileInfo(qrcFileName);
         QString qrcDirPath = qrcFileInfo.dir().absolutePath();
         QString relativeDirPath = rootQrcFolder.relativeFilePath(qrcDirPath);
@@ -53,9 +55,9 @@ void copyFiles(QDirIterator &iterator, QDir &dataDir) {
 
         QString targetDirPath = dataDir.absoluteFilePath(relativeDirPath);
         QDir targetDir(targetDirPath);
-        if(!targetDir.exists()) {
+        if (!targetDir.exists()) {
             bool pathCreated = targetDir.mkpath(".");
-            if(!pathCreated) {
+            if (!pathCreated) {
                 qWarning() << "Could not create" << targetDir.absolutePath();
                 continue;
             }
@@ -63,13 +65,13 @@ void copyFiles(QDirIterator &iterator, QDir &dataDir) {
 
         QString targetPath = dataDir.absoluteFilePath(relativeFilePath);
 
-        if(QFile(targetPath).exists()) {
+        if (QFile(targetPath).exists()) {
             continue;
         }
 
         QFile file(qrcFileName);
         bool fileCopied = file.copy(targetPath);
-        if(!fileCopied) {
+        if (!fileCopied) {
             qWarning() << "Could not copy" << qrcFileName << "to" << targetPath;
             continue;
         }
@@ -96,18 +98,18 @@ void showDataDir()
     exit(0);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QString initialScriptFilePath;
 
-    if(argc>1) {
-        if(strcmp(argv[1], "--showdatadir")==0) {
+    if (argc > 1) {
+        if (strcmp(argv[1], "--showdatadir") == 0) {
             // We need to create Qt app for this, but now we know that the user does not
             // want to run a regular script.
-        } else if(strcmp(argv[1], "--clearcache")==0) {
+        } else if (strcmp(argv[1], "--clearcache") == 0) {
             // We need to create Qt app for this, but now we know that the user does not
             // want to run a regular script.
-        } else if(strcmp(argv[1], "--version")==0) {
+        } else if (strcmp(argv[1], "--version") == 0) {
             printf(ATOMIFYVERSION);
             printf("\n");
             exit(0);
@@ -115,35 +117,35 @@ int main(int argc, char *argv[])
             bool dashInFound = false;
             bool dashGFound = false;
             bool nextIsScript = false;
-            for(int i=1; i<argc; i++) {
-                if(nextIsScript) {
+            for (int i = 1; i < argc; i++) {
+                if (nextIsScript) {
                     nextIsScript = false;
 
                     initialScriptFilePath = QString::fromUtf8(argv[i]);
                     QString fullPathRelativeToCurrentPath = QDir::current().absoluteFilePath(initialScriptFilePath);
                     QFile file(fullPathRelativeToCurrentPath);
-                    if(file.exists()) {
-                        initialScriptFilePath = QString("file://")+fullPathRelativeToCurrentPath;
+                    if (file.exists()) {
+                        initialScriptFilePath = QString("file://") + fullPathRelativeToCurrentPath;
                     } else {
-                        file.setFileName(QString("file://")+initialScriptFilePath);
-                        if(!file.exists()) {
+                        file.setFileName(QString("file://") + initialScriptFilePath);
+                        if (!file.exists()) {
                             qDebug() << "Warning, file " << initialScriptFilePath << " could not be found.";
                             initialScriptFilePath.clear();
                         }
                     }
                 }
 
-                if(strcmp(argv[i], "-in") == 0) {
+                if (strcmp(argv[i], "-in") == 0) {
                     dashInFound = true;
                     nextIsScript = true;
                 }
 
-                if(strcmp(argv[i], "-g") == 0) {
+                if (strcmp(argv[i], "-g") == 0) {
                     dashGFound = true;
                 }
             }
 
-            if(dashInFound && !dashGFound) {
+            if (dashInFound && !dashGFound) {
                 qDebug() << "Running regular LAMMPS";
                 return regularLAMMPS(argc, argv);
             }
@@ -168,12 +170,12 @@ int main(int argc, char *argv[])
 #endif
     QSurfaceFormat::setDefaultFormat(format);
 
-    if(argc>1) {
-        if(strcmp(argv[1], "--showdatadir")==0) {
+    if (argc > 1) {
+        if (strcmp(argv[1], "--showdatadir") == 0) {
             showDataDir();
         }
 
-        if(strcmp(argv[1], "--clearcache")==0) {
+        if (strcmp(argv[1], "--clearcache") == 0) {
             QSettings settings;
             settings.clear();
             exit(0);
@@ -185,15 +187,15 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QmlPreviewer previewer(app);
     qpm::init(app, engine);
-    if(false && argc > 2) {
+    if (false && argc > 2) {
         previewer.show();
     } else {
         engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-        if(engine.rootObjects().size() == 0) {
+        if (engine.rootObjects().size() == 0) {
             qDebug() << "ERROR: Could not load QML";
             return 1;
         }
-        QWindow *window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
+        QWindow* window = qobject_cast<QWindow*>(engine.rootObjects()[0]);
         if (!window) {
             qDebug() << "ERROR: Could not load window";
             return 1;
@@ -208,7 +210,7 @@ int main(int argc, char *argv[])
         setlocale(LC_NUMERIC, "C");
 #endif
 
-        for(QKeySequence k : QKeySequence::keyBindings(QKeySequence::FullScreen)) {
+        for (QKeySequence k : QKeySequence::keyBindings(QKeySequence::FullScreen)) {
             qDebug() << "Use " << k.toString() << " to toggle fullscreen.";
         }
     }
