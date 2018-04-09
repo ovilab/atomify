@@ -6,11 +6,9 @@
 #include "core/editor/highlighter.h"
 #include "core/editor/linenumbers.h"
 #include "core/editor/codeeditorbackend.h"
-#include "datasource.h"
 #include "LammpsWrappers/modifiers/modifiers.h"
 #include "dataproviders/data1d.h"
 #include "dataproviders/data2d.h"
-#include "dataproviders/dataprovider.h"
 #include "usagestatistics.h"
 #include "states.h"
 #include "helpers/clipboard.h"
@@ -19,8 +17,6 @@
 using namespace atomify;
 
 void registerQML() {
-    qmlRegisterType<DataSource>("Atomify", 1, 0, "DataSource");
-    qmlRegisterType<DataProvider>("Atomify", 1, 0, "DataProvider");
     qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
 

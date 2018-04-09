@@ -105,7 +105,6 @@ SOURCES += \
     helpers/keysequence.cpp \
     helpers/clipboard.cpp \
     helpers/rendercapturehelper.cpp \
-    datasource.cpp \
     LammpsWrappers/atomdata.cpp \
     dataproviders/dataprovider.cpp \
     dataproviders/data2d.cpp \
@@ -132,7 +131,6 @@ HEADERS += \
     helpers/keysequence.h \
     helpers/clipboard.h \
     helpers/rendercapturehelper.h \
-    datasource.h \
     LammpsWrappers/atomdata.h \
     dataproviders/dataprovider.h \
     dataproviders/data2d.h \
