@@ -16,15 +16,9 @@ BackendLAMMPSController::BackendLAMMPSController()
     m_thread->start();
 }
 
-LAMMPSData BackendLAMMPSController::synchronize(LAMMPSData data)
+std::shared_ptr<const LAMMPSData> BackendLAMMPSController::synchronize()
 {
-    if (!m_thread->dataDirty()) {
-        data.empty = true;
-        return data;
-    }
-
-    LAMMPSData newData = m_thread->data(std::move(data));
-    newData.empty = false;
+    std::shared_ptr<const LAMMPSData> newData = m_thread->data();
     return newData;
 }
 

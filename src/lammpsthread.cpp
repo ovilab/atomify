@@ -3,6 +3,10 @@
 
 // std
 #include <unistd.h>
+#include <memory>
+
+// Boost
+#include <boost/pool/pool_alloc.hpp>
 
 // Qt
 #include <QDebug>
@@ -30,6 +34,7 @@ namespace atomify {
 LAMMPSThread::LAMMPSThread(QObject* parent)
     : QThread(parent)
     , m_dataDirty(false)
+    , m_data(std::allocate_shared<LAMMPSData, boost::fast_pool_allocator<LAMMPSData>>(boost::fast_pool_allocator<LAMMPSData>()))
 {
 }
 
@@ -104,7 +109,7 @@ void LAMMPSThread::run()
 
             // TODO synchronize with frontend
             bool doContinue = false;
-            //            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/diffusion/simple_diffusion/simple_diffusion.in";
+//            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/diffusion/simple_diffusion/simple_diffusion.in";
             const QString scriptFilePath = "/Users/anderhaf/Desktop/lj.in";
 
             if (finished || didCancel || crashed)
@@ -161,27 +166,31 @@ void LAMMPSThread::callback(LAMMPS_NS::LAMMPS* lammps, int mode)
     }
 
     {
-        QMutexLocker locker(&m_mutex);
-        copy(&m_data.atomData, static_cast<void*>(lammps));
-        copy(&m_data.systemData, static_cast<void*>(lammps));
+//        QMutexLocker locker(&m_mutex);
+        copy(&m_data->atomData, static_cast<void*>(lammps));
+        copy(&m_data->systemData, static_cast<void*>(lammps));
         m_dataDirty = true;
-        qDebug() << "Did callback with ts = " << m_data.systemData.ntimestep;
+        qDebug() << "Did callback with ts = " << m_data->systemData.ntimestep;
+        m_latestData = m_data;
+        m_data = std::allocate_shared<LAMMPSData, boost::fast_pool_allocator<LAMMPSData>>(boost::fast_pool_allocator<LAMMPSData>());
     }
 }
 
 bool LAMMPSThread::dataDirty() const
 {
-    QMutexLocker locker(&m_mutex);
+//    QMutexLocker locker(&m_mutex);
     return m_dataDirty;
 }
 
-LAMMPSData LAMMPSThread::data(LAMMPSData data)
+std::shared_ptr<const LAMMPSData> LAMMPSThread::data()
 {
-    {
-        QMutexLocker locker(&m_mutex);
-        std::swap(data, m_data);
-        m_dataDirty = false;
-    }
-    return data;
+//    {
+//        QMutexLocker locker(&m_mutex);
+//        std::swap(data, m_data);
+//        m_dataDirty = false;
+//    }
+//    return data;
+    m_dataDirty = false;
+    return m_latestData;
 }
 } // namespace atomify

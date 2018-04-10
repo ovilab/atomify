@@ -78,16 +78,18 @@ static void setSphereBufferOnControllers(QMap<Qt3DCore::QNodeId, QPair<bool, QBy
 
 struct LAMMPSSynchronizationJob : public Qt3DCore::QAspectJob {
     BackendLAMMPSController* controller = nullptr;
-    LAMMPSData m_rawData;
+    std::shared_ptr<const LAMMPSData> m_rawData;
     ParticleData m_particleData;
     QByteArray m_sphereBufferData;
 
     void run() override
     {
-        m_rawData = controller->synchronize(std::move(m_rawData));
-        if (m_rawData.empty)
+        auto oldData = m_rawData;
+        m_rawData = controller->synchronize();
+        // TODO consider removing empty case
+        if (m_rawData == nullptr || oldData == m_rawData || m_rawData->empty)
             return;
-        convertData(m_rawData, m_particleData);
+        convertData(*m_rawData, m_particleData);
         createSphereBufferData(m_particleData, m_sphereBufferData);
 
         uint64_t sphereCount = m_sphereBufferData.size() / sizeof(SphereVBOData);

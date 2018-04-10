@@ -14,6 +14,8 @@ unix:!macx {
     LIBS += -fopenmp
 }
 
+LIBS += -lboost_system
+
 defined(DEPLOYLINUX, var) {
     QMAKE_LFLAGS += -static-libstdc++
     DEFINES += BUILDVERSION=\\\"LINUX\\\"

@@ -4,14 +4,15 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <vector>
+#include <boost/pool/pool_alloc.hpp>
 
 namespace atomify {
 
 struct LAMMPSAtomData {
     std::vector<double> x;
-    std::vector<int> type;
-    std::vector<int> mask;
-    std::vector<int> id;
+    std::vector<int, boost::fast_pool_allocator<int>> type;
+    std::vector<int, boost::fast_pool_allocator<int>> mask;
+    std::vector<int, boost::fast_pool_allocator<int>> id;
     uint64_t size;
 };
 
