@@ -15,7 +15,7 @@ public:
     BackendLAMMPSController();
     LAMMPSData synchronize(LAMMPSData data);
     Qt3DCore::QNodeId spheresBufferId() const;
-    void setSphereBufferData(const QByteArray& buffer, uint64_t sphereCount);
+    void notifySphereBuffer(const QByteArray& buffer, uint64_t sphereCount);
 
 protected:
     void sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e) override;

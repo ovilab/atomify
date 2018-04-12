@@ -18,7 +18,7 @@ LAMMPSAspect::LAMMPSAspect(QObject* parent)
     registerBackendType<LAMMPSController>(m_mapper);
 }
 
-static void convertData(const LAMMPSData& pendingRawData, ParticleData& particleData)
+static ParticleData convertData(const LAMMPSData& pendingRawData, ParticleData particleData)
 {
     const auto& atomData = pendingRawData.atomData;
     resize(&particleData, atomData.size);
@@ -38,9 +38,11 @@ static void convertData(const LAMMPSData& pendingRawData, ParticleData& particle
         particleData.colors[i] = QVector3D(1.0, 0.0, 0.0);
         particleData.radii[i] = 0.3;
     }
+
+    return particleData;
 }
 
-static void createSphereBufferData(const ParticleData& particleData, QByteArray& sphereBufferData)
+static QByteArray createSphereBufferData(const ParticleData& particleData, QByteArray sphereBufferData)
 {
     sphereBufferData.resize(particleData.size * sizeof(SphereVBOData));
 
@@ -62,6 +64,8 @@ static void createSphereBufferData(const ParticleData& particleData, QByteArray&
         vbo.flags = 0; // TODO add back
         //        vbo.flags = m_selectedParticles.contains(particleId) ? Selected : 0;
     }
+
+    return sphereBufferData;
 }
 
 static void setSphereBufferOnControllers(QMap<Qt3DCore::QNodeId, QPair<bool, QByteArray>>& sphereBufferData, const LAMMPSControllerMapper& mapper)
@@ -72,7 +76,7 @@ static void setSphereBufferOnControllers(QMap<Qt3DCore::QNodeId, QPair<bool, QBy
         }
         const auto controller = dynamic_cast<BackendLAMMPSController*>(mapper.get(nodeId));
         uint64_t sphereCount = sphereBufferData[nodeId].second.size() / sizeof(SphereVBOData);
-        controller->setSphereBufferData(sphereBufferData[nodeId].second, sphereCount);
+        controller->notifySphereBuffer(sphereBufferData[nodeId].second, sphereCount);
     }
 }
 
@@ -87,11 +91,12 @@ struct LAMMPSSynchronizationJob : public Qt3DCore::QAspectJob {
         m_rawData = controller->synchronize(std::move(m_rawData));
         if (m_rawData.empty)
             return;
-        convertData(m_rawData, m_particleData);
-        createSphereBufferData(m_particleData, m_sphereBufferData);
+        m_particleData = convertData(m_rawData, std::move(m_particleData));
+        // m_particleData = applyModifiers(m_particleData, std::move(m_particleData));
+        m_sphereBufferData = createSphereBufferData(m_particleData, std::move(m_sphereBufferData));
 
         uint64_t sphereCount = m_sphereBufferData.size() / sizeof(SphereVBOData);
-        controller->setSphereBufferData(m_sphereBufferData, sphereCount);
+        controller->notifySphereBuffer(m_sphereBufferData, sphereCount);
     }
 };
 

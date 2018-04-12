@@ -119,7 +119,8 @@ SOURCES += \
     tmplammps.cpp \
     core/data/lammps/lammpsatomdata.cpp \
     core/data/lammps/lammpssystemdata.cpp \
-    core/data/particledata.cpp
+    core/data/particledata.cpp \
+    core/visualization/atomify.cpp
 
 HEADERS += \
     core/controllers/lammpscontroller.h \
@@ -143,7 +144,8 @@ HEADERS += \
     core/data/lammps/lammpsatomdata.h \
     core/data/lammps/lammpssystemdata.h \
     core/data/lammps/lammpsdata.h \
-    core/data/particledata.h
+    core/data/particledata.h \
+    core/visualization/atomify.h
 
 # Temporary use of quickcontrols2 without install
 

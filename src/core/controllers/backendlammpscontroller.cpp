@@ -4,7 +4,6 @@
 #include "lammpsthread.h"
 #include <QDebug>
 #include <QPropertyUpdatedChange>
-#include <SimVis/SphereData>
 
 namespace atomify {
 
@@ -44,7 +43,7 @@ Qt3DCore::QNodeId BackendLAMMPSController::spheresBufferId() const
     return m_spheresBufferId;
 }
 
-void BackendLAMMPSController::setSphereBufferData(const QByteArray& buffer, uint64_t sphereCount)
+void BackendLAMMPSController::notifySphereBuffer(const QByteArray& buffer, uint64_t sphereCount)
 {
     {
         auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresBufferId);

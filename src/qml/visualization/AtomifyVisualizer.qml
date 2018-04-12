@@ -188,10 +188,15 @@ Scene3D {
             }
         ]
 
-        LAMMPSController {
-            id: controller
-            onVisibleAtomCountChanged: console.log(visibleAtomCount)
+        Atomify {
+            controller: LAMMPSController {
+                id: controller
+            }
+            spheresBuffer: spheres.buffer
+            spheresGeometryRenderer: spheres.geometryRenderer
         }
+
+
 
         ForwardFrameGraph {
             id: forwardFrameGraph

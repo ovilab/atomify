@@ -8,6 +8,7 @@ namespace atomify {
 LAMMPSController::LAMMPSController(Qt3DCore::QNode* parent)
     : Qt3DCore::QComponent(parent)
     , m_spheresBuffer(new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, this))
+    , m_spheresRenderer(nullptr)
     , m_visibleAtomCount(0)
     , m_states(new States(this))
 {
@@ -29,6 +30,11 @@ States* LAMMPSController::states() const
     return m_states;
 }
 
+Qt3DRender::QGeometryRenderer* LAMMPSController::spheresRenderer() const
+{
+    return m_spheresRenderer;
+}
+
 void LAMMPSController::setStates(States* states)
 {
     if (m_states == states)
@@ -36,6 +42,15 @@ void LAMMPSController::setStates(States* states)
 
     m_states = states;
     emit statesChanged(m_states);
+}
+
+void LAMMPSController::setSpheresRenderer(Qt3DRender::QGeometryRenderer* spheresRenderer)
+{
+    if (m_spheresRenderer == spheresRenderer)
+        return;
+
+    m_spheresRenderer = spheresRenderer;
+    emit spheresRendererChanged(m_spheresRenderer);
 }
 
 void LAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e)

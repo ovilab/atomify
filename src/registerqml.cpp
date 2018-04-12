@@ -3,6 +3,7 @@
 #include "core/editor/codeeditorbackend.h"
 #include "core/editor/highlighter.h"
 #include "core/editor/linenumbers.h"
+#include "core/visualization/atomify.h"
 #include "dataproviders/data1d.h"
 #include "dataproviders/data2d.h"
 #include "helpers/clipboard.h"
@@ -13,13 +14,13 @@
 #include "helpers/windowgl2.h"
 #include "states.h"
 #include "usagestatistics.h"
-
 using namespace atomify;
 
 void registerQML()
 {
     qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
+    qmlRegisterType<Atomify>("Atomify", 1, 0, "Atomify");
 
     qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");
     qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
