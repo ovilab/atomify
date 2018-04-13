@@ -10,10 +10,10 @@
 
 namespace atomify {
 
-class LAMMPSAspect : public Qt3DCore::QAbstractAspect {
+class AtomifyAspect : public Qt3DCore::QAbstractAspect {
     Q_OBJECT
 public:
-    explicit LAMMPSAspect(QObject* parent = nullptr);
+    explicit AtomifyAspect(QObject* parent = nullptr);
 
 protected:
     QVector<Qt3DCore::QAspectJobPtr> jobsToExecute(qint64 time) override;

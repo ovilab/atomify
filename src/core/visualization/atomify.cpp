@@ -16,9 +16,9 @@ Qt3DRender::QBuffer* Atomify::spheresBuffer() const
     return m_spheresBuffer;
 }
 
-Qt3DRender::QGeometryRenderer* Atomify::spheresRenderer() const
+Qt3DRender::QGeometryRenderer* Atomify::spheresGeometryRenderer() const
 {
-    return m_spheresRenderer;
+    return m_spheresGeometryRenderer;
 }
 
 void Atomify::setController(LAMMPSController* controller)
@@ -39,13 +39,13 @@ void Atomify::setSpheresBuffer(Qt3DRender::QBuffer* spheresBuffer)
     emit spheresBufferChanged(m_spheresBuffer);
 }
 
-void Atomify::setSpheresRenderer(Qt3DRender::QGeometryRenderer* spheresRenderer)
+void Atomify::setSpheresGeometryRenderer(Qt3DRender::QGeometryRenderer* spheresGeometryRenderer)
 {
-    if (m_spheresRenderer == spheresRenderer)
+    if (m_spheresGeometryRenderer == spheresGeometryRenderer)
         return;
 
-    m_spheresRenderer = spheresRenderer;
-    emit spheresRendererChanged(m_spheresRenderer);
+    m_spheresGeometryRenderer = spheresGeometryRenderer;
+    emit spheresGeometryRendererChanged(m_spheresGeometryRenderer);
 }
 
 } // namespace atomify

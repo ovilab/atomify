@@ -114,13 +114,13 @@ SOURCES += \
     dataproviders/data1d.cpp \
     usagestatistics.cpp \
     registerqml.cpp \
-    core/aspects/lammpsaspect.cpp \
     lammpsthread.cpp \
     tmplammps.cpp \
     core/data/lammps/lammpsatomdata.cpp \
     core/data/lammps/lammpssystemdata.cpp \
     core/data/particledata.cpp \
-    core/visualization/atomify.cpp
+    core/visualization/atomify.cpp \
+    core/aspects/atomifyaspect.cpp
 
 HEADERS += \
     core/controllers/lammpscontroller.h \
@@ -138,14 +138,14 @@ HEADERS += \
     states.h \
     dataproviders/data1d.h \
     usagestatistics.h \
-    core/aspects/lammpsaspect.h \
     lammpsthread.h \
     tmplammps.h \
     core/data/lammps/lammpsatomdata.h \
     core/data/lammps/lammpssystemdata.h \
     core/data/lammps/lammpsdata.h \
     core/data/particledata.h \
-    core/visualization/atomify.h
+    core/visualization/atomify.h \
+    core/aspects/atomifyaspect.h
 
 # Temporary use of quickcontrols2 without install
 

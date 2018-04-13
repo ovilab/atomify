@@ -1,5 +1,5 @@
 #include "backendlammpscontroller.h"
-#include "core/aspects/lammpsaspect.h"
+#include "core/aspects/atomifyaspect.h"
 #include "lammpscontroller.h"
 #include "lammpsthread.h"
 #include <QDebug>
@@ -62,7 +62,7 @@ void BackendLAMMPSController::notifySphereBuffer(const QByteArray& buffer, uint6
     }
 }
 
-LAMMPSControllerMapper::LAMMPSControllerMapper(LAMMPSAspect* aspect)
+LAMMPSControllerMapper::LAMMPSControllerMapper(AtomifyAspect* aspect)
 {
 }
 

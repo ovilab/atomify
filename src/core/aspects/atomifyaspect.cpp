@@ -1,4 +1,4 @@
-#include "lammpsaspect.h"
+#include "atomifyaspect.h"
 #include "core/controllers/backendlammpscontroller.h"
 #include "core/controllers/lammpscontroller.h"
 #include <SimVis/SphereData>
@@ -10,7 +10,7 @@
 
 namespace atomify {
 
-LAMMPSAspect::LAMMPSAspect(QObject* parent)
+AtomifyAspect::AtomifyAspect(QObject* parent)
     : Qt3DCore::QAbstractAspect(parent)
 {
     // Register the mapper to handle creation, lookup, and destruction of backend nodes
@@ -102,7 +102,7 @@ struct LAMMPSSynchronizationJob : public Qt3DCore::QAspectJob {
 
 using LAMMPSSynchronizationJobPtr = QSharedPointer<LAMMPSSynchronizationJob>;
 
-QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
+QVector<Qt3DCore::QAspectJobPtr> AtomifyAspect::jobsToExecute(qint64 time)
 {
     QVector<Qt3DCore::QAspectJobPtr> jobs;
 
@@ -121,4 +121,4 @@ QVector<Qt3DCore::QAspectJobPtr> LAMMPSAspect::jobsToExecute(qint64 time)
 
 } // namespace atomify
 
-QT3D_REGISTER_NAMESPACED_ASPECT("lammps", QT_PREPEND_NAMESPACE(atomify), LAMMPSAspect)
+QT3D_REGISTER_NAMESPACED_ASPECT("lammps", QT_PREPEND_NAMESPACE(atomify), AtomifyAspect)
