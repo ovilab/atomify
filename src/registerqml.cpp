@@ -20,7 +20,6 @@ void registerQML()
 {
     qmlRegisterType<Data1D>("Atomify", 1, 0, "Data1D");
     qmlRegisterType<Data2D>("Atomify", 1, 0, "Data2D");
-    qmlRegisterType<Atomify>("Atomify", 1, 0, "Atomify");
 
     qmlRegisterType<LineNumbers>("Atomify", 1, 0, "LineNumbers");
     qmlRegisterType<CodeEditorBackend>("Atomify", 1, 0, "CodeEditorBackend");
@@ -37,5 +36,6 @@ void registerQML()
 
     qmlRegisterSingletonType<RenderCaptureHelper>("Atomify", 1, 0, "RenderCaptureHelper", &RenderCaptureHelper::qmlInstance);
 
+    qmlRegisterType<Atomify>("Atomify", 1, 0, "Atomify");
     qmlRegisterType<LAMMPSController>("Atomify", 1, 0, "LAMMPSController");
 }

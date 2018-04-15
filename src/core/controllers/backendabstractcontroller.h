@@ -15,6 +15,7 @@ public:
     virtual const ParticleData& createParticleData() = 0;
 
 protected:
+    ParticleData m_particleData;
     void sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e) override {}
 
 private:

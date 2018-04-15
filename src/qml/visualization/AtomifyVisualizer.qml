@@ -48,7 +48,7 @@ Scene3D {
 
     hoverEnabled: root.mode === "flymode"
     multisample: true
-    aspects: ["render", "input", "logic", "lammps"]
+    aspects: ["render", "input", "logic", "atomify"]
 
 //    onFocusModeChanged: {
 //        if(focusMode) {
@@ -188,15 +188,15 @@ Scene3D {
             }
         ]
 
+        LAMMPSController {
+            id: lammpsController
+        }
+
         Atomify {
-            controller: LAMMPSController {
-                id: controller
-            }
+            controller: lammpsController
             spheresBuffer: spheres.buffer
             spheresGeometryRenderer: spheres.geometryRenderer
         }
-
-
 
         ForwardFrameGraph {
             id: forwardFrameGraph

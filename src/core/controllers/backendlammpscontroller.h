@@ -19,10 +19,10 @@ public:
     void notifySphereBuffer(const QByteArray& buffer, uint64_t sphereCount);
 
 protected:
-    void sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e) override;
+    //    void sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e) override;
 
 private:
-    void initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr& change) override;
+    //    void initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr& change) override;
     QScopedPointer<class LAMMPSThread> m_thread;
     LAMMPSData m_rawData;
 };

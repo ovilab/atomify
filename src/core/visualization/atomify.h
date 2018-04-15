@@ -11,7 +11,7 @@ class LAMMPSController;
 
 class Atomify : public Qt3DCore::QComponent {
     Q_OBJECT
-    Q_PROPERTY(LAMMPSController* controller READ controller WRITE setController NOTIFY controllerChanged) // TODO(anders.hafreager) Create abstract class for MDControllers
+    Q_PROPERTY(atomify::LAMMPSController* controller READ controller WRITE setController NOTIFY controllerChanged) // TODO(anders.hafreager) Create abstract class for MDControllers
     Q_PROPERTY(Qt3DRender::QBuffer* spheresBuffer READ spheresBuffer WRITE setSpheresBuffer NOTIFY spheresBufferChanged)
     Q_PROPERTY(Qt3DRender::QGeometryRenderer* spheresGeometryRenderer READ spheresGeometryRenderer WRITE setSpheresGeometryRenderer NOTIFY spheresGeometryRendererChanged)
 

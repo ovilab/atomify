@@ -126,21 +126,11 @@ Entity {
         }
     }
 
-    QQ2.Timer {
-        interval: 2000
-        running: true
-        onTriggered: {
-            console.log("Buffer: ", spheresRoot.spheresBuffer)
-//            spheresMeshInstanced.instanceCount = 10
-        }
-    }
-
     GeometryRenderer {
         id: geometryRenderer_
         primitiveType: GeometryRenderer.TriangleStrip
         enabled: instanceCount != 0
-//        instanceCount: sphereData.count
-        instanceCount: sphereCount
+        instanceCount: 0
 
         geometry: SpheresPointGeometry {
             id: geometry

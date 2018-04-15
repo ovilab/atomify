@@ -8,6 +8,7 @@ namespace atomify {
 LAMMPSController::LAMMPSController(Qt3DCore::QNode* parent)
     : Qt3DCore::QComponent(parent)
 {
+    qDebug() << "Creating LAMMPSController with id " << this->id();
 }
 
 void LAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e)
@@ -22,12 +23,12 @@ void LAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e)
     //    }
 }
 
-Qt3DCore::QNodeCreatedChangeBasePtr LAMMPSController::createNodeCreationChange() const
-{
-    //    auto creationChange = Qt3DCore::QNodeCreatedChangePtr<LAMMPSControllerData>::create(this);
-    //    auto& data = creationChange->data;
-    //    data.spheresBufferId = m_spheresBuffer->id();
-    //    return creationChange;
-}
+//Qt3DCore::QNodeCreatedChangeBasePtr LAMMPSController::createNodeCreationChange() const
+//{
+//    auto creationChange = Qt3DCore::QNodeCreatedChangePtr<LAMMPSControllerData>::create(this);
+//    auto& data = creationChange->data;
+//    data.spheresBufferId = m_spheresBuffer->id();
+//    return creationChange;
+//}
 
 } // namespace atomify

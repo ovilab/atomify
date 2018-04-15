@@ -35,7 +35,7 @@ Qt3DCore::QBackendNode* Mapper<T>::create(const Qt3DCore::QNodeCreatedChangeBase
 template <typename T>
 Qt3DCore::QBackendNode* Mapper<T>::get(Qt3DCore::QNodeId id) const
 {
-    if (m_controller->peerId() != id)
+    if (m_controller && m_controller->peerId() != id)
         throw "Tried to request a node with id different from the backend node";
     return m_controller;
 }
