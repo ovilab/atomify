@@ -1,19 +1,19 @@
 #ifndef BACKENDLAMMPSCONTROLLER_H
 #define BACKENDLAMMPSCONTROLLER_H
 
+#include "core/controllers/backendabstractcontroller.h"
 #include "core/data/lammps/lammpsdata.h"
 #include "core/data/particledata.h"
 
 #include <QBackendNode>
-#include <QHash>
-#include <experimental/optional>
 
 namespace atomify {
 
-class BackendLAMMPSController : public Qt3DCore::QBackendNode {
+class BackendLAMMPSController : public BackendAbstractController {
 public:
     BackendLAMMPSController();
-    LAMMPSData synchronize(LAMMPSData data);
+    bool synchronize() override;
+    const ParticleData& createParticleData() override;
     Qt3DCore::QNodeId spheresBufferId() const;
     void notifySphereBuffer(const QByteArray& buffer, uint64_t sphereCount);
 
@@ -23,20 +23,8 @@ protected:
 private:
     void initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr& change) override;
     QScopedPointer<class LAMMPSThread> m_thread;
-    Qt3DCore::QNodeId m_spheresBufferId;
+    LAMMPSData m_rawData;
 };
-
-class LAMMPSControllerMapper : public Qt3DCore::QBackendNodeMapper {
-public:
-    explicit LAMMPSControllerMapper(class AtomifyAspect* aspect);
-    Qt3DCore::QBackendNode* create(const Qt3DCore::QNodeCreatedChangeBasePtr& change) const override;
-    Qt3DCore::QBackendNode* get(Qt3DCore::QNodeId id) const override;
-    void destroy(Qt3DCore::QNodeId id) const override;
-    QList<class BackendLAMMPSController*> controllers();
-
-private:
-    mutable QHash<Qt3DCore::QNodeId, class BackendLAMMPSController*> m_controllers;
-};
-}
+} // namespace atomify
 
 #endif // BACKENDLAMMPSCONTROLLER_H

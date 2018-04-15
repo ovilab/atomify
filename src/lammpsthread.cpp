@@ -1,5 +1,4 @@
 #include "lammpsthread.h"
-#include "tmplammps.h"
 
 // std
 #include <unistd.h>

@@ -3,6 +3,9 @@
 namespace atomify {
 
 Atomify::Atomify()
+    : m_controller(nullptr)
+    , m_spheresBuffer(nullptr)
+    , m_spheresGeometryRenderer(nullptr)
 {
 }
 

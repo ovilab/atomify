@@ -49,7 +49,6 @@ struct LAMMPSData {
 
     LAMMPSSystemData systemData;
     LAMMPSAtomData atomData;
-    bool empty = true;
 };
 
 } // namespace atomify

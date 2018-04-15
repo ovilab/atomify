@@ -7,56 +7,27 @@ namespace atomify {
 
 LAMMPSController::LAMMPSController(Qt3DCore::QNode* parent)
     : Qt3DCore::QComponent(parent)
-    , m_spheresBuffer(new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, this))
-    , m_spheresRenderer(nullptr)
-    , m_visibleAtomCount(0)
 {
-    qDebug() << "Yeah baby";
-}
-
-Qt3DRender::QBuffer* LAMMPSController::spheresBuffer() const
-{
-    return m_spheresBuffer.data();
-}
-
-int LAMMPSController::visibleAtomCount() const
-{
-    return m_visibleAtomCount;
-}
-
-Qt3DRender::QGeometryRenderer* LAMMPSController::spheresRenderer() const
-{
-    return m_spheresRenderer;
-}
-
-void LAMMPSController::setSpheresRenderer(Qt3DRender::QGeometryRenderer* spheresRenderer)
-{
-    if (m_spheresRenderer == spheresRenderer)
-        return;
-
-    m_spheresRenderer = spheresRenderer;
-    emit spheresRendererChanged(m_spheresRenderer);
 }
 
 void LAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e)
 {
-    const auto change = qSharedPointerCast<Qt3DCore::QPropertyUpdatedChange>(e);
-    if (change->propertyName() == QByteArrayLiteral("visibleAtomCount")) {
-        const int visibleAtoms = change->value().value<int>();
-        if (m_visibleAtomCount != visibleAtoms) {
-            m_visibleAtomCount = visibleAtoms;
-            qDebug() << "Got atoms" << m_visibleAtomCount;
-            emit visibleAtomCountChanged();
-        }
-    }
+    //    const auto change = qSharedPointerCast<Qt3DCore::QPropertyUpdatedChange>(e);
+    //    if (change->propertyName() == QByteArrayLiteral("visibleAtomCount")) {
+    //        const int visibleAtoms = change->value().value<int>();
+    //        if (m_visibleAtomCount != visibleAtoms) {
+    //            m_visibleAtomCount = visibleAtoms;
+    //            emit visibleAtomCountChanged();
+    //        }
+    //    }
 }
 
 Qt3DCore::QNodeCreatedChangeBasePtr LAMMPSController::createNodeCreationChange() const
 {
-    auto creationChange = Qt3DCore::QNodeCreatedChangePtr<LAMMPSControllerData>::create(this);
-    auto& data = creationChange->data;
-    data.spheresBufferId = m_spheresBuffer->id();
-    return creationChange;
+    //    auto creationChange = Qt3DCore::QNodeCreatedChangePtr<LAMMPSControllerData>::create(this);
+    //    auto& data = creationChange->data;
+    //    data.spheresBufferId = m_spheresBuffer->id();
+    //    return creationChange;
 }
 
 } // namespace atomify

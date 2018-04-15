@@ -1,8 +1,11 @@
 #ifndef LAMMPSASPECT_H
 #define LAMMPSASPECT_H
 
+#include "core/controllers/backendlammpscontroller.h"
 #include "core/data/lammps/lammpsdata.h"
 #include "core/data/particledata.h"
+#include "core/mapper.h"
+#include "core/visualization/backendatomify.h"
 
 #include <QAbstractAspect>
 #include <QThread>
@@ -17,8 +20,9 @@ public:
 
 protected:
     QVector<Qt3DCore::QAspectJobPtr> jobsToExecute(qint64 time) override;
-    QSharedPointer<class LAMMPSControllerMapper> m_mapper;
-    QMap<Qt3DCore::QNodeId, QSharedPointer<struct LAMMPSSynchronizationJob>> m_jobs;
+    QSharedPointer<Mapper<BackendLAMMPSController>> m_lammpsMapper;
+    QSharedPointer<Mapper<BackendAtomify>> m_atomifyMapper;
+    //    QMap<Qt3DCore::QNodeId, QSharedPointer<struct AtomifySynchronizationJob>> m_jobs;
 };
 } // namespace atomify
 
