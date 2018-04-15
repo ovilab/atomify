@@ -13,8 +13,6 @@ Entity {
     property var variable: 0.0
     property string vertexShaderSourceFile: "qrc:/SimVis/render/shaders/gl3/spheres.vert"
     property string fragmentShaderSourceFile: "qrc:/SimVis/render/shaders/gl3/spheres.frag"
-    //    property string vertexShaderSourceFile: "qrc:/SimVis/render/shaders/es2/spheres.vert"
-    //    property string fragmentShaderSourceFile: "qrc:/SimVis/render/shaders/es2/spheres.frag"
     property alias fragmentColor: _fragmentColor.value
     property alias fragmentBuilder: _fragmentBuilder
     property alias normal: _fragmentBuilder.normal
@@ -24,7 +22,6 @@ Entity {
     property alias buffer: buffer_
     property alias geometryRenderer: geometryRenderer_
     property SphereData sphereData
-    property int sphereCount: 0
     property Camera camera
 
     onSphereDataChanged: {
@@ -131,6 +128,9 @@ Entity {
         primitiveType: GeometryRenderer.TriangleStrip
         enabled: instanceCount != 0
         instanceCount: 0
+        onInstanceCountChanged: {
+            console.log("            Instance count changed: ", instanceCount)
+        }
 
         geometry: SpheresPointGeometry {
             id: geometry
