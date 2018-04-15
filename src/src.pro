@@ -115,7 +115,6 @@ SOURCES += \
     usagestatistics.cpp \
     registerqml.cpp \
     lammpsthread.cpp \
-    tmplammps.cpp \
     core/data/lammps/lammpsatomdata.cpp \
     core/data/lammps/lammpssystemdata.cpp \
     core/data/particledata.cpp \
@@ -139,7 +138,6 @@ HEADERS += \
     dataproviders/data1d.h \
     usagestatistics.h \
     lammpsthread.h \
-    tmplammps.h \
     core/data/lammps/lammpsatomdata.h \
     core/data/lammps/lammpssystemdata.h \
     core/data/lammps/lammpsdata.h \
