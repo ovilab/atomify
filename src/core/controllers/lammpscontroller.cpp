@@ -10,7 +10,6 @@ LAMMPSController::LAMMPSController(Qt3DCore::QNode* parent)
     , m_spheresBuffer(new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, this))
     , m_spheresRenderer(nullptr)
     , m_visibleAtomCount(0)
-    , m_states(new States(this))
 {
     qDebug() << "Yeah baby";
 }
@@ -25,23 +24,9 @@ int LAMMPSController::visibleAtomCount() const
     return m_visibleAtomCount;
 }
 
-States* LAMMPSController::states() const
-{
-    return m_states;
-}
-
 Qt3DRender::QGeometryRenderer* LAMMPSController::spheresRenderer() const
 {
     return m_spheresRenderer;
-}
-
-void LAMMPSController::setStates(States* states)
-{
-    if (m_states == states)
-        return;
-
-    m_states = states;
-    emit statesChanged(m_states);
 }
 
 void LAMMPSController::setSpheresRenderer(Qt3DRender::QGeometryRenderer* spheresRenderer)
