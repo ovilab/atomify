@@ -3,7 +3,6 @@
 
 #include "core/data/lammps/lammpsdata.h"
 #include "core/data/particledata.h"
-#include "lammpsthread.h"
 
 #include <QBackendNode>
 
@@ -17,7 +16,6 @@ public:
 
 protected:
     void sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e) override {}
-    QScopedPointer<class LAMMPSThread> m_thread;
 
 private:
     void initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr& change) override {}

@@ -31,15 +31,19 @@ signals:
     void spheresBufferChanged(Qt3DRender::QBuffer* spheresBuffer);
     void spheresGeometryRendererChanged(Qt3DRender::QGeometryRenderer* spheresGeometryRenderer);
 
+protected:
+    void sceneChangeEvent(const Qt3DCore::QSceneChangePtr& change) override;
+
 private:
     LAMMPSController* m_controller;
     Qt3DRender::QBuffer* m_spheresBuffer;
     Qt3DRender::QGeometryRenderer* m_spheresGeometryRenderer;
+    Qt3DCore::QNodeCreatedChangeBasePtr createNodeCreationChange() const override;
 };
 
 struct AtomifyData {
     Qt3DCore::QNodeId spheresBufferId;
-    Qt3DCore::QNodeId spheresRendererId;
+    Qt3DCore::QNodeId spheresGeometryRendererId;
     Qt3DCore::QNodeId controllerId;
 };
 

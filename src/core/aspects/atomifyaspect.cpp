@@ -14,8 +14,9 @@ AtomifyAspect::AtomifyAspect(QObject* parent)
     : Qt3DCore::QAbstractAspect(parent)
 {
     // Register the mapper to handle creation, lookup, and destruction of backend nodes
-    Mapper<BackendLAMMPSController> mapper(this);
+    m_lammpsMapper = QSharedPointer<Mapper<BackendLAMMPSController>>::create(this);
     m_atomifyMapper = QSharedPointer<Mapper<BackendAtomify>>::create(this);
+
     registerBackendType<LAMMPSController>(m_lammpsMapper);
     registerBackendType<Atomify>(m_atomifyMapper);
 }
@@ -58,43 +59,34 @@ static QByteArray createSphereBufferData(const ParticleData& particleData, QByte
 //    }
 // }
 
-//struct LAMMPSSynchronizationJob : public Qt3DCore::QAspectJob {
-//    BackendLAMMPSController* controller = nullptr;
-//    LAMMPSData m_rawData;
-//    ParticleData m_particleData;
-//    QByteArray m_sphereBufferData;
+struct AtomifySynchronizationJob : public Qt3DCore::QAspectJob {
+    BackendAtomify* atomify = nullptr;
+    BackendAbstractController* controller = nullptr;
+    QByteArray m_sphereBufferData;
 
-//    void run() override
-//    {
-//        m_rawData = controller->synchronize(std::move(m_rawData));
-//        if (m_rawData.empty)
-//            return;
-//        m_particleData = convertData(m_rawData, std::move(m_particleData));
-//        // m_particleData = applyModifiers(m_particleData, std::move(m_particleData));
-//        m_sphereBufferData = createSphereBufferData(m_particleData, std::move(m_sphereBufferData));
+    void run() override
+    {
+        if (controller->synchronize()) {
+            const auto& particleData = controller->createParticleData();
+            // particleData = applyModifiers(m_particleData, std::move(m_particleData));
+            m_sphereBufferData = createSphereBufferData(particleData, std::move(m_sphereBufferData));
 
-//        uint64_t sphereCount = m_sphereBufferData.size() / sizeof(SphereVBOData);
-//        controller->notifySphereBuffer(m_sphereBufferData, sphereCount);
-//    }
-//};
+            uint64_t sphereCount = m_sphereBufferData.size() / sizeof(SphereVBOData);
+            atomify->notifySphereBuffer(m_sphereBufferData, sphereCount);
+        }
+    }
+};
 
-// using LAMMPSSynchronizationJobPtr = QSharedPointer<LAMMPSSynchronizationJob>;
+using AtomifySynchronizationJobPtr = QSharedPointer<AtomifySynchronizationJob>;
 
 QVector<Qt3DCore::QAspectJobPtr> AtomifyAspect::jobsToExecute(qint64 time)
 {
-    QVector<Qt3DCore::QAspectJobPtr> jobs;
-
-    //    for (auto* controller : m_mapper->controllers()) {
-    //        auto nodeId = controller->peerId();
-
-    //        if (!m_jobs.contains(nodeId)) {
-    //            m_jobs[nodeId] = LAMMPSSynchronizationJobPtr::create();
-    //            m_jobs[nodeId]->controller = controller;
-    //        }
-
-    //        jobs.append(m_jobs[nodeId]);
-    //    }
-    return jobs;
+    if (m_job == nullptr) {
+        m_job = AtomifySynchronizationJobPtr::create();
+        m_job->atomify = m_atomifyMapper->controller();
+        m_job->controller = m_lammpsMapper->controller();
+    }
+    return { m_job };
 }
 
 } // namespace atomify

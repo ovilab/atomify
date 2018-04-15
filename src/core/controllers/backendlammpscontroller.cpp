@@ -11,7 +11,6 @@ BackendLAMMPSController::BackendLAMMPSController()
     : BackendAbstractController()
     , m_thread(new LAMMPSThread())
 {
-    qDebug() << "OOOOOH YEAH!!! Starting LAMMPS.";
     m_thread->start();
 }
 
@@ -58,25 +57,6 @@ void BackendLAMMPSController::initializeFromPeer(const Qt3DCore::QNodeCreatedCha
     //    const auto typedChange = qSharedPointerCast<Qt3DCore::QNodeCreatedChange<LAMMPSControllerData>>(change);
     //    const auto& data = typedChange->data;
     //    m_spheresBufferId = data.spheresBufferId;
-}
-
-void BackendLAMMPSController::notifySphereBuffer(const QByteArray& buffer, uint64_t sphereCount)
-{
-    //    {
-    //        auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresBufferId);
-    //        change->setPropertyName("data");
-    //        change->setValue(QVariant::fromValue(buffer));
-    //        notifyObservers(change);
-    //    }
-
-    //    {
-    //        qDebug() << "Sending visible atom count" << sphereCount;
-    //        auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(peerId());
-    //        change->setPropertyName("visibleAtomCount");
-    //        change->setValue(static_cast<int>(sphereCount)); // Cast for linux compilation
-    //        change->setDeliveryFlags(Qt3DCore::QSceneChange::Nodes);
-    //        notifyObservers(change);
-    //    }
 }
 
 } // namespace atomify

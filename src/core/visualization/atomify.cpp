@@ -1,4 +1,5 @@
 #include "atomify.h"
+#include "core/controllers/lammpscontroller.h"
 
 namespace atomify {
 
@@ -52,3 +53,18 @@ void Atomify::setSpheresGeometryRenderer(Qt3DRender::QGeometryRenderer* spheresG
 }
 
 } // namespace atomify
+
+void atomify::Atomify::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& change)
+{
+}
+
+Qt3DCore::QNodeCreatedChangeBasePtr atomify::Atomify::createNodeCreationChange() const
+{
+    auto creationChange = Qt3DCore::QNodeCreatedChangePtr<AtomifyData>::create(this);
+    auto& data = creationChange->data;
+    data.spheresBufferId = m_spheresBuffer->id();
+    data.spheresGeometryRendererId = m_spheresGeometryRenderer->id();
+    data.controllerId = m_controller->id();
+
+    return creationChange;
+}

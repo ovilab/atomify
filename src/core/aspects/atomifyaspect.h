@@ -22,7 +22,7 @@ protected:
     QVector<Qt3DCore::QAspectJobPtr> jobsToExecute(qint64 time) override;
     QSharedPointer<Mapper<BackendLAMMPSController>> m_lammpsMapper;
     QSharedPointer<Mapper<BackendAtomify>> m_atomifyMapper;
-    //    QMap<Qt3DCore::QNodeId, QSharedPointer<struct AtomifySynchronizationJob>> m_jobs;
+    QSharedPointer<struct AtomifySynchronizationJob> m_job;
 };
 } // namespace atomify
 

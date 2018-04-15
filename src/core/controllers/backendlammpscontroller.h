@@ -4,6 +4,7 @@
 #include "core/controllers/backendabstractcontroller.h"
 #include "core/data/lammps/lammpsdata.h"
 #include "core/data/particledata.h"
+#include "lammpsthread.h"
 
 #include <QBackendNode>
 

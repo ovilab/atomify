@@ -12,7 +12,6 @@ struct ParticleData {
     QVector<QVector3D> colors;
     QVector<float> radii;
     QVector<uint64_t> ids;
-    QVector<int> bitmask; // For detecting group membership
     QVector<int> types;
     QVector<bool> visible;
     int size;
