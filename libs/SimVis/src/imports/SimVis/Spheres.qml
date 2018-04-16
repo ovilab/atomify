@@ -126,7 +126,7 @@ Entity {
     GeometryRenderer {
         id: geometryRenderer_
         primitiveType: GeometryRenderer.TriangleStrip
-        enabled: instanceCount != 0
+//        enabled: instanceCount != 0
         instanceCount: 0
         onInstanceCountChanged: {
             console.log("            Instance count changed: ", instanceCount)
