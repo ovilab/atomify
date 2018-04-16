@@ -31,11 +31,10 @@ void registerQML()
     qmlRegisterType<Clipboard>("Atomify", 1, 0, "Clipboard");
 
     qmlRegisterSingletonType<StandardPaths>("StandardPaths", 1, 0, "StandardPaths", &StandardPaths::qmlInstance);
-
     qmlRegisterSingletonType<KeySequence>("KeySequence", 1, 0, "KeySequence", &KeySequence::qmlInstance);
-
     qmlRegisterSingletonType<RenderCaptureHelper>("Atomify", 1, 0, "RenderCaptureHelper", &RenderCaptureHelper::qmlInstance);
 
-    qmlRegisterType<Atomify>("Atomify", 1, 0, "Atomify");
+    qmlRegisterUncreatableType<AbstractController>("Atomify", 1, 0, "AbstractController", "Cannot create abstract type: AbstractController");
     qmlRegisterType<LAMMPSController>("Atomify", 1, 0, "LAMMPSController");
+    qmlRegisterType<Atomify>("Atomify", 1, 0, "Atomify");
 }

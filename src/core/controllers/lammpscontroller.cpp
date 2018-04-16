@@ -6,9 +6,8 @@
 namespace atomify {
 
 LAMMPSController::LAMMPSController(Qt3DCore::QNode* parent)
-    : Qt3DCore::QComponent(parent)
+    : AbstractController(parent)
 {
-    qDebug() << "Creating LAMMPSController with id " << this->id();
 }
 
 void LAMMPSController::sceneChangeEvent(const Qt3DCore::QSceneChangePtr& e)

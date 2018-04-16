@@ -1,11 +1,11 @@
 #ifndef LAMMPSCONTROLLER_H
 #define LAMMPSCONTROLLER_H
 
-#include <QComponent>
+#include "abstractcontroller.h"
 
 namespace atomify {
 
-class LAMMPSController : public Qt3DCore::QComponent {
+class LAMMPSController : public AbstractController {
     Q_OBJECT
 public:
     explicit LAMMPSController(Qt3DCore::QNode* parent = nullptr);

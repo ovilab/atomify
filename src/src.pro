@@ -149,7 +149,8 @@ HEADERS += \
     core/aspects/atomifyaspect.h \
     core/visualization/backendatomify.h \
     core/controllers/backendabstractcontroller.h \
-    core/mapper.h
+    core/mapper.h \
+    core/controllers/abstractcontroller.h
 
 # Temporary use of quickcontrols2 without install
 
