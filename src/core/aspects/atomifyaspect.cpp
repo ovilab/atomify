@@ -52,15 +52,11 @@ struct AtomifySynchronizationJob : public Qt3DCore::QAspectJob {
     void run() override
     {
         if (controller->synchronize()) {
-            qDebug() << "Did synchronize!!!";
             const auto& particleData = controller->createParticleData();
-            qDebug() << "Got particle data with " << particleData.size << " things";
             // particleData = applyModifiers(m_particleData, std::move(m_particleData));
             m_sphereBufferData = createSphereBufferData(particleData, std::move(m_sphereBufferData));
-            qDebug() << "Creating sphere buffer data";
 
             uint64_t sphereCount = m_sphereBufferData.size() / sizeof(SphereVBOData);
-            qDebug() << "Setting sphere buffer data";
             atomify->notifySphereBuffer(m_sphereBufferData, sphereCount);
         }
     }
