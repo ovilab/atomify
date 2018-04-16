@@ -8,6 +8,7 @@
 namespace atomify {
 
 BackendAtomify::BackendAtomify()
+    : Qt3DCore::QBackendNode(Qt3DCore::QBackendNode::ReadWrite)
 {
 }
 
@@ -27,6 +28,7 @@ void BackendAtomify::initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePt
 void BackendAtomify::notifySphereBuffer(const QByteArray& buffer, uint64_t sphereCount)
 {
     {
+        qDebug() << "Will send buffer changed to " << m_spheresBufferId;
         auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresBufferId);
         change->setPropertyName("data");
         change->setValue(QVariant::fromValue(buffer));
@@ -34,6 +36,7 @@ void BackendAtomify::notifySphereBuffer(const QByteArray& buffer, uint64_t spher
     }
 
     {
+        qDebug() << "Will send instance count changed to " << m_spheresGeometryRendererId;
         auto change = Qt3DCore::QPropertyUpdatedChangePtr::create(m_spheresGeometryRendererId);
         change->setPropertyName("instanceCount");
         change->setValue(static_cast<int>(sphereCount));
