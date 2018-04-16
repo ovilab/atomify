@@ -1,5 +1,5 @@
-#ifndef CODEEDITORBACKEND_H
-#define CODEEDITORBACKEND_H
+#ifndef CORE_EDITOR_CODEEDITORBACKEND_H
+#define CORE_EDITOR_CODEEDITORBACKEND_H
 
 #include <QQuickItem>
 #include <QVariantMap>
@@ -41,4 +41,4 @@ private:
     QString readFile(bool* ok);
 };
 
-#endif // CODEEDITORBACKEND_H
+#endif // CORE_EDITOR_CODEEDITORBACKEND_H

@@ -1,5 +1,5 @@
-#ifndef BACKENDATOMIFY_H
-#define BACKENDATOMIFY_H
+#ifndef CORE_VISUALIZATION_BACKENDATOMIFY_H
+#define CORE_VISUALIZATION_BACKENDATOMIFY_H
 
 #include "core/data/lammps/lammpsdata.h"
 #include "core/data/particledata.h"
@@ -28,4 +28,4 @@ private:
 
 } // namespace atomify
 
-#endif // BACKENDATOMIFY_H
+#endif // CORE_VISUALIZATION_BACKENDATOMIFY_H

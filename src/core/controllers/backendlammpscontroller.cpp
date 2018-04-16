@@ -1,5 +1,5 @@
 #include "backendlammpscontroller.h"
-#include "core/aspects/atomifyaspect.h"
+#include "core/atomifyaspect.h"
 #include "lammpscontroller.h"
 #include "lammpsthread.h"
 #include <QDebug>

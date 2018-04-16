@@ -1,5 +1,5 @@
-#ifndef LAMMPSASPECT_H
-#define LAMMPSASPECT_H
+#ifndef CORE_LAMMPSASPECT_H
+#define CORE_LAMMPSASPECT_H
 
 #include "core/controllers/backendlammpscontroller.h"
 #include "core/data/lammps/lammpsdata.h"
@@ -26,4 +26,4 @@ protected:
 };
 } // namespace atomify
 
-#endif // LAMMPSASPECT_H
+#endif // CORE_LAMMPSASPECT_H

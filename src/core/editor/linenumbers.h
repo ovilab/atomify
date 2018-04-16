@@ -1,5 +1,5 @@
-#ifndef LINENUMBERS_H
-#define LINENUMBERS_H
+#ifndef CORE_EDITOR_LINENUMBERS_H
+#define CORE_EDITOR_LINENUMBERS_H
 
 #include <QQuickPaintedItem>
 
@@ -87,4 +87,4 @@ private:
     QFont m_font;
 };
 
-#endif // LINENUMBERS_H
+#endif // CORE_EDITOR_LINENUMBERS_H

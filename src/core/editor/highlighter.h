@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-#ifndef HIGHLIGHTER_H
-#define HIGHLIGHTER_H
+#ifndef CORE_EDITOR_HIGHLIGHTER_H
+#define CORE_EDITOR_HIGHLIGHTER_H
 
 #include <QQuickTextDocument>
 #include <QSyntaxHighlighter>
@@ -90,4 +90,4 @@ public slots:
     void setTextDocument(QQuickTextDocument* textDocument);
 };
 
-#endif // HIGHLIGHTER_H
+#endif // CORE_EDITOR_HIGHLIGHTER_H

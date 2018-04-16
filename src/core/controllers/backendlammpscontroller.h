@@ -1,5 +1,5 @@
-#ifndef BACKENDLAMMPSCONTROLLER_H
-#define BACKENDLAMMPSCONTROLLER_H
+#ifndef CORE_CONTROLLERS_BACKENDLAMMPSCONTROLLER_H
+#define CORE_CONTROLLERS_BACKENDLAMMPSCONTROLLER_H
 
 #include "core/controllers/backendabstractcontroller.h"
 #include "core/data/lammps/lammpsdata.h"
@@ -28,4 +28,4 @@ private:
 };
 } // namespace atomify
 
-#endif // BACKENDLAMMPSCONTROLLER_H
+#endif // CORE_CONTROLLERS_BACKENDLAMMPSCONTROLLER_H

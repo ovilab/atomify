@@ -119,7 +119,7 @@ SOURCES += \
     core/data/lammps/lammpssystemdata.cpp \
     core/data/particledata.cpp \
     core/visualization/atomify.cpp \
-    core/aspects/atomifyaspect.cpp \
+    core/atomifyaspect.cpp \
     core/visualization/backendatomify.cpp \
     core/controllers/backendabstractcontroller.cpp \
     core/mapper.cpp
@@ -146,7 +146,7 @@ HEADERS += \
     core/data/lammps/lammpsdata.h \
     core/data/particledata.h \
     core/visualization/atomify.h \
-    core/aspects/atomifyaspect.h \
+    core/atomifyaspect.h \
     core/visualization/backendatomify.h \
     core/controllers/backendabstractcontroller.h \
     core/mapper.h \

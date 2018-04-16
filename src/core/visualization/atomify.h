@@ -1,5 +1,5 @@
-#ifndef ATOMIFY_H
-#define ATOMIFY_H
+#ifndef CORE_VISUALIZATION_ATOMIFY_H
+#define CORE_VISUALIZATION_ATOMIFY_H
 
 #include <Qt3DCore/QComponent>
 #include <Qt3DRender/QBuffer>
@@ -49,4 +49,4 @@ struct AtomifyData {
 
 } // namespace atomify
 
-#endif // ATOMIFY_H
+#endif // CORE_VISUALIZATION_ATOMIFY_H

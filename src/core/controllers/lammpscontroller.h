@@ -1,5 +1,5 @@
-#ifndef LAMMPSCONTROLLER_H
-#define LAMMPSCONTROLLER_H
+#ifndef CORE_CONTROLLERS_LAMMPSCONTROLLER_H
+#define CORE_CONTROLLERS_LAMMPSCONTROLLER_H
 
 #include "abstractcontroller.h"
 
@@ -17,4 +17,4 @@ private:
 
 } // namespace atomify
 
-#endif // LAMMPSCONTROLLER_H
+#endif // CORE_CONTROLLERS_LAMMPSCONTROLLER_H
