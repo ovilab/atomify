@@ -17,7 +17,7 @@ struct ParticleData {
     int size;
 };
 
-void resize(ParticleData* data, size_t size);
+ParticleData resize(ParticleData data, size_t size);
 
 } // namespace atomify
 

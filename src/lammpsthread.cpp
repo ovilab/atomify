@@ -21,6 +21,7 @@
 #include <lammps.h>
 #include <library.h>
 #include <modify.h>
+#include <core/kernel/value.h>
 
 using namespace LAMMPS_NS;
 
@@ -28,8 +29,13 @@ namespace atomify {
 
 LAMMPSThread::LAMMPSThread(QObject* parent)
     : QThread(parent)
-    , m_dataDirty(false)
 {
+}
+
+LAMMPSThread::~LAMMPSThread()
+{
+    // just in case we got destructed before a request was finished
+    m_dataReady.release(1);
 }
 
 int findFixIndex(LAMMPS_NS::LAMMPS* lammps, QString identifier)
@@ -103,7 +109,7 @@ void LAMMPSThread::run()
 
             // TODO synchronize with frontend
             bool doContinue = false;
-            //            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/diffusion/simple_diffusion/simple_diffusion.in";
+//            const QString scriptFilePath = "/home/svenni/projects/atomify/atomify/src/simulations/other/indent/indent.in";
             const QString scriptFilePath = "/Users/anderhaf/Desktop/lj.in";
 
             if (finished || didCancel || crashed)
@@ -159,28 +165,24 @@ void LAMMPSThread::callback(LAMMPS_NS::LAMMPS* lammps, int mode)
         return;
     }
 
-    {
-        QMutexLocker locker(&m_mutex);
-        copy(&m_data.atomData, static_cast<void*>(lammps));
-        copy(&m_data.systemData, static_cast<void*>(lammps));
-        m_dataDirty = true;
-        qDebug() << "Did callback with ts = " << m_data.systemData.ntimestep;
-    }
+    // TODO make sure we do not reallocate this every frame (use a better allocator)
+    Value<LAMMPSData> data;
+    if (m_atomDataRequested)
+        copy(&data->atomData, static_cast<void*>(lammps));
+    if (m_systemDataRequested)
+        copy(&data->systemData, static_cast<void*>(lammps));
+
+    m_readyData = data;
+    m_dataReady.release();
+    qDebug() << "Did callback with ts = " << data->systemData.ntimestep;
 }
 
-bool LAMMPSThread::dataDirty() const
-{
-    QMutexLocker locker(&m_mutex);
-    return m_dataDirty;
-}
-
-LAMMPSData LAMMPSThread::data(LAMMPSData data)
-{
-    {
-        QMutexLocker locker(&m_mutex);
-        std::swap(data, m_data);
-        m_dataDirty = false;
-    }
-    return data;
-}
+//LAMMPSData LAMMPSThread::data(LAMMPSData data)
+//{
+//    {
+//        std::swap(data, m_readyData);
+//        m_dataDirty = false;
+//    }
+//    return data;
+//}
 } // namespace atomify

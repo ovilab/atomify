@@ -7,14 +7,14 @@
 #include "lammpsthread.h"
 
 #include <QBackendNode>
+#include <QFuture>
 
 namespace atomify {
 
 class BackendLAMMPSController : public BackendAbstractController {
 public:
     BackendLAMMPSController();
-    bool synchronize() override;
-    const ParticleData& createParticleData() override;
+    QFuture<Value<ParticleData>> fetchParticleData() override;
     Qt3DCore::QNodeId spheresBufferId() const;
     void notifySphereBuffer(const QByteArray& buffer, uint64_t sphereCount);
 
@@ -24,7 +24,7 @@ protected:
 private:
     //    void initializeFromPeer(const Qt3DCore::QNodeCreatedChangeBasePtr& change) override;
     QScopedPointer<class LAMMPSThread> m_thread;
-    LAMMPSData m_rawData;
+    Value<LAMMPSData> m_rawData;
 };
 } // namespace atomify
 

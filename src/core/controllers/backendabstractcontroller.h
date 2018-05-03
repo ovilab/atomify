@@ -3,16 +3,17 @@
 
 #include "core/data/lammps/lammpsdata.h"
 #include "core/data/particledata.h"
+#include "core/kernel/value.h"
 
 #include <QBackendNode>
+#include <QFuture>
 
 namespace atomify {
 
 class BackendAbstractController : public Qt3DCore::QBackendNode {
 public:
     BackendAbstractController();
-    virtual bool synchronize() = 0;
-    virtual const ParticleData& createParticleData() = 0;
+    virtual QFuture<Value<ParticleData>> fetchParticleData() = 0;
 
 protected:
     ParticleData m_particleData;

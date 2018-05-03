@@ -150,7 +150,8 @@ HEADERS += \
     core/visualization/backendatomify.h \
     core/controllers/backendabstractcontroller.h \
     core/mapper.h \
-    core/controllers/abstractcontroller.h
+    core/controllers/abstractcontroller.h \
+    core/kernel/value.h
 
 # Temporary use of quickcontrols2 without install
 

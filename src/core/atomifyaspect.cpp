@@ -7,6 +7,7 @@
 #include <QAbstractAspect>
 #include <QAspectJob>
 #include <QPropertyUpdatedChange>
+#include <QtConcurrent/QtConcurrentRun>
 
 namespace atomify {
 
@@ -21,17 +22,20 @@ AtomifyAspect::AtomifyAspect(QObject* parent)
     registerBackendType<Atomify>(m_atomifyMapper);
 }
 
-static QByteArray createSphereBufferData(const ParticleData& particleData, QByteArray sphereBufferData)
+Value<QByteArray> createSphereBufferData(Value<ParticleData> particleData)
 {
-    sphereBufferData.resize(particleData.size * sizeof(SphereVBOData));
+    qDebug() << "Create sphere buffer data";
 
-    SphereVBOData* vboData = reinterpret_cast<SphereVBOData*>(sphereBufferData.data());
+    Value<QByteArray> sphereBufferData;
+    sphereBufferData->resize(particleData->size * sizeof(SphereVBOData));
+
+    SphereVBOData* vboData = reinterpret_cast<SphereVBOData*>(sphereBufferData->data());
     // TODO(anders.hafreager) SIMDIFY
-    for (size_t i = 0; i < particleData.size; i++) {
+    for (size_t i = 0; i < particleData->size; i++) {
         SphereVBOData& vbo = vboData[i];
 
-        const int id = particleData.ids[i];
-        vbo.position = particleData.positions[i];
+        const int id = particleData->ids[i];
+        vbo.position = particleData->positions[i];
         vbo.color[0] = 1.0;
         vbo.color[1] = 0.0;
         vbo.color[2] = 0.0;
@@ -47,17 +51,33 @@ static QByteArray createSphereBufferData(const ParticleData& particleData, QByte
 struct AtomifySynchronizationJob : public Qt3DCore::QAspectJob {
     BackendAtomify* atomify = nullptr;
     BackendAbstractController* controller = nullptr;
-    QByteArray m_sphereBufferData;
+//    QByteArray m_sphereBufferData;
+    QFuture<Value<ParticleData>> m_particleData;
+    QFuture<Value<QByteArray>> m_sphereBufferData;
 
     void run() override
     {
-        if (controller->synchronize()) {
-            const auto& particleData = controller->createParticleData();
-            // particleData = applyModifiers(m_particleData, std::move(m_particleData));
-            m_sphereBufferData = createSphereBufferData(particleData, std::move(m_sphereBufferData));
+        // if job not launched, launch it
+        // check if job finished
+        // if job finished, start createSphereBufferDataJob
+        // check if createSphereBufferDataJob finished
 
-            uint64_t sphereCount = m_sphereBufferData.size() / sizeof(SphereVBOData);
-            atomify->notifySphereBuffer(m_sphereBufferData, sphereCount);
+        if (m_particleData.isCanceled()) {
+            m_particleData = controller->fetchParticleData();
+        }
+
+        // TODO consider waiting a few ms, or maybe not...
+        if (m_particleData.isResultReadyAt(0)) {
+            qDebug() << "Running sphere buffer data";
+            m_sphereBufferData = QtConcurrent::run(&createSphereBufferData, m_particleData.result());
+            m_particleData = {};
+        }
+
+        if (m_sphereBufferData.isResultReadyAt(0)) {
+            qDebug() << "Sphere buffer data was finished";
+            const auto &sphereBufferData = m_sphereBufferData.result();
+            uint64_t sphereCount = sphereBufferData->size() / sizeof(SphereVBOData);
+            atomify->notifySphereBuffer(*sphereBufferData, sphereCount);
         }
     }
 };
