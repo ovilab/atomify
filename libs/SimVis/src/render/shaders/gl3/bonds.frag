@@ -1,7 +1,9 @@
 #version 330
+// bonds.frag
 
 #pragma shadernodes header
 
+in vec2 texCoord;
 in vec3 vs_vertex1Position;
 in vec3 vs_vertex2Position;
 in float vs_sphereRadius1;
@@ -37,6 +39,12 @@ float square(vec3 a) {
 }
 
 void main(void) {
+  vec3 eyePosition = vec3(0.620731, 3.95707, -2.2287);
+    if (worldPosition.x < 0) {
+      fragColor = vec4(texCoord.x, texCoord.y, 1.0, 1.0);
+      return;
+    }
+
     vec3 rayOrigin = vec3(0.0, 0.0, 0.0); // in modelview space
     vec3 rayTarget = modelViewPosition; // in modelview space
     vec3 rayDirection = normalize(rayOrigin - rayTarget);
@@ -223,5 +231,4 @@ void main(void) {
     vec3 normalDotCamera = color*dot(normal, normalize(cameraToTarget));
 
 #pragma shadernodes body
-
 }

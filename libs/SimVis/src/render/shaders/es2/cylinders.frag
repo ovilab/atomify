@@ -195,4 +195,5 @@ void main(void) {
 
 #pragma shadernodes body
 
+    fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/extras">
         <file>atomtypes.json</file>
+        <file>camera.obj</file>
     </qresource>
 </RCC>

@@ -1,5 +1,5 @@
 #version 330
-
+// bonds.vert
 in vec3 vertex1Position;
 in vec3 vertex2Position;
 in float radius1;
@@ -50,6 +50,7 @@ vec3 makePerpendicular(vec3 v) {
 
 void main(void)
 {
+  vec3 eyePosition = vec3(0.620731, 3.95707, -2.2287);
     vs_vertex1Position = vertex1Position;
     vs_vertex2Position = vertex2Position;
     vs_radius1 = radius1;
@@ -141,4 +142,5 @@ void main(void)
     modelViewPosition = (modelView * ppos).xyz;
     worldPosition = vertices[i];
     gl_Position = mvp*vec4(vertices[i], 1.0);
+    texCoord = texCoords[i];
 }

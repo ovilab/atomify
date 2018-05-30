@@ -1,4 +1,7 @@
 #version 330
+
+// spheres.frag
+
 #pragma shadernodes header
 
 in vec3 modelPosition;
@@ -8,6 +11,7 @@ in vec2 planePosition;
 in float vs_particleId;
 in float vs_flags;
 in float radius;
+in vec3 worldPosition;
 
 out float particleIdOut;
 out vec4 colorOut;
@@ -19,6 +23,11 @@ uniform vec3 eyePosition;
 uniform vec3 viewVector;
 
 void main(void) {
+  vec3 eyePosition = vec3(0.620731, 3.95707, -2.2287);
+  if (worldPosition.x < 0) {
+    colorOut = vec4(0.5*(1.0 + planePosition), 1.0, 1.0);
+    return;
+  }
     vec3 rayDirection = eyePosition - modelPosition;
     vec3 rayOrigin = modelPosition - modelSpherePosition;
 
@@ -59,6 +68,8 @@ void main(void) {
     }
 
     if ( d < 0.0 ) {
+      colorOut = vec4(0.5*(1.0 + planePosition), 1.0, 1.0);
+      return;
         discard;
     }
 

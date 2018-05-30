@@ -1,5 +1,5 @@
 #version 330
-
+// spheres.vert
 in vec3 vertexPosition;
 in float vertexId;
 in vec3 pos;
@@ -15,6 +15,7 @@ uniform mat4 mvp;
 
 out vec3 modelSpherePosition;
 out vec3 modelPosition;
+out vec3 worldPosition;
 out vec3 color;
 out vec2 planePosition;
 out float radius;
@@ -32,15 +33,18 @@ vec3 makePerpendicular(vec3 v) {
 }
 
 void main() {
+    vec3 eyePosition = vec3(0.620731, 3.95707, -2.2287);
+
     vec3 position = vertexPosition + pos;
     color = col;
     radius = scale;
     modelSpherePosition = (modelMatrix * vec4(position, 1.0)).xyz;
 
+
     vec3 view = normalize(position - eyePosition);
     vec3 right = normalize(makePerpendicular(view));
     vec3 up = cross(right, view);
-
+    
     float texCoordX = 1.0 - 2.0*(float(vertexId==0.0) + float(vertexId==2.0));
     float texCoordY = 1.0 - 2.0*(float(vertexId==0.0) + float(vertexId==1.0));
     planePosition = vec2(texCoordX, texCoordY);
@@ -57,6 +61,6 @@ void main() {
 
     vs_particleId = particleId;
     vs_flags = flags;
-
+    worldPosition = modelPosition;
     gl_Position = mvp*vec4(position, 1.0);
 }

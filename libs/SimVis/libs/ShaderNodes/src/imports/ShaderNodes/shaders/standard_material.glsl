@@ -5,6 +5,7 @@ highp vec3 standardMaterialLight(highp Light light, highp vec3 vnormal, highp ve
                         highp vec3 ambientColor, highp vec3 diffuseColor, highp vec3 specularColor,
                         highp float ambientIntensity, highp float diffuseIntensity, highp float specularIntensity,
                         highp float hardness, highp float attenuationOffset) {
+    cameraPosition = vec3(0.620731, 3.95707, -2.2287);
     highp vec3 normal = normalize(vnormal); // IMPORTANT: Do not remove
     // this because the normal is no longer normalized due to
     // interpolation on fragment shader
@@ -32,7 +33,6 @@ highp vec3 standardMaterialLight(highp Light light, highp vec3 vnormal, highp ve
     // normFactor *= (cosAngle < 3.1415) ? 1.0 : 0.0;
     highp float specularCoefficient = pow(max(cosAngle, 0.0), hardness);
     lightVector += normFactor*light.color*light.strength*specularColor.rgb*specularCoefficient*specularIntensity*attenuationFactor;
-
    /* RETURN GAMMA CORRECTED COMBINED */
    return gamma(lightVector, light.gamma);
 }

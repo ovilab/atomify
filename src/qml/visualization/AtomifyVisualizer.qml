@@ -259,6 +259,10 @@ Scene3D {
 
         Camera {
             id: trackballCamera
+            onPositionChanged: {
+                console.log("Pos: ", position)
+            }
+
             Component.onCompleted: {
                 panAboutViewCenter(40, Qt.vector3d(0, 0, 1))
                 tiltAboutViewCenter(30)
@@ -299,19 +303,13 @@ Scene3D {
 
         Light {
             id: light1
-            position: visualizer.camera.position.plus(
-                          (visualizer.camera.viewVector.normalized().plus(
-                               visualizer.camera.upVector.normalized()).plus(
-                               visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(20))
+            position: Qt.vector3d(0.620731, 5.95707, -2.2287);
             strength: 0.5
             attenuation: 0.5
         }
         Light {
             id: light2
-            position: visualizer.camera.position.minus(
-                          (visualizer.camera.viewVector.normalized().plus(
-                               visualizer.camera.upVector.normalized()).plus(
-                               visualizer.camera.viewVector.crossProduct(visualizer.camera.upVector)).normalized()).times(10))
+            position: Qt.vector3d(-3.620731, 5.95707, -2.2287);
             strength: 0.5
             attenuation: 5.0
         }
@@ -721,5 +719,25 @@ Scene3D {
             lights: visualizer.lights
             layer: forwardFrameGraph.outlineLayer
         }
+
+        Mesh {
+            id: meshthing
+            source: "qrc:///extras/camera.obj"
+        }
+
+        PhongMaterial {
+            id: phongy
+            diffuse: "blue"
+            ambient: "white"
+        }
+
+        Transform {
+            id: trans
+            scale: 0.02
+        }
+
+//        Entity {
+//            components: [meshthing, phongy, trans]
+//        }
     }
 }
