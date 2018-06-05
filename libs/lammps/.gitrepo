@@ -6,6 +6,6 @@
 [subrepo]
 	remote = git@github.com:ovilab/lammps
 	branch = atomify
-	commit = 04cd970e6e98613aa33563edcd206158566b53d8
-	parent = 293f4767de6e9aa611fba57b17b203f10c8e86f8
+	commit = 5730145e9a0f5c3e107ba3fb2bf768506763eece
+	parent = 101ff50d13e4392a906327658726bc810af415b4
 	cmdver = 0.3.1
