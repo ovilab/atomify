@@ -1,23 +1,24 @@
 #ifndef ATOMS_H
 #define ATOMS_H
 
-#include <SimVis/SphereData>
 #include <SimVis/BondData>
+#include <SimVis/SphereData>
 
+#include "atomdata.h"
 #include <QColor>
 #include <QObject>
-#include <QVector>
 #include <QVariantList>
-#include <mpi.h>
+#include <QVector>
 #include <lammps.h>
-#include "atomdata.h"
+#include <mpi.h>
 
 struct AtomStyle {
     QColor color;
     float radius;
     QString shortName;
     QString fullName;
-    AtomStyle(QString shortName, QString fullName, float radius, QColor color) {
+    AtomStyle(QString shortName, QString fullName, float radius, QColor color)
+    {
         this->color = color;
         this->radius = radius;
         this->shortName = shortName;
@@ -25,8 +26,7 @@ struct AtomStyle {
     }
 };
 
-class Atoms : public QObject
-{
+class Atoms : public QObject {
     Q_OBJECT
     Q_PROPERTY(SphereData* sphereData READ sphereData NOTIFY sphereDataChanged)
     Q_PROPERTY(BondData* bondData READ bondData NOTIFY bondDataChanged)
@@ -47,22 +47,22 @@ public:
     };
     Q_DECLARE_FLAGS(AtomFlags, AtomFlag)
 
-    Atoms(class AtomifySimulator *simulator = nullptr);
-    void synchronize(class LAMMPSController *lammpsController);
-    void processModifiers(class System *system);
+    Atoms(class AtomifySimulator* simulator = nullptr);
+    void synchronize(class LAMMPSController* lammpsController);
+    void processModifiers(class System* system);
     SphereData* sphereData() const;
     QVariantList modifiers() const;
-    QVector<AtomStyle*> &atomStyles();
+    QVector<AtomStyle*>& atomStyles();
     void setAtomType(int atomType, QString atomTypeName);
     void setAtomColorAndScale(int atomType, QColor color, float size);
     void setAtomColor(int atomType, QColor color);
     BondData* bondData() const;
     class Bonds* bonds() const;
-    AtomData &atomData();
+    AtomData& atomData();
     void reset();
     bool sort() const;
     void synchronizeRenderer();
-    void createRenderererData(LAMMPSController *lammpsController);
+    void createRenderererData(LAMMPSController* lammpsController);
     float bondScale() const;
     float sphereScale() const;
     QString renderingMode() const;
@@ -112,17 +112,17 @@ private:
     bool m_sort = false;
     bool m_dirtyData = false;
     float m_bondScale = 1.0;
-    float m_sphereScale = 1.0;
+    float m_sphereScale = 2.0;
     QString m_renderingMode = "Ball and stick";
     int m_numberOfBonds = 0;
     float m_globalScale = 1.0;
     void readAtomTypesFromFile();
-    void generateBondData(AtomData &atomData, LAMMPSController *controller);
-    void generateBondDataFromLammpsNeighborlist(AtomData &atomData, LAMMPSController *controller);
-    bool generateBondDataFromNeighborList(AtomData &atomData, class LAMMPSController *controller);
-    bool generateBondDataFromBondList(AtomData &atomData, LAMMPSController *controller);
-    void generateSphereData(AtomData &atomData);
-    bool doWeHavefullNeighborList(class LAMMPS_NS::Neighbor *neighbor);
+    void generateBondData(AtomData& atomData, LAMMPSController* controller);
+    void generateBondDataFromLammpsNeighborlist(AtomData& atomData, LAMMPSController* controller);
+    bool generateBondDataFromNeighborList(AtomData& atomData, class LAMMPSController* controller);
+    bool generateBondDataFromBondList(AtomData& atomData, LAMMPSController* controller);
+    void generateSphereData(AtomData& atomData);
+    bool doWeHavefullNeighborList(class LAMMPS_NS::Neighbor* neighbor);
     QVector<int> m_selectedParticles;
 };
 
