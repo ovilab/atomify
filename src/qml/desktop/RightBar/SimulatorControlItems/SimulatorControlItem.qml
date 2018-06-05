@@ -47,11 +47,11 @@ Row {
         MouseArea {
             anchors.fill: parent
             enabled: numPerAtomValues > 1
-            onClicked: menu.open()
+            onClicked: myMenu.open()
         }
 
         Menu {
-            id: menu
+            id: myMenu
 
             Column {
                 Repeater {
@@ -60,7 +60,7 @@ Row {
                         text: model.index+1
                         onClicked: {
                             simulatorControl.perAtomIndex = (parseInt(text)-1)
-                            menu.close()
+                            myMenu.close()
                         }
                     }
                 }
